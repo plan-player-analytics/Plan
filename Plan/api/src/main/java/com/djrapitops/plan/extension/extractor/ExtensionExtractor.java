@@ -172,7 +172,7 @@ public final class ExtensionExtractor {
         Class<?> methodParameter = parameterTypes[0];
 
         boolean validParameter = false;
-        for (Class option : parameterOptions) {
+        for (Class<?> option : parameterOptions) {
             if (option.equals(methodParameter)) {
                 validParameter = true;
                 break;

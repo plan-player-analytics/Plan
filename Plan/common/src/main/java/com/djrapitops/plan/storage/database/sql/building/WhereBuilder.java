@@ -25,11 +25,7 @@ public abstract class WhereBuilder extends SqlBuilder {
 
     private int conditions = 0;
 
-    public WhereBuilder() {
-        super();
-    }
-
-    public WhereBuilder(String start) {
+    protected WhereBuilder(String start) {
         super(start);
     }
 

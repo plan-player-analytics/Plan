@@ -8,6 +8,7 @@
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta content="Player Analytics, login page" name="description">
     <meta content="Rsl1122" name="author">
+    <meta content="noindex, nofollow" name="robots">
 
     <title>Plan | Register</title>
 
@@ -98,8 +99,8 @@
                 </button>
             </div>
             <div class="modal-body bg-white">
-                <p>You can now finish registering the user. The registration should be completed before next
-                    restart.</p>
+                <p>You can now finish registering the user. The registration should be completed now or within 15
+                    minutes of closing this page.</p>
                 <p>Use the following command in game to finish registration:</p>
                 <p><code>/${command} register --code <span class="register-code"></span></code></p>
                 <p>Or using console:</p>
@@ -191,7 +192,7 @@
     }
 
     function checkIfRegistered(code) {
-        jsonRequest(`./auth/register?code=${encodeURI(code)}`, (json, error) => {
+        jsonRequest(`./auth/register?code=${encodeURIComponent(code)}`, (json, error) => {
             if (error) {
                 displayError('Checking registration status failed: ' + error)
             }
@@ -216,7 +217,7 @@
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
-        jsonRequest(`./auth/register?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
+        jsonRequest(`./auth/register?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
             if (error) {
                 return displayError('Registration failed: ' + error);
             }

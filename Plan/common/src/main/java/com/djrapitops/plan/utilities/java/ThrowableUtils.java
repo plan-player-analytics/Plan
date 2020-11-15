@@ -37,7 +37,7 @@ public class ThrowableUtils {
         cause.setStackTrace(ArrayUtil.merge(cause.getStackTrace(), originPoint.getStackTrace()));
     }
 
-    public static String findCallerAfterClass(StackTraceElement[] stackTrace, Class afterThis) {
+    public static String findCallerAfterClass(StackTraceElement[] stackTrace, Class<?> afterThis) {
         boolean found = false;
         for (StackTraceElement stackTraceElement : stackTrace) {
             if (found) {

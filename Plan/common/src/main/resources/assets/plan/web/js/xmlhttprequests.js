@@ -24,12 +24,7 @@ function jsonRequest(address, callback) {
                         callback(null, "Request did not reach the server. (Server offline / Adblocker?)")
                     }
                 } catch (e) {
-                    if (e.message.includes('Unexpected end of JSON input') && navigator.brave && navigator.brave.isBrave) {
-                        navigator.brave.isBrave()
-                            .then(confirm => callback(null, e.message + (confirm ? " (Possibly blocked by ad-block in Brave)" : '') + " (See " + address + ")"));
-                    } else {
-                        callback(null, e.message + " (See " + address + ")")
-                    }
+                    callback(null, e.message + " (See " + address + ")")
                 }
             }
         };

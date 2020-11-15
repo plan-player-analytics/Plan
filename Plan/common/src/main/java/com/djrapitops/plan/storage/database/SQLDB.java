@@ -31,20 +31,18 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransa
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.*;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -62,27 +60,27 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final PlanConfig config;
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
-    protected final ErrorHandler errorHandler;
+    protected final ErrorLogger errorLogger;
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
 
     private final boolean devMode;
 
-    public SQLDB(
+    protected SQLDB(
             Supplier<UUID> serverUUIDSupplier,
             Locale locale,
             PlanConfig config,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
         this.config = config;
         this.runnableFactory = runnableFactory;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         devMode = config.isTrue(PluginSettings.DEV_MODE);
 
@@ -92,7 +90,9 @@ public abstract class SQLDB extends AbstractDatabase {
                     .namingPattern(nameFormat)
                     .uncaughtExceptionHandler((thread, throwable) -> {
                         if (devMode) {
-                            errorHandler.log(L.WARN, getClass(), throwable);
+                            errorLogger.log(L.WARN, throwable, ErrorContext.builder()
+                                    .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
+                                    .build());
                         }
                     }).build());
         };
@@ -201,7 +201,15 @@ public abstract class SQLDB extends AbstractDatabase {
             runnableFactory.create("Database Index Creation", new AbsRunnable() {
                 @Override
                 public void run() {
-                    executeTransaction(new CreateIndexTransaction());
+                    if (getState() == State.CLOSED || getState() == State.CLOSING) {
+                        cancel();
+                        return;
+                    }
+                    try {
+                        executeTransaction(new CreateIndexTransaction());
+                    } catch (DBOpException e) {
+                        errorLogger.log(L.WARN, e);
+                    }
                 }
             }).runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
         } catch (Exception ignore) {
@@ -248,20 +256,28 @@ public abstract class SQLDB extends AbstractDatabase {
             }
             transaction.executeTransaction(this);
             return CompletableFuture.completedFuture(null);
-        }, getTransactionExecutor()).handle(errorHandler(origin));
+        }, getTransactionExecutor()).handle(errorHandler(transaction, origin));
     }
 
-    private BiFunction<CompletableFuture<Object>, Throwable, CompletableFuture<Object>> errorHandler(Exception origin) {
+    private BiFunction<CompletableFuture<Object>, Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, Exception origin) {
         return (obj, throwable) -> {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);
             }
-            if (throwable instanceof FatalDBException) {
+            if (throwable.getCause() instanceof FatalDBException) {
+                logger.error("Database failed to open, " + transaction.getClass().getName() + " failed to be executed.");
+                FatalDBException actual = (FatalDBException) throwable.getCause();
+                Optional<String> whatToDo = actual.getContext().flatMap(ErrorContext::getWhatToDo);
+                whatToDo.ifPresent(message -> logger.error("What to do: " + message));
+                if (!whatToDo.isPresent()) logger.error("Error msg: " + actual.getMessage());
                 setState(State.CLOSED);
             }
             ThrowableUtils.appendEntryPointToCause(throwable, origin);
 
-            errorHandler.log(L.ERROR, getClass(), throwable);
+            errorLogger.log(getState() == State.CLOSED ? L.CRITICAL : L.ERROR, throwable, ErrorContext.builder()
+                    .related("Transaction: " + transaction.getClass())
+                    .related("DB State: " + getState())
+                    .build());
             return CompletableFuture.completedFuture(null);
         };
     }
@@ -292,5 +308,13 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public void setTransactionExecutorServiceProvider(Supplier<ExecutorService> transactionExecutorServiceProvider) {
         this.transactionExecutorServiceProvider = transactionExecutorServiceProvider;
+    }
+
+    public RunnableFactory getRunnableFactory() {
+        return runnableFactory;
+    }
+
+    public PluginLogger getLogger() {
+        return logger;
     }
 }

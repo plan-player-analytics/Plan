@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension;
 import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Interface for registering {@link DataExtension}s.
@@ -44,7 +45,7 @@ public interface ExtensionService {
      * @throws IllegalStateException If Plan is installed, but not enabled.
      */
     static ExtensionService getInstance() {
-        return Optional.ofNullable(Holder.service)
+        return Optional.ofNullable(Holder.service.get())
                 .orElseThrow(() -> new IllegalStateException("ExtensionService has not been initialised yet."));
     }
 
@@ -70,14 +71,14 @@ public interface ExtensionService {
     void unregister(DataExtension extension);
 
     class Holder {
-        static ExtensionService service;
+        static volatile AtomicReference<ExtensionService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */
         }
 
         static void set(ExtensionService service) {
-            Holder.service = service;
+            Holder.service.set(service);
         }
     }
 

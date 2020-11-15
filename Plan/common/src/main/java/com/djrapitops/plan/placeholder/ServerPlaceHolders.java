@@ -81,13 +81,13 @@ public class ServerPlaceHolders implements Placeholders {
                 () -> percentage.apply(database.query(TPSQueries.averageCPU(monthAgo(), now(), serverUUID))));
 
         placeholders.registerStatic("server_ram_day",
-                () -> database.query(TPSQueries.averageRAM(dayAgo(), now(), serverUUID)) + " MB");
+                () -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(dayAgo(), now(), serverUUID))));
 
         placeholders.registerStatic("server_ram_week",
-                () -> database.query(TPSQueries.averageRAM(weekAgo(), now(), serverUUID)) + " MB");
+                () -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(weekAgo(), now(), serverUUID))));
 
         placeholders.registerStatic("server_ram_month",
-                () -> database.query(TPSQueries.averageRAM(monthAgo(), now(), serverUUID)) + " MB");
+                () -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(monthAgo(), now(), serverUUID))));
 
         placeholders.registerStatic("server_chunks_day",
                 () -> database.query(TPSQueries.averageChunks(dayAgo(), now(), serverUUID)));

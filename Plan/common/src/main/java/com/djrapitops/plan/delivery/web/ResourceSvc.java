@@ -23,9 +23,10 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -53,7 +54,7 @@ public class ResourceSvc implements ResourceService {
     private final ResourceSettings resourceSettings;
     private final Locale locale;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public ResourceSvc(
@@ -61,13 +62,13 @@ public class ResourceSvc implements ResourceService {
             PlanConfig config,
             Locale locale,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.files = files;
         this.resourceSettings = config.getResourceSettings();
         this.locale = locale;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
         this.snippets = new HashSet<>();
     }
 
@@ -145,7 +146,9 @@ public class ResourceSvc implements ResourceService {
                 return getOrWriteCustomized(fileName, source);
             }
         } catch (IOException e) {
-            errorHandler.log(L.WARN, getClass(), e.getCause());
+            errorLogger.log(L.WARN, e, ErrorContext.builder()
+                    .whatToDo("Report this or provide " + fileName + " in " + files.getCustomizationDirectory())
+                    .related("Fetching resource", "Of: " + pluginName, fileName).build());
         }
         // Return original by default
         return source.get();

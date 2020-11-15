@@ -1,6 +1,7 @@
 dependencies {
     compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
     compile project(":api")
+    compileOnly project(":extensions")
     compile project(path: ":extensions", configuration: 'shadow')
     compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
     compile "org.apache.commons:commons-text:$commonsTextVersion"
@@ -45,9 +46,7 @@ shadowJar {
     exclude "**/module-info.class"
     exclude 'META-INF/versions/' // Causes Sponge to crash
 
-    relocate('org.apache', 'plan.org.apache') {
-        exclude 'org/apache/logging/**'
-    }
+
     relocate 'com.maxmind', 'plan.com.maxmind'
     relocate 'com.fasterxml', 'plan.com.fasterxml'
     relocate 'com.zaxxer', 'plan.com.zaxxer'

@@ -44,7 +44,7 @@ public class ConfigReader implements Closeable {
     // Indent mode assumes the number of spaces used to indent the file.
     // If the first found indent is smaller, that will be used instead.
     private int indentMode = 4;
-    private List<String> unboundComment = new ArrayList<>();
+    private final List<String> unboundComment = new ArrayList<>();
 
     private int lastDepth = -1;
 
@@ -146,7 +146,7 @@ public class ConfigReader implements Closeable {
         // Parse a node "Key: value"
         // Can not use StringUtils.split(line, ":", 2) - Relies on 2nd empty String for parent node parsing
         String[] keyAndValue = line.split(":", 2);
-        if (keyAndValue.length <= 1) {
+        if (keyAndValue.length <= 1 || line.startsWith("- ")) {
             return handleMultiline(line);
         }
         String key = keyAndValue[0].trim();

@@ -16,13 +16,10 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,9 +41,7 @@ public class SpongeDBSystem extends DBSystem {
             SQLiteDB.Factory sqLiteDB,
             H2DB.Factory h2DB,
             PlanConfig config,
-            PluginLogger logger,
-            Timings timings,
-            ErrorHandler errorHandler
+            PluginLogger logger
     ) {
         super(locale, sqLiteDB, h2DB, logger);
         this.config = config;
@@ -57,7 +52,7 @@ public class SpongeDBSystem extends DBSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
         db = getActiveDatabaseByName(dbType);
         super.enable();

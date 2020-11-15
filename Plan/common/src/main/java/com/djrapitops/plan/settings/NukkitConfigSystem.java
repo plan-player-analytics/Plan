@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.settings;
 
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
@@ -25,8 +24,8 @@ import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.network.ServerSettingsManager;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,15 +53,15 @@ public class NukkitConfigSystem extends ConfigSystem {
             ServerSettingsManager serverSettingsManager,
             Theme theme,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        super(files, config, theme, logger, errorHandler);
+        super(files, config, theme, logger, errorLogger);
         this.configUpdater = configUpdater;
         this.serverSettingsManager = serverSettingsManager;
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         firstInstall = !files.getConfigFile().exists();
         super.enable();
         if (config.isTrue(PluginSettings.PROXY_COPY_CONFIG)) {

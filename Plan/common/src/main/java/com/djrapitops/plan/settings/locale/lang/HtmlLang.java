@@ -40,7 +40,7 @@ public enum HtmlLang implements Lang {
     TITLE_THEME_SELECT("Theme Select"),
     LINK_NIGHT_MODE("Night Mode"),
     TEXT_PLUGIN_INFORMATION("Information about the plugin"),
-    TEXT_LICENSED_UNDER("is developed and licensed under"),
+    TEXT_LICENSED_UNDER("Player Analytics is developed and licensed under"),
     LINK_WIKI("Plan Wiki, Tutorials & Documentation"),
     LINK_ISSUES("Report Issues"),
     LINK_DISCORD("General Support on Discord"),

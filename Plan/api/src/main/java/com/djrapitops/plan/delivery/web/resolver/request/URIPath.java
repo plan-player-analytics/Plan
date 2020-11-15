@@ -119,4 +119,11 @@ public final class URIPath {
         }
         return count;
     }
+
+    @Override
+    public String toString() {
+        return "URIPath{" +
+                "path='" + path + '\'' +
+                '}';
+    }
 }

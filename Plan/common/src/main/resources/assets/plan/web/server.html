@@ -8,6 +8,7 @@
     <meta content="Player Analytics, server analysis page that allows gaining insights to how players play on your server."
           name="description">
     <meta content="Rsl1122" name="author">
+    <meta content="noindex, nofollow" name="robots">
 
     <title>Plan | Server Analysis</title>
 
@@ -22,7 +23,7 @@
     <link href="../css/style.css" rel="stylesheet">
 </head>
 
-<body id="page-top">
+<body>
 <script>
     var gmPieColors = [${gmPieColors}];
 </script>
@@ -126,7 +127,7 @@
             <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
-            <a class="btn bg-plan" href="/auth/logout" id="logout-button">
+            <a class="btn bg-plan" href="../auth/logout" id="logout-button">
                 <i class="fa fa-fw fa-door-open"></i> Logout
             </a>
         </div>
@@ -334,6 +335,12 @@
                                                 class="fa fa-fw fa-chart-area col-blue"></i> Day by Day</a>
                                     </li>
                                     <li class="nav-item">
+                                        <a aria-controls="home" aria-selected="true" class="nav-link col-black"
+                                           data-toggle="tab" href="#hourly-unique-tab" id="online-hourly-unique-tab"
+                                           role="tab"><i
+                                                class="fa fa-fw fa-chart-area col-blue"></i> Hour by Hour</a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a aria-controls="profile" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab"
                                            href="#calendar-tab" id="online-calendar-tab" role="tab"><i
@@ -348,9 +355,13 @@
                                 </ul>
                                 <div class="tab-content" id="onlineActivityTabContent">
                                     <div aria-labelledby="online-unique-tab" class="tab-pane show active"
-                                         id="unique-tab"
-                                         role="tabpanel">
+                                         id="unique-tab" role="tabpanel">
                                         <div class="chart-area" id="uniqueChart"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="online-unique-tab" class="tab-pane"
+                                         id="hourly-unique-tab" role="tabpanel">
+                                        <div class="chart-area" id="hourlyUniqueChart"><span class="loader"></span>
+                                        </div>
                                     </div>
                                     <div aria-labelledby="online-calendar-tab" class="tab-pane" id="calendar-tab"
                                          role="tabpanel">
@@ -1194,9 +1205,7 @@
                         v3.0</a></p>
                     <hr>
                     <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki"
-                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan
-                        Wiki,
-                        Tutorials & Documentation</a>
+                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan Wiki, Tutorials & Documentation</a>
                     <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/issues"
                        rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-bug"></i> Report Issues</a>
                     <a class="btn col-plan" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
@@ -1246,11 +1255,6 @@
 
 </div>
 <!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-fw fa-angle-up"></i>
-</a>
 
 <!-- Bootstrap core JavaScript-->
 <script src="../vendor/jquery/jquery.min.js"></script>
@@ -1421,21 +1425,21 @@
                         type: s.type.spline,
                         tooltip: s.tooltip.twoDecimals,
                         data: json.avg_ping_series,
-                        color: json.colors.avgPing
+                        color: json.colors.avg
                     },
                     maxPing: {
                         name: s.name.maxPing,
                         type: s.type.spline,
                         tooltip: s.tooltip.zeroDecimals,
                         data: json.max_ping_series,
-                        color: json.colors.maxPing
+                        color: json.colors.max
                     },
                     minPing: {
                         name: s.name.minPing,
                         type: s.type.spline,
                         tooltip: s.tooltip.zeroDecimals,
                         data: json.min_ping_series,
-                        color: json.colors.minPing
+                        color: json.colors.min
                     }
                 };
                 lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
@@ -1509,12 +1513,33 @@
             }
         });
 
+        jsonRequest("../v1/graph?type=hourlyUniqueAndNew&server=${serverUUID}", function (json, error) {
+            if (json) {
+                var uniquePlayers = {
+                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: json.uniquePlayers, color: json.colors.playersOnline
+                };
+                var newPlayers = {
+                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: json.newPlayers, color: json.colors.newPlayers
+                };
+                dayByDay('hourlyUniqueChart', [uniquePlayers, newPlayers]);
+            } else if (error) {
+                $('#uniqueChart').text("Failed to load graph data: " + error)
+            }
+        });
+
         jsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", function (json, error) {
             if (json) {
                 $('#calendar').text('');
                 onlineActivityCalendar('#calendar', json.data, json.firstDay);
                 $('#online-calendar-tab').click(function () {
-                    $('#calendar').fullCalendar('render');
+                    // Wrapping this in a 0ms setTimeout waits for all other event handlers
+                    // to finish. We need this because if the calendar is rendered
+                    // immediately, it renders for a width of 0.
+                    setTimeout(function() {
+                        window.calendars.online_activity.render();
+                    }, 0);
                 });
             } else if (error) {
                 $('#calendar').text("Failed to load calendar data: " + error)
@@ -1571,7 +1596,6 @@
         }, 10000);
         throw loadingError;
     }
-
 
 
     function setLoadingText(text) {

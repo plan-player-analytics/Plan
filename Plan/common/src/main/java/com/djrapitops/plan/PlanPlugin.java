@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 
@@ -44,4 +45,6 @@ public interface PlanPlugin extends IPlugin {
     default boolean isSystemEnabled() {
         return getSystem().isEnabled();
     }
+
+    void registerCommand(Subcommand command);
 }

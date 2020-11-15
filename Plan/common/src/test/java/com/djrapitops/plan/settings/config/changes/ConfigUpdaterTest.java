@@ -20,12 +20,14 @@ import com.djrapitops.plan.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mockito;
 import utilities.TestResources;
 
 import java.io.File;
@@ -55,6 +57,7 @@ class ConfigUpdaterTest {
     private static Path newBungeeConfig;
 
     private static ConfigUpdater UNDER_TEST;
+    private static ErrorLogger errorLogger;
 
     @BeforeAll
     static void prepareConfigFiles() throws URISyntaxException, IOException {
@@ -73,7 +76,13 @@ class ConfigUpdaterTest {
         TestResources.copyResourceIntoFile(newBungeeConfig.toFile(), "/assets/plan/bungeeconfig.yml");
 
         PluginLogger testLogger = new TestPluginLogger();
-        UNDER_TEST = new ConfigUpdater(testLogger, new ConsoleErrorLogger(testLogger));
+        errorLogger = Mockito.mock(ErrorLogger.class);
+        UNDER_TEST = new ConfigUpdater(testLogger, errorLogger);
+    }
+
+    @AfterEach
+    void ensureNoErrors() {
+        Mockito.verifyNoInteractions(errorLogger);
     }
 
     @Test

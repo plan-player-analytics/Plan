@@ -22,9 +22,10 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.lang.*;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,7 +48,7 @@ public class LocaleSystem implements SubSystem {
     private final PlanFiles files;
     private final PlanConfig config;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private final Locale locale;
 
@@ -56,22 +57,21 @@ public class LocaleSystem implements SubSystem {
             PlanFiles files,
             PlanConfig config,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.files = files;
         this.config = config;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
         this.locale = new Locale();
     }
 
     public static Map<String, Lang> getIdentifiers() {
         Lang[][] lang = new Lang[][]{
                 CommandLang.values(),
-                CmdHelpLang.values(),
+                HelpLang.values(),
                 DeepHelpLang.values(),
                 PluginLang.values(),
-                ManageLang.values(),
                 GenericLang.values(),
                 HtmlLang.values(),
                 ErrorPageLang.values(),
@@ -112,8 +112,7 @@ public class LocaleSystem implements SubSystem {
             }
             new LocaleFileWriter(writing).writeToFile(localeFile);
         } catch (IOException | IllegalStateException e) {
-            logger.error("Failed to write new Locale file at " + localeFile.getAbsolutePath());
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + localeFile.getAbsolutePath()).build());
         }
         resetWriteConfigSetting();
     }
@@ -123,14 +122,24 @@ public class LocaleSystem implements SubSystem {
             config.set(PluginSettings.WRITE_NEW_LOCALE, false);
             config.save();
         } catch (IOException | IllegalStateException e) {
-            logger.error("Failed set WriteNewLocaleFileOnEnable back to false");
-            errorHandler.log(L.WARN, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.getConfigFilePath()).build());
         }
     }
 
     private Optional<Locale> loadSettingLocale() {
         try {
             String setting = config.get(PluginSettings.LOCALE);
+            if ("write-all".equalsIgnoreCase(setting)) {
+                for (LangCode code : LangCode.values()) {
+                    if (code == LangCode.CUSTOM) continue;
+                    Locale writing = Locale.forLangCode(code, files);
+                    new LocaleFileWriter(writing).writeToFile(
+                            files.getDataDirectory().resolve("locale_" + code.name() + ".txt").toFile()
+                    );
+                }
+
+                return Optional.empty();
+            }
             if (!"default".equalsIgnoreCase(setting)) {
                 return Optional.of(Locale.forLangCodeString(files, setting));
             }

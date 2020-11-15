@@ -34,6 +34,7 @@ public class MethodWrapper<T> {
     private final Method method;
     private final Class<T> returnType;
     private final MethodType methodType;
+    private boolean disabled = false;
 
     public MethodWrapper(Method method, Class<T> returnType) {
         this.method = method;
@@ -42,6 +43,7 @@ public class MethodWrapper<T> {
     }
 
     public T callMethod(DataExtension extension, Parameters with) {
+        if (disabled) return null;
         try {
             return returnType.cast(with.usingOn(extension, method));
         } catch (InvocationTargetException notReadyToBeCalled) {
@@ -65,6 +67,10 @@ public class MethodWrapper<T> {
 
     public Class<T> getReturnType() {
         return returnType;
+    }
+
+    public void disable() {
+        this.disabled = true;
     }
 
     @Override

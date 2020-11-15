@@ -19,10 +19,10 @@ package com.djrapitops.plan.gathering.listeners;
 import com.djrapitops.plan.gathering.listeners.bukkit.BukkitAFKListener;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,15 +40,22 @@ import static org.mockito.Mockito.*;
  * @author Rsl1122
  */
 @ExtendWith(MockitoExtension.class)
-public class BukkitAFKListenerTest {
+class BukkitAFKListenerTest {
 
     private static BukkitAFKListener underTest;
+    private static ErrorLogger errorLogger;
 
     @BeforeAll
     static void setUp() {
         PlanConfig config = Mockito.mock(PlanConfig.class);
         when(config.get(TimeSettings.AFK_THRESHOLD)).thenReturn(TimeUnit.MINUTES.toMillis(3));
-        underTest = new BukkitAFKListener(config, new ConsoleErrorLogger(new TestPluginLogger()));
+        errorLogger = Mockito.mock(ErrorLogger.class);
+        underTest = new BukkitAFKListener(config, errorLogger);
+    }
+
+    @AfterEach
+    void ensureNoErrors() {
+        verifyNoInteractions(errorLogger);
     }
 
     @Test

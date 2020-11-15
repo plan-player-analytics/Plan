@@ -23,8 +23,9 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.Entity;
@@ -52,15 +53,15 @@ import java.util.UUID;
 public class SpongeDeathListener {
 
     private final Processing processing;
-    private ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public SpongeDeathListener(
             Processing processing,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.processing = processing;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Listener
@@ -81,7 +82,7 @@ public class SpongeDeathListener {
                 handleKill(time, dead, killerEntity);
             }
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, dead).build());
         }
     }
 

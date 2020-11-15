@@ -19,8 +19,9 @@ package com.djrapitops.plan.gathering.listeners.sponge;
 import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -51,11 +52,11 @@ public class SpongeAFKListener {
     static AFKTracker AFK_TRACKER;
 
     private final Map<UUID, Boolean> ignorePermissionInfo;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public SpongeAFKListener(PlanConfig config, ErrorHandler errorHandler) {
-        this.errorHandler = errorHandler;
+    public SpongeAFKListener(PlanConfig config, ErrorLogger errorLogger) {
+        this.errorLogger = errorLogger;
         this.ignorePermissionInfo = new HashMap<>();
 
         SpongeAFKListener.assignAFKTracker(config);
@@ -71,7 +72,7 @@ public class SpongeAFKListener {
         try {
             performedAction(event.getTargetEntity());
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

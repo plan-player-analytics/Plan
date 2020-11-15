@@ -29,8 +29,8 @@ public class Status {
         countKicks = true;
     }
 
-    public boolean areKicksCounted() {
-        return countKicks;
+    public boolean areKicksNotCounted() {
+        return !countKicks;
     }
 
     public void setCountKicks(boolean countKicks) {

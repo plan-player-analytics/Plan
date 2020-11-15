@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  *
  * @author Rsl1122
  */
-public abstract class ServerProperties {
+public class ServerProperties {
 
     private final String name;
     private final int port;
@@ -33,7 +33,7 @@ public abstract class ServerProperties {
     private final Supplier<String> ip;
     private final int maxPlayers;
 
-    protected ServerProperties(
+    public ServerProperties(
             String name,
             int port,
             String version,

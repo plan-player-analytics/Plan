@@ -49,6 +49,7 @@ public class Formatters {
 
     private final DecimalFormatter decimalFormatter;
     private final PercentageFormatter percentageFormatter;
+    private final ByteSizeFormatter byteSizeFormatter;
 
     @Inject
     public Formatters(PlanConfig config, Locale locale) {
@@ -69,7 +70,7 @@ public class Formatters {
 
         decimalFormatter = new DecimalFormatter(config);
         percentageFormatter = new PercentageFormatter(decimalFormatter);
-
+        byteSizeFormatter = new ByteSizeFormatter(decimalFormatter);
     }
 
     public Formatter<DateHolder> year() {
@@ -126,5 +127,13 @@ public class Formatters {
 
     public Formatter<Double> decimals() {
         return decimalFormatter;
+    }
+
+    public Formatter<Double> byteSize() {
+        return byteSizeFormatter;
+    }
+
+    public Formatter<Long> byteSizeLong() {
+        return value -> byteSizeFormatter.apply((double) value);
     }
 }

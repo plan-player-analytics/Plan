@@ -18,8 +18,9 @@ package com.djrapitops.plan.settings;
 
 import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,15 +38,15 @@ import java.util.function.Supplier;
 public class SettingsSvc implements SettingsService {
 
     private final PlanConfig config;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public SettingsSvc(
             PlanConfig config,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public void register() {
@@ -70,7 +71,7 @@ public class SettingsSvc implements SettingsService {
         try {
             config.save();
         } catch (IOException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.getConfigFilePath()).build());
         }
     }
 

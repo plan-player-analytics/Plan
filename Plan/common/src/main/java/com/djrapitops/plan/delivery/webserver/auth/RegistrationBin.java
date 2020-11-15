@@ -18,9 +18,14 @@ package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Holds registrations of users before they are confirmed.
@@ -29,7 +34,13 @@ import java.util.*;
  */
 public class RegistrationBin {
 
-    private static final Map<String, AwaitingForRegistration> REGISTRATION_BIN = new HashMap<>();
+    private static final Cache<String, AwaitingForRegistration> REGISTRATION_BIN = Caffeine.newBuilder()
+            .expireAfterAccess(15, TimeUnit.MINUTES)
+            .build();
+
+    private RegistrationBin() {
+        // Hide static cache constructor
+    }
 
     public static String addInfoForRegistration(String username, String password) {
         String hash = PassEncryptUtil.createHash(password);
@@ -39,14 +50,14 @@ public class RegistrationBin {
     }
 
     public static Optional<User> register(String code, UUID linkedToUUID) {
-        AwaitingForRegistration found = REGISTRATION_BIN.get(code);
+        AwaitingForRegistration found = REGISTRATION_BIN.getIfPresent(code);
         if (found == null) return Optional.empty();
-        REGISTRATION_BIN.remove(code);
+        REGISTRATION_BIN.invalidate(code);
         return Optional.of(found.toUser(linkedToUUID));
     }
 
     public static boolean contains(String code) {
-        return REGISTRATION_BIN.containsKey(code);
+        return REGISTRATION_BIN.getIfPresent(code) != null;
     }
 
     private static class AwaitingForRegistration {

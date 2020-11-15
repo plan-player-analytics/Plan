@@ -76,7 +76,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
     default void testBackupAndRestoreSQLite() throws Exception {
         File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
-        SQLiteDB backup = system().getDatabaseSystem().getSqLiteFactory().usingFile(tempFile);
+        SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         try {
             backup.init();
@@ -103,7 +103,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
     default void testBackupAndRestoreH2() throws Exception {
         File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
-        H2DB backup = system().getDatabaseSystem().getH2Factory().usingFile(tempFile);
+        H2DB backup = dbSystem().getH2Factory().usingFile(tempFile);
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         try {
             backup.init();

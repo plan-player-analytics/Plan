@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.web;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -29,7 +30,7 @@ import java.util.function.Supplier;
 public interface ResourceService {
 
     static ResourceService getInstance() {
-        return Optional.ofNullable(ResourceService.Holder.service)
+        return Optional.ofNullable(ResourceService.Holder.service.get())
                 .orElseThrow(() -> new IllegalStateException("ResourceService has not been initialised yet."));
     }
 
@@ -102,14 +103,14 @@ public interface ResourceService {
     }
 
     class Holder {
-        static ResourceService service;
+        static volatile AtomicReference<ResourceService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */
         }
 
         static void set(ResourceService service) {
-            ResourceService.Holder.service = service;
+            ResourceService.Holder.service.set(service);
         }
     }
 }

@@ -23,7 +23,6 @@ package com.djrapitops.plan;
  */
 public class DebugChannels {
 
-
     private DebugChannels() {
         /* Static variable class */
     }

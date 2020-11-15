@@ -51,13 +51,26 @@ for (let tab of tabs) {
 
 window.addEventListener('hashchange', openPage);
 
+//Sidebar navigation tabs
+$('#accordionSidebar .nav-item a').click(event => {
+    if (history.replaceState && event.currentTarget.href.split('#')[1].length > 0) {
+        event.preventDefault();
+        history.replaceState(undefined, undefined, '#' + event.currentTarget.href.split('#')[1]);
+        openPage();
+    }
+});
+
 // Persistent Bootstrap tabs
 $('.nav-tabs a.nav-link').click(event => {
     const uriHash = (window.location.hash).split("&");
     if (!uriHash) return;
     const currentTab = uriHash[0];
-    const originalTargetId = event.target.href.split('#')[1];
-    window.location.hash = currentTab + '&' + originalTargetId;
+    const originalTargetId = event.currentTarget.href.split('#')[1];
+    if (history.replaceState) {
+        event.preventDefault();
+        history.replaceState(undefined, undefined, currentTab + '&' + originalTargetId);
+        openPage();
+    } else window.location.hash = currentTab + '&' + originalTargetId;
 });
 
 let oldWidth = null;
@@ -68,16 +81,16 @@ function reduceSidebar() {
         return;
     }
 
-    const $sidebar = $('.sidebar');
+    const $body = $('body')
     const closeModal = $('.sidebar-close-modal');
     if ($(window).width() < 1350) {
-        if (!$sidebar.hasClass('hidden')) $sidebar.addClass('hidden');
+        if (!$body.hasClass('sidebar-hidden')) $body.addClass('sidebar-hidden');
         if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
 
         // Close any open menu accordions when window is resized
         $('.sidebar .collapse').collapse('hide');
-    } else if ($(window).width() > 1400 && $sidebar.hasClass('hidden')) {
-        $sidebar.removeClass('hidden');
+    } else if ($(window).width() > 1400 && $body.hasClass('sidebar-hidden')) {
+        $body.removeClass('sidebar-hidden');
         if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
     }
     oldWidth = newWidth;
@@ -87,7 +100,7 @@ reduceSidebar();
 $(window).resize(reduceSidebar);
 
 function toggleSidebar() {
-    $('.sidebar').toggleClass('hidden');
+    $('body').toggleClass('sidebar-hidden');
     $('.sidebar .collapse').collapse('hide');
 
     const closeModal = $('.sidebar-close-modal');
@@ -99,18 +112,3 @@ function toggleSidebar() {
 }
 
 $('.sidebar-toggler,.sidebar-close-modal').on('click', toggleSidebar);
-
-// Scroll to top button appear
-$(document).on('scroll', () => {
-    const scrollDistance = $(this).scrollTop();
-    if (scrollDistance > 100) {
-        $('.scroll-to-top').fadeIn();
-    } else {
-        $('.scroll-to-top').fadeOut();
-    }
-});
-
-$('.scroll-to-top').on('click', 'a.scroll-to-top', event => {
-    window.scrollTo(0, 0); // Scroll to top
-    event.preventDefault();
-});

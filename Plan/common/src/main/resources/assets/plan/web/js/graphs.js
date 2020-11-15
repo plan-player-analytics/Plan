@@ -20,6 +20,7 @@ var linegraphButtons = [{
 }];
 
 var graphs = [];
+window.calendars = {};
 
 function activityPie(id, activitySeries) {
     graphs.push(Highcharts.chart(id, {
@@ -148,32 +149,36 @@ function dayByDay(id, series) {
     }));
 }
 
-function onlineActivityCalendar(id, events, firstDay) {
-    $(id).fullCalendar({
+function onlineActivityCalendar(id, event_data, firstDay) {
+    window.calendars.online_activity = new FullCalendar.Calendar(document.querySelector(id), {
+        themeSystem: 'bootstrap',
         eventColor: '#2196F3',
         firstDay: firstDay,
+        initialView: 'dayGridMonth',
 
-        eventRender: function (eventObj, $el) {
-            $el.popover({
-                content: eventObj.title,
+        eventDidMount: function (info) {
+            $(info.el).popover({
+                content: info.event.title,
                 trigger: 'hover',
                 placement: 'top',
                 container: 'body'
             });
         },
 
-        events: events,
+        events: function (fetchInfo, successCallback, failureCallback) {
+            successCallback(event_data)
+        },
 
         height: 800,
         contentHeight: 795,
-        header: {
+        headerToolbar: {
             left: 'title',
             center: '',
-            right: 'month prev,next'
+            right: 'today prev,next'
         }
     });
 
-    $(id).fullCalendar('render')
+    window.calendars.online_activity.render();
 }
 
 function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries) {
@@ -401,36 +406,40 @@ function formatTimeAmount(ms) {
     return out;
 }
 
-function sessionCalendar(id, events, firstDay) {
-    $(id).fullCalendar({
+function sessionCalendar(id, event_data, firstDay) {
+    window.calendars.sessions = new FullCalendar.Calendar(document.querySelector(id), {
+        themeSystem: 'bootstrap',
         eventColor: '#009688',
-        eventLimit: 4,
+        dayMaxEventRows: 4,
         firstDay: firstDay,
+        initialView: 'dayGridMonth',
 
-        eventRender: function (eventObj, $el) {
-            $el.popover({
-                content: eventObj.title,
+        eventDidMount: function (info) {
+            $(info.el).popover({
+                content: info.event.title,
                 trigger: 'hover',
                 placement: 'top',
                 container: 'body'
             });
         },
 
-        events: events,
+        events: function (fetchInfo, successCallback, failureCallback) {
+            successCallback(event_data)
+        },
 
         navLinks: true,
         height: 450,
         contentHeight: 445,
-        header: {
+        headerToolbar: {
             left: 'title',
             center: '',
-            right: 'month agendaWeek agendaDay today prev,next'
+            right: 'dayGridMonth dayGridWeek dayGridDay today prev,next'
         }
     });
 
     setTimeout(function () {
-        $(id).fullCalendar('render')
-    }, 1000);
+        window.calendars.sessions.render();
+    }, 0);
 }
 
 function stackChart(id, categories, series, label) {

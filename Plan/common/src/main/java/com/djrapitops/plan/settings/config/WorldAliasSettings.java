@@ -27,8 +27,9 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 import dagger.Lazy;
 
@@ -52,7 +53,7 @@ public class WorldAliasSettings {
     private final Supplier<Formatter<Double>> percentageFormatter;
     private final Lazy<Locale> locale;
     private final Processing processing;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public WorldAliasSettings(
@@ -60,12 +61,12 @@ public class WorldAliasSettings {
             Lazy<Locale> locale,
             Lazy<Formatters> formatters,
             Processing processing,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.locale = locale;
         this.processing = processing;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         percentageFormatter = () -> formatters.get().percentage();
     }
@@ -93,7 +94,7 @@ public class WorldAliasSettings {
                 try {
                     aliasSect.save();
                 } catch (IOException e) {
-                    errorHandler.log(L.WARN, WorldAliasSettings.class, e);
+                    errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.get().getConfigFilePath()).build());
                 }
             });
         }

@@ -18,12 +18,8 @@ package com.djrapitops.plan.modules.nukkit;
 
 import com.djrapitops.plan.PlanNukkit;
 import com.djrapitops.plan.PlanPlugin;
-import com.djrapitops.plan.commands.PlanCommand;
-import com.djrapitops.plugin.command.CommandNode;
 import dagger.Binds;
 import dagger.Module;
-
-import javax.inject.Named;
 
 /**
  * Dagger module for binding Plan instance.
@@ -36,7 +32,4 @@ public interface NukkitPlanModule {
     @Binds
     PlanPlugin bindPlanPlugin(PlanNukkit plugin);
 
-    @Binds
-    @Named("mainCommand")
-    CommandNode bindMainCommand(PlanCommand command);
 }

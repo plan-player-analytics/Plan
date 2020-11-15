@@ -37,13 +37,10 @@ public abstract class DateFormatter implements Formatter<Long> {
     protected final PlanConfig config;
     protected final Locale locale;
 
-    public DateFormatter(PlanConfig config, Locale locale) {
+    protected DateFormatter(PlanConfig config, Locale locale) {
         this.config = config;
         this.locale = locale;
     }
-
-    @Override
-    public abstract String apply(Long value);
 
     protected String format(long epochMs, String format) {
         String localeSetting = config.get(PluginSettings.LOCALE);

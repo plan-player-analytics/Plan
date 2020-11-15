@@ -18,7 +18,7 @@ package com.djrapitops.plan.addons.placeholderapi;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,20 +28,20 @@ public class BukkitPlaceholderRegistrar {
 
     private final PlanPlaceholders placeholders;
     private final PlanSystem system;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public BukkitPlaceholderRegistrar(
             PlanPlaceholders placeholders,
             PlanSystem system,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.placeholders = placeholders;
         this.system = system;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public void register() {
-        new PlanPlaceholderExtension(placeholders, system, errorHandler).register();
+        new PlanPlaceholderExtension(placeholders, system, errorLogger).register();
     }
 }

@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class LoginResolver implements NoAuthResolver {
 
-    private DBSystem dbSystem;
+    private final DBSystem dbSystem;
 
     @Inject
     public LoginResolver(
@@ -61,7 +61,7 @@ public class LoginResolver implements NoAuthResolver {
     public Response getResponse(String cookie) {
         return Response.builder()
                 .setStatus(200)
-                .setHeader("Set-Cookie", "auth=" + cookie + "; Path=/; Max-Age=" + TimeUnit.HOURS.toSeconds(2L))
+                .setHeader("Set-Cookie", "auth=" + cookie + "; Path=/; Max-Age=" + TimeUnit.HOURS.toSeconds(2L) + "; SameSite=Lax; Secure;")
                 .setJSONContent(Collections.singletonMap("success", true))
                 .build();
     }

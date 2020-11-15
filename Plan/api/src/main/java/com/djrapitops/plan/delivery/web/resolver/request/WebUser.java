@@ -59,4 +59,13 @@ public final class WebUser {
     public String getUsername() {
         return username;
     }
+
+    @Override
+    public String toString() {
+        return "WebUser{" +
+                "playerName='" + playerName + '\'' +
+                ", username='" + username + '\'' +
+                ", permissions=" + permissions +
+                '}';
+    }
 }

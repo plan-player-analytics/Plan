@@ -16,10 +16,9 @@
  */
 package com.djrapitops.plan.settings.config.paths;
 
-import com.djrapitops.plan.settings.config.paths.key.BooleanSetting;
-import com.djrapitops.plan.settings.config.paths.key.IntegerSetting;
-import com.djrapitops.plan.settings.config.paths.key.Setting;
-import com.djrapitops.plan.settings.config.paths.key.StringSetting;
+import com.djrapitops.plan.settings.config.paths.key.*;
+
+import java.util.List;
 
 /**
  * {@link Setting} values that are in "Webserver" section.
@@ -37,6 +36,8 @@ public class WebserverSettings {
     public static final Setting<String> CERTIFICATE_KEYPASS = new StringSetting("Webserver.Security.SSL_certificate.Key_pass");
     public static final Setting<String> CERTIFICATE_STOREPASS = new StringSetting("Webserver.Security.SSL_certificate.Store_pass");
     public static final Setting<String> CERTIFICATE_ALIAS = new StringSetting("Webserver.Security.SSL_certificate.Alias");
+    public static final Setting<Boolean> IP_WHITELIST = new BooleanSetting("Webserver.Security.IP_whitelist");
+    public static final Setting<List<String>> WHITELIST = new StringListSetting("Webserver.Security.IP_whitelist.Whitelist");
     public static final Setting<Boolean> DISABLED = new BooleanSetting("Webserver.Disable_Webserver");
     public static final Setting<Boolean> DISABLED_AUTHENTICATION = new BooleanSetting("Webserver.Security.Disable_authentication");
     public static final Setting<String> EXTERNAL_LINK = new StringSetting("Webserver.External_Webserver_address");

@@ -24,8 +24,9 @@ import cn.nukkit.event.player.*;
 import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -46,11 +47,14 @@ public class NukkitAFKListener implements Listener {
     static AFKTracker AFK_TRACKER;
 
     private final Map<UUID, Boolean> ignorePermissionInfo;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public NukkitAFKListener(PlanConfig config, ErrorHandler errorHandler) {
-        this.errorHandler = errorHandler;
+    public NukkitAFKListener(
+            PlanConfig config,
+            ErrorLogger errorLogger
+    ) {
+        this.errorLogger = errorLogger;
         this.ignorePermissionInfo = new HashMap<>();
 
         NukkitAFKListener.assignAFKTracker(config);
@@ -79,7 +83,7 @@ public class NukkitAFKListener implements Listener {
 
             AFK_TRACKER.performedAction(uuid, time);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

@@ -30,9 +30,9 @@ import com.djrapitops.plan.storage.database.queries.objects.NewerConfigQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 import com.djrapitops.plugin.task.RunnableFactory;
 
@@ -66,7 +66,7 @@ public class NetworkSettingManager implements SubSystem {
     private final RunnableFactory runnableFactory;
     private final PlanConfig config;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private File serverSettingsFolder;
 
@@ -80,7 +80,7 @@ public class NetworkSettingManager implements SubSystem {
             ServerInfo serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.files = files;
         this.config = config;
@@ -89,11 +89,11 @@ public class NetworkSettingManager implements SubSystem {
         this.runnableFactory = runnableFactory;
         this.logger = logger;
 
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         serverSettingsFolder = createServerSettingsFolder();
 
         watcher = prepareFileWatcher();
@@ -117,11 +117,11 @@ public class NetworkSettingManager implements SubSystem {
     }
 
     private FileWatcher prepareFileWatcher() {
-        FileWatcher fileWatcher = new FileWatcher(serverSettingsFolder, errorHandler);
+        FileWatcher fileWatcher = new FileWatcher(serverSettingsFolder, errorLogger);
 
-        File[] files = getConfigFiles();
-        if (files != null) {
-            for (File file : files) {
+        File[] configFiles = getConfigFiles();
+        if (configFiles != null) {
+            for (File file : configFiles) {
                 addFileToWatchList(fileWatcher, file);
             }
         }
@@ -153,7 +153,7 @@ public class NetworkSettingManager implements SubSystem {
         }).runTaskTimerAsynchronously(checkPeriod, checkPeriod);
     }
 
-    private File createServerSettingsFolder() throws EnableException {
+    private File createServerSettingsFolder() {
         try {
             File serverConfigFolder = files.getFileFromPluginFolder("serverConfiguration");
             Files.createDirectories(serverConfigFolder.toPath());

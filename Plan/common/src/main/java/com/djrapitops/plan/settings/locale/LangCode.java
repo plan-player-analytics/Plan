@@ -25,13 +25,15 @@ public enum LangCode {
 
     CUSTOM("Custom", ""),
     EN("English", "Rsl1122"),
-    ES("Spanish", "Catalina"),
-    CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f) & qsefthuopq"),
-    DE("Deutch", "Eyremba & fuzzlemann & Morsmorse"),
+    ES("Spanish", "Catalina & itaquito & Elguerrero"),
+    CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f) & qsefthuopq & shaokeyibb & Fur_xia"),
+    CS("Czech", "Shadowhackercz"),
+    DE("Deutsch", "Eyremba & fuzzlemann & Morsmorse & hallo1142"),
     FI("Finnish", "Rsl1122"),
     FR("French", "CyanTech & Aurelien & Nogapra"),
-    IT("Italian", "Malachiel"),
+    IT("Italian", "Malachiel & Mastory_Md5"),
     JA("Japanese", "yukieji"),
+    RU("Russian", "Saph1s"),
     TR("Turkish", "TDJisvan"),
     PT_BR("Portuguese (Brazil)", "jvmuller");
 

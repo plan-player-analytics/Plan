@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.commands.PlanProxyCommand;
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ProxySuperClassBindingModule;
@@ -49,7 +49,7 @@ import javax.inject.Singleton;
 })
 public interface PlanBungeeComponent {
 
-    PlanProxyCommand planCommand();
+    PlanCommand planCommand();
 
     PlanSystem system();
 

@@ -16,23 +16,21 @@
  */
 package com.djrapitops.plan.settings;
 
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
-import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.network.ServerSettingsManager;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 
 /**
- * Sponge ConfigSystem that disables WebServer and Geolocations on first enable.
+ * Sponge ConfigSystem that disables Geolocations on first enable.
  *
  * @author Rsl1122
  */
@@ -49,13 +47,13 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
             ServerSettingsManager serverSettingsManager,
             Theme theme,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        super(files, config, configUpdater, serverSettingsManager, theme, logger, errorHandler);
+        super(files, config, configUpdater, serverSettingsManager, theme, logger, errorLogger);
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         firstInstall = !files.getConfigFile().exists();
         super.enable();
     }
@@ -64,11 +62,9 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
     protected void copyDefaults() throws IOException {
         super.copyDefaults();
         if (firstInstall) {
-            logger.info("§eWebServer and Geolocations disabled by default on Sponge servers. You can enable them in the config:");
-            logger.info("§e  " + WebserverSettings.DISABLED.getPath());
+            logger.info("§eGeolocations disabled by default on Sponge servers. You can enable them in the config:");
             logger.info("§e  " + DataGatheringSettings.GEOLOCATIONS.getPath());
 
-            config.set(WebserverSettings.DISABLED, true);
             config.set(DataGatheringSettings.GEOLOCATIONS, false);
             config.save();
         }

@@ -48,6 +48,8 @@ public enum PluginLang implements Lang {
     WEB_SERVER_NOTIFY_USING_PROXY_MODE("WebServer - Notify Using Proxy", "WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Link points to the Proxy"),
     WEB_SERVER_NOTIFY_HTTP_USER_AUTH("WebServer - Notify HTTP User Auth", "WebServer: User Authorization Disabled! (Not secure over HTTP)"),
     WEB_SERVER_NOTIFY_HTTPS_USER_AUTH("WebServer - Notify HTTPS User Auth", "WebServer: User Authorization Disabled! (Disabled in config)"),
+    WEB_SERVER_NOTIFY_IP_WHITELIST("Webserver - Notify IP Whitelist", "Webserver: IP Whitelist is enabled."),
+    WEB_SERVER_NOTIFY_IP_WHITELIST_BLOCK("Webserver - Notify IP Whitelist Block", "Webserver: ${0} was denied access to '${1}'. (not whitelisted)"),
 
     DISABLED("Disable", "Player Analytics Disabled."),
     DISABLED_WEB_SERVER("Disable - WebServer", "Webserver has been disabled."),

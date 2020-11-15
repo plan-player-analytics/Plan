@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Abstract class representing a Database.
  * <p>
@@ -27,8 +29,9 @@ public abstract class AbstractDatabase implements Database {
 
     protected final DBAccessLock accessLock;
     private State state;
+    private final AtomicInteger heavyLoadDelayMs = new AtomicInteger(0);
 
-    public AbstractDatabase() {
+    protected AbstractDatabase() {
         state = State.CLOSED;
         accessLock = new DBAccessLock(this);
     }
@@ -41,5 +44,21 @@ public abstract class AbstractDatabase implements Database {
     public void setState(State state) {
         this.state = state;
         accessLock.operabilityChanged();
+    }
+
+    public boolean isUnderHeavyLoad() {
+        return heavyLoadDelayMs.get() != 0;
+    }
+
+    public void increaseHeavyLoadDelay() {
+        heavyLoadDelayMs.incrementAndGet();
+    }
+
+    public void assumeNoMoreHeavyLoad() {
+        this.heavyLoadDelayMs.set(0);
+    }
+
+    public int getHeavyLoadDelayMs() {
+        return heavyLoadDelayMs.get();
     }
 }

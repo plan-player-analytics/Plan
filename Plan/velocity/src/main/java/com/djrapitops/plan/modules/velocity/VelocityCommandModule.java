@@ -27,7 +27,7 @@ public class VelocityCommandModule {
     @Provides
     @Named("mainCommandName")
     String provideMainCommandName() {
-        return "planvelocity";
+        return "planproxy";
     }
 
 }

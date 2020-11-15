@@ -17,6 +17,7 @@
 package com.djrapitops.plan.identification;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -26,21 +27,23 @@ import java.util.UUID;
  */
 public class Server implements Comparable<Server> {
     private final UUID uuid;
-    private int id;
+    private Integer id;
     private String name;
     private String webAddress;
-    private int maxPlayers;
 
-    public Server(int id, UUID uuid, String name, String webAddress, int maxPlayers) {
+    public Server(UUID uuid, String name, String webAddress) {
+        this(null, uuid, name, webAddress);
+    }
+
+    public Server(Integer id, UUID uuid, String name, String webAddress) {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
         this.webAddress = webAddress;
-        this.maxPlayers = maxPlayers;
     }
 
-    public int getId() {
-        return id;
+    public Optional<Integer> getId() {
+        return Optional.ofNullable(id);
     }
 
     public void setId(int id) {
@@ -71,10 +74,6 @@ public class Server implements Comparable<Server> {
         this.webAddress = webAddress;
     }
 
-    public int getMaxPlayers() {
-        return maxPlayers;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,7 +96,6 @@ public class Server implements Comparable<Server> {
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", webAddress='" + webAddress + '\'' +
-                ", maxPlayers=" + maxPlayers +
                 '}';
     }
 
@@ -114,7 +112,4 @@ public class Server implements Comparable<Server> {
         return !isProxy();
     }
 
-    public void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = maxPlayers;
-    }
 }

@@ -18,8 +18,8 @@ package utilities.mocks;
 
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.google.common.util.concurrent.MoreExecutors;
 import dagger.Lazy;
 
@@ -36,8 +36,12 @@ import java.util.concurrent.ExecutorService;
 public class TestProcessing extends Processing {
 
     @Inject
-    public TestProcessing(Lazy<Locale> locale, PluginLogger logger, ErrorHandler errorHandler) {
-        super(locale, logger, errorHandler);
+    public TestProcessing(
+            Lazy<Locale> locale,
+            PluginLogger logger,
+            ErrorLogger errorLogger
+    ) {
+        super(locale, logger, errorLogger);
     }
 
     @Override

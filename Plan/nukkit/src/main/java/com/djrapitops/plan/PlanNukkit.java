@@ -16,18 +16,26 @@
  */
 package com.djrapitops.plan;
 
+import cn.nukkit.Player;
+import cn.nukkit.command.Command;
+import cn.nukkit.command.CommandSender;
 import com.djrapitops.plan.addons.placeholderapi.NukkitPlaceholderRegistrar;
-import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.commands.use.*;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plugin.NukkitPlugin;
 import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
+import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.task.AbsRunnable;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +49,8 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
     private PlanSystem system;
     private Locale locale;
     private ServerShutdownSave serverShutdownSave;
+
+    private final Map<String, Subcommand> commands = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -71,9 +81,8 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        PlanCommand command = component.planCommand();
-        command.registerCommands();
-        registerCommand("plan", command);
+
+        registerCommand(component.planCommand().build());
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
@@ -100,6 +109,35 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
     }
 
     @Override
+    public boolean onCommand(CommandSender actualSender, Command actualCommand, String label, String[] args) {
+        String name = actualCommand.getName();
+        Subcommand command = commands.get(name);
+        if (command == null) return false;
+
+        CMDSender sender;
+        if (actualSender instanceof Player) {
+            sender = new NukkitPlayerCMDSender((Player) actualSender);
+        } else {
+            sender = new NukkitCMDSender(actualSender);
+        }
+
+        runnableFactory.create("", new AbsRunnable() {
+            @Override
+            public void run() {
+                try {
+                    command.getExecutor().accept(sender, new Arguments(args));
+                } catch (Exception e) {
+                    system.getErrorLogger().log(L.ERROR, e, ErrorContext.builder()
+                            .related(sender.getClass())
+                            .related(label + " " + Arrays.toString(args))
+                            .build());
+                }
+            }
+        }).runTaskAsynchronously();
+        return true;
+    }
+
+    @Override
     public String getVersion() {
         return getDescription().getVersion();
     }
@@ -112,6 +150,17 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
     @Override
     public boolean isReloading() {
         return reloading;
+    }
+
+    @Override
+    public void registerCommand(Subcommand command) {
+        if (command == null) {
+            logger.warn("Attempted to register a null command!");
+            return;
+        }
+        for (String name : command.getAliases()) {
+            commands.put(name, command);
+        }
     }
 
     @Override

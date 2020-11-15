@@ -22,22 +22,36 @@ package com.djrapitops.plan.settings;
  * @author Rsl1122
  */
 public enum Permissions {
-
-    HELP("plan.?"),
-
-    INSPECT("plan.inspect.base"),
-    QUICK_INSPECT("plan.qinspect.base"),
-    INSPECT_OTHER("plan.inspect.other"),
-    QUICK_INSPECT_OTHER("plan.qinspect.other"),
-
-    ANALYZE("plan.analyze"),
-
+    SERVER("plan.server"),
+    SERVERS("plan.servers"),
+    NETWORK("plan.network"),
+    PLAYER_SELF("plan.player.self"),
+    PLAYER_OTHER("plan.player.other"),
     SEARCH("plan.search"),
-
-    RELOAD("plan.reload"),
+    INGAME_SELF("plan.ingame.self"),
+    INGAME_OTHER("plan.ingame.other"),
+    REGISTER_SELF("plan.register.self"),
+    REGISTER_OTHER("plan.register.other"),
+    UNREGISTER_SELF("plan.unregister.self"),
+    UNREGISTER_OTHER("plan.unregister.other"),
     INFO("plan.info"),
-    MANAGE("plan.manage"),
-    MANAGE_WEB("plan.webmanage"),
+    RELOAD("plan.reload"),
+    DISABLE("plan.disable"),
+    USERS("plan.users"),
+
+    DATA_BASE("plan.data.base"),
+    DATA_BACKUP("plan.data.backup"),
+    DATA_RESTORE("plan.data.restore"),
+    DATA_MOVE("plan.data.move"),
+    DATA_HOTSWAP("plan.data.hotswap"),
+    DATA_CLEAR("plan.data.clear"),
+    DATA_REMOVE_PLAYER("plan.data.remove.player"),
+    DATA_REMOVE_SERVER("plan.data.remove.server"),
+    DATA_EXPORT("plan.data.export"),
+    DATA_IMPORT("plan.data.import"),
+
+    JSON_SELF("plan.json.self"),
+    JSON_OTHER("plan.json.other"),
 
     IGNORE_COMMAND_USE("plan.ignore.commanduse"),
     IGNORE_AFK("plan.ignore.afk");
@@ -63,6 +77,15 @@ public enum Permissions {
      * @return permission node eg. plan.inspect.base
      */
     public String getPerm() {
-        return getPermission();
+        return permission;
+    }
+
+    /**
+     * Returns the permission node in plugin.yml.
+     *
+     * @return permission node eg. plan.inspect.base
+     */
+    public String get() {
+        return permission;
     }
 }

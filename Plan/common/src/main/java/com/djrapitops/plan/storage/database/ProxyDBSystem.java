@@ -17,9 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,9 +36,7 @@ public class ProxyDBSystem extends DBSystem {
             MySQLDB mySQLDB,
             SQLiteDB.Factory sqLiteDB,
             H2DB.Factory h2DB,
-            PluginLogger logger,
-            Timings timings,
-            ErrorHandler errorHandler
+            PluginLogger logger
     ) {
         super(locale, sqLiteDB, h2DB, logger);
         databases.add(mySQLDB);

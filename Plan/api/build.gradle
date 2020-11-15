@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+    compileOnly group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     compileOnly "com.google.code.gson:gson:$gsonVersion"
 }
 

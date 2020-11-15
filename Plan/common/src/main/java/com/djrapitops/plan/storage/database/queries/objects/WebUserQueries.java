@@ -146,4 +146,31 @@ public class WebUserQueries {
             }
         };
     }
+
+    public static Query<List<User>> matchUsers(String partOfUsername) {
+        String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME +
+                LEFT_JOIN + UsersTable.TABLE_NAME + " on " + SecurityTable.LINKED_TO + "=" + UsersTable.USER_UUID +
+                WHERE + "LOWER(" + SecurityTable.USERNAME + ") LIKE LOWER(?)";
+        return new QueryStatement<List<User>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, '%' + partOfUsername + '%');
+            }
+
+            @Override
+            public List<User> processResults(ResultSet set) throws SQLException {
+                List<User> users = new ArrayList<>();
+                while (set.next()) {
+                    String username = set.getString(SecurityTable.USERNAME);
+                    String linkedTo = set.getString(UsersTable.USER_NAME);
+                    UUID linkedToUUID = linkedTo != null ? UUID.fromString(set.getString(SecurityTable.LINKED_TO)) : null;
+                    String passwordHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
+                    int permissionLevel = set.getInt(SecurityTable.PERMISSION_LEVEL);
+                    List<String> permissions = WebUser.getPermissionsForLevel(permissionLevel);
+                    users.add(new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionLevel, permissions));
+                }
+                return users;
+            }
+        };
+    }
 }

@@ -56,7 +56,7 @@ public class StoreConfigTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        if (query(isConfigStored())) {
+        if (Boolean.TRUE.equals(query(isConfigStored()))) {
             execute(updateConfig());
         } else {
             execute(insertConfig());

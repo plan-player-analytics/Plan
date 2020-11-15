@@ -42,7 +42,6 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransac
 import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import org.junit.jupiter.api.Test;
 import utilities.FieldFetcher;
 import utilities.RandomData;
@@ -131,15 +130,14 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         execute(DataStoreQueries.storeSession(session));
 
         TestPluginLogger logger = new TestPluginLogger();
-        ConsoleErrorLogger errorHandler = new ConsoleErrorLogger(logger);
         new DBCleanTask(
-                system().getConfigSystem().getConfig(),
+                config(),
                 new Locale(),
-                system().getDatabaseSystem(),
-                new QuerySvc(system().getDatabaseSystem(), system().getServerInfo(), logger, errorHandler),
-                system().getServerInfo(),
+                dbSystem(),
+                new QuerySvc(dbSystem(), serverInfo(), null),
+                serverInfo(),
                 logger,
-                errorHandler
+                null
         ).cleanOldPlayers(db());
 
         Collection<BaseUser> found = db().query(BaseUserQueries.fetchServerBaseUsers(serverUUID()));
@@ -175,7 +173,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void configIsStoredInTheDatabase() {
-        PlanConfig config = system().getConfigSystem().getConfig();
+        PlanConfig config = config();
 
         db().executeTransaction(new StoreConfigTransaction(serverUUID(), config, System.currentTimeMillis()));
 
@@ -189,7 +187,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         configIsStoredInTheDatabase();
         long savedMs = System.currentTimeMillis();
 
-        PlanConfig config = system().getConfigSystem().getConfig();
+        PlanConfig config = config();
 
         db().executeTransaction(new StoreConfigTransaction(serverUUID(), config, System.currentTimeMillis()));
 
@@ -258,7 +256,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset) / 1000))) + " as date";
 
         System.out.println(testSQL);
-        String expected = system().getDeliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
+        String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
         String result = db.query(new QueryAllStatement<String>(testSQL) {
             @Override
             public String processResults(ResultSet set) throws SQLException {

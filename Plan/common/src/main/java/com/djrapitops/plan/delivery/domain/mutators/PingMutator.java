@@ -92,6 +92,7 @@ public class PingMutator {
             for (Session session : sessionsOfServer) {
                 long start = session.getDate();
                 Long end = session.getValue(SessionKeys.END).orElseGet(System::currentTimeMillis);
+                if (end < start) continue;
                 // Calculate average ping for each session with a Ping submap
                 SortedMap<Long, Ping> duringSession = pingOfServer.subMap(start, end);
                 for (Ping ping : duringSession.values()) {

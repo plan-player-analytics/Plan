@@ -10,10 +10,10 @@ plugins {
     id "java"
     id "jacoco"
     id "checkstyle"
-    id "org.sonarqube" version "2.8"
+    id "org.sonarqube" version "3.0"
     id "net.ltgt.apt" version "0.21"
     id "net.ltgt.apt-idea" version "0.21"
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
 apply plugin: 'nebula-aggregate-javadocs'
@@ -63,30 +63,30 @@ subprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
-    ext.daggerVersion = "2.27"
-    ext.daggerCompilerVersion = "2.27"
+    ext.daggerVersion = "2.29.1"
+    ext.daggerCompilerVersion = "2.29.1"
 
     ext.abstractPluginFrameworkVersion = "3.4.2"
 
     ext.bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
     ext.spigotVersion = "1.13.2-R0.1-SNAPSHOT"
     ext.paperVersion = "1.13.2-R0.1-SNAPSHOT"
-    ext.spongeVersion = "7.1.0"
+    ext.spongeVersion = "7.3.0"
     ext.nukkitVersion = "1.0-SNAPSHOT"
-    ext.bungeeVersion = "1.13-SNAPSHOT"
-    ext.velocityVersion = "1.0-SNAPSHOT"
+    ext.bungeeVersion = "1.16-R0.3"
+    ext.velocityVersion = "1.0.0-SNAPSHOT"
     ext.redisBungeeVersion = "0.3.8-SNAPSHOT"
 
-    ext.httpClientVersion = "4.5.12"
-    ext.commonsTextVersion = "1.8"
+    ext.httpClientVersion = "4.5.13"
+    ext.commonsTextVersion = "1.9"
     ext.commonsCompressVersion = "1.20"
     ext.htmlCompressorVersion = "1.5.2"
     ext.caffeineVersion = "2.8.0"
     ext.h2Version = "1.4.199"
-    ext.mysqlVersion = "8.0.20"
-    ext.hikariVersion = "3.4.3"
+    ext.mysqlVersion = "8.0.22"
+    ext.hikariVersion = "3.4.5"
     ext.slf4jVersion = "1.7.30"
-    ext.geoIpVersion = "2.13.1"
+    ext.geoIpVersion = "2.15.0"
     ext.gsonVersion = "2.8.6"
     ext.guavaVersion = "28.0-jre"
     ext.bstatsVersion = "1.4"
@@ -131,16 +131,16 @@ subprojects {
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.6.2"   // JUnit 5
-        testCompile "org.junit.jupiter:junit-jupiter-params:5.6.2"   // JUnit 5, parameterized tests
-        testCompile "org.mockito:mockito-core:3.3.3"                // Mockito Core
-        testCompile "org.mockito:mockito-junit-jupiter:3.3.3"       // Mockito JUnit 5 Extension
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.0"   // JUnit 5
+        testCompile "org.junit.jupiter:junit-jupiter-params:5.7.0"   // JUnit 5, parameterized tests
+        testCompile "org.mockito:mockito-core:3.6.0"                // Mockito Core
+        testCompile "org.mockito:mockito-junit-jupiter:3.6.0"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testCompile "org.xerial:sqlite-jdbc:3.31.1"     // SQLite
+        testCompile "org.xerial:sqlite-jdbc:3.32.3.2"     // SQLite
         testCompile "mysql:mysql-connector-java:$mysqlVersion" // MySQL
     }
 
@@ -165,6 +165,7 @@ subprojects {
     }
 
     checkstyle {
+        toolVersion "8.33"
         getConfigDirectory().set file("$rootProject.projectDir/config/checkstyle")
     }
 
@@ -174,11 +175,16 @@ subprojects {
             // xml.destination file("${buildDir}/jacoco/report.xml")
         }
     }
+
+    plugins.withType(JacocoPlugin) {
+        tasks["test"].finalizedBy 'jacocoTestReport'
+    }
 }
 
 sonarqube {
     properties {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
+        property "sonar.coverage.jacoco.xmlReportPaths", "**/build/report/jacoco/test/jacocoTestReport.xml"
     }
 }

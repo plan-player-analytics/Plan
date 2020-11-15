@@ -22,9 +22,8 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,8 +44,7 @@ public class ExportScheduler {
     private final TaskSystem taskSystem;
 
     private final Exporter exporter;
-    private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public ExportScheduler(
@@ -54,15 +52,13 @@ public class ExportScheduler {
             DBSystem dbSystem,
             TaskSystem taskSystem,
             Exporter exporter,
-            PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
         this.taskSystem = taskSystem;
         this.exporter = exporter;
-        this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public void scheduleExport() {
@@ -73,7 +69,7 @@ public class ExportScheduler {
     private void schedulePlayersPageExport() {
         long period = TimeAmount.toTicks(config.get(ExportSettings.EXPORT_PERIOD), TimeUnit.MILLISECONDS);
         taskSystem.registerTask("Players page export",
-                new ExportTask(exporter, Exporter::exportPlayersPage, logger, errorHandler)
+                new ExportTask(exporter, Exporter::exportPlayersPage, errorLogger)
         ).runTaskTimerAsynchronously(0L, period);
     }
 
@@ -89,7 +85,7 @@ public class ExportScheduler {
 
         Optional<Server> proxy = servers.stream().filter(Server::isProxy).findFirst();
         proxy.ifPresent(mainServer -> taskSystem.registerTask("Network export",
-                new ExportTask(exporter, exporter -> exporter.exportServerPage(mainServer), logger, errorHandler))
+                new ExportTask(exporter, same -> same.exportServerPage(mainServer), errorLogger))
                 .runTaskTimerAsynchronously(0L, period)
         );
 
@@ -99,7 +95,7 @@ public class ExportScheduler {
                     new ExportTask(exporter, same -> {
                         same.exportServerPage(server);
                         same.exportServerJSON(server);
-                    }, logger, errorHandler))
+                    }, errorLogger))
                     .runTaskTimerAsynchronously(offset * offsetMultiplier, period);
             offsetMultiplier++;
         }

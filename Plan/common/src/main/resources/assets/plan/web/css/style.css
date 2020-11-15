@@ -759,119 +759,124 @@ div.scrollbar {
     background: rgba(0, 0, 0, 0) linear-gradient(180deg, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0.2) 100%);
 }
 
-.bg-red {
+.bg-red, body.theme-red .fc-toolbar-chunk .btn.btn-primary {
     background-color: #F44336;
     color: #fff;
 }
 
-.bg-pink {
+.bg-pink, body.theme-pink .fc-toolbar-chunk .btn.btn-primary {
     background-color: #E91E63;
     color: #fff;
 }
 
-.bg-purple {
+.bg-purple, body.theme-purple .fc-toolbar-chunk .btn.btn-primary {
     background-color: #9C27B0;
     color: #fff;
 }
 
-.bg-deep-purple {
+.bg-deep-purple, body.theme-deep-purple .fc-toolbar-chunk .btn.btn-primary {
     background-color: #673AB7;
     color: #fff;
 }
 
-.bg-indigo {
+.bg-indigo, body.theme-indigo .fc-toolbar-chunk .btn.btn-primary {
     background-color: #3F51B5;
     color: #fff;
 }
 
-.bg-blue {
+.bg-blue, body.theme-blue .fc-toolbar-chunk .btn.btn-primary {
     background-color: #2196F3;
     color: #fff;
 }
 
-.bg-light-blue {
+.bg-light-blue, body.theme-light-blue .fc-toolbar-chunk .btn.btn-primary {
     background-color: #03A9F4;
     color: #fff;
 }
 
-.bg-cyan {
+.bg-cyan, body.theme-cyan .fc-toolbar-chunk .btn.btn-primary {
     background-color: #00BCD4;
     color: #fff;
 }
 
-.bg-teal {
+.bg-teal, body.theme-teal .fc-toolbar-chunk .btn.btn-primary {
     background-color: #009688;
     color: #fff;
 }
 
-.bg-green {
+.bg-green, body.theme-green .fc-toolbar-chunk .btn.btn-primary {
     background-color: #4CAF50;
     color: #fff;
 }
 
-.bg-light-green {
+.bg-light-green, body.theme-light-green .fc-toolbar-chunk .btn.btn-primary {
     background-color: #8BC34A;
     color: #fff;
 }
 
-.bg-lime {
+.bg-lime , body.theme-lime .fc-toolbar-chunk .btn.btn-primary{
     background-color: #CDDC39;
     color: #fff;
 }
 
-.bg-yellow {
+.bg-yellow, body.theme-yellow .fc-toolbar-chunk .btn.btn-primary {
     background-color: #ffe821;
     color: #fff;
 }
 
-.bg-amber {
+.bg-amber, body.theme-amber .fc-toolbar-chunk .btn.btn-primary {
     background-color: #FFC107;
     color: #fff;
 }
 
-.bg-orange {
+.bg-orange, body.theme-orange .fc-toolbar-chunk .btn.btn-primary {
     background-color: #FF9800;
     color: #fff;
 }
 
-.bg-deep-orange {
+.bg-deep-orange, body.theme-deep-orange .fc-toolbar-chunk .btn.btn-primary {
     background-color: #FF5722;
     color: #fff;
 }
 
-.bg-brown {
+.bg-brown, body.theme-brown .fc-toolbar-chunk .btn.btn-primary {
     background-color: #795548;
     color: #fff;
 }
 
-.bg-grey {
+.bg-grey, body.theme-grey .fc-toolbar-chunk .btn.btn-primary {
     background-color: #9E9E9E;
     color: #fff;
 }
 
-.bg-blue-grey {
+.bg-blue-grey, body.theme-blue-grey .fc-toolbar-chunk .btn.btn-primary {
     background-color: #607D8B;
     color: #fff;
 }
 
-.bg-black {
+.bg-black, body.theme-black .fc-toolbar-chunk .btn.btn-primary {
     background-color: #555555;
     color: #fff;
 }
 
-.bg-white {
+.bg-white, body.theme-white .fc-toolbar-chunk .btn.btn-primary {
     background-color: #ffffff;
     color: #333;
 }
 
-.bg-plan {
+.bg-plan, body.theme-plan .fc-toolbar-chunk .btn.btn-primary {
     background-color: #368F17;
     color: #fff;
 }
 
-.bg-night {
+.bg-night, body.theme-night .fc-toolbar-chunk .btn.btn-primary {
     background-color: #44475a;
     color: #eee8d5;
+}
+
+.fc-toolbar-chunk .btn.btn-primary {
+    outline: none !important;
+    border: none !important;
 }
 
 .bg-red-outline {
@@ -1195,4 +1200,37 @@ div.scrollbar {
 .white {
     color: #FFFFFF;
     text-shadow: 0 0 8px #000;
+}
+
+/*
+Adding a translation, even though it doesn't visually
+impact the page, causes child elements with a
+position of "fixed" to be based on this element
+instead of any other parent elements. For example,
+if a child element to this element had `top: 0`
+and `left: 0`, then it would align with the top
+left of this element instead of another parent or the document body.
+See this StackOverflow answer: https://stackoverflow.com/a/20830413
+
+We use this to properly align the popover when there are more
+than 3 events in one day on the sessions calendar.
+ */
+#sessions-overview {
+    transform: translateX(0);
+}
+
+/*
+When the sidebar is visible, it offsets the popovers by its width.
+ The rules below fix that by applying a negative margin.
+ */
+body .fc-popover {
+    margin-left: -14rem;
+}
+
+body.sidebar-hidden .fc-popover {
+    margin-left: 0 !important;
+}
+
+body.sidebar-hidden .navbar-nav {
+    display: none;
 }

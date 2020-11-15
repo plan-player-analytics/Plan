@@ -22,8 +22,9 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
@@ -46,19 +47,19 @@ public class SpongeWorldChangeListener {
     private final WorldAliasSettings worldAliasSettings;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
-    private ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public SpongeWorldChangeListener(
             WorldAliasSettings worldAliasSettings,
             ServerInfo serverInfo,
             DBSystem dbSystem,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.worldAliasSettings = worldAliasSettings;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Listener(order = Order.POST)
@@ -70,7 +71,7 @@ public class SpongeWorldChangeListener {
         try {
             actOnEvent(event, player);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

@@ -31,7 +31,7 @@ public abstract class TaskSystem implements SubSystem {
 
     protected final RunnableFactory runnableFactory;
 
-    public TaskSystem(RunnableFactory runnableFactory) {
+    protected TaskSystem(RunnableFactory runnableFactory) {
         this.runnableFactory = runnableFactory;
     }
 

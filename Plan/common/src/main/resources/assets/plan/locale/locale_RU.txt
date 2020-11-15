@@ -1,0 +1,427 @@
+API - css+                                      || PageExtension: ${0} добавил таблицы стилей в ${1}, ${2}
+API - js+                                       || PageExtension: ${0} добавил JavaScript(ы) к ${1}, ${2}
+Cmd - Click Me                                  || Нажми на меня
+Cmd - Link                                      || Ссылка
+Cmd - Link Network                              || Network page: 
+Cmd - Link Player                               || Player page: 
+Cmd - Link Player JSON                          || Player json: 
+Cmd - Link Players                              || Players page: 
+Cmd - Link Register                             || Register page: 
+Cmd - Link Server                               || Server page: 
+CMD Arg - backup-file                           || Name of the backup file (case sensitive)
+CMD Arg - code                                  || Code used to finalize registration.
+CMD Arg - db type backup                        || Type of the database to backup. Current database is used if not specified.
+CMD Arg - db type clear                         || Type of the database to remove all data from.
+CMD Arg - db type hotswap                       || Type of the database to start using.
+CMD Arg - db type move from                     || Type of the database to move data from.
+CMD Arg - db type move to                       || Type of the database to move data to. Can not be same as previous.
+CMD Arg - db type restore                       || Type of the database to restore to. Current database is used if not specified.
+CMD Arg - feature                               || Name of the feature to disable: ${0}
+CMD Arg - player identifier                     || Name or UUID of a player
+CMD Arg - player identifier remove              || Identifier for a player that will be removed from current database.
+CMD Arg - server identifier                     || Name, ID or UUID of a server
+CMD Arg - subcommand                            || Use the command without subcommand to see help.
+CMD Arg - username                              || Username of another user. If not specified player linked user is used.
+CMD Arg Name - backup-file                      || backup-file
+CMD Arg Name - code                             || ${code}
+CMD Arg Name - export kind                      || export kind
+CMD Arg Name - feature                          || feature
+CMD Arg Name - import kind                      || import kind
+CMD Arg Name - name or uuid                     || name/uuid
+CMD Arg Name - server                           || server
+CMD Arg Name - subcommand                       || subcommand
+CMD Arg Name - username                         || username
+Cmd Confirm - accept                            || Accept
+Cmd Confirm - cancelled, no data change         || Cancelled. No data was changed.
+Cmd Confirm - cancelled, unregister             || Cancelled. '${0}' was not unregistered
+Cmd Confirm - clearing db                       || You are about to remove all Plan-data in ${0}
+Cmd Confirm - confirmation                      || Confirm: 
+Cmd Confirm - deny                              || Cancel
+Cmd Confirm - Expired                           || Confirmation expired, use the command again
+Cmd Confirm - Fail on accept                    || The accepted action errored upon execution: ${0}
+Cmd Confirm - Fail on deny                      || The denied action errored upon execution: ${0}
+Cmd Confirm - overwriting db                    || You are about to overwrite data in Plan ${0} with data in ${1}
+Cmd Confirm - remove player db                  || You are about to remove data of ${0} from ${1}
+Cmd Confirm - unregister                        || You are about to unregister '${0}' linked to ${1}
+Cmd db - creating backup                        || Creating a backup file '${0}.db' with contents of ${1}
+Cmd db - removal                                || Removing Plan-data from ${0}..
+Cmd db - removal player                         || Removing data of ${0} from ${1}..
+Cmd db - server uninstalled                     || §aIf the server is still installed, it will automatically set itself as installed in the database.
+Cmd db - write                                  || Writing to ${0}..
+Cmd Disable - Disabled                          || §aPlan сейчас отключен. Вы всё еще можете использовать reload для перезагрузки плагина.
+Cmd FAIL - Accepts only these arguments         || Accepts following as ${0}: ${1}
+Cmd FAIL - Database not open                    || §cБаза данных ${0} - Пожалуйста попробуйте снова немного позже.
+Cmd FAIL - Empty search string                  || The search string can not be empty
+Cmd FAIL - Invalid Username                     || §cПользователь не имеет UUID.
+Cmd FAIL - No Feature                           || §eОпределите функцию для отключения! (в настоящее время поддерживает ${0})
+Cmd FAIL - No Permission                        || §cУ вас нет необходимых прав.
+Cmd FAIL - No player                            || Player '${0}' was not found, they have no UUID.
+Cmd FAIL - No player register                   || Player '${0}' was not found in the database.
+Cmd FAIL - No server                            || Server '${0}' was not found from the database.
+Cmd FAIL - Require only one Argument            || §cТребуется только один аргумент ${1}
+Cmd FAIL - Requires Arguments                   || §cТребуется аргумент (${0}) ${1}
+Cmd FAIL - see config                           || see '${0}' in config.yml
+Cmd FAIL - Unknown Username                     || §cПользователь не был замечен на этом сервере
+Cmd FAIL - Users not linked                     || Пользователь не связан с вашей учетной записью, и у вас нет прав на удаление учетных записей других пользователей.
+Cmd FAIL - WebUser does not exists              || §cПользователь не существует!
+Cmd FAIL - WebUser exists                       || §cПользователь уже существует!
+Cmd Footer - Help                               || §7Hover over command or arguments or use '/${0} ?' to learn more about them.
+Cmd Header - Analysis                           || > §2Результаты анализа
+Cmd Header - Help                               || > §2/${0} Help
+Cmd Header - Info                               || > §2Аналитика игрока
+Cmd Header - Inspect                            || > §2Игрок: §f${0}
+Cmd Header - Network                            || > §2Сетевая страница
+Cmd Header - Players                            || > §2Игроки
+Cmd Header - Search                             || > §2${0} Результаты для §f${1}§2:
+Cmd Header - server list                        || id::name::uuid
+Cmd Header - Servers                            || > §2Серверы
+Cmd Header - web user list                      || username::linked to::permission level
+Cmd Header - Web Users                          || > §2${0} Веб-пользователи
+Cmd Info - Bungee Connection                    ||   §2Подключен к прокси: §f${0}
+Cmd Info - Database                             ||   §2Текущая база данных: §f${0}
+Cmd Info - Reload Complete                      || §aПерезагрузка завершена
+Cmd Info - Reload Failed                        || §cЧто-то пошло не так во время перезагрузки плагина, рекомендуется перезагрузка.
+Cmd Info - Update                               ||   §2Доступно обновление: §f${0}
+Cmd Info - Version                              ||   §2Версия: §f${0}
+Cmd network - No network                        || Server is not connected to a network. The link redirects to server page.
+Cmd Notify - No Address                         || §eАдрес недоступен - используется localhost в качестве запасного. Настройте 'Alternative_IP'.
+Cmd Notify - No WebUser                         || Возможно, вы не имеете веб-пользователя, используйте /plan register <password>
+Cmd Notify - WebUser register                   || Зарегистрирован новый пользователь: '${0}' Уровень прав: ${1}
+Cmd Qinspect - Active Playtime                  ||   §2Активное время игры: §f${0}
+Cmd Qinspect - Activity Index                   ||   §2Индекс активности: §f${0} | ${1}
+Cmd Qinspect - AFK Playtime                     ||   §2Время AFK: §f${0}
+Cmd Qinspect - Deaths                           ||   §2Смерти: §f${0}
+Cmd Qinspect - Geolocation                      ||   §2Присоединился из: §f${0}
+Cmd Qinspect - Last Seen                        ||   §2Последнее посещение: §f${0}
+Cmd Qinspect - Longest Session                  ||   §2Самая длинная сессия: §f${0}
+Cmd Qinspect - Mob Kills                        ||   §2Убито мобов: §f${0}
+Cmd Qinspect - Player Kills                     ||   §2Убито игроков: §f${0}
+Cmd Qinspect - Playtime                         ||   §2Время игры: §f${0}
+Cmd Qinspect - Registered                       ||   §2Зарегистрировался: §f${0}
+Cmd Qinspect - Times Kicked                     ||   §2Кол-во киков: §f${0}
+Cmd SUCCESS - Feature disabled                  || §aВременно отключено '${0}' до следующей перезагрузки плагина.
+Cmd SUCCESS - WebUser register                  || §aНовый пользователь (${0}) успешно добавлен!
+Cmd unregister - unregistering                  || Unregistering '${0}'..
+Cmd WARN - Database not open                    || §eБаза данных ${0} - Это может занять больше времени, чем ожидалось.
+Cmd Web - Permission Levels                     || >\§70: Доступ ко всем страницам\§71: Доступ к '/players' и всем страницам игроков\§72: Доступ к странице игрока с тем же именем пользователя, что и для веб-пользователя\§73+: Нет прав
+Command Help - /plan db                         || Manage Plan database
+Command Help - /plan db backup                  || Backup data of a database to a file
+Command Help - /plan db clear                   || Remove ALL Plan data from a database
+Command Help - /plan db hotswap                 || Быстрое изменение базы данных
+Command Help - /plan db move                    || Перемещение данных между базами данных
+Command Help - /plan db remove                  || Remove player's data from Current database
+Command Help - /plan db restore                 || Restore data from a file to a database
+Command Help - /plan db uninstalled             || Set a server as uninstalled in the database.
+Command Help - /plan disable                    || Disable the plugin or part of it
+Command Help - /plan export                     || Export html or json files manually
+Command Help - /plan import                     || Import data
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan ingame                     || Просмотр информации об игроке в игре
+Command Help - /plan json                       || View json of Player's raw data.
+Command Help - /plan network                    || Просмотр веб-страницы
+Command Help - /plan player                     || Просмотр страницы игрока
+Command Help - /plan players                    || Посмотреть страницу с игроками
+Command Help - /plan register                   || Зарегистрировать веб-пользователя
+Command Help - /plan reload                     || Перезапустить Plan
+Command Help - /plan search                     || Поиск по имени игрока
+Command Help - /plan server                     || Просмотр страницы сервера
+Command Help - /plan servers                    || Список серверов в базе данных
+Command Help - /plan unregister                 || Unregister a user of Plan website
+Command Help - /plan users                      || List all web users
+Database - Apply Patch                          || Применение исправлений: ${0}..
+Database - Patches Applied                      || Все исправления базы данных успешно применены.
+Database - Patches Applied Already              || Все исправления базы данных уже применены.
+Database MySQL - Launch Options Error           || Параметры запуска были ошибочными, используются стандартные (${0})
+Database Notify - Clean                         || Удалены данные ${0} игроков.
+Database Notify - SQLite No WAL                 || Режим SQLite WAL не поддерживается на этой версии сервера, используется стандартный. Это может или не может повлиять на производительность.
+Disable                                         || Аналитика игрока отключена.
+Disable - Processing                            || Обработка критических необработанных задач. (${0})
+Disable - Processing Complete                   || Обработка завершена.
+Disable - Unsaved Session Save                  || Сохранение незавершенных сессий..
+Disable - WebServer                             || Веб-сервер был отключен.
+Enable                                          || Аналитика игрока включена.
+Enable - Database                               || ${0}-соединение с базой данных установлено.
+Enable - Notify Bad IP                          || 0.0.0.0 не является допустимым адресом, настройте параметры Alternative_IP. Могут быть даны неверные ссылки!
+Enable - Notify Empty IP                        || IP в server.properties пуст, а Alternative_IP не используется. Могут быть даны неверные ссылки!
+Enable - Notify Geolocations disabled           || Геолокационный сбор не активен. (Data.Geolocations: false)
+Enable - Notify Geolocations Internet Required  || Plan'у Требуется доступ в Интернет при первом запуске, чтобы загрузить базу геолокации GeoLite2.
+Enable - Notify Webserver disabled              || Веб-сервер не был инициализирован. (WebServer.DisableWebServer: true)
+Enable - WebServer                              || Веб-сервер работает на порте ${0} (${1})
+Enable FAIL - Database                          || ${0}-Ошибка подключения к базе данных: ${1}
+Enable FAIL - Database Patch                    || Ошибка обновления базы данных, плагин должен быть отключен. Пожалуйста, сообщите об этой проблеме
+Enable FAIL - GeoDB Write                       || Что-то пошло не так при сохранении загруженной базы геолокации GeoLite2
+Enable FAIL - WebServer (Proxy)                 || Веб-сервер не инициализирован!
+Enable FAIL - Wrong Database Type               || ${0} неподдерживаемая база данных
+HTML - COMPARING_15_DAYS                        || Сравнение 15 дней
+HTML - COMPARING_60_DAYS                        || Сравнение 30 дней назад и сейчас
+HTML - COMPARING_7_DAYS                         || Сравнение 7 дней
+HTML - DATABASE_NOT_OPEN                        || База данных не открыта, проверьте статус БД с помощью /plan info
+HTML - ERROR                                    || Неуспешная авторизация из-за ошибки
+HTML - EXPIRED_COOKIE                           || Срок действия файла cookie пользователя истек
+HTML - INDEX_ACTIVE                             || Активный
+HTML - INDEX_INACTIVE                           || Неактивный
+HTML - INDEX_IRREGULAR                          || Нерегулярный
+HTML - INDEX_REGULAR                            || Регулярный
+HTML - INDEX_VERY_ACTIVE                        || Очень активный
+HTML - KILLED                                   || Убит
+HTML - LABEL_1ST_WEAPON                         || Самое смертоносное оружие в PvP
+HTML - LABEL_2ND_WEAPON                         || 2-е PvP оружие
+HTML - LABEL_3RD_WEAPON                         || 3-е PvP оружие
+HTML - LABEL_ACTIVITY_INDEX                     || Индекс активности
+HTML - LABEL_AFK                                || AFK
+HTML - LABEL_AFK_TIME                           || Время AFK
+HTML - LABEL_AVG                                || Сред.
+HTML - LABEL_AVG_KDR                            || Сред. KDR
+HTML - LABEL_AVG_MOB_KDR                        || Сред. моб KDR
+HTML - LABEL_AVG_PLAYTIME                       || Среднее время игры
+HTML - LABEL_AVG_SESSION_LENGTH                 || Средняя продолжительность сеанса
+HTML - LABEL_AVG_TPS                            || Средний TPS
+HTML - LABEL_BANNED                             || Забанен
+HTML - LABEL_BEST_PEAK                          || Максимальный пик
+HTML - LABEL_DAY_OF_WEEK                        || День недели
+HTML - LABEL_DEATHS                             || Смерти
+HTML - LABEL_DOWNTIME                           || Время простоя
+HTML - LABEL_DURING_LOW_TPS                     || Во время низкого TPS:
+HTML - LABEL_ENTITIES                           || Объекты
+HTML - LABEL_FAVORITE_SERVER                    || Любимый сервер
+HTML - LABEL_FIRST_SESSION_LENGTH               || Продолжительность первого сеанса
+HTML - LABEL_FREE_DISK_SPACE                    || Свободное дисковое пространство
+HTML - LABEL_INACTIVE                           || Неактивный
+HTML - LABEL_LAST_PEAK                          || Последний Пик
+HTML - LABEL_LAST_SEEN                          || Последнее посещение
+HTML - LABEL_LOADED_CHUNKS                      || Загруженные чанки
+HTML - LABEL_LOADED_ENTITIES                    || Загруженные объекты
+HTML - LABEL_LONE_JOINS                         || Одиночка присоеденился
+HTML - LABEL_LONE_NEW_JOINS                     || Одинокий новичок присоединяется
+HTML - LABEL_LONGEST_SESSION                    || Самая длинная сессия
+HTML - LABEL_LOW_TPS                            || Низкий TPS
+HTML - LABEL_MAX_FREE_DISK                      || Макс. свободный диск
+HTML - LABEL_MIN_FREE_DISK                      || Мин. свободный диск
+HTML - LABEL_MOB_DEATHS                         || Смерть из-за мобов
+HTML - LABEL_MOB_KDR                            || Моб KDR
+HTML - LABEL_MOB_KILLS                          || Убийства мобов
+HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Самый активный игровой режим
+HTML - LABEL_NAME                               || Имя
+HTML - LABEL_NEW                                || Новый
+HTML - LABEL_NEW_PLAYERS                        || Новые игроки
+HTML - LABEL_NICKNAME                           || Никнейм
+HTML - LABEL_NO_SESSION_KILLS                   || Никто
+HTML - LABEL_ONLINE_FIRST_JOIN                  || Кол-во игроков онлайн при первом присоединении
+HTML - LABEL_OPERATOR                           || Оператор
+HTML - LABEL_PER_PLAYER                         || / Игрок
+HTML - LABEL_PER_REGULAR_PLAYER                 || / Постоянный игрок
+HTML - LABEL_PLAYER_DEATHS                      || Смерть из-за игроков
+HTML - LABEL_PLAYER_KILLS                       || Убито игроков
+HTML - LABEL_PLAYERS_ONLINE                     || Игроки онлайн
+HTML - LABEL_PLAYTIME                           || Время игры
+HTML - LABEL_REGISTERED                         || Зарегистрированный
+HTML - LABEL_REGISTERED_PLAYERS                 || Зарегистрированные игроки
+HTML - LABEL_REGULAR                            || Постоянный
+HTML - LABEL_REGULAR_PLAYERS                    || Постоянные игроки
+HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Сравнительная активность присоединения
+HTML - LABEL_RETENTION                          || Сохранение нового игрока
+HTML - LABEL_SERVER_DOWNTIME                    || Время простоя сервера
+HTML - LABEL_SERVER_OCCUPIED                    || Сервер занят
+HTML - LABEL_SESSION_ENDED                      || Конец сессии
+HTML - LABEL_SESSION_MEDIAN                     || Средняя сессия
+HTML - LABEL_TIMES_KICKED                       || Кол-во киков
+HTML - LABEL_TOTAL_PLAYERS                      || Всего игроков
+HTML - LABEL_TOTAL_PLAYTIME                     || Общее время игры
+HTML - LABEL_UNIQUE_PLAYERS                     || Уникальные игроки
+HTML - LABEL_WEEK_DAYS                          || 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'
+HTML - LINK_BACK_NETWORK                        || Сетевая страница
+HTML - LINK_BACK_SERVER                         || Страница сервера
+HTML - LINK_CHANGELOG                           || Просмотр журнала изменений
+HTML - LINK_DISCORD                             || Общая поддержка в Discord
+HTML - LINK_DOWNLOAD                            || Скачать
+HTML - LINK_ISSUES                              || Сообщить о проблемах
+HTML - LINK_NIGHT_MODE                          || Ночной режим
+HTML - LINK_PLAYER_PAGE                         || Страница игрока
+HTML - LINK_QUICK_VIEW                          || Быстрый просмотр
+HTML - LINK_SERVER_ANALYSIS                     || Анализ сервера
+HTML - LINK_WIKI                                || Plan Вики, туториалы и документация
+HTML - LOCAL_MACHINE                            || Локальная машина
+HTML - NAV_PLUGINS                              || Плагины
+HTML - NEW_CALENDAR                             || Новое:
+HTML - NO_KILLS                                 || Нет убийств
+HTML - NO_USER_PRESENT                          || Пользовательский файл cookie отсутствует
+HTML - OFFLINE                                  ||  Не в сети
+HTML - ONLINE                                   ||  В сети
+HTML - PER_DAY                                  || / День
+HTML - PLAYERS_TEXT                             || Игроки
+HTML - SESSION                                  || Сессия
+HTML - SIDE_GEOLOCATIONS                        || Геолокация
+HTML - SIDE_INFORMATION                         || ИНФОРМАЦИЯ
+HTML - SIDE_NETWORK_OVERVIEW                    || Обзор сети
+HTML - SIDE_OVERVIEW                            || Обзор
+HTML - SIDE_PERFORMANCE                         || Производительность
+HTML - SIDE_PLAYER_LIST                         || Список игроков
+HTML - SIDE_PLAYERBASE                          || База игроков
+HTML - SIDE_PLAYERBASE_OVERVIEW                 || Обзор базы игроков
+HTML - SIDE_PLUGINS                             || ПЛАГИНЫ
+HTML - SIDE_PVP_PVE                             || PvP & PvE
+HTML - SIDE_SERVERS                             || Серверы
+HTML - SIDE_SERVERS_TITLE                       || СЕРВЕРЫ
+HTML - SIDE_SESSIONS                            || Сессии
+HTML - SIDE_TO_MAIN_PAGE                        || на главную страницу
+HTML - TEXT_CLICK_TO_EXPAND                     || Нажмите, чтобы развернуть
+HTML - TEXT_CONTRIBUTORS_CODE                   || автор кода
+HTML - TEXT_CONTRIBUTORS_LOCALE                 || переводчик
+HTML - TEXT_CONTRIBUTORS_MONEY                  || Особая благодарность тем, кто оказал финансовую поддержку развитию.
+HTML - TEXT_CONTRIBUTORS_THANKS                 || Кроме того, данные <span class="col-plan">замечательные люди</span> внесли свой вклад:
+HTML - TEXT_DEV_VERSION                         || Эта версия является DEV релизом.
+HTML - TEXT_DEVELOPED_BY                        || разработан
+HTML - TEXT_FIRST_SESSION                       || Первая сессия
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics разработан и лицензирован под
+HTML - TEXT_METRICS                             || bStats Metrics
+HTML - TEXT_NO_EXTENSION_DATA                   || Нет данных об расширениях
+HTML - TEXT_NO_LOW_TPS                          || Нет низких TPS
+HTML - TEXT_NO_SERVER                           || Нет сервера для отображения онлайн активности
+HTML - TEXT_NO_SERVERS                          || В базе данных не найдено ни одного сервера
+HTML - TEXT_PLUGIN_INFORMATION                  || Информация о плагине
+HTML - TEXT_PREDICTED_RETENTION                 || Это значение является прогнозом на основе предыдущих игроков
+HTML - TEXT_VERSION                             || Новая версия была выпущена и теперь доступна для скачивания.
+HTML - TITLE_30_DAYS                            || 30 дней
+HTML - TITLE_30_DAYS_AGO                        || 30 дней назад
+HTML - TITLE_ALL                                || Все
+HTML - TITLE_ALL_TIME                           || Все время
+HTML - TITLE_AS_NUMBERS                         || как числа
+HTML - TITLE_AVG_PING                           || Средний пинг
+HTML - TITLE_BEST_PING                          || Наилучший пинг
+HTML - TITLE_CALENDAR                           ||  Календарь
+HTML - TITLE_CONNECTION_INFO                    || Информация о соединении
+HTML - TITLE_COUNTRY                            || Страна
+HTML - TITLE_CPU_RAM                            || ЦПУ & ОЗУ
+HTML - TITLE_CURRENT_PLAYERBASE                 || Текущая база игроков
+HTML - TITLE_DISK                               || Дисковое пространство
+HTML - TITLE_GRAPH_DAY_BY_DAY                   || День за днем
+HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Сетевая активность
+HTML - TITLE_GRAPH_PUNCHCARD                    || Перфокарта на 30 дней
+HTML - TITLE_INSIGHTS                           || Статистика за 30 дней
+HTML - TITLE_IS_AVAILABLE                       || доступен
+HTML - TITLE_LAST_24_HOURS                      || Последние 24 часа
+HTML - TITLE_LAST_30_DAYS                       || Последние 30 дней
+HTML - TITLE_LAST_7_DAYS                        || Последние 7 дней
+HTML - TITLE_LAST_CONNECTED                     || Последнее подключение
+HTML - TITLE_LENGTH                             ||  Длина
+HTML - TITLE_MOST_PLAYED_WORLD                  || Самый популярный мир
+HTML - TITLE_NETWORK                            || Сеть
+HTML - TITLE_NETWORK_AS_NUMBERS                 || Сеть в числах
+HTML - TITLE_NOW                                || Сейчас
+HTML - TITLE_ONLINE_ACTIVITY                    || Сетевая активность
+HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Сетевая активность в числах
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Обзор сетевой активности
+HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Производительность в числах
+HTML - TITLE_PING                               || Пинг
+HTML - TITLE_PLAYER                             || Игрок
+HTML - TITLE_PLAYER_OVERVIEW                    || Обзор игрока
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Разработка базы игроков
+HTML - TITLE_PVP_DEATHS                         || Недавние PvP смерти
+HTML - TITLE_PVP_KILLS                          || Недавние PvP убийства
+HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE в числах
+HTML - TITLE_RECENT_KILLS                       || Недавние убийства
+HTML - TITLE_RECENT_SESSIONS                    || Недавние сессии
+HTML - TITLE_SEEN_NICKNAMES                     || Увиденные никнеймы
+HTML - TITLE_SERVER                             || Сервер
+HTML - TITLE_SERVER_AS_NUMBERS                  || Сервер в числах
+HTML - TITLE_SERVER_OVERVIEW                    || Обзор сервера
+HTML - TITLE_SERVER_PLAYTIME                    || Время игры на сервере
+HTML - TITLE_SERVER_PLAYTIME_30                 || Время игры на сервере за 30 дней
+HTML - TITLE_SESSION_START                      || Сессия началась
+HTML - TITLE_THEME_SELECT                       || Выбор темы
+HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Перфокарты
+HTML - TITLE_TPS                                || TPS
+HTML - TITLE_TREND                              || Тенденция
+HTML - TITLE_TRENDS                             || тенденция за 30 дней
+HTML - TITLE_VERSION                            || Версия
+HTML - TITLE_WEEK_COMPARISON                    || Сравнение недели
+HTML - TITLE_WORLD                              || Загрузка мира
+HTML - TITLE_WORLD_PLAYTIME                     || Время игры в мире
+HTML - TITLE_WORST_PING                         || Наихудший пинг
+HTML - TOTAL_ACTIVE_TEXT                        || Общая активность
+HTML - TOTAL_AFK                                || Всего AFK
+HTML - TOTAL_PLAYERS                            || Всего игроков
+HTML - UNIQUE_CALENDAR                          || Уникальных:
+HTML - UNIT_CHUNKS                              || Чанки
+HTML - UNIT_ENTITIES                            || Объекты
+HTML - UNIT_NO_DATA                             || Нет данных
+HTML - UNIT_THE_PLAYERS                         || Игроки
+HTML - USER_AND_PASS_NOT_SPECIFIED              || Имя пользователя и пароль не указаны
+HTML - USER_DOES_NOT_EXIST                      || Пользователь не существует
+HTML - USER_PASS_MISMATCH                       || Пользователь и пароль не совпадают
+HTML - WITH                                     || <th>С
+HTML ERRORS - ACCESS_DENIED_403                 || Доступ закрыт
+HTML ERRORS - AUTH_FAIL_TIPS_401                || - Убедитесь, что вы зарегистрировали пользователя с помощью <b>/plan register</b><br>- Проверьте правильность имени пользователя и пароля<br>- Имя пользователя и пароль чувствительны к регистру<br><br>Если вы забыли ваш пароль, попросите сотрудника удалить вашего старого пользователя и перерегистрировать вас.
+HTML ERRORS - AUTHENTICATION_FAILED_401         || Ошибка аутентификации.
+HTML ERRORS - FORBIDDEN_403                     || Запрещено
+HTML ERRORS - NO_SERVERS_404                    || Нет серверов в сети для выполнения запроса.
+HTML ERRORS - NOT_FOUND_404                     || Не обнаружена
+HTML ERRORS - NOT_PLAYED_404                    || Plan еще не видел этого игрока.
+HTML ERRORS - PAGE_NOT_FOUND_404                || Страница не существует.
+HTML ERRORS - UNAUTHORIZED_401                  || Не авторизован
+HTML ERRORS - UNKNOWN_PAGE_404                  || Убедитесь, что вы получаете доступ к ссылке, заданной командой, Примеры:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UUID_404                          || UUID игрока не найден в базе данных.
+In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
+In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.
+In Depth Help - /plan db clear                  || Clears all Plan tables, removing all Plan-data in the process.
+In Depth Help - /plan db hotswap                || Reloads the plugin with the other database and changes the config to match.
+In Depth Help - /plan db move                   || Overwrites contents in the other database with the contents in another.
+In Depth Help - /plan db remove                 || Removes all data linked to a player from the Current database.
+In Depth Help - /plan db restore                || Uses SQLite backup file and overwrites contents of the target database.
+In Depth Help - /plan db uninstalled            || Marks a server in Plan database as uninstalled so that it will not show up in server queries.
+In Depth Help - /plan disable                   || Disable the plugin or part of it until next reload/restart.
+In Depth Help - /plan export                    || Performs an export to export location defined in the config.
+In Depth Help - /plan import                    || Performs an import to load data into the database.
+In Depth Help - /plan info                      || Display the current status of the plugin.
+In Depth Help - /plan ingame                    || Отображает некоторую информацию о игроке в игре.
+In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
+In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
+In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
+In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.
+In Depth Help - /plan register                  || Use without arguments to get link to register page. Use --code [code] after registration to get a user.
+In Depth Help - /plan reload                    || Disable and enable the plugin to reload any changes in config.
+In Depth Help - /plan search                    || List all matching player names to given part of a name.
+In Depth Help - /plan server                    || Obtain a link to the /server page of a specific server, or the current server if no arguments are given.
+In Depth Help - /plan servers                   || List ids, names and uuids of servers in the database.
+In Depth Help - /plan unregister                || Use without arguments to unregister player linked user, or with username argument to unregister another user.
+In Depth Help - /plan users                     || Lists web users as a table.
+Manage - Confirm Overwrite                      || Данные в ${0} будут перезаписаны!
+Manage - Confirm Removal                        || Данные в ${0} будут удалены!
+Manage - Fail                                   || > §cЧто-то пошло не так: ${0}
+Manage - Fail File not found                    || > §cФайл не найден в ${0}
+Manage - Fail Incorrect Database                || > §c'${0}' неподдерживаемая база данных.
+Manage - Fail No Exporter                       || §eЭкспортер '${0}' не существует
+Manage - Fail No Importer                       || §eИмпортер '${0}' не существует
+Manage - Fail No Server                         || Сервер с данными параметрами не найден.
+Manage - Fail Same Database                     || > §cНельзя работать с одной и той же базой данных!
+Manage - Fail Same server                       || Невозможно пометить этот сервер как удаленный (Вы на нем)
+Manage - Fail, Confirmation                     || > §cДобавьте аргумент '-a' для подтверждения выполнения: ${0}
+Manage - List Importers                         || Импортеры:
+Manage - Progress                               || ${0} / ${1} processed..
+Manage - Remind HotSwap                         || §eНе забудьте поменять на новую базу данных (/plan m hotswap ${0}) и перезагрузить плагин.
+Manage - Start                                  || > §2Обработка данных..
+Manage - Success                                || > §aУспех!
+Negative                                        || Нет
+Positive                                        || Да
+Today                                           || 'Сегодня'
+Unavailable                                     || Недоступен
+Unknown                                         || Неизвестный
+Version - DEV                                   ||  Это DEV релиз.
+Version - Latest                                || Вы используете последнюю версию.
+Version - New                                   || Новый релиз (${0}) доступен ${1}
+Version - New (old)                             || Новая версия доступна на ${0}
+Version FAIL - Read info (old)                  || Не удалось проверить номер последней версии
+Version FAIL - Read versions.txt                || Информация о версии не может быть загружена из Github/versions.txt
+Web User Listing                                ||   §2${0} §7: §f${1}
+WebServer - Notify HTTP                         || Веб-сервер: Нет сертификата -> Использование HTTP-сервера для визуализации.
+WebServer - Notify HTTP User Auth               || Веб-сервер: авторизация пользователя отключена! (Не защищен через HTTP)
+WebServer - Notify HTTPS User Auth              || Веб-сервер: авторизация пользователя отключена! (Отключено в конфиге)
+Webserver - Notify IP Whitelist                 || Веб-сервер: Белый список IP адресов включён.
+Webserver - Notify IP Whitelist Block           || Веб-сервер: ${0} было отказано в доступе к '${1}'. (не в белом списке)
+WebServer - Notify no Cert file                 || Веб-сервер: файл хранилища ключей сертификата не найден: ${0}
+WebServer - Notify Using Proxy                  || Веб-сервер: HTTPS в режиме прокси включен, убедитесь, что ваш обратный прокси-сервер выполняет маршрутизацию с использованием HTTPS, и Plan Alternative_IP.Link указывает на прокси
+WebServer FAIL - EOF                            || Веб-сервер: EOF при чтении файла сертификата. (Убедитесь, что файл не пустой)
+WebServer FAIL - Port Bind                      || Веб-сервер не был успешно инициализирован. Порт (${0}) используется?
+WebServer FAIL - SSL Context                    || Веб-сервер: сбой инициализации контекста SSL.
+WebServer FAIL - Store Load                     || Веб-сервер: сбой загрузки сертификата SSL.
+Yesterday                                       || 'Вчера'

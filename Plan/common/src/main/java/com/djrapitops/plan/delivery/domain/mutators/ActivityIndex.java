@@ -17,15 +17,13 @@
 package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
-import com.djrapitops.plugin.api.TimeAmount;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents Activity index of a player at a certain date.
@@ -112,10 +110,7 @@ public class ActivityIndex {
     }
 
     private double calculate(DataContainer container) {
-        Optional<List<Session>> sessionsValue = container.getValue(PlayerKeys.SESSIONS);
-        return sessionsValue
-                .map(sessions -> calculate(new SessionsMutator(sessions)))
-                .orElse(0.0);
+        return calculate(SessionsMutator.forContainer(container));
     }
 
     private double calculate(SessionsMutator sessionsMutator) {
@@ -123,7 +118,7 @@ public class ActivityIndex {
             return 0.0;
         }
 
-        long week = TimeAmount.WEEK.toMillis(1L);
+        long week = TimeUnit.DAYS.toMillis(7L);
         long weekAgo = date - week;
         long twoWeeksAgo = date - 2L * week;
         long threeWeeksAgo = date - 3L * week;
@@ -132,13 +127,13 @@ public class ActivityIndex {
         SessionsMutator weekTwo = sessionsMutator.filterSessionsBetween(twoWeeksAgo, weekAgo);
         SessionsMutator weekThree = sessionsMutator.filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
 
-        long playtime1 = weekOne.toActivePlaytime();
-        long playtime2 = weekTwo.toActivePlaytime();
-        long playtime3 = weekThree.toActivePlaytime();
+        double playtime1 = weekOne.toActivePlaytime();
+        double playtime2 = weekTwo.toActivePlaytime();
+        double playtime3 = weekThree.toActivePlaytime();
 
-        double indexW1 = 1.0 / (Math.PI / 2.0 * (playtime1 * 1.0 / playtimeMsThreshold) + 1.0);
-        double indexW2 = 1.0 / (Math.PI / 2.0 * (playtime2 * 1.0 / playtimeMsThreshold) + 1.0);
-        double indexW3 = 1.0 / (Math.PI / 2.0 * (playtime3 * 1.0 / playtimeMsThreshold) + 1.0);
+        double indexW1 = 1.0 / (Math.PI / 2.0 * (playtime1 / playtimeMsThreshold) + 1.0);
+        double indexW2 = 1.0 / (Math.PI / 2.0 * (playtime2 / playtimeMsThreshold) + 1.0);
+        double indexW3 = 1.0 / (Math.PI / 2.0 * (playtime3 / playtimeMsThreshold) + 1.0);
 
         double average = (indexW1 + indexW2 + indexW3) / 3.0;
 

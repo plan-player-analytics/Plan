@@ -31,8 +31,9 @@ import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -59,12 +60,12 @@ public class ResponseResolver {
     private final RootPageResolver rootPageResolver;
     private final RootJSONResolver rootJSONResolver;
     private final StaticResourceResolver staticResourceResolver;
-    private LoginPageResolver loginPageResolver;
-    private RegisterPageResolver registerPageResolver;
-    private LoginResolver loginResolver;
-    private LogoutResolver logoutResolver;
-    private RegisterResolver registerResolver;
-    private final ErrorHandler errorHandler;
+    private final LoginPageResolver loginPageResolver;
+    private final RegisterPageResolver registerPageResolver;
+    private final LoginResolver loginResolver;
+    private final LogoutResolver logoutResolver;
+    private final RegisterResolver registerResolver;
+    private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
     private final ResponseFactory responseFactory;
@@ -90,7 +91,7 @@ public class ResponseResolver {
             LogoutResolver logoutResolver,
             RegisterResolver registerResolver,
 
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.resolverService = resolverService;
         this.responseFactory = responseFactory;
@@ -107,11 +108,12 @@ public class ResponseResolver {
         this.loginResolver = loginResolver;
         this.logoutResolver = logoutResolver;
         this.registerResolver = registerResolver;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public void registerPages() {
         String plugin = "Plan";
+        resolverService.registerResolver(plugin, "/robots.txt", (NoAuthResolver) request -> Optional.of(responseFactory.robotsResponse()));
         resolverService.registerResolver(plugin, "/debug", debugPageResolver);
         resolverService.registerResolver(plugin, "/players", playersPageResolver);
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
@@ -143,7 +145,7 @@ public class ResponseResolver {
         } catch (WebUserAuthException e) {
             throw e; // Pass along
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(request).build());
             return responseFactory.internalErrorResponse(e, request.getPath().asString());
         }
     }
@@ -156,7 +158,7 @@ public class ResponseResolver {
     private Response tryToGetResponse(Request request) {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
-            return Response.builder().setStatus(204).setContent(new byte[0]).build();
+            return Response.builder().setStatus(204).build();
         }
 
         Optional<WebUser> user = request.getUser();

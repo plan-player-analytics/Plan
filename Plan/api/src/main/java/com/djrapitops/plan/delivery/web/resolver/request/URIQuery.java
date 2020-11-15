@@ -18,6 +18,9 @@ package com.djrapitops.plan.delivery.web.resolver.request;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,7 +56,14 @@ public final class URIQuery {
             }
             String[] keyAndValue = StringUtils.split(kv, "=", 2);
             if (keyAndValue.length >= 2) {
-                parameters.put(keyAndValue[0], keyAndValue[1]);
+                try {
+                    parameters.put(
+                            URLDecoder.decode(keyAndValue[0], StandardCharsets.UTF_8.name()),
+                            URLDecoder.decode(keyAndValue[1], StandardCharsets.UTF_8.name())
+                    );
+                } catch (UnsupportedEncodingException e) {
+                    // If UTF-8 is unsupported, we have bigger problems
+                }
             }
         }
         return parameters;
@@ -83,5 +93,12 @@ public final class URIQuery {
             i++;
         }
         return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "URIQuery{" +
+                "byKey=" + byKey +
+                '}';
     }
 }

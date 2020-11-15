@@ -209,10 +209,8 @@ public class JSONFactory {
                     server.put("downtime", timeAmount.apply(tpsWeek.serverDownTime()));
 
                     Optional<TPS> online = tpsWeek.getLast();
-                    server.put("online", online.isPresent() ?
-                            online.get().getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ?
-                                    online.get().getPlayers() : "Possibly offline"
-                            : locale.get(HtmlLang.UNIT_NO_DATA).toString());
+                    server.put("online", online.map(point -> point.getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : "Possibly offline")
+                            .orElse(locale.get(HtmlLang.UNIT_NO_DATA).toString()));
                     servers.add(server);
                 });
         return servers;

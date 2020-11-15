@@ -8,6 +8,7 @@
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta content="Player Analytics, login page" name="description">
     <meta content="Rsl1122" name="author">
+    <meta content="noindex, nofollow" name="robots">
 
     <title>Plan | Login</title>
 
@@ -23,6 +24,44 @@
 </head>
 
 <body class="bg-plan bg-gradient">
+
+<script>
+    function login() {
+        msg.addClass('hidden');
+        const user = $('#inputUser').val();
+        if (!user || user.length < 1) {
+            return displayError('You need to specify a Username');
+        }
+        if (user.length > 50) {
+            return displayError('Username can be up to 50 characters, yours is ' + user.length);
+        }
+        const password = $('#inputPassword').val();
+        if (!password || password.length < 1) {
+            return displayError('You need to specify a Password');
+        }
+        jsonRequest(`./auth/login?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
+            if (error) {
+                if (error.includes("HTTP 403")) {
+                    location.reload();
+                }
+                $('#inputPassword').val("");
+                return displayError('Login failed: ' + error);
+            }
+            if (json && json.success) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const cameFrom = urlParams.get('from');
+                window.location.href = cameFrom ? cameFrom : './';
+            } else {
+                return displayError('Login failed: ' + json.error);
+            }
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        console.log(event.key);
+        if (event.key === 'Enter') login();
+    });
+</script>
 
 <div class="container">
 
@@ -52,9 +91,9 @@
                                                id="inputPassword" placeholder="Password"
                                                type="password">
                                     </div>
-                                    <a class="btn bg-plan btn-user btn-block" href="#" id="login-button">
+                                    <button class="btn bg-plan btn-user btn-block" href="#" id="login-button">
                                         Login
-                                    </a>
+                                    </button>
                                 </form>
                                 <hr>
                                 <div class="text-center">
@@ -181,6 +220,10 @@
 <script src="js/logonsine.js"></script>
 <script id="mainScript">
     drawSine("decoration");
+    document.getElementById('login-button').addEventListener('click', event => {
+        event.preventDefault();
+        login();
+    });
 
     const msg = $(`#fail-msg`);
 
@@ -190,36 +233,6 @@
     }
 
     $('#forgot-button').click(() => $('#forgotModal').modal());
-    $('#login-button').click(() => {
-        msg.addClass('hidden');
-        const user = $('#inputUser').val();
-        if (!user || user.length < 1) {
-            return displayError('You need to specify a Username');
-        }
-        if (user.length > 50) {
-            return displayError('Username can be up to 50 characters, yours is ' + user.length);
-        }
-        const password = $('#inputPassword').val();
-        if (!password || password.length < 1) {
-            return displayError('You need to specify a Password');
-        }
-        jsonRequest(`./auth/login?user=${encodeURI(user)}&password=${encodeURI(password)}`, (json, error) => {
-            if (error) {
-                if (error.includes("HTTP 403")) {
-                    location.reload();
-                }
-                $('#inputPassword').val("");
-                return displayError('Login failed: ' + error);
-            }
-            if (json && json.success) {
-                const urlParams = new URLSearchParams(window.location.search);
-                const cameFrom = urlParams.get('from');
-                window.location.href = cameFrom ? cameFrom : './';
-            } else {
-                return displayError('Login failed: ' + json.error);
-            }
-        });
-    })
 </script>
 </body>
 

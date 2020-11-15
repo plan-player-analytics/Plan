@@ -29,7 +29,7 @@ public abstract class Type<T> {
 
     private final String genericsSuperClass;
 
-    public Type() {
+    protected Type() {
         genericsSuperClass = getGenericsClass().getGenericSuperclass().getTypeName();
     }
 

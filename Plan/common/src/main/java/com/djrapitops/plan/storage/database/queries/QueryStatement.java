@@ -34,11 +34,11 @@ public abstract class QueryStatement<T> implements Query<T> {
     private final String sql;
     private final int fetchSize;
 
-    public QueryStatement(String sql) {
+    protected QueryStatement(String sql) {
         this(sql, 10);
     }
 
-    public QueryStatement(String sql, int fetchSize) {
+    protected QueryStatement(String sql, int fetchSize) {
         this.sql = sql;
         this.fetchSize = fetchSize;
     }

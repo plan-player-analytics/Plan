@@ -16,24 +16,31 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
+import com.djrapitops.plan.delivery.domain.TablePlayer;
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
+import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
+import com.djrapitops.plan.storage.database.queries.objects.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plugin.api.TimeAmount;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -258,61 +265,60 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         assertEquals(new HashSet<>(Arrays.asList(expected)), result);
     }
 
-    // Tests to reproduce an issue, flaky.
-//    @Test
-//    default void playersTableAndPlayerPagePlaytimeMatches() {
-//        prepareForSessionSave();
-//        List<Session> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
-//        List<Session> player2Sessions = RandomData.randomSessions(serverUUID(), worlds, player2UUID, playerUUID);
-//        player1Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
-//        player2Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
-//
-//        long playtimeThreshold = RandomData.randomLong(TimeUnit.HOURS.toMillis(1L), TimeUnit.DAYS.toMillis(2L));
-//
-//        PlayerContainer playerContainer = db().query(new PlayerContainerQuery(playerUUID));
-//        TablePlayer tablePlayer = db().query(new ServerTablePlayersQuery(serverUUID(), System.currentTimeMillis(), playtimeThreshold, 5))
-//                .stream().filter(player -> playerUUID.equals(player.getPlayerUUID())).findAny()
-//                .orElseThrow(AssertionError::new);
-//
-//        long expected = SessionsMutator.forContainer(playerContainer).toPlaytime();
-//        long got = tablePlayer.getPlaytime().orElseThrow(AssertionError::new);
-//        assertEquals(expected, got);
-//    }
-//
-//    @Test
-//    default void playersTableAndPlayerPageActivityIndexMatches() {
-//        prepareForSessionSave();
-//        List<Session> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
-//        List<Session> player2Sessions = RandomData.randomSessions(serverUUID(), worlds, player2UUID, playerUUID);
-//        player1Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
-//        player2Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
-//
-//        long time = System.currentTimeMillis();
-//        long playtimeThreshold = RandomData.randomLong(TimeUnit.HOURS.toMillis(1L), TimeUnit.DAYS.toMillis(2L));
-//
-//        PlayerContainer playerContainer = db().query(new PlayerContainerQuery(playerUUID));
-//        TablePlayer tablePlayer = db().query(new ServerTablePlayersQuery(serverUUID(), time, playtimeThreshold, 5))
-//                .stream().filter(player -> playerUUID.equals(player.getPlayerUUID())).findAny()
-//                .orElseThrow(AssertionError::new);
-//
-//        SessionsMutator sessionsMutator = SessionsMutator.forContainer(playerContainer);
-//        long week = TimeAmount.WEEK.toMillis(1L);
-//        long weekAgo = time - week;
-//        long twoWeeksAgo = time - 2L * week;
-//        long threeWeeksAgo = time - 3L * week;
-//        SessionsMutator weekOne = sessionsMutator.filterSessionsBetween(weekAgo, time);
-//        SessionsMutator weekTwo = sessionsMutator.filterSessionsBetween(twoWeeksAgo, weekAgo);
-//        SessionsMutator weekThree = sessionsMutator.filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
-//
-//        long playtime1 = weekOne.toActivePlaytime();
-//        long playtime2 = weekTwo.toActivePlaytime();
-//        long playtime3 = weekThree.toActivePlaytime();
-//
-//        double expected = playerContainer.getActivityIndex(time, playtimeThreshold).getValue();
-//        double got = tablePlayer.getCurrentActivityIndex().orElseThrow(AssertionError::new).getValue();
-//        assertEquals(expected, got, 0.00001,
-//                () -> "Activity Indexes between queries differed, expected: <" + expected + "> but was: <" + got + ">" +
-//                        ". Playtime for reference container: <w1:" + playtime1 + ", w2:" + playtime2 + ", w3:" + playtime3 + ">"
-//        );
-//    }
+    @RepeatedTest(value = 3, name = "Players table and Player page playtimes match {currentRepetition}/{totalRepetitions}")
+    default void playersTableAndPlayerPagePlaytimeMatches() {
+        prepareForSessionSave();
+        List<Session> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
+        List<Session> player2Sessions = RandomData.randomSessions(serverUUID(), worlds, player2UUID, playerUUID);
+        player1Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
+        player2Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
+
+        long playtimeThreshold = RandomData.randomLong(TimeUnit.HOURS.toMillis(1L), TimeUnit.DAYS.toMillis(2L));
+
+        PlayerContainer playerContainer = db().query(new PlayerContainerQuery(playerUUID));
+        TablePlayer tablePlayer = db().query(new ServerTablePlayersQuery(serverUUID(), System.currentTimeMillis(), playtimeThreshold, 5))
+                .stream().filter(player -> playerUUID.equals(player.getPlayerUUID())).findAny()
+                .orElseThrow(AssertionError::new);
+
+        long expected = SessionsMutator.forContainer(playerContainer).toPlaytime();
+        long got = tablePlayer.getPlaytime().orElseThrow(AssertionError::new);
+        assertEquals(expected, got);
+    }
+
+    @RepeatedTest(value = 3, name = "Players table and player page Activity Index calculations match {currentRepetition}/{totalRepetitions}")
+    default void playersTableAndPlayerPageActivityIndexMatches() {
+        prepareForSessionSave();
+        List<Session> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
+        List<Session> player2Sessions = RandomData.randomSessions(serverUUID(), worlds, player2UUID, playerUUID);
+        player1Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
+        player2Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
+
+        long time = System.currentTimeMillis();
+        long playtimeThreshold = RandomData.randomLong(TimeUnit.HOURS.toMillis(1L), TimeUnit.DAYS.toMillis(2L));
+
+        PlayerContainer playerContainer = db().query(new PlayerContainerQuery(playerUUID));
+        TablePlayer tablePlayer = db().query(new ServerTablePlayersQuery(serverUUID(), time, playtimeThreshold, 5))
+                .stream().filter(player -> playerUUID.equals(player.getPlayerUUID())).findAny()
+                .orElseThrow(AssertionError::new);
+
+        SessionsMutator sessionsMutator = SessionsMutator.forContainer(playerContainer);
+        long week = TimeAmount.WEEK.toMillis(1L);
+        long weekAgo = time - week;
+        long twoWeeksAgo = time - 2L * week;
+        long threeWeeksAgo = time - 3L * week;
+        SessionsMutator weekOne = sessionsMutator.filterSessionsBetween(weekAgo, time);
+        SessionsMutator weekTwo = sessionsMutator.filterSessionsBetween(twoWeeksAgo, weekAgo);
+        SessionsMutator weekThree = sessionsMutator.filterSessionsBetween(threeWeeksAgo, twoWeeksAgo);
+
+        long playtime1 = weekOne.toActivePlaytime();
+        long playtime2 = weekTwo.toActivePlaytime();
+        long playtime3 = weekThree.toActivePlaytime();
+
+        double expected = playerContainer.getActivityIndex(time, playtimeThreshold).getValue();
+        double got = tablePlayer.getCurrentActivityIndex().orElseThrow(AssertionError::new).getValue();
+        assertEquals(expected, got, 0.001,
+                () -> "Activity Indexes between queries differed, expected: <" + expected + "> but was: <" + got + ">" +
+                        ". Playtime for reference container: <w1:" + playtime1 + ", w2:" + playtime2 + ", w3:" + playtime3 + ">"
+        );
+    }
 }

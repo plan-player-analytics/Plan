@@ -10,15 +10,15 @@
         'brown', 'grey', 'blue-grey'];
 
     const selectedColor = window.localStorage.getItem('themeColor');
-    const themeDefaultColor = 'plan';
+    const themeDefaultColor = '${defaultTheme}';
     let currentColor = 'plan';
-
-    if (selectedColor === null) {
-        window.localStorage.setItem('themeColor', currentColor);
-    }
 
     // Function for changing color
     function setColor(nextColor) {
+        if (selectedColor === null) {
+            window.localStorage.setItem('themeColor', currentColor);
+        }
+        $('body').removeClass('theme-' + currentColor).addClass('theme-' + nextColor);
         if (!nextColor || nextColor == currentColor) {
             return;
         }
@@ -70,7 +70,7 @@
     // Change the color of the theme
     setColor(selectedColor ? selectedColor : themeDefaultColor);
 
-    let nightMode = window.localStorage.getItem('nightMode') == 'true';
+    let nightMode = window.localStorage.getItem('nightMode') == 'true' || '${defaultTheme}' == 'night';
 
     const saturationReduction = 0.70;
 
@@ -218,6 +218,7 @@
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
+                '.fc-popover-body,.fc-popover-header {background-color: #44475a;color: #eee8d5;}' +
                 nightModeColors +
                 '</style>');
             // Turn bright tables to dark

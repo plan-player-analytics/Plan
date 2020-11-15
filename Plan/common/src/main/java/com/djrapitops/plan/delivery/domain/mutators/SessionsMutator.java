@@ -197,7 +197,7 @@ public class SessionsMutator {
         return session -> {
             Long start = session.getUnsafe(SessionKeys.START);
             long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
-            return (after <= start && start <= before) || (after <= end && end <= before);
+            return after <= end && start <= before;
         };
     }
 

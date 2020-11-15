@@ -39,14 +39,15 @@ public class BukkitListenerSystem extends ListenerSystem {
     private final BukkitAFKListener afkListener;
 
     @Inject
-    public BukkitListenerSystem(Plan plugin,
-                                Status status,
-                                PlayerOnlineListener playerOnlineListener,
-                                ChatListener chatListener,
-                                GameModeChangeListener gamemodeChangeListener,
-                                WorldChangeListener worldChangeListener,
-                                DeathEventListener deathEventListener,
-                                BukkitAFKListener afkListener
+    public BukkitListenerSystem(
+            Plan plugin,
+            Status status,
+            PlayerOnlineListener playerOnlineListener,
+            ChatListener chatListener,
+            GameModeChangeListener gamemodeChangeListener,
+            WorldChangeListener worldChangeListener,
+            DeathEventListener deathEventListener,
+            BukkitAFKListener afkListener
     ) {
         this.plugin = plugin;
         this.status = status;

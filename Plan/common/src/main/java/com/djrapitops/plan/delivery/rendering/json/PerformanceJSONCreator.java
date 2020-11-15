@@ -50,8 +50,9 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
     private final DBSystem dbSystem;
 
     private final Formatter<Double> decimals;
-    private final Formatter<Long> timeAmountFormatter;
-    private final Formatter<Double> percentageFormatter;
+    private final Formatter<Long> timeAmount;
+    private final Formatter<Double> percentage;
+    private final Formatter<Double> byteSize;
 
     @Inject
     public PerformanceJSONCreator(
@@ -65,8 +66,9 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         this.dbSystem = dbSystem;
 
         decimals = formatters.decimals();
-        percentageFormatter = formatters.percentage();
-        timeAmountFormatter = formatters.timeAmount();
+        percentage = formatters.percentage();
+        timeAmount = formatters.timeAmount();
+        byteSize = formatters.byteSize();
     }
 
     public Map<String, Object> createJSONAsMap(UUID serverUUID) {
@@ -97,9 +99,9 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("low_tps_spikes_7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
         numbers.put("low_tps_spikes_24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
 
-        numbers.put("server_downtime_30d", timeAmountFormatter.apply(tpsDataMonth.serverDownTime()));
-        numbers.put("server_downtime_7d", timeAmountFormatter.apply(tpsDataWeek.serverDownTime()));
-        numbers.put("server_downtime_24h", timeAmountFormatter.apply(tpsDataDay.serverDownTime()));
+        numbers.put("server_downtime_30d", timeAmount.apply(tpsDataMonth.serverDownTime()));
+        numbers.put("server_downtime_7d", timeAmount.apply(tpsDataWeek.serverDownTime()));
+        numbers.put("server_downtime_24h", timeAmount.apply(tpsDataDay.serverDownTime()));
 
         numbers.put("tps_30d", format(tpsDataMonth.averageTPS()));
         numbers.put("tps_7d", format(tpsDataWeek.averageTPS()));
@@ -107,9 +109,9 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("cpu_30d", formatPerc(tpsDataMonth.averageCPU()));
         numbers.put("cpu_7d", formatPerc(tpsDataWeek.averageCPU()));
         numbers.put("cpu_24h", formatPerc(tpsDataDay.averageCPU()));
-        numbers.put("ram_30d", format(tpsDataMonth.averageRAM(), " MB"));
-        numbers.put("ram_7d", format(tpsDataWeek.averageRAM(), " MB"));
-        numbers.put("ram_24h", format(tpsDataDay.averageRAM(), " MB"));
+        numbers.put("ram_30d", formatBytes(tpsDataMonth.averageRAM()));
+        numbers.put("ram_7d", formatBytes(tpsDataWeek.averageRAM()));
+        numbers.put("ram_24h", formatBytes(tpsDataDay.averageRAM()));
         numbers.put("entities_30d", format((int) tpsDataMonth.averageEntities()));
         numbers.put("entities_7d", format((int) tpsDataWeek.averageEntities()));
         numbers.put("entities_24h", format((int) tpsDataDay.averageEntities()));
@@ -117,12 +119,12 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("chunks_7d", format((int) tpsDataWeek.averageChunks()));
         numbers.put("chunks_24h", format((int) tpsDataDay.averageChunks()));
 
-        numbers.put("max_disk_30d", format(tpsDataMonth.maxFreeDisk(), " MB"));
-        numbers.put("max_disk_7d", format(tpsDataWeek.maxFreeDisk(), " MB"));
-        numbers.put("max_disk_24h", format(tpsDataDay.maxFreeDisk(), " MB"));
-        numbers.put("min_disk_30d", format(tpsDataMonth.minFreeDisk(), " MB"));
-        numbers.put("min_disk_7d", format(tpsDataWeek.minFreeDisk(), " MB"));
-        numbers.put("min_disk_24h", format(tpsDataDay.minFreeDisk(), " MB"));
+        numbers.put("max_disk_30d", formatBytes(tpsDataMonth.maxFreeDisk()));
+        numbers.put("max_disk_7d", formatBytes(tpsDataWeek.maxFreeDisk()));
+        numbers.put("max_disk_24h", formatBytes(tpsDataDay.maxFreeDisk()));
+        numbers.put("min_disk_30d", formatBytes(tpsDataMonth.minFreeDisk()));
+        numbers.put("min_disk_7d", formatBytes(tpsDataWeek.minFreeDisk()));
+        numbers.put("min_disk_24h", formatBytes(tpsDataDay.minFreeDisk()));
 
         return numbers;
     }
@@ -131,12 +133,12 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         return value != -1 ? decimals.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
     }
 
-    private String format(double value, String suffix) {
-        return value != -1 ? decimals.apply(value) + suffix : locale.get(GenericLang.UNAVAILABLE).toString();
+    private String formatBytes(double value) {
+        return value != -1 ? byteSize.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
     }
 
     private String formatPerc(double value) {
-        return value != -1 ? percentageFormatter.apply(value / 100.0) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? percentage.apply(value / 100.0) : locale.get(GenericLang.UNAVAILABLE).toString();
     }
 
     private Map<String, Object> createInsightsMap(List<TPS> tpsData) {

@@ -69,13 +69,13 @@ public class ConfigNode {
             return Optional.empty();
         }
         String[] parts = splitPathInTwo(path);
-        String key = parts[0];
+        String lookingFor = parts[0];
         String leftover = parts[1];
 
         if (leftover.isEmpty()) {
-            return Optional.ofNullable(childNodes.get(key));
+            return Optional.ofNullable(childNodes.get(lookingFor));
         } else {
-            return getNode(key).flatMap(child -> child.getNode(leftover));
+            return getNode(lookingFor).flatMap(child -> child.getNode(leftover));
         }
     }
 
@@ -95,15 +95,15 @@ public class ConfigNode {
         ConfigNode newParent = this;
         if (path != null && !path.isEmpty()) {
             String[] parts = splitPathInTwo(path);
-            String key = parts[0];
+            String lookingFor = parts[0];
             String leftover = parts[1];
 
             // Add a new child
             ConfigNode child;
-            if (!childNodes.containsKey(key)) {
-                child = addChild(new ConfigNode(key, newParent, null));
+            if (!childNodes.containsKey(lookingFor)) {
+                child = addChild(new ConfigNode(lookingFor, newParent, null));
             } else {
-                child = childNodes.get(key);
+                child = childNodes.get(lookingFor);
             }
 
             // If the path ends return the leaf node
@@ -200,9 +200,9 @@ public class ConfigNode {
     public void reorder(List<String> newOrder) {
         List<String> oldOrder = nodeOrder;
         nodeOrder = new ArrayList<>();
-        for (String key : newOrder) {
-            if (childNodes.containsKey(key)) {
-                nodeOrder.add(key);
+        for (String childKey : newOrder) {
+            if (childNodes.containsKey(childKey)) {
+                nodeOrder.add(childKey);
             }
         }
         // Add those that were not in the new order, but are in the old order.
@@ -311,11 +311,11 @@ public class ConfigNode {
         }
 
         // Copy all nodes from 'from'
-        for (String key : from.nodeOrder) {
-            ConfigNode newChild = from.childNodes.get(key);
+        for (String childKey : from.nodeOrder) {
+            ConfigNode newChild = from.childNodes.get(childKey);
 
             // Copy values recursively to children
-            ConfigNode created = addNode(key);
+            ConfigNode created = addNode(childKey);
             created.copyMissing(newChild);
         }
     }
@@ -326,11 +326,11 @@ public class ConfigNode {
         value = from.value;
 
         // Copy all nodes from 'from'
-        for (String key : from.nodeOrder) {
-            ConfigNode newChild = from.childNodes.get(key);
+        for (String childKey : from.nodeOrder) {
+            ConfigNode newChild = from.childNodes.get(childKey);
 
             // Copy values recursively to children
-            ConfigNode created = addNode(key);
+            ConfigNode created = addNode(childKey);
             created.copyAll(newChild);
         }
     }

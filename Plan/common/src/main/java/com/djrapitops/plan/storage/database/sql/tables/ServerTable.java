@@ -40,18 +40,18 @@ public class ServerTable {
     public static final String NAME = "name";
     public static final String WEB_ADDRESS = "web_address";
     public static final String INSTALLED = "is_installed";
+    @Deprecated
     public static final String MAX_PLAYERS = "max_players";
 
     public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME,
             SERVER_UUID, NAME,
-            WEB_ADDRESS, INSTALLED, MAX_PLAYERS);
+            WEB_ADDRESS, INSTALLED);
 
     public static final String UPDATE_STATEMENT = Update.values(TABLE_NAME,
             SERVER_UUID,
             NAME,
             WEB_ADDRESS,
-            INSTALLED,
-            MAX_PLAYERS)
+            INSTALLED)
             .where(SERVER_UUID + "=?")
             .toString();
 

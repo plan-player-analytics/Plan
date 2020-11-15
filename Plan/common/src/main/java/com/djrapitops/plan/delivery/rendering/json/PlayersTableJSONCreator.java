@@ -153,11 +153,11 @@ public class PlayersTableJSONCreator {
     }
 
     private String makeDataEntry(Object data, String dataName) {
-        return "\"" + dataName + "\":\"" + data.toString().replace('"', '\'') + "\"";
+        return "\"" + dataName + "\":\"" + StringEscapeUtils.escapeJson(data.toString()) + "\"";
     }
 
     private String makeDataEntry(Object data, String formatted, String dataName) {
-        return "\"" + dataName + "\":{\"v\":\"" + data.toString().replace('"', '\'') + "\", \"d\":\"" + formatted.replace('"', '\'') + "\"}";
+        return "\"" + dataName + "\":{\"v\":\"" + StringEscapeUtils.escapeJson(data.toString()) + "\", \"d\":\"" + StringEscapeUtils.escapeJson(formatted) + "\"}";
     }
 
     private void appendExtensionData(StringBuilder dataJSON, ExtensionTabData tabData) {
@@ -207,11 +207,11 @@ public class PlayersTableJSONCreator {
     }
 
     private String makeColumnHeader(String title, String dataProperty) {
-        return "{\"title\": \"" + title.replace('"', '\'') + "\",\"data\":\"" + dataProperty + "\"}";
+        return "{\"title\": \"" + StringEscapeUtils.escapeJson(title) + "\",\"data\":\"" + dataProperty + "\"}";
     }
 
     private String makeFColumnHeader(String title, String dataProperty) {
-        return "{\"title\": \"" + title.replace('"', '\'') + "\",\"data\":{\"_\":\"" + dataProperty + ".v\",\"display\":\"" + dataProperty + ".d\"}}";
+        return "{\"title\": \"" + StringEscapeUtils.escapeJson(title) + "\",\"data\":{\"_\":\"" + dataProperty + ".v\",\"display\":\"" + dataProperty + ".d\"}}";
     }
 
     private void appendExtensionHeaders(StringBuilder columnHeaders) {

@@ -82,7 +82,9 @@ public class PlayerPageExporter extends FileExporter {
     public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
-        if (!dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) return;
+        if (Boolean.FALSE.equals(dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)))) {
+            return;
+        }
 
         ExportPaths exportPaths = new ExportPaths();
         exportPaths.put("../network", toRelativePathFromRoot("network"));

@@ -30,10 +30,13 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -43,10 +46,7 @@ import org.apache.commons.text.TextStringBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * HttpHandler for WebServer request management.
@@ -56,33 +56,37 @@ import java.util.Optional;
 @Singleton
 public class RequestHandler implements HttpHandler {
 
+    private final Locale locale;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final Addresses addresses;
     private final ResponseResolver responseResolver;
     private final ResponseFactory responseFactory;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
-    private PassBruteForceGuard bruteForceGuard;
+    private final PassBruteForceGuard bruteForceGuard;
+    private List<String> ipWhitelist = null;
 
     @Inject
     RequestHandler(
+            Locale locale,
             PlanConfig config,
             DBSystem dbSystem,
             Addresses addresses,
             ResponseResolver responseResolver,
             ResponseFactory responseFactory,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
+        this.locale = locale;
         this.config = config;
         this.dbSystem = dbSystem;
         this.addresses = addresses;
         this.responseResolver = responseResolver;
         this.responseFactory = responseFactory;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         bruteForceGuard = new PassBruteForceGuard();
     }
@@ -94,12 +98,16 @@ public class RequestHandler implements HttpHandler {
             response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
             response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
             response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
+            response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
             ResponseSender sender = new ResponseSender(addresses, exchange, response);
             sender.send();
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                errorHandler.log(L.WARN, this.getClass(), e);
+                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                        .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
+                        .related(exchange.getRequestMethod(), exchange.getRemoteAddress(), exchange.getRequestHeaders(), exchange.getResponseHeaders(), exchange.getRequestURI())
+                        .build());
             }
         } finally {
             exchange.close();
@@ -107,6 +115,11 @@ public class RequestHandler implements HttpHandler {
     }
 
     public Response getResponse(HttpExchange exchange) {
+        if (ipWhitelist == null) {
+            ipWhitelist = config.isTrue(WebserverSettings.IP_WHITELIST)
+                    ? config.get(WebserverSettings.WHITELIST)
+                    : Collections.emptyList();
+        }
         String accessor = exchange.getRemoteAddress().getAddress().getHostAddress();
         Request request = null;
         Response response;
@@ -114,6 +127,9 @@ public class RequestHandler implements HttpHandler {
             request = buildRequest(exchange);
             if (bruteForceGuard.shouldPreventRequest(accessor)) {
                 response = responseFactory.failedLoginAttempts403();
+            } else if (!ipWhitelist.isEmpty() && !ipWhitelist.contains(accessor)) {
+                response = responseFactory.ipWhitelist403(accessor);
+                logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_IP_WHITELIST_BLOCK, accessor, exchange.getRequestURI().toString()));
             } else {
                 response = responseResolver.getResponse(request);
             }
@@ -125,8 +141,8 @@ public class RequestHandler implements HttpHandler {
             } else {
                 String from = exchange.getRequestURI().toASCIIString();
                 response = Response.builder()
-                        .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=" + from)
-                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1")
+                        .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from)
+                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1; SameSite=Lax; Secure;")
                         .build();
             }
         }
@@ -146,7 +162,7 @@ public class RequestHandler implements HttpHandler {
     private Request buildRequest(HttpExchange exchange) {
         String requestMethod = exchange.getRequestMethod();
         URIPath path = new URIPath(exchange.getRequestURI().getPath());
-        URIQuery query = new URIQuery(exchange.getRequestURI().getQuery());
+        URIQuery query = new URIQuery(exchange.getRequestURI().getRawQuery());
         WebUser user = getWebUser(exchange);
         Map<String, String> headers = getRequestHeaders(exchange);
         return new Request(requestMethod, path, query, user, headers);

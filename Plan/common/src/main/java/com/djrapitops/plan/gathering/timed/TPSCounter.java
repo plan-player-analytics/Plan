@@ -16,9 +16,10 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 /**
@@ -29,14 +30,14 @@ import com.djrapitops.plugin.task.AbsRunnable;
 public abstract class TPSCounter extends AbsRunnable {
 
     protected final PluginLogger logger;
-    protected final ErrorHandler errorHandler;
+    protected final ErrorLogger errorLogger;
 
-    public TPSCounter(
+    protected TPSCounter(
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Override
@@ -45,7 +46,7 @@ public abstract class TPSCounter extends AbsRunnable {
             pulse();
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
             logger.error("TPS Count Task Disabled due to error, reload Plan to re-enable.");
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("See if a restart fixes this or Report this").build());
             cancel();
         }
     }
