@@ -18,6 +18,7 @@ package com.djrapitops.plan.settings;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 /**
@@ -33,7 +34,7 @@ import java.util.function.Supplier;
 public interface SettingsService {
 
     static SettingsService getInstance() {
-        return Optional.ofNullable(Holder.service)
+        return Optional.ofNullable(Holder.service.get())
                 .orElseThrow(() -> new IllegalStateException("SettingsService has not been initialised yet."));
     }
 
@@ -65,14 +66,14 @@ public interface SettingsService {
     List<String> getStringList(String path, Supplier<List<String>> defaultValue);
 
     class Holder {
-        static SettingsService service;
+        static volatile AtomicReference<SettingsService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */
         }
 
         static void set(SettingsService service) {
-            Holder.service = service;
+            Holder.service.set(service);
         }
     }
 

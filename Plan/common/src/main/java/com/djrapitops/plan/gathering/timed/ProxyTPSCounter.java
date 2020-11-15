@@ -24,8 +24,8 @@ import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransact
 import com.djrapitops.plan.utilities.analysis.Average;
 import com.djrapitops.plan.utilities.analysis.Maximum;
 import com.djrapitops.plan.utilities.analysis.TimerAverage;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,9 +43,9 @@ public class ProxyTPSCounter extends TPSCounter {
     private final SystemUsageBuffer systemUsage;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private Maximum.ForInteger playersOnline;
-    private Average cpu;
-    private TimerAverage ram;
+    private final Maximum.ForInteger playersOnline;
+    private final Average cpu;
+    private final TimerAverage ram;
 
     @Inject
     public ProxyTPSCounter(
@@ -54,9 +54,9 @@ public class ProxyTPSCounter extends TPSCounter {
             DBSystem dbSystem,
             ServerInfo serverInfo,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        super(logger, errorHandler);
+        super(logger, errorLogger);
 
         this.serverSensor = serverSensor;
         this.dbSystem = dbSystem;

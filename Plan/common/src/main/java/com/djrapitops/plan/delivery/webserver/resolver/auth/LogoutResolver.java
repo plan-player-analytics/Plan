@@ -58,7 +58,7 @@ public class LogoutResolver implements NoAuthResolver {
     public Response getResponse(String cookie) {
         return Response.builder()
                 .setStatus(200)
-                .setHeader("Set-Cookie", "auth=" + cookie + "; Max-Age=1")
+                .setHeader("Set-Cookie", "auth=" + cookie + "; Max-Age=1; SameSite=Lax; Secure;")
                 .setMimeType(MimeType.HTML)
                 .setContent(
                         "<p>Logging out..</p><script>const urlParams = new URLSearchParams(window.location.search);" +

@@ -132,7 +132,7 @@ class BooleanProviderValueGatherer {
             }
 
             if (providedCondition != null) {
-                if (result) {
+                if (Boolean.TRUE.equals(result)) {
                     // The condition was fulfilled (true) for this player.
                     conditions.conditionFulfilled(providedCondition);
                 } else {

@@ -74,20 +74,21 @@ public class ActivityIndexQueries {
 
     public static String selectActivityIndexSQL() {
         String selectActivePlaytimeSQL = SELECT +
-                SessionsTable.USER_UUID +
-                ",SUM(" +
-                SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
-                ") as active_playtime" +
+                "ux." + UserInfoTable.USER_UUID + ",COALESCE(active_playtime,0) AS active_playtime" +
+                FROM + UserInfoTable.TABLE_NAME + " ux" +
+                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_UUID +
+                ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SERVER_UUID + "=?" +
-                AND + SessionsTable.SESSION_START + ">=?" +
-                AND + SessionsTable.SESSION_END + "<=?" +
-                GROUP_BY + SessionsTable.USER_UUID;
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                GROUP_BY + SessionsTable.USER_UUID +
+                ") sx on sx.uuid=ux.uuid";
 
-        String selectThreeWeeks = selectActivePlaytimeSQL + UNION + selectActivePlaytimeSQL + UNION + selectActivePlaytimeSQL;
+        String selectThreeWeeks = selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL;
 
         return SELECT +
-                "5.0 - 5.0 * AVG(1 / (?/2 * (q1.active_playtime/?) +1)) as activity_index," +
+                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (q1.active_playtime*1.0/?) +1.0)) as activity_index," +
                 "q1." + SessionsTable.USER_UUID +
                 FROM + '(' + selectThreeWeeks + ") q1" +
                 GROUP_BY + "q1." + SessionsTable.USER_UUID;

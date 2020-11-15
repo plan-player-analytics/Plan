@@ -58,7 +58,7 @@ public class WorldMap {
 
     private Map<String, Integer> toGeoCodeCounts(Map<String, Integer> geolocationCounts) {
         Map<String, String> geoCodes = getGeoCodes();
-        Map<String, Integer> geoCodeCounts = new HashMap<>();
+        Map<String, Integer> codeCounts = new HashMap<>();
 
         for (Map.Entry<String, Integer> entry : geolocationCounts.entrySet()) {
             String geolocation = entry.getKey().toLowerCase();
@@ -67,10 +67,10 @@ public class WorldMap {
                 continue;
             }
 
-            geoCodeCounts.put(geoCode, entry.getValue());
+            codeCounts.put(geoCode, entry.getValue());
         }
 
-        return geoCodeCounts;
+        return codeCounts;
     }
 
     private Map<String, Integer> toGeoCodeCounts(List<String> geoLocations) {

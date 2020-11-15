@@ -18,24 +18,18 @@ package com.djrapitops.plan.identification;
 
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
+import com.djrapitops.plan.identification.storage.ServerDBLoader;
+import com.djrapitops.plan.identification.storage.ServerFileLoader;
+import com.djrapitops.plan.identification.storage.ServerLoader;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
-import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Manages the Server UUID for Bukkit servers.
@@ -47,121 +41,65 @@ import java.util.concurrent.ExecutionException;
 @Singleton
 public class ServerServerInfo extends ServerInfo {
 
-    private final ServerInfoFile serverInfoFile;
+    private final ServerLoader fromFile;
+    private final ServerLoader fromDatabase;
 
     private final PlanConfig config;
     private final Processing processing;
-    private final DBSystem dbSystem;
     private final Addresses addresses;
-    private final ErrorHandler errorHandler;
 
     @Inject
     public ServerServerInfo(
             ServerProperties serverProperties,
-            ServerInfoFile serverInfoFile,
+            ServerFileLoader fromFile,
+            ServerDBLoader fromDatabase,
             Processing processing,
             PlanConfig config,
-            DBSystem dbSystem,
-            Addresses addresses,
-            ErrorHandler errorHandler
+            Addresses addresses
     ) {
         super(serverProperties);
-        this.serverInfoFile = serverInfoFile;
+        this.fromFile = fromFile;
+        this.fromDatabase = fromDatabase;
         this.processing = processing;
-        this.dbSystem = dbSystem;
         this.addresses = addresses;
         this.config = config;
-        this.errorHandler = errorHandler;
     }
 
     @Override
-    public void enable() throws EnableException {
-        try {
-            serverInfoFile.prepare();
-        } catch (IOException e) {
-            throw new EnableException("Failed to read ServerInfoFile.yml", e);
-        }
-        super.enable();
+    protected void loadServerInfo() {
+        Optional<Server> loaded = fromFile.load(null);
+        server = loaded.orElseGet(this::registerNew);
+        processing.submitNonCritical(this::updateStorage);
     }
 
-    @Override
-    protected void loadServerInfo() throws EnableException {
-        Optional<UUID> serverUUID = serverInfoFile.getUUID();
-        try {
-            if (serverUUID.isPresent()) {
-                server = createServerObject(serverUUID.get());
-                processing.submitNonCritical(() -> updateDbInfo(serverUUID.get()));
-            } else {
-                server = registerServer();
-            }
-        } catch (DBOpException e) {
-            String causeMsg = e.getMessage();
-            throw new EnableException("Failed to read Server information from Database: " + causeMsg, e);
-        } catch (IOException e) {
-            throw new EnableException("Failed to read ServerInfoFile.yml", e);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (Exception e) {
-            throw new EnableException("Failed to perform a database transaction to store the server information", e);
-        }
-    }
-
-    private void updateDbInfo(UUID serverUUID) {
-        Database db = dbSystem.getDatabase();
-
-        Optional<Server> foundServer = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID));
-        if (!foundServer.isPresent()) {
-            try {
-                server = registerServer(serverUUID);
-            } catch (ExecutionException | IOException e) {
-                errorHandler.log(L.CRITICAL, this.getClass(), e);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            return;
-        }
-
-        server = foundServer.get();
-
-        // Update information
+    private void updateStorage() {
+        String address = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
         String name = config.get(PluginSettings.SERVER_NAME);
-        server.setName("plan".equalsIgnoreCase(name) ? "Server " + server.getId() : name);
 
-        addresses.getAccessAddress().ifPresent(server::setWebAddress);
+        server.setName(name);
+        server.setWebAddress(address);
 
-        int maxPlayers = serverProperties.getMaxPlayers();
-        server.setMaxPlayers(maxPlayers);
-
-        // Save
-        db.executeTransaction(new StoreServerInformationTransaction(server));
+        fromDatabase.save(server);
+        fromFile.save(server);
     }
 
-    private Server registerServer() throws ExecutionException, InterruptedException, IOException {
-        return registerServer(generateNewUUID());
+    private Server registerNew() {
+        return registerNew(generateNewUUID());
     }
 
-    private Server registerServer(UUID serverUUID) throws ExecutionException, InterruptedException, IOException {
-        Database db = dbSystem.getDatabase();
-
+    private Server registerNew(UUID serverUUID) {
         Server server = createServerObject(serverUUID);
+        fromDatabase.save(server);
 
-        // Save
-        db.executeTransaction(new StoreServerInformationTransaction(server))
-                .get(); // Wait until transaction has completed
-
-        // Load from database
-        server = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
-                .orElseThrow(() -> new IllegalStateException("Failed to Register Server (ID not found)"));
-
-        // Store the UUID in ServerInfoFile
-        serverInfoFile.saveServerUUID(serverUUID);
-        return server;
+        Server stored = fromDatabase.load(serverUUID)
+                .orElseThrow(() -> new EnableException("Failed to register server (not found after saving to database)"));
+        fromFile.save(stored);
+        return stored;
     }
 
     private Server createServerObject(UUID serverUUID) {
-        String webAddress = addresses.getAccessAddress().orElse(addresses.getFallbackLocalhostAddress());
+        String webAddress = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
         String name = config.get(PluginSettings.SERVER_NAME);
-        int maxPlayers = serverProperties.getMaxPlayers();
-        return new Server(-1, serverUUID, name, webAddress, maxPlayers);
+        return new Server(serverUUID, name, webAddress);
     }
 }

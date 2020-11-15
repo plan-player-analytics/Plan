@@ -18,12 +18,8 @@ package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSponge;
-import com.djrapitops.plan.commands.PlanCommand;
-import com.djrapitops.plugin.command.CommandNode;
 import dagger.Binds;
 import dagger.Module;
-
-import javax.inject.Named;
 
 /**
  * Dagger module for binding PlanSponge instance.
@@ -36,7 +32,4 @@ public interface SpongePlanModule {
     @Binds
     PlanPlugin bindPlanPlugin(PlanSponge plugin);
 
-    @Binds
-    @Named("mainCommand")
-    CommandNode bindMainCommand(PlanCommand command);
 }

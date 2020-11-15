@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering.cache;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.commands.TabCompleteCache;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 
 import javax.inject.Inject;
@@ -30,16 +31,19 @@ import javax.inject.Singleton;
 @Singleton
 public class CacheSystem implements SubSystem {
 
+    private final TabCompleteCache tabCompleteCache;
     private final SessionCache sessionCache;
     private final NicknameCache nicknameCache;
     private final GeolocationCache geolocationCache;
 
     @Inject
     public CacheSystem(
+            TabCompleteCache tabCompleteCache,
             SessionCache sessionCache,
             NicknameCache nicknameCache,
             GeolocationCache geolocationCache
     ) {
+        this.tabCompleteCache = tabCompleteCache;
         this.sessionCache = sessionCache;
         this.nicknameCache = nicknameCache;
         this.geolocationCache = geolocationCache;
@@ -49,6 +53,7 @@ public class CacheSystem implements SubSystem {
     public void enable() {
         nicknameCache.enable();
         geolocationCache.enable();
+        tabCompleteCache.enable();
     }
 
     @Override

@@ -18,6 +18,8 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -104,6 +106,14 @@ public enum DBType {
         }
 
         return false;
+    }
+
+    public static List<String> names() {
+        List<String> names = new ArrayList<>();
+        for (DBType value : values()) {
+            names.add(value.name);
+        }
+        return names;
     }
 
     public Sql getSql() {

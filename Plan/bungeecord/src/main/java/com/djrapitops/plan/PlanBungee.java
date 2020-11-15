@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.commands.PlanProxyCommand;
+import com.djrapitops.plan.command.use.BungeeCommand;
+import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
@@ -65,9 +66,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        PlanProxyCommand command = component.planCommand();
-        command.registerCommands();
-        registerCommand("planbungee", command);
+        registerCommand(component.planCommand().build());
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
@@ -88,6 +87,17 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public void onReload() {
         // Nothing to be done, systems are disabled
+    }
+
+    @Override
+    public void registerCommand(Subcommand command) {
+        if (command == null) {
+            logger.warn("Attempted to register a null command!");
+            return;
+        }
+        for (String name : command.getAliases()) {
+            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(runnableFactory, system.getErrorLogger(), command, name));
+        }
     }
 
     @Override

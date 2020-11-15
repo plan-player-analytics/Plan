@@ -16,25 +16,145 @@
  */
 package com.djrapitops.plan.exceptions.database;
 
+import com.djrapitops.plan.exceptions.ExceptionWithContext;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * Runtime exception for wrapping database errors.
  *
  * @author Rsl1122
  */
-public class DBOpException extends IllegalStateException {
+public class DBOpException extends IllegalStateException implements ExceptionWithContext {
+
+    private final ErrorContext context;
 
     public DBOpException(String message) {
         super(message);
+        this.context = null;
     }
 
     public DBOpException(String message, Throwable cause) {
-        super(message, cause);
+        this(message, cause, null);
     }
+
+    public DBOpException(String message, Throwable cause, ErrorContext context) {
+        super(message, cause);
+        this.context = context;
+    }
+
+    // Checkstyle.OFF: CyclomaticComplexity
 
     public static DBOpException forCause(String sql, SQLException e) {
-        return new DBOpException("SQL Failed: " + sql + "; " + e.getMessage(), e);
+        ErrorContext.Builder context = ErrorContext.builder();
+        int errorCode = e.getErrorCode();
+        context.related("Error code: " + errorCode)
+                .related(sql);
+        switch (errorCode) {
+            // SQLite Corrupt
+            case 10:
+            case 523:
+                context.related("SQL Corrupted")
+                        .whatToDo("Your SQLite has corrupted. This can happen if .db-wal or .db-shm files get replaced mid operation. Restore database.db from backup.");
+                break;
+            // Syntax error codes
+            case 1054: // MySQL
+            case 1064:
+            case 1146:
+            case 42000: // H2
+            case 42001:
+            case 42101:
+            case 42102:
+            case 42111:
+            case 42112:
+            case 42121:
+            case 42122:
+            case 42132:
+                context.related("SQL Grammar error")
+                        .whatToDo("Report this, there is an SQL grammar error.");
+                break;
+            // Type mismatch
+            case 20: // SQLite
+                context.related("SQL Type mismatch")
+                        .whatToDo("Report this, there is an SQL Type mismatch.");
+                break;
+            // Duplicate key
+            case 1062:
+            case 23001:
+            case 23505:
+                context.related("Duplicate key")
+                        .whatToDo("Report this, duplicate key exists in SQL.");
+                break;
+            // Constraint violation
+            case 19: // SQLite
+            case 275:
+            case 531:
+            case 787:
+            case 1043:
+            case 1299:
+            case 1555:
+            case 2579:
+            case 1811:
+            case 2067:
+            case 2323:
+            case 630: // MySQL
+            case 839:
+            case 840:
+            case 893:
+            case 1169:
+            case 1215:
+            case 1216:
+            case 1217:
+            case 1364:
+            case 1451:
+            case 1557:
+            case 22001: // H2
+            case 22003:
+            case 22012:
+            case 22018:
+            case 22025:
+            case 23000:
+            case 23002:
+            case 23502:
+            case 23506:
+            case 23507:
+            case 23513:
+                context.related("Constraint Violation")
+                        .whatToDo("Report this, there is an SQL Constraint Violation.");
+                break;
+            // Custom rules based on reported errors
+            case 11:
+            case 14:
+                context.related("SQLite file is corrupt.")
+                        .whatToDo("SQLite database is corrupt, restore database.db, .db-shm & .db-wal files from a backup, or repair the database: https://wordpress.semnaitik.com/repair-sqlite-database/.");
+                break;
+            case 1104:
+                context.whatToDo("MySQL has too small query limits for the query. SET SQL_BIG_SELECTS=1 or SET MAX_JOIN_SIZE=# (higher number)");
+                break;
+            case 1142:
+                context.related("Missing privilege")
+                        .whatToDo("Grant the required privileges to your MySQL user (often 'REFERENCES' privilege is missing).");
+                break;
+            case 1213:
+                context.related("Deadlock");
+                break;
+            case 1267:
+            case 1366:
+                context.related("Incorrect character encoding in MySQL")
+                        .whatToDo("Convert your MySQL database and tables to use uft8mb4: https://www.a2hosting.com/kb/developer-corner/mysql/convert-mysql-database-utf-8");
+                break;
+            default:
+                context.related("Unknown SQL Error code");
+        }
+        return new DBOpException("SQL Failure: " + e.getMessage(), e, context.build());
     }
 
+    // Checkstyle.ON: CyclomaticComplexity
+
+    @Override
+    public Optional<ErrorContext> getContext() {
+        return Optional.ofNullable(context);
+    }
 }

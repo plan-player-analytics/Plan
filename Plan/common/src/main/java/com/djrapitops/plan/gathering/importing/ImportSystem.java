@@ -24,6 +24,8 @@ import java.util.*;
 
 /**
  * Abstract representation of an ImportSystem.
+ * <p>
+ * TODO it is possible to remove the abstract part of this class by binding Importers to a Map with Dagger
  *
  * @author Rsl1122
  */
@@ -31,7 +33,7 @@ public abstract class ImportSystem implements SubSystem {
 
     protected final Map<String, Importer> importers;
 
-    public ImportSystem() {
+    protected ImportSystem() {
         importers = new HashMap<>();
     }
 

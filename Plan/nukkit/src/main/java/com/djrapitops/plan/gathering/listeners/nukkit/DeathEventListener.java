@@ -35,8 +35,9 @@ import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -49,15 +50,15 @@ import java.util.UUID;
 public class DeathEventListener implements Listener {
 
     private final Processing processing;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public DeathEventListener(
             Processing processing,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.processing = processing;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -78,7 +79,7 @@ public class DeathEventListener implements Listener {
             UUID uuid = dead.getUniqueId();
             handleKill(time, uuid, killerEntity);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, dead).build());
         }
     }
 
@@ -98,7 +99,7 @@ public class DeathEventListener implements Listener {
 
             handleKill(time, /* Not a player */ null, killerEntity);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, dead).build());
         }
     }
 

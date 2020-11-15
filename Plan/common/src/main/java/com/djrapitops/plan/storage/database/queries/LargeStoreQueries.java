@@ -164,7 +164,6 @@ public class LargeStoreQueries {
                     statement.setString(2, name);
                     statement.setString(3, webAddress);
                     statement.setBoolean(4, true);
-                    statement.setInt(5, info.getMaxPlayers());
                     statement.addBatch();
                 }
             }

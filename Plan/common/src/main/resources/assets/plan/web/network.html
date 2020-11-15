@@ -9,6 +9,7 @@
     <meta content="Player Analytics, network page that allows gaining insights to how players play on your network & servers."
           name="description">
     <meta content="Rsl1122" name="author">
+    <meta content="noindex, nofollow" name="robots">
 
     <title>Plan | Network</title>
 
@@ -24,13 +25,13 @@
 
 </head>
 
-<body id="page-top">
+<body>
 <script>
     var gmPieColors = [${gmPieColors}];
 </script>
 <div class="page-loader">
     <span class="loader"></span>
-    <p class="loader-text">Please wait..</span>
+    <p class="loader-text">Please wait..</p>
 </div>
 
 <!-- Page Wrapper -->
@@ -120,7 +121,7 @@
             <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
-            <a class="btn bg-plan" href="/auth/logout" id="logout-button">
+            <a class="btn bg-plan" href="./auth/logout" id="logout-button">
                 <i class="fa fa-fw fa-door-open"></i> Logout
             </a>
         </div>
@@ -162,6 +163,12 @@
                                            data-toggle="tab" href="#unique-tab" id="online-unique-tab" role="tab"><i
                                                 class="fa fa-fw fa-chart-area col-blue"></i> Day by Day</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="home" aria-selected="true" class="nav-link col-black"
+                                           data-toggle="tab" href="#hourly-unique-tab" id="online-hourly-unique-tab"
+                                           role="tab"><i
+                                                class="fa fa-fw fa-chart-area col-blue"></i> Hour by Hour</a>
+                                    </li>
                                 </ul>
                                 <div class="tab-content" id="onlineActivityTabContent">
                                     <div aria-labelledby="online-online-tab" class="tab-pane show active"
@@ -174,6 +181,11 @@
                                          id="unique-tab"
                                          role="tabpanel">
                                         <div class="chart-area" id="uniqueChart"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="online-unique-tab" class="tab-pane"
+                                         id="hourly-unique-tab" role="tabpanel">
+                                        <div class="chart-area" id="hourlyUniqueChart"><span class="loader"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -319,7 +331,7 @@
                     </div>
 
                     <div class="row" id="data_servers">
-                        <div class="col-xl-6 col-lg-6 col-sm-12 scrollbar">
+                        <div class="col-xl-6 col-lg-6 col-sm-12 scrollbar" style="max-height: 85vh">
                             <div id="data_server_list"></div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-sm-12">
@@ -721,8 +733,7 @@
                         v3.0</a></p>
                     <hr>
                     <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki"
-                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan Wiki,
-                        Tutorials & Documentation</a>
+                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan Wiki, Tutorials & Documentation</a>
                     <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/issues"
                        rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-bug"></i> Report Issues</a>
                     <a class="btn col-plan" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
@@ -771,11 +782,6 @@
 
 </div>
 <!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-fw fa-angle-up"></i>
-</a>
 
 <!-- Bootstrap core JavaScript-->
 <script src="./vendor/jquery/jquery.min.js"></script>
@@ -882,6 +888,22 @@
                     data: json.newPlayers, color: v.colors.newPlayers
                 };
                 dayByDay('uniqueChart', [uniquePlayers, newPlayers]);
+            } else if (error) {
+                $('#uniqueChart').text("Failed to load graph data: " + error)
+            }
+        });
+
+        jsonRequest("./v1/graph?type=hourlyUniqueAndNew", function (json, error) {
+            if (json) {
+                var uniquePlayers = {
+                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: json.uniquePlayers, color: v.colors.playersOnline
+                };
+                var newPlayers = {
+                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: json.newPlayers, color: v.colors.newPlayers
+                };
+                dayByDay('hourlyUniqueChart', [uniquePlayers, newPlayers]);
             } else if (error) {
                 $('#uniqueChart').text("Failed to load graph data: " + error)
             }

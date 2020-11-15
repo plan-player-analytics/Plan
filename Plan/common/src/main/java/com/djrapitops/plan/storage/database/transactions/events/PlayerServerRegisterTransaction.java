@@ -41,7 +41,7 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
     protected void performOperations() {
         super.performOperations();
         long registerDate = registered.getAsLong();
-        if (!query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID))) {
+        if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)))) {
             execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID));
         }
 

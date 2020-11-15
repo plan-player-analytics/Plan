@@ -19,7 +19,6 @@ package com.djrapitops.plan.identification;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -36,7 +35,7 @@ public abstract class ServerInfo implements SubSystem {
     protected Server server;
     protected final ServerProperties serverProperties;
 
-    public ServerInfo(ServerProperties serverProperties) {
+    protected ServerInfo(ServerProperties serverProperties) {
         this.serverProperties = serverProperties;
     }
 
@@ -57,12 +56,12 @@ public abstract class ServerInfo implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         loadServerInfo();
-        Verify.nullCheck(server, () -> new EnableException("Server information did not load!"));
+        if (server == null) throw new EnableException("Server information did not load!");
     }
 
-    protected abstract void loadServerInfo() throws EnableException;
+    protected abstract void loadServerInfo();
 
     @Override
     public void disable() {

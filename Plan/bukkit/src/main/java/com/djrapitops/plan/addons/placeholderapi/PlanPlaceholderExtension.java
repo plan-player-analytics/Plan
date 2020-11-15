@@ -18,14 +18,16 @@ package com.djrapitops.plan.addons.placeholderapi;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
+import java.util.UUID;
 
 /**
  * Placeholder expansion used to provide data from Plan on Bukkit.
@@ -34,18 +36,18 @@ import java.util.Collections;
  */
 public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
-    public final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
     private final VersionChecker versionChecker;
     private final PlanPlaceholders placeholders;
 
     public PlanPlaceholderExtension(
             PlanPlaceholders placeholders,
             PlanSystem system,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.placeholders = placeholders;
         this.versionChecker = system.getVersionChecker();
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Override
@@ -81,8 +83,9 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String params) {
+        UUID uuid = player != null ? player.getUniqueId() : null;
         try {
-            String value = placeholders.onPlaceholderRequest(player.getUniqueId(), params, Collections.emptyList());
+            String value = placeholders.onPlaceholderRequest(uuid, params, Collections.emptyList());
 
             if ("true".equals(value)) { //hack
                 value = PlaceholderAPIPlugin.booleanTrue();
@@ -92,7 +95,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
             return value;
         } catch (Exception e) {
-            errorHandler.log(L.WARN, getClass(), e);
+            errorLogger.log(L.WARN, e, ErrorContext.builder().whatToDo("Report this").related("Placeholder Request", params, uuid).build());
             return null;
         }
     }

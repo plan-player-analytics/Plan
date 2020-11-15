@@ -24,10 +24,11 @@ import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.debug.*;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Singleton;
@@ -46,20 +47,20 @@ public abstract class ConfigSystem implements SubSystem {
     protected final PlanConfig config;
     protected final Theme theme;
     protected final PluginLogger logger;
-    protected final ErrorHandler errorHandler;
+    protected final ErrorLogger errorLogger;
 
-    public ConfigSystem(
+    protected ConfigSystem(
             PlanFiles files,
             PlanConfig config,
             Theme theme,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.files = files;
         this.config = config;
         this.theme = theme;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     public PlanConfig getConfig() {
@@ -71,7 +72,7 @@ public abstract class ConfigSystem implements SubSystem {
     }
 
     @Override
-    public void enable() throws EnableException {
+    public void enable() {
         try {
             copyDefaults();
             config.reorder(Arrays.asList(
@@ -86,7 +87,7 @@ public abstract class ConfigSystem implements SubSystem {
 
             checkWrongTimeZone();
         } catch (IOException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.getConfigFilePath()).build());
             throw new EnableException("Failed to save default config: " + e.getMessage(), e);
         }
         theme.enable();
@@ -110,7 +111,7 @@ public abstract class ConfigSystem implements SubSystem {
             loggers.add(new ConsoleDebugLogger(logger));
         }
         if (Verify.containsOne(debugMode, "true", "both", "all", "file")) {
-            loggers.add(new FolderTimeStampFileDebugLogger(files.getLogsFolder(), () -> errorHandler));
+            loggers.add(new FolderTimeStampFileDebugLogger(files.getLogsFolder(), () -> errorLogger));
         }
         if (Verify.containsOne(debugMode, "true", "both", "all", "memory")) {
             loggers.add(debugLogger.getDebugLogger(MemoryDebugLogger.class).orElse(new MemoryDebugLogger()));
@@ -134,7 +135,7 @@ public abstract class ConfigSystem implements SubSystem {
         try {
             config.read();
         } catch (IOException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix read permissions to " + config.getConfigFilePath()).build());
         }
     }
 }

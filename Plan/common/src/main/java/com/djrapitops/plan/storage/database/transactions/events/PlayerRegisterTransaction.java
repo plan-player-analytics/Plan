@@ -51,7 +51,7 @@ public class PlayerRegisterTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        if (!query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) {
+        if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegistered(playerUUID)))) {
             long registerDate = registered.getAsLong();
             insertUser(registerDate);
             SessionCache.getCachedSession(playerUUID).ifPresent(session -> session.setAsFirstSessionIfMatches(registerDate));

@@ -28,11 +28,11 @@ public abstract class HasMoreThanZeroQueryStatement extends QueryStatement<Boole
 
     private String countColumnName = "c";
 
-    public HasMoreThanZeroQueryStatement(String sql) {
+    protected HasMoreThanZeroQueryStatement(String sql) {
         super(sql);
     }
 
-    public HasMoreThanZeroQueryStatement(String sql, String countColumnName) {
+    protected HasMoreThanZeroQueryStatement(String sql, String countColumnName) {
         super(sql);
         this.countColumnName = countColumnName;
     }

@@ -25,7 +25,7 @@ import java.util.List;
  */
 public abstract class PieWithDrilldown extends Pie {
 
-    public PieWithDrilldown(List<PieSlice> slices) {
+    protected PieWithDrilldown(List<PieSlice> slices) {
         super(slices);
     }
 

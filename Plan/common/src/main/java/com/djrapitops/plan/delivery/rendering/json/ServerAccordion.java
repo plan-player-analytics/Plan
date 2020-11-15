@@ -66,18 +66,18 @@ public class ServerAccordion {
 
         for (Map.Entry<UUID, DataContainer> entry : perServer.entrySet()) {
             UUID serverUUID = entry.getKey();
-            DataContainer perServer = entry.getValue();
+            DataContainer ofServer = entry.getValue();
             Map<String, Object> server = new HashMap<>();
 
             String serverName = serverNames.getOrDefault(serverUUID, unknown);
-            WorldTimes worldTimes = perServer.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes());
-            SessionsMutator sessionsMutator = SessionsMutator.forContainer(perServer);
+            WorldTimes worldTimes = ofServer.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes());
+            SessionsMutator sessionsMutator = SessionsMutator.forContainer(ofServer);
 
             server.put("server_name", serverName);
 
-            server.put("banned", perServer.getValue(PerServerKeys.BANNED).orElse(false));
-            server.put("operator", perServer.getValue(PerServerKeys.OPERATOR).orElse(false));
-            server.put("registered", year.apply(perServer.getValue(PerServerKeys.REGISTERED).orElse(0L)));
+            server.put("banned", ofServer.getValue(PerServerKeys.BANNED).orElse(false));
+            server.put("operator", ofServer.getValue(PerServerKeys.OPERATOR).orElse(false));
+            server.put("registered", year.apply(ofServer.getValue(PerServerKeys.REGISTERED).orElse(0L)));
             server.put("last_seen", year.apply(sessionsMutator.toLastSeen()));
 
             server.put("session_count", sessionsMutator.count());

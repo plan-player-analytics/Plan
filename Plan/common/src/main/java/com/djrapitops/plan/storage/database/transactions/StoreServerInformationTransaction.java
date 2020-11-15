@@ -53,8 +53,7 @@ public class StoreServerInformationTransaction extends Transaction {
                 statement.setString(2, server.getName());
                 statement.setString(3, server.getWebAddress());
                 statement.setBoolean(4, true);
-                statement.setInt(5, server.getMaxPlayers());
-                statement.setString(6, serverUUIDString);
+                statement.setString(5, serverUUIDString);
             }
         };
     }
@@ -67,7 +66,6 @@ public class StoreServerInformationTransaction extends Transaction {
                 statement.setString(2, server.getName());
                 statement.setString(3, server.getWebAddress());
                 statement.setBoolean(4, true);
-                statement.setInt(5, server.getMaxPlayers());
             }
         };
     }

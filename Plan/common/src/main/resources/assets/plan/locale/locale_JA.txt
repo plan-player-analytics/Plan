@@ -1,32 +1,95 @@
+API - css+                                      || PageExtension: ${0} added stylesheet(s) to ${1}, ${2}
+API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
 Cmd - Click Me                                  || ここをクリック
-Cmd - Link                                      ||   §2リンク: §f
-Cmd Disable - Disabled                          || §a「Plan」は無効になりました。「/planbungee reload」コマンドを使ってプラグインを再起動できます
+Cmd - Link                                      || リンク
+Cmd - Link Network                              || Network page: 
+Cmd - Link Player                               || Player page: 
+Cmd - Link Player JSON                          || Player json: 
+Cmd - Link Players                              || Players page: 
+Cmd - Link Register                             || Register page: 
+Cmd - Link Server                               || Server page: 
+CMD Arg - backup-file                           || Name of the backup file (case sensitive)
+CMD Arg - code                                  || Code used to finalize registration.
+CMD Arg - db type backup                        || Type of the database to backup. Current database is used if not specified.
+CMD Arg - db type clear                         || Type of the database to remove all data from.
+CMD Arg - db type hotswap                       || Type of the database to start using.
+CMD Arg - db type move from                     || Type of the database to move data from.
+CMD Arg - db type move to                       || Type of the database to move data to. Can not be same as previous.
+CMD Arg - db type restore                       || Type of the database to restore to. Current database is used if not specified.
+CMD Arg - feature                               || Name of the feature to disable: ${0}
+CMD Arg - player identifier                     || Name or UUID of a player
+CMD Arg - player identifier remove              || Identifier for a player that will be removed from current database.
+CMD Arg - server identifier                     || Name, ID or UUID of a server
+CMD Arg - subcommand                            || Use the command without subcommand to see help.
+CMD Arg - username                              || Username of another user. If not specified player linked user is used.
+CMD Arg Name - backup-file                      || backup-file
+CMD Arg Name - code                             || ${code}
+CMD Arg Name - export kind                      || export kind
+CMD Arg Name - feature                          || feature
+CMD Arg Name - import kind                      || import kind
+CMD Arg Name - name or uuid                     || name/uuid
+CMD Arg Name - server                           || server
+CMD Arg Name - subcommand                       || subcommand
+CMD Arg Name - username                         || username
+Cmd Confirm - accept                            || Accept
+Cmd Confirm - cancelled, no data change         || Cancelled. No data was changed.
+Cmd Confirm - cancelled, unregister             || Cancelled. '${0}' was not unregistered
+Cmd Confirm - clearing db                       || You are about to remove all Plan-data in ${0}
+Cmd Confirm - confirmation                      || Confirm: 
+Cmd Confirm - deny                              || Cancel
+Cmd Confirm - Expired                           || Confirmation expired, use the command again
+Cmd Confirm - Fail on accept                    || The accepted action errored upon execution: ${0}
+Cmd Confirm - Fail on deny                      || The denied action errored upon execution: ${0}
+Cmd Confirm - overwriting db                    || You are about to overwrite data in Plan ${0} with data in ${1}
+Cmd Confirm - remove player db                  || You are about to remove data of ${0} from ${1}
+Cmd Confirm - unregister                        || You are about to unregister '${0}' linked to ${1}
+Cmd db - creating backup                        || Creating a backup file '${0}.db' with contents of ${1}
+Cmd db - removal                                || Removing Plan-data from ${0}..
+Cmd db - removal player                         || Removing data of ${0} from ${1}..
+Cmd db - server uninstalled                     || §aIf the server is still installed, it will automatically set itself as installed in the database.
+Cmd db - write                                  || Writing to ${0}..
+Cmd Disable - Disabled                          || §a「Plan」は無効になりました。「reload」コマンドを使ってプラグインを再起動できます
+Cmd FAIL - Accepts only these arguments         || Accepts following as ${0}: ${1}
 Cmd FAIL - Database not open                    || §cデータベースは${0}です - しばらくしてからもう一度お試し下さい
+Cmd FAIL - Empty search string                  || The search string can not be empty
 Cmd FAIL - Invalid Username                     || §cこのユーザーはUUIDを所持していません
 Cmd FAIL - No Feature                           || §eこの機能は現在使用されていません！ (現在、「${0}」をサポートしています)
 Cmd FAIL - No Permission                        || §cあなたには実行する権限がありません
+Cmd FAIL - No player                            || Player '${0}' was not found, they have no UUID.
+Cmd FAIL - No player register                   || Player '${0}' was not found in the database.
+Cmd FAIL - No server                            || Server '${0}' was not found from the database.
 Cmd FAIL - Require only one Argument            || §c一つの引数「${1}」が必要です
 Cmd FAIL - Requires Arguments                   || §c引数「(${0}) ${1}」が必要です
+Cmd FAIL - see config                           || see '${0}' in config.yml
 Cmd FAIL - Unknown Username                     || §c入力されたユーザーはBukkit/Spigotサーバー上にいません
+Cmd FAIL - Users not linked                     || User is not linked to your account and you don't have permission to remove other user's accounts.
 Cmd FAIL - WebUser does not exists              || §c入力されたユーザーは存在しません!
 Cmd FAIL - WebUser exists                       || §c入力されたユーザー名は既に使われています!
+Cmd Footer - Help                               || §7Hover over command or arguments or use '/${0} ?' to learn more about them.
 Cmd Header - Analysis                           || > §2分析結果
+Cmd Header - Help                               || > §2/${0} Help
 Cmd Header - Info                               || > §2プレイヤーの分析結果
 Cmd Header - Inspect                            || > §2プレイヤー: §f${0}
 Cmd Header - Network                            || > §2ネットワークページ
 Cmd Header - Players                            || > §2プレイヤー
 Cmd Header - Search                             || > §2${0} §f${1}§2 の結果:
+Cmd Header - server list                        || id::name::uuid
 Cmd Header - Servers                            || > §2サーバー
+Cmd Header - web user list                      || username::linked to::permission level
 Cmd Header - Web Users                          || > §2${0} ウェブユーザー
 Cmd Info - Bungee Connection                    ||   §2BungeeCordに接続済み: §f${0}
-Cmd Info - Database                             ||   §2動作中のデータベース: §f${0}
+Cmd Info - Database                             ||   §2現在のデータベース: §f${0}
 Cmd Info - Reload Complete                      || §aリロードが完了しました
 Cmd Info - Reload Failed                        || §cプラグインのリロード中に何らかの問題が発生しました、Bukkit/SpigotサーバーかBungeeCordの再起動をお勧めします
 Cmd Info - Update                               ||   §2利用可能なアップデート: §f${0}
 Cmd Info - Version                              ||   §2バージョン: §f${0}
+Cmd network - No network                        || Server is not connected to a network. The link redirects to server page.
+Cmd Notify - No Address                         || §eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings.
 Cmd Notify - No WebUser                         || ウェブユーザーの情報がない可能性があります、「/plan register <password>」を使用してユーザーを登録して下さい
 Cmd Notify - WebUser register                   || 登録が完了しました: '${0}' 権限レベル: ${1}
+Cmd Qinspect - Active Playtime                  ||   §2Active Playtime: §f${0}
 Cmd Qinspect - Activity Index                   ||   §2活動指数: §f${0} | ${1}
+Cmd Qinspect - AFK Playtime                     ||   §2AFK Time: §f${0}
 Cmd Qinspect - Deaths                           ||   §2死亡回数: §f${0}
 Cmd Qinspect - Geolocation                      ||   §2接続地域: §f${0}
 Cmd Qinspect - Last Seen                        ||   §2最終ログイン日: §f${0}
@@ -37,39 +100,34 @@ Cmd Qinspect - Playtime                         ||   §2プレイ時間: §f${0}
 Cmd Qinspect - Registered                       ||   §2登録日: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2キックされた回数: §f${0}
 Cmd SUCCESS - Feature disabled                  || §a次にプラグインがリロードされるまで一時的に「${0}」を無効にしました。
-Cmd SUCCESS - WebUser register                  || §a新規ユーザー「(${0})」の登録に成功しました！次のリンクでWebパネルを見ることができます。
+Cmd SUCCESS - WebUser register                  || §a新規ユーザー「(${0})」の登録に成功しました！
+Cmd unregister - unregistering                  || Unregistering '${0}'..
 Cmd WARN - Database not open                    || §eデータベースは${0}です - 予想以上に時間がかかるかもしれません
 Cmd Web - Permission Levels                     || >\§70: 全てのページにアクセスできます\§71:「/players」と全てのプレイヤーページにアクセスできます\§72: ウェブユーザーと同じユーザー名でプレイヤーページにアクセスできます\§73+:権限を保持していません
-Command Help - /plan analyze                    || サーバーページのURLを表示します
-Command Help - /plan dev                        || 開発モードコマンド
-Command Help - /plan help                       || コマンドリストを表示します
-Command Help - /plan info                       || 「Plan」のバージョンを表示します
-Command Help - /plan inspect                    || 「プレイヤー」のURLを表示します
-Command Help - /plan manage                     || 「Plan」のデータベースを管理します
-Command Help - /plan manage backup              || データベースをバックアップします
-Command Help - /plan manage clear               || データベースを消去します
-Command Help - /plan manage disable             || 機能を一時的に無効にします
-Command Help - /plan manage export              || 手動でデータのエクスポートを行います
-Command Help - /plan manage hotswap             || データベースを高速で変更します
-Command Help - /plan manage import              || 他の場所からデータをインポートします
-Command Help - /plan manage move                || データベース間でデータを移動します
-Command Help - /plan manage raw                 || プレイヤーデータのJSONファイルを直接表示ます
-Command Help - /plan manage remove              || プレイヤーのデータを削除します
-Command Help - /plan manage restore             || 以前のバックアップから復元します
-Command Help - /plan manage uninstalled         || 指定されたサーバーをデータベースからアンインストールします
+Command Help - /plan db                         || Manage Plan database
+Command Help - /plan db backup                  || Backup data of a database to a file
+Command Help - /plan db clear                   || Remove ALL Plan data from a database
+Command Help - /plan db hotswap                 || データベースを高速で変更します
+Command Help - /plan db move                    || データベース間でデータを移動します
+Command Help - /plan db remove                  || Remove player's data from Current database
+Command Help - /plan db restore                 || Restore data from a file to a database
+Command Help - /plan db uninstalled             || Set a server as uninstalled in the database.
+Command Help - /plan disable                    || Disable the plugin or part of it
+Command Help - /plan export                     || Export html or json files manually
+Command Help - /plan import                     || Import data
+Command Help - /plan info                       || Information about the plugin
+Command Help - /plan ingame                     || プレイヤー情報をゲーム内で表示します
+Command Help - /plan json                       || View json of Player's raw data.
 Command Help - /plan network                    || 「ネットワーク」のページのURLを表示します
+Command Help - /plan player                     || 「プレイヤー」のURLを表示します
 Command Help - /plan players                    || 「プレイヤー」のページのURLを表示します
-Command Help - /plan qinspect                   || プレイヤー情報をゲーム内で表示します
 Command Help - /plan register                   || ウェブユーザーを登録します
 Command Help - /plan reload                     || 「Plan」を再起動します
 Command Help - /plan search                     || プレイヤー名を検索します
+Command Help - /plan server                     || サーバーページのURLを表示します
 Command Help - /plan servers                    || データベース内のBukkit/Spigotサーバー一覧を表示します
-Command Help - /plan web check                  || ウェブユーザーの点検を行います
-Command Help - /plan web delete                 || ウェブユーザーの削除を行います
-Command Help - /plan web level                  || 権限レベルに関する情報を表示します
-Command Help - /plan web list                   || ウェブユーザーの一覧を表示します
-Command Help - /plan webuser                    || ウェブユーザーを管理します
-Command Help - /planbungee disable              || プラグインを一時的に無効にします
+Command Help - /plan unregister                 || Unregister a user of Plan website
+Command Help - /plan users                      || List all web users
 Database - Apply Patch                          || 次のパッチを適用しています: ${0}..
 Database - Patches Applied                      || データベースに全てのパッチが正常に適用されました
 Database - Patches Applied Already              || データベースに全てのパッチが適用済みです
@@ -83,6 +141,7 @@ Disable - Unsaved Session Save                  || 未保存のセッション�
 Disable - WebServer                             || ウェブサーバーが無効になりました
 Enable                                          || プレイヤー分析が有効になりました
 Enable - Database                               || ${0}のデータベースの接続が確立しました
+Enable - Notify Bad IP                          || 0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!
 Enable - Notify Empty IP                        || server.propertiesの設定で、IPの項目が設定されておらずAlternative IPが使用されていません。そのため誤ったリンクが表示されます!
 Enable - Notify Geolocations disabled           || 位置情報サービスが有効ではありません。 (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || 「Plan」は初回起動時、「GeoLite2」の位置情報データベースをダウンロードするためインターネットアクセスが必要です
@@ -98,6 +157,7 @@ HTML - COMPARING_60_DAYS                        || 30日前との比較
 HTML - COMPARING_7_DAYS                         || 直近1週間との比較
 HTML - DATABASE_NOT_OPEN                        || データベースを開くことができませんでした。「/plan info」コマンドを実行して状況を確認して下さい
 HTML - ERROR                                    || エラーが発生したため認証に失敗しました
+HTML - EXPIRED_COOKIE                           || User cookie has expired
 HTML - INDEX_ACTIVE                             || よくログインしている
 HTML - INDEX_INACTIVE                           || 休止中
 HTML - INDEX_IRREGULAR                          || たまにログインしている
@@ -184,6 +244,7 @@ HTML - LOCAL_MACHINE                            || ローカルマシン
 HTML - NAV_PLUGINS                              || プラグイン
 HTML - NEW_CALENDAR                             || New:
 HTML - NO_KILLS                                 || プレイヤーキルなし
+HTML - NO_USER_PRESENT                          || User cookie not present
 HTML - OFFLINE                                  ||  オフライン
 HTML - ONLINE                                   ||  オンライン
 HTML - PER_DAY                                  || /日
@@ -211,7 +272,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || 加えて、以下の<span cl
 HTML - TEXT_DEV_VERSION                         || このバージョンは開発版です
 HTML - TEXT_DEVELOPED_BY                        || 開発者:
 HTML - TEXT_FIRST_SESSION                       || 初参加
-HTML - TEXT_LICENSED_UNDER                      || は以下のライセンスの下、開発されています
+HTML - TEXT_LICENSED_UNDER                      || 「Player Analytics」は以下のライセンスの下、開発されています
 HTML - TEXT_METRICS                             || 「bStats Metrics」が有効になっています
 HTML - TEXT_NO_EXTENSION_DATA                   || 「Extension Data」が存在しません
 HTML - TEXT_NO_LOW_TPS                          || TPSの低下が存在しません
@@ -236,7 +297,7 @@ HTML - TITLE_DISK                               || ドライブの容量
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || 詳細情報
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || ネットワーク内の接続状況
 HTML - TITLE_GRAPH_PUNCHCARD                    || 1ヶ月のパンチボード
-HTML - TITLE_INSIGHTS                           || 1ヶ月の状況
+HTML - TITLE_INSIGHTS                           || 1ヶ月のパンチボード
 HTML - TITLE_IS_AVAILABLE                       || が利用可能です
 HTML - TITLE_LAST_24_HOURS                      || 24時間
 HTML - TITLE_LAST_30_DAYS                       || 1ヶ月
@@ -264,14 +325,14 @@ HTML - TITLE_SEEN_NICKNAMES                     || ニックネーム一覧
 HTML - TITLE_SERVER                             || サーバー
 HTML - TITLE_SERVER_AS_NUMBERS                  || サーバーの状況
 HTML - TITLE_SERVER_OVERVIEW                    || サーバーの概要
-HTML - TITLE_SERVER_PLAYTIME                    || サーバーのプレイ時間
-HTML - TITLE_SERVER_PLAYTIME_30                 || 直近30日間のサーバーのプレイ時間
-HTML - TITLE_SESSION_START                      || 接続開始時間
+HTML - TITLE_SERVER_PLAYTIME                    || 各サーバーのプレイ時間
+HTML - TITLE_SERVER_PLAYTIME_30                 || 各サーバーでの1ヶ月のプレイ時間
+HTML - TITLE_SESSION_START                      || 接続した時間
 HTML - TITLE_THEME_SELECT                       || テーマ選択
 HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || パンチカード
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || 増減
-HTML - TITLE_TRENDS                             || 直近30日間でのトレンド
+HTML - TITLE_TRENDS                             || 1ヶ月間の増減
 HTML - TITLE_VERSION                            || バージョン
 HTML - TITLE_WEEK_COMPARISON                    || 直近1周間での比較
 HTML - TITLE_WORLD                              || ワールドのロード数
@@ -300,29 +361,30 @@ HTML ERRORS - PAGE_NOT_FOUND_404                || ページは存在しませ�
 HTML ERRORS - UNAUTHORIZED_401                  || 未認証状態です
 HTML ERRORS - UNKNOWN_PAGE_404                  || リンクが間違っています、コマンドを使用してURLを確認して下さい。 URL例:</p><p>/player/PlayerName<br>/server/ServerName</p>
 HTML ERRORS - UUID_404                          || データベース内にプレヤーのUUIDが存在しません
-In Depth Help - /plan ?                         || > §2主要なコマンド\  補助コマンドの表示とヘルプ\  §2/plan §f補助コマンドの一覧を表示します\  §2/plan <subcommand> ? §f詳細なヘルプを表示します
-In Depth Help - /plan analyze ?                 || > §2分析コマンド\  サーバーページを更新して、ウェブページへのリンクを表示します
-In Depth Help - /plan inspect ?                 || > §2検査コマンド\  プレイヤーページを更新して、ウェブページへのリンクを表示します
-In Depth Help - /plan manage ?                  || > §2管理コマンド\  MySQLまたはSQLiteの「Plan」のデータベースを管理します\  §2/plan m §f補助コマンドの一覧を表示します\  §2/plan m <subcommand> ? §f詳細なヘルプを表示します
-In Depth Help - /plan manage backup ?           || > §2バックアップコマンド\  現在アクティブになっているデータベースの内容を含むSQLiteの新しいデータベースを「Plan」のプラグインフォルダ内に作成します(拡張子は「.db」です)
-In Depth Help - /plan manage clear ?            || > §2クリア補助コマンド\  アクティブになっているデータベースの全てを削除します。使用には注意が必要です
-In Depth Help - /plan manage disable ?          || > §2Disable Subcommand\  Can disable parts of the plugin until next reload.\  Accepted arguments:\    §2kickcount §fDisables kick counts in case /kickall is used on shutdown macro.
-In Depth Help - /plan manage export ?           || > §2エクスポート補助コマンド\  分析結果を特定のフォルダーへのエクスポートを有効化します\  使用できる引数:\    §2list §fList possible arguments.\    §2players §fExport /players, /player pages + /player/raw json depending on config values.\    §2server_json §fExport /server/raw JSON if enabled in config.
-In Depth Help - /plan manage import ?           || > §2インポート補助コマンド\  別のソースからデータをインポートします\  使用できる引数:\    §2オフライン §fBukkitのプレイヤーデータ、登録日と名前のみを登録できます
-In Depth Help - /plan manage move ?             || > §2移動補助コマンド\  SQLiteからMySQLもしくは他の形式にデータを移行させます\  ターゲットとなるデータベースは移行前に空である必要があります
-In Depth Help - /plan manage raw ?              || > §2生のデータ補助コマンド\ 生のJSONデータページへのリンクを表示します\  「Plan」の内部ウェブサーバーが有効になっていない場合は利用できません
-In Depth Help - /plan manage remove ?           || > §2削除補助コマンド\  プレイヤーのデータをアクティブになっているデータベースから削除します
-In Depth Help - /plan manage restore ?          || > §2復元補助コマンド\  データベースを以前にバックアップしたSQLiteデータベース(拡張子が「.db」のファイル)に復元します\  他のサーバーの拡張子が「.db」のデータベースをMySQLに復元することもできます\  ターゲットとなるデータベースは移行前に空である必要があります
-In Depth Help - /plan manage uninstalled ?      || > §2サーバーアンインストール補助コマンド\  指定されたサーバーをデータベースからアンインストールします\  コマンドが実行されているサーバーをアンインストールするサーバーとしてマークすることはできません\  サーバーの接続システムに影響します
-In Depth Help - /plan network ?                 || > §2ネットワークコマンド\  「ネットワーク」のページのURLを表示します\  BungeeCordのネットワーク上にない場合は、このページにサーバーページが表示されます。
-In Depth Help - /plan players ?                 || > §2プレイヤーコマンド\  「プレイヤー」のページのURLを表示します
-In Depth Help - /plan qinspect ?                || > §2クイック検査コマンド\  ゲーム内にいるプレイヤーに関する情報を表示します。
-In Depth Help - /plan reload ?                  || > §2リロードコマンド\ 「onDisable」と「onEnable」を使ってプラグインを再起動します。\  §bその状態で「Swapping jar」は対応していません
-In Depth Help - /plan search ?                  || > §2検索コマンド\  与えられた引数に一致するプレイヤー名のリストを取得します\§7  例: /plan search 123 - 名前に「123」を含むすべてのユーザーを検索します
-In Depth Help - /plan servers ?                 || > §2サーバーコマンド\  データベース内の「Plan」サーバーのリストを表示します\  BungeeCordネットワークのデータベースにサーバーを登録する際の問題をデバッグするために使用できます
-In Depth Help - /plan web ?                     || < §2ウェブユーザー管理コマンド\  §2/plan web §f補助コマンドの一覧を表示します\  §2/plan web <subcommand> ? §f詳細なヘルプを表示します
-In Depth Help - /plan web register ?            || > §2登録コマンド\  新しいウェブユーザーを登録します。\  プレイヤーが他のプレイヤーをユーザー登録するには「plan.webmanage」権限が必要です\  パスワードはPBKDF2(64,000回のSHA1の繰り返し)でソルト(暗号論)をかけてハッシュされます。
-In Depth Help - /planbungee disable ?           || > §2無効化コマンド\  BungeeCordの「Plan」で「onDisable」を実行します\  あとで「/planbungee reload」を使ってプラグインを有効にすることができます\  §bその状態で「Swapping jar」は対応していません
+In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
+In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.
+In Depth Help - /plan db clear                  || Clears all Plan tables, removing all Plan-data in the process.
+In Depth Help - /plan db hotswap                || Reloads the plugin with the other database and changes the config to match.
+In Depth Help - /plan db move                   || Overwrites contents in the other database with the contents in another.
+In Depth Help - /plan db remove                 || Removes all data linked to a player from the Current database.
+In Depth Help - /plan db restore                || Uses SQLite backup file and overwrites contents of the target database.
+In Depth Help - /plan db uninstalled            || Marks a server in Plan database as uninstalled so that it will not show up in server queries.
+In Depth Help - /plan disable                   || Disable the plugin or part of it until next reload/restart.
+In Depth Help - /plan export                    || Performs an export to export location defined in the config.
+In Depth Help - /plan import                    || Performs an import to load data into the database.
+In Depth Help - /plan info                      || Display the current status of the plugin.
+In Depth Help - /plan ingame                    || ゲーム内にいるプレイヤーに関する情報を表示します。
+In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
+In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
+In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
+In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.
+In Depth Help - /plan register                  || Use without arguments to get link to register page. Use --code [code] after registration to get a user.
+In Depth Help - /plan reload                    || Disable and enable the plugin to reload any changes in config.
+In Depth Help - /plan search                    || List all matching player names to given part of a name.
+In Depth Help - /plan server                    || Obtain a link to the /server page of a specific server, or the current server if no arguments are given.
+In Depth Help - /plan servers                   || List ids, names and uuids of servers in the database.
+In Depth Help - /plan unregister                || Use without arguments to unregister player linked user, or with username argument to unregister another user.
+In Depth Help - /plan users                     || Lists web users as a table.
 Manage - Confirm Overwrite                      || ${0}のデータは上書きされます!
 Manage - Confirm Removal                        || ${0}のデータは削除されます!
 Manage - Fail                                   || > §c何かがうまくいきませんでした: ${0}
@@ -335,6 +397,7 @@ Manage - Fail Same Database                     || > §c同じデータベース
 Manage - Fail Same server                       || このサーバーをアンインストールするサーバーとして指定することはできません(あなたがこのサーバーにログインしているため)
 Manage - Fail, Confirmation                     || > §c実行を確認するために引数「-a」を追加します: ${0}
 Manage - List Importers                         || インポーター:
+Manage - Progress                               || ${0} / ${1} processed..
 Manage - Remind HotSwap                         || §e新しいデータベースに交換することを忘れないで下さい(/plan m hotswap ${0})。そして、プラグインをリロードして下さい
 Manage - Start                                  || > §2データを処理中です..
 Manage - Success                                || > §a成功しました!
@@ -352,7 +415,12 @@ Version FAIL - Read versions.txt                || Github/versions.txtに存在�
 Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || Webサーバー: 証明書が存在ません -> HTTPサーバーを使用します
 WebServer - Notify HTTP User Auth               || Webサーバー: ユーザー認証を無効にします (HTTP経由だと安全ではないためです)
+WebServer - Notify HTTPS User Auth              || WebServer: User Authorization Disabled! (Disabled in config)
+Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
+Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
 WebServer - Notify no Cert file                 || Webサーバー: 以下のパスに保存された認証キーファイルが存在しません: ${0}
+WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Link points to the Proxy
+WebServer FAIL - EOF                            || WebServer: EOF when reading Certificate file. (Check that the file is not empty)
 WebServer FAIL - Port Bind                      || Webサーバーの初期化が正常に終了しませんでした。ポート番号(${0})は使用されていませんか?
 WebServer FAIL - SSL Context                    || Webサーバー: SSLコンテキストの初期化に失敗しました。
 WebServer FAIL - Store Load                     || Webサーバー: SSL証明書のロードに失敗しました

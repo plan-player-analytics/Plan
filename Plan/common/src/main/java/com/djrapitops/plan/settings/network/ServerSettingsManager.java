@@ -31,9 +31,9 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.NewerConfigQuery;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;
@@ -63,7 +63,7 @@ public class ServerSettingsManager implements SubSystem {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final TaskSystem taskSystem;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
     private final PluginLogger logger;
     private FileWatcher watcher;
 
@@ -75,7 +75,7 @@ public class ServerSettingsManager implements SubSystem {
             ServerInfo serverInfo,
             TaskSystem taskSystem,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.files = files;
         this.config = config;
@@ -83,7 +83,7 @@ public class ServerSettingsManager implements SubSystem {
         this.serverInfo = serverInfo;
         this.taskSystem = taskSystem;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class ServerSettingsManager implements SubSystem {
     }
 
     private FileWatcher prepareFileWatcher() {
-        FileWatcher fileWatcher = new FileWatcher(files.getDataFolder(), errorHandler);
+        FileWatcher fileWatcher = new FileWatcher(files.getDataFolder(), errorLogger);
         File configFile = files.getConfigFile();
         fileWatcher.addToWatchlist(new WatchedFile(configFile,
                 () -> updateConfigInDB(configFile)

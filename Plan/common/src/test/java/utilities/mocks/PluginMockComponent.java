@@ -18,6 +18,7 @@ package utilities.mocks;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import utilities.dagger.DaggerPlanPluginComponent;
 import utilities.dagger.PlanPluginComponent;
 
@@ -50,9 +51,20 @@ public class PluginMockComponent {
     }
 
     public PlanSystem getPlanSystem() throws Exception {
-        if (component == null) {
-            component = DaggerPlanPluginComponent.builder().plan(getPlanMock()).build();
-        }
+        initComponent();
         return component.system();
+    }
+
+    private void initComponent() throws Exception {
+        if (component == null) {
+            component = DaggerPlanPluginComponent.builder()
+                    .bindTemporaryDirectory(tempDir)
+                    .plan(getPlanMock()).build();
+        }
+    }
+
+    public PluginErrorLogger getPluginErrorLogger() throws Exception {
+        initComponent();
+        return component.pluginErrorLogger();
     }
 }

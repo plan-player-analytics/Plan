@@ -31,7 +31,7 @@ public abstract class ExecStatement implements Executable {
 
     private final String sql;
 
-    public ExecStatement(String sql) {
+    protected ExecStatement(String sql) {
         this.sql = sql;
     }
 

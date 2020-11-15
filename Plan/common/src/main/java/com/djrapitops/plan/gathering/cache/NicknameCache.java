@@ -22,8 +22,8 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.NicknameQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +42,7 @@ public class NicknameCache implements SubSystem {
 
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private final Map<UUID, String> displayNames;
 
@@ -50,11 +50,11 @@ public class NicknameCache implements SubSystem {
     public NicknameCache(
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
         displayNames = new HashMap<>();
     }
 
@@ -99,7 +99,7 @@ public class NicknameCache implements SubSystem {
                     NicknameQueries.fetchLastSeenNicknameOfPlayer(uuid, serverInfo.getServerUUID())
             ).map(Nickname::getName);
         } catch (DBOpException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e);
         }
         return Optional.empty();
     }

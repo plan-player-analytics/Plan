@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.gathering;
 
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GMTimes;
@@ -30,7 +31,6 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
 import extension.PrintExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,17 +66,20 @@ class ShutdownSaveTest {
 
     @BeforeEach
     void setupShutdownSaveObject(@TempDir Path temporaryFolder) throws Exception {
-        PlanPluginComponent pluginComponent = DaggerPlanPluginComponent.builder().plan(
-                PlanPluginMocker.setUp()
-                        .withDataFolder(temporaryFolder.resolve("ShutdownSaveTest").toFile())
-                        .withLogging()
-                        .getPlanMock()
-        ).build();
+        PlanPluginComponent pluginComponent = DaggerPlanPluginComponent.builder()
+                .bindTemporaryDirectory(temporaryFolder)
+                .plan(
+                        PlanPluginMocker.setUp()
+                                .withDataFolder(temporaryFolder.resolve("ShutdownSaveTest").toFile())
+                                .withLogging()
+                                .getPlanMock()
+                ).build();
+        PlanSystem system = pluginComponent.system();
 
-        database = pluginComponent.system().getDatabaseSystem().getSqLiteFactory().usingFileCalled("test");
+        database = system.getDatabaseSystem().getSqLiteFactory().usingFileCalled("test");
         database.init();
 
-        sessionCache = pluginComponent.system().getCacheSystem().getSessionCache();
+        sessionCache = system.getCacheSystem().getSessionCache();
 
         storeNecessaryInformation();
         placeSessionToCache();
@@ -85,7 +88,7 @@ class ShutdownSaveTest {
         when(dbSystemMock.getDatabase()).thenReturn(database);
 
         TestPluginLogger logger = new TestPluginLogger();
-        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, new ConsoleErrorLogger(logger)) {
+        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, system.getErrorLogger()) {
             @Override
             protected boolean checkServerShuttingDownStatus() {
                 return shutdownStatus;
@@ -108,7 +111,7 @@ class ShutdownSaveTest {
         UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
         String worldName = TestConstants.WORLD_ONE_NAME;
 
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, serverUUID, "-", "", 0)));
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, "-", "")));
         database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName))
                 .get();

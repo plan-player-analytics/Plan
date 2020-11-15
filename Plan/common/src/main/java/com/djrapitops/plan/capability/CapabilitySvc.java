@@ -27,8 +27,17 @@ import java.util.function.Consumer;
  */
 public class CapabilitySvc implements CapabilityService {
 
+    private CapabilitySvc() {
+        // Hide constructor
+    }
+
+    /**
+     * Implementation detail.
+     *
+     * @param isEnabled Did the plugin enable properly.
+     */
     public static void notifyAboutEnable(boolean isEnabled) {
-        for (Consumer<Boolean> enableListener : CapabilityService.ListHolder.ENABLE_LISTENERS) {
+        for (Consumer<Boolean> enableListener : CapabilityService.ListHolder.ENABLE_LISTENERS.get()) {
             enableListener.accept(isEnabled);
         }
     }

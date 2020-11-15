@@ -23,10 +23,10 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plugin.benchmarking.Timings;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -35,10 +35,8 @@ import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +48,7 @@ public class MySQLDB extends SQLDB {
 
     private static int increment = 1;
 
-    protected DataSource dataSource;
+    protected HikariDataSource dataSource;
 
     @Inject
     public MySQLDB(
@@ -59,10 +57,9 @@ public class MySQLDB extends SQLDB {
             Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger pluginLogger,
-            Timings timings,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, pluginLogger, errorHandler);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, pluginLogger, errorLogger);
     }
 
     private static synchronized void increment() {
@@ -78,7 +75,7 @@ public class MySQLDB extends SQLDB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            errorLogger.log(L.CRITICAL, e, ErrorContext.builder().whatToDo("Install MySQL Driver to the server").build());
         }
     }
 
@@ -101,6 +98,7 @@ public class MySQLDB extends SQLDB {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
+            hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
             hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
 
             String username = config.get(DatabaseSettings.MYSQL_USER);
@@ -108,6 +106,7 @@ public class MySQLDB extends SQLDB {
 
             hikariConfig.setUsername(username);
             hikariConfig.setPassword(password);
+            hikariConfig.addDataSourceProperty("connectionInitSql", "set time_zone = '+00:00'");
 
             hikariConfig.setPoolName("Plan Connection Pool-" + increment);
             increment();
@@ -128,9 +127,7 @@ public class MySQLDB extends SQLDB {
         Connection connection = dataSource.getConnection();
         if (!connection.isValid(5)) {
             connection.close();
-            if (dataSource instanceof HikariDataSource) {
-                ((HikariDataSource) dataSource).close();
-            }
+            dataSource.close();
             try {
                 setupDataSource();
                 // get new connection after restarting pool
@@ -140,23 +137,14 @@ public class MySQLDB extends SQLDB {
             }
         }
         if (connection.getAutoCommit()) connection.setAutoCommit(false);
-        setTimezoneToUTC(connection);
         return connection;
-    }
-
-    private void setTimezoneToUTC(Connection connection) throws SQLException {
-        try (Statement statement = connection.createStatement()) {
-            statement.execute("set time_zone = '+00:00'");
-        }
     }
 
     @Override
     public void close() {
         super.close();
 
-        if (dataSource instanceof HikariDataSource) {
-            ((HikariDataSource) dataSource).close();
-        }
+        if (dataSource != null) dataSource.close();
     }
 
     @Override
@@ -166,7 +154,7 @@ public class MySQLDB extends SQLDB {
                 connection.close();
             }
         } catch (SQLException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.CRITICAL, e, ErrorContext.builder().related("Closing connection").build());
         }
     }
 

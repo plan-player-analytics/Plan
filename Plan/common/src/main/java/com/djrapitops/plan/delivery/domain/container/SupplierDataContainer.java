@@ -75,7 +75,7 @@ public class SupplierDataContainer implements DataContainer {
     }
 
     private <T> Supplier<T> getSupplier(Key<T> key) {
-        return (Supplier<T>) map.get(key);
+        return map.get(key);
     }
 
     @Override

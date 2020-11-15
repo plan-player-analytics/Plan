@@ -17,6 +17,7 @@
 package com.djrapitops.plan.modules;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.IPlugin;
 import com.djrapitops.plugin.benchmarking.Timings;
 import com.djrapitops.plugin.command.ColorScheme;
@@ -70,8 +71,8 @@ public class APFModule {
 
     @Provides
     @Singleton
-    ErrorHandler provideErrorHandler(IPlugin plugin) {
-        return plugin.getErrorHandler();
+    ErrorHandler provideErrorHandler(ErrorLogger errorLogger) {
+        return errorLogger;
     }
 
     @Provides

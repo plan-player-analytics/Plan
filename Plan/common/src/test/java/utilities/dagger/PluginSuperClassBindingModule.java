@@ -18,24 +18,16 @@ package utilities.dagger;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.TaskSystem;
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.H2DB;
-import com.djrapitops.plan.storage.database.MySQLDB;
-import com.djrapitops.plan.storage.database.SQLiteDB;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Module;
 import dagger.Provides;
 import org.mockito.Mockito;
 import utilities.mocks.TestProcessing;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import static org.mockito.Mockito.when;
@@ -47,29 +39,6 @@ import static org.mockito.Mockito.when;
  */
 @Module
 public class PluginSuperClassBindingModule {
-
-    @Provides
-    @Singleton
-    DBSystem provideDatabaseSystem(
-            PlanConfig config,
-            Locale locale,
-            SQLiteDB.Factory sqLiteDB,
-            H2DB.Factory h2Factory,
-            MySQLDB mySQLDB,
-            PluginLogger logger
-    ) {
-        return new DBSystem(locale, sqLiteDB, h2Factory, logger) {
-            @Override
-            public void enable() throws EnableException {
-                databases.add(sqLiteDB.usingDefaultFile());
-                databases.add(h2Factory.usingDefaultFile());
-                databases.add(mySQLDB);
-                String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();
-                db = getActiveDatabaseByName(dbType);
-                super.enable();
-            }
-        };
-    }
 
     @Provides
     @Singleton
@@ -114,6 +83,13 @@ public class PluginSuperClassBindingModule {
         when(mock.getEntityCount(Mockito.any())).thenCallRealMethod();
         when(mock.getTPS()).thenCallRealMethod();
         return mock;
+    }
+
+    @Provides
+    @Singleton
+    @Named("mainCommandName")
+    String provideMainCommandName() {
+        return "plan";
     }
 
 }

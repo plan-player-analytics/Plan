@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Rsl1122
  */
-public class SpongeSystemTest {
+class SpongeSystemTest {
 
     private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 

@@ -36,12 +36,10 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.debug.CombineDebugLogger;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
-import com.djrapitops.plugin.logging.error.DefaultErrorHandler;
 import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.RunnableFactory;
 import com.djrapitops.plugin.task.nukkit.NukkitRunnableFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +52,6 @@ import java.util.Map;
 public class NukkitPlugin extends PluginBase implements APFPlugin {
 
     protected final CombineDebugLogger debugLogger;
-    protected final DefaultErrorHandler errorHandler;
     protected final Timings timings;
     protected final RunnableFactory runnableFactory;
     private final Map<String, CommandNode> commands;
@@ -82,7 +79,6 @@ public class NukkitPlugin extends PluginBase implements APFPlugin {
                 this::getDebugLogger,
                 this::getLogger
         );
-        this.errorHandler = new DefaultErrorHandler(this, logger, new File(getDataFolder(), "logs"));
         commands = new HashMap<>();
     }
 
@@ -153,8 +149,9 @@ public class NukkitPlugin extends PluginBase implements APFPlugin {
     }
 
     @Override
+    @Deprecated
     public ErrorHandler getErrorHandler() {
-        return errorHandler;
+        return null;
     }
 
     @Override
@@ -168,9 +165,7 @@ public class NukkitPlugin extends PluginBase implements APFPlugin {
     }
 
     @Override
-    public void setErrorHandlers(ErrorHandler... errorHandlers) {
-        errorHandler.setErrorHandlers(errorHandlers);
-    }
+    public void setErrorHandlers(ErrorHandler... errorHandlers) { }
 
     @Override
     public void onReload() {

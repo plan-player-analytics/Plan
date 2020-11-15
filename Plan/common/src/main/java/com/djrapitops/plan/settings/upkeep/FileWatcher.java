@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan.settings.upkeep;
 
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
@@ -36,7 +37,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
  */
 public class FileWatcher extends Thread {
 
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     private volatile boolean running;
 
@@ -45,16 +46,16 @@ public class FileWatcher extends Thread {
 
     public FileWatcher(
             File folder,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        this(folder.toPath(), errorHandler);
+        this(folder.toPath(), errorLogger);
     }
 
     public FileWatcher(
             Path watchedPath,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
         this.running = false;
         this.watchedFiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
@@ -75,7 +76,7 @@ public class FileWatcher extends Thread {
             watchedPath.register(watcher, ENTRY_MODIFY);
             runLoop(watcher);
         } catch (IOException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().build());
             interrupt();
         } catch (InterruptedException e) {
             interrupt();

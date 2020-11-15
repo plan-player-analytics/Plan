@@ -41,7 +41,7 @@ public class RandomData {
     }
 
     public static long randomTime() {
-        return randomTimeAfter(0);
+        return randomTimeAfter(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(60L));
     }
 
     public static long randomTimeAfter(long after) {

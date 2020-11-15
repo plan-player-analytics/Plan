@@ -36,8 +36,9 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
@@ -72,7 +73,7 @@ public class PlayerOnlineListener {
     private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
     private final Status status;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public PlayerOnlineListener(
@@ -85,7 +86,7 @@ public class PlayerOnlineListener {
             NicknameCache nicknameCache,
             SessionCache sessionCache,
             Status status,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.processing = processing;
@@ -97,7 +98,7 @@ public class PlayerOnlineListener {
         this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
         this.status = status;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Listener(order = Order.POST)
@@ -105,7 +106,7 @@ public class PlayerOnlineListener {
         try {
             actOnLoginEvent(event);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -120,12 +121,12 @@ public class PlayerOnlineListener {
     public void onKick(KickPlayerEvent event) {
         try {
             UUID playerUUID = event.getTargetEntity().getUniqueId();
-            if (!status.areKicksCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(playerUUID)) {
+            if (status.areKicksNotCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(playerUUID)) {
                 return;
             }
             dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(playerUUID));
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -143,7 +144,7 @@ public class PlayerOnlineListener {
         try {
             actOnJoinEvent(event);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -208,7 +209,7 @@ public class PlayerOnlineListener {
         try {
             actOnQuitEvent(event);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

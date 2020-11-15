@@ -19,8 +19,9 @@ package com.djrapitops.plan.gathering.listeners.bukkit;
 import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -46,11 +47,11 @@ public class BukkitAFKListener implements Listener {
     static AFKTracker AFK_TRACKER;
 
     private final Map<UUID, Boolean> ignorePermissionInfo;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public BukkitAFKListener(PlanConfig config, ErrorHandler errorHandler) {
-        this.errorHandler = errorHandler;
+    public BukkitAFKListener(PlanConfig config, ErrorLogger errorLogger) {
+        this.errorLogger = errorLogger;
         this.ignorePermissionInfo = new HashMap<>();
 
         BukkitAFKListener.assignAFKTracker(config);
@@ -79,7 +80,7 @@ public class BukkitAFKListener implements Listener {
 
             AFK_TRACKER.performedAction(uuid, time);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

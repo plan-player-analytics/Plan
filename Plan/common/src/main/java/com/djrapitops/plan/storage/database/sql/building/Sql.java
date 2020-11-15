@@ -43,6 +43,7 @@ public abstract class Sql {
     public static final String INNER_JOIN = " JOIN ";
     public static final String LEFT_JOIN = " LEFT JOIN ";
     public static final String UNION = " UNION ";
+    public static final String UNION_ALL = " UNION ALL ";
     public static final String AND = " AND ";
     public static final String OR = " OR ";
     public static final String IS_NULL = " IS NULL";
@@ -78,6 +79,8 @@ public abstract class Sql {
 
     public abstract String dateToDayStamp(String sql);
 
+    public abstract String dateToHourStamp(String sql);
+
     public abstract String dateToDayOfWeek(String sql);
 
     public abstract String dateToHour(String sql);
@@ -98,6 +101,11 @@ public abstract class Sql {
         @Override
         public String dateToDayStamp(String sql) {
             return "DATE(" + sql + ')';
+        }
+
+        @Override
+        public String dateToHourStamp(String sql) {
+            return "DATE_FORMAT(" + sql + ",'%Y-%m-%d %H:00:00')";
         }
 
         @Override
@@ -130,6 +138,11 @@ public abstract class Sql {
         }
 
         @Override
+        public String dateToHourStamp(String sql) {
+            return "DATE_FORMAT(" + sql + ",'yyyy-MM-dd HH:00:00')";
+        }
+
+        @Override
         public String dateToHour(String sql) {
             return "HOUR(" + sql + ')';
         }
@@ -151,6 +164,11 @@ public abstract class Sql {
         @Override
         public String dateToDayStamp(String sql) {
             return "strftime('%Y-%m-%d'," + sql + ')';
+        }
+
+        @Override
+        public String dateToHourStamp(String sql) {
+            return "strftime('%Y-%m-%d %H:00:00'," + sql + ')';
         }
 
         @Override

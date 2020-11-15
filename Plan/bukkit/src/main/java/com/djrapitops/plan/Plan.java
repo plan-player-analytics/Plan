@@ -17,7 +17,8 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.addons.placeholderapi.BukkitPlaceholderRegistrar;
-import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.commands.use.BukkitCommand;
+import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -28,6 +29,7 @@ import com.djrapitops.plugin.benchmarking.Benchmark;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.task.AbsRunnable;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.logging.Level;
@@ -74,9 +76,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
             onDisable();
         }
-        PlanCommand command = component.planCommand();
-        command.registerCommands();
-        registerCommand("plan", command);
+        registerCommand(component.planCommand().build());
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
@@ -143,6 +143,22 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
     @Override
     public boolean isReloading() {
         return reloading;
+    }
+
+    @Override
+    public void registerCommand(Subcommand command) {
+        if (command == null) {
+            logger.warn("Attempted to register a null command!");
+            return;
+        }
+        for (String name : command.getAliases()) {
+            PluginCommand registering = getCommand(name);
+            if (registering == null) {
+                logger.warn("Attempted to register '" + name + "'-command, but it is not in plugin.yml!");
+                continue;
+            }
+            registering.setExecutor(new BukkitCommand(runnableFactory, system.getErrorLogger(), command));
+        }
     }
 
     /**

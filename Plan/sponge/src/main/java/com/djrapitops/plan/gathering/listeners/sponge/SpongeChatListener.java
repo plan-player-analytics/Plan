@@ -21,8 +21,9 @@ import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.NicknameStoreTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -42,19 +43,19 @@ public class SpongeChatListener {
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final NicknameCache nicknameCache;
-    private ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public SpongeChatListener(
             ServerInfo serverInfo,
             DBSystem dbSystem,
             NicknameCache nicknameCache,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.nicknameCache = nicknameCache;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @Listener(order = Order.POST)
@@ -66,7 +67,7 @@ public class SpongeChatListener {
         try {
             actOnChatEvent(player);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

@@ -34,9 +34,9 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTr
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldSampledDataTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 import com.djrapitops.plugin.task.AbsRunnable;
 
 import javax.inject.Inject;
@@ -64,7 +64,7 @@ public class DBCleanTask extends AbsRunnable {
     private final QuerySvc queryService;
     private final ServerInfo serverInfo;
     private final PluginLogger logger;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
 
     // This variable assumes that the system is thrown away on reload and new one is constructed.
     // It is to avoid cleaning extension data that has not been updated after uptime longer than the deletion threshold.
@@ -78,7 +78,7 @@ public class DBCleanTask extends AbsRunnable {
             QuerySvc queryService,
             ServerInfo serverInfo,
             PluginLogger logger,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.locale = locale;
 
@@ -87,7 +87,7 @@ public class DBCleanTask extends AbsRunnable {
         this.queryService = queryService;
         this.serverInfo = serverInfo;
         this.logger = logger;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
 
         lastReload = System.currentTimeMillis();
     }
@@ -115,7 +115,7 @@ public class DBCleanTask extends AbsRunnable {
                 }
             }
         } catch (DBOpException e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e);
             cancel();
         }
     }

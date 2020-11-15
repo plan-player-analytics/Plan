@@ -17,19 +17,27 @@
 package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class ActiveCookieStore {
 
-    private static final Map<String, User> USERS_BY_COOKIE = new HashMap<>();
+    private static final Cache<String, User> USERS_BY_COOKIE = Caffeine.newBuilder()
+            .expireAfterWrite(2, TimeUnit.HOURS)
+            .build();
+
+    private ActiveCookieStore() {
+        // Hide static cache constructor
+    }
 
     public static Optional<User> checkCookie(String cookie) {
-        return Optional.ofNullable(USERS_BY_COOKIE.get(cookie));
+        return Optional.ofNullable(USERS_BY_COOKIE.getIfPresent(cookie));
     }
 
     public static String generateNewCookie(User user) {
@@ -39,11 +47,11 @@ public class ActiveCookieStore {
     }
 
     public static void removeCookie(String cookie) {
-        USERS_BY_COOKIE.remove(cookie);
+        USERS_BY_COOKIE.invalidate(cookie);
     }
 
     public static void removeCookie(User user) {
-        USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(user.getUsername()))
+        USERS_BY_COOKIE.asMap().entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(user.getUsername()))
                 .findAny()
                 .map(Map.Entry::getKey)
                 .ifPresent(ActiveCookieStore::removeCookie);

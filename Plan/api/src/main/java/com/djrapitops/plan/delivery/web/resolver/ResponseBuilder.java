@@ -132,6 +132,10 @@ public class ResponseBuilder {
      */
     public Response build() {
         byte[] content = response.bytes;
+        if(content == null && response.code == 204) {
+            // HTTP Code 204 requires no response, so there is no need to validate it.
+            return response;
+        }
         exceptionIf(content == null, "Content not defined for Response");
         String mimeType = getMimeType();
         exceptionIf(content.length > 0 && mimeType == null, "MIME Type not defined for Response");

@@ -175,7 +175,11 @@ public class ResponseFactory {
         try {
             String content = UnaryChain.of(getResource(fileName).asString())
                     .chain(theme::replaceThemeColors)
-                    .chain(locale::replaceLanguageInJavascript)
+                    .chain(resource -> {
+                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/"))
+                            return resource;
+                        return locale.replaceLanguageInJavascript(resource);
+                    })
                     .apply();
             return Response.builder()
                     .setMimeType(MimeType.JS)
@@ -247,6 +251,17 @@ public class ResponseFactory {
                     .build();
         } catch (UncheckedIOException e) {
             return forInternalError(e, "Could not read favicon");
+        }
+    }
+
+    public Response robotsResponse() {
+        try {
+            return Response.builder()
+                    .setMimeType("text/plain")
+                    .setContent(getResource("robots.txt"))
+                    .build();
+        } catch (UncheckedIOException e) {
+            return forInternalError(e, "Could not read robots.txt");
         }
     }
 
@@ -341,6 +356,15 @@ public class ResponseFactory {
                         "<p>You have too many failed login attempts. Please wait 2 minutes until attempting again.</p>" +
                         "<script>setTimeout(() => location.reload(), 120500);\" +\n" +
                         "</script>")
+                .setStatus(403)
+                .build();
+    }
+
+    public Response ipWhitelist403(String accessor) {
+        return Response.builder()
+                .setMimeType(MimeType.HTML)
+                .setContent("<h1>403 Forbidden</h1>" +
+                        "<p>IP-whitelist enabled, \"" + accessor + "\" is not on the list!</p>")
                 .setStatus(403)
                 .build();
     }

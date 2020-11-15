@@ -9,6 +9,7 @@
     <meta content="Player Analytics, player page that displays more insights about a specific player"
           name="description">
     <meta content="Rsl1122" name="author">
+    <meta content="noindex, nofollow" name="robots">
 
     <title>Plan | ${playerName}</title>
 
@@ -24,13 +25,13 @@
 
 </head>
 
-<body id="page-top">
+<body>
 <script>
     var gmPieColors = [${gmPieColors}];
 </script>
 <div class="page-loader">
     <span class="loader"></span>
-    <span class="loader-text">Please wait..</span>
+    <p class="loader-text">Please wait..</p>
 </div>
 
 <!-- Page Wrapper -->
@@ -108,7 +109,7 @@
             <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
-            <a class="btn bg-plan" href="/auth/logout" id="logout-button">
+            <a class="btn bg-plan" href="../auth/logout" id="logout-button">
                 <i class="fa fa-fw fa-door-open"></i> Logout
             </a>
         </div>
@@ -639,9 +640,7 @@
                         v3.0</a></p>
                     <hr>
                     <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki"
-                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan
-                        Wiki,
-                        Tutorials & Documentation</a>
+                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan Wiki, Tutorials & Documentation</a>
                     <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/issues"
                        rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-bug"></i> Report Issues</a>
                     <a class="btn col-plan" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
@@ -691,11 +690,6 @@
 
 </div>
 <!-- End of Page Wrapper -->
-
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-fw fa-angle-up"></i>
-</a>
 
 <!-- Bootstrap core JavaScript-->
 <script src="../vendor/jquery/jquery.min.js"></script>

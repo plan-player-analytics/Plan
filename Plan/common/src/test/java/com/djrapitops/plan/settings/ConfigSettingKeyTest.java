@@ -40,6 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test to check that configs contain all values required to run the plugin.
+ * <p>
+ * TODO Move public utility methods to an utility to make this class package private
  *
  * @author Rsl1122
  */
@@ -109,6 +111,8 @@ public class ConfigSettingKeyTest {
         settings.remove(PluginSettings.PROXY_COPY_CONFIG);
         settings.remove(DatabaseSettings.TYPE);
         settings.remove(DisplaySettings.WORLD_ALIASES);
+        settings.remove(DatabaseSettings.H2_USER);
+        settings.remove(DatabaseSettings.H2_PASS);
         return settings;
     }
 

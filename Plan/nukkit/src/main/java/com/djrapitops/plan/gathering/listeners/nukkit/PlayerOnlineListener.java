@@ -45,8 +45,9 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -68,7 +69,7 @@ public class PlayerOnlineListener implements Listener {
     private final GeolocationCache geolocationCache;
     private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
-    private final ErrorHandler errorHandler;
+    private final ErrorLogger errorLogger;
     private final Status status;
 
     @Inject
@@ -83,7 +84,7 @@ public class PlayerOnlineListener implements Listener {
             NicknameCache nicknameCache,
             SessionCache sessionCache,
             Status status,
-            ErrorHandler errorHandler
+            ErrorLogger errorLogger
     ) {
         this.config = config;
         this.processing = processing;
@@ -95,7 +96,7 @@ public class PlayerOnlineListener implements Listener {
         this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
         this.status = status;
-        this.errorHandler = errorHandler;
+        this.errorLogger = errorLogger;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -105,7 +106,7 @@ public class PlayerOnlineListener implements Listener {
             boolean operator = event.getPlayer().isOp();
             dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -120,7 +121,7 @@ public class PlayerOnlineListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
         try {
-            if (!status.areKicksCounted() || event.isCancelled()) {
+            if (status.areKicksNotCounted() || event.isCancelled()) {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
@@ -130,7 +131,7 @@ public class PlayerOnlineListener implements Listener {
 
             dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(uuid));
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -139,7 +140,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnJoinEvent(event);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 
@@ -204,7 +205,7 @@ public class PlayerOnlineListener implements Listener {
         try {
             actOnQuitEvent(event);
         } catch (Exception e) {
-            errorHandler.log(L.ERROR, this.getClass(), e);
+            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
         }
     }
 

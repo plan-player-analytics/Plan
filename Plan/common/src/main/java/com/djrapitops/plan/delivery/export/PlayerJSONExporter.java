@@ -50,7 +50,9 @@ public class PlayerJSONExporter extends FileExporter {
     public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
-        if (!dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID))) return;
+        if (Boolean.FALSE.equals(dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)))) {
+            return;
+        }
 
         Path to = toDirectory.resolve("player/" + toFileName(playerName) + ".json");
         exportJSON(to, playerUUID);
