@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.modules;
 
+import com.djrapitops.plan.DataService;
+import com.djrapitops.plan.DataSvc;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -76,6 +78,12 @@ public class SystemObjectProvidingModule {
     @Singleton
     ErrorLogger provideErrorLogger(PluginErrorLogger errorLogger) {
         return errorLogger;
+    }
+
+    @Provides
+    @Singleton
+    DataService provideDataService(DataSvc dataService) {
+        return dataService;
     }
 
 }
