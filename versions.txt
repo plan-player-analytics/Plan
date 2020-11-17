@@ -1,3 +1,4 @@
+REL|5.1 build 808|https://github.com/plan-player-analytics/Plan/releases/download/5.1.808/Plan-5.1-build-808.jar|https://github.com/plan-player-analytics/Plan/releases
 REL|5.1 build 791|https://github.com/plan-player-analytics/Plan/releases/download/5.1.791/Plan-5.1-build-791.jar|https://github.com/plan-player-analytics/Plan/releases
 REL|5.1 build 770|https://github.com/plan-player-analytics/Plan/releases/download/5.1.770/Plan-5.1-build-770.jar|https://github.com/plan-player-analytics/Plan/releases
 REL|5.1 build 768|https://github.com/plan-player-analytics/Plan/releases/download/5.1.768/Plan-5.1-build-768.jar|https://github.com/plan-player-analytics/Plan/releases
