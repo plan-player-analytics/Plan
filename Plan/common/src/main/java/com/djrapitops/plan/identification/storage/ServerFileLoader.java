@@ -19,6 +19,7 @@ package com.djrapitops.plan.identification.storage;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.Config;
+import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
@@ -69,7 +70,9 @@ public class ServerFileLoader extends Config implements ServerLoader {
 
             Integer id = getInteger("Server.ID");
             UUID serverUUID = UUID.fromString(serverUUIDString);
-            String name = config.get(PluginSettings.SERVER_NAME);
+            String name = config.getNode(PluginSettings.SERVER_NAME.getPath())
+                    .map(ConfigNode::getString)
+                    .orElse("BungeeCord");
             String address = getString("Server.Web_address");
 
             return Optional.of(new Server(id, serverUUID, name, address));
