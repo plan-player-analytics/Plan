@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.storage.database.queries.Query;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -72,5 +74,7 @@ public interface DataService {
     <S> DataService registerSupplier(Class<S> type, Supplier<S> supplier);
 
     <P, S> DataService registerSupplier(Class<S> type, Class<P> parameterType, Function<P, S> supplierWithParameter);
+
+    <P, S> DataService registerDBSupplier(Class<S> type, Class<P> parameterType, Function<P, Query<S>> supplierWithParameter);
 
 }

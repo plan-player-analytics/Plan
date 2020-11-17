@@ -16,6 +16,10 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.Query;
+import dagger.Lazy;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
@@ -33,8 +37,13 @@ public class DataSvc implements DataService {
     private final Map<ClassPair, Function> suppliersWithParameter;
     private final MultiHashMap<Class, Consumer> consumers;
 
+    private final Lazy<DBSystem> dbSystem;
+
     @Inject
-    public DataSvc() {
+    public DataSvc(
+            Lazy<DBSystem> dbSystem
+    ) {
+        this.dbSystem = dbSystem;
         mappers = new MultiHashMap<>();
         mappersReverse = new MultiHashMap<>();
         suppliers = new ConcurrentHashMap<>();
@@ -120,6 +129,11 @@ public class DataSvc implements DataService {
     public <P, S> DataService registerSupplier(Class<S> type, Class<P> parameterType, Function<P, S> supplierWithParameter) {
         suppliersWithParameter.put(new ClassPair<>(type, parameterType), supplierWithParameter);
         return this;
+    }
+
+    @Override
+    public <P, S> DataService registerDBSupplier(Class<S> type, Class<P> parameterType, Function<P, Query<S>> queryVisitor) {
+        return registerSupplier(type, parameterType, parameter -> dbSystem.get().getDatabase().query(queryVisitor.apply(parameter)));
     }
 
     private static class ClassPair<A, B> {
