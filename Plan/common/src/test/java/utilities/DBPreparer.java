@@ -17,7 +17,7 @@
 package utilities;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -46,23 +46,23 @@ public class DBPreparer {
         this.testPortNumber = testPortNumber;
     }
 
-    public Optional<Database> prepareSQLite() throws EnableException {
+    public Optional<Database> prepareSQLite() {
         String dbName = DBType.SQLITE.getName();
         return Optional.of(prepareDBByName(dbName));
     }
 
-    public Optional<Database> prepareH2() throws EnableException {
+    public Optional<Database> prepareH2() {
         String dbName = DBType.H2.getName();
         return Optional.of(prepareDBByName(dbName));
     }
 
-    private SQLDB prepareDBByName(String dbName) throws EnableException {
+    private SQLDB prepareDBByName(String dbName) {
         PlanConfig config = dependencies.config();
         config.set(WebserverSettings.PORT, testPortNumber);
         config.set(DatabaseSettings.TYPE, dbName);
+        dependencies.enable();
 
         DBSystem dbSystem = dependencies.dbSystem();
-        dbSystem.enable();
         SQLDB db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
         db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         db.init();
@@ -94,7 +94,7 @@ public class DBPreparer {
         return Optional.of(formattedDatabase);
     }
 
-    public Optional<Database> prepareMySQL() throws EnableException {
+    public Optional<Database> prepareMySQL() {
         PlanConfig config = dependencies.config();
         Optional<String> formattedDB = setUpMySQLSettings(config);
         if (formattedDB.isPresent()) {
@@ -113,7 +113,11 @@ public class DBPreparer {
         return Optional.empty();
     }
 
-    public interface Dependencies {
+    public void tearDown() {
+        dependencies.disable();
+    }
+
+    public interface Dependencies extends SubSystem {
         PlanConfig config();
 
         DBSystem dbSystem();
@@ -125,6 +129,16 @@ public class DBPreparer {
 
         PlanSystemAsDependencies(PlanSystem system) {
             this.system = system;
+        }
+
+        @Override
+        public void enable() {
+            system.enable();
+        }
+
+        @Override
+        public void disable() {
+            system.disable();
         }
 
         @Override

@@ -67,14 +67,15 @@ public class SQLiteTest implements DatabaseTest,
 
     private static Database database;
     private static DatabaseTestComponent component;
+    private static DBPreparer preparer;
 
     @BeforeAll
     static void setupDatabase(@TempDir Path temp) throws Exception {
         component = DaggerDatabaseTestComponent.builder()
                 .bindTemporaryDirectory(temp)
                 .build();
-        component.enable();
-        database = new DBPreparer(component, TEST_PORT_NUMBER).prepareSQLite()
+        preparer = new DBPreparer(component, TEST_PORT_NUMBER);
+        database = preparer.prepareSQLite()
                 .orElseThrow(IllegalStateException::new);
     }
 
@@ -105,7 +106,7 @@ public class SQLiteTest implements DatabaseTest,
     @AfterAll
     static void disableSystem() {
         if (database != null) database.close();
-        component.disable();
+        preparer.tearDown();
     }
 
     @Override

@@ -73,14 +73,15 @@ class MySQLTest implements DatabaseTest,
 
     private static Database database;
     private static DatabaseTestComponent component;
+    private static DBPreparer preparer;
 
     @BeforeAll
     static void setupDatabase(@TempDir Path temp) throws Exception {
         component = DaggerDatabaseTestComponent.builder()
                 .bindTemporaryDirectory(temp)
                 .build();
-        component.enable();
-        Optional<Database> mysql = new DBPreparer(component, TEST_PORT_NUMBER).prepareMySQL();
+        preparer = new DBPreparer(component, TEST_PORT_NUMBER);
+        Optional<Database> mysql = preparer.prepareMySQL();
         Assumptions.assumeTrue(mysql.isPresent());
         database = mysql.get();
     }
@@ -111,7 +112,7 @@ class MySQLTest implements DatabaseTest,
     @AfterAll
     static void disableSystem() {
         if (database != null) database.close();
-        component.disable();
+        preparer.tearDown();
     }
 
     @Override

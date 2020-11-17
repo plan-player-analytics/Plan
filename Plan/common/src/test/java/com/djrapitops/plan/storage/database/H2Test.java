@@ -67,14 +67,15 @@ public class H2Test implements DatabaseTest,
 
     private static Database database;
     private static DatabaseTestComponent component;
+    private static DBPreparer preparer;
 
     @BeforeAll
-    static void setupDatabase(@TempDir Path temp) throws Exception {
+    static void setupDatabase(@TempDir Path temp) {
         component = DaggerDatabaseTestComponent.builder()
                 .bindTemporaryDirectory(temp)
                 .build();
-        component.enable();
-        database = new DBPreparer(component, TEST_PORT_NUMBER).prepareH2()
+        preparer = new DBPreparer(component, TEST_PORT_NUMBER);
+        database = preparer.prepareH2()
                 .orElseThrow(IllegalStateException::new);
     }
 
@@ -108,7 +109,7 @@ public class H2Test implements DatabaseTest,
             database.close();
             System.out.println("Database state after close: " + database.getState().name());
         }
-        component.disable();
+        preparer.tearDown();
     }
 
     @Override

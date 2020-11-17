@@ -43,6 +43,7 @@ import java.nio.file.Path;
 public interface DatabaseTestComponent extends DBPreparer.Dependencies {
 
     default void enable() {
+        files().enable();
         configSystem().enable();
         dbSystem().enable();
         serverInfo().enable();
@@ -52,6 +53,7 @@ public interface DatabaseTestComponent extends DBPreparer.Dependencies {
         serverInfo().disable();
         dbSystem().disable();
         configSystem().disable();
+        files().disable();
     }
 
     PlanConfig config();
