@@ -1,5 +1,5 @@
-API - css+                                      || ページ拡張機能: 「${0}」が「${1}」、「${2}」にスタイルシートを追加
-API - js+                                       || ページ拡張機能: 「${0}」が「${1}」、「${2}」にJavascriptの機能を追加
+API - css+                                      || ページ拡張機能: 「${0}」が「${1}」,「${2}」にスタイルシートを追加
+API - js+                                       || ページ拡張機能: 「${0}」が「${1}」,「${2}」にJavascriptの機能を追加
 Cmd - Click Me                                  || ここをクリック
 Cmd - Link                                      || リンク
 Cmd - Link Network                              || ネットワークページ: 
@@ -359,32 +359,32 @@ HTML ERRORS - NOT_FOUND_404                     || ページが見つかりま�
 HTML ERRORS - NOT_PLAYED_404                    || プレイヤーはこのサーバーでプレイしていません
 HTML ERRORS - PAGE_NOT_FOUND_404                || ページは存在しません
 HTML ERRORS - UNAUTHORIZED_401                  || 未認証状態です
-HTML ERRORS - UNKNOWN_PAGE_404                  || リンクが間違っています、コマンドを使用してURLを確認して下さい。 URL例:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || リンクが間違っています、コマンド等を使用しURLを確認して下さい。 URL例:</p><p>/player/PlayerName<br>/server/ServerName</p>
 HTML ERRORS - UUID_404                          || データベース内にプレヤーのUUIDが存在しません
-In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
-In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.
-In Depth Help - /plan db clear                  || Clears all Plan tables, removing all Plan-data in the process.
-In Depth Help - /plan db hotswap                || Reloads the plugin with the other database and changes the config to match.
-In Depth Help - /plan db move                   || Overwrites contents in the other database with the contents in another.
-In Depth Help - /plan db remove                 || Removes all data linked to a player from the Current database.
-In Depth Help - /plan db restore                || Uses SQLite backup file and overwrites contents of the target database.
-In Depth Help - /plan db uninstalled            || Marks a server in Plan database as uninstalled so that it will not show up in server queries.
-In Depth Help - /plan disable                   || Disable the plugin or part of it until next reload/restart.
-In Depth Help - /plan export                    || Performs an export to export location defined in the config.
-In Depth Help - /plan import                    || Performs an import to load data into the database.
-In Depth Help - /plan info                      || Display the current status of the plugin.
+In Depth Help - /plan db                        || 異なるデータベースのサブコマンドを使用することで、様々な方法でデータを変更/更新/削除します
+In Depth Help - /plan db backup                 || SQLiteによってデータベースをファイルにバックアップします
+In Depth Help - /plan db clear                  || 全てのPlanのデータベーステーブルを削除します。この処理によってPlanのデータは全て削除されます
+In Depth Help - /plan db hotswap                || コンフィグの設定や異なるデータベースを設定時、設定が正しく反映されるようにプラグインをリロードします
+In Depth Help - /plan db move                   || 他のデータベースのデータを別データベースに移動させます。この時、別のデータベース内のデータは上書きされます
+In Depth Help - /plan db remove                 || 現在使用しているデータベースからプレイヤーとリンクしているデータを全て削除します
+In Depth Help - /plan db restore                || SQLiteのバックアップファイルを用いてデータベースを復元します。この時、復元先のデータベース内のデータは上書きされます
+In Depth Help - /plan db uninstalled            || サーバーで使用していたPlanのデータベースとの接続を解除し、サーバーのクエリに表示されないようにします
+In Depth Help - /plan disable                   || Planもしくはその一部をリロード/リスタートコマンドを使用するまで、無効化します
+In Depth Help - /plan export                    || コンフィグで指定した出力先にデータをエクスポートします
+In Depth Help - /plan import                    || データベースにデータをロードするためのインポートを行います
+In Depth Help - /plan info                      || Planの現在の状態を表示します
 In Depth Help - /plan ingame                    || ゲーム内にいるプレイヤーに関する情報を表示します。
-In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
-In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
-In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
-In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.
-In Depth Help - /plan register                  || Use without arguments to get link to register page. Use --code [code] after registration to get a user.
-In Depth Help - /plan reload                    || Disable and enable the plugin to reload any changes in config.
-In Depth Help - /plan search                    || List all matching player names to given part of a name.
-In Depth Help - /plan server                    || Obtain a link to the /server page of a specific server, or the current server if no arguments are given.
-In Depth Help - /plan servers                   || List ids, names and uuids of servers in the database.
-In Depth Help - /plan unregister                || Use without arguments to unregister player linked user, or with username argument to unregister another user.
-In Depth Help - /plan users                     || Lists web users as a table.
+In Depth Help - /plan json                      || プレイヤーのデータをJsonでダウンロードできるようにします。このJsonには全てのプレイヤーデータが格納されています
+In Depth Help - /plan network                   || 「/network」ページへのリンクを取得します、これは「ネットワーク」が有効時のみ実行されます
+In Depth Help - /plan player                    || 特定もしくは、現在のプレイヤーの「/player」ページへのリンクを取得します
+In Depth Help - /plan players                   || プレイヤー一覧の「/player」ページへのリンクを取得します
+In Depth Help - /plan register                  || 引数なしで実行された場合、登録ページへのリンクが取得できます。引数「 --code [コード]」を使用して実行することで登録したユーザーを取得できます。
+In Depth Help - /plan reload                    || このプラグインを一度無効にし、有効にします。この時、コンフィグの変更が反映されます
+In Depth Help - /plan search                    || 名前が一致もしくは、部分一致する全てのプレイヤーを表示します
+In Depth Help - /plan server                    || 特定のサーバーの「/server」ページへのリンクを取得します。引数が未指定の場合、現在のサーバーの「/server」ページへのリンクになります
+In Depth Help - /plan servers                   || データベース内に存在する全サーバーのID、名前、UUIDを表示します
+In Depth Help - /plan unregister                || 別のユーザーの登録を解除します。引数が未指定の場合、ユーザーにリンクされたのプレイヤーの登録を解除します。
+In Depth Help - /plan users                     || ウェブユーザーの一覧を表で表示します
 Manage - Confirm Overwrite                      || ${0}のデータは上書きされます!
 Manage - Confirm Removal                        || ${0}のデータは削除されます!
 Manage - Fail                                   || > §c何かがうまくいきませんでした: ${0}
@@ -397,7 +397,7 @@ Manage - Fail Same Database                     || > §c同じデータベース
 Manage - Fail Same server                       || このサーバーをアンインストールするサーバーとして指定することはできません(あなたがこのサーバーにログインしているため)
 Manage - Fail, Confirmation                     || > §c実行を確認するために引数「-a」を追加します: ${0}
 Manage - List Importers                         || インポーター:
-Manage - Progress                               || ${0} / ${1} processed..
+Manage - Progress                               || ${0} / ${1} を処理中..
 Manage - Remind HotSwap                         || §e新しいデータベースに交換することを忘れないで下さい(/plan m hotswap ${0})。そして、プラグインをリロードして下さい
 Manage - Start                                  || > §2データを処理中です..
 Manage - Success                                || > §a成功しました!
@@ -415,13 +415,13 @@ Version FAIL - Read versions.txt                || Github/versions.txtに存在�
 Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || Webサーバー: 証明書が存在ません -> HTTPサーバーを使用します
 WebServer - Notify HTTP User Auth               || Webサーバー: ユーザー認証を無効にします (HTTP経由だと安全ではないためです)
-WebServer - Notify HTTPS User Auth              || WebServer: User Authorization Disabled! (Disabled in config)
-Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
-Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
-WebServer - Notify no Cert file                 || Webサーバー: 以下のパスに保存された認証キーファイルが存在しません: ${0}
-WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Link points to the Proxy
-WebServer FAIL - EOF                            || WebServer: EOF when reading Certificate file. (Check that the file is not empty)
-WebServer FAIL - Port Bind                      || Webサーバーの初期化が正常に終了しませんでした。ポート番号(${0})は使用されていませんか?
+WebServer - Notify HTTPS User Auth              || Webサーバー: ユーザー認証を無効にします! (Configで無効化されています)
+Webserver - Notify IP Whitelist                 || Webサーバー: IPのホワイトリストが有効になっています
+Webserver - Notify IP Whitelist Block           || Webサーバー: 「${0}」の「${1}」へのアクセスが拒否されました(ホワイトリストには未登録です)
+WebServer - Notify no Cert file                 || Webサーバー: 次のパスに保存された認証キーファイルが存在しません: ${0}
+WebServer - Notify Using Proxy                  || Webサーバー: Proxy-mode HTTPSが有効になっています、リバースプロキシがHTTPSを使用してルーティングされていることと、PlanのAlternative_IP.Linkがプロキシを指定していることを確認してください。
+WebServer FAIL - EOF                            || Webサーバー: 証明書ファイルをロード中にEOFエラーが発生しました (ファイルが殻になっていないか確認してください)
+WebServer FAIL - Port Bind                      || Webサーバー: 初期化が正常に終了しませんでした。ポート番号(${0})は使用されていませんか?
 WebServer FAIL - SSL Context                    || Webサーバー: SSLコンテキストの初期化に失敗しました。
 WebServer FAIL - Store Load                     || Webサーバー: SSL証明書のロードに失敗しました
 Yesterday                                       || '昨日'
