@@ -76,6 +76,7 @@ public class BungeeServerInfo extends ServerInfo {
         server.setWebAddress(address);
 
         fromDatabase.save(server);
+        server = fromDatabase.load(server.getUuid()).orElse(server);
         fromFile.save(server);
     }
 
