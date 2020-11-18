@@ -55,12 +55,12 @@ Cmd FAIL - Empty search string                  || 検索欄は空欄にでき�
 Cmd FAIL - Invalid Username                     || §cこのユーザーはUUIDを所持していません
 Cmd FAIL - No Feature                           || §eこの機能は現在使用されていません！ (現在、「${0}」をサポートしています)
 Cmd FAIL - No Permission                        || §cあなたには実行する権限がありません
-Cmd FAIL - No player                            || プレイヤー「'${0}'」はUUIDが無いため見つけることができませんでした
-Cmd FAIL - No player register                   || プレイヤー「'${0}'」はデータベース内には存在しません
-Cmd FAIL - No server                            || サーバー「'${0}'」はデータベース内には存在しません
+Cmd FAIL - No player                            || プレイヤー「${0}」はUUIDが無いため見つけることができませんでした
+Cmd FAIL - No player register                   || プレイヤー「${0}」はデータベース内には存在しません
+Cmd FAIL - No server                            || サーバー「${0}」はデータベース内には存在しません
 Cmd FAIL - Require only one Argument            || §c一つの引数「${1}」が必要です
 Cmd FAIL - Requires Arguments                   || §c引数「(${0}) ${1}」が必要です
-Cmd FAIL - see config                           || 「config.yml」内の'${0}'を参照してください
+Cmd FAIL - see config                           || 「config.yml」内の「${0}」を参照してください
 Cmd FAIL - Unknown Username                     || §c入力されたユーザーはBukkit/Spigotサーバー上にいません
 Cmd FAIL - Users not linked                     || 入力されたユーザーはあなたのアカウントにリンクされていないため、それを削除する権限はありません
 Cmd FAIL - WebUser does not exists              || §c入力されたユーザーは存在しません!
