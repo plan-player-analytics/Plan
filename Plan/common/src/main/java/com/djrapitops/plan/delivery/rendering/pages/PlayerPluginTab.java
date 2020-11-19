@@ -185,7 +185,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
             if (tableData.isWideTable()) {
                 hasWideTable = true;
             }
-            builder.append(tableData.getHtmlTable().buildHtml());
+            builder.append(tableData.getHtmlTable().toHtml());
         }
         return builder.toString();
     }

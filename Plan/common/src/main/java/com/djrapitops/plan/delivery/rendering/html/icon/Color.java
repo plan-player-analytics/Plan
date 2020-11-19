@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.rendering.html.icon;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Optional;
 
 public enum Color {
@@ -60,5 +62,9 @@ public enum Color {
 
     public String getHtmlClass() {
         return htmlClass;
+    }
+
+    public String getBackgroundColorClass() {
+        return StringUtils.replace(htmlClass, "col-", "bg-");
     }
 }
