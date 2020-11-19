@@ -38,8 +38,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ImportBuilderTest {
 
-    private int randomInt = RandomData.randomInt(0, 10);
-    private String randomString = RandomData.randomString(randomInt);
+    private final int randomInt = RandomData.randomInt(0, 10);
+    private final String randomString = RandomData.randomString(randomInt);
 
     @Test
     void emptyServerBuilderInitializesCollections() {
@@ -100,7 +100,7 @@ class ImportBuilderTest {
         UserImportData.UserImportDataBuilder builder = UserImportData.builder(TestConstants.SERVER_UUID);
 
         UUID uuid = UUID.randomUUID();
-        PlayerKill playerKill = new PlayerKill(uuid, randomString, 1);
+        PlayerKill playerKill = new PlayerKill(uuid, uuid, randomString, 1);
         GMTimes gmTimes = new GMTimes(randomString, randomInt);
 
         UserImportData data = builder.uuid(uuid)
