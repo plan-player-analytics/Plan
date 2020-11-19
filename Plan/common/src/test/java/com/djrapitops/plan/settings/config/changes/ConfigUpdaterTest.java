@@ -16,10 +16,8 @@
  */
 package com.djrapitops.plan.settings.config.changes;
 
-import com.djrapitops.plan.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
@@ -29,6 +27,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;
 import utilities.TestResources;
+import utilities.TestSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +35,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -87,77 +85,75 @@ class ConfigUpdaterTest {
 
     @Test
     void serverConfigIsPatchedCorrectly() throws IOException, IllegalAccessException {
-        Path config = tempDir.resolve("oldconfig.yml");
-        Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
+        Path configPath = tempDir.resolve("oldconfig.yml");
+        Files.copy(oldConfig.toPath(), configPath, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null, null, new TestPluginLogger());
+        PlanConfig config = new PlanConfig(configPath.toFile(), null, null, new TestPluginLogger());
 
-        UNDER_TEST.applyConfigUpdate(planConfig);
+        UNDER_TEST.applyConfigUpdate(config);
 
         // Ensure that added settings are present
-        copyMissingFrom(planConfig, newConfig);
+        copyMissingFrom(config, newConfig);
 
-        Collection<Setting> settings = ConfigSettingKeyTest.getServerSettings();
-        ConfigSettingKeyTest.assertValidDefaultValuesForAllSettings(planConfig, settings);
+        TestSettings.assertValidDefaultValuesForAllSettings(config, TestSettings.getServerSettings());
     }
 
     @Test
     void proxyConfigIsPatchedCorrectly() throws IOException, IllegalAccessException {
-        Path config = tempDir.resolve("oldconfig.yml");
-        Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
+        Path configPath = tempDir.resolve("oldconfig.yml");
+        Files.copy(oldBungeeConfig.toPath(), configPath, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null, null, new TestPluginLogger());
+        PlanConfig config = new PlanConfig(configPath.toFile(), null, null, new TestPluginLogger());
 
-        UNDER_TEST.applyConfigUpdate(planConfig);
+        UNDER_TEST.applyConfigUpdate(config);
 
         // Ensure that added settings are present
-        copyMissingFrom(planConfig, newBungeeConfig);
+        copyMissingFrom(config, newBungeeConfig);
 
-        Collection<Setting> settings = ConfigSettingKeyTest.getProxySettings();
-        ConfigSettingKeyTest.assertValidDefaultValuesForAllSettings(planConfig, settings);
+        TestSettings.assertValidDefaultValuesForAllSettings(config, TestSettings.getProxySettings());
     }
 
-    private void copyMissingFrom(PlanConfig planConfig, Path newBungeeConfig) throws IOException {
+    private void copyMissingFrom(PlanConfig config, Path newBungeeConfig) throws IOException {
         try (ConfigReader reader = new ConfigReader(newBungeeConfig)) {
-            planConfig.copyMissing(reader.read());
+            config.copyMissing(reader.read());
         }
     }
 
     @Test
     void serverMoveChangesDoNotLeaveNewEmptyValues() throws IOException {
-        Path config = tempDir.resolve("oldconfig.yml");
-        Files.copy(oldConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
+        Path configPath = tempDir.resolve("oldconfig.yml");
+        Files.copy(oldConfig.toPath(), configPath, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null, null, new TestPluginLogger());
+        PlanConfig config = new PlanConfig(configPath.toFile(), null, null, new TestPluginLogger());
 
         ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
-        assertMoveChangesAreAppliedProperly(planConfig, changes);
+        assertMoveChangesAreAppliedProperly(config, changes);
     }
 
     @Test
     void proxyMoveChangesDoNotLeaveNewEmptyValues() throws IOException {
-        Path config = tempDir.resolve("oldconfig.yml");
-        Files.copy(oldBungeeConfig.toPath(), config, StandardCopyOption.REPLACE_EXISTING);
+        Path configPath = tempDir.resolve("oldconfig.yml");
+        Files.copy(oldBungeeConfig.toPath(), configPath, StandardCopyOption.REPLACE_EXISTING);
 
-        PlanConfig planConfig = new PlanConfig(config.toFile(), null, null, new TestPluginLogger());
+        PlanConfig config = new PlanConfig(configPath.toFile(), null, null, new TestPluginLogger());
 
         ConfigChange[] changes = UNDER_TEST.configEnhancementPatch();
-        assertMoveChangesAreAppliedProperly(planConfig, changes);
+        assertMoveChangesAreAppliedProperly(config, changes);
     }
 
-    private void assertMoveChangesAreAppliedProperly(PlanConfig planConfig, ConfigChange[] changes) {
+    private void assertMoveChangesAreAppliedProperly(PlanConfig config, ConfigChange[] changes) {
         for (ConfigChange change : changes) {
-            if (change.hasBeenApplied(planConfig)) {
+            if (change.hasBeenApplied(config)) {
                 continue;
             }
 
             if (change instanceof ConfigChange.Moved) {
                 ConfigChange.Moved move = (ConfigChange.Moved) change;
-                String expected = planConfig.getString(move.oldPath);
+                String expected = config.getString(move.oldPath);
 
-                move.apply(planConfig);
+                move.apply(config);
 
-                assertEquals(expected, planConfig.getString(move.newPath));
+                assertEquals(expected, config.getString(move.newPath));
             }
         }
     }

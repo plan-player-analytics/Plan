@@ -16,19 +16,16 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.settings.ConfigSettingKeyTest;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.settings.config.paths.key.Setting;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import utilities.RandomData;
+import utilities.TestSettings;
 import utilities.mocks.BukkitMockComponent;
 
 import java.nio.file.Path;
-import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,7 +48,7 @@ class BukkitSystemTest {
     }
 
     @Test
-    void bukkitSystemEnables() throws EnableException {
+    void bukkitSystemEnables() {
         try {
             system.enable();
             assertTrue(system.isEnabled());
@@ -61,13 +58,12 @@ class BukkitSystemTest {
     }
 
     @Test
-    void bukkitSystemHasDefaultConfigValuesAfterEnable() throws EnableException, IllegalAccessException {
+    void bukkitSystemHasDefaultConfigValuesAfterEnable() throws IllegalAccessException {
         try {
             system.enable();
             PlanConfig config = system.getConfigSystem().getConfig();
 
-            Collection<Setting> serverSettings = ConfigSettingKeyTest.getServerSettings();
-            ConfigSettingKeyTest.assertValidDefaultValuesForAllSettings(config, serverSettings);
+            TestSettings.assertValidDefaultValuesForAllSettings(config, TestSettings.getServerSettings());
         } finally {
             system.disable();
         }
