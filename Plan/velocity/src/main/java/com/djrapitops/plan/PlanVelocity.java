@@ -102,7 +102,8 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        system.disable();
+        cancelAllTasks();
+        if (system != null) system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));
     }

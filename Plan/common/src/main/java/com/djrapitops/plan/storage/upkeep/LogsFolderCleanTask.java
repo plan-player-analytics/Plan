@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan.storage.upkeep;
 
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  * @author Rsl1122
  */
 @Singleton
-public class LogsFolderCleanTask extends AbsRunnable {
+public class LogsFolderCleanTask extends TaskSystem.Task {
 
     private final File folder;
     private final PlanConfig config;
@@ -69,6 +71,12 @@ public class LogsFolderCleanTask extends AbsRunnable {
                 /* Ignored, TaskCenter concurrent modification exception, will be fixed later in apf-3.3.0. */
             }
         }
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        long delay = TimeAmount.toTicks(30L, TimeUnit.SECONDS);
+        runnableFactory.create(null, this).runTaskLaterAsynchronously(delay);
     }
 
     private void cleanFolder() {

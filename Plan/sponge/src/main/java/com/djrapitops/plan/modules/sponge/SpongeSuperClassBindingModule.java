@@ -17,8 +17,6 @@
 package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.SpongeServerShutdownSave;
-import com.djrapitops.plan.SpongeTaskSystem;
-import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.gathering.SpongeSensor;
@@ -55,9 +53,6 @@ public interface SpongeSuperClassBindingModule {
 
     @Binds
     ConfigSystem bindConfigSystem(SpongeConfigSystem configSystem);
-
-    @Binds
-    TaskSystem bindTaskSystem(SpongeTaskSystem taskSystem);
 
     @Binds
     ListenerSystem bindListenerSystem(SpongeListenerSystem listenerSystem);

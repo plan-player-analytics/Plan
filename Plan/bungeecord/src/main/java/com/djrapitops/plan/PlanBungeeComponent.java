@@ -21,10 +21,7 @@ import com.djrapitops.plan.modules.APFModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ProxySuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
-import com.djrapitops.plan.modules.bungee.BungeeCommandModule;
-import com.djrapitops.plan.modules.bungee.BungeePlanModule;
-import com.djrapitops.plan.modules.bungee.BungeeServerPropertiesModule;
-import com.djrapitops.plan.modules.bungee.BungeeSuperClassBindingModule;
+import com.djrapitops.plan.modules.bungee.*;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -45,7 +42,8 @@ import javax.inject.Singleton;
 
         ProxySuperClassBindingModule.class,
         BungeeSuperClassBindingModule.class,
-        BungeeServerPropertiesModule.class
+        BungeeServerPropertiesModule.class,
+        BungeeTaskModule.class
 })
 public interface PlanBungeeComponent {
 

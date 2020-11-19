@@ -18,8 +18,6 @@ package com.djrapitops.plan.modules.nukkit;
 
 import cn.nukkit.level.Level;
 import com.djrapitops.plan.NukkitServerShutdownSave;
-import com.djrapitops.plan.NukkitTaskSystem;
-import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.NukkitSensor;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
@@ -50,9 +48,6 @@ public interface NukkitSuperClassBindingModule {
 
     @Binds
     ConfigSystem bindConfigSystem(NukkitConfigSystem configSystem);
-
-    @Binds
-    TaskSystem bindTaskSystem(NukkitTaskSystem taskSystem);
 
     @Binds
     ListenerSystem bindListenerSystem(NukkitListenerSystem listenerSystem);
