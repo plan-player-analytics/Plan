@@ -19,6 +19,7 @@ package com.djrapitops.plan.modules;
 import com.djrapitops.plan.DataService;
 import com.djrapitops.plan.DataSvc;
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -28,10 +29,13 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.ElementsIntoSet;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -41,6 +45,12 @@ import java.util.function.Predicate;
  */
 @Module
 public class SystemObjectProvidingModule {
+
+    @Provides
+    @ElementsIntoSet
+    Set<Importer> emptyImporterSet() {
+        return new HashSet<>();
+    }
 
     @Provides
     @Singleton

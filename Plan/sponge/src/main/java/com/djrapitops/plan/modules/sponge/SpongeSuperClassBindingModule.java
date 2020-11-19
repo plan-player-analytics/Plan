@@ -22,8 +22,6 @@ import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.gathering.SpongeSensor;
-import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
-import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.gathering.listeners.SpongeListenerSystem;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -63,9 +61,6 @@ public interface SpongeSuperClassBindingModule {
 
     @Binds
     ListenerSystem bindListenerSystem(SpongeListenerSystem listenerSystem);
-
-    @Binds
-    ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
 
     @Binds
     ServerShutdownSave bindServerShutdownSave(SpongeServerShutdownSave shutdownSave);
