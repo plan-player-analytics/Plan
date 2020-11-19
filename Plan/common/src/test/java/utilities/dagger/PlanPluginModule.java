@@ -16,8 +16,6 @@
  */
 package utilities.dagger;
 
-import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
-import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerServerInfo;
 import com.djrapitops.plan.settings.BukkitConfigSystem;
@@ -32,9 +30,6 @@ import dagger.Module;
  */
 @Module
 public interface PlanPluginModule {
-
-    @Binds
-    ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
 
     @Binds
     ConfigSystem bindBukkitConfigSystem(BukkitConfigSystem bukkitConfigSystem);
