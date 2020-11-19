@@ -47,7 +47,7 @@ public class PlayerKillMutator {
                     Map<String, Object> killMap = new HashMap<>();
                     killMap.put("date", formatters.secondLong().apply(kill.getDate()));
                     killMap.put("victim", kill.getVictimName().orElse(kill.getVictim().toString()));
-                    killMap.put("killer", kill.getKillerName().orElse("Missing UUID")); // TODO Kills should support killer UUID
+                    killMap.put("killer", kill.getKillerName().orElse(kill.getKiller().toString()));
                     killMap.put("weapon", kill.getWeapon());
                     return killMap;
                 }
