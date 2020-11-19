@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.modules.velocity;
 
-import com.djrapitops.plan.TaskSystem;
-import com.djrapitops.plan.VelocityTaskSystem;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.VelocitySensor;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
@@ -37,9 +35,6 @@ public interface VelocitySuperClassBindingModule {
 
     @Binds
     ServerInfo bindServerInfo(VelocityServerInfo serverInfo);
-
-    @Binds
-    TaskSystem bindTaskSystem(VelocityTaskSystem taskSystem);
 
     @Binds
     ListenerSystem bindListenerSystem(VelocityListenerSystem listenerSystem);
