@@ -33,6 +33,7 @@ public enum LangCode {
     FR("French", "CyanTech & Aurelien & Nogapra"),
     IT("Italian", "Malachiel & Mastory_Md5"),
     JA("Japanese", "yukieji"),
+    KO("Korean", "Guinness_Akihiko"),
     RU("Russian", "Saph1s"),
     TR("Turkish", "TDJisvan"),
     PT_BR("Portuguese (Brazil)", "jvmuller");
