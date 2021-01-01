@@ -84,6 +84,7 @@ subprojects {
     ext.caffeineVersion = "2.8.0"
     ext.h2Version = "1.4.199"
     ext.mysqlVersion = "8.0.22"
+    ext.sqliteVersion = "3.34.0"
     ext.hikariVersion = "3.4.5"
     ext.slf4jVersion = "1.7.30"
     ext.geoIpVersion = "2.15.0"
@@ -140,7 +141,7 @@ subprojects {
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testCompile "org.xerial:sqlite-jdbc:3.34.0"     // SQLite
+        testCompile "org.xerial:sqlite-jdbc:$sqliteVersion"     // SQLite
         testCompile "mysql:mysql-connector-java:$mysqlVersion" // MySQL
     }
 
