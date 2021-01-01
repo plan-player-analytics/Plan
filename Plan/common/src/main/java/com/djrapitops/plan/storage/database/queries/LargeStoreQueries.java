@@ -151,19 +151,17 @@ public class LargeStoreQueries {
         return new ExecBatchStatement(ServerTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                for (Server info : servers) {
-                    UUID uuid = info.getUuid();
-                    String name = info.getName();
-                    String webAddress = info.getWebAddress();
-
+                for (Server server : servers) {
+                    UUID uuid = server.getUuid();
                     if (uuid == null) {
                         continue;
                     }
 
                     statement.setString(1, uuid.toString());
-                    statement.setString(2, name);
-                    statement.setString(3, webAddress);
+                    statement.setString(2, server.getName());
+                    statement.setString(3, server.getWebAddress());
                     statement.setBoolean(4, true);
+                    statement.setBoolean(5, server.isProxy());
                     statement.addBatch();
                 }
             }

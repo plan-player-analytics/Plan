@@ -72,10 +72,10 @@ public class ServerFileLoader extends Config implements ServerLoader {
             UUID serverUUID = UUID.fromString(serverUUIDString);
             String name = config.getNode(PluginSettings.SERVER_NAME.getPath())
                     .map(ConfigNode::getString)
-                    .orElse("BungeeCord");
+                    .orElse("Proxy");
             String address = getString("Server.Web_address");
 
-            return Optional.of(new Server(id, serverUUID, name, address));
+            return Optional.of(new Server(id, serverUUID, name, address, false));
         } catch (IOException e) {
             throw new EnableException("Failed to read ServerInfoFile.yml: " + e.getMessage());
         }
