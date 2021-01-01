@@ -21,6 +21,13 @@ import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 
+/**
+ * Replaces server_id foreign keys with server_uuid field in world table.
+ * <p>
+ * This was to "reduce the amount of joins when querying sessions".
+ *
+ * @author Rsl1122
+ */
 public class WorldsOptimizationPatch extends Patch {
 
     private final String tempTableName;

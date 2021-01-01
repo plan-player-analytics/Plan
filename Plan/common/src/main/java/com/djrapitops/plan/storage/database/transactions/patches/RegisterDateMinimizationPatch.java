@@ -31,6 +31,15 @@ import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
+/**
+ * Changes register dates on networks to the smallest number found in the database.
+ * <p>
+ * Proxy servers do not store player register date information, so Game servers can hold earlier
+ * join date than the first session Plan sees. This patch changes the register date in
+ * plan_users if a smaller register date in plan_user_info is found.
+ *
+ * @author Rsl1122
+ */
 public class RegisterDateMinimizationPatch extends Patch {
 
     private Map<UUID, Long> registerDates;
