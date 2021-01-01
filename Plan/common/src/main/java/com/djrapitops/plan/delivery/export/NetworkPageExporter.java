@@ -118,6 +118,7 @@ public class NetworkPageExporter extends FileExporter {
                 "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=uniqueAndNew",
                 "graph?type=serverPie",
+                "graph?type=hostnamePie",
                 "graph?type=activity",
                 "graph?type=geolocation",
                 "graph?type=uniqueAndNew",

@@ -68,6 +68,10 @@ public class PieGraphFactory {
         return new ServerPreferencePie(serverPlaytimes);
     }
 
+    public Pie hostnamePie(Map<String, Integer> hostname) {
+        return new hostnamePie(hostname);
+    }
+
     public WorldPie worldPie(WorldTimes worldTimes) {
         WorldAliasSettings worldAliasSettings = config.getWorldAliasSettings();
         Map<String, Long> playtimePerAlias = worldAliasSettings.getPlaytimePerAlias(worldTimes);

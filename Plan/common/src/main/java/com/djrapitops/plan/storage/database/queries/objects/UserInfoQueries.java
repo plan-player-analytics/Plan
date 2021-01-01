@@ -20,6 +20,7 @@ import com.djrapitops.plan.gathering.domain.UserInfo;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -180,6 +181,28 @@ public class UserInfoQueries {
                     );
                 }
                 return registerDates;
+            }
+        };
+    }
+
+    public static Query<Map<String, Integer>> hostnameTotals() {
+        String sql = SELECT +
+                "COUNT(hostname) as total," +
+                UserInfoTable.HOSTNAME +
+                FROM + UserInfoTable.TABLE_NAME +
+                GROUP_BY + UserInfoTable.HOSTNAME;
+
+        return new QueryStatement<Map<String, Integer>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) {}
+
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> hostnames = new HashMap<>();
+                while (set.next()) {
+                    hostnames.put(set.getString(UserInfoTable.HOSTNAME), set.getInt("total"));
+                }
+                return hostnames;
             }
         };
     }

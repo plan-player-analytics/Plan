@@ -65,7 +65,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public interface DatabaseTest extends DatabaseTestPreparer {
 
     default void saveUserOne() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
         db().executeTransaction(new KickStoreTransaction(playerUUID));
     }
 
@@ -91,7 +92,8 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     default void testRemovalSingleUser() {
         saveUserTwo();
 
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
         saveTwoWorlds();
 
         Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
@@ -269,7 +271,8 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     @Test
     default void registerDateIsMinimized() {
         executeTransactions(
-                new PlayerServerRegisterTransaction(playerUUID, () -> 1000, TestConstants.PLAYER_ONE_NAME, serverUUID())
+                new PlayerServerRegisterTransaction(playerUUID, () -> 1000,
+                        TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com")
                 , new Transaction() {
                     @Override
                     protected void performOperations() {
@@ -297,8 +300,10 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     default void serverTablePlayersQueryQueriesAtLeastOnePlayer() {
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime, TestConstants.PLAYER_TWO_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
+        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), "play.example.com"));
         db().executeTransaction(new SessionEndTransaction(RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID)));
 
         List<TablePlayer> result = db().query(new ServerTablePlayersQuery(serverUUID(), System.currentTimeMillis(), 10L, 1));
@@ -310,8 +315,10 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     default void networkTablePlayersQueryQueriesAtLeastOnePlayer() {
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime, TestConstants.PLAYER_TWO_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
+        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), "play.example.com"));
         db().executeTransaction(new SessionEndTransaction(RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID)));
 
         List<TablePlayer> result = db().query(new NetworkTablePlayersQuery(System.currentTimeMillis(), 10L, 1));

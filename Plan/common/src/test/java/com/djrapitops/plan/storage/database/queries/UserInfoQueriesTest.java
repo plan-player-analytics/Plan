@@ -40,7 +40,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userInfoTableStoresCorrectUserInformation() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
 
         List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, false));
@@ -50,7 +51,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userInfoTableUpdatesBanStatus() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
 
         db().executeTransaction(new BanStatusTransaction(playerUUID, () -> true));
 
@@ -62,7 +64,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userInfoTableUpdatesOperatorStatus() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
 
         db().executeTransaction(new OperatorStatusTransaction(playerUUID, true));
 
@@ -74,7 +77,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void playerNameIsUpdatedWhenPlayerLogsIn() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
 
         OptionalAssert.equals(playerUUID, db().query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)));
 
@@ -147,7 +151,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void playerIsRegisteredToBothTables() {
         assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
     }
@@ -173,9 +178,12 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
-                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L, serverUUID()));
-                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L, serverUUID()));
-                execute(DataStoreQueries.registerUserInfo(player2UUID, 0L, serverUUID()));
+                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L,
+                        serverUUID(), "play.example.com"));
+                execute(DataStoreQueries.registerUserInfo(playerUUID, 0L,
+                        serverUUID(), "play.example.com"));
+                execute(DataStoreQueries.registerUserInfo(player2UUID, 0L,
+                        serverUUID(), "play.example.com"));
             }
         });
 

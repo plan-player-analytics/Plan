@@ -47,8 +47,10 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
     default void saveDataForBackup() {
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime, TestConstants.PLAYER_TWO_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
+        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), "play.example.com"));
 
         Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         execute(DataStoreQueries.storeSession(session));

@@ -37,7 +37,8 @@ public interface NicknameQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void allNicknamesAreSaved() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
 
         List<Nickname> saved = RandomData.randomNicknames(serverUUID());
         for (Nickname nickname : saved) {

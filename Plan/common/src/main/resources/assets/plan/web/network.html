@@ -422,6 +422,15 @@
                                 </div>
                                 <div class="chart-pie" id="serverPie"></div>
                             </div>
+                            <!-- Hostname piechart -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                            class="fa fa-fw fa-network-wired col-teal"></i>
+                                        Hostname PieChart</h6>
+                                </div>
+                                <div class="chart-pie" id="serverPie"></div>
+                            </div>
                             <!-- Insights -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
@@ -477,6 +486,7 @@
                     </div>
 
                     <div class="row">
+
                         <!-- Trends for 30 days -->
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
@@ -557,32 +567,49 @@
                                 </table>
                             </div>
                         </div> <!-- Trends for 30 days-->
+
                         <!-- Insights -->
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="far fa-fw fa-life-ring col-red"></i>
-                                        Insights for 30 days</h6>
+                        <div class="col-lg-4 col-sm-12">
+                            <div class="mb-4 col-lg-12 col-sm-12">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold col-black"><i
+                                                class="far fa-fw fa-life-ring col-red"></i>
+                                            Insights for 30 days</h6>
+                                    </div>
+                                    <div class="card-body" id="data_insights">
+                                        <p><i class="fa fa-fw fa-user col-light-green"></i> New <i
+                                                class="fa fa-fw fa-long-arrow-alt-right"></i> <i
+                                                class="fa fa-fw fa-user col-lime"></i> Regular<span
+                                                class="float-right"><b><span
+                                                id="data_new_to_regular"></span></b></span></p>
+                                        <p><i class="fa fa-fw fa-user col-lime"></i> Regular <i
+                                                class="fa fa-fw fa-long-arrow-alt-right"></i> <i
+                                                class="fa fa-fw fa-user col-blue-grey"></i> Inactive<span
+                                                class="float-right"><b><span
+                                                id="data_regular_to_inactive"></span></b></span></p>
+                                        <p class="float-right"><i class="text-success fa fa-caret-up"></i><i
+                                                class="text-danger fa fa-caret-down"></i>
+                                            <small>Comparing 30d ago to Now</small>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="card-body" id="data_insights">
-                                    <p><i class="fa fa-fw fa-user col-light-green"></i> New <i
-                                            class="fa fa-fw fa-long-arrow-alt-right"></i> <i
-                                            class="fa fa-fw fa-user col-lime"></i> Regular<span
-                                            class="float-right"><b><span
-                                            id="data_new_to_regular"></span></b></span></p>
-                                    <p><i class="fa fa-fw fa-user col-lime"></i> Regular <i
-                                            class="fa fa-fw fa-long-arrow-alt-right"></i> <i
-                                            class="fa fa-fw fa-user col-blue-grey"></i> Inactive<span
-                                            class="float-right"><b><span
-                                            id="data_regular_to_inactive"></span></b></span></p>
-                                    <p class="float-right"><i class="text-success fa fa-caret-up"></i><i
-                                            class="text-danger fa fa-caret-down"></i>
-                                        <small>Comparing 30d ago to Now</small>
-                                    </p>
+                            </div>
+
+                            <!-- Hostname Analytics -->
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold col-black">
+                                            <i class="fa fa-fw fa-users col-amber"></i>
+                                            Used hostnames
+                                        </h6>
+                                    </div>
+                                    <div class="chart-area" id="hostnamePie"></div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Playerbase Overview tab -->
@@ -920,6 +947,20 @@
                 serverPie('serverPie', serverPieSeries);
             } else if (error) {
                 $('#serverPie').text("Failed to load graph data: " + error)
+            }
+        });
+
+        jsonRequest("./v1/graph?type=hostnamePie", function (json, error) {
+            if (json) {
+                hostnamePieSeries = {
+                    name: 'Used IP Addresses',
+                    colorByPoint: true,
+                    colors: json.server_pie_colors,
+                    data: json.server_pie_series_30d
+                };
+                hostnamePie('hostnamePie', hostnamePieSeries);
+            } else if (error) {
+                $('#hostnamePie').text("Failed to load graph data: " + error)
             }
         });
 

@@ -51,8 +51,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
     default void storeSessions(Predicate<Session> save) {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME, serverUUID()));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime, TestConstants.PLAYER_TWO_NAME, serverUUID()));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), "play.example.com"));
+        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), "play.example.com"));
         for (String world : worlds) {
             db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), world));
         }

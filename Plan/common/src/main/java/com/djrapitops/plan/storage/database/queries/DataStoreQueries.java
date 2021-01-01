@@ -190,7 +190,7 @@ public class DataStoreQueries {
      * @param serverUUID UUID of the Plan server.
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable registerUserInfo(UUID playerUUID, long registered, UUID serverUUID) {
+    public static Executable registerUserInfo(UUID playerUUID, long registered, UUID serverUUID, String hostname) {
         return new ExecStatement(UserInfoTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -198,7 +198,8 @@ public class DataStoreQueries {
                 statement.setLong(2, registered);
                 statement.setString(3, serverUUID.toString());
                 statement.setBoolean(4, false); // Banned
-                statement.setBoolean(5, false); // Operator
+                statement.setString(5, hostname); // Hostname
+                statement.setBoolean(6, false); // Operator
             }
         };
     }
