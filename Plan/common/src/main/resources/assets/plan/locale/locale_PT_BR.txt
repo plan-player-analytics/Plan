@@ -398,7 +398,7 @@ Manage - Fail Same server                       || Can not mark this server as u
 Manage - Fail, Confirmation                     || > §cAdicione o argumento '-a' para confirmar a execução: ${0}
 Manage - List Importers                         || Importadores:
 Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §eLembre-se de trocar para o novo banco de dados (/plan m hotswap ${0}) & reinicie o plugin.
+Manage - Remind HotSwap                         || §eLembre-se de trocar para o novo banco de dados (/plan db hotswap ${0}) & reinicie o plugin.
 Manage - Start                                  || > §2Processando dados..
 Manage - Success                                || > §aSucesso!
 Negative                                        || Não

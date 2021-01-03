@@ -398,7 +398,7 @@ Manage - Fail Same server                       || Impossibile rimuovere questo 
 Manage - Fail, Confirmation                     || > §cAggiungi l'argomento '-a' per confermare l'esecuzione: ${0}
 Manage - List Importers                         || Importatori: 
 Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §eRircorda di cambiare il nuovo database (/plan m hotswap ${0}) e ricaricare il plugin.
+Manage - Remind HotSwap                         || §eRircorda di cambiare il nuovo database (/plan db hotswap ${0}) e ricaricare il plugin.
 Manage - Start                                  || > §2Processando i dati..
 Manage - Success                                || > §aCompletato!
 Negative                                        || No
