@@ -200,4 +200,36 @@ public class ServerQueries {
             }
         };
     }
+
+    public static Query<Integer> fetchServerCount() {
+        String sql = SELECT + "COUNT(1) as c" + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?";
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("c") : 1;
+            }
+        };
+    }
+
+    public static Query<Integer> fetchBiggestServerID() {
+        String sql = SELECT + "MAX(" + ServerTable.SERVER_ID + ") as max_id" + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?";
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("max_id") : 1;
+            }
+        };
+    }
 }
