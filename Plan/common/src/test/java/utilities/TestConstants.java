@@ -37,6 +37,8 @@ public class TestConstants {
     public static final String PLAYER_ONE_NAME = "Test_Player_one";
     public static final String PLAYER_TWO_NAME = "Test_Player_two";
 
+    public static final String PLAYER_HOSTNAME = "play.example.com";
+
     public static final String WORLD_ONE_NAME = "World One";
     public static final Long REGISTER_TIME = RandomData.randomTime();
 

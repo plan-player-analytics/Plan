@@ -116,9 +116,9 @@ public class TestData {
                     @Override
                     protected void performOperations() {
                         executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerFirstJoin,
-                                playerName, serverUUID, "play.example.com"));
+                                playerName, serverUUID, TestConstants.PLAYER_HOSTNAME));
                         executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerSecondJoin,
-                                playerName, server2UUID, "play.example.com"));
+                                playerName, server2UUID, TestConstants.PLAYER_HOSTNAME));
 
                         for (GeoInfo geoInfo : playerGeoInfo) {
                             executeOther(new GeoInfoStoreTransaction(playerUUID, geoInfo));
@@ -139,9 +139,9 @@ public class TestData {
                     @Override
                     protected void performOperations() {
                         executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerFirstJoin,
-                                player2Name, serverUUID, "play.example.com"));
+                                player2Name, serverUUID, TestConstants.PLAYER_HOSTNAME));
                         executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerSecondJoin,
-                                player2Name, server2UUID, "play.example.com"));
+                                player2Name, server2UUID, TestConstants.PLAYER_HOSTNAME));
 
                         for (GeoInfo geoInfo : playerGeoInfo) {
                             executeOther(new GeoInfoStoreTransaction(player2UUID, geoInfo));

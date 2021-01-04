@@ -33,6 +33,7 @@ public class UserInfoHostnamePatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        addColumn(UserInfoTable.TABLE_NAME, UserInfoTable.HOSTNAME + ' ' + Sql.varchar(255) + " NOT NULL");
+        addColumn(UserInfoTable.TABLE_NAME, UserInfoTable.HOSTNAME + ' '
+                + Sql.varchar(255) + " NOT NULL DEFAULT 'Unknown'");
     }
 }

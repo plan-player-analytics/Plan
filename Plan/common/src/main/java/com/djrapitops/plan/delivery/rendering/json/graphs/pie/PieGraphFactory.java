@@ -68,8 +68,8 @@ public class PieGraphFactory {
         return new ServerPreferencePie(serverPlaytimes);
     }
 
-    public Pie hostnamePie(Map<String, Integer> hostname) {
-        return new hostnamePie(hostname);
+    public Pie HostnamePie(Map<String, Integer> hostname) {
+        return new HostnamePie(hostname);
     }
 
     public WorldPie worldPie(WorldTimes worldTimes) {

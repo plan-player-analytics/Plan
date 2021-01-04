@@ -425,9 +425,10 @@
                             <!-- Hostname piechart -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="fa fa-fw fa-network-wired col-teal"></i>
-                                        Hostname PieChart</h6>
+                                    <h6 class="m-0 font-weight-bold col-black">
+                                        <i class="fa fa-fw fa-network-wired col-teal"></i>
+                                        Hostname PieChart
+                                    </h6>
                                 </div>
                                 <div class="chart-pie" id="serverPie"></div>
                             </div>
@@ -955,8 +956,8 @@
                 hostnamePieSeries = {
                     name: 'Used IP Addresses',
                     colorByPoint: true,
-                    colors: json.server_pie_colors,
-                    data: json.server_pie_series_30d
+                    colors: json.hostname_pie_colors,
+                    data: json.hostname_pie_slices
                 };
                 hostnamePie('hostnamePie', hostnamePieSeries);
             } else if (error) {

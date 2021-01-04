@@ -351,8 +351,8 @@ public class GraphJSONCreator {
         Map<String, Integer> hostnameResults = dbSystem.getDatabase().query(UserInfoQueries.hostnameTotals());
 
         return Maps.builder(String.class, Object.class)
-                .put("server_pie_colors", pieColors)
-                .put("server_pie_series_30d", graphs.pie().hostnamePie(hostnameResults).getSlices())
+                .put("hostname_pie_colors", pieColors)
+                .put("hostname_pie_slices", graphs.pie().HostnamePie(hostnameResults).getSlices())
                 .build();
     }
 }

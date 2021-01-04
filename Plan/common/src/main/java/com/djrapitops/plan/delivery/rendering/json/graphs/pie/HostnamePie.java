@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class hostnamePie extends Pie {
+public class HostnamePie extends Pie {
 
-    hostnamePie(Map<String, Integer> hostnames) {
+    HostnamePie(Map<String, Integer> hostnames) {
         super(turnToSlices(hostnames));
     }
 
