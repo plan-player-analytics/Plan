@@ -398,7 +398,7 @@ Manage - Fail Same server                       || 无法将服务器标记为�
 Manage - Fail, Confirmation                     || > §c[数据统计] 请添加 -a 以确认执行！${0}
 Manage - List Importers                         || 导入器：
 Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §e[数据统计] 请切换至新数据库并重载插件（/plan m hotswap ${0}）
+Manage - Remind HotSwap                         || §e[数据统计] 请切换至新数据库并重载插件（/plan db hotswap ${0}）
 Manage - Start                                  || »§7 正在处理数据...
 Manage - Success                                || §f» §2 成功！
 Negative                                        || 否

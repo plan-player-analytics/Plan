@@ -398,7 +398,7 @@ Manage - Fail Same server                       || Невозможно поме
 Manage - Fail, Confirmation                     || > §cДобавьте аргумент '-a' для подтверждения выполнения: ${0}
 Manage - List Importers                         || Импортеры:
 Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §eНе забудьте поменять на новую базу данных (/plan m hotswap ${0}) и перезагрузить плагин.
+Manage - Remind HotSwap                         || §eНе забудьте поменять на новую базу данных (/plan db hotswap ${0}) и перезагрузить плагин.
 Manage - Start                                  || > §2Обработка данных..
 Manage - Success                                || > §aУспех!
 Negative                                        || Нет

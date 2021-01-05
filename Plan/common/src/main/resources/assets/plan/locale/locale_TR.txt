@@ -398,7 +398,7 @@ Manage - Fail Same server                       || Can not mark this server as u
 Manage - Fail, Confirmation                     || > §cKomutu onaylamak için '-a' komuta ekle: ${0}
 Manage - List Importers                         || Importers:
 Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §eRemember to swap to the new database (/plan m hotswap ${0}) & reload the plugin.
+Manage - Remind HotSwap                         || §eRemember to swap to the new database (/plan db hotswap ${0}) & reload the plugin.
 Manage - Start                                  || > §2Veri işleniyor..
 Manage - Success                                || > §aBaşarılı!
 Negative                                        || Hayır

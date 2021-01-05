@@ -65,7 +65,9 @@ public class ServerQueries {
                             set.getInt(ServerTable.SERVER_ID),
                             serverUUID,
                             set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS)));
+                            set.getString(ServerTable.WEB_ADDRESS),
+                            set.getBoolean(ServerTable.PROXY)
+                    ));
                 }
                 return servers;
             }
@@ -106,7 +108,8 @@ public class ServerQueries {
                             set.getInt(ServerTable.SERVER_ID),
                             UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS)
+                            set.getString(ServerTable.WEB_ADDRESS),
+                            set.getBoolean(ServerTable.PROXY)
                     ));
                 }
                 return Optional.empty();
@@ -115,7 +118,31 @@ public class ServerQueries {
     }
 
     public static Query<Optional<Server>> fetchProxyServerInformation() {
-        return db -> db.query(fetchServerMatchingIdentifier("BungeeCord"));
+        String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?" +
+                AND + ServerTable.PROXY + "=?" +
+                " LIMIT 1";
+        return new QueryStatement<Optional<Server>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);
+                statement.setBoolean(2, true);
+            }
+
+            @Override
+            public Optional<Server> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(new Server(
+                            set.getInt(ServerTable.SERVER_ID),
+                            UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                            set.getString(ServerTable.NAME),
+                            set.getString(ServerTable.WEB_ADDRESS),
+                            set.getBoolean(ServerTable.PROXY)
+                    ));
+                }
+                return Optional.empty();
+            }
+        };
     }
 
     public static Query<Map<UUID, String>> fetchServerNames() {
@@ -165,10 +192,43 @@ public class ServerQueries {
                             set.getInt(ServerTable.SERVER_ID),
                             UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS)
+                            set.getString(ServerTable.WEB_ADDRESS),
+                            set.getBoolean(ServerTable.PROXY)
                     ));
                 }
                 return matches;
+            }
+        };
+    }
+
+    public static Query<Integer> fetchServerCount() {
+        String sql = SELECT + "COUNT(1) as c" + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?";
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("c") : 1;
+            }
+        };
+    }
+
+    public static Query<Integer> fetchBiggestServerID() {
+        String sql = SELECT + "MAX(" + ServerTable.SERVER_ID + ") as max_id" + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?";
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("max_id") : 1;
             }
         };
     }

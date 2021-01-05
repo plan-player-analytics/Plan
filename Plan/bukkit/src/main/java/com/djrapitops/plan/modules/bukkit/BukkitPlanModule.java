@@ -18,8 +18,11 @@ package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.gathering.importing.importers.Importer;
+import com.djrapitops.plan.gathering.importing.importers.OfflinePlayerImporter;
 import dagger.Binds;
 import dagger.Module;
+import dagger.multibindings.IntoSet;
 
 /**
  * Dagger module for binding Plan instance.
@@ -31,4 +34,8 @@ public interface BukkitPlanModule {
 
     @Binds
     PlanPlugin bindPlanPlugin(Plan plugin);
+
+    @Binds
+    @IntoSet
+    Importer bindOfflinePlayerImporter(OfflinePlayerImporter importer);
 }

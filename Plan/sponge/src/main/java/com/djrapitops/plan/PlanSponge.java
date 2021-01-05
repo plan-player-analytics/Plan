@@ -38,6 +38,7 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.scheduler.Task;
 
 import java.io.File;
 import java.io.InputStream;
@@ -123,14 +124,19 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        if (serverShutdownSave != null) {
-            serverShutdownSave.performSave();
-        }
-        if (system != null) {
-            system.disable();
-        }
+        if (serverShutdownSave != null) serverShutdownSave.performSave();
+        cancelAllTasks();
+        if (system != null) system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));
+    }
+
+    @Override
+    public void cancelAllTasks() {
+        runnableFactory.cancelAllKnownTasks();
+        for (Task task : Sponge.getScheduler().getScheduledTasks(this)) {
+            task.cancel();
+        }
     }
 
     @Override

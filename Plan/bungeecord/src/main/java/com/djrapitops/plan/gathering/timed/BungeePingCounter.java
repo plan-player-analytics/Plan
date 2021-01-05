@@ -23,9 +23,12 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
+import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
@@ -50,10 +53,11 @@ import java.util.concurrent.TimeUnit;
  * @author BrainStone
  */
 @Singleton
-public class BungeePingCounter extends AbsRunnable implements Listener {
+public class BungeePingCounter extends TaskSystem.Task implements Listener {
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
+    private final PlanBungee plugin;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -61,11 +65,13 @@ public class BungeePingCounter extends AbsRunnable implements Listener {
 
     @Inject
     public BungeePingCounter(
+            PlanBungee plugin,
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             RunnableFactory runnableFactory
     ) {
+        this.plugin = plugin;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -99,6 +105,18 @@ public class BungeePingCounter extends AbsRunnable implements Listener {
             } else {
                 iterator.remove();
             }
+        }
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        Long startDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
+        if (startDelay < TimeUnit.HOURS.toMillis(1L) && config.isTrue(DataGatheringSettings.PING)) {
+            plugin.registerListener(this);
+
+            long delay = TimeAmount.toTicks(startDelay, TimeUnit.MILLISECONDS);
+            long period = 40L;
+            runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
         }
     }
 

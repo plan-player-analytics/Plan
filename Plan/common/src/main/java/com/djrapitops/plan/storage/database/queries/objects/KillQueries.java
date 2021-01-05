@@ -46,7 +46,9 @@ public class KillQueries {
     }
 
     public static Query<List<PlayerKill>> fetchPlayerKillsOnServer(UUID serverUUID, int limit) {
-        String sql = SELECT + KillsTable.VICTIM_UUID + ", " +
+        String sql = SELECT +
+                KillsTable.KILLER_UUID + ", " +
+                KillsTable.VICTIM_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
@@ -76,7 +78,9 @@ public class KillQueries {
     }
 
     public static Query<List<PlayerKill>> fetchPlayerKillsOfPlayer(UUID playerUUID) {
-        String sql = SELECT + KillsTable.VICTIM_UUID + ", " +
+        String sql = SELECT +
+                KillsTable.KILLER_UUID + ", " +
+                KillsTable.VICTIM_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
@@ -105,7 +109,9 @@ public class KillQueries {
     }
 
     public static Query<List<PlayerKill>> fetchPlayerDeathsOfPlayer(UUID playerUUID) {
-        String sql = SELECT + KillsTable.VICTIM_UUID + ", " +
+        String sql = SELECT +
+                KillsTable.KILLER_UUID + ", " +
+                KillsTable.VICTIM_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
@@ -137,10 +143,11 @@ public class KillQueries {
         String victimName = set.getString("victim_name");
         String killerName = set.getString("killer_name");
         if (victimName != null && killerName != null) {
+            UUID killer = UUID.fromString(set.getString(KillsTable.KILLER_UUID));
             UUID victim = UUID.fromString(set.getString(KillsTable.VICTIM_UUID));
             long date = set.getLong(KillsTable.DATE);
             String weapon = set.getString(KillsTable.WEAPON);
-            return Optional.of(new PlayerKill(victim, weapon, date, victimName, killerName));
+            return Optional.of(new PlayerKill(killer, victim, weapon, date, victimName, killerName));
         }
         return Optional.empty();
     }

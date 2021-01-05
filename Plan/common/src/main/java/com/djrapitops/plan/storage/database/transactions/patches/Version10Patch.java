@@ -24,6 +24,18 @@ import java.util.Optional;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 
+/**
+ * Table schema change patch for version 4.0.0 to support BungeeCord servers.
+ * <p>
+ * This patch makes the database compatible with further changes to the schema,
+ * bugs in this patch are possible, as the patch is untested against new schema.
+ * <p>
+ * Version 10 comes from "schema version" that was in use in the database to version changes
+ * before Patch system was implemented.
+ *
+ * @author Rsl1122
+ * @see VersionTableRemovalPatch for Patch that removes the schema versions
+ */
 public class Version10Patch extends Patch {
 
     private Integer serverID;

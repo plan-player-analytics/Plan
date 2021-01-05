@@ -237,7 +237,7 @@ function loadservers(servers, error) {
 
     if (!servers || !servers.length) {
         $('#data_server_list').replaceWith(
-            `<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p></div></div>`
+            `<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p><p>It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.</p></div></div>`
         );
         $('#quick_view_players_online').text(`No server to display online activity for.`);
         return;

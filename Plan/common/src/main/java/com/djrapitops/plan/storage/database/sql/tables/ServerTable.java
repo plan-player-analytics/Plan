@@ -40,18 +40,20 @@ public class ServerTable {
     public static final String NAME = "name";
     public static final String WEB_ADDRESS = "web_address";
     public static final String INSTALLED = "is_installed";
+    public static final String PROXY = "is_proxy";
     @Deprecated
     public static final String MAX_PLAYERS = "max_players";
 
     public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME,
             SERVER_UUID, NAME,
-            WEB_ADDRESS, INSTALLED);
+            WEB_ADDRESS, INSTALLED, PROXY);
 
     public static final String UPDATE_STATEMENT = Update.values(TABLE_NAME,
             SERVER_UUID,
             NAME,
             WEB_ADDRESS,
-            INSTALLED)
+            INSTALLED,
+            PROXY)
             .where(SERVER_UUID + "=?")
             .toString();
 
@@ -71,6 +73,7 @@ public class ServerTable {
                 .column(NAME, Sql.varchar(100))
                 .column(WEB_ADDRESS, Sql.varchar(100))
                 .column(INSTALLED, Sql.BOOL).notNull().defaultValue(true)
+                .column(PROXY, Sql.BOOL).notNull().defaultValue(false)
                 .column(MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
                 .toString();
     }

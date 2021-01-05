@@ -22,6 +22,6 @@ public class ConsoleChatFormatter extends ChatFormatter {
 
     @Override
     public int getWidth(String part) {
-        return part.length() - (StringUtils.countMatches(part, '§') * 2);
+        return part.length() - (StringUtils.countMatches(part, '\u00a7') * 2);
     }
 }

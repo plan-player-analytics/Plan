@@ -16,18 +16,22 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class responsible for calculating TPS every second.
  *
  * @author Rsl1122
  */
-public abstract class TPSCounter extends AbsRunnable {
+public abstract class TPSCounter extends TaskSystem.Task {
 
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
@@ -49,6 +53,12 @@ public abstract class TPSCounter extends AbsRunnable {
             errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("See if a restart fixes this or Report this").build());
             cancel();
         }
+    }
+
+    public void register(RunnableFactory runnableFactory) {
+        long delay = TimeAmount.toTicks(1L, TimeUnit.MINUTES);
+        long period = TimeAmount.toTicks(1L, TimeUnit.SECONDS);
+        runnableFactory.create(null, this).runTaskTimer(delay, period);
     }
 
     public abstract void pulse();

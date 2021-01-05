@@ -17,13 +17,9 @@
 package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.BukkitServerShutdownSave;
-import com.djrapitops.plan.BukkitTaskSystem;
-import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.BukkitSensor;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
-import com.djrapitops.plan.gathering.importing.BukkitImportSystem;
-import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -54,13 +50,7 @@ public interface BukkitSuperClassBindingModule {
     ConfigSystem bindConfigSystem(BukkitConfigSystem configSystem);
 
     @Binds
-    TaskSystem bindTaskSystem(BukkitTaskSystem taskSystem);
-
-    @Binds
     ListenerSystem bindListenerSystem(BukkitListenerSystem listenerSystem);
-
-    @Binds
-    ImportSystem bindImportSystem(BukkitImportSystem importSystem);
 
     @Binds
     ServerShutdownSave bindServerShutdownSave(BukkitServerShutdownSave shutdownSave);

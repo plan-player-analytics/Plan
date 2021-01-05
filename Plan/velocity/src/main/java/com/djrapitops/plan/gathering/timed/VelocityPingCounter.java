@@ -24,9 +24,11 @@
 package com.djrapitops.plan.gathering.timed;
 
 import com.djrapitops.plan.PlanVelocity;
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
@@ -51,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  * @author MicleBrick
  */
 @Singleton
-public class VelocityPingCounter extends AbsRunnable {
+public class VelocityPingCounter extends TaskSystem.Task {
 
     final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
@@ -103,6 +105,17 @@ public class VelocityPingCounter extends AbsRunnable {
             } else {
                 iterator.remove();
             }
+        }
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        Long startDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
+        if (startDelay < TimeUnit.HOURS.toMillis(1L) && config.isTrue(DataGatheringSettings.PING)) {
+            plugin.registerListener(this);
+            long delay = TimeAmount.toTicks(startDelay, TimeUnit.MILLISECONDS);
+            long period = 40L;
+            runnableFactory.create(null, this).runTaskTimer(delay, period);
         }
     }
 

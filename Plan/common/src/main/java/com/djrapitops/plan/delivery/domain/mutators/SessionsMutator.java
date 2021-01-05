@@ -288,8 +288,8 @@ public class SessionsMutator {
                     kill -> {
                         Map<String, Object> killMap = new HashMap<>();
                         killMap.put("date", formatters.secondLong().apply(kill.getDate()));
-                        killMap.put("victim", kill.getVictimName());
-                        killMap.put("killer", sessionMap.get("player_name"));
+                        killMap.put("victim", kill.getVictimName().orElse(kill.getVictim().toString()));
+                        killMap.put("killer", playerName);
                         killMap.put("weapon", kill.getWeapon());
                         return killMap;
                     }

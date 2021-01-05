@@ -21,6 +21,13 @@ import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 
+/**
+ * Replaces killer_id, victim_id and server_id foreign keys with respective uuid fields in kills table.
+ * <p>
+ * This was to "reduce the amount of joins when querying sessions".
+ *
+ * @author Rsl1122
+ */
 public class KillsOptimizationPatch extends Patch {
 
     private final String tempTableName;

@@ -23,13 +23,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * This class is used to store data about a player kill inside the UserInfo
- * object.
+ * Represents a player vs player kill.
  *
  * @author Rsl1122
  */
 public class PlayerKill implements DateHolder {
 
+    private final UUID killer;
     private final UUID victim;
     private final String weapon;
     private final long date;
@@ -40,31 +40,32 @@ public class PlayerKill implements DateHolder {
     /**
      * Creates a PlayerKill object with given parameters.
      *
+     * @param killer UUID of the killer.
      * @param victim UUID of the victim.
      * @param weapon Weapon used.
      * @param date   Epoch millisecond at which the kill occurred.
      */
-    public PlayerKill(UUID victim, String weapon, long date) {
+    public PlayerKill(UUID killer, UUID victim, String weapon, long date) {
+        this.killer = killer;
         this.victim = victim;
         this.weapon = weapon;
         this.date = date;
     }
 
-    public PlayerKill(UUID victim, String weapon, long date, String victimName) {
-        this(victim, weapon, date);
+    public PlayerKill(UUID killer, UUID victim, String weapon, long date, String victimName) {
+        this(killer, victim, weapon, date);
         this.victimName = victimName;
     }
 
-    public PlayerKill(UUID victim, String weapon, long date, String victimName, String killerName) {
-        this(victim, weapon, date, victimName);
+    public PlayerKill(UUID killer, UUID victim, String weapon, long date, String victimName, String killerName) {
+        this(killer, victim, weapon, date, victimName);
         this.killerName = killerName;
     }
 
-    /**
-     * Get the victim's UUID.
-     *
-     * @return UUID of the victim.
-     */
+    public UUID getKiller() {
+        return killer;
+    }
+
     public UUID getVictim() {
         return victim;
     }
@@ -97,25 +98,27 @@ public class PlayerKill implements DateHolder {
         if (o == null || getClass() != o.getClass()) return false;
         PlayerKill that = (PlayerKill) o;
         return date == that.date &&
+                Objects.equals(killer, that.killer) &&
                 Objects.equals(victim, that.victim) &&
                 Objects.equals(weapon, that.weapon);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(victim, date, weapon);
+        return Objects.hash(killer, victim, date, weapon);
     }
 
     @Override
     public String toString() {
         return "PlayerKill{" +
+                "killer=" + killer + ", " +
                 "victim=" + victim + ", " +
                 "date=" + date + ", " +
                 "weapon='" + weapon + "'}";
     }
 
     public boolean isSelfKill() {
-        return getVictimName().map(v -> v.equals(killerName)).orElse(false);
+        return killer.equals(victim);
     }
 
     public boolean isNotSelfKill() {

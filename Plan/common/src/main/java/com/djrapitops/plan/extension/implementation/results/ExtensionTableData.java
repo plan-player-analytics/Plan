@@ -16,15 +16,10 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
-import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
 import com.djrapitops.plan.extension.icon.Color;
-import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.table.Table;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -44,41 +39,8 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
         this.tableColor = tableColor;
     }
 
-    public TableContainer getHtmlTable() {
-        String[] columns = table.getColumns();
-        Icon[] icons = table.getIcons();
-        List<Object[]> rows = table.getRows();
-
-        String[] header = buildHeader(columns, icons);
-
-        TableContainer htmlTable = new TableContainer(header);
-        if (rows.size() > 50) {
-            htmlTable.useJqueryDataTables(); // Use a jQuery data table since there are a lot of rows.
-        } else {
-            String colorName = com.djrapitops.plan.delivery.rendering.html.icon.Color.getByName(tableColor.name()).orElse(com.djrapitops.plan.delivery.rendering.html.icon.Color.NONE).getHtmlClass()
-                    .replace("col-", ""); // TODO after PluginData deprecation, change this thing
-            htmlTable.setColor(colorName);
-        }
-
-        for (Object[] row : rows) {
-            htmlTable.addRow(Arrays.stream(row).map(value -> value != null ? value.toString() : null).toArray(Serializable[]::new));
-        }
-
-        return htmlTable;
-    }
-
-    private String[] buildHeader(String[] columns, Icon[] icons) {
-        ArrayList<String> header = new ArrayList<>();
-
-        for (int i = 0; i < columns.length; i++) {
-            String column = columns[i];
-            if (column == null) {
-                break;
-            }
-            header.add(com.djrapitops.plan.delivery.rendering.html.icon.Icon.fromExtensionIcon(icons[i]).toHtml() + ' ' + column);
-        }
-
-        return header.toArray(new String[0]);
+    public HtmlTable getHtmlTable() {
+        return HtmlTable.fromExtensionTable(table, tableColor);
     }
 
     @Override
