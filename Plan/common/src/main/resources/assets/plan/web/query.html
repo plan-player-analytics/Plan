@@ -81,40 +81,40 @@
                         <div class="col-xs-12 col-sm-12 col-lg-11">
                             <div class="card shadow mb-4">
                                 <div class="card-body" id="data_player_info">
-                                    <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">Show a view</label>
+                                    <label class="mt-2 mb-0" for="viewFromDateField">Show a view</label>
                                     <div class="mt-2 input-group input-row">
                                         <div class="col-auto">
-                                            <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">from</label>
+                                            <label class="mt-2 mb-0" for="viewFromDateField">from</label>
                                         </div>
                                         <div class="col-3">
-                                            <label class="sr-only" for="inlineFormInputGroup">Date: DD/MM/YYYY</label>
+                                            <label class="sr-only" for="viewFromDateField">Date: DD/MM/YYYY</label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 </div>
-                                                <input class="form-control" id="inlineFormInputGroup"
+                                                <input class="form-control" id="viewFromDateField"
                                                        placeholder="31/12/2016" type="text">
                                             </div>
                                         </div>
                                         <div class="col-2">
-                                            <label class="sr-only" for="inlineFormInputGroup">Time: H H : M M</label>
+                                            <label class="sr-only" for="viewFromTimeField">Time: H H : M M</label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
-                                                <input class="form-control" id="inlineFormInputGroup"
+                                                <input class="form-control" id="viewFromTimeField"
                                                        placeholder="23:59" type="text">
                                             </div>
                                         </div>
                                         <div class="col-auto">
-                                            <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">to</label>
+                                            <label class="mt-2 mb-0" for="viewToDateField">to</label>
                                         </div>
                                         <div class="col-3">
                                             <div class="input-group mb-2">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 </div>
-                                                <input class="form-control" id="inlineFormInputGroup"
+                                                <input class="form-control" id="viewToDateField"
                                                        placeholder="23/03/2020" type="text">
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
-                                                <input class="form-control" id="inlineFormInputGroup"
+                                                <input class="form-control" id="viewToTimeField"
                                                        placeholder="21:26" type="text">
                                             </div>
                                         </div>
@@ -288,8 +288,6 @@
         </div>
     </div>
 </div>
-
-</div>
 <!-- End of Page Wrapper -->
 
 <!-- Scroll to Top Button-->
@@ -312,7 +310,6 @@
 <script id="mainScript">
     const filters = [];
     jsonRequest("./v1/filters", function (json, error) {
-        openPage();
         filters.push(...json.filters);
 
         let filterElements = '';

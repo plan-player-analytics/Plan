@@ -6,34 +6,143 @@ let filterCount = 0;
 }*/
 const filterQuery = [];
 
+class Filter {
+    render(filterCount) {
+        return 'Unimplemented render function'
+    }
+}
+
+class MultipleChoiceFilter extends Filter {
+    constructor(
+        id, label, options
+    ) {
+        super();
+        this.id = id;
+        this.label = label;
+        this.options = options;
+    }
+
+    render(filterCount) {
+        const select = filterCount === 0 ? "of Players who " : "and ";
+        let html =
+            `<div id="${this.id}" class="mt-2 input-group input-row">` +
+            `<div class="col-12"><label for="exampleFormControlSelect2">${select}${this.label}:</label>` +
+            `<select class="form-control" multiple>`;
+
+        for (const option of this.options.options) {
+            html += `<option>${option}</option>`;
+        }
+
+        html += `</select></div></div>`;
+        return html;
+    }
+}
+
+class ActivityIndexFilter extends MultipleChoiceFilter {
+    constructor(
+        id, options
+    ) {
+        super(id, `are in Activity Groups`, options);
+    }
+}
+
+class BannedFilter extends MultipleChoiceFilter {
+    constructor(
+        id, options
+    ) {
+        super(id, `are`, options);
+    }
+}
+
+class OperatorsFilter extends MultipleChoiceFilter {
+    constructor(
+        id, options
+    ) {
+        super(id, `are`, options);
+    }
+}
+
+class PluginGroupsFilter extends MultipleChoiceFilter {
+    constructor(
+        id, plugin, options
+    ) {
+        super(id, `are in ${plugin} Groups`, options);
+    }
+}
+
+class BetweenDateFilter extends Filter {
+    constructor(id, label, options) {
+        super();
+        this.id = id;
+        this.label = label;
+        this.afterDate = options.after[0];
+        this.afterTime = options.after[1];
+        this.beforeDate = options.before[0];
+        this.beforeTime = options.before[1];
+    }
+
+    render(filterCount) {
+        const id = this.id;
+        const select = filterCount === 0 ? "of Players who " : "and ";
+        return (
+            `<label class="ml-2 mt-0 mb-0">${select}${this.label}:</label>` +
+            `<div id="${id}" class="mt-2 input-group input-row">` +
+            `<div class="col-3"><div class="input-group mb-2">` +
+            `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
+            `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)" class="form-control" placeholder="${this.afterDate}" type="text">` +
+            `</div></div>` +
+            `<div class="col-2"><div class="input-group mb-2">` +
+            `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
+            `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)" class="form-control" placeholder="${this.afterTime}" type="text">` +
+            `</div></div>` +
+            `<div class="col-auto"><label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label></div>` +
+            `<div class="col-3"><div class="input-group mb-2">` +
+            `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
+            `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)" class="form-control" placeholder="${this.beforeDate}" type="text">` +
+            `</div></div>` +
+            `<div class="col-2"><div class="input-group mb-2">` +
+            `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
+            `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)" class="form-control" placeholder="${this.beforeTime}" type="text">` +
+            `</div></div>` +
+            `</div>`
+        );
+    }
+}
+
+class PlayedBetweenFilter extends BetweenDateFilter {
+    constructor(id, options) {
+        super(id, "Played between", options);
+    }
+}
+
+class RegisteredBetweenFilter extends BetweenDateFilter {
+    constructor(id, options) {
+        super(id, "Registered between", options);
+    }
+}
+
 function addFilter(parentSelector, filterIndex) {
     const id = "f" + filterCount;
-    $(parentSelector).append(createElement(filters[filterIndex], id));
+    const filter = createFilter(filters[filterIndex], id);
+    filterQuery.push(filter);
+    $(parentSelector).append(filter.render(filterCount));
     filterCount++;
 }
 
-function createElement(filter, id) {
+function createFilter(filter, id) {
     switch (filter.kind) {
         case "activityIndexNow":
-            return createMultipleChoiceSelector(
-                id,
-                `are in Activity Groups`,
-                filter.options
-            );
+            return new ActivityIndexFilter(id, filter.options);
         case "banned":
-            return createMultipleChoiceSelector(id, `are`, filter.options);
+            return new BannedFilter(id, filter.options);
         case "operators":
-            return createMultipleChoiceSelector(id, `are`, filter.options);
+            return new OperatorsFilter(id, filter.options);
         case "pluginGroups":
-            return createMultipleChoiceSelector(
-                id,
-                `are in ${filter.options.plugin} Groups`,
-                filter.options
-            );
+            return new PluginGroupsFilter(id, filter.options);
         case "playedBetween":
-            return createBetweenSelector(id, "Played between", filter.options);
+            return new PlayedBetweenFilter(id, filter.options);
         case "registeredBetween":
-            return createBetweenSelector(id, "Registered between", filter.options);
+            return new RegisteredBetweenFilter(id, filter.options);
         default:
             throw new Error("Unsupported filter kind: '" + filter.kind + "'");
     }
@@ -41,41 +150,6 @@ function createElement(filter, id) {
 
 function createFilterSelector(parent, index, filter) {
     return `<a class="dropdown-item" href="#" onclick="addFilter('${parent}', ${index})">${filter.kind}</a>`;
-}
-
-function createBetweenSelector(id, label, options) {
-    const query = {
-        id: id,
-        afterDate: options.after[0],
-        afterTime: options.after[1],
-        beforeDate: options.before[0],
-        beforeTime: options.before[1],
-    };
-    filterQuery.push(query);
-
-    const select = filterCount === 0 ? "of Players who " : "and ";
-    return (
-        `<label class="ml-2 mt-0 mb-0">${select}${label}:</label>` +
-        `<div id="${id}" class="mt-2 input-group input-row">` +
-        `<div class="col-3"><div class="input-group mb-2">` +
-        `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-        `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)" class="form-control" placeholder="${query.afterDate}" type="text">` +
-        `</div></div>` +
-        `<div class="col-2"><div class="input-group mb-2">` +
-        `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-        `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)" class="form-control" placeholder="${query.afterTime}" type="text">` +
-        `</div></div>` +
-        `<div class="col-auto"><label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label></div>` +
-        `<div class="col-3"><div class="input-group mb-2">` +
-        `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-        `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)" class="form-control" placeholder="${query.beforeDate}" type="text">` +
-        `</div></div>` +
-        `<div class="col-2"><div class="input-group mb-2">` +
-        `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-        `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)" class="form-control" placeholder="${query.beforeTime}" type="text">` +
-        `</div></div>` +
-        `</div>`
-    );
 }
 
 function isValidDate(value) {
@@ -144,19 +218,4 @@ function setFilterOption(
     } else {
         element.addClass("is-invalid");
     }
-}
-
-function createMultipleChoiceSelector(id, label, options) {
-    var select = filterCount === 0 ? "of Players who " : "and ";
-    var html =
-        `<div id="${id}" class="mt-2 input-group input-row">` +
-        `<div class="col-12"><label for="exampleFormControlSelect2">${select}${label}:</label>` +
-        `<select class="form-control" multiple>`;
-
-    for (var option of options.options) {
-        html += `<option>${option}</option>`;
-    }
-
-    html += `</select></div> </div>`;
-    return html;
 }
