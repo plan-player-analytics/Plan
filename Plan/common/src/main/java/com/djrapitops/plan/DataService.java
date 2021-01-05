@@ -39,7 +39,7 @@ import java.util.function.Supplier;
  * - mappers are stateless type transformers in memory
  * <p>
  * Example use-case:
- * - PlayerJoinEvent -> mapped to a generic event
+ * - PlayerJoinEvent is mapped to a generic event
  * - that generic event is then consumed and mapped until the data is in a database.
  * <p>
  * - Some kind of data is wanted to place on a web page
