@@ -66,6 +66,8 @@ public class VelocityServerInfo extends ServerInfo {
 
         this.server = fromFile.load(null).orElseGet(() -> fromDatabase.load(null)
                 .orElseGet(this::registerServer));
+        this.server.setProxy(true); // Ensure isProxy if loaded from file
+
         processing.submitNonCritical(this::updateStorage);
     }
 
@@ -108,7 +110,7 @@ public class VelocityServerInfo extends ServerInfo {
     private Server createServerObject() {
         UUID serverUUID = generateNewUUID();
         String accessAddress = addresses.getAccessAddress().orElseThrow(() -> new EnableException("Velocity can not have '0.0.0.0' or '' as an address. Set up 'Server.IP' setting."));
-        // TODO Rework to allow Velocity as a name
-        return new Server(-1, serverUUID, "BungeeCord", accessAddress);
+
+        return new Server(-1, serverUUID, "Velocity", accessAddress, true);
     }
 }

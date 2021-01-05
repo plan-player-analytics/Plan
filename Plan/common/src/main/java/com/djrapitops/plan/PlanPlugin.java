@@ -47,4 +47,8 @@ public interface PlanPlugin extends IPlugin {
     }
 
     void registerCommand(Subcommand command);
+
+    default void cancelAllTasks() {
+        getRunnableFactory().cancelAllKnownTasks();
+    }
 }

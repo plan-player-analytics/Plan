@@ -26,6 +26,7 @@ import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.nukkit.NukkitPlanModule;
 import com.djrapitops.plan.modules.nukkit.NukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.nukkit.NukkitSuperClassBindingModule;
+import com.djrapitops.plan.modules.nukkit.NukkitTaskModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -45,7 +46,8 @@ import javax.inject.Singleton;
 
         ServerCommandModule.class,
         NukkitServerPropertiesModule.class,
-        NukkitSuperClassBindingModule.class
+        NukkitSuperClassBindingModule.class,
+        NukkitTaskModule.class
 })
 public interface PlanNukkitComponent {
 

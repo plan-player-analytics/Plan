@@ -207,7 +207,7 @@ public class ServerPluginTabs {
     private String buildTablesHtml(ExtensionTabData tabData) {
         StringBuilder builder = new StringBuilder();
         for (ExtensionTableData tableData : tabData.getTableData()) {
-            builder.append(tableData.getHtmlTable().buildHtml());
+            builder.append(tableData.getHtmlTable().toHtml());
         }
         return builder.toString();
     }

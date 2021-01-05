@@ -16,10 +16,15 @@
  */
 package com.djrapitops.plan.extension;
 
-import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Task for updating {@link DataExtension} server values periodically.
@@ -27,17 +32,29 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class ExtensionServerMethodCallerTask extends AbsRunnable {
+public class ExtensionServerDataUpdater extends TaskSystem.Task {
 
     private final ExtensionSvc service;
+    private final PlanConfig config;
 
     @Inject
-    public ExtensionServerMethodCallerTask(ExtensionSvc service) {
+    public ExtensionServerDataUpdater(
+            ExtensionSvc service,
+            PlanConfig config
+    ) {
         this.service = service;
+        this.config = config;
     }
 
     @Override
     public void run() {
         service.updateServerValues(CallEvents.SERVER_PERIODICAL);
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        long period = TimeAmount.toTicks(config.get(TimeSettings.EXTENSION_DATA_REFRESH_PERIOD), TimeUnit.MILLISECONDS);
+        long delay = TimeAmount.toTicks(30, TimeUnit.SECONDS);
+        runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
     }
 }

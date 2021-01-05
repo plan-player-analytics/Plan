@@ -399,7 +399,7 @@ Manage - Fail Same server                       || 이 서버를 제거된 것�
 Manage - Fail, Confirmation                     || > §cAdd '-a' argument to confirm execution: ${0}
 Manage - List Importers                         || Importers: 
 Manage - Progress                               || ${0} / ${1} 처리 중..
-Manage - Remind HotSwap                         || §e새 데이터베이스 (/plan m hotswap ${0})로 교체하고 플러그인을 다시 로드해야합니다.
+Manage - Remind HotSwap                         || §e새 데이터베이스 (/plan db hotswap ${0})로 교체하고 플러그인을 다시 로드해야합니다.
 Manage - Start                                  || > §2데이터 처리 중..
 Manage - Success                                || > §a성공!
 Negative                                        || 아니오

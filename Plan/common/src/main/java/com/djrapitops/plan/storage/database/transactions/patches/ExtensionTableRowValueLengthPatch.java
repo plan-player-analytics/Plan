@@ -23,6 +23,11 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
 
+/**
+ * Increases the length of Strings in extension tables to 250 to avoid cutoffs and exceptions.
+ *
+ * @author Rsl1122
+ */
 public class ExtensionTableRowValueLengthPatch extends Patch {
 
     private final String playerTable;

@@ -33,10 +33,10 @@ allprojects {
     wrapper.gradleVersion = "6.2.1"
 
     group "com.djrapitops"
-    version "5.1-SNAPSHOT"
+    version "5.2-SNAPSHOT"
 
     ext.majorVersion = '5'
-    ext.minorVersion = '1'
+    ext.minorVersion = '2'
     ext.buildVersion = buildVersion
     ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + ' build ' + project.ext.buildVersion
 
@@ -84,6 +84,7 @@ subprojects {
     ext.caffeineVersion = "2.8.0"
     ext.h2Version = "1.4.199"
     ext.mysqlVersion = "8.0.22"
+    ext.sqliteVersion = "3.34.0"
     ext.hikariVersion = "3.4.5"
     ext.slf4jVersion = "1.7.30"
     ext.geoIpVersion = "2.15.0"
@@ -135,12 +136,12 @@ subprojects {
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.0"   // JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.7.0"   // JUnit 5, parameterized tests
         testCompile "org.mockito:mockito-core:3.6.28"                // Mockito Core
-        testCompile "org.mockito:mockito-junit-jupiter:3.6.28"       // Mockito JUnit 5 Extension
+        testCompile "org.mockito:mockito-junit-jupiter:3.7.0"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
         testCompile "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testCompile "org.xerial:sqlite-jdbc:3.34.0"     // SQLite
+        testCompile "org.xerial:sqlite-jdbc:$sqliteVersion"     // SQLite
         testCompile "mysql:mysql-connector-java:$mysqlVersion" // MySQL
     }
 

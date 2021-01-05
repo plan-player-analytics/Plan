@@ -398,7 +398,7 @@ Manage - Fail Same server                       || Nelze označit tento server j
 Manage - Fail, Confirmation                     || > §cPřidejte '-a' argument k potvrzení provedení: ${0}
 Manage - List Importers                         || Importery:
 Manage - Progress                               || ${0} / ${1} zpracovávání..
-Manage - Remind HotSwap                         || §eNezapomeňte přehodit na novou databázi (/plan m hotswap ${0}) & reload pluginu.
+Manage - Remind HotSwap                         || §eNezapomeňte přehodit na novou databázi (/plan db hotswap ${0}) & reload pluginu.
 Manage - Start                                  || > §2Zpracovávám data..
 Manage - Success                                || > §aÚspěch!
 Negative                                        || Ne

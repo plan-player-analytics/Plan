@@ -398,7 +398,7 @@ Manage - Fail Same server                       || Impossible de marquer ce serv
 Manage - Fail, Confirmation                     || > §cAjoutez l'argmenter '-a' afin de confirmer l'éxécution : ${0}
 Manage - List Importers                         || Importateurs :
 Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §eN'oubliez pas de passer à la nouvelle base de données (/plan m hotswap ${0}) & de recharger Plan.
+Manage - Remind HotSwap                         || §eN'oubliez pas de passer à la nouvelle base de données (/plan db hotswap ${0}) & de recharger Plan.
 Manage - Start                                  || > §2Traitement des données...
 Manage - Success                                || > §aSuccès !
 Negative                                        || Non

@@ -398,7 +398,7 @@ Manage - Fail Same server                       || Ei voi merkitä tätä palvel
 Manage - Fail, Confirmation                     || > §cLisää '-a' vahvistaaksesi: ${0}
 Manage - List Importers                         || Tuojat:
 Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §eMuista vaihtaa tietokantaa (/plan m hotswap ${0}) & käynnistä Plan uudelleen.
+Manage - Remind HotSwap                         || §eMuista vaihtaa tietokantaa (/plan db hotswap ${0}) & käynnistä Plan uudelleen.
 Manage - Start                                  || > §2Prosessoidaan tietoa..
 Manage - Success                                || > §aOnnistui!
 Negative                                        || Ei

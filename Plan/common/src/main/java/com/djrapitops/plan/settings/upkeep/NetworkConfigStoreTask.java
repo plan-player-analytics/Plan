@@ -16,13 +16,18 @@
  */
 package com.djrapitops.plan.settings.upkeep;
 
+import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.network.NetworkSettingManager;
-import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Task on networks that stores server configs in /plugins/Plan/serverConfiguration in database on boot.
@@ -30,14 +35,17 @@ import java.util.UUID;
  * @author Rsl1122
  */
 @Singleton
-public class NetworkConfigStoreTask extends AbsRunnable {
+public class NetworkConfigStoreTask extends TaskSystem.Task {
 
     private final NetworkSettingManager networkSettingManager;
+    private final PlanConfig config;
 
     @Inject
     public NetworkConfigStoreTask(
+            PlanConfig config,
             NetworkSettingManager networkSettingManager
     ) {
+        this.config = config;
         this.networkSettingManager = networkSettingManager;
     }
 
@@ -45,6 +53,13 @@ public class NetworkConfigStoreTask extends AbsRunnable {
     public void run() {
         updateDBConfigs();
         cancel();
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        long delay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
+
+        runnableFactory.create(null, this).runTaskLaterAsynchronously(delay);
     }
 
     private void updateDBConfigs() {

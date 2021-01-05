@@ -216,7 +216,7 @@ public class NetworkPageExporter extends FileExporter {
                 () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
         Path to = toDirectory.resolve(resourceName);
 
-        if (resourceName.endsWith(".css")) {
+        if (resourceName.endsWith(".css") || resourceName.endsWith("color-selector.js")) {
             export(to, theme.replaceThemeColors(resource.asString()));
         } else if ("js/network-values.js".equalsIgnoreCase(resourceName) || "js/sessionAccordion.js".equalsIgnoreCase(resourceName)) {
             String relativePlayerLink = toRelativePathFromRoot("player");

@@ -67,6 +67,7 @@ public class SessionQueries {
             WorldTimesTable.ADVENTURE + ',' +
             WorldTimesTable.SPECTATOR + ',' +
             WorldTable.NAME + ',' +
+            KillsTable.KILLER_UUID + ',' +
             KillsTable.VICTIM_UUID + ',' +
             "v." + UsersTable.USER_NAME + " as victim_name, " +
             KillsTable.DATE + ',' +
@@ -193,11 +194,12 @@ public class SessionQueries {
 
             String victimName = set.getString("victim_name");
             if (victimName != null) {
+                UUID killer = UUID.fromString(set.getString(KillsTable.KILLER_UUID));
                 UUID victim = UUID.fromString(set.getString(KillsTable.VICTIM_UUID));
                 long date = set.getLong(KillsTable.DATE);
                 String weapon = set.getString(KillsTable.WEAPON);
                 List<PlayerKill> playerKills = session.getPlayerKills();
-                PlayerKill newKill = new PlayerKill(victim, weapon, date, victimName);
+                PlayerKill newKill = new PlayerKill(killer, victim, weapon, date, victimName);
                 if (!playerKills.contains(newKill)) {
                     playerKills.add(newKill);
                 }

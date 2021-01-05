@@ -62,6 +62,6 @@ public class PlayerKillProcessor implements CriticalRunnable {
         }
         Session session = cachedSession.get();
 
-        session.playerKilled(new PlayerKill(victim, weaponName, time));
+        session.playerKilled(new PlayerKill(killer, victim, weaponName, time));
     }
 }

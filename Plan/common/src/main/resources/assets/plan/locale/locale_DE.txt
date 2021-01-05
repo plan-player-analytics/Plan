@@ -398,7 +398,7 @@ Manage - Fail Same server                       || Server kann nicht als uninsta
 Manage - Fail, Confirmation                     || > §cFüge '-a' zum Befehl hinzu um die Ausführung zu bestätigen: ${0}
 Manage - List Importers                         || Importer:
 Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §eDenk dran, zur neuen Datenbank zu wechseln (/plan m hotswap ${0}) und um das Plugin neu zu laden.
+Manage - Remind HotSwap                         || §eDenk dran, zur neuen Datenbank zu wechseln (/plan db hotswap ${0}) und um das Plugin neu zu laden.
 Manage - Start                                  || > §2Verarbeite Daten...
 Manage - Success                                || > §aErfolgreich!
 Negative                                        || Nein

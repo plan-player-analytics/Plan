@@ -99,8 +99,10 @@ public class H2DB extends SQLDB {
 
     private void startConnectionPingTask() {
         stopConnectionPingTask();
-        logger.warn("H2 database is going to be deprecated in version 5.2. It is recommended to move to MySQL or SQLite when possible.");
+        logger.warn("! ! ! ---------- ! ! !");
+        logger.warn("H2 database is DEPRECATED and WILL STOP WORKING in version 5.4 - It is recommended to move to MySQL or SQLite when possible.");
         logger.warn("See https://github.com/plan-player-analytics/Plan/issues/1472 for details");
+        logger.warn("! ! ! ---------- ! ! !");
         try {
             // Maintains Connection.
             connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),

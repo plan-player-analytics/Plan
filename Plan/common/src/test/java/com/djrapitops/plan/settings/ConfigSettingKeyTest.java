@@ -17,35 +17,25 @@
 package com.djrapitops.plan.settings;
 
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.*;
-import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import utilities.FieldFetcher;
 import utilities.TestResources;
+import utilities.TestSettings;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test to check that configs contain all values required to run the plugin.
- * <p>
- * TODO Move public utility methods to an utility to make this class package private
  *
  * @author Rsl1122
  */
-public class ConfigSettingKeyTest {
+class ConfigSettingKeyTest {
 
     public static Path temporaryFolder;
 
@@ -54,82 +44,18 @@ public class ConfigSettingKeyTest {
         temporaryFolder = tempDir;
     }
 
-    public static void assertValidDefaultValuesForAllSettings(PlanConfig config, Iterable<Setting> settings) {
-        List<String> fails = new ArrayList<>();
-        for (Setting<?> setting : settings) {
-            checkSettingForFailures(config, setting).ifPresent(fails::add);
-        }
-        assertTrue(fails.isEmpty(), fails::toString);
-    }
-
-    private static Optional<String> checkSettingForFailures(PlanConfig config, Setting<?> setting) {
-        try {
-            if (!config.contains(setting.getPath())) {
-                return Optional.of("Did not contain " + setting.getPath());
-            } else {
-                config.get(setting);
-                return Optional.empty();
-            }
-        } catch (IllegalStateException validationFailed) {
-            return Optional.of(validationFailed.getMessage());
-        }
-    }
-
-    public static Collection<Setting> getServerSettings() throws IllegalAccessException {
-        List<Setting> settings = new ArrayList<>();
-        for (Class settingKeyClass : new Class[]{
-                DatabaseSettings.class,
-                DataGatheringSettings.class,
-                DisplaySettings.class,
-                ExportSettings.class,
-                FormatSettings.class,
-                PluginSettings.class,
-                TimeSettings.class,
-                WebserverSettings.class
-        }) {
-            settings.addAll(FieldFetcher.getPublicStaticFields(settingKeyClass, Setting.class));
-        }
-        return settings;
-    }
-
-    public static Collection<Setting> getProxySettings() throws IllegalAccessException {
-        List<Setting> settings = new ArrayList<>();
-        for (Class settingKeyClass : new Class[]{
-                DatabaseSettings.class,
-                DisplaySettings.class,
-                ExportSettings.class,
-                FormatSettings.class,
-                PluginSettings.class,
-                ProxySettings.class,
-                TimeSettings.class,
-                WebserverSettings.class
-        }) {
-            settings.addAll(FieldFetcher.getPublicStaticFields(settingKeyClass, Setting.class));
-        }
-        // Server settings contained in the key classes, remove
-        settings.remove(PluginSettings.SERVER_NAME);
-        settings.remove(PluginSettings.PROXY_COPY_CONFIG);
-        settings.remove(DatabaseSettings.TYPE);
-        settings.remove(DisplaySettings.WORLD_ALIASES);
-        settings.remove(DatabaseSettings.H2_USER);
-        settings.remove(DatabaseSettings.H2_PASS);
-        return settings;
-    }
-
     @Test
     @DisplayName("config.yml has valid default values")
     void serverConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
-        PlanConfig planConfig = createConfig("config.yml");
-        Collection<Setting> settings = getServerSettings();
-        assertValidDefaultValuesForAllSettings(planConfig, settings);
+        PlanConfig config = createConfig("config.yml");
+        TestSettings.assertValidDefaultValuesForAllSettings(config, TestSettings.getServerSettings());
     }
 
     @Test
     @DisplayName("bungeeconfig.yml has valid default values")
     void proxyConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
-        PlanConfig planConfig = createConfig("bungeeconfig.yml");
-        Collection<Setting> settings = getProxySettings();
-        assertValidDefaultValuesForAllSettings(planConfig, settings);
+        PlanConfig config = createConfig("bungeeconfig.yml");
+        TestSettings.assertValidDefaultValuesForAllSettings(config, TestSettings.getProxySettings());
     }
 
     private PlanConfig createConfig(String copyDefaultSettingsFrom) throws IOException {

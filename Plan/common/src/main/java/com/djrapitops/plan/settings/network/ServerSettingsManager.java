@@ -17,7 +17,6 @@
 package com.djrapitops.plan.settings.network;
 
 import com.djrapitops.plan.SubSystem;
-import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.ConfigReader;
@@ -35,6 +34,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,8 +62,8 @@ public class ServerSettingsManager implements SubSystem {
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final TaskSystem taskSystem;
     private final ErrorLogger errorLogger;
+    private final RunnableFactory runnableFactory;
     private final PluginLogger logger;
     private FileWatcher watcher;
 
@@ -73,7 +73,7 @@ public class ServerSettingsManager implements SubSystem {
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            TaskSystem taskSystem,
+            RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
@@ -81,7 +81,7 @@ public class ServerSettingsManager implements SubSystem {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.taskSystem = taskSystem;
+        this.runnableFactory = runnableFactory;
         this.logger = logger;
         this.errorLogger = errorLogger;
     }
@@ -125,7 +125,8 @@ public class ServerSettingsManager implements SubSystem {
 
     private void scheduleDBCheckTask() {
         long checkPeriod = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS);
-        taskSystem.registerTask("Config Update DB Checker", new AbsRunnable() {
+
+        runnableFactory.create("Config Update DB Checker", new AbsRunnable() {
             @Override
             public void run() {
                 checkDBForNewConfigSettings(dbSystem.getDatabase());

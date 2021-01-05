@@ -25,6 +25,7 @@ public enum JSLang implements Lang {
 
     TEXT_PREDICTED_RETENTION("This value is a prediction based on previous players"),
     TEXT_NO_SERVERS("No servers found in the database"),
+    TEXT_SERVER_INSTRUCTIONS("It appears that Plan is not installed on any game servers or not connected to the same database. See <a href=\"https://github.com/plan-player-analytics/Plan/wiki\">wiki</a> for Network tutorial."),
     TEXT_NO_SERVER("No server to display online activity for"),
     LABEL_REGISTERED_PLAYERS("Registered Players"),
     LINK_SERVER_ANALYSIS("Server Analysis"),

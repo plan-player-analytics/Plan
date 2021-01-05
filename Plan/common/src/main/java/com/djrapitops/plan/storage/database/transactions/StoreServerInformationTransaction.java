@@ -25,7 +25,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ServerTable.INSERT
 import static com.djrapitops.plan.storage.database.sql.tables.ServerTable.UPDATE_STATEMENT;
 
 /**
- * Transaction for keeping Plan Server serverrmation up to date in the database.
+ * Transaction for keeping Plan Server information up to date in the database.
  *
  * @author Rsl1122
  */
@@ -53,7 +53,8 @@ public class StoreServerInformationTransaction extends Transaction {
                 statement.setString(2, server.getName());
                 statement.setString(3, server.getWebAddress());
                 statement.setBoolean(4, true);
-                statement.setString(5, serverUUIDString);
+                statement.setBoolean(5, server.isProxy());
+                statement.setString(6, serverUUIDString);
             }
         };
     }
@@ -66,6 +67,7 @@ public class StoreServerInformationTransaction extends Transaction {
                 statement.setString(2, server.getName());
                 statement.setString(3, server.getWebAddress());
                 statement.setBoolean(4, true);
+                statement.setBoolean(5, server.isProxy());
             }
         };
     }

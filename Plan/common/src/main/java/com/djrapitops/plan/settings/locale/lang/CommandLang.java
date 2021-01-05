@@ -115,7 +115,7 @@ public enum CommandLang implements Lang {
     RELOAD_COMPLETE("Cmd Info - Reload Complete", "§aReload Complete"),
     RELOAD_FAILED("Cmd Info - Reload Failed", "§cSomething went wrong during reload of the plugin, a restart is recommended."),
     NO_ADDRESS_NOTIFY("Cmd Notify - No Address", "§eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings."),
-    HOTSWAP_REMINDER("Manage - Remind HotSwap", "§eRemember to swap to the new database (/plan m hotswap ${0}) & reload the plugin."),
+    HOTSWAP_REMINDER("Manage - Remind HotSwap", "§eRemember to swap to the new database (/plan db hotswap ${0}) & reload the plugin."),
     PROGRESS_START("Manage - Start", "> §2Processing data.."),
     PROGRESS("Manage - Progress", "${0} / ${1} processed.."),
     PROGRESS_SUCCESS("Manage - Success", "> §aSuccess!"),

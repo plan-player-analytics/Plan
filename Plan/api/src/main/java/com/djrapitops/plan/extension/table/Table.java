@@ -22,8 +22,9 @@ import com.djrapitops.plan.extension.icon.Icon;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Object for giving Plan table data.
@@ -186,7 +187,17 @@ public final class Table {
                 return this; // Ignore row when all values are null or no values are present.
             }
 
-            building.rows.add(Arrays.copyOf(values, 5));
+            Object[] row = new Object[5];
+
+            for (int i = 0; i < Math.min(values.length, 5); i++) {
+                Object value = values[i];
+                if (value instanceof Optional) {
+                    value = ((Optional<?>) value).map(Objects::toString).orElse("-");
+                }
+                row[i] = value;
+            }
+
+            building.rows.add(row);
             return this;
         }
 

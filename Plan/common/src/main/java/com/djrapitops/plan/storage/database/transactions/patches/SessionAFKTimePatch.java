@@ -18,6 +18,11 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 
+/**
+ * Adds afk_time field to sessions table.
+ *
+ * @author Rsl1122
+ */
 public class SessionAFKTimePatch extends Patch {
 
     @Override

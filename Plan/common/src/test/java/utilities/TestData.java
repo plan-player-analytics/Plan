@@ -78,8 +78,8 @@ public class TestData {
         Session sessionOne = new Session(uuid, serverUUID, playerFirstJoin, serverWorldNames[0], gms[0]);
 
         UUID otherUUID = uuid.equals(playerUUID) ? player2UUID : playerUUID;
-        sessionOne.playerKilled(new PlayerKill(otherUUID, "Iron Sword", 1234750L));
-        sessionOne.playerKilled(new PlayerKill(otherUUID, "Gold Sword", 1234800L));
+        sessionOne.playerKilled(new PlayerKill(uuid, otherUUID, "Iron Sword", 1234750L));
+        sessionOne.playerKilled(new PlayerKill(uuid, otherUUID, "Gold Sword", 1234800L));
 
         sessionOne.endSession(1235000L); // Length 500ms
         sessions.add(sessionOne);
