@@ -73,6 +73,7 @@ public class Contributors {
                 new Contributor("Karlatemp", CODE, LANG),
                 new Contributor("Mastory_Md5", LANG),
                 new Contributor("FluxCapacitor2", CODE)
+                new Contributor("galexrt", LANG),
         };
         int estimatedLength = contributors.length * 40 + 50;
         StringBuilder html = new StringBuilder(estimatedLength);
