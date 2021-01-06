@@ -96,7 +96,7 @@ Cmd Qinspect - Last Seen                        ||   §2Zuletzt gesehen: §f${0}
 Cmd Qinspect - Longest Session                  ||   §2Längste Session: §f${0}
 Cmd Qinspect - Mob Kills                        ||   §2Getötete Mobs: §f${0}
 Cmd Qinspect - Player Kills                     ||   §2Getötete Spieler: §f${0}
-Cmd Qinspect - Playtime                         ||   §Spielzeit: §f${0}
+Cmd Qinspect - Playtime                         ||   §2Spielzeit: §f${0}
 Cmd Qinspect - Registered                       ||   §2Registrierung: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Kicks: §f${0}
 Cmd SUCCESS - Feature disabled                  || §a'${0}' wurde bis zum nächsten Reload des Plugins deaktiviert.
