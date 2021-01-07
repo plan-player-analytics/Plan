@@ -7,16 +7,24 @@ let filterCount = 0;
 const filterQuery = [];
 
 class Filter {
+    constructor(kind) {
+        this.kind = kind;
+    }
+
     render(filterCount) {
         return 'Unimplemented render function'
+    }
+
+    updateParameters() {
+
     }
 }
 
 class MultipleChoiceFilter extends Filter {
     constructor(
-        id, label, options
+        id, kind, label, options
     ) {
-        super();
+        super(kind);
         this.id = id;
         this.label = label;
         this.options = options;
@@ -36,13 +44,22 @@ class MultipleChoiceFilter extends Filter {
         html += `</select></div></div>`;
         return html;
     }
+
+    updateParameters() {
+        let selected = "";
+        for (let option of document.querySelector('#' + filter.id + " select").selectedOptions) {
+            selected += option.text + ',';
+        }
+        selected = selected.substr(0, selected.length - 1); // Remove trailing comma
+        this.parameters = {selected};
+    }
 }
 
 class ActivityIndexFilter extends MultipleChoiceFilter {
     constructor(
         id, options
     ) {
-        super(id, `are in Activity Groups`, options);
+        super(id, "activityIndexNow", `are in Activity Groups`, options);
     }
 }
 
@@ -50,7 +67,7 @@ class BannedFilter extends MultipleChoiceFilter {
     constructor(
         id, options
     ) {
-        super(id, `are`, options);
+        super(id, "banned", `are`, options);
     }
 }
 
@@ -58,7 +75,7 @@ class OperatorsFilter extends MultipleChoiceFilter {
     constructor(
         id, options
     ) {
-        super(id, `are`, options);
+        super(id, "operators", `are`, options);
     }
 }
 
@@ -66,13 +83,13 @@ class PluginGroupsFilter extends MultipleChoiceFilter {
     constructor(
         id, plugin, options
     ) {
-        super(id, `are in ${plugin} Groups`, options);
+        super(id, "pluginGroups", `are in ${plugin} Groups`, options);
     }
 }
 
 class BetweenDateFilter extends Filter {
-    constructor(id, label, options) {
-        super();
+    constructor(id, kind, label, options) {
+        super(kind);
         this.id = id;
         this.label = label;
         this.afterDate = options.after[0];
@@ -107,17 +124,26 @@ class BetweenDateFilter extends Filter {
             `</div>`
         );
     }
+
+    updateParameters() {
+        this.parameters = {
+            dateAfter: this.afterDate,
+            timeAfter: this.afterTime,
+            dateBefore: this.beforeDate,
+            timeBefore: this.beforeTime
+        }
+    }
 }
 
 class PlayedBetweenFilter extends BetweenDateFilter {
     constructor(id, options) {
-        super(id, "Played between", options);
+        super(id, "playedBetween", "Played between", options);
     }
 }
 
 class RegisteredBetweenFilter extends BetweenDateFilter {
     constructor(id, options) {
-        super(id, "Registered between", options);
+        super(id, "registeredBetween", "Registered between", options);
     }
 }
 
@@ -206,8 +232,6 @@ function setFilterOption(
     const element = $(`#${elementId}`);
     let value = element.val();
 
-    console.log(element, value, id, elementId);
-
     value = correctionFunction.apply(element, [value]);
     element.val(value);
 
@@ -218,4 +242,14 @@ function setFilterOption(
     } else {
         element.addClass("is-invalid");
     }
+}
+
+function performQuery() {
+    for (filter of filterQuery) filter.updateParameters();
+
+    jsonRequest(`./v1/query?q=${encodeURIComponent(JSON.stringify(filterQuery))}`, function (json, error) {
+        console.log(filterQuery);
+        console.log(json);
+        console.error(error);
+    });
 }
