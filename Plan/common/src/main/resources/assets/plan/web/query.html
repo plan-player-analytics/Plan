@@ -93,7 +93,9 @@
                                                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewFromDateField"
-                                                       placeholder="31/12/2016" type="text">
+                                                       onkeyup="setFilterOption('view', 'viewFromDateField', 'dateBefore', isValidDate, correctDate)"
+                                                       placeholder="31/12/2016"
+                                                       type="text">
                                             </div>
                                         </div>
                                         <div class="col-2">
@@ -103,7 +105,9 @@
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewFromTimeField"
-                                                       placeholder="23:59" type="text">
+                                                       onkeyup="setFilterOption('view', 'viewFromTimeField', 'timeBefore', isValidTime, correctTime)"
+                                                       placeholder="23:59"
+                                                       type="text">
                                             </div>
                                         </div>
                                         <div class="col-auto">
@@ -115,7 +119,9 @@
                                                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewToDateField"
-                                                       placeholder="23/03/2020" type="text">
+                                                       onkeyup="setFilterOption('view', 'viewToDateField', 'dateAfter', isValidDate, correctDate)"
+                                                       placeholder="23/03/2020"
+                                                       type="text">
                                             </div>
                                         </div>
                                         <div class="col-2">
@@ -124,7 +130,9 @@
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewToTimeField"
-                                                       placeholder="21:26" type="text">
+                                                       onkeyup="setFilterOption('view', 'viewToTimeField', 'timeAfter', isValidTime, correctTime)"
+                                                       placeholder="21:26"
+                                                       type="text">
                                             </div>
                                         </div>
                                     </div>

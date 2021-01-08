@@ -4,6 +4,12 @@ let filterCount = 0;
     id: "DOM id",
     options...
 }*/
+const filterView = {
+    dateAfter: null,
+    timeAfter: null,
+    dateBefore: null,
+    timeBefore: null
+};
 const filterQuery = [];
 
 class Filter {
@@ -233,7 +239,7 @@ function setFilterOption(
     isValidFunction,
     correctionFunction
 ) {
-    const query = filterQuery.find(function (f) {
+    const query = id === 'view' ? filterView : filterQuery.find(function (f) {
         return f.id === id;
     });
     const element = $(`#${elementId}`);
@@ -257,7 +263,9 @@ function performQuery() {
         query.push(filter.toObject());
     }
 
-    jsonRequest(`./v1/query?q=${encodeURIComponent(JSON.stringify(query))}`, function (json, error) {
+    const encodedQuery = encodeURIComponent(JSON.stringify(query));
+    const encodedView = encodeURIComponent(JSON.stringify(filterView));
+    jsonRequest(`./v1/query?q=${encodedQuery}&view=${encodedView}`, function (json, error) {
         console.log(filterQuery);
         if (json) console.log(json);
         if (error) console.error(error);

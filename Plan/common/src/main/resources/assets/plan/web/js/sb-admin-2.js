@@ -19,7 +19,7 @@ function openTab(openIndex) {
     const tabWidthPercent = -100 / tabCount;
     const verticalScrollPercent = slideIndex * tabWidthPercent;
     content.style.transition = "0.5s";
-    content.style.transform = "translate3d(" + verticalScrollPercent + "%,0px,0)";
+    content.style.transform = `translate3d(${verticalScrollPercent}%,0px,0)`;
 }
 
 function openPage() {
