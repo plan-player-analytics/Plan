@@ -16,10 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Represents a query filter for /query page.
@@ -82,15 +79,26 @@ public interface Filter {
             return currentUUIDs;
         }
 
-        public StringBuilder getResultPath(String separator) {
-            StringBuilder builder;
-            if (previous == null) {
-                // First Result in chain
-                builder = new StringBuilder();
-            } else {
-                builder = previous.getResultPath(separator);
+        public List<ResultPath> getResultPath() {
+            List<ResultPath> path = new ArrayList<>();
+
+            Result current = this;
+            while (current != null) {
+                path.add(new ResultPath(current.filterKind, current.resultSize));
+                current = current.previous;
             }
-            return builder.append(separator).append("-> ").append(filterKind).append(": ").append(resultSize);
+
+            return path;
+        }
+    }
+
+    class ResultPath {
+        final String kind;
+        final int size;
+
+        public ResultPath(String kind, int size) {
+            this.kind = kind;
+            this.size = size;
         }
     }
 }

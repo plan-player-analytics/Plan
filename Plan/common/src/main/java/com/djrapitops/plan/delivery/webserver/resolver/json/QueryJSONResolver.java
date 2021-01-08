@@ -67,7 +67,7 @@ public class QueryJSONResolver implements Resolver {
             return Response.builder()
                     .setMimeType(MimeType.JSON)
                     .setJSONContent(Maps.builder(String.class, Object.class)
-                            .put("path", result.getResultPath(","))
+                            .put("path", result.getResultPath())
                             .put("uuids", result.getResultUUIDs())
                             .build())
                     .build();

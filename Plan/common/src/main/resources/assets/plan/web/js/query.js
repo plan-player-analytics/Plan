@@ -15,8 +15,8 @@ class Filter {
         return 'Unimplemented render function'
     }
 
-    updateParameters() {
-
+    toObject() {
+        return {kind: this.kind}
     }
 }
 
@@ -45,13 +45,17 @@ class MultipleChoiceFilter extends Filter {
         return html;
     }
 
-    updateParameters() {
-        let selected = "";
+    toObject() {
+        let selected = [];
         for (let option of document.querySelector('#' + filter.id + " select").selectedOptions) {
-            selected += option.text + ',';
+            selected.push(option.text);
         }
-        selected = selected.substr(0, selected.length - 1); // Remove trailing comma
-        this.parameters = {selected};
+        selected = JSON.stringify(selected);
+
+        return {
+            kind: this.kind,
+            parameters: {selected}
+        }
     }
 }
 
@@ -92,10 +96,10 @@ class BetweenDateFilter extends Filter {
         super(kind);
         this.id = id;
         this.label = label;
-        this.afterDate = options.after[0];
-        this.afterTime = options.after[1];
-        this.beforeDate = options.before[0];
-        this.beforeTime = options.before[1];
+        this.dateAfter = options.after[0];
+        this.timeAfter = options.after[1];
+        this.dateBefore = options.before[0];
+        this.timeBefore = options.before[1];
     }
 
     render(filterCount) {
@@ -106,31 +110,34 @@ class BetweenDateFilter extends Filter {
             `<div id="${id}" class="mt-2 input-group input-row">` +
             `<div class="col-3"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-            `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)" class="form-control" placeholder="${this.afterDate}" type="text">` +
+            `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'dateAfter', isValidDate, correctDate)" class="form-control" placeholder="${this.dateAfter}" type="text">` +
             `</div></div>` +
             `<div class="col-2"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-            `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)" class="form-control" placeholder="${this.afterTime}" type="text">` +
+            `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'timeAfter', isValidTime, correctTime)" class="form-control" placeholder="${this.timeAfter}" type="text">` +
             `</div></div>` +
             `<div class="col-auto"><label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label></div>` +
             `<div class="col-3"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-            `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)" class="form-control" placeholder="${this.beforeDate}" type="text">` +
+            `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'dateBefore', isValidDate, correctDate)" class="form-control" placeholder="${this.dateBefore}" type="text">` +
             `</div></div>` +
             `<div class="col-2"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-            `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)" class="form-control" placeholder="${this.beforeTime}" type="text">` +
+            `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'timeBefore', isValidTime, correctTime)" class="form-control" placeholder="${this.timeBefore}" type="text">` +
             `</div></div>` +
             `</div>`
         );
     }
 
-    updateParameters() {
-        this.parameters = {
-            dateAfter: this.afterDate,
-            timeAfter: this.afterTime,
-            dateBefore: this.beforeDate,
-            timeBefore: this.beforeTime
+    toObject() {
+        return {
+            kind: this.kind,
+            parameters: {
+                dateAfter: this.dateAfter,
+                timeAfter: this.timeAfter,
+                dateBefore: this.dateBefore,
+                timeBefore: this.timeBefore
+            }
         }
     }
 }
@@ -245,11 +252,14 @@ function setFilterOption(
 }
 
 function performQuery() {
-    for (filter of filterQuery) filter.updateParameters();
+    const query = [];
+    for (filter of filterQuery) {
+        query.push(filter.toObject());
+    }
 
-    jsonRequest(`./v1/query?q=${encodeURIComponent(JSON.stringify(filterQuery))}`, function (json, error) {
+    jsonRequest(`./v1/query?q=${encodeURIComponent(JSON.stringify(query))}`, function (json, error) {
         console.log(filterQuery);
-        console.log(json);
-        console.error(error);
+        if (json) console.log(json);
+        if (error) console.error(error);
     });
 }

@@ -18,9 +18,9 @@ package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
-import org.apache.commons.lang3.StringUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class MultiOptionFilter implements Filter {
@@ -32,10 +32,6 @@ public abstract class MultiOptionFilter implements Filter {
 
     protected List<String> getSelected(FilterQuery query) {
         String selected = query.get("selected").orElseThrow(IllegalArgumentException::new);
-        return Arrays.asList(deserializeOptions(selected));
-    }
-
-    private String[] deserializeOptions(String selected) {
-        return StringUtils.split(selected, ',');
+        return new Gson().fromJson(selected, new TypeToken<List<String>>() {}.getType());
     }
 }
