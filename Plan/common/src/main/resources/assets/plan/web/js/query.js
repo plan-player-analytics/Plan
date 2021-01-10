@@ -258,6 +258,10 @@ function setFilterOption(
 }
 
 function performQuery() {
+    const queryButton = document.querySelector('#query-button');
+    queryButton.setAttribute('disabled', 'true');
+    queryButton.classList.add('disabled');
+
     const query = [];
     for (filter of filterQuery) {
         query.push(filter.toObject());
@@ -269,5 +273,33 @@ function performQuery() {
         console.log(filterQuery);
         if (json) console.log(json);
         if (error) console.error(error);
+
+        renderDataResultScreen();
+
+        $('.player-table').DataTable({
+            responsive: true,
+            columns: json.data.players.columns,
+            data: json.data.players.data,
+            order: [[5, "desc"]]
+        })
     });
+}
+
+function renderDataResultScreen() {
+    document.querySelector('#content .tab').innerHTML +=
+        `<div class="row">
+            <div class="col-xs-12 col-sm-12 col-lg-11">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover player-table dataTable">
+                            <tr>
+                                <td>Loading..</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>`;
 }
