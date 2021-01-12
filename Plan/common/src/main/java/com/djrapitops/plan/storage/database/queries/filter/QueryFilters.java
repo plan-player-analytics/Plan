@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.filter;
 
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.storage.database.queries.filter.filters.AllPlayersFilter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,9 +33,14 @@ import java.util.*;
 public class QueryFilters {
 
     private final Map<String, Filter> filters;
+    private final AllPlayersFilter allPlayersFilter;
 
     @Inject
-    public QueryFilters(Set<Filter> filters) {
+    public QueryFilters(
+            Set<Filter> filters,
+            AllPlayersFilter allPlayersFilter
+    ) {
+        this.allPlayersFilter = allPlayersFilter;
         this.filters = new HashMap<>();
         put(filters);
     }
@@ -58,6 +64,7 @@ public class QueryFilters {
      */
     public Filter.Result apply(List<FilterQuery> filterQueries) {
         Filter.Result current = null;
+        if (filterQueries.isEmpty()) return allPlayersFilter.apply(null);
         for (FilterQuery filterQuery : filterQueries) {
             current = apply(current, filterQuery);
             if (current != null && current.isEmpty()) break;

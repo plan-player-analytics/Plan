@@ -43,7 +43,7 @@ function openPage() {
 
 // Prepare tabs for display
 content.style.transform = "translate3d(0px,0px,0)";
-content.style.width = (tabCount * 100) + "%";
+content.style.width = (Math.max(100, tabCount * 100)) + "%";
 content.style.opacity = "1";
 for (let tab of tabs) {
     tab.style.width = (100 / tabCount) + "%";

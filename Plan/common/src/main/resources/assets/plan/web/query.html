@@ -93,7 +93,7 @@
                                                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewFromDateField"
-                                                       onkeyup="setFilterOption('view', 'viewFromDateField', 'dateBefore', isValidDate, correctDate)"
+                                                       onkeyup="setFilterOption('view', 'viewFromDateField', 'beforeDate', isValidDate, correctDate)"
                                                        placeholder="31/12/2016"
                                                        type="text">
                                             </div>
@@ -105,7 +105,7 @@
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewFromTimeField"
-                                                       onkeyup="setFilterOption('view', 'viewFromTimeField', 'timeBefore', isValidTime, correctTime)"
+                                                       onkeyup="setFilterOption('view', 'viewFromTimeField', 'beforeTime', isValidTime, correctTime)"
                                                        placeholder="23:59"
                                                        type="text">
                                             </div>
@@ -119,7 +119,7 @@
                                                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewToDateField"
-                                                       onkeyup="setFilterOption('view', 'viewToDateField', 'dateAfter', isValidDate, correctDate)"
+                                                       onkeyup="setFilterOption('view', 'viewToDateField', 'afterDate', isValidDate, correctDate)"
                                                        placeholder="23/03/2020"
                                                        type="text">
                                             </div>
@@ -130,7 +130,7 @@
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewToTimeField"
-                                                       onkeyup="setFilterOption('view', 'viewToTimeField', 'timeAfter', isValidTime, correctTime)"
+                                                       onkeyup="setFilterOption('view', 'viewToTimeField', 'afterTime', isValidTime, correctTime)"
                                                        placeholder="21:26"
                                                        type="text">
                                             </div>
@@ -324,6 +324,13 @@
     const filters = [];
     jsonRequest("./v1/filters", function (json, error) {
         filters.push(...json.filters);
+
+        filterView = json.view;
+
+        document.getElementById('viewFromDateField').setAttribute('placeholder', json.view.afterDate);
+        document.getElementById('viewFromTimeField').setAttribute('placeholder', json.view.afterTime);
+        document.getElementById('viewToDateField').setAttribute('placeholder', json.view.beforeDate);
+        document.getElementById('viewToTimeField').setAttribute('placeholder', json.view.beforeTime);
 
         let filterElements = '';
         for (let i = 0; i < filters.length; i++) {

@@ -46,19 +46,21 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
     private final Collection<UUID> playerUUIDs;
-    private final long date;
+    private final long afterDate;
+    private final long beforeDate;
     private final long activeMsThreshold;
 
     /**
      * Create a new query.
      *
      * @param playerUUIDs       UUIDs of the players in the query
-     * @param date              Date used for Activity Index calculation
+     * @param beforeDate        Date used for Activity Index calculation
      * @param activeMsThreshold Playtime threshold for Activity Index calculation
      */
-    public QueryTablePlayersQuery(Collection<UUID> playerUUIDs, long date, long activeMsThreshold) {
+    public QueryTablePlayersQuery(Collection<UUID> playerUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {
         this.playerUUIDs = playerUUIDs;
-        this.date = date;
+        this.afterDate = afterDate;
+        this.beforeDate = beforeDate;
         this.activeMsThreshold = activeMsThreshold;
     }
 
@@ -88,7 +90,9 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 "COUNT(1) as count," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
-                WHERE + "s." + SessionsTable.USER_UUID +
+                WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
+                AND + "s." + SessionsTable.SESSION_END + "<=?" +
+                AND + "s." + SessionsTable.USER_UUID +
                 uuidsInSet +
                 GROUP_BY + "s." + SessionsTable.USER_UUID;
 
@@ -114,7 +118,9 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
         return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                NetworkActivityIndexQueries.setSelectActivityIndexSQLParameters(statement, 1, activeMsThreshold, date);
+                statement.setLong(1, afterDate);
+                statement.setLong(2, beforeDate);
+                NetworkActivityIndexQueries.setSelectActivityIndexSQLParameters(statement, 3, activeMsThreshold, beforeDate);
             }
 
             @Override
@@ -129,7 +135,7 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                             .lastSeen(set.getLong("last_seen"))
                             .sessionCount(set.getInt("count"))
                             .playtime(set.getLong("playtime"))
-                            .activityIndex(new ActivityIndex(set.getDouble("activity_index"), date));
+                            .activityIndex(new ActivityIndex(set.getDouble("activity_index"), beforeDate));
                     if (set.getBoolean(UserInfoTable.BANNED)) {
                         player.banned();
                     }

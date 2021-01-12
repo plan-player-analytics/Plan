@@ -4,11 +4,11 @@ let filterCount = 0;
     id: "DOM id",
     options...
 }*/
-const filterView = {
-    dateAfter: null,
-    timeAfter: null,
-    dateBefore: null,
-    timeBefore: null
+let filterView = {
+    afterDate: null,
+    afterTime: null,
+    beforeDate: null,
+    beforeTime: null
 };
 const filterQuery = [];
 
@@ -102,10 +102,10 @@ class BetweenDateFilter extends Filter {
         super(kind);
         this.id = id;
         this.label = label;
-        this.dateAfter = options.after[0];
-        this.timeAfter = options.after[1];
-        this.dateBefore = options.before[0];
-        this.timeBefore = options.before[1];
+        this.afterDate = options.after[0];
+        this.afterTime = options.after[1];
+        this.beforeDate = options.before[0];
+        this.beforeTime = options.before[1];
     }
 
     render(filterCount) {
@@ -116,20 +116,20 @@ class BetweenDateFilter extends Filter {
             `<div id="${id}" class="mt-2 input-group input-row">` +
             `<div class="col-3"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-            `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'dateAfter', isValidDate, correctDate)" class="form-control" placeholder="${this.dateAfter}" type="text">` +
+            `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)" class="form-control" placeholder="${this.afterDate}" type="text">` +
             `</div></div>` +
             `<div class="col-2"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-            `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'timeAfter', isValidTime, correctTime)" class="form-control" placeholder="${this.timeAfter}" type="text">` +
+            `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)" class="form-control" placeholder="${this.afterTime}" type="text">` +
             `</div></div>` +
             `<div class="col-auto"><label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label></div>` +
             `<div class="col-3"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-            `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'dateBefore', isValidDate, correctDate)" class="form-control" placeholder="${this.dateBefore}" type="text">` +
+            `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)" class="form-control" placeholder="${this.beforeDate}" type="text">` +
             `</div></div>` +
             `<div class="col-2"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-            `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'timeBefore', isValidTime, correctTime)" class="form-control" placeholder="${this.timeBefore}" type="text">` +
+            `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)" class="form-control" placeholder="${this.beforeTime}" type="text">` +
             `</div></div>` +
             `</div>`
         );
@@ -139,10 +139,10 @@ class BetweenDateFilter extends Filter {
         return {
             kind: this.kind,
             parameters: {
-                dateAfter: this.dateAfter,
-                timeAfter: this.timeAfter,
-                dateBefore: this.dateBefore,
-                timeBefore: this.timeBefore
+                afterDate: this.afterDate,
+                afterTime: this.afterTime,
+                beforeDate: this.beforeDate,
+                beforeTime: this.beforeTime
             }
         }
     }
@@ -274,7 +274,7 @@ function performQuery() {
         if (json) console.log(json);
         if (error) console.error(error);
 
-        renderDataResultScreen();
+        renderDataResultScreen(json.data.players.data.length);
 
         $('.player-table').DataTable({
             responsive: true,
@@ -282,24 +282,41 @@ function performQuery() {
             data: json.data.players.data,
             order: [[5, "desc"]]
         })
+
+        const activityIndexHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(2)");
+        const lastSeenHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(6)");
+
+        activityIndexHeader.innerHTML += ` (${filterView.beforeDate})`
+        lastSeenHeader.innerHTML += ` (view)`
     });
 }
 
-function renderDataResultScreen() {
-    document.querySelector('#content .tab').innerHTML +=
-        `<div class="row">
-            <div class="col-xs-12 col-sm-12 col-lg-11">
-                <div class="card shadow mb-4">
-                    <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover player-table dataTable">
-                            <tr>
-                                <td>Loading..</td>
-                            </tr>
-                        </table>
+function renderDataResultScreen(resultCount) {
+    document.querySelector('#content .tab').innerHTML =
+        `<div class="container-fluid mt-4">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Plan &middot;
+                    Query Results</h1>
+                <p class="mb-0 text-gray-800">(matched ${resultCount} players)</p>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-11">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold col-black" title=" ${filterView.afterDate} ${filterView.afterTime} - ${filterView.beforeDate} ${filterView.beforeTime}"><i
+                                    class="fas fa-fw fa-users col-black"></i>
+                                View: ${filterView.afterDate} - ${filterView.beforeDate}</h6>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover player-table dataTable">
+                                <tr>
+                                    <td>Loading..</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>`;
+        </div>`;
 }

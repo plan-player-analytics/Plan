@@ -35,11 +35,14 @@ import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
 import com.djrapitops.plan.utilities.java.Maps;
+import com.google.gson.Gson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Singleton
@@ -81,6 +84,7 @@ public class QueryJSONResolver implements Resolver {
     private Response getResponse(Request request) {
         String q = request.getQuery().get("q").orElseThrow(() -> new BadRequestException("'q' parameter not set (expecting json array)"));
         String view = request.getQuery().get("view").orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
+
         try {
             q = URLDecoder.decode(q, "UTF-8");
             List<FilterQuery> queries = FilterQuery.parse(q);
@@ -90,23 +94,30 @@ public class QueryJSONResolver implements Resolver {
                     .put("path", result.getResultPath())
                     .build();
             if (!result.isEmpty()) {
-                json.put("data", getDataFor(result.getResultUUIDs()));
+                json.put("data", getDataFor(result.getResultUUIDs(), view));
             }
             return Response.builder()
                     .setMimeType(MimeType.JSON)
                     .setJSONContent(json)
                     .build();
 
+        } catch (ParseException e) {
+            throw new BadRequestException("'view' date format was incorrect (expecting afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm}): " + e.getMessage());
         } catch (IOException e) {
             throw new BadRequestException("Failed to parse json: '" + q + "'" + e.getMessage());
         }
     }
 
-    private Map<String, Object> getDataFor(Set<UUID> playerUUIDs) {
+    private Map<String, Object> getDataFor(Set<UUID> playerUUIDs, String view) throws ParseException {
+        FiltersJSONResolver.ViewJSON viewJSON = new Gson().fromJson(view, FiltersJSONResolver.ViewJSON.class);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy kk:mm");
+        long after = dateFormat.parse(viewJSON.afterDate + " " + viewJSON.afterTime).getTime();
+        long before = dateFormat.parse(viewJSON.beforeDate + " " + viewJSON.beforeTime).getTime();
+
         Database database = dbSystem.getDatabase();
         return Maps.builder(String.class, Object.class)
                 .put("players", new PlayersTableJSONCreator(
-                        database.query(new QueryTablePlayersQuery(playerUUIDs, System.currentTimeMillis(), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
+                        database.query(new QueryTablePlayersQuery(playerUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
                         Collections.emptyMap(),
                         config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                         formatters, locale

@@ -40,10 +40,10 @@ public abstract class DateRangeFilter implements Filter {
     @Override
     public String[] getExpectedParameters() {
         return new String[]{
-                "dateAfter",
-                "timeAfter",
-                "dateBefore",
-                "timeBefore"
+                "afterDate",
+                "afterTime",
+                "beforeDate",
+                "beforeTime"
         };
     }
 
@@ -61,11 +61,11 @@ public abstract class DateRangeFilter implements Filter {
     }
 
     protected long getAfter(FilterQuery query) {
-        return getTime(query, "dateAfter", "timeAfter");
+        return getTime(query, "afterDate", "afterTime");
     }
 
     protected long getBefore(FilterQuery query) {
-        return getTime(query, "dateBefore", "timeBefore");
+        return getTime(query, "beforeDate", "beforeTime");
     }
 
     private long getTime(FilterQuery query, String dateKey, String timeKey) {
