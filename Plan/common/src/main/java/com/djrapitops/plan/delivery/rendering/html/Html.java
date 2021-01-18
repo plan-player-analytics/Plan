@@ -22,6 +22,7 @@ import org.apache.commons.text.TextStringBuilder;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -142,6 +143,17 @@ public enum Html {
         TextStringBuilder builder = new TextStringBuilder();
         builder.appendWithSeparators(elements, " &#x2022; ");
         return builder.toString();
+    }
+
+    public static String decodeFromURL(String string) {
+        try {
+            return StringUtils.replace(
+                    URLDecoder.decode(string, "UTF-8"),
+                    " ", "+" // Decoding replaces + with spaces
+            );
+        } catch (UnsupportedEncodingException e) {
+            return string;
+        }
     }
 
     /**

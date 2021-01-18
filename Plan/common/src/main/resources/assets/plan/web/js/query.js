@@ -4,6 +4,7 @@ let filterCount = 0;
     id: "DOM id",
     options...
 }*/
+let timestamp = undefined;
 let filterView = {
     afterDate: null,
     afterTime: null,
@@ -53,7 +54,7 @@ class MultipleChoiceFilter extends Filter {
 
     toObject() {
         let selected = [];
-        for (let option of document.querySelector('#' + filter.id + " select").selectedOptions) {
+        for (let option of document.querySelector('#' + this.id + " select").selectedOptions) {
             selected.push(option.text);
         }
         selected = JSON.stringify(selected);
@@ -257,24 +258,50 @@ function setFilterOption(
     }
 }
 
+let query = [];
+
 function performQuery() {
+    for (let filter of filterQuery) {
+        query.push(filter.toObject());
+    }
+    runQuery();
+}
+
+function getQueryAddress() {
+    if (timestamp) return `./v1/query?timestamp=${timestamp}`;
+
+    const encodedQuery = encodeURIComponent(JSON.stringify(query));
+    const encodedView = encodeURIComponent(JSON.stringify(filterView));
+    return `./v1/query?q=${encodedQuery}&view=${encodedView}`;
+}
+
+function runQuery() {
     const queryButton = document.querySelector('#query-button');
     queryButton.setAttribute('disabled', 'true');
     queryButton.classList.add('disabled');
 
-    const query = [];
-    for (filter of filterQuery) {
-        query.push(filter.toObject());
-    }
+    document.querySelector('#content .tab').innerHTML =
+        `<div class="page-loader">
+            <span class="loader"></span>
+            <p class="loader-text">Loading..</p>
+        </div>`;
 
-    const encodedQuery = encodeURIComponent(JSON.stringify(query));
-    const encodedView = encodeURIComponent(JSON.stringify(filterView));
-    jsonRequest(`./v1/query?q=${encodedQuery}&view=${encodedView}`, function (json, error) {
-        console.log(filterQuery);
-        if (json) console.log(json);
-        if (error) console.error(error);
+    const navButton = document.querySelector('.navbar-nav .nav-item');
+    navButton.insertAdjacentElement('beforebegin',
+        `<li class="nav-item nav-button"><a class="nav-link" href="./query">
+                <i class="far fa-fw fa-undo"></i>
+                <span>Make another query</span>
+            </a></li>`);
 
-        renderDataResultScreen(json.data.players.data.length);
+    jsonRequest(getQueryAddress(), function (json, error) {
+        if (!json.data) {
+            window.history.replaceState({}, '', `${location.pathname}?error=${error ? error : 'Query result expired'}`);
+            location.reload();
+        }
+
+        renderDataResultScreen(json.data.players.data.length, json.view ? json.view : {});
+
+        window.history.replaceState({}, '', `${location.pathname}?timestamp=${json.timestamp}`);
 
         $('.player-table').DataTable({
             responsive: true,
@@ -291,7 +318,11 @@ function performQuery() {
     });
 }
 
-function renderDataResultScreen(resultCount) {
+function renderDataResultScreen(resultCount, view) {
+    const afterDate = filterView.afterDate ? filterView.afterDate : view.afterDate;
+    const beforeDate = filterView.beforeDate ? filterView.beforeDate : view.beforeDate;
+    const afterTime = filterView.afterTime ? filterView.afterTime : view.afterTime;
+    const beforeTime = filterView.beforeTime ? filterView.beforeTime : view.beforeTime;
     document.querySelector('#content .tab').innerHTML =
         `<div class="container-fluid mt-4">
             <!-- Page Heading -->
@@ -301,12 +332,12 @@ function renderDataResultScreen(resultCount) {
                 <p class="mb-0 text-gray-800">(matched ${resultCount} players)</p>
             </div>
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-lg-11">
+                <div class="col-xs-12 col-sm-12 col-lg-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black" title=" ${filterView.afterDate} ${filterView.afterTime} - ${filterView.beforeDate} ${filterView.beforeTime}"><i
+                            <h6 class="m-0 font-weight-bold col-black" title=" ${afterDate} ${afterTime} - ${beforeDate} ${beforeTime}"><i
                                     class="fas fa-fw fa-users col-black"></i>
-                                View: ${filterView.afterDate} - ${filterView.beforeDate}</h6>
+                                View: ${afterDate} - ${beforeDate}</h6>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover player-table dataTable">

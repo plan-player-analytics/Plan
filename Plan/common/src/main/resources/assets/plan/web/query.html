@@ -78,7 +78,7 @@
 
                     <div class="row">
                         <!-- Card -->
-                        <div class="col-xs-12 col-sm-12 col-lg-11">
+                        <div class="col-xs-12 col-sm-12 col-lg-12">
                             <div class="card shadow mb-4">
                                 <div class="card-body" id="data_player_info">
                                     <label class="mt-2 mb-0" for="viewFromDateField">Show a view</label>
@@ -322,22 +322,40 @@
 
 <script id="mainScript">
     const filters = [];
-    jsonRequest("./v1/filters", function (json, error) {
-        filters.push(...json.filters);
 
-        filterView = json.view;
+    if (location.search.includes("error=")) {
+        const placeBefore = document.querySelector('.tab .row div');
+        placeBefore.insertAdjacentElement('beforebegin',
+            `<alert class="alert alert-danger alert-dismissible show">
+                ${new URLSearchParams(location.search).get("error")}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </alert>`);
+    }
 
-        document.getElementById('viewFromDateField').setAttribute('placeholder', json.view.afterDate);
-        document.getElementById('viewFromTimeField').setAttribute('placeholder', json.view.afterTime);
-        document.getElementById('viewToDateField').setAttribute('placeholder', json.view.beforeDate);
-        document.getElementById('viewToTimeField').setAttribute('placeholder', json.view.beforeTime);
+    if (location.search.includes('timestamp=')) {
+        const parameters = new URLSearchParams(location.search);
+        timestamp = parameters.get('timestamp');
+        runQuery();
+    } else {
+        jsonRequest("./v1/filters", function (json, error) {
+            filters.push(...json.filters);
 
-        let filterElements = '';
-        for (let i = 0; i < filters.length; i++) {
-            filterElements += createFilterSelector('#filters', i, filters[i]);
-        }
-        document.getElementById('filter-dropdown').innerHTML = filterElements;
-    });
+            filterView = json.view;
+
+            document.getElementById('viewFromDateField').setAttribute('placeholder', json.view.afterDate);
+            document.getElementById('viewFromTimeField').setAttribute('placeholder', json.view.afterTime);
+            document.getElementById('viewToDateField').setAttribute('placeholder', json.view.beforeDate);
+            document.getElementById('viewToTimeField').setAttribute('placeholder', json.view.beforeTime);
+
+            let filterElements = '';
+            for (let i = 0; i < filters.length; i++) {
+                filterElements += createFilterSelector('#filters', i, filters[i]);
+            }
+            document.getElementById('filter-dropdown').innerHTML = filterElements;
+        });
+    }
 </script>
 
 </body>

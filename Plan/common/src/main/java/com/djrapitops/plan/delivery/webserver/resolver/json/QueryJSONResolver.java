@@ -34,6 +34,7 @@ import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
+import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.google.gson.Gson;
 
@@ -52,6 +53,7 @@ public class QueryJSONResolver implements Resolver {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final JSONStorage jsonStorage;
     private final Locale locale;
     private final Formatters formatters;
 
@@ -60,12 +62,14 @@ public class QueryJSONResolver implements Resolver {
             QueryFilters filters,
             PlanConfig config,
             DBSystem dbSystem,
+            JSONStorage jsonStorage,
             Locale locale,
             Formatters formatters
     ) {
         this.filters = filters;
         this.config = config;
         this.dbSystem = dbSystem;
+        this.jsonStorage = jsonStorage;
         this.locale = locale;
         this.formatters = formatters;
     }
@@ -82,8 +86,24 @@ public class QueryJSONResolver implements Resolver {
     }
 
     private Response getResponse(Request request) {
+        // Attempt to find previously created result
+        try {
+            Optional<JSONStorage.StoredJSON> previousResults = request.getQuery().get("timestamp")
+                    .flatMap(queryTimestamp -> jsonStorage.fetchExactJson("query", Long.parseLong(queryTimestamp)));
+            if (previousResults.isPresent()) {
+                return Response.builder()
+                        .setMimeType(MimeType.JSON)
+                        .setJSONContent(previousResults.get().json)
+                        .build();
+            }
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("Could not parse 'timestamp' into a number. Remove parameter or fix it.");
+        }
+
         String q = request.getQuery().get("q").orElseThrow(() -> new BadRequestException("'q' parameter not set (expecting json array)"));
         String view = request.getQuery().get("view").orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
+
+        long timestamp = System.currentTimeMillis();
 
         try {
             q = URLDecoder.decode(q, "UTF-8");
@@ -92,15 +112,19 @@ public class QueryJSONResolver implements Resolver {
 
             Map<String, Object> json = Maps.builder(String.class, Object.class)
                     .put("path", result.getResultPath())
+                    .put("view", new Gson().fromJson(view, FiltersJSONResolver.ViewJSON.class))
+                    .put("timestamp", timestamp)
                     .build();
             if (!result.isEmpty()) {
                 json.put("data", getDataFor(result.getResultUUIDs(), view));
             }
+
+            JSONStorage.StoredJSON stored = jsonStorage.storeJson("query", json, timestamp);
+
             return Response.builder()
                     .setMimeType(MimeType.JSON)
-                    .setJSONContent(json)
+                    .setJSONContent(stored.json)
                     .build();
-
         } catch (ParseException e) {
             throw new BadRequestException("'view' date format was incorrect (expecting afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm}): " + e.getMessage());
         } catch (IOException e) {
