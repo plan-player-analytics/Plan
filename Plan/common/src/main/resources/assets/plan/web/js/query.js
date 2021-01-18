@@ -287,11 +287,13 @@ function runQuery() {
         </div>`;
 
     const navButton = document.querySelector('.navbar-nav .nav-item');
-    navButton.insertAdjacentElement('beforebegin',
-        `<li class="nav-item nav-button"><a class="nav-link" href="./query">
-                <i class="far fa-fw fa-undo"></i>
+    const element = document.createElement('li');
+    element.classList.add("nav-item", "nav-button")
+    element.innerHTML = `<a class="nav-link" href="./query">
+                <i class="fas fa-fw fa-undo"></i>
                 <span>Make another query</span>
-            </a></li>`);
+            </a>`
+    navButton.insertAdjacentElement('beforebegin', element);
 
     jsonRequest(getQueryAddress(), function (json, error) {
         if (!json.data) {

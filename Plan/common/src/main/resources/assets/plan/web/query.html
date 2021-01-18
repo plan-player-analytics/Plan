@@ -324,14 +324,14 @@
     const filters = [];
 
     if (location.search.includes("error=")) {
-        const placeBefore = document.querySelector('.tab .row div');
-        placeBefore.insertAdjacentElement('beforebegin',
-            `<alert class="alert alert-danger alert-dismissible show">
-                ${new URLSearchParams(location.search).get("error")}
+        const placeBefore = document.querySelector('.tab .row .card');
+        const element = document.createElement('alert');
+        element.classList.add("alert", "alert-danger", "alert-dismissable", "show");
+        element.innerHTML = `${new URLSearchParams(location.search).get("error")}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </button>
-            </alert>`);
+                </button>`
+        placeBefore.insertAdjacentElement('beforebegin', element);
     }
 
     if (location.search.includes('timestamp=')) {
