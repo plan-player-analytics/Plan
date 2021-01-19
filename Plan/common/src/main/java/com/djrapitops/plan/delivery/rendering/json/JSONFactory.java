@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.Ping;
@@ -101,9 +102,12 @@ public class JSONFactory {
 
         Database database = dbSystem.getDatabase();
 
+        UUID mainServerUUID = database.query(ServerQueries.fetchProxyServerInformation()).map(Server::getUuid).orElse(serverInfo.getServerUUID());
+        Map<UUID, ExtensionTabData> pluginData = database.query(new ExtensionServerPlayerDataTableQuery(mainServerUUID, xMostRecentPlayers));
+
         return new PlayersTableJSONCreator(
                 database.query(new NetworkTablePlayersQuery(System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
-                Collections.emptyMap(),
+                pluginData,
                 openPlayerLinksInNewTab,
                 formatters, locale
         ).toJSONString();
