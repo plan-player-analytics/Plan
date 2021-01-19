@@ -16,46 +16,105 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionUUIDsInGroupQuery;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionGroupsTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.utilities.java.Maps;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import javax.inject.Singleton;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 public class PluginGroupsFilter extends MultiOptionFilter {
 
     private final DBSystem dbSystem;
     private final String pluginName;
+    private final String groupProvider;
     private final List<String> groups;
 
     public PluginGroupsFilter(
             DBSystem dbSystem,
             String pluginName,
+            String groupProvider,
             List<String> groups
     ) {
         this.dbSystem = dbSystem;
         this.pluginName = pluginName;
+        this.groupProvider = groupProvider;
         this.groups = groups;
     }
 
     @Override
     public String getKind() {
-        return "pluginGroups";
+        return "pluginGroups-" + pluginName + "-" + groupProvider;
     }
 
     @Override
     public Map<String, Object> getOptions() {
         return Maps.builder(String.class, Object.class)
                 .put("plugin", pluginName)
+                .put("group", groupProvider)
                 .put("options", groups)
                 .build();
     }
 
     @Override
     public Set<UUID> getMatchingUUIDs(FilterQuery query) {
-        return null;
+        return dbSystem.getDatabase().query(
+                new ExtensionUUIDsInGroupQuery(pluginName, groupProvider, getSelected(query))
+        );
+    }
+
+    @Singleton
+    public static class PluginGroupsFilterQuery extends QueryAllStatement<Collection<PluginGroupsFilter>> {
+
+        private final DBSystem dbSystem;
+
+        public PluginGroupsFilterQuery(DBSystem dbSystem) {
+            super(SELECT + DISTINCT + ExtensionPluginTable.PLUGIN_NAME + ',' +
+                    ExtensionProviderTable.PROVIDER_NAME + ',' +
+                    ExtensionGroupsTable.GROUP_NAME +
+                    FROM + ExtensionPluginTable.TABLE_NAME + " pl" +
+                    INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " pr  on pl." + ExtensionPluginTable.ID + "=pr." + ExtensionProviderTable.PLUGIN_ID +
+                    INNER_JOIN + ExtensionGroupsTable.TABLE_NAME + " gr on pr." + ExtensionProviderTable.ID + "=gr." + ExtensionGroupsTable.PROVIDER_ID);
+
+            this.dbSystem = dbSystem;
+        }
+
+        @Override
+        public Collection<PluginGroupsFilter> processResults(ResultSet set) throws SQLException {
+            Map<String, Map<String, List<String>>> byPlugin = new HashMap<>();
+            while (set.next()) {
+                String plugin = set.getString(ExtensionPluginTable.PLUGIN_NAME);
+                String provider = set.getString(ExtensionProviderTable.PROVIDER_NAME);
+                String group = set.getString(ExtensionGroupsTable.GROUP_NAME);
+
+                Map<String, List<String>> byProvider = byPlugin.getOrDefault(plugin, new HashMap<>());
+                List<String> groups = byProvider.getOrDefault(provider, new ArrayList<>());
+                groups.add(group);
+                byProvider.put(provider, groups);
+                byPlugin.put(plugin, byProvider);
+            }
+
+            List<PluginGroupsFilter> filters = new ArrayList<>();
+            for (Map.Entry<String, Map<String, List<String>>> providersOfPlugin : byPlugin.entrySet()) {
+                for (Map.Entry<String, List<String>> groupsOfProvider : providersOfPlugin.getValue().entrySet()) {
+                    filters.add(new PluginGroupsFilter(
+                            dbSystem,
+                            providersOfPlugin.getKey(),
+                            groupsOfProvider.getKey(),
+                            groupsOfProvider.getValue()
+                    ));
+                }
+            }
+            return filters;
+        }
     }
 }

@@ -92,9 +92,9 @@ class OperatorsFilter extends MultipleChoiceFilter {
 
 class PluginGroupsFilter extends MultipleChoiceFilter {
     constructor(
-        id, plugin, options
+        id, plugin, group, options
     ) {
-        super(id, "pluginGroups", `are in ${plugin} Groups`, options);
+        super(id, `pluginGroups: ${plugin} ${group}`, `are in ${plugin}'s ${group} Groups`, options);
     }
 }
 
@@ -178,7 +178,7 @@ function createFilter(filter, id) {
         case "operators":
             return new OperatorsFilter(id, filter.options);
         case "pluginGroups":
-            return new PluginGroupsFilter(id, filter.options);
+            return new PluginGroupsFilter(id, filter.plugin, filter.group, filter.options);
         case "playedBetween":
             return new PlayedBetweenFilter(id, filter.options);
         case "registeredBetween":

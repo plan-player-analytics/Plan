@@ -17,11 +17,14 @@
 package com.djrapitops.plan.storage.database.queries.filter;
 
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.filters.AllPlayersFilter;
+import com.djrapitops.plan.storage.database.queries.filter.filters.PluginGroupsFilter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Contains a single instance of each filter kind.
@@ -34,24 +37,37 @@ public class QueryFilters {
 
     private final Map<String, Filter> filters;
     private final AllPlayersFilter allPlayersFilter;
+    private final DBSystem dbSystem;
+
+    private final AtomicBoolean fetchedPluginFilters = new AtomicBoolean(false);
 
     @Inject
     public QueryFilters(
             Set<Filter> filters,
-            AllPlayersFilter allPlayersFilter
+            AllPlayersFilter allPlayersFilter,
+            DBSystem dbSystem
     ) {
         this.allPlayersFilter = allPlayersFilter;
+        this.dbSystem = dbSystem;
         this.filters = new HashMap<>();
         put(filters);
     }
 
-    private void put(Iterable<Filter> filters) {
+    private void put(Iterable<? extends Filter> filters) {
         for (Filter filter : filters) {
             this.filters.put(filter.getKind(), filter);
         }
     }
 
+    private void prepareFilters() {
+        if (!fetchedPluginFilters.get()) {
+            put(dbSystem.getDatabase().query(new PluginGroupsFilter.PluginGroupsFilterQuery(dbSystem)));
+            fetchedPluginFilters.set(true);
+        }
+    }
+
     public Optional<Filter> getFilter(String kind) {
+        prepareFilters();
         return Optional.ofNullable(filters.get(kind));
     }
 
@@ -63,6 +79,7 @@ public class QueryFilters {
      * @throws BadRequestException If the request kind is not supported or if filter was given bad options.
      */
     public Filter.Result apply(List<FilterQuery> filterQueries) {
+        prepareFilters();
         Filter.Result current = null;
         if (filterQueries.isEmpty()) return allPlayersFilter.apply(null);
         for (FilterQuery filterQuery : filterQueries) {
@@ -93,6 +110,7 @@ public class QueryFilters {
     }
 
     public Map<String, Filter> getFilters() {
+        prepareFilters();
         return filters;
     }
 }
