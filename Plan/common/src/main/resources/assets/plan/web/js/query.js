@@ -313,6 +313,10 @@ function runQuery() {
             data: json.data.players.data,
             order: [[5, "desc"]]
         });
+        const activityIndexHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(2)");
+        const lastSeenHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(6)");
+        activityIndexHeader.innerHTML += ` (${json.view.beforeDate})`
+        lastSeenHeader.innerHTML += ` (view)`
 
         // Activity graphs
         const activity_data = json.data.activity;
@@ -320,13 +324,31 @@ function runQuery() {
             name: 'Players', colorByPoint: true, data: activity_data.activity_pie_series
         });
         stackChart('activityStackGraph', activity_data.activity_labels, activity_data.activity_series, 'Players');
-
-        const activityIndexHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(2)");
-        const lastSeenHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(6)");
-
         document.querySelector("#activity-date").innerHTML = json.view.beforeDate;
-        activityIndexHeader.innerHTML += ` (${json.view.beforeDate})`
-        lastSeenHeader.innerHTML += ` (view)`
+
+        // Geolocations
+        const geolocation_data = json.data.geolocation;
+        const geolocationSeries = {
+            name: 'Players',
+            type: 'map',
+            mapData: Highcharts.maps['custom/world'],
+            data: geolocation_data.geolocation_series,
+            joinBy: ['iso-a3', 'code']
+        };
+        const geolocationBarSeries = {
+            color: geolocation_data.colors.bars,
+            name: 'Players',
+            data: geolocation_data.geolocation_bar_series.map(function (bar) {
+                return bar.value
+            })
+        };
+        const geolocationBarCategories = geolocation_data.geolocation_bar_series.map(function (bar) {
+            return bar.label
+        });
+        worldMap('worldMap', geolocation_data.colors.low, geolocation_data.colors.high, geolocationSeries);
+        horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
+
+
     });
 }
 
@@ -337,12 +359,12 @@ function renderDataResultScreen(resultCount, view) {
     const beforeTime = filterView.beforeTime ? filterView.beforeTime : view.beforeTime;
     document.querySelector('#content .tab').innerHTML =
         `<div class="container-fluid mt-4">
-            <!-- Page Heading -->
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Plan &middot;
                     Query Results</h1>
                 <p class="mb-0 text-gray-800">(matched ${resultCount} players)</p>
             </div>
+            
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-lg-12">
                     <div class="card shadow mb-4">
@@ -361,6 +383,7 @@ function renderDataResultScreen(resultCount, view) {
                     </div>
                 </div>
             </div>
+            
             <div class="row">
                 <div class="col-xl-8 col-lg-8 col-sm-12">
                     <div class="card shadow mb-4">
@@ -372,7 +395,6 @@ function renderDataResultScreen(resultCount, view) {
                         <div class="chart-area" id="activityStackGraph"></div>
                     </div>
                 </div>
-
                 <div class="col-xl-4 col-lg-4 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -381,6 +403,26 @@ function renderDataResultScreen(resultCount, view) {
                                 Activity on <span id="activity-date"></span></h6>
                         </div>
                         <div class="chart-area" id="activityPie"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xl-12 col-lg-12 col-sm-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold col-black"><i
+                                    class="fas fa-fw fa-globe col-green"></i>
+                                Geolocations</h6>
+                        </div>
+                        <div class="chart-area row" style="height: 100%;">
+                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div id="countryBarChart"></div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                                <div id="worldMap"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

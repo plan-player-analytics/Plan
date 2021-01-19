@@ -946,7 +946,7 @@
                     joinBy: ['iso-a3', 'code']
                 };
                 var geolocationBarSeries = {
-                    color: '#4CAF50',
+                    color: json.colors.bars,
                     name: 'Players',
                     data: json.geolocation_bar_series.map(function (bar) {
                         return bar.value
@@ -955,7 +955,7 @@
                 var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
                     return bar.label
                 });
-                worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, geolocationSeries);
+                worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
                 horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
             } else if (error) {
                 $('#worldMap').text("Failed to load graph data: " + error);

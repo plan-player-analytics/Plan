@@ -36,6 +36,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityInde
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
+import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
 import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -146,10 +147,19 @@ public class QueryJSONResolver implements Resolver {
         long before = dateFormat.parse(viewJSON.beforeDate + " " + viewJSON.beforeTime).getTime();
 
         Database database = dbSystem.getDatabase();
+
         return Maps.builder(String.class, Object.class)
                 .put("players", getPlayersTableData(playerUUIDs, after, before))
                 .put("activity", getActivityGraphData(playerUUIDs, after, before))
+                .put("geolocation", getGeolocationData(playerUUIDs))
                 .build();
+    }
+
+    private Map<String, Object> getGeolocationData(Set<UUID> playerUUIDs) {
+        Database database = dbSystem.getDatabase();
+        return graphJSONCreator.createGeolocationJSON(
+                database.query(GeoInfoQueries.networkGeolocationCounts(playerUUIDs))
+        );
     }
 
     private Map<String, Object> getActivityGraphData(Set<UUID> playerUUIDs, long after, long before) {
@@ -164,8 +174,7 @@ public class QueryJSONResolver implements Resolver {
             activityData.put(time, database.query(NetworkActivityIndexQueries.fetchActivityIndexGroupingsOn(time, threshold, playerUUIDs)));
         }
 
-        Map<String, Object> activityGraphJSON = graphJSONCreator.createActivityGraphJSON(activityData);
-        return activityGraphJSON;
+        return graphJSONCreator.createActivityGraphJSON(activityData);
     }
 
     private Map<String, Object> getPlayersTableData(Set<UUID> playerUUIDs, long after, long before) {
