@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -141,6 +142,36 @@ public class NetworkActivityIndexQueries {
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?";
+
+        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                setSelectActivityIndexSQLParameters(statement, 1, threshold, date);
+                statement.setLong(9, date);
+            }
+
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> groups = new HashMap<>();
+                while (set.next()) {
+                    double activityIndex = set.getDouble("activity_index");
+                    String group = ActivityIndex.getGroup(activityIndex);
+                    groups.put(group, groups.getOrDefault(group, 0) + 1);
+                }
+                return groups;
+            }
+        };
+    }
+
+    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs) {
+        String selectActivityIndex = selectActivityIndexSQL();
+
+        String selectIndexes = SELECT + "activity_index" +
+                FROM + UsersTable.TABLE_NAME + " u" +
+                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                WHERE + "u." + UsersTable.REGISTERED + "<=?" +
+                AND + "u." + UsersTable.USER_UUID + " IN ('" +
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
 
         return new QueryStatement<Map<String, Integer>>(selectIndexes) {
             @Override

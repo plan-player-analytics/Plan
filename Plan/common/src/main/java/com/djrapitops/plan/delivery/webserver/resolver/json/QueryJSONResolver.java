@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.DateMap;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONCreator;
+import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -30,12 +32,14 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
 import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.java.Maps;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -54,6 +58,7 @@ public class QueryJSONResolver implements Resolver {
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final JSONStorage jsonStorage;
+    private final GraphJSONCreator graphJSONCreator;
     private final Locale locale;
     private final Formatters formatters;
 
@@ -63,6 +68,7 @@ public class QueryJSONResolver implements Resolver {
             PlanConfig config,
             DBSystem dbSystem,
             JSONStorage jsonStorage,
+            GraphJSONCreator graphJSONCreator,
             Locale locale,
             Formatters formatters
     ) {
@@ -70,6 +76,7 @@ public class QueryJSONResolver implements Resolver {
         this.config = config;
         this.dbSystem = dbSystem;
         this.jsonStorage = jsonStorage;
+        this.graphJSONCreator = graphJSONCreator;
         this.locale = locale;
         this.formatters = formatters;
     }
@@ -140,12 +147,34 @@ public class QueryJSONResolver implements Resolver {
 
         Database database = dbSystem.getDatabase();
         return Maps.builder(String.class, Object.class)
-                .put("players", new PlayersTableJSONCreator(
-                        database.query(new QueryTablePlayersQuery(playerUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
-                        Collections.emptyMap(),
-                        config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
-                        formatters, locale
-                ).toJSONMap())
+                .put("players", getPlayersTableData(playerUUIDs, after, before))
+                .put("activity", getActivityGraphData(playerUUIDs, after, before))
                 .build();
+    }
+
+    private Map<String, Object> getActivityGraphData(Set<UUID> playerUUIDs, long after, long before) {
+        Database database = dbSystem.getDatabase();
+        Long threshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
+
+        long twoMonthsBeforeLastDate = before - TimeAmount.MONTH.toMillis(2L);
+        long stopDate = Math.max(twoMonthsBeforeLastDate, after);
+
+        DateMap<Map<String, Integer>> activityData = new DateMap<>();
+        for (long time = before; time >= stopDate; time -= TimeAmount.WEEK.toMillis(1L)) {
+            activityData.put(time, database.query(NetworkActivityIndexQueries.fetchActivityIndexGroupingsOn(time, threshold, playerUUIDs)));
+        }
+
+        Map<String, Object> activityGraphJSON = graphJSONCreator.createActivityGraphJSON(activityData);
+        return activityGraphJSON;
+    }
+
+    private Map<String, Object> getPlayersTableData(Set<UUID> playerUUIDs, long after, long before) {
+        Database database = dbSystem.getDatabase();
+        return new PlayersTableJSONCreator(
+                database.query(new QueryTablePlayersQuery(playerUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
+                Collections.emptyMap(),
+                config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
+                formatters, locale
+        ).toJSONMap();
     }
 }

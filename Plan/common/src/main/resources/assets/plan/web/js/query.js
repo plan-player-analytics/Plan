@@ -303,19 +303,29 @@ function runQuery() {
 
         renderDataResultScreen(json.data.players.data.length, json.view ? json.view : {});
 
+        // Set URL so that the query result can be shared
         window.history.replaceState({}, '', `${location.pathname}?timestamp=${json.timestamp}`);
 
+        // Player table
         $('.player-table').DataTable({
             responsive: true,
             columns: json.data.players.columns,
             data: json.data.players.data,
             order: [[5, "desc"]]
-        })
+        });
+
+        // Activity graphs
+        const activity_data = json.data.activity;
+        activityPie('activityPie', {
+            name: 'Players', colorByPoint: true, data: activity_data.activity_pie_series
+        });
+        stackChart('activityStackGraph', activity_data.activity_labels, activity_data.activity_series, 'Players');
 
         const activityIndexHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(2)");
         const lastSeenHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(6)");
 
-        activityIndexHeader.innerHTML += ` (${filterView.beforeDate})`
+        document.querySelector("#activity-date").innerHTML = json.view.beforeDate;
+        activityIndexHeader.innerHTML += ` (${json.view.beforeDate})`
         lastSeenHeader.innerHTML += ` (view)`
     });
 }
@@ -348,6 +358,29 @@ function renderDataResultScreen(resultCount, view) {
                                 </tr>
                             </table>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-8 col-lg-8 col-sm-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold col-black"><i
+                                    class="fas fa-fw fa-chart-line col-amber"></i>
+                                Activity of matched players</h6>
+                        </div>
+                        <div class="chart-area" id="activityStackGraph"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-4 col-sm-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold col-black"><i
+                                    class="fa fa-fw fa-users col-amber"></i>
+                                Activity on <span id="activity-date"></span></h6>
+                        </div>
+                        <div class="chart-area" id="activityPie"></div>
                     </div>
                 </div>
             </div>
