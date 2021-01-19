@@ -286,15 +286,6 @@ function runQuery() {
             <p class="loader-text">Loading..</p>
         </div>`;
 
-    const navButton = document.querySelector('.navbar-nav .nav-item');
-    const element = document.createElement('li');
-    element.classList.add("nav-item", "nav-button")
-    element.innerHTML = `<a class="nav-link" href="./query">
-                <i class="fas fa-fw fa-undo"></i>
-                <span>Make another query</span>
-            </a>`
-    navButton.insertAdjacentElement('beforebegin', element);
-
     jsonRequest(getQueryAddress(), function (json, error) {
         if (!json.data) {
             window.history.replaceState({}, '', `${location.pathname}?error=${error ? error : 'Query result expired'}`);
@@ -348,7 +339,17 @@ function runQuery() {
         worldMap('worldMap', geolocation_data.colors.low, geolocation_data.colors.high, geolocationSeries);
         horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
 
+        const session_data = json.data.sessions;
 
+        document.querySelector("#data_total_playtime").innerHTML = session_data.total_playtime;
+        document.querySelector("#data_average_playtime").innerHTML = session_data.average_playtime;
+        document.querySelector("#data_total_afk_playtime").innerHTML = session_data.total_afk_playtime;
+        document.querySelector("#data_average_afk_playtime").innerHTML = session_data.average_afk_playtime;
+        document.querySelector("#data_total_active_playtime").innerHTML = session_data.total_active_playtime;
+        document.querySelector("#data_average_active_playtime").innerHTML = session_data.average_active_playtime;
+        document.querySelector("#data_total_sessions").innerHTML = session_data.total_sessions;
+        document.querySelector("#data_average_sessions").innerHTML = session_data.average_sessions;
+        document.querySelector("#data_average_session_length").innerHTML = session_data.average_session_length;
     });
 }
 
@@ -408,7 +409,37 @@ function renderDataResultScreen(resultCount, view) {
             </div>
             
             <div class="row">
-                <div class="col-xl-12 col-lg-12 col-sm-12">
+                <div class="col-xl-3 col-lg-3 col-sm-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold col-black"><i class="col-teal far fa-calendar"></i> Sessions within view</h6>
+                        </div>
+                        <div class="card-body" id="data_players">
+                            <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
+                                    class="float-right"><b id="data_total_sessions"></b></span></p>
+                            <p><i class="col-teal far fa-fw fa-calendar-check"></i> Average Sessions / Player<span
+                                    class="float-right"><b id="data_average_sessions"></b></span></p>
+                            <p><i class="col-teal far fa-fw fa-clock"></i> Average Session Length<span
+                                    class="float-right" id="data_average_session_length"></span></p>
+                            <hr>
+                            <p><i class="col-green far fa-fw fa-clock"></i> Playtime<span
+                                    class="float-right" id="data_total_playtime"></span></p>
+                            <p><i class="col-green far fa-fw fa-clock"></i> Active Playtime<span
+                                    class="float-right" id="data_total_active_playtime"></span></p>
+                            <p><i class="col-grey far fa-fw fa-clock"></i> AFK Playtime<span
+                                    class="float-right" id="data_total_afk_playtime"></span></p>
+                            <hr>
+                            <p><i class="col-green far fa-fw fa-clock"></i> Average Playtime / Player<span
+                                    class="float-right" id="data_average_playtime"></span></p>
+                            <p><i class="col-green far fa-fw fa-clock"></i> Average Active Playtime / Player<span
+                                    class="float-right" id="data_average_active_playtime"></span></p>
+                            <p><i class="col-grey far fa-fw fa-clock"></i> Average AFK Playtime / Player<span
+                                    class="float-right" id="data_average_afk_playtime"></span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-xl-9 col-lg-9 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 font-weight-bold col-black"><i

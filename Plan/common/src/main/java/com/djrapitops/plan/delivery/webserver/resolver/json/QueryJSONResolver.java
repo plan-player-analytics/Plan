@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.DateMap;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
@@ -37,6 +38,7 @@ import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
+import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
 import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -146,13 +148,25 @@ public class QueryJSONResolver implements Resolver {
         long after = dateFormat.parse(viewJSON.afterDate + " " + viewJSON.afterTime).getTime();
         long before = dateFormat.parse(viewJSON.beforeDate + " " + viewJSON.beforeTime).getTime();
 
-        Database database = dbSystem.getDatabase();
-
         return Maps.builder(String.class, Object.class)
                 .put("players", getPlayersTableData(playerUUIDs, after, before))
                 .put("activity", getActivityGraphData(playerUUIDs, after, before))
                 .put("geolocation", getGeolocationData(playerUUIDs))
+                .put("sessions", getSessionSummaryData(playerUUIDs, after, before))
                 .build();
+    }
+
+    private Map<String, String> getSessionSummaryData(Set<UUID> playerUUIDs, long after, long before) {
+        Database database = dbSystem.getDatabase();
+        Map<String, Long> summary = database.query(SessionQueries.summaryOfPlayers(playerUUIDs, after, before));
+        Map<String, String> formattedSummary = new HashMap<>();
+        Formatter<Long> timeAmount = formatters.timeAmount();
+        for (Map.Entry<String, Long> entry : summary.entrySet()) {
+            formattedSummary.put(entry.getKey(), timeAmount.apply(entry.getValue()));
+        }
+        formattedSummary.put("total_sessions", Long.toString(summary.get("total_sessions")));
+        formattedSummary.put("average_sessions", Long.toString(summary.get("average_sessions")));
+        return formattedSummary;
     }
 
     private Map<String, Object> getGeolocationData(Set<UUID> playerUUIDs) {
