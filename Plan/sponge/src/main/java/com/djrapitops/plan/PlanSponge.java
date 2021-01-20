@@ -63,7 +63,7 @@ import java.util.Optional;
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @com.google.inject.Inject
-    private Metrics2 metrics;
+    private Metrics2.Factory metrics;
 
     @com.google.inject.Inject
     private Logger slf4jLogger;
@@ -96,8 +96,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
+            int pluginId = 3086;
             new BStatsSponge(
-                    metrics,
+                    metrics.make(pluginId),
                     system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 

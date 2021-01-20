@@ -36,7 +36,8 @@ public class BStatsBungee {
 
     public void registerMetrics() {
         if (metrics == null) {
-            metrics = new Metrics(plugin);
+            int pluginId = 3085;
+            metrics = new Metrics(plugin, pluginId);
         }
         registerConfigSettingGraphs();
     }

@@ -30,7 +30,7 @@ public class BStatsBukkit {
 
     public void registerMetrics() {
         if (metrics == null) {
-            metrics = new Metrics(plugin);
+            metrics = new Metrics(plugin, 1240);
         }
         registerConfigSettingGraphs();
     }
