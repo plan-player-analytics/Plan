@@ -70,7 +70,7 @@ subprojects {
 
     ext.bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
     ext.spigotVersion = "1.13.2-R0.1-SNAPSHOT"
-    ext.paperVersion = "1.13.2-R0.1-SNAPSHOT"
+    ext.paperVersion = "1.16.5-R0.1-SNAPSHOT"
     ext.spongeVersion = "7.3.0"
     ext.nukkitVersion = "1.0-SNAPSHOT"
     ext.bungeeVersion = "1.16-R0.4"
