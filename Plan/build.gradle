@@ -63,7 +63,7 @@ subprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
-    ext.daggerVersion = "2.31"
+    ext.daggerVersion = "2.31.1"
     ext.daggerCompilerVersion = "2.31.1"
 
     ext.abstractPluginFrameworkVersion = "3.4.2"
