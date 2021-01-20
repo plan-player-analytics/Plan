@@ -108,10 +108,10 @@ public class PlanConfig extends Config {
         return foundTZ.orElse(TimeZone.getTimeZone(ZoneId.of("UTC")));
     }
 
-    public int getTimeZoneOffsetHours() {
-        int offset = getTimeZone().getOffset(System.currentTimeMillis());
+    public double getTimeZoneOffsetHours() {
+        int offsetMs = getTimeZone().getOffset(System.currentTimeMillis());
         int hourMs = (int) TimeUnit.HOURS.toMillis(1L);
-        return -offset / hourMs;
+        return -offsetMs * 1.0 / hourMs;
     }
 
     public Path getPageExportPath() {
