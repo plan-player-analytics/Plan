@@ -136,6 +136,30 @@ public class PlayerPlaceHolders implements Placeholders {
                         .orElse((long) 0))
         );
 
+        registerPlaytimePlaceholders(placeholders, time);
+
+        placeholders.register("player_favorite_server",
+                player -> PerServerMutator.forContainer(player).favoriteServer()
+                        .flatMap(serverUUID -> dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)))
+                        .map(Server::getName)
+                        .orElse("-")
+        );
+
+        placeholders.register("player_activity_index",
+                player -> player.getActivityIndex(
+                        now(),
+                        config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
+                ).getValue()
+        );
+        placeholders.register("player_activity_group",
+                player -> player.getActivityIndex(
+                        now(),
+                        config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
+                ).getGroup()
+        );
+    }
+
+    private void registerPlaytimePlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
         placeholders.register("player_time_active",
                 player -> time.apply(SessionsMutator.forContainer(player)
                         .toActivePlaytime())
@@ -206,26 +230,6 @@ public class PlayerPlaceHolders implements Placeholders {
                         .filterSessionsBetween(monthAgo(), now())
                         .filterPlayedOnServer(serverInfo.getServerUUID())
                         .toPlaytime())
-        );
-
-        placeholders.register("player_favorite_server",
-                player -> PerServerMutator.forContainer(player).favoriteServer()
-                        .flatMap(serverUUID -> dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)))
-                        .map(Server::getName)
-                        .orElse("-")
-        );
-
-        placeholders.register("player_activity_index",
-                player -> player.getActivityIndex(
-                        now(),
-                        config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
-                ).getValue()
-        );
-        placeholders.register("player_activity_group",
-                player -> player.getActivityIndex(
-                        now(),
-                        config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
-                ).getGroup()
         );
     }
 }

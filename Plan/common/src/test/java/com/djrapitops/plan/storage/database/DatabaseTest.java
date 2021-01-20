@@ -134,7 +134,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 config(),
                 new Locale(),
                 dbSystem(),
-                new QuerySvc(dbSystem(), serverInfo(), null),
+                new QuerySvc(config(), dbSystem(), serverInfo(), null),
                 serverInfo(),
                 logger,
                 null
