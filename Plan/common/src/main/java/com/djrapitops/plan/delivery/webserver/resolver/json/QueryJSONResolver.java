@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryPlayerDataTableQuery;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -195,7 +196,7 @@ public class QueryJSONResolver implements Resolver {
         Database database = dbSystem.getDatabase();
         return new PlayersTableJSONCreator(
                 database.query(new QueryTablePlayersQuery(playerUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
-                Collections.emptyMap(),
+                database.query(new ExtensionQueryPlayerDataTableQuery(playerUUIDs)),
                 config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                 formatters, locale
         ).toJSONMap();
