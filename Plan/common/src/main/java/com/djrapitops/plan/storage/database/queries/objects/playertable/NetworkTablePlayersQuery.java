@@ -75,7 +75,7 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
         String selectSessionData = SELECT + "s." + SessionsTable.USER_UUID + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "COUNT(1) as count," +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 GROUP_BY + "s." + SessionsTable.USER_UUID;
 
@@ -91,7 +91,7 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 "geoloc." + GeoInfoTable.GEOLOCATION + ',' +
                 "ses.last_seen," +
                 "ses.count," +
-                "ses.playtime," +
+                "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
@@ -119,7 +119,7 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                             .registered(set.getLong(UsersTable.REGISTERED))
                             .lastSeen(set.getLong("last_seen"))
                             .sessionCount(set.getInt("count"))
-                            .playtime(set.getLong("playtime"))
+                            .activePlaytime(set.getLong("active_playtime"))
                             .activityIndex(new ActivityIndex(set.getDouble("activity_index"), date));
                     if (set.getString("banned") != null) {
                         player.banned();

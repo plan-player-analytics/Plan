@@ -125,7 +125,7 @@ public class PlayersTableJSONCreator {
         String url = "../player/" + Html.encodeToURL(name);
 
         int loginTimes = player.getSessionCount().orElse(0);
-        long playtime = player.getPlaytime().orElse(-1L);
+        long activePlaytime = player.getActivePlaytime().orElse(-1L);
         long registered = player.getRegistered().orElse(-1L);
         long lastSeen = player.getLastSeen().orElse(-1L);
 
@@ -140,7 +140,7 @@ public class PlayersTableJSONCreator {
 
         putDataEntry(dataJson, link.create(url, StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\") /* Backslashes escaped to prevent json errors */), "name");
         putDataEntry(dataJson, activityIndex.getValue(), activityString, "index");
-        putDataEntry(dataJson, playtime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(playtime), "playtime");
+        putDataEntry(dataJson, activePlaytime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(activePlaytime), "activePlaytime");
         putDataEntry(dataJson, loginTimes, "sessions");
         putDataEntry(dataJson, registered, numberFormatters.get(FormatType.DATE_YEAR).apply(registered), "registered");
         putDataEntry(dataJson, lastSeen, numberFormatters.get(FormatType.DATE_YEAR).apply(lastSeen), "seen");
@@ -189,7 +189,7 @@ public class PlayersTableJSONCreator {
 
         columnHeaders.add(makeColumnHeader(Icon.called("user") + " " + locale.get(HtmlLang.LABEL_NAME), "name"));
         columnHeaders.add(makeFColumnHeader(Icon.called("check") + " " + locale.get(HtmlLang.LABEL_ACTIVITY_INDEX), "index"));
-        columnHeaders.add(makeFColumnHeader(Icon.called("clock").of(Family.REGULAR) + " " + locale.get(HtmlLang.LABEL_PLAYTIME), "playtime"));
+        columnHeaders.add(makeFColumnHeader(Icon.called("clock").of(Family.REGULAR) + " " + locale.get(HtmlLang.LABEL_ACTIVE_PLAYTIME), "activePlaytime"));
         columnHeaders.add(makeColumnHeader(Icon.called("calendar-plus").of(Family.REGULAR) + " " + locale.get(HtmlLang.SIDE_SESSIONS), "sessions"));
         columnHeaders.add(makeFColumnHeader(Icon.called("user-plus") + " " + locale.get(HtmlLang.LABEL_REGISTERED), "registered"));
         columnHeaders.add(makeFColumnHeader(Icon.called("calendar-check").of(Family.REGULAR) + " " + locale.get(HtmlLang.LABEL_LAST_SEEN), "seen"));

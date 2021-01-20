@@ -71,6 +71,7 @@ public enum HtmlLang implements Lang {
     LABEL_PLAYERS_ONLINE("Players Online"),
     LABEL_TOTAL_PLAYTIME("Total Playtime"),
     LABEL_PLAYTIME("Playtime"),
+    LABEL_ACTIVE_PLAYTIME("Active Playtime"),
     LABEL_LAST_PEAK("Last Peak"),
     LABEL_BEST_PEAK("Best Peak"),
     LABEL_AVG_PLAYTIME("Average Playtime"),

@@ -280,8 +280,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
                 .stream().filter(player -> playerUUID.equals(player.getPlayerUUID())).findAny()
                 .orElseThrow(AssertionError::new);
 
-        long expected = SessionsMutator.forContainer(playerContainer).toPlaytime();
-        long got = tablePlayer.getPlaytime().orElseThrow(AssertionError::new);
+        long expected = SessionsMutator.forContainer(playerContainer).toActivePlaytime();
+        long got = tablePlayer.getActivePlaytime().orElseThrow(AssertionError::new);
         assertEquals(expected, got);
     }
 

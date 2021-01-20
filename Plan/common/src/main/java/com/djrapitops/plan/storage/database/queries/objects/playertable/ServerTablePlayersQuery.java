@@ -85,7 +85,7 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
         String selectSessionData = SELECT + "s." + SessionsTable.USER_UUID + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "COUNT(1) as count," +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 WHERE + "s." + SessionsTable.SERVER_UUID + "=?" +
                 GROUP_BY + "s." + SessionsTable.USER_UUID;
@@ -98,7 +98,7 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                 "geoloc." + GeoInfoTable.GEOLOCATION + ',' +
                 "ses.last_seen," +
                 "ses.count," +
-                "ses.playtime," +
+                "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " on u." + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
@@ -128,7 +128,7 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                             .registered(set.getLong(UsersTable.REGISTERED))
                             .lastSeen(set.getLong("last_seen"))
                             .sessionCount(set.getInt("count"))
-                            .playtime(set.getLong("playtime"))
+                            .activePlaytime(set.getLong("active_playtime"))
                             .activityIndex(new ActivityIndex(set.getDouble("activity_index"), date));
                     if (set.getBoolean(UserInfoTable.BANNED)) {
                         player.banned();
