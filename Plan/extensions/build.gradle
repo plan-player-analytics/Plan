@@ -21,7 +21,7 @@ dependencies {
     compile 'com.djrapitops:Extension-Jobs:4.13.1-R0.1'
     compile 'com.djrapitops:Extension-Litebans:0.3.2-R0.1'
     compile 'com.djrapitops:Extension-LuckPerms:5.0-R0.2'
-    compile 'com.djrapitops:Extension-McMMO:2.1.149-R1.2'
+    compile 'com.djrapitops:Extension-McMMO:2.1.149-R1.3'
     compile 'com.djrapitops:Extension-MinigamesLib:1.14.17-R0.2'
     compile 'com.djrapitops:Extension-Nucleus:1.14.0-R0.1'
     compile 'com.djrapitops:Extension-nuVotifier:2.3.4-R0.3'
