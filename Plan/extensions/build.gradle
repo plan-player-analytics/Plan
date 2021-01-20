@@ -12,7 +12,7 @@ dependencies {
     compile 'com.djrapitops:Extension-DKCoins:3.0.5-R0.1'
     compile 'com.djrapitops:Extension-EssentialsX:2.15.0-R0.6'
     compile 'com.djrapitops:Extension-Factions:2.14.0-R0.1'
-    compile 'com.djrapitops:Extension-FactionsUUID:1.6.9.5-U0.5.16-R0.1'
+    compile 'com.djrapitops:Extension-FactionsUUID:1.6.9.5-U0.5.16-R0.2'
     compile 'com.djrapitops:Extension-Floodgate:1.0-R1.1'
     compile 'com.djrapitops:Extension-GriefDefender:R0.2'
     compile 'com.djrapitops:Extension-GriefPrevention:16.11.6-R0.2'
