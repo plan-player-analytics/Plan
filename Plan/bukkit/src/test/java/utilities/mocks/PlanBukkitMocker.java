@@ -108,7 +108,6 @@ public class PlanBukkitMocker extends Mocker {
         Server serverMock = Mockito.mock(Server.class);
         doReturn("").when(serverMock).getIp();
         doReturn("Bukkit").when(serverMock).getName();
-        doReturn("Bukkit").when(serverMock).getServerName();
         doReturn(25565).when(serverMock).getPort();
         doReturn("1.12.2").when(serverMock).getVersion();
         doReturn("32423").when(serverMock).getBukkitVersion();
