@@ -25,6 +25,8 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.Predicates;
@@ -42,16 +44,19 @@ import static com.djrapitops.plan.utilities.MiscUtils.*;
 @Singleton
 public class PlayerPlaceHolders implements Placeholders {
 
+    private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
 
     @Inject
     public PlayerPlaceHolders(
+            PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
+        this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.formatters = formatters;
@@ -208,6 +213,19 @@ public class PlayerPlaceHolders implements Placeholders {
                         .flatMap(serverUUID -> dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)))
                         .map(Server::getName)
                         .orElse("-")
+        );
+
+        placeholders.register("player_activity_index",
+                player -> player.getActivityIndex(
+                        now(),
+                        config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
+                ).getValue()
+        );
+        placeholders.register("player_activity_group",
+                player -> player.getActivityIndex(
+                        now(),
+                        config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
+                ).getGroup()
         );
     }
 }
