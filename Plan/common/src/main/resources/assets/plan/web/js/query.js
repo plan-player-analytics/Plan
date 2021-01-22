@@ -13,6 +13,29 @@ let filterView = {
 };
 const filterQuery = [];
 
+const InvalidEntries = {
+    ids: [],
+    setAsInvalid: function (id) {
+        if (this.ids.includes(id)) return;
+        this.ids.push(id);
+        this.updateQueryButton();
+    },
+    setAsValid: function (id) {
+        this.ids = this.ids.filter(invalidID => invalidID !== id);
+        this.updateQueryButton();
+    },
+    updateQueryButton: function () {
+        const queryButton = document.getElementById('query-button');
+        if (this.ids.length === 0) {
+            queryButton.removeAttribute('disabled');
+            queryButton.classList.remove('disabled');
+        } else {
+            queryButton.setAttribute('disabled', 'true');
+            queryButton.classList.add('disabled');
+        }
+    }
+}
+
 class Filter {
     constructor(kind) {
         this.kind = kind;
@@ -253,8 +276,10 @@ function setFilterOption(
     if (isValid) {
         element.removeClass("is-invalid");
         query[propertyName] = value;
+        InvalidEntries.setAsValid(elementId);
     } else {
         element.addClass("is-invalid");
+        InvalidEntries.setAsInvalid(elementId);
     }
 }
 
@@ -288,7 +313,8 @@ function runQuery() {
 
     jsonRequest(getQueryAddress(), function (json, error) {
         if (!json.data) {
-            window.history.replaceState({}, '', `${location.pathname}?error=${error ? error : 'Query result expired'}`);
+            // TODO write proper error messages
+            window.history.replaceState({}, '', `${location.pathname}?error=${error ? error : 'Query produced 0 results'}`);
             location.reload();
         }
 
