@@ -329,7 +329,7 @@
     const filters = [];
 
     if (location.search.includes("error=")) {
-        const placeBefore = document.querySelector('.tab .row .card');
+        const placeBefore = document.querySelector('.tab .row .card div');
         const element = document.createElement('alert');
         element.classList.add("alert", "alert-danger", "alert-dismissable", "show");
         element.innerHTML = `${new URLSearchParams(location.search).get("error")}
