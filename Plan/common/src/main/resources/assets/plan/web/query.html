@@ -99,7 +99,7 @@
                                                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewFromDateField"
-                                                       onkeyup="setFilterOption('view', 'viewFromDateField', 'beforeDate', isValidDate, correctDate)"
+                                                       onkeyup="setFilterOption('view', 'viewFromDateField', 'afterDate', isValidDate, correctDate)"
                                                        placeholder="31/12/2016"
                                                        type="text">
                                             </div>
@@ -111,13 +111,13 @@
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewFromTimeField"
-                                                       onkeyup="setFilterOption('view', 'viewFromTimeField', 'beforeTime', isValidTime, correctTime)"
+                                                       onkeyup="setFilterOption('view', 'viewFromTimeField', 'afterTime', isValidTime, correctTime)"
                                                        placeholder="23:59"
                                                        type="text">
                                             </div>
                                         </div>
                                         <div class="col-auto">
-                                            <label class="mt-2 mb-0" for="viewToDateField">to</label>
+                                            <label class="mt-2 mb-0">to</label>
                                         </div>
                                         <div class="col-3">
                                             <div class="input-group mb-2">
@@ -125,7 +125,7 @@
                                                     <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewToDateField"
-                                                       onkeyup="setFilterOption('view', 'viewToDateField', 'afterDate', isValidDate, correctDate)"
+                                                       onkeyup="setFilterOption('view', 'viewToDateField', 'beforeDate', isValidDate, correctDate)"
                                                        placeholder="23/03/2020"
                                                        type="text">
                                             </div>
@@ -136,7 +136,7 @@
                                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 </div>
                                                 <input class="form-control" id="viewToTimeField"
-                                                       onkeyup="setFilterOption('view', 'viewToTimeField', 'afterTime', isValidTime, correctTime)"
+                                                       onkeyup="setFilterOption('view', 'viewToTimeField', 'beforeTime', isValidTime, correctTime)"
                                                        placeholder="21:26"
                                                        type="text">
                                             </div>
