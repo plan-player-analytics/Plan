@@ -78,9 +78,9 @@ public class PluginGroupsFilter extends MultiOptionFilter {
         private final DBSystem dbSystem;
 
         public PluginGroupsFilterQuery(DBSystem dbSystem) {
-            super(SELECT + DISTINCT + ExtensionPluginTable.PLUGIN_NAME + ',' +
-                    ExtensionProviderTable.PROVIDER_NAME + ',' +
-                    ExtensionGroupsTable.GROUP_NAME +
+            super(SELECT + DISTINCT + "pl." + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
+                    "pr." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
+                    "gr." + ExtensionGroupsTable.GROUP_NAME + " as group_name" +
                     FROM + ExtensionPluginTable.TABLE_NAME + " pl" +
                     INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " pr  on pl." + ExtensionPluginTable.ID + "=pr." + ExtensionProviderTable.PLUGIN_ID +
                     INNER_JOIN + ExtensionGroupsTable.TABLE_NAME + " gr on pr." + ExtensionProviderTable.ID + "=gr." + ExtensionGroupsTable.PROVIDER_ID);
@@ -92,9 +92,9 @@ public class PluginGroupsFilter extends MultiOptionFilter {
         public Collection<PluginGroupsFilter> processResults(ResultSet set) throws SQLException {
             Map<String, Map<String, List<String>>> byPlugin = new HashMap<>();
             while (set.next()) {
-                String plugin = set.getString(ExtensionPluginTable.PLUGIN_NAME);
-                String provider = set.getString(ExtensionProviderTable.PROVIDER_NAME);
-                String group = set.getString(ExtensionGroupsTable.GROUP_NAME);
+                String plugin = set.getString("plugin_name");
+                String provider = set.getString("provider_name");
+                String group = set.getString("group_name");
 
                 Map<String, List<String>> byProvider = byPlugin.getOrDefault(plugin, new HashMap<>());
                 List<String> groups = byProvider.getOrDefault(provider, new ArrayList<>());
