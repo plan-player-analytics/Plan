@@ -151,6 +151,7 @@ function dayByDay(id, series) {
 
 function onlineActivityCalendar(id, event_data, firstDay) {
     window.calendars.online_activity = new FullCalendar.Calendar(document.querySelector(id), {
+        timeZone: "UTC",
         themeSystem: 'bootstrap',
         eventColor: '#2196F3',
         firstDay: firstDay,
@@ -408,6 +409,7 @@ function formatTimeAmount(ms) {
 
 function sessionCalendar(id, event_data, firstDay) {
     window.calendars.sessions = new FullCalendar.Calendar(document.querySelector(id), {
+        timeZone: "UTC",
         themeSystem: 'bootstrap',
         eventColor: '#009688',
         dayMaxEventRows: 4,
