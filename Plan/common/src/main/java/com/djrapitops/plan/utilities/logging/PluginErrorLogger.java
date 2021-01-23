@@ -94,7 +94,7 @@ public class PluginErrorLogger implements ErrorLogger {
     }
 
     private void mergeAdditionalContext(Throwable throwable, ErrorContext context) {
-        Throwable cause = throwable.getCause();
+        Throwable cause = throwable;
         while (cause != null) {
             if (cause instanceof ExceptionWithContext) {
                 ((ExceptionWithContext) cause).getContext().ifPresent(context::merge);
