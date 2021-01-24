@@ -56,6 +56,9 @@ Webserver:
     # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
     CORS:
       Allow_origin: "*"
+    # Allows using the whitelist & brute-force shield with a reverse-proxy.
+    # ! Make sure non-proxy access is not possible, it would allow IP spoofing !
+    Use_X-Forwarded-For_Header: false
     IP_whitelist: false
       Whitelist:
         - "192.168.0.0"
