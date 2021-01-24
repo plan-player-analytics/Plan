@@ -88,6 +88,8 @@ public class GraphsJSONResolver implements Resolver {
         switch (type) {
             case "performance":
                 return DataID.GRAPH_PERFORMANCE;
+            case "optimizedPerformance":
+                return DataID.GRAPH_OPTIMIZED_PERFORMANCE;
             case "playersOnline":
                 return DataID.GRAPH_ONLINE;
             case "uniqueAndNew":
@@ -117,6 +119,8 @@ public class GraphsJSONResolver implements Resolver {
         switch (id) {
             case GRAPH_PERFORMANCE:
                 return graphJSON.performanceGraphJSON(serverUUID);
+            case GRAPH_OPTIMIZED_PERFORMANCE:
+                return graphJSON.optimizedPerformanceGraphJSON(serverUUID);
             case GRAPH_ONLINE:
                 return graphJSON.playersOnlineGraph(serverUUID);
             case GRAPH_UNIQUE_NEW:

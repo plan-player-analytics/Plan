@@ -182,6 +182,29 @@ function onlineActivityCalendar(id, event_data, firstDay) {
     window.calendars.online_activity.render();
 }
 
+function mapToDataSeries(performanceData) {
+    const dataSeries = {
+        playersOnline: [],
+        tps: [],
+        cpu: [],
+        ram: [],
+        entities: [],
+        chunks: [],
+        disk: []
+    };
+    for (const entry of performanceData) {
+        const date = entry[0];
+        dataSeries.playersOnline.push([date, entry[1]]);
+        dataSeries.tps.push([date, entry[2]]);
+        dataSeries.cpu.push([date, entry[3]]);
+        dataSeries.ram.push([date, entry[4]]);
+        dataSeries.entities.push([date, entry[5]]);
+        dataSeries.chunks.push([date, entry[6]]);
+        dataSeries.disk.push([date, entry[7]]);
+    }
+    return dataSeries;
+}
+
 function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries) {
     graphs.push(Highcharts.stockChart(id, {
         rangeSelector: {

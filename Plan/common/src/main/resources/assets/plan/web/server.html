@@ -1330,9 +1330,9 @@
             }
         };
 
-        jsonRequest("../v1/graph?type=performance&server=${serverUUID}", function (json, error) {
+        jsonRequest("../v1/graph?type=optimizedPerformance&server=${serverUUID}", function (json, error) {
             if (json) {
-                var zones = {
+                const zones = {
                     tps: [{
                         value: json.zones.tpsThresholdMed,
                         color: json.colors.low
@@ -1354,51 +1354,52 @@
                         color: json.colors.high
                     }]
                 };
-                var series = {
+                const dataSeries = mapToDataSeries(json.values);
+                const series = {
                     playersOnline: {
                         name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.playersOnline, color: json.colors.playersOnline, yAxis: 0
+                        data: dataSeries.playersOnline, color: json.colors.playersOnline, yAxis: 0
                     },
                     tps: {
                         name: s.name.tps, type: s.type.spline, color: json.colors.high,
-                        zones: zones.tps, tooltip: s.tooltip.twoDecimals, data: json.tps,
+                        zones: zones.tps, tooltip: s.tooltip.twoDecimals, data: dataSeries.tps,
                         yAxis: 1
                     },
                     cpu: {
                         name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: json.cpu, color: json.colors.cpu, yAxis: 2
+                        data: dataSeries.cpu, color: json.colors.cpu, yAxis: 2
                     },
                     cpu_alt: {
                         name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: json.cpu, color: json.colors.cpu, yAxis: 1
+                        data: dataSeries.cpu, color: json.colors.cpu, yAxis: 1
                     },
                     ram: {
                         name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.ram, color: json.colors.ram, yAxis: 3
+                        data: dataSeries.ram, color: json.colors.ram, yAxis: 3
                     },
                     ram_alt: {
                         name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.ram, color: json.colors.ram, yAxis: 2
+                        data: dataSeries.ram, color: json.colors.ram, yAxis: 2
                     },
                     entities: {
                         name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.entities, color: json.colors.entities, yAxis: 4
+                        data: dataSeries.entities, color: json.colors.entities, yAxis: 4
                     },
                     entities_alt: {
                         name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.entities, color: json.colors.entities, yAxis: 1
+                        data: dataSeries.entities, color: json.colors.entities, yAxis: 1
                     },
                     chunks: {
                         name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.chunks, color: json.colors.chunks, yAxis: 5
+                        data: dataSeries.chunks, color: json.colors.chunks, yAxis: 5
                     },
                     chunks_alt: {
                         name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.chunks, color: json.colors.chunks, yAxis: 2
+                        data: dataSeries.chunks, color: json.colors.chunks, yAxis: 2
                     },
                     disk: {
                         name: s.name.disk, type: s.type.spline, color: json.colors.high,
-                        zones: zones.disk, tooltip: s.tooltip.zeroDecimals, data: json.disk
+                        zones: zones.disk, tooltip: s.tooltip.zeroDecimals, data: dataSeries.disk
                     }
                 };
                 playersChart('playersOnlineChart', series.playersOnline, 2);

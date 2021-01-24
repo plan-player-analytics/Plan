@@ -249,4 +249,29 @@ public class TPSMutator {
         tpsData.sort(new TPSComparator());
         return Optional.of(tpsData.get(tpsData.size() - 1));
     }
+
+    public Number[][] toArrays(boolean displayGaps) {
+        List<Number[]> arrays = new ArrayList<>();
+        Long lastX = null;
+        for (TPS tps : tpsData) {
+            long date = tps.getDate();
+            if (displayGaps && lastX != null && date - lastX > TimeUnit.MINUTES.toMillis(3L)) {
+                addMissingPoints(arrays, lastX, date);
+            }
+            lastX = date;
+
+            arrays.add(tps.toArray());
+        }
+        return arrays.toArray(new Number[0][]);
+    }
+
+    private void addMissingPoints(List<Number[]> arrays, Long lastX, long date) {
+        long iterate = lastX + TimeUnit.MINUTES.toMillis(1L);
+        while (iterate < date) {
+            Number[] entry = new Number[7];
+            entry[0] = iterate;
+            arrays.add(entry);
+            iterate += TimeUnit.MINUTES.toMillis(30L);
+        }
+    }
 }
