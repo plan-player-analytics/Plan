@@ -97,7 +97,7 @@ public class Identifiers {
     private UUID getPlayerUUIDFromName(String playerName) {
         return dbSystem.getDatabase()
                 .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
-                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database: '" + playerName + "'"));
+                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
     }
 
     public UUID getPlayerUUID(String name) {
