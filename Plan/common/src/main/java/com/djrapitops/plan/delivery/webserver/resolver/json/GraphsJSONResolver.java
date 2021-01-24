@@ -109,7 +109,7 @@ public class GraphsJSONResolver implements Resolver {
             case "serverPie":
                 return DataID.GRAPH_SERVER_PIE;
             default:
-                throw new BadRequestException("unknown 'type' parameter: " + type);
+                throw new BadRequestException("unknown 'type' parameter.");
         }
     }
 
