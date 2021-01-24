@@ -57,7 +57,7 @@ public class Identifiers {
 
         Optional<UUID> parsed = UUIDUtility.parseFromString(identifier);
         return parsed.orElseGet(() -> getServerUUIDFromName(identifier).orElseThrow(
-                () -> new BadRequestException("Given 'server' was not found in the database: '" + identifier + "'")
+                () -> new BadRequestException("Given 'server' was not found in the database.")
         ));
     }
 
