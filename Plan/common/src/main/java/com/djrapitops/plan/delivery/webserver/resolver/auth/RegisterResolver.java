@@ -35,7 +35,7 @@ import java.util.Optional;
 @Singleton
 public class RegisterResolver implements NoAuthResolver {
 
-    private DBSystem dbSystem;
+    private final DBSystem dbSystem;
 
     @Inject
     public RegisterResolver(DBSystem dbSystem) {this.dbSystem = dbSystem;}
@@ -58,7 +58,7 @@ public class RegisterResolver implements NoAuthResolver {
         String username = query.get("user").orElseThrow(() -> new BadRequestException("'user' parameter not defined"));
 
         boolean alreadyExists = dbSystem.getDatabase().query(WebUserQueries.fetchUser(username)).isPresent();
-        if (alreadyExists) throw new BadRequestException("User '" + username + "' already exists!");
+        if (alreadyExists) throw new BadRequestException("User already exists!");
 
         String password = query.get("password").orElseThrow(() -> new BadRequestException("'password' parameter not defined"));
         try {
