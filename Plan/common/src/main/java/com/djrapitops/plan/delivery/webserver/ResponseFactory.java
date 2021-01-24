@@ -137,8 +137,8 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response internalErrorResponse(Throwable e, String s) {
-        return forInternalError(e, s);
+    public Response internalErrorResponse(Throwable e, String cause) {
+        return forInternalError(e, cause);
     }
 
     public Response networkPageResponse() {

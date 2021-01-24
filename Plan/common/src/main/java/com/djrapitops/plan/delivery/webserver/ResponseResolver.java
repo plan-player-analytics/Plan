@@ -146,7 +146,7 @@ public class ResponseResolver {
             throw e; // Pass along
         } catch (Exception e) {
             errorLogger.log(L.ERROR, e, ErrorContext.builder().related(request).build());
-            return responseFactory.internalErrorResponse(e, request.getPath().asString());
+            return responseFactory.internalErrorResponse(e, "Failed to get a response");
         }
     }
 
