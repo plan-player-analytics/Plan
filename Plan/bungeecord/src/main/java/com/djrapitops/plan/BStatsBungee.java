@@ -19,6 +19,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import org.bstats.bungeecord.Metrics;
+import org.bstats.charts.SimplePie;
 
 import java.util.function.Supplier;
 
@@ -49,6 +50,6 @@ public class BStatsBungee {
     }
 
     protected void addStringSettingPie(String id, Supplier<String> setting) {
-        metrics.addCustomChart(new Metrics.SimplePie(id, setting::get));
+        metrics.addCustomChart(new SimplePie(id, setting::get));
     }
 }
