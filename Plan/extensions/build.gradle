@@ -25,7 +25,7 @@ dependencies {
     compile 'com.djrapitops:Extension-MinigamesLib:1.14.17-R0.2'
     compile 'com.djrapitops:Extension-Nucleus:2.3.0-R0.1'
     compile 'com.djrapitops:Extension-nuVotifier:2.3.4-R0.3'
-    compile 'com.djrapitops:Extension-ProtocolSupport:1.16.4-R0.1'
+    compile 'com.djrapitops:Extension-ProtocolSupport:4.29-R0.4'
     compile 'com.djrapitops:Extension-RedProtect:7.5.6-R0.3'
     compile 'com.djrapitops:Extension-Sponge-Economy:7.1.0-R0.3'
     compile 'com.djrapitops:Extension-SuperbVote:0.5.4-R0.1'
