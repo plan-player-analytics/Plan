@@ -18,6 +18,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plugin.api.Check;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 
 public class BStatsBukkit {
 
@@ -47,6 +48,6 @@ public class BStatsBukkit {
     }
 
     protected void addStringSettingPie(String id, String setting) {
-        metrics.addCustomChart(new Metrics.SimplePie(id, () -> setting));
+        metrics.addCustomChart(new SimplePie(id, () -> setting));
     }
 }
