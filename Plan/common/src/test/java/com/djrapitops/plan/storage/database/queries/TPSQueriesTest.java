@@ -44,7 +44,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
 
         forcePersistenceCheck();
 
-        assertEquals(expected, db().query(TPSQueries.fetchTPSDataOfServer(serverUUID())));
+        assertEquals(expected, db().query(TPSQueries.fetchTPSDataOfServer(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
     }
 
     @Test
