@@ -21,7 +21,6 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -129,10 +128,11 @@ public class TPSQueries {
     }
 
     public static Query<List<TPS>> fetchTPSDataOfServer(long after, long before, UUID serverUUID) {
-        String sql = Select.all(TABLE_NAME)
-                .where(SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID)
-                .and(DATE + ">=?").and(DATE + "<=?")
-                .toString();
+        String sql = SELECT + "*" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + ">=?" +
+                AND + DATE + "<=?" +
+                ORDER_BY + DATE;
 
         return new QueryStatement<List<TPS>>(sql, 50000) {
             @Override

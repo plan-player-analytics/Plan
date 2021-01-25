@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
@@ -44,6 +45,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
 
         forcePersistenceCheck();
 
+        expected.sort(new TPSComparator());
         assertEquals(expected, db().query(TPSQueries.fetchTPSDataOfServer(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
     }
 
