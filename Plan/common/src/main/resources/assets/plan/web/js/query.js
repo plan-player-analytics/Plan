@@ -229,24 +229,35 @@ function createFilterSelector(parent, index, filter) {
 
 function isValidDate(value) {
     if (!value) return true;
-    const date = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4,5})$/);
-    return date ? new Date(date[3], date[2] - 1, date[1]) : null;
+    const d = value.match(
+        /^(0\d|\d{2})[\/|\-]?(0\d|\d{2})[\/|\-]?(\d{4,5})$/
+    );
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+    const parsedDay = Number(d[1]);
+    const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
+    const parsedYear = Number(d[3]);
+    return d ? new Date(parsedYear, parsedMonth, parsedDay) : null;
 }
 
 function correctDate(value) {
     const d = value.match(
-        /^(0\d{1}|\d{2})[\/|\-]?(0\d{1}|\d{2})[\/|\-]?(\d{4,5})$/
+        /^(0\d|\d{2})[\/|\-]?(0\d|\d{2})[\/|\-]?(\d{4,5})$/
     );
     if (!d) return value;
 
-    const date = d ? new Date(d[3], d[2] - 1, d[1]) : null;
-    const day = "" + (date.getUTCDate() + 1);
-    const month = "" + (date.getUTCMonth() + 1);
-    const year = "" + date.getUTCFullYear();
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+    const parsedDay = Number(d[1]);
+    const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
+    const parsedYear = Number(d[3]);
+    const date = d ? new Date(parsedYear, parsedMonth, parsedDay) : null;
+
+    const day = `${date.getDate()}`;
+    const month = `${date.getMonth() + 1}`;
+    const year = `${date.getFullYear()}`;
     return (
-        (day.length === 1 ? "0" + day : day) +
+        (day.length === 1 ? `0${day}` : day) +
         "/" +
-        (month.length === 1 ? "0" + month : month) +
+        (month.length === 1 ? `0${month}` : month) +
         "/" +
         year
     );
