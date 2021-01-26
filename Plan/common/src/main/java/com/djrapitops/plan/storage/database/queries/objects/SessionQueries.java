@@ -872,19 +872,23 @@ public class SessionQueries {
 
             @Override
             public Map<String, Long> processResults(ResultSet set) throws SQLException {
-                long sessionCount = set.getLong("total_sessions");
-                long playtime = set.getLong("total_playtime");
-                return Maps.builder(String.class, Long.class)
-                        .put("total_playtime", playtime)
-                        .put("average_playtime", set.getLong("average_playtime"))
-                        .put("total_afk_playtime", set.getLong("total_afk_playtime"))
-                        .put("average_afk_playtime", set.getLong("average_afk_playtime"))
-                        .put("total_active_playtime", set.getLong("total_active_playtime"))
-                        .put("average_active_playtime", set.getLong("average_active_playtime"))
-                        .put("total_sessions", sessionCount)
-                        .put("average_sessions", set.getLong("average_sessions"))
-                        .put("average_session_length", sessionCount != 0 ? playtime / sessionCount : -1L)
-                        .build();
+                if (set.next()) {
+                    long sessionCount = set.getLong("total_sessions");
+                    long playtime = set.getLong("total_playtime");
+                    return Maps.builder(String.class, Long.class)
+                            .put("total_playtime", playtime)
+                            .put("average_playtime", set.getLong("average_playtime"))
+                            .put("total_afk_playtime", set.getLong("total_afk_playtime"))
+                            .put("average_afk_playtime", set.getLong("average_afk_playtime"))
+                            .put("total_active_playtime", set.getLong("total_active_playtime"))
+                            .put("average_active_playtime", set.getLong("average_active_playtime"))
+                            .put("total_sessions", sessionCount)
+                            .put("average_sessions", set.getLong("average_sessions"))
+                            .put("average_session_length", sessionCount != 0 ? playtime / sessionCount : -1L)
+                            .build();
+                } else {
+                    return Collections.emptyMap();
+                }
             }
         };
     }
