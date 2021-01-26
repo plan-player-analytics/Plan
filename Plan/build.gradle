@@ -85,7 +85,7 @@ subprojects {
     ext.h2Version = "1.4.199"
     ext.mysqlVersion = "8.0.23"
     ext.sqliteVersion = "3.34.0"
-    ext.hikariVersion = "4.0.0"
+    ext.hikariVersion = "4.0.1"
     ext.slf4jVersion = "1.7.30"
     ext.geoIpVersion = "2.15.0"
     ext.gsonVersion = "2.8.6"
