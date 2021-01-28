@@ -192,15 +192,16 @@ function mapToDataSeries(performanceData) {
         chunks: [],
         disk: []
     };
-    for (const entry of performanceData) {
+    for (let i = 0; i < performanceData.length; i++) {
+        const entry = performanceData[i];
         const date = entry[0];
-        dataSeries.playersOnline.push([date, entry[1]]);
-        dataSeries.tps.push([date, entry[2]]);
-        dataSeries.cpu.push([date, entry[3]]);
-        dataSeries.ram.push([date, entry[4]]);
-        dataSeries.entities.push([date, entry[5]]);
-        dataSeries.chunks.push([date, entry[6]]);
-        dataSeries.disk.push([date, entry[7]]);
+        dataSeries.playersOnline[i] = [date, entry[1]];
+        dataSeries.tps[i] = [date, entry[2]];
+        dataSeries.cpu[i] = [date, entry[3]];
+        dataSeries.ram[i] = [date, entry[4]];
+        dataSeries.entities[i] = [date, entry[5]];
+        dataSeries.chunks[i] = [date, entry[6]];
+        dataSeries.disk[i] = [date, entry[7]];
     }
     return dataSeries;
 }
