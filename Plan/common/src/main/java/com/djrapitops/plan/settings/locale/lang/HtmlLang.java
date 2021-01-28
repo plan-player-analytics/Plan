@@ -212,7 +212,16 @@ public enum HtmlLang implements Lang {
     WITH("<th>With"),
     NO_KILLS("No Kills"),
     LABEL_MAX_FREE_DISK("Max Free Disk"),
-    LABEL_MIN_FREE_DISK("Min Free Disk")
+    LABEL_MIN_FREE_DISK("Min Free Disk"),
+
+    QUERY_PERFORM_QUERY("Perform Query!"),
+    QUERY_LOADING_FILTERS("Loading filters.."),
+    QUERY_ADD_FILTER("Add a filter.."),
+    QUERY_TIME_TO(">to</label>"),
+    QUERY_TIME_FROM(">from</label>"),
+    QUERY_SHOW_VIEW("Show a view"),
+    QUERY("Query"),
+    QUERY_MAKE_ANOTHER("Make another query"),
     ;
 
     private final String defaultValue;

@@ -337,7 +337,7 @@ function runQuery() {
     jsonRequest(getQueryAddress(), function (json, error) {
         if (!json.data) {
             // TODO write proper error messages
-            window.history.replaceState({}, '', `${location.pathname}?error=${error ? error : 'Query produced 0 results'}`);
+            window.history.replaceState({}, '', `${location.pathname}?error=${encodeURIComponent(error ? error : 'Query produced 0 results')}`);
             location.reload();
         }
 
