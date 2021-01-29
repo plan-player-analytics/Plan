@@ -1234,3 +1234,7 @@ body.sidebar-hidden .fc-popover {
 body.sidebar-hidden .navbar-nav {
     display: none;
 }
+
+.contributors li {
+    padding: 0;
+}
