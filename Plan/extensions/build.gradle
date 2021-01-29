@@ -32,7 +32,7 @@ dependencies {
     compile 'com.djrapitops:Extension-Tebex:R0.6'
     compile 'com.djrapitops:Extension-Towny:0.92.0.0-R0.1'
     compile 'com.djrapitops:Extension-Vault:1.7-R0.3'
-    compile 'com.djrapitops:Extension-ViaVersion:2.1.3-R1.3'
+    compile 'com.djrapitops:Extension-ViaVersion:2.1.3-R1.4'
 }
 
 shadowJar {
