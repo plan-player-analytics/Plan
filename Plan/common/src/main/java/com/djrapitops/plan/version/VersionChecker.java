@@ -126,16 +126,20 @@ public class VersionChecker implements SubSystem {
     }
 
     public Optional<String> getUpdateButton() {
-        return getNewVersionAvailable()
-                .map(v -> "<button class=\"btn bg-white col-plan\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
-                        "<i class=\"fa fa-fw fa-download\"></i> v." + v.getVersion().getVersionString() +
-                        "</button>"
-                );
+        return getNewVersionAvailable().map(v -> {
+                    String reduceFontSize = v.getVersion().compareTo(new Version("5.2 build 999")) > 0 ?
+                            "font-size: 0.95rem;" : "";
+                    return "<button class=\"btn bg-white col-plan\" style=\"" + reduceFontSize +
+                            "\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
+                            "<i class=\"fa fa-fw fa-download\"></i> Update: " + v.getVersion().getVersionString() +
+                            "</button>";
+                }
+        );
     }
 
     public String getCurrentVersionButton() {
         return "<button class=\"btn bg-plan\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
-                "v." + getCurrentVersion() +
+                getCurrentVersion() +
                 "</button>";
     }
 
