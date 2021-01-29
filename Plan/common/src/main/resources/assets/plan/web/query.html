@@ -364,7 +364,7 @@
 
             const playersOnlineSeries = {
                 name: 'Players Online', type: 'areaspline', tooltip: {valueDecimals: 0},
-                data: json.viewPoints, color: '#1E90FF', yAxis: 0
+                data: json.viewPoints, color: '#9E9E9E', yAxis: 0
             }
 
             graphs.push(Highcharts.stockChart('viewChart', {
@@ -395,7 +395,11 @@
                                 document.getElementById('viewFromTimeField').value = afterTime;
                                 document.getElementById('viewToDateField').value = beforeDate;
                                 document.getElementById('viewToTimeField').value = beforeTime;
-                                filterView = {afterDate, afterTime, beforeDate, beforeTime};
+                                const dontUpdateGraph = true;
+                                setFilterOption('view', 'viewFromDateField', 'afterDate', isValidDate, correctDate, dontUpdateGraph);
+                                setFilterOption('view', 'viewFromTimeField', 'afterTime', isValidTime, correctTime, dontUpdateGraph);
+                                setFilterOption('view', 'viewToDateField', 'beforeDate', isValidDate, correctDate, dontUpdateGraph);
+                                setFilterOption('view', 'viewToTimeField', 'beforeTime', isValidTime, correctTime, dontUpdateGraph);
                             }
                         }
                     }

@@ -277,7 +277,7 @@ function correctTime(value) {
     while (hour > 23) hour--;
     let minute = Number(d[2]);
     while (minute > 59) minute--;
-    return hour + ":" + minute;
+    return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
 }
 
 function setFilterOption(
@@ -285,7 +285,8 @@ function setFilterOption(
     elementId,
     propertyName,
     isValidFunction,
-    correctionFunction
+    correctionFunction,
+    dontUpdateGraph
 ) {
     const query = id === 'view' ? filterView : filterQuery.find(function (f) {
         return f.id === id;
@@ -301,7 +302,7 @@ function setFilterOption(
         element.classList.remove("is-invalid");
         query[propertyName] = value; // Updates either the query or filterView properties
         InvalidEntries.setAsValid(elementId);
-        if (id === 'view') updateViewGraph();
+        if (id === 'view' && !dontUpdateGraph) updateViewGraph();
     } else {
         element.classList.add("is-invalid");
         InvalidEntries.setAsInvalid(elementId);
@@ -321,7 +322,8 @@ function updateViewGraph() {
         const parsedYear = Number(d[3]);
         let hour = Number(t[1]);
         let minute = Number(t[2]);
-        return new Date(parsedYear, parsedMonth, parsedDay, hour, minute).getTime();
+        const date = new Date(parsedYear, parsedMonth, parsedDay, hour, minute);
+        return date.getTime() - (date.getTimezoneOffset() * 60000);
     }
 
     const graph = graphs[0];
