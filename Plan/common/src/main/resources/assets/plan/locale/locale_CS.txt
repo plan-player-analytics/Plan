@@ -1,7 +1,7 @@
 API - css+                                      || Rozšíření: ${0} přidán stylesheet(s) k ${1}, ${2}
 API - js+                                       || Rozšíření: ${0} přidán javascript(s) k ${1}, ${2}
 Cmd - Click Me                                  || Klikni na mě
-Cmd - Link                                      ||   §2Odkaz: §f
+Cmd - Link                                      || Odkaz
 Cmd - Link Network                              || Stránka sítě: 
 Cmd - Link Player                               || Stránka hráče: 
 Cmd - Link Player JSON                          || Hráč json: 
