@@ -23,6 +23,7 @@ import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -743,6 +744,7 @@ public class SessionQueries {
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
         String sql = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
+                ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + ',' +
                 ServerTable.NAME +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.SERVER_UUID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID +
@@ -760,7 +762,11 @@ public class SessionQueries {
             public Map<String, Long> processResults(ResultSet set) throws SQLException {
                 Map<String, Long> playtimePerServer = new HashMap<>();
                 while (set.next()) {
-                    playtimePerServer.put(set.getString(ServerTable.NAME), set.getLong("playtime"));
+                    String name = Server.getIdentifiableName(
+                            set.getString(ServerTable.NAME),
+                            set.getInt(ServerTable.SERVER_ID)
+                    );
+                    playtimePerServer.put(name, set.getLong("playtime"));
                 }
                 return playtimePerServer;
             }

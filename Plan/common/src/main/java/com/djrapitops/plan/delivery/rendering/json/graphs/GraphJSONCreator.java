@@ -362,7 +362,7 @@ public class GraphJSONCreator {
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Long> playtimePerServer = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(now, monthAgo));
+        Map<String, Long> playtimePerServer = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(monthAgo, now));
 
         return Maps.builder(String.class, Object.class)
                 .put("server_pie_colors", pieColors)
