@@ -11,7 +11,7 @@ let filterView = {
     beforeDate: null,
     beforeTime: null
 };
-const filterQuery = [];
+let filterQuery = [];
 
 const InvalidEntries = {
     ids: [],
@@ -64,7 +64,9 @@ class MultipleChoiceFilter extends Filter {
         const select = filterCount === 0 ? "of Players who " : "and ";
         let html =
             `<div id="${this.id}" class="mt-2 input-group input-row">` +
-            `<div class="col-12"><label for="exampleFormControlSelect2">${select}${this.label}:</label>` +
+            `<div class="col-12"><label for="${this.id}">${select}${this.label}:</label>` +
+            `<button class="filter-remover btn btn-outline-secondary float-right"
+                onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>` +
             `<select class="form-control" multiple>`;
 
         for (const option of this.options.options) {
@@ -136,8 +138,9 @@ class BetweenDateFilter extends Filter {
         const id = this.id;
         const select = filterCount === 0 ? "of Players who " : "and ";
         return (
+            `<div id="${id}">` +
             `<label class="ml-2 mt-0 mb-0">${select}${this.label}:</label>` +
-            `<div id="${id}" class="mt-2 input-group input-row">` +
+            `<div class="mt-2 input-group input-row">` +
             `<div class="col-3"><div class="input-group mb-2">` +
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
             `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)" class="form-control" placeholder="${this.afterDate}" type="text">` +
@@ -155,7 +158,10 @@ class BetweenDateFilter extends Filter {
             `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
             `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)" class="form-control" placeholder="${this.beforeTime}" type="text">` +
             `</div></div>` +
-            `</div>`
+            `<button class="filter-remover btn btn-outline-secondary float-right"
+                style="position: absolute;right: 0.8rem;"
+                onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>` +
+            `</div></div>`
         );
     }
 
@@ -188,8 +194,14 @@ function addFilter(parentSelector, filterIndex) {
     const id = "f" + filterCount;
     const filter = createFilter(filters[filterIndex], id);
     filterQuery.push(filter);
-    $(parentSelector).append(filter.render(filterCount));
+    document.querySelector(parentSelector).innerHTML +=
+        filter.render(filterCount);
     filterCount++;
+}
+
+function removeFilter(filterIndex) {
+    document.getElementById(filterIndex).remove();
+    filterQuery = filterQuery.filter(f => f.id !== filterIndex);
 }
 
 function createFilter(filter, id) {
