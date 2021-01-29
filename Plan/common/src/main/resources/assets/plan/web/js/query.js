@@ -224,7 +224,7 @@ function createFilter(filter, id) {
 }
 
 function createFilterSelector(parent, index, filter) {
-    return `<a class="dropdown-item" href="#" onclick="addFilter('${parent}', ${index})">${filter.kind}</a>`;
+    return `<a class="dropdown-item" href="javascript:void(0)" onclick="addFilter('${parent}', ${index})">${filter.kind}</a>`;
 }
 
 function isValidDate(value) {
