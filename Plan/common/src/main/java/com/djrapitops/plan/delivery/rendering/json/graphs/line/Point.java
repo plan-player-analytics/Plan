@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.line;
 
+import com.djrapitops.plan.delivery.domain.DateObj;
+
 import java.util.Objects;
 
 /**
@@ -23,15 +25,21 @@ import java.util.Objects;
  */
 public class Point {
     private final double x;
-    private final Double y;
+    private Double y;
 
     public Point(double x, Double y) {
         this.x = x;
         this.y = y;
     }
 
-    public Point(double x, double y) {
-        this(x, (Double) y);
+    public <V extends Number> Point(double x, V y) {
+        this.x = x;
+        this.y = y == null ? null : y.doubleValue();
+    }
+
+    public static <V extends Number> Point fromDateObj(DateObj<V> dateObj) {
+        V value = dateObj.getValue();
+        return new Point(dateObj.getDate(), value != null ? value.doubleValue() : null);
     }
 
     public double getX() {
@@ -40,6 +48,10 @@ public class Point {
 
     public Double getY() {
         return y;
+    }
+
+    public void setY(Double y) {
+        this.y = y;
     }
 
     @Override
@@ -63,7 +75,7 @@ public class Point {
                 "y=" + y + '}';
     }
 
-    public double[] toArray() {
-        return new double[]{x, y};
+    public Double[] toArray() {
+        return new Double[]{x, y};
     }
 }

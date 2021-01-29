@@ -892,4 +892,15 @@ public class SessionQueries {
             }
         };
     }
+
+    public static Query<Long> earliestSessionStart() {
+        String sql = SELECT + "MIN(" + SessionsTable.SESSION_START + ") as m" +
+                FROM + SessionsTable.TABLE_NAME;
+        return new QueryAllStatement<Long>(sql) {
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("m") : -1L;
+            }
+        };
+    }
 }

@@ -232,11 +232,12 @@ function isValidDate(value) {
     const d = value.match(
         /^(0\d|\d{2})[\/|\-]?(0\d|\d{2})[\/|\-]?(\d{4,5})$/
     );
+    if (!d) return false;
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
     const parsedDay = Number(d[1]);
     const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
     const parsedYear = Number(d[3]);
-    return d ? new Date(parsedYear, parsedMonth, parsedDay) : null;
+    return new Date(parsedYear, parsedMonth, parsedDay);
 }
 
 function correctDate(value) {
@@ -270,11 +271,11 @@ function isValidTime(value) {
 }
 
 function correctTime(value) {
-    const d = value.match(/^(\d{2}):?(\d{2})$/);
+    const d = value.match(/^(0\d|\d{2}):?(0\d|\d{2})$/);
     if (!d) return value;
-    let hour = d[1];
+    let hour = Number(d[1]);
     while (hour > 23) hour--;
-    let minute = d[2];
+    let minute = Number(d[2]);
     while (minute > 59) minute--;
     return hour + ":" + minute;
 }
@@ -289,20 +290,46 @@ function setFilterOption(
     const query = id === 'view' ? filterView : filterQuery.find(function (f) {
         return f.id === id;
     });
-    const element = $(`#${elementId}`);
-    let value = element.val();
+    const element = document.getElementById(elementId);
+    let value = element.value;
 
     value = correctionFunction.apply(element, [value]);
-    element.val(value);
+    element.value = value;
 
     const isValid = isValidFunction.apply(element, [value]);
     if (isValid) {
-        element.removeClass("is-invalid");
-        query[propertyName] = value;
+        element.classList.remove("is-invalid");
+        query[propertyName] = value; // Updates either the query or filterView properties
         InvalidEntries.setAsValid(elementId);
+        if (id === 'view') updateViewGraph();
     } else {
-        element.addClass("is-invalid");
+        element.classList.add("is-invalid");
         InvalidEntries.setAsInvalid(elementId);
+    }
+}
+
+function updateViewGraph() {
+    function parseTime(dateString, timeString) {
+        const d = dateString.match(
+            /^(0\d|\d{2})[\/|\-]?(0\d|\d{2})[\/|\-]?(\d{4,5})$/
+        );
+        const t = timeString.match(/^(0\d|\d{2}):?(0\d|\d{2})$/);
+
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+        const parsedDay = Number(d[1]);
+        const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
+        const parsedYear = Number(d[3]);
+        let hour = Number(t[1]);
+        let minute = Number(t[2]);
+        return new Date(parsedYear, parsedMonth, parsedDay, hour, minute).getTime();
+    }
+
+    const graph = graphs[0];
+
+    const min = parseTime(filterView.afterDate, filterView.afterTime);
+    const max = parseTime(filterView.beforeDate, filterView.beforeTime);
+    for (const axis of graph.xAxis) {
+        axis.setExtremes(min, max);
     }
 }
 

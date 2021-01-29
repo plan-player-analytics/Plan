@@ -141,6 +141,8 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="chart-area" id="viewChart"><span class="loader"></span></div>
+
                                     <hr>
 
                                     <div id="filters"></div>
@@ -353,6 +355,52 @@
             document.getElementById('viewFromTimeField').setAttribute('placeholder', json.view.afterTime);
             document.getElementById('viewToDateField').setAttribute('placeholder', json.view.beforeDate);
             document.getElementById('viewToTimeField').setAttribute('placeholder', json.view.beforeTime);
+
+            const s = {
+                name: {playersOnline: 'Players Online'},
+                tooltip: {zeroDecimals: {valueDecimals: 0}},
+                type: {areaSpline: 'areaspline'}
+            };
+
+            const playersOnlineSeries = {
+                name: 'Players Online', type: 'areaspline', tooltip: {valueDecimals: 0},
+                data: json.viewPoints, color: '#1E90FF', yAxis: 0
+            }
+
+            graphs.push(Highcharts.stockChart('viewChart', {
+                rangeSelector: {
+                    selected: 3,
+                    buttons: linegraphButtons
+                },
+                yAxis: {
+                    softMax: 2,
+                    softMin: 0
+                },
+                title: {text: ''},
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.4
+                    }
+                },
+                series: [playersOnlineSeries],
+                xAxis: {
+                    events: {
+                        afterSetExtremes: function (event) {
+                            if (this) {
+                                const afterDate = Highcharts.dateFormat('%d/%m/%Y', this.min);
+                                const afterTime = Highcharts.dateFormat('%H:%M', this.min);
+                                const beforeDate = Highcharts.dateFormat('%d/%m/%Y', this.max);
+                                const beforeTime = Highcharts.dateFormat('%H:%M', this.max);
+                                document.getElementById('viewFromDateField').value = afterDate;
+                                document.getElementById('viewFromTimeField').value = afterTime;
+                                document.getElementById('viewToDateField').value = beforeDate;
+                                document.getElementById('viewToTimeField').value = beforeTime;
+                                filterView = {afterDate, afterTime, beforeDate, beforeTime};
+                            }
+                        }
+                    }
+                }
+            }));
 
             let filterElements = '';
             for (let i = 0; i < filters.length; i++) {

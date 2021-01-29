@@ -154,6 +154,29 @@ public class TPSQueries {
         };
     }
 
+    public static Query<List<DateObj<Integer>>> fetchQueryPreviewPlayersOnline(UUID serverUUID) {
+        String sql = SELECT + "MIN(" + DATE + ") as " + DATE + ',' +
+                "MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE +
+                FROM + TABLE_NAME +
+                WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                GROUP_BY + "FLOOR(" + DATE + "/?)";
+
+        return new QueryStatement<List<DateObj<Integer>>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, TimeUnit.MINUTES.toMillis(15));
+            }
+
+            @Override
+            public List<DateObj<Integer>> processResults(ResultSet set) throws SQLException {
+                List<DateObj<Integer>> ofServer = new ArrayList<>();
+                while (set.next()) ofServer.add(new DateObj<>(set.getLong(DATE), set.getInt(PLAYERS_ONLINE)));
+                return ofServer;
+            }
+        };
+    }
+
     public static Query<List<DateObj<Integer>>> fetchPlayersOnlineOfServer(long after, long before, UUID serverUUID) {
         String sql = SELECT + ServerTable.SERVER_UUID + ',' + DATE + ',' + PLAYERS_ONLINE +
                 FROM + TABLE_NAME +

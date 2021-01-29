@@ -44,8 +44,12 @@ public class LineGraphFactory {
     }
 
     public LineGraph lineGraph(List<Point> points) {
+        return lineGraph(points, shouldDisplayGapsInData());
+    }
+
+    public LineGraph lineGraph(List<Point> points, boolean displayGaps) {
         points.sort(new PointComparator());
-        return new LineGraph(points, shouldDisplayGapsInData());
+        return new LineGraph(points, displayGaps);
     }
 
     public LineGraph chunkGraph(TPSMutator mutator) {
