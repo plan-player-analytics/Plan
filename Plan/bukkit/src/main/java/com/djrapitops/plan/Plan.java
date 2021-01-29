@@ -73,7 +73,7 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
         } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
         registerCommand(component.planCommand().build());

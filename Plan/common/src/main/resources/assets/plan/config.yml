@@ -1,7 +1,7 @@
 # -----------------------------------------------------
 # Plan Bukkit Configuration file
 # More information about each setting:
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bukkit-Configuration
+# https://github.com/plan-player-analytics/Plan/wiki/Bukkit-Configuration
 # -----------------------------------------------------
 Server:
   ServerName: Plan
@@ -9,7 +9,7 @@ Server:
 Plugin:
   Logging:
     # More information about Locale
-    # https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Localization
+    # https://github.com/plan-player-analytics/Plan/wiki/Localization
     Locale: default
     Create_new_locale_file_on_next_enable: false
     Debug: false
@@ -39,7 +39,7 @@ Database:
     Password: minecraft
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
+# https://github.com/plan-player-analytics/Plan/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
 # -----------------------------------------------------
 Webserver:
   Port: 8804
@@ -121,7 +121,7 @@ Time:
 # -----------------------------------------------------
 Display_options:
   # More information about Themes:
-  # https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
+  # https://github.com/plan-player-analytics/Plan/wiki/Themes
   Theme: default
   Sessions:
     Show_on_page: 50
