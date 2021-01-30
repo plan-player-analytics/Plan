@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
+import java.util.Optional;
 
 public abstract class DateRangeFilter implements Filter {
 
@@ -49,10 +50,9 @@ public abstract class DateRangeFilter implements Filter {
 
     @Override
     public Map<String, Object> getOptions() {
-        long earliestData = dbSystem.getDatabase().query(BaseUserQueries.minimumRegisterDate());
+        Optional<Long> earliestData = dbSystem.getDatabase().query(BaseUserQueries.minimumRegisterDate());
         long now = System.currentTimeMillis();
-        if (earliestData == -1) earliestData = now;
-        String[] afterDate = StringUtils.split(dateFormat.format(earliestData), ' ');
+        String[] afterDate = StringUtils.split(dateFormat.format(earliestData.orElse(now)), ' ');
         String[] beforeDate = StringUtils.split(dateFormat.format(now), ' ');
         return Maps.builder(String.class, Object.class)
                 .put("after", afterDate)

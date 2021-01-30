@@ -162,13 +162,17 @@ public class BaseUserQueries {
         };
     }
 
-    public static Query<Long> minimumRegisterDate() {
-        String sql = SELECT + "MIN(" + UsersTable.REGISTERED + ") as min" +
+    public static Query<Optional<Long>> minimumRegisterDate() {
+        String sql = SELECT + min(UsersTable.REGISTERED) + " as min" +
                 FROM + UsersTable.TABLE_NAME;
-        return new QueryAllStatement<Long>(sql) {
+        return new QueryAllStatement<Optional<Long>>(sql) {
             @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("min") : -1;
+            public Optional<Long> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    long min = set.getLong("min");
+                    if (!set.wasNull()) return Optional.of(min);
+                }
+                return Optional.empty();
             }
         };
     }

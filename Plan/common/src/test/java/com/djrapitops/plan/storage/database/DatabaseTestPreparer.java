@@ -31,6 +31,7 @@ public interface DatabaseTestPreparer {
     String[] worlds = new String[]{"TestWorld", "TestWorld2"};
     UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
     UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
+    UUID player3UUID = TestConstants.PLAYER_THREE_UUID;
 
     Database db();
 
