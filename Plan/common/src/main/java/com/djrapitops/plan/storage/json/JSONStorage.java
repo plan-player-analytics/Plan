@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.json;
 
 import com.google.gson.Gson;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -56,6 +57,19 @@ public interface JSONStorage {
         public StoredJSON(String json, long timestamp) {
             this.json = json;
             this.timestamp = timestamp;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            StoredJSON that = (StoredJSON) o;
+            return timestamp == that.timestamp && Objects.equals(json, that.json);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(json, timestamp);
         }
     }
 }
