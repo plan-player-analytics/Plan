@@ -20,10 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents parameters for a single {@link Filter} parsed from the query json.
@@ -54,7 +51,7 @@ public class FilterQuery {
     }
 
     public Set<String> getSetParameters() {
-        if (parameters == null) return null;
+        if (parameters == null) return Collections.emptySet();
         return parameters.keySet();
     }
 }

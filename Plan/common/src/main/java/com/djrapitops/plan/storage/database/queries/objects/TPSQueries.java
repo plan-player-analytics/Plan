@@ -47,32 +47,32 @@ public class TPSQueries {
     public static Query<List<TPS>> fetchTPSDataOfServer(UUID serverUUID) {
         return db -> {
             String selectLowestResolution = SELECT +
-                    "MIN(t." + DATE + ") as " + DATE + ',' +
-                    "MIN(t." + TPS + ") as " + TPS + ',' +
-                    "MAX(t." + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + ',' +
-                    "MAX(t." + RAM_USAGE + ") as " + RAM_USAGE + ',' +
-                    "MAX(t." + CPU_USAGE + ") as " + CPU_USAGE + ',' +
-                    "MAX(t." + ENTITIES + ") as " + ENTITIES + ',' +
-                    "MAX(t." + CHUNKS + ") as " + CHUNKS + ',' +
-                    "MAX(t." + FREE_DISK + ") as " + FREE_DISK +
+                    min("t." + DATE) + " as " + DATE + ',' +
+                    min("t." + TPS) + " as " + TPS + ',' +
+                    max("t." + PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE + ',' +
+                    max("t." + RAM_USAGE) + " as " + RAM_USAGE + ',' +
+                    max("t." + CPU_USAGE) + " as " + CPU_USAGE + ',' +
+                    max("t." + ENTITIES) + " as " + ENTITIES + ',' +
+                    max("t." + CHUNKS) + " as " + CHUNKS + ',' +
+                    max("t." + FREE_DISK) + " as " + FREE_DISK +
                     FROM + TABLE_NAME + " t" +
                     WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
                     AND + DATE + "<?" +
-                    GROUP_BY + "FLOOR(" + DATE + "/?)";
+                    GROUP_BY + floor(DATE + "/?");
             String selectLowerResolution = SELECT +
-                    "MIN(t." + DATE + ") as " + DATE + ',' +
-                    "MIN(t." + TPS + ") as " + TPS + ',' +
-                    "MAX(t." + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + ',' +
-                    "MAX(t." + RAM_USAGE + ") as " + RAM_USAGE + ',' +
-                    "MAX(t." + CPU_USAGE + ") as " + CPU_USAGE + ',' +
-                    "MAX(t." + ENTITIES + ") as " + ENTITIES + ',' +
-                    "MAX(t." + CHUNKS + ") as " + CHUNKS + ',' +
-                    "MAX(t." + FREE_DISK + ") as " + FREE_DISK +
+                    min("t." + DATE) + " as " + DATE + ',' +
+                    min("t." + TPS) + " as " + TPS + ',' +
+                    max("t." + PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE + ',' +
+                    max("t." + RAM_USAGE) + " as " + RAM_USAGE + ',' +
+                    max("t." + CPU_USAGE) + " as " + CPU_USAGE + ',' +
+                    max("t." + ENTITIES) + " as " + ENTITIES + ',' +
+                    max("t." + CHUNKS) + " as " + CHUNKS + ',' +
+                    max("t." + FREE_DISK) + " as " + FREE_DISK +
                     FROM + TABLE_NAME + " t" +
                     WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
                     AND + DATE + ">=?" +
                     AND + DATE + "<?" +
-                    GROUP_BY + "FLOOR(" + DATE + "/?)";
+                    GROUP_BY + floor(DATE + "/?");
             String selectNormalResolution = SELECT +
                     DATE + ',' + TPS + ',' + PLAYERS_ONLINE + ',' +
                     RAM_USAGE + ',' + CPU_USAGE + ',' + ENTITIES + ',' + CHUNKS + ',' + FREE_DISK +
@@ -155,11 +155,11 @@ public class TPSQueries {
     }
 
     public static Query<List<DateObj<Integer>>> fetchQueryPreviewPlayersOnline(UUID serverUUID) {
-        String sql = SELECT + "MIN(" + DATE + ") as " + DATE + ',' +
-                "MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE +
+        String sql = SELECT + min(DATE) + " as " + DATE + ',' +
+                max(PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
-                GROUP_BY + "FLOOR(" + DATE + "/?)";
+                GROUP_BY + floor(DATE + "/?");
 
         return new QueryStatement<List<DateObj<Integer>>>(sql) {
             @Override

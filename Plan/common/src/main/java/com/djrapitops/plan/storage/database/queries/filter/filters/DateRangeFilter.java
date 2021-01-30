@@ -32,7 +32,7 @@ public abstract class DateRangeFilter implements Filter {
     private final DBSystem dbSystem;
     private final SimpleDateFormat dateFormat;
 
-    public DateRangeFilter(DBSystem dbSystem) {
+    protected DateRangeFilter(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
         this.dateFormat = new SimpleDateFormat("dd/MM/yyyy kk:mm");
     }

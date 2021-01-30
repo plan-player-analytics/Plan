@@ -51,6 +51,7 @@ public class VersionChecker implements SubSystem {
     private final PluginLogger logger;
     private final RunnableFactory runnableFactory;
     private final ErrorLogger errorLogger;
+    private final String downloadIconHtml = "<i class=\"fa fa-fw fa-download\"></i> ";
 
     private VersionInfo newVersionAvailable;
 
@@ -131,7 +132,7 @@ public class VersionChecker implements SubSystem {
                             "font-size: 0.95rem;" : "";
                     return "<button class=\"btn bg-white col-plan\" style=\"" + reduceFontSize +
                             "\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
-                            "<i class=\"fa fa-fw fa-download\"></i> " + locale.getString(PluginLang.VERSION_UPDATE) + ": " + v.getVersion().getVersionString() +
+                            downloadIconHtml + locale.getString(PluginLang.VERSION_UPDATE) + ": " + v.getVersion().getVersionString() +
                             "</button>";
                 }
         );
@@ -147,7 +148,7 @@ public class VersionChecker implements SubSystem {
         return getNewVersionAvailable()
                 .map(v -> "<div class=\"modal-header\">" +
                         "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
-                        "<i class=\"fa fa-fw fa-download\"></i> " + locale.getString(PluginLang.VERSION_UPDATE_AVAILABLE, v.getVersion().getVersionString()) +
+                        downloadIconHtml + locale.getString(PluginLang.VERSION_UPDATE_AVAILABLE, v.getVersion().getVersionString()) +
                         "</h5><button aria-label=\"Close\" class=\"close\" data-dismiss=\"modal\" type=\"button\"><span aria-hidden=\"true\">&times;</span></button>" +
                         "</div>" + // Close modal-header
                         "<div class=\"modal-body\">" +
@@ -156,7 +157,7 @@ public class VersionChecker implements SubSystem {
                         "<a class=\"btn col-plan\" href=\"" + v.getChangeLogUrl() + "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
                         "<i class=\"fa fa-fw fa-list\"></i> " + locale.getString(PluginLang.VERSION_CHANGE_LOG) + "</a>" +
                         "<a class=\"btn col-plan\" href=\"" + v.getDownloadUrl() + "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
-                        "<i class=\"fa fa-fw fa-download\"></i> " + locale.getString(PluginLang.VERSION_DOWNLOAD, v.getVersion().getVersionString()) + "</a>" +
+                        downloadIconHtml + locale.getString(PluginLang.VERSION_DOWNLOAD, v.getVersion().getVersionString()) + "</a>" +
                         "</div>") // Close modal-body
                 .orElse("<div class=\"modal-header\">" +
                         "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
