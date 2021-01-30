@@ -420,82 +420,121 @@ function getQueryAddress() {
 }
 
 function runQuery() {
-    const queryButton = document.querySelector('#query-button');
+    const queryButton = document.getElementById('query-button');
     queryButton.setAttribute('disabled', 'true');
     queryButton.classList.add('disabled');
 
-    document.querySelector('#content .tab').innerHTML =
-        `<div class="page-loader">
-            <span class="loader"></span>
-            <p class="loader-text">Loading..</p>
-        </div>`;
+    // document.querySelector('#content .tab').innerHTML =
+    //     `<div class="page-loader">
+    //         <span class="loader"></span>
+    //         <p class="loader-text">Loading..</p>
+    //     </div>`;
 
     jsonRequest(getQueryAddress(), function (json, error) {
-        if (!json.data) {
-            // TODO write proper error messages
-            window.history.replaceState({}, '', `${location.pathname}?error=${encodeURIComponent(error ? error : 'Query produced 0 results')}`);
+        const previousPath = document.getElementById('result-path');
+        if (previousPath) previousPath.remove();
+        console.log(json);
+        if (json) {
+            if (json.data) {
+                renderResults(json);
+            } else if (json.path) {
+                // filters resulted in 0 players matched
+                renderResultPath(json);
+                // Reset query
+                queryButton.removeAttribute('disabled');
+                queryButton.classList.remove('disabled');
+                query.splice(0, query.length);
+            } else {
+                // Cached query expired
+                window.history.replaceState({}, '', `${location.pathname}?error=${encodeURIComponent('Cached query has expired')}`);
+                location.reload();
+            }
+        } else if (error) {
+            window.history.replaceState({}, '', `${location.pathname}?error=${encodeURIComponent(error)}`);
             location.reload();
         }
-
-        renderDataResultScreen(json.data.players.data.length, json.view ? json.view : {});
-
-        // Set URL so that the query result can be shared
-        window.history.replaceState({}, '', `${location.pathname}?timestamp=${json.timestamp}`);
-
-        // Player table
-        $('.player-table').DataTable({
-            responsive: true,
-            columns: json.data.players.columns,
-            data: json.data.players.data,
-            order: [[5, "desc"]]
-        });
-        const activityIndexHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(2)");
-        const lastSeenHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(6)");
-        activityIndexHeader.innerHTML += ` (${json.view.beforeDate})`
-        lastSeenHeader.innerHTML += ` (view)`
-
-        // Activity graphs
-        const activity_data = json.data.activity;
-        activityPie('activityPie', {
-            name: 'Players', colorByPoint: true, data: activity_data.activity_pie_series
-        });
-        stackChart('activityStackGraph', activity_data.activity_labels, activity_data.activity_series, 'Players');
-        document.querySelector("#activity-date").innerHTML = json.view.beforeDate;
-
-        // Geolocations
-        const geolocation_data = json.data.geolocation;
-        const geolocationSeries = {
-            name: 'Players',
-            type: 'map',
-            mapData: Highcharts.maps['custom/world'],
-            data: geolocation_data.geolocation_series,
-            joinBy: ['iso-a3', 'code']
-        };
-        const geolocationBarSeries = {
-            color: geolocation_data.colors.bars,
-            name: 'Players',
-            data: geolocation_data.geolocation_bar_series.map(function (bar) {
-                return bar.value
-            })
-        };
-        const geolocationBarCategories = geolocation_data.geolocation_bar_series.map(function (bar) {
-            return bar.label
-        });
-        worldMap('worldMap', geolocation_data.colors.low, geolocation_data.colors.high, geolocationSeries);
-        horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
-
-        const session_data = json.data.sessions;
-
-        document.querySelector("#data_total_playtime").innerHTML = session_data.total_playtime;
-        document.querySelector("#data_average_playtime").innerHTML = session_data.average_playtime;
-        document.querySelector("#data_total_afk_playtime").innerHTML = session_data.total_afk_playtime;
-        document.querySelector("#data_average_afk_playtime").innerHTML = session_data.average_afk_playtime;
-        document.querySelector("#data_total_active_playtime").innerHTML = session_data.total_active_playtime;
-        document.querySelector("#data_average_active_playtime").innerHTML = session_data.average_active_playtime;
-        document.querySelector("#data_total_sessions").innerHTML = session_data.total_sessions;
-        document.querySelector("#data_average_sessions").innerHTML = session_data.average_sessions;
-        document.querySelector("#data_average_session_length").innerHTML = session_data.average_session_length;
     });
+}
+
+function renderResultPath(json) {
+    let pathHtml = ``;
+    for (let i = 0; i < json.path.length; i++) {
+        const step = json.path[i];
+        pathHtml += `<p class="m-0">`;
+        for (let j = 0; j < i * 4; j++) {
+            pathHtml += "&nbsp;";
+        }
+        pathHtml += `<i class="fa fa-fw fa-filter"></i> ${step.kind} matched ${step.size} players</p>`
+    }
+
+    const placeBefore = document.querySelector('.tab .row .card');
+    const element = document.createElement('div');
+    element.id = "result-path"
+    element.classList.add("alert", "alert-warning", "shadow");
+    element.innerHTML = pathHtml
+    placeBefore.insertAdjacentElement('beforebegin', element);
+    window.scrollTo(0, 0); // Scroll to top
+}
+
+function renderResults(json) {
+    renderDataResultScreen(json.data.players.data.length, json.view ? json.view : {});
+
+    // Set URL so that the query result can be shared
+    window.history.replaceState({}, '', `${location.pathname}?timestamp=${json.timestamp}`);
+
+    // Player table
+    $('.player-table').DataTable({
+        responsive: true,
+        columns: json.data.players.columns,
+        data: json.data.players.data,
+        order: [[5, "desc"]]
+    });
+    const activityIndexHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(2)");
+    const lastSeenHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(6)");
+    activityIndexHeader.innerHTML += ` (${json.view.beforeDate})`
+    lastSeenHeader.innerHTML += ` (view)`
+
+    // Activity graphs
+    const activity_data = json.data.activity;
+    activityPie('activityPie', {
+        name: 'Players', colorByPoint: true, data: activity_data.activity_pie_series
+    });
+    stackChart('activityStackGraph', activity_data.activity_labels, activity_data.activity_series, 'Players');
+    document.querySelector("#activity-date").innerHTML = json.view.beforeDate;
+
+    // Geolocations
+    const geolocation_data = json.data.geolocation;
+    const geolocationSeries = {
+        name: 'Players',
+        type: 'map',
+        mapData: Highcharts.maps['custom/world'],
+        data: geolocation_data.geolocation_series,
+        joinBy: ['iso-a3', 'code']
+    };
+    const geolocationBarSeries = {
+        color: geolocation_data.colors.bars,
+        name: 'Players',
+        data: geolocation_data.geolocation_bar_series.map(function (bar) {
+            return bar.value
+        })
+    };
+    const geolocationBarCategories = geolocation_data.geolocation_bar_series.map(function (bar) {
+        return bar.label
+    });
+    worldMap('worldMap', geolocation_data.colors.low, geolocation_data.colors.high, geolocationSeries);
+    horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
+
+    const session_data = json.data.sessions;
+
+    document.querySelector("#data_total_playtime").innerHTML = session_data.total_playtime;
+    document.querySelector("#data_average_playtime").innerHTML = session_data.average_playtime;
+    document.querySelector("#data_total_afk_playtime").innerHTML = session_data.total_afk_playtime;
+    document.querySelector("#data_average_afk_playtime").innerHTML = session_data.average_afk_playtime;
+    document.querySelector("#data_total_active_playtime").innerHTML = session_data.total_active_playtime;
+    document.querySelector("#data_average_active_playtime").innerHTML = session_data.average_active_playtime;
+    document.querySelector("#data_total_sessions").innerHTML = session_data.total_sessions;
+    document.querySelector("#data_average_sessions").innerHTML = session_data.average_sessions;
+    document.querySelector("#data_average_session_length").innerHTML = session_data.average_session_length;
 }
 
 function renderDataResultScreen(resultCount, view) {

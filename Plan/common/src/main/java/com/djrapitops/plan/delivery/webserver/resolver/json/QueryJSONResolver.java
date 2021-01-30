@@ -120,9 +120,11 @@ public class QueryJSONResolver implements Resolver {
             q = URLDecoder.decode(q, "UTF-8");
             List<FilterQuery> queries = FilterQuery.parse(q);
             Filter.Result result = filters.apply(queries);
+            List<Filter.ResultPath> resultPath = result.getInverseResultPath();
+            Collections.reverse(resultPath);
 
             Map<String, Object> json = Maps.builder(String.class, Object.class)
-                    .put("path", result.getResultPath())
+                    .put("path", resultPath)
                     .put("view", new Gson().fromJson(view, FiltersJSONResolver.ViewJSON.class))
                     .put("timestamp", timestamp)
                     .build();

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import com.google.gson.Gson;
@@ -31,7 +32,9 @@ public abstract class MultiOptionFilter implements Filter {
     }
 
     protected List<String> getSelected(FilterQuery query) {
-        String selected = query.get("selected").orElseThrow(IllegalArgumentException::new);
-        return new Gson().fromJson(selected, new TypeToken<List<String>>() {}.getType());
+        String selectedJSON = query.get("selected").orElseThrow(IllegalArgumentException::new);
+        List<String> selected = new Gson().fromJson(selectedJSON, new TypeToken<List<String>>() {}.getType());
+        if (selected.isEmpty()) throw new CompleteSetException();
+        return selected;
     }
 }

@@ -68,7 +68,7 @@ public interface Filter {
         }
 
         public Result notApplied(Filter filter) {
-            return new Result(this, filter.getKind(), currentUUIDs);
+            return new Result(this, filter.getKind() + " (skip)", currentUUIDs);
         }
 
         public boolean isEmpty() {
@@ -79,7 +79,7 @@ public interface Filter {
             return currentUUIDs;
         }
 
-        public List<ResultPath> getResultPath() {
+        public List<ResultPath> getInverseResultPath() {
             List<ResultPath> path = new ArrayList<>();
 
             Result current = this;
