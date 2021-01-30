@@ -178,6 +178,15 @@ public class Locale extends HashMap<Lang, Message> {
                 HtmlLang.LABEL_FREE_DISK_SPACE,
                 HtmlLang.LABEL_NEW_PLAYERS,
                 HtmlLang.LABEL_UNIQUE_PLAYERS,
+                HtmlLang.LABEL_ACTIVE_PLAYTIME,
+                HtmlLang.LABEL_AFK_TIME,
+                HtmlLang.LABEL_AVG_SESSION_LENGTH,
+                HtmlLang.LABEL_AVG_PLAYTIME,
+                HtmlLang.LABEL_AVG_ACTIVE_PLAYTIME,
+                HtmlLang.LABEL_AVG_AFK_TIME,
+                HtmlLang.LABEL_AVG_PLAYTIME,
+                HtmlLang.SIDE_GEOLOCATIONS,
+                HtmlLang.LABEL_PER_PLAYER
 
         }) {
             getNonDefault(extra).ifPresent(replacement ->

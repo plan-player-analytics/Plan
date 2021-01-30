@@ -152,6 +152,8 @@ Enable FAIL - Database Patch                    || 数据库补丁失败，插�
 Enable FAIL - GeoDB Write                       || 保存已下载的 GeoLite2 地理位置数据库时发生问题
 Enable FAIL - WebServer (Proxy)                 || 网页服务器未初始化
 Enable FAIL - Wrong Database Type               || ${0} 此数据类型不存在。
+HTML - AND_BUG_REPORTERS                        || & Bug reporters!
+HTML - BANNED (Filters)                         || Banned
 HTML - COMPARING_15_DAYS                        || 比较15天前
 HTML - COMPARING_60_DAYS                        || 比较30天前
 HTML - COMPARING_7_DAYS                         || 比较7天前
@@ -167,14 +169,18 @@ HTML - KILLED                                   || 被击杀
 HTML - LABEL_1ST_WEAPON                         || 最致命的PVP武器
 HTML - LABEL_2ND_WEAPON                         || 更致命的武器
 HTML - LABEL_3RD_WEAPON                         || 致命的PvP武器
+HTML - LABEL_ACTIVE_PLAYTIME                    || Active Playtime
 HTML - LABEL_ACTIVITY_INDEX                     || 活跃指数
 HTML - LABEL_AFK                                || AFK
 HTML - LABEL_AFK_TIME                           || 挂机时间
 HTML - LABEL_AVG                                || 平均
+HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
+HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
 HTML - LABEL_AVG_KDR                            || 平均击杀比
 HTML - LABEL_AVG_MOB_KDR                        || 平均怪物击杀比
 HTML - LABEL_AVG_PLAYTIME                       || 平均游戏时间
 HTML - LABEL_AVG_SESSION_LENGTH                 || 平均时域长度
+HTML - LABEL_AVG_SESSIONS                       || Average Sessions
 HTML - LABEL_AVG_TPS                            || 平均TPS
 HTML - LABEL_BANNED                             || 已封禁
 HTML - LABEL_BEST_PEAK                          || 所有时间峰值
@@ -241,14 +247,66 @@ HTML - LINK_QUICK_VIEW                          || 快速检索
 HTML - LINK_SERVER_ANALYSIS                     || 服务器分析
 HTML - LINK_WIKI                                || Plan Wiki,教程 & 文档
 HTML - LOCAL_MACHINE                            || 本机
+HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
+HTML - LOGIN_FAILED                             || Login failed: 
+HTML - LOGIN_FORGOT_PASSWORD                    || Forgot Password?
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Forgot password? Unregister and register again.
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Use the following command in game to remove your current user:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Or using console:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || After using the command, 
+HTML - LOGIN_LOGIN                              || Login
+HTML - LOGIN_LOGOUT                             || Logout
+HTML - LOGIN_PASSWORD                           || "Password"
+HTML - LOGIN_USERNAME                           || "Username"
 HTML - NAV_PLUGINS                              || 插件
 HTML - NEW_CALENDAR                             || 新：
 HTML - NO_KILLS                                 || 无击杀数
 HTML - NO_USER_PRESENT                          || 用户Cookie未提供
+HTML - NON_OPERATORS (Filters)                  || Non operators
+HTML - NOT_BANNED (Filters)                     || Not banned
 HTML - OFFLINE                                  ||  离线
 HTML - ONLINE                                   ||  在线
+HTML - OPERATORS (Filters)                      || Operators
 HTML - PER_DAY                                  || / 天
 HTML - PLAYERS_TEXT                             || 玩家
+HTML - QUERY                                    || Query<
+HTML - QUERY_ACTIVITY_OF_MATCHED_PLAYERS        || Activity of matched players
+HTML - QUERY_ACTIVITY_ON                        || Activity on <span id="activity-date"></span>
+HTML - QUERY_ADD_FILTER                         || Add a filter..
+HTML - QUERY_AND                                || and 
+HTML - QUERY_ARE                                || `are`
+HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
+HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
+HTML - QUERY_LOADING_FILTERS                    || Loading filters..
+HTML - QUERY_MAKE                               || Make a query
+HTML - QUERY_MAKE_ANOTHER                       || Make another query
+HTML - QUERY_OF_PLAYERS                         || of Players who 
+HTML - QUERY_PERFORM_QUERY                      || Perform Query!
+HTML - QUERY_PLAYED_BETWEEN                     || Played between
+HTML - QUERY_REGISTERED_BETWEEN                 || Registered between
+HTML - QUERY_RESULTS                            || Query Results
+HTML - QUERY_RESULTS_MATCH                      || matched ${resultCount} players
+HTML - QUERY_SESSIONS_WITHIN_VIEW               || Sessions within view
+HTML - QUERY_SHOW_VIEW                          || Show a view
+HTML - QUERY_TIME_FROM                          || >from</label>
+HTML - QUERY_TIME_TO                            || >to</label>
+HTML - QUERY_VIEW                               ||   View:
+HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
+HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
+HTML - REGISTER_COMPLETE                        || Complete Registration
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Code expires in 15 minutes
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Use the following command in game to finish registration:
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Or using console:
+HTML - REGISTER_CREATE_USER                     || Create a new user
+HTML - REGISTER_FAILED                          || Registration failed: 
+HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
+HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
+HTML - REGISTER                        || Register
+HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
+HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
+HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
+HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 characters.
 HTML - SESSION                                  || 时域
 HTML - SIDE_GEOLOCATIONS                        || 地理位置
 HTML - SIDE_INFORMATION                         || 信息
@@ -280,6 +338,7 @@ HTML - TEXT_NO_SERVER                           || 没有可显示的在线活�
 HTML - TEXT_NO_SERVERS                          || 数据库中找不到服务器
 HTML - TEXT_PLUGIN_INFORMATION                  || 插件信息
 HTML - TEXT_PREDICTED_RETENTION                 || 这个数值根据之前的玩家预测得出
+HTML - TEXT_SERVER_INSTRUCTIONS                 || It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.
 HTML - TEXT_VERSION                             || 有新版本的插件可用.
 HTML - TITLE_30_DAYS                            || 30 天
 HTML - TITLE_30_DAYS_AGO                        || 30 天前
@@ -295,6 +354,7 @@ HTML - TITLE_CPU_RAM                            || CPU & RAM
 HTML - TITLE_CURRENT_PLAYERBASE                 || 当前玩家
 HTML - TITLE_DISK                               || 磁盘空间
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || 每日
+HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || Hour by Hour
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || 全服网络在线活动
 HTML - TITLE_GRAPH_PUNCHCARD                    || 30天打卡签到
 HTML - TITLE_INSIGHTS                           || 30天Insights
@@ -348,7 +408,15 @@ HTML - UNIT_NO_DATA                             || 没有数据
 HTML - UNIT_THE_PLAYERS                         || 玩家
 HTML - USER_AND_PASS_NOT_SPECIFIED              || 未指定用户名与密码
 HTML - USER_DOES_NOT_EXIST                      || 用户不存在
+HTML - USER_INFORMATION_NOT_FOUND               || Registration failed, try again (The code expires after 15 minutes)
 HTML - USER_PASS_MISMATCH                       || 用户名与密码不匹配
+HTML - Version Change log                       || View Changelog
+HTML - Version Current                          || You have version ${0}
+HTML - Version Download                         || Download Plan-${0}.jar
+HTML - Version Update                           || Update
+HTML - Version Update Available                 || Version ${0} is Available!
+HTML - Version Update Dev                       || This version is a DEV release.
+HTML - Version Update Info                      || A new version has been released and is now available for download.
 HTML - WITH                                     || <th> 与
 HTML ERRORS - ACCESS_DENIED_403                 || 拒绝访问
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - 确保您已使用 <b>/plan register</b> 注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若您忘记了密码，请让工作人员删除您的旧密码并重新注册。
@@ -419,7 +487,7 @@ WebServer - Notify HTTPS User Auth              || 网页服务器: 用户验证
 Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
 Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
 WebServer - Notify no Cert file                 || 网页服务器：未找到证书密钥存储文件：${0}
-WebServer - Notify Using Proxy                  || 网页服务器: 代理模式HTTPS已开启, 请确保您的反代已经配置为HTTPS模式并且Plan的Alternative_IP.Link已经指向代理
+WebServer - Notify Using Proxy                  || 网页服务器: 代理模式HTTPS已开启, 请确保您的反代已经配置为HTTPS模式并且Plan的Alternative_IP.Address已经指向代理
 WebServer FAIL - EOF                            || 网页服务器: 在读取证书文件时出现了EOF异常. (请检查证书文件完整性)
 WebServer FAIL - Port Bind                      || 未成功初始化网页服务器。端口（${0}）是否被占用？
 WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境初始化失败。

@@ -433,7 +433,6 @@ function runQuery() {
     jsonRequest(getQueryAddress(), function (json, error) {
         const previousPath = document.getElementById('result-path');
         if (previousPath) previousPath.remove();
-        console.log(json);
         if (json) {
             if (json.data) {
                 renderResults(json);
@@ -610,14 +609,14 @@ function renderDataResultScreen(resultCount, view) {
                                     class="float-right" id="data_total_playtime"></span></p>
                             <p><i class="col-green far fa-fw fa-clock"></i> Active Playtime<span
                                     class="float-right" id="data_total_active_playtime"></span></p>
-                            <p><i class="col-grey far fa-fw fa-clock"></i> AFK Playtime<span
+                            <p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span
                                     class="float-right" id="data_total_afk_playtime"></span></p>
                             <hr>
                             <p><i class="col-green far fa-fw fa-clock"></i> Average Playtime / Player<span
                                     class="float-right" id="data_average_playtime"></span></p>
                             <p><i class="col-green far fa-fw fa-clock"></i> Average Active Playtime / Player<span
                                     class="float-right" id="data_average_active_playtime"></span></p>
-                            <p><i class="col-grey far fa-fw fa-clock"></i> Average AFK Playtime / Player<span
+                            <p><i class="col-grey far fa-fw fa-clock"></i> Average AFK Time / Player<span
                                     class="float-right" id="data_average_afk_playtime"></span></p>
                         </div>
                     </div>

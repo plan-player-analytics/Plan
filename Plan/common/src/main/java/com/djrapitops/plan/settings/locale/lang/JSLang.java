@@ -52,6 +52,8 @@ public enum JSLang implements Lang {
     QUERY_VIEW("  View:"),
     QUERY_ACTIVITY_OF_MATCHED_PLAYERS("Activity of matched players"),
     QUERY_ACTIVITY_ON("Activity on <span id=\"activity-date\"></span>"),
+    QUERY_ARE("`are`"),
+    QUERY_SESSIONS_WITHIN_VIEW("Sessions within view"),
     ;
 
     private final String defaultValue;
