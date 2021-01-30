@@ -100,15 +100,16 @@ reduceSidebar();
 $(window).resize(reduceSidebar);
 
 function toggleSidebar() {
-    $('body').toggleClass('sidebar-hidden');
+    document.querySelector('body').classList.toggle('sidebar-hidden');
     $('.sidebar .collapse').collapse('hide');
 
-    const closeModal = $('.sidebar-close-modal');
+    const closeModal = document.querySelector('.sidebar-close-modal');
     if ($(window).width() < 900) {
-        closeModal.toggleClass('hidden');
-    } else {
-        if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
+        closeModal.classList.toggle('hidden');
+    } else if (!closeModal.classList.contains('hidden')) {
+        closeModal.classList.add('hidden');
     }
 }
 
-$('.sidebar-toggler,.sidebar-close-modal').on('click', toggleSidebar);
+document.querySelectorAll('.sidebar-toggler,.sidebar-close-modal')
+    .forEach(element => element.addEventListener('click', toggleSidebar));

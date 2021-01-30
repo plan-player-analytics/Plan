@@ -27,7 +27,7 @@
 
 <script>
     function login() {
-        msg.addClass('hidden');
+        errorElement.classList.add('hidden');
         const user = $('#inputUser').val();
         if (!user || user.length < 1) {
             return displayError('You need to specify a Username');
@@ -58,7 +58,6 @@
     }
 
     document.addEventListener('keydown', (event) => {
-        console.log(event.key);
         if (event.key === 'Enter') login();
     });
 </script>
@@ -225,14 +224,14 @@
         login();
     });
 
-    const msg = $(`#fail-msg`);
+    const errorElement = document.getElementById("fail-msg");
 
     function displayError(message) {
-        msg.text(message);
-        msg.removeClass('hidden');
+        errorElement.innerText = message;
+        errorElement.classList.remove('hidden');
     }
 
-    $('#forgot-button').click(() => $('#forgotModal').modal());
+    document.getElementById('forgot-button').addEventListener('click', () => $('#forgotModal').modal());
 </script>
 </body>
 

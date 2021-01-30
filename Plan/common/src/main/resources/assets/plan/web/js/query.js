@@ -36,6 +36,73 @@ const InvalidEntries = {
     }
 }
 
+function loadFilters(json) {
+    filters.push(...json.filters);
+
+    filterView = json.view;
+
+    document.getElementById('viewFromDateField').setAttribute('placeholder', json.view.afterDate);
+    document.getElementById('viewFromTimeField').setAttribute('placeholder', json.view.afterTime);
+    document.getElementById('viewToDateField').setAttribute('placeholder', json.view.beforeDate);
+    document.getElementById('viewToTimeField').setAttribute('placeholder', json.view.beforeTime);
+
+    const s = {
+        name: {playersOnline: 'Players Online'},
+        tooltip: {zeroDecimals: {valueDecimals: 0}},
+        type: {areaSpline: 'areaspline'}
+    };
+
+    const playersOnlineSeries = {
+        name: 'Players Online', type: 'areaspline', tooltip: {valueDecimals: 0},
+        data: json.viewPoints, color: '#9E9E9E', yAxis: 0
+    }
+
+    graphs.push(Highcharts.stockChart('viewChart', {
+        rangeSelector: {
+            selected: 3,
+            buttons: linegraphButtons
+        },
+        yAxis: {
+            softMax: 2,
+            softMin: 0
+        },
+        title: {text: ''},
+        plotOptions: {
+            areaspline: {
+                fillOpacity: 0.4
+            }
+        },
+        series: [playersOnlineSeries],
+        xAxis: {
+            events: {
+                afterSetExtremes: function (event) {
+                    if (this) {
+                        const afterDate = Highcharts.dateFormat('%d/%m/%Y', this.min);
+                        const afterTime = Highcharts.dateFormat('%H:%M', this.min);
+                        const beforeDate = Highcharts.dateFormat('%d/%m/%Y', this.max);
+                        const beforeTime = Highcharts.dateFormat('%H:%M', this.max);
+                        document.getElementById('viewFromDateField').value = afterDate;
+                        document.getElementById('viewFromTimeField').value = afterTime;
+                        document.getElementById('viewToDateField').value = beforeDate;
+                        document.getElementById('viewToTimeField').value = beforeTime;
+                        const dontUpdateGraph = true;
+                        setFilterOption('view', 'viewFromDateField', 'afterDate', isValidDate, correctDate, dontUpdateGraph);
+                        setFilterOption('view', 'viewFromTimeField', 'afterTime', isValidTime, correctTime, dontUpdateGraph);
+                        setFilterOption('view', 'viewToDateField', 'beforeDate', isValidDate, correctDate, dontUpdateGraph);
+                        setFilterOption('view', 'viewToTimeField', 'beforeTime', isValidTime, correctTime, dontUpdateGraph);
+                    }
+                }
+            }
+        }
+    }));
+
+    let filterElements = '';
+    for (let i = 0; i < filters.length; i++) {
+        filterElements += createFilterSelector('#filters', i, filters[i]);
+    }
+    document.getElementById('filter-dropdown').innerHTML = filterElements;
+}
+
 class Filter {
     constructor(kind) {
         this.kind = kind;
@@ -439,7 +506,7 @@ function renderDataResultScreen(resultCount, view) {
     document.querySelector('#content .tab').innerHTML =
         `<div class="container-fluid mt-4">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>Plan &middot;
+                <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars" onclick="toggleSidebar()"></i>Plan &middot;
                     Query Results</h1>
                 <p class="mb-0 text-gray-800">(matched ${resultCount} players)</p>
             </div>

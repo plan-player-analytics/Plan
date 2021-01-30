@@ -184,11 +184,11 @@
 <script src="js/color-selector.js"></script>
 
 <script id="mainScript">
-    const msg = $(`#fail-msg`);
+    const errorElement = document.getElementById("fail-msg");
 
     function displayError(message) {
-        msg.text(message);
-        msg.removeClass('hidden');
+        errorElement.innerText = message;
+        errorElement.classList.remove('hidden');
     }
 
     function checkIfRegistered(code) {
@@ -204,8 +204,8 @@
         })
     }
 
-    $('#register-button').click(() => {
-        msg.addClass('hidden');
+    document.getElementById('register-button').addEventListener('click', () => {
+        errorElement.classList.add('hidden');
         const user = $('#inputUser').val();
         if (!user || user.length < 1) {
             return displayError('You need to specify a Username');
