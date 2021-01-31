@@ -216,10 +216,17 @@ public class PageFactory {
     }
 
     public Page loginPage() throws IOException {
-        return new LoginPage(getResource("login.html"), serverInfo.get());
+        return new LoginPage(getResource("login.html"), serverInfo.get(), locale.get(), theme.get());
     }
 
     public Page registerPage() throws IOException {
-        return new LoginPage(getResource("register.html"), serverInfo.get());
+        return new LoginPage(getResource("register.html"), serverInfo.get(), locale.get(), theme.get());
+    }
+
+    public Page queryPage() throws IOException {
+        return new QueryPage(
+                getResource("query.html"),
+                locale.get(), theme.get(), versionChecker.get()
+        );
     }
 }

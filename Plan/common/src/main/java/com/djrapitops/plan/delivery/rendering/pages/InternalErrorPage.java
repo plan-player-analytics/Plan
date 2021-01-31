@@ -61,7 +61,7 @@ public class InternalErrorPage implements Page {
     private String createContent() {
         StringBuilder paragraph = new StringBuilder();
         paragraph.append("Please report this issue here: ");
-        paragraph.append(Html.LINK.create("https://github.com/Rsl1122/Plan-PlayerAnalytics/issues", "Issues"));
+        paragraph.append(Html.LINK.create("https://github.com/plan-player-analytics/Plan/issues", "Issues"));
         paragraph.append("<br><br><pre>");
         paragraph.append(error).append(" | ").append(errorMsg);
 

@@ -71,4 +71,21 @@ public interface CommonQueries {
     boolean doesDBHaveTable(String table);
 
     boolean doesDBHaveTableColumn(String table, String column);
+
+    /**
+     * Calculates the activity index for the player at a specific date.
+     *
+     * @param playerUUID UUID of the player.
+     * @param epochMs    Epoch millisecond to use for calculation
+     * @return a double between 0.0 and 5.0.
+     */
+    double fetchActivityIndexOf(UUID playerUUID, long epochMs);
+
+    /**
+     * Get a String that represents the Activity group for an index.
+     *
+     * @param activityIndex a double between 0.0 and 5.0.
+     * @return Name of the group (in English) that this activityIndex falls within.
+     */
+    String getActivityGroupForIndex(double activityIndex);
 }

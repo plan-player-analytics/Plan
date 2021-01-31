@@ -151,6 +151,7 @@ function dayByDay(id, series) {
 
 function onlineActivityCalendar(id, event_data, firstDay) {
     window.calendars.online_activity = new FullCalendar.Calendar(document.querySelector(id), {
+        timeZone: "UTC",
         themeSystem: 'bootstrap',
         eventColor: '#2196F3',
         firstDay: firstDay,
@@ -179,6 +180,30 @@ function onlineActivityCalendar(id, event_data, firstDay) {
     });
 
     window.calendars.online_activity.render();
+}
+
+function mapToDataSeries(performanceData) {
+    const dataSeries = {
+        playersOnline: [],
+        tps: [],
+        cpu: [],
+        ram: [],
+        entities: [],
+        chunks: [],
+        disk: []
+    };
+    for (let i = 0; i < performanceData.length; i++) {
+        const entry = performanceData[i];
+        const date = entry[0];
+        dataSeries.playersOnline[i] = [date, entry[1]];
+        dataSeries.tps[i] = [date, entry[2]];
+        dataSeries.cpu[i] = [date, entry[3]];
+        dataSeries.ram[i] = [date, entry[4]];
+        dataSeries.entities[i] = [date, entry[5]];
+        dataSeries.chunks[i] = [date, entry[6]];
+        dataSeries.disk[i] = [date, entry[7]];
+    }
+    return dataSeries;
 }
 
 function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries) {
@@ -436,6 +461,7 @@ function formatTimeAmount(ms) {
 
 function sessionCalendar(id, event_data, firstDay) {
     window.calendars.sessions = new FullCalendar.Calendar(document.querySelector(id), {
+        timeZone: "UTC",
         themeSystem: 'bootstrap',
         eventColor: '#009688',
         dayMaxEventRows: 4,

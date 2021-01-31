@@ -60,8 +60,12 @@ public class Server implements Comparable<Server> {
         return name;
     }
 
-    public String getIdentifiableName() {
+    public static String getIdentifiableName(String name, int id) {
         return !"Plan".equalsIgnoreCase(name) ? name : "Server " + id;
+    }
+
+    public String getIdentifiableName() {
+        return getIdentifiableName(name, id);
     }
 
     public void setName(String name) {

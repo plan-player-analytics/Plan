@@ -80,10 +80,7 @@ public class GraphJSONCreator {
     public String performanceGraphJSON(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         LineGraphFactory lineGraphs = graphs.line();
-        long now = System.currentTimeMillis();
-        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
-        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)))
-                .filterDataBetween(halfYearAgo, now);
+        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
         return '{' +
                 "\"playersOnline\":" + lineGraphs.playersOnlineGraph(tpsMutator).toHighChartsSeries() +
                 ",\"tps\":" + lineGraphs.tpsGraph(tpsMutator).toHighChartsSeries() +
@@ -109,13 +106,41 @@ public class GraphJSONCreator {
                 "}}";
     }
 
+    public Map<String, Object> optimizedPerformanceGraphJSON(UUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
+        Number[][] values = tpsMutator.toArrays(config.isTrue(DisplaySettings.GAPS_IN_GRAPH_DATA));
+
+        return Maps.builder(String.class, Object.class)
+                .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk"})
+                .put("values", values)
+                .put("colors", Maps.builder(String.class, Object.class)
+                        .put("playersOnline", theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE))
+                        .put("cpu", theme.getValue(ThemeVal.GRAPH_CPU))
+                        .put("ram", theme.getValue(ThemeVal.GRAPH_RAM))
+                        .put("entities", theme.getValue(ThemeVal.GRAPH_ENTITIES))
+                        .put("chunks", theme.getValue(ThemeVal.GRAPH_CHUNKS))
+                        .put("low", theme.getValue(ThemeVal.GRAPH_TPS_LOW))
+                        .put("med", theme.getValue(ThemeVal.GRAPH_TPS_MED))
+                        .put("high", theme.getValue(ThemeVal.GRAPH_TPS_HIGH))
+                        .build())
+                .put("zones", Maps.builder(String.class, Object.class)
+                        .put("tpsThresholdMed", config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED))
+                        .put("tpsThresholdHigh", config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH))
+                        .put("diskThresholdMed", config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_MED))
+                        .put("diskThresholdHigh", config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH))
+                        .build())
+                .build();
+    }
+
     public String playersOnlineGraph(UUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
 
-        List<Point> points = Lists.map(db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)),
-                point -> new Point(point.getDate(), point.getValue())
+        List<Point> points = Lists.map(
+                db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)),
+                Point::fromDateObj
         );
         return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() +
                 ",\"color\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"}";
@@ -338,7 +363,7 @@ public class GraphJSONCreator {
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Long> playtimePerServer = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(now, monthAgo));
+        Map<String, Long> playtimePerServer = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(monthAgo, now));
 
         return Maps.builder(String.class, Object.class)
                 .put("server_pie_colors", pieColors)

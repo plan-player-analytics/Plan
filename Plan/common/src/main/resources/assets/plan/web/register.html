@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-    <meta content="Player Analytics, login page" name="description">
+    <meta content="Player Analytics, register page" name="description">
     <meta content="Rsl1122" name="author">
     <meta content="noindex, nofollow" name="robots">
 
@@ -99,8 +99,7 @@
                 </button>
             </div>
             <div class="modal-body bg-white">
-                <p>You can now finish registering the user. The registration should be completed now or within 15
-                    minutes of closing this page.</p>
+                <p>You can now finish registering the user. Code expires in 15 minutes.</p>
                 <p>Use the following command in game to finish registration:</p>
                 <p><code>/${command} register --code <span class="register-code"></span></code></p>
                 <p>Or using console:</p>
@@ -166,8 +165,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
-                    Night
-                    Mode
+                    Night Mode
                 </button>
                 <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
             </div>
@@ -184,11 +182,11 @@
 <script src="js/color-selector.js"></script>
 
 <script id="mainScript">
-    const msg = $(`#fail-msg`);
+    const errorElement = document.getElementById("fail-msg");
 
     function displayError(message) {
-        msg.text(message);
-        msg.removeClass('hidden');
+        errorElement.innerText = message;
+        errorElement.classList.remove('hidden');
     }
 
     function checkIfRegistered(code) {
@@ -204,8 +202,8 @@
         })
     }
 
-    $('#register-button').click(() => {
-        msg.addClass('hidden');
+    document.getElementById('register-button').addEventListener('click', () => {
+        errorElement.classList.add('hidden');
         const user = $('#inputUser').val();
         if (!user || user.length < 1) {
             return displayError('You need to specify a Username');

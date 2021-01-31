@@ -149,4 +149,8 @@ public class PlanFiles implements SubSystem {
         }
         return Optional.empty();
     }
+
+    public Path getJSONStorageDirectory() {
+        return getDataDirectory().resolve("cached_json");
+    }
 }

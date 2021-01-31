@@ -27,7 +27,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
@@ -116,7 +116,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
         execute(DataStoreQueries.storeSession(session));
 
-        Map<UUID, ExtensionTabData> result = db().query(new ExtensionServerPlayerDataTableQuery(serverUUID(), 50));
+        Map<UUID, ExtensionTabData> result = db().query(new ExtensionServerTableDataQuery(serverUUID(), 50));
         assertEquals(1, result.size());
         ExtensionTabData playerData = result.get(playerUUID);
         assertNotNull(playerData);

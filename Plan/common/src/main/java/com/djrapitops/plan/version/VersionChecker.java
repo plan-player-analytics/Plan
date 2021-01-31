@@ -52,6 +52,8 @@ public class VersionChecker implements SubSystem {
     private final RunnableFactory runnableFactory;
     private final ErrorLogger errorLogger;
 
+    private static final String DOWNLOAD_ICON_HTML = "<i class=\"fa fa-fw fa-download\"></i> ";
+
     private VersionInfo newVersionAvailable;
 
     @Inject
@@ -126,16 +128,20 @@ public class VersionChecker implements SubSystem {
     }
 
     public Optional<String> getUpdateButton() {
-        return getNewVersionAvailable()
-                .map(v -> "<button class=\"btn bg-white col-plan\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
-                        "<i class=\"fa fa-fw fa-download\"></i> v." + v.getVersion().getVersionString() +
-                        "</button>"
-                );
+        return getNewVersionAvailable().map(v -> {
+                    String reduceFontSize = v.getVersion().compareTo(new Version("5.2 build 999")) > 0 ?
+                            "font-size: 0.95rem;" : "";
+                    return "<button class=\"btn bg-white col-plan\" style=\"" + reduceFontSize +
+                            "\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
+                            DOWNLOAD_ICON_HTML + locale.getString(PluginLang.VERSION_UPDATE) + ": " + v.getVersion().getVersionString() +
+                            "</button>";
+                }
+        );
     }
 
     public String getCurrentVersionButton() {
         return "<button class=\"btn bg-plan\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
-                "v." + getCurrentVersion() +
+                getCurrentVersion() +
                 "</button>";
     }
 
@@ -143,24 +149,24 @@ public class VersionChecker implements SubSystem {
         return getNewVersionAvailable()
                 .map(v -> "<div class=\"modal-header\">" +
                         "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
-                        "<i class=\"fa fa-fw fa-download\"></i> Version " + v.getVersion().getVersionString() + " is Available!" +
+                        DOWNLOAD_ICON_HTML + locale.getString(PluginLang.VERSION_UPDATE_AVAILABLE, v.getVersion().getVersionString()) +
                         "</h5><button aria-label=\"Close\" class=\"close\" data-dismiss=\"modal\" type=\"button\"><span aria-hidden=\"true\">&times;</span></button>" +
                         "</div>" + // Close modal-header
                         "<div class=\"modal-body\">" +
-                        "<p>A new version has been released and is now available for download." +
-                        (v.isRelease() ? "" : "<br>This version is a DEV release.") + "</p>" +
+                        "<p>" + locale.getString(PluginLang.VERSION_CURRENT, getCurrentVersion()) + ". " + locale.getString(PluginLang.VERSION_UPDATE_INFO) +
+                        (v.isRelease() ? "" : "<br>" + locale.getString(PluginLang.VERSION_UPDATE_DEV)) + "</p>" +
                         "<a class=\"btn col-plan\" href=\"" + v.getChangeLogUrl() + "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
-                        "<i class=\"fa fa-fw fa-list\"></i> View Changelog</a>" +
+                        "<i class=\"fa fa-fw fa-list\"></i> " + locale.getString(PluginLang.VERSION_CHANGE_LOG) + "</a>" +
                         "<a class=\"btn col-plan\" href=\"" + v.getDownloadUrl() + "\" rel=\"noopener noreferrer\" target=\"_blank\">" +
-                        "<i class=\"fa fa-fw fa-download\"></i> Download Plan-" + v.getVersion().getVersionString() + ".jar</a>" +
+                        DOWNLOAD_ICON_HTML + locale.getString(PluginLang.VERSION_DOWNLOAD, v.getVersion().getVersionString()) + "</a>" +
                         "</div>") // Close modal-body
                 .orElse("<div class=\"modal-header\">" +
                         "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
-                        "<i class=\"far fa-fw fa-check-circle\"></i> You have version " + getCurrentVersion() + "" +
+                        "<i class=\"far fa-fw fa-check-circle\"></i> " + locale.getString(PluginLang.VERSION_CURRENT, getCurrentVersion()) +
                         "</h5><button aria-label=\"Close\" class=\"close\" data-dismiss=\"modal\" type=\"button\"><span aria-hidden=\"true\">&times;</span></button>" +
                         "</div>" + // Close modal-header
                         "<div class=\"modal-body\">" +
-                        "<p>You are running the latest version.</p>" +
+                        "<p>" + locale.getString(PluginLang.VERSION_NEWEST) + "</p>" +
                         "</div>"); // Close modal-body
     }
 

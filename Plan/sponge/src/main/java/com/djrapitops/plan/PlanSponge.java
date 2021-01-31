@@ -26,7 +26,7 @@ import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
-import org.bstats.sponge.Metrics2;
+import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -63,7 +63,7 @@ import java.util.Optional;
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @com.google.inject.Inject
-    private Metrics2 metrics;
+    private Metrics.Factory metrics;
 
     @com.google.inject.Inject
     private Logger slf4jLogger;
@@ -96,8 +96,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
+            int pluginId = 3086;
             new BStatsSponge(
-                    metrics,
+                    metrics.make(pluginId),
                     system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 
@@ -113,7 +114,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         } catch (Exception e) {
             errorHandler.log(L.CRITICAL, this.getClass(), e);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
         registerCommand(component.planCommand().build());

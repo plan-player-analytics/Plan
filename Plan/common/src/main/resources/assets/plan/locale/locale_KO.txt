@@ -152,6 +152,8 @@ Enable FAIL - Database Patch                    || 데이터베이스 패치에 
 Enable FAIL - GeoDB Write                       || 다운로드 한 GeoLite2 Geolocation 데이터베이스를 저장하는 도중에 문제가 발생했습니다.
 Enable FAIL - WebServer (Proxy)                 || 웹 서버가 초기화되지 않았습니다!
 Enable FAIL - Wrong Database Type               || ${0} 해당 데이터베이스는 지원되지 않습니다.
+HTML - AND_BUG_REPORTERS                        || & Bug reporters!
+HTML - BANNED (Filters)                         || Banned
 HTML - COMPARING_15_DAYS                        || 지난 15일 비교
 HTML - COMPARING_60_DAYS                        || 지난 30일 비교
 HTML - COMPARING_7_DAYS                         || 지난 7일 비교
@@ -167,14 +169,18 @@ HTML - KILLED                                   || Killed
 HTML - LABEL_1ST_WEAPON                         || 치명적인 PvP 무기
 HTML - LABEL_2ND_WEAPON                         || 2nd PvP 무기
 HTML - LABEL_3RD_WEAPON                         || 3rd PvP 무기
+HTML - LABEL_ACTIVE_PLAYTIME                    || Active Playtime
 HTML - LABEL_ACTIVITY_INDEX                     || 활동 색인
 HTML - LABEL_AFK                                || AFK
 HTML - LABEL_AFK_TIME                           || AFK 시간
 HTML - LABEL_AVG                                || 평균
+HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
+HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
 HTML - LABEL_AVG_KDR                            || 평균 사망 횟수(KDR)
 HTML - LABEL_AVG_MOB_KDR                        || 평균 몬스터 사망 횟수(Mob KDR)
 HTML - LABEL_AVG_PLAYTIME                       || 평균 플레이 타임
 HTML - LABEL_AVG_SESSION_LENGTH                 || 평균 접속 시간(세션 길이)
+HTML - LABEL_AVG_SESSIONS                       || Average Sessions
 HTML - LABEL_AVG_TPS                            || 평균 TPS
 HTML - LABEL_BANNED                             || Banned
 HTML - LABEL_BEST_PEAK                          || 최고의 피크
@@ -241,17 +247,70 @@ HTML - LINK_QUICK_VIEW                          || 퀵 뷰
 HTML - LINK_SERVER_ANALYSIS                     || 서버 분석
 HTML - LINK_WIKI                                || Plan 위키, 튜토리얼 & 문서
 HTML - LOCAL_MACHINE                            || 로컬 머신
+HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
+HTML - LOGIN_FAILED                             || Login failed: 
+HTML - LOGIN_FORGOT_PASSWORD                    || Forgot Password?
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Forgot password? Unregister and register again.
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Use the following command in game to remove your current user:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Or using console:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || After using the command, 
+HTML - LOGIN_LOGIN                              || Login
+HTML - LOGIN_LOGOUT                             || Logout
+HTML - LOGIN_PASSWORD                           || "Password"
+HTML - LOGIN_USERNAME                           || "Username"
 HTML - NAV_PLUGINS                              || 플러그인
 HTML - NEW_CALENDAR                             || New:
 HTML - NO_KILLS                                 || 살인 없음
 HTML - NO_USER_PRESENT                          || 사용자 쿠키가 없습니다.
+HTML - NON_OPERATORS (Filters)                  || Non operators
+HTML - NOT_BANNED (Filters)                     || Not banned
 HTML - OFFLINE                                  ||  오프라인
 HTML - ONLINE                                   ||  온라인
+HTML - OPERATORS (Filters)                      || Operators
 HTML - PER_DAY                                  || / Day
 HTML - PLAYERS_TEXT                             || 플레이어들
+HTML - QUERY                                    || Query<
+HTML - QUERY_ACTIVITY_OF_MATCHED_PLAYERS        || Activity of matched players
+HTML - QUERY_ACTIVITY_ON                        || Activity on <span id="activity-date"></span>
+HTML - QUERY_ADD_FILTER                         || Add a filter..
+HTML - QUERY_AND                                || and 
+HTML - QUERY_ARE                                || `are`
+HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
+HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
+HTML - QUERY_LOADING_FILTERS                    || Loading filters..
+HTML - QUERY_MAKE                               || Make a query
+HTML - QUERY_MAKE_ANOTHER                       || Make another query
+HTML - QUERY_OF_PLAYERS                         || of Players who 
+HTML - QUERY_PERFORM_QUERY                      || Perform Query!
+HTML - QUERY_PLAYED_BETWEEN                     || Played between
+HTML - QUERY_REGISTERED_BETWEEN                 || Registered between
+HTML - QUERY_RESULTS                            || Query Results
+HTML - QUERY_RESULTS_MATCH                      || matched ${resultCount} players
+HTML - QUERY_SESSIONS_WITHIN_VIEW               || Sessions within view
+HTML - QUERY_SHOW_VIEW                          || Show a view
+HTML - QUERY_TIME_FROM                          || >from</label>
+HTML - QUERY_TIME_TO                            || >to</label>
+HTML - QUERY_VIEW                               ||   View:
+HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
+HTML - REGISTER                                 || Register
+HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
+HTML - REGISTER_COMPLETE                        || Complete Registration
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Code expires in 15 minutes
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Use the following command in game to finish registration:
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Or using console:
+HTML - REGISTER_CREATE_USER                     || Create a new user
+HTML - REGISTER_FAILED                          || Registration failed: 
+HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
+HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
+HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
+HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
+HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
+HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 characters.
 HTML - SESSION                                  || 세션
 HTML - SIDE_GEOLOCATIONS                        || 지리적 위치
 HTML - SIDE_INFORMATION                         || 정보
+HTML - SIDE_LINKS                               || LINKS
 HTML - SIDE_NETWORK_OVERVIEW                    || 네트워크 개요
 HTML - SIDE_OVERVIEW                            || 개요
 HTML - SIDE_PERFORMANCE                         || 성능
@@ -280,6 +339,7 @@ HTML - TEXT_NO_SERVER                           || 온라인 활동을 표시 �
 HTML - TEXT_NO_SERVERS                          || 데이터베이스에 서버가 없습니다.
 HTML - TEXT_PLUGIN_INFORMATION                  || 플러그인에 대한 정보
 HTML - TEXT_PREDICTED_RETENTION                 || 이 값은 기존 플레이어를 기반으로 한 예측입니다.
+HTML - TEXT_SERVER_INSTRUCTIONS                 || It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.
 HTML - TEXT_VERSION                             || 새 버전이 출시되었으며 이제 다운로드 할 수 있습니다.
 HTML - TITLE_30_DAYS                            || 30일
 HTML - TITLE_30_DAYS_AGO                        || 30일 전
@@ -295,6 +355,7 @@ HTML - TITLE_CPU_RAM                            || CPU & RAM
 HTML - TITLE_CURRENT_PLAYERBASE                 || 현재 플레이어 베이스
 HTML - TITLE_DISK                               || 디스크 공간
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || Day by Day
+HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || Hour by Hour
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || 네트워크 온라인 활동
 HTML - TITLE_GRAPH_PUNCHCARD                    || 30일 동안의 펀치 카드
 HTML - TITLE_INSIGHTS                           || 30일 동안의 인사이트
@@ -350,6 +411,13 @@ HTML - USER_AND_PASS_NOT_SPECIFIED              || 사용자 및 암호가 지�
 HTML - USER_DOES_NOT_EXIST                      || 사용자가 존재하지 않습니다
 HTML - USER_INFORMATION_NOT_FOUND               || 등록 실패, 다시 시도 (코드는 15분 후에 만료 됨)
 HTML - USER_PASS_MISMATCH                       || 사용자와 비밀번호가 일치하지 않습니다
+HTML - Version Change log                       || View Changelog
+HTML - Version Current                          || You have version ${0}
+HTML - Version Download                         || Download Plan-${0}.jar
+HTML - Version Update                           || Update
+HTML - Version Update Available                 || Version ${0} is Available!
+HTML - Version Update Dev                       || This version is a DEV release.
+HTML - Version Update Info                      || A new version has been released and is now available for download.
 HTML - WITH                                     || <th>With
 HTML ERRORS - ACCESS_DENIED_403                 || Access Denied 403
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register.

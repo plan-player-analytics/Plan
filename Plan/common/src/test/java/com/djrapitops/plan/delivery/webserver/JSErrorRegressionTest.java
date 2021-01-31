@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * <p>
  * Errors may have been caused by:
  * - Missing placeholders {@code ${placeholder}} inside {@code <script>} tags.
- * - Automatic formatting of plugin javascript (See https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/820)
+ * - Automatic formatting of plugin javascript (See https://github.com/plan-player-analytics/Plan/issues/820)
  * - Missing file definition in Mocker
  */
 @ExtendWith(SeleniumExtension.class)

@@ -128,6 +128,7 @@ public class DBCleanTask extends TaskSystem.Task {
 
     @Override
     public void register(RunnableFactory runnableFactory) {
+        AbsRunnable taskToRegister = this;
         // Secondary task for registration due to database queries.
         runnableFactory.create(null, new AbsRunnable() {
             @Override
@@ -145,7 +146,7 @@ public class DBCleanTask extends TaskSystem.Task {
 
                 long delay = TimeAmount.toTicks(startAfter, TimeUnit.MILLISECONDS);
                 long period = TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS);
-                runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
+                runnableFactory.create(null, taskToRegister).runTaskTimerAsynchronously(delay, period);
             }
         }).runTaskAsynchronously();
     }

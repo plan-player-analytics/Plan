@@ -1,8 +1,8 @@
 # -----------------------------------------------------
 # Plan Bungee Configuration file
 # More information about each setting:
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bungee-Configuration
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bukkit-Configuration
+# https://github.com/plan-player-analytics/Plan/wiki/Bungee-Configuration
+# https://github.com/plan-player-analytics/Plan/wiki/Bukkit-Configuration
 # -----------------------------------------------------
 Server:
   IP: 0.0.0.0
@@ -18,7 +18,7 @@ Plugin:
 
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
+# https://github.com/plan-player-analytics/Plan/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
 # -----------------------------------------------------
 WebServer:
   Port: 8804
@@ -109,7 +109,7 @@ Customization:
 
 # -----------------------------------------------------
 # More information about Themes:
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
+# https://github.com/plan-player-analytics/Plan/wiki/Themes
 # -----------------------------------------------------
 Theme:
   Base: Default

@@ -56,7 +56,7 @@ public class BukkitServerShutdownSave extends ServerShutdownSave {
 
     private boolean performCheck() {
         // Special thanks to Fuzzlemann for figuring out the methods required for this check.
-        // https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/769#issuecomment-433898242
+        // https://github.com/plan-player-analytics/Plan/issues/769#issuecomment-433898242
         Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
         Object minecraftServer = Reflection.getField(minecraftServerClass, "SERVER", minecraftServerClass).get(null);
 

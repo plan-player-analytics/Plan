@@ -49,9 +49,20 @@ public abstract class Sql {
     public static final String IS_NULL = " IS NULL";
     public static final String IS_NOT_NULL = " IS NOT NULL";
 
+    private static final String FLOOR = "FLOOR(";
+    private static final String MIN = "MIN(";
+    private static final String MAX = "MAX(";
+    private static final String VARCHAR = "varchar(";
+
     public static String varchar(int length) {
-        return "varchar(" + length + ')';
+        return VARCHAR + length + ')';
     }
+
+    public static String floor(String expression) {return FLOOR + expression + ')';}
+
+    public static String min(String expression) {return MIN + expression + ')';}
+
+    public static String max(String expression) {return MAX + expression + ')';}
 
     /**
      * Turn day of week to epoch ms.

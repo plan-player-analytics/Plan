@@ -108,6 +108,7 @@ public class RandomData {
         Session session = new Session(uuids[0], serverUUID, RandomData.randomTime(), pickAtRandom(worlds), randomGameMode());
         session.endSession(RandomData.randomTimeAfter(session.getDate()));
         session.setWorldTimes(RandomData.randomWorldTimes(worlds));
+        session.addAFKTime(RandomData.randomLong(1, session.getLength()));
         if (uuids.length >= 2) {
             session.setPlayerKills(RandomData.randomKills(uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length))));
         }

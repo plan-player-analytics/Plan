@@ -33,6 +33,7 @@ import utilities.TestConstants;
 import utilities.TestData;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,8 +41,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userInfoTableStoresCorrectUserInformation() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
-                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+        assertFalse(db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).isPresent());
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
 
         List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, false));
@@ -173,7 +174,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
 
     @Test
-    default void cleanRemovesOnlyDuplicatedUserInfo() {
+    default void cleanRemovesOnlyDuplicatedUserInfo() throws ExecutionException, InterruptedException {
         // Store one duplicate
         db().executeTransaction(new Transaction() {
             @Override
@@ -185,7 +186,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
                 execute(DataStoreQueries.registerUserInfo(player2UUID, 0L,
                         serverUUID(), TestConstants.PLAYER_HOSTNAME));
             }
-        });
+        }).get();
 
         db().executeTransaction(new RemoveDuplicateUserInfoTransaction());
 
@@ -200,5 +201,41 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
                 Collections.singletonList(new UserInfo(player2UUID, serverUUID(), 0, false, false)),
                 found2
         );
+    }
+
+    @Test
+    default void registeredUUIDsWithinDateAreFetched() throws ExecutionException, InterruptedException {
+        db().executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(DataStoreQueries.registerBaseUser(playerUUID, 0L, TestConstants.PLAYER_ONE_NAME));
+                execute(DataStoreQueries.registerBaseUser(player2UUID, 5000L, TestConstants.PLAYER_TWO_NAME));
+                execute(DataStoreQueries.registerBaseUser(player3UUID, 10000L, TestConstants.PLAYER_THREE_NAME));
+            }
+        }).get();
+
+        Set<UUID> expected = Collections.singleton(player2UUID);
+        Set<UUID> result = db().query(BaseUserQueries.uuidsOfRegisteredBetween(2500L, 7500L));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void minimumRegisterDateIsFetched() throws ExecutionException, InterruptedException {
+        db().executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(DataStoreQueries.registerBaseUser(playerUUID, 0L, TestConstants.PLAYER_ONE_NAME));
+                execute(DataStoreQueries.registerBaseUser(player2UUID, 5000L, TestConstants.PLAYER_TWO_NAME));
+                execute(DataStoreQueries.registerBaseUser(player3UUID, 10000L, TestConstants.PLAYER_THREE_NAME));
+            }
+        }).get();
+
+        long expected = 0L;
+        assertEquals(expected, db().query(BaseUserQueries.minimumRegisterDate()).orElseThrow(AssertionError::new));
+    }
+
+    @Test
+    default void noMinimumRegisterDateIsFetchedWithNoData() {
+        assertFalse(db().query(BaseUserQueries.minimumRegisterDate()).isPresent());
     }
 }

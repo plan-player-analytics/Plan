@@ -27,7 +27,7 @@
 
 <script>
     function login() {
-        msg.addClass('hidden');
+        errorElement.classList.add('hidden');
         const user = $('#inputUser').val();
         if (!user || user.length < 1) {
             return displayError('You need to specify a Username');
@@ -50,7 +50,7 @@
             if (json && json.success) {
                 const urlParams = new URLSearchParams(window.location.search);
                 const cameFrom = urlParams.get('from');
-                window.location.href = cameFrom ? cameFrom : './';
+                window.location.href = cameFrom && !cameFrom.startsWith("http") ? cameFrom : './';
             } else {
                 return displayError('Login failed: ' + json.error);
             }
@@ -58,7 +58,6 @@
     }
 
     document.addEventListener('keydown', (event) => {
-        console.log(event.key);
         if (event.key === 'Enter') login();
     });
 </script>
@@ -200,8 +199,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
-                    Night
-                    Mode
+                    Night Mode
                 </button>
                 <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
             </div>
@@ -225,14 +223,14 @@
         login();
     });
 
-    const msg = $(`#fail-msg`);
+    const errorElement = document.getElementById("fail-msg");
 
     function displayError(message) {
-        msg.text(message);
-        msg.removeClass('hidden');
+        errorElement.innerText = message;
+        errorElement.classList.remove('hidden');
     }
 
-    $('#forgot-button').click(() => $('#forgotModal').modal());
+    document.getElementById('forgot-button').addEventListener('click', () => $('#forgotModal').modal());
 </script>
 </body>
 

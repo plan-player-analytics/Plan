@@ -137,8 +137,8 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response internalErrorResponse(Throwable e, String s) {
-        return forInternalError(e, s);
+    public Response internalErrorResponse(Throwable e, String cause) {
+        return forInternalError(e, cause);
     }
 
     public Response networkPageResponse() {
@@ -421,6 +421,14 @@ public class ResponseFactory {
             return forPage(pageFactory.registerPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate player page");
+        }
+    }
+
+    public Response queryPageResponse() {
+        try {
+            return forPage(pageFactory.queryPage());
+        } catch (IOException e) {
+            return forInternalError(e, "Failed to generate query page");
         }
     }
 }
