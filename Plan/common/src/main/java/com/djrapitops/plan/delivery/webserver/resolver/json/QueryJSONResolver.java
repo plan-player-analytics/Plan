@@ -97,32 +97,41 @@ public class QueryJSONResolver implements Resolver {
     }
 
     private Response getResponse(Request request) {
-        // Attempt to find previously created result
-        try {
-            Optional<JSONStorage.StoredJSON> previousResults = request.getQuery().get("timestamp")
-                    .flatMap(queryTimestamp -> jsonStorage.fetchExactJson("query", Long.parseLong(queryTimestamp)));
-            if (previousResults.isPresent()) {
-                return Response.builder()
-                        .setMimeType(MimeType.JSON)
-                        .setJSONContent(previousResults.get().json)
-                        .build();
-            }
-        } catch (NumberFormatException e) {
-            throw new BadRequestException("Could not parse 'timestamp' into a number. Remove parameter or fix it.");
-        }
+        Optional<Response> cachedResult = checkForCachedResult(request);
+        if (cachedResult.isPresent()) return cachedResult.get();
 
         String q = request.getQuery().get("q").orElseThrow(() -> new BadRequestException("'q' parameter not set (expecting json array)"));
         String view = request.getQuery().get("view").orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
 
-        long timestamp = System.currentTimeMillis();
-
         try {
-            q = URLDecoder.decode(q, "UTF-8");
-            List<SpecifiedFilterInformation> queries = SpecifiedFilterInformation.parse(q);
+            String query = URLDecoder.decode(q, "UTF-8");
+            List<SpecifiedFilterInformation> queries = SpecifiedFilterInformation.parse(query);
             Filter.Result result = filters.apply(queries);
             List<Filter.ResultPath> resultPath = result.getInverseResultPath();
             Collections.reverse(resultPath);
 
+            return buildAndStoreResponse(view, result, resultPath);
+        } catch (IOException e) {
+            throw new BadRequestException("Failed to decode json: '" + q + "', " + e.getMessage());
+        }
+    }
+
+    private Optional<Response> checkForCachedResult(Request request) {
+        try {
+            return request.getQuery().get("timestamp")
+                    .flatMap(queryTimestamp -> jsonStorage.fetchExactJson("query", Long.parseLong(queryTimestamp)))
+                    .map(results -> Response.builder()
+                            .setMimeType(MimeType.JSON)
+                            .setJSONContent(results.json)
+                            .build());
+        } catch (NumberFormatException e) {
+            throw new BadRequestException("Could not parse 'timestamp' into a number. Remove parameter or fix it.");
+        }
+    }
+
+    private Response buildAndStoreResponse(String view, Filter.Result result, List<Filter.ResultPath> resultPath) {
+        try {
+            long timestamp = System.currentTimeMillis();
             Map<String, Object> json = Maps.builder(String.class, Object.class)
                     .put("path", resultPath)
                     .put("view", new Gson().fromJson(view, FiltersJSONResolver.ViewJSON.class))
@@ -140,8 +149,6 @@ public class QueryJSONResolver implements Resolver {
                     .build();
         } catch (ParseException e) {
             throw new BadRequestException("'view' date format was incorrect (expecting afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm}): " + e.getMessage());
-        } catch (IOException e) {
-            throw new BadRequestException("Failed to parse json: '" + q + "'" + e.getMessage());
         }
     }
 
