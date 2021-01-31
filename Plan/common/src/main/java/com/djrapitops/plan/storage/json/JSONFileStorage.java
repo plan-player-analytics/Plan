@@ -46,7 +46,7 @@ public class JSONFileStorage implements JSONStorage {
     private final Path jsonDirectory;
 
     private final Pattern timestampRegex = Pattern.compile(".*-([0-9]*).json");
-    private final String jsonFileExtension = ".json";
+    private static final String JSON_FILE_EXTENSION = ".json";
 
     @Inject
     public JSONFileStorage(PlanFiles files, PluginLogger logger) {
@@ -57,7 +57,7 @@ public class JSONFileStorage implements JSONStorage {
 
     @Override
     public StoredJSON storeJson(String identifier, String json, long timestamp) {
-        Path writingTo = jsonDirectory.resolve(identifier + '-' + timestamp + jsonFileExtension);
+        Path writingTo = jsonDirectory.resolve(identifier + '-' + timestamp + JSON_FILE_EXTENSION);
         try {
             Files.createDirectories(jsonDirectory);
             Files.write(writingTo, json.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
@@ -73,7 +73,7 @@ public class JSONFileStorage implements JSONStorage {
         if (stored == null) return Optional.empty();
         for (File file : stored) {
             String fileName = file.getName();
-            if (fileName.endsWith(jsonFileExtension) && fileName.startsWith(identifier)) {
+            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {
                 return Optional.ofNullable(readStoredJSON(file));
             }
         }
@@ -101,7 +101,7 @@ public class JSONFileStorage implements JSONStorage {
 
     @Override
     public Optional<StoredJSON> fetchExactJson(String identifier, long timestamp) {
-        File found = jsonDirectory.resolve(identifier + "-" + timestamp + jsonFileExtension).toFile();
+        File found = jsonDirectory.resolve(identifier + "-" + timestamp + JSON_FILE_EXTENSION).toFile();
         if (!found.exists()) return Optional.empty();
         return Optional.ofNullable(readStoredJSON(found));
     }
@@ -122,7 +122,7 @@ public class JSONFileStorage implements JSONStorage {
         for (File file : stored) {
             try {
                 String fileName = file.getName();
-                if (fileName.endsWith(jsonFileExtension) && fileName.startsWith(identifier)) {
+                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {
                     Matcher timestampMatch = timestampRegex.matcher(fileName);
                     if (timestampMatch.find() && timestampComparator.test(timestampMatch, timestamp)) {
                         return Optional.ofNullable(readStoredJSON(file));
