@@ -389,6 +389,9 @@ function displayDataResultScreen(resultCount, view) {
     const beforeDate = queryState.view.beforeDate ? queryState.view.beforeDate : view.beforeDate;
     const afterTime = queryState.view.afterTime ? queryState.view.afterTime : view.afterTime;
     const beforeTime = queryState.view.beforeTime ? queryState.view.beforeTime : view.beforeTime;
+
+    graphs.splice(0, graphs.length); // Remove view graph from state as it is removed from DOM
+
     document.querySelector('#content .tab').innerHTML =
         `<div class="container-fluid mt-4">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
