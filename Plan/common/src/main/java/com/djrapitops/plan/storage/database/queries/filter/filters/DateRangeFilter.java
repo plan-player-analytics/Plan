@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
@@ -69,8 +70,8 @@ public abstract class DateRangeFilter implements Filter {
     }
 
     private long getTime(SpecifiedFilterInformation query, String dateKey, String timeKey) {
-        String date = query.get(dateKey).orElseThrow(IllegalArgumentException::new);
-        String time = query.get(timeKey).orElseThrow(IllegalArgumentException::new);
+        String date = query.get(dateKey).orElseThrow(() -> new BadRequestException("'" + dateKey + "' not specified in parameters for " + getKind()));
+        String time = query.get(timeKey).orElseThrow(() -> new BadRequestException("'" + timeKey + "' not specified in parameters for " + getKind()));
 
         try {
             return dateFormat.parse(date + ' ' + time).getTime();
