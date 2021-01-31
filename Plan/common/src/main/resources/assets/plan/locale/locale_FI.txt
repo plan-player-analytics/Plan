@@ -292,6 +292,7 @@ HTML - QUERY_TIME_FROM                          || >tästä</label>
 HTML - QUERY_TIME_TO                            || >tänne</label>
 HTML - QUERY_VIEW                               ||   Näkymä:
 HTML - QUERY_ZERO_RESULTS                       || Ei tuloksia
+HTML - REGISTER                                 || Rekisteröidy
 HTML - REGISTER_CHECK_FAILED                    || Rekisteröitymisen tilan tarkistus epäonnistui:
 HTML - REGISTER_COMPLETE                        || Viimeistele rekisteröinti
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || Voit viimeistellä käyttäjän rekisteröinnin.
@@ -302,7 +303,6 @@ HTML - REGISTER_CREATE_USER                     || Luo uusi käyttäjä
 HTML - REGISTER_FAILED                          || Rekisteröinti epäonnistui:
 HTML - REGISTER_HAVE_ACCOUNT                    || Aiempi käyttäjä? Kirjaudu sisään!
 HTML - REGISTER_PASSWORD_TIP                    || Salasana kannattaa olla yli 8 merkkiä, mutta ei ole rajoituksia.
-HTML - REGISTER                        || Rekisteröidy
 HTML - REGISTER_SPECIFY_PASSWORD                || Anna salasana
 HTML - REGISTER_SPECIFY_USERNAME                || Anna käyttäjänimi
 HTML - REGISTER_USERNAME_LENGTH                 || Käyttäjänimi voi olla enintään 50 merkkiä, sinun on
@@ -310,6 +310,7 @@ HTML - REGISTER_USERNAME_TIP                    || Käyttäjänimi voi olla enin
 HTML - SESSION                                  || Istunto
 HTML - SIDE_GEOLOCATIONS                        || Sijainnit
 HTML - SIDE_INFORMATION                         || TIETOJA
+HTML - SIDE_LINKS                               || LINKIT
 HTML - SIDE_NETWORK_OVERVIEW                    || Verkoston yhteenveto
 HTML - SIDE_OVERVIEW                            || Yhteenveto
 HTML - SIDE_PERFORMANCE                         || Suorituskyky

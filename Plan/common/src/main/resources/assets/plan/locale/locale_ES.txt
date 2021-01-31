@@ -292,6 +292,7 @@ HTML - QUERY_TIME_FROM                          || >from</label>
 HTML - QUERY_TIME_TO                            || >to</label>
 HTML - QUERY_VIEW                               ||   View:
 HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
+HTML - REGISTER                                 || Register
 HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
 HTML - REGISTER_COMPLETE                        || Complete Registration
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
@@ -302,7 +303,6 @@ HTML - REGISTER_CREATE_USER                     || Create a new user
 HTML - REGISTER_FAILED                          || Registration failed: 
 HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
 HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
-HTML - REGISTER                        || Register
 HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
 HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
 HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
@@ -310,6 +310,7 @@ HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 char
 HTML - SESSION                                  || Sesión
 HTML - SIDE_GEOLOCATIONS                        || Geolocalizaciones
 HTML - SIDE_INFORMATION                         || INFORMACIÓN
+HTML - SIDE_LINKS                               || LINKS
 HTML - SIDE_NETWORK_OVERVIEW                    || Vista general de red
 HTML - SIDE_OVERVIEW                            || Vista general
 HTML - SIDE_PERFORMANCE                         || Rendimiento

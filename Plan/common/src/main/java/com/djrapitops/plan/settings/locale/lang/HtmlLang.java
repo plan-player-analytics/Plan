@@ -35,6 +35,7 @@ public enum HtmlLang implements Lang {
     SIDE_PLAYERBASE_OVERVIEW("Playerbase Overview"),
     SIDE_GEOLOCATIONS("Geolocations"),
     SIDE_PLUGINS("PLUGINS"), // Nav group title
+    SIDE_LINKS("LINKS"),
     UNIT_NO_DATA("No Data"), // Generic
     // Modals
     TITLE_THEME_SELECT("Theme Select"),
