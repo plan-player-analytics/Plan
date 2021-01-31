@@ -50,7 +50,11 @@
             if (json && json.success) {
                 const urlParams = new URLSearchParams(window.location.search);
                 const cameFrom = urlParams.get('from');
-                window.location.href = cameFrom && !cameFrom.startsWith("http") ? cameFrom : './';
+                if (cameFrom && !cameFrom.startsWith("http")) {
+                    window.location.href = cameFrom + (window.location.hash ? window.location.hash : '');
+                } else {
+                    window.location.href = './';
+                }
             } else {
                 return displayError('Login failed: ' + json.error);
             }
