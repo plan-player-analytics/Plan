@@ -30,7 +30,7 @@ class MultipleChoiceFilter extends Filter {
                     <label for="${this.id}">${select}${this.label}:</label>
                     <button class="filter-remover btn btn-outline-secondary float-right"
                         onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
-                    <select class="form-control" multiple>`;
+                    <select class="form-control" multiple style="margin-bottom: 0.5rem;">`;
 
         for (const option of this.options.options) {
             html += `<option>${option}</option>`;
@@ -42,8 +42,8 @@ class MultipleChoiceFilter extends Filter {
 
     toObject() {
         let selected = [];
-        for (let option of document.querySelector(`#${this.id} select`).selectedOptions) {
-            selected.push(option.text);
+        for (let option of document.querySelector(`#${this.id} select`).options) {
+            if (option.selected) selected.push(option.text);
         }
         selected = JSON.stringify(selected);
 

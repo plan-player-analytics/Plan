@@ -468,7 +468,7 @@
             Highcharts.setOptions(Highcharts.theme);
             updateGraphs();
         } catch (e) {
-            if (graphs !== undefined) console.error(e);
+            console.error(e);
         }
     }
 

@@ -101,7 +101,9 @@ function addFilter(parentSelector, filterIndex) {
     const id = "f" + queryState.filterCount;
     const filter = createFilter(loadedFilters[filterIndex], id);
     queryState.filters.push(filter);
-    document.querySelector(parentSelector).innerHTML += filter.render(queryState.filterCount);
+    const inserting = document.createElement("template");
+    inserting.innerHTML = filter.render(queryState.filterCount);
+    document.querySelector(parentSelector).appendChild(inserting.content);
     queryState.filterCount++;
 }
 
