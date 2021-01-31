@@ -249,7 +249,7 @@ function updateViewGraph() {
 
 let query = [];
 
-function performQuery() {
+function performNewQuery() {
     for (let filter of queryState.filters) {
         query.push(filter.toObject());
     }
