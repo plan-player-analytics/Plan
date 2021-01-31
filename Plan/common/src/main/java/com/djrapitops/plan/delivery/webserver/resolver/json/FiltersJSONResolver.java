@@ -80,24 +80,26 @@ public class FiltersJSONResolver implements Resolver {
     }
 
     private Response getResponse() {
-        List<DateObj<Integer>> data = dbSystem.getDatabase().query(TPSQueries.fetchViewPreviewGraphData(serverInfo.getServerUUID()));
-        Long earliestStart = dbSystem.getDatabase().query(SessionQueries.earliestSessionStart());
-        data.add(0, new DateObj<>(earliestStart, 1));
-
-        boolean displayGaps = true;
-        List<Double[]> viewPoints = graphs.line().lineGraph(Lists.map(data, Point::fromDateObj), displayGaps).getPoints()
-                .stream().map(point -> {
-                    if (point.getY() == null) point.setY(0.0);
-                    return point.toArray();
-                }).collect(Collectors.toList());
-
         return Response.builder()
                 .setMimeType(MimeType.JSON)
                 .setJSONContent(new FilterResponseJSON(
                         filters.getFilters(),
                         new ViewJSON(formatters),
-                        viewPoints
+                        fetchViewGraphPoints()
                 )).build();
+    }
+
+    private List<Double[]> fetchViewGraphPoints() {
+        List<DateObj<Integer>> data = dbSystem.getDatabase().query(TPSQueries.fetchViewPreviewGraphData(serverInfo.getServerUUID()));
+        Long earliestStart = dbSystem.getDatabase().query(SessionQueries.earliestSessionStart());
+        data.add(0, new DateObj<>(earliestStart, 1));
+
+        boolean displayGaps = true;
+        return graphs.line().lineGraph(Lists.map(data, Point::fromDateObj), displayGaps).getPoints()
+                .stream().map(point -> {
+                    if (point.getY() == null) point.setY(0.0);
+                    return point.toArray();
+                }).collect(Collectors.toList());
     }
 
     /**
