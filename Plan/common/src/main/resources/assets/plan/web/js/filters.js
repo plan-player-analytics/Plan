@@ -25,11 +25,12 @@ class MultipleChoiceFilter extends Filter {
     render(filterCount) {
         const select = filterCount === 0 ? "of Players who " : "and ";
         let html =
-            `<div id="${this.id}" class="mt-2 input-group input-row">` +
-            `<div class="col-12"><label for="${this.id}">${select}${this.label}:</label>` +
-            `<button class="filter-remover btn btn-outline-secondary float-right"
-                onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>` +
-            `<select class="form-control" multiple>`;
+            `<div id="${this.id}" class="mt-2 input-group input-row">
+                <div class="col-12">
+                    <label for="${this.id}">${select}${this.label}:</label>
+                    <button class="filter-remover btn btn-outline-secondary float-right"
+                        onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                    <select class="form-control" multiple>`;
 
         for (const option of this.options.options) {
             html += `<option>${option}</option>`;
@@ -41,7 +42,7 @@ class MultipleChoiceFilter extends Filter {
 
     toObject() {
         let selected = [];
-        for (let option of document.querySelector('#' + this.id + " select").selectedOptions) {
+        for (let option of document.querySelector(`#${this.id} select`).selectedOptions) {
             selected.push(option.text);
         }
         selected = JSON.stringify(selected);
@@ -100,30 +101,53 @@ class BetweenDateFilter extends Filter {
         const id = this.id;
         const select = filterCount === 0 ? "of Players who " : "and ";
         return (
-            `<div id="${id}">` +
-            `<label class="ml-2 mt-0 mb-0">${select}${this.label}:</label>` +
-            `<div class="mt-2 input-group input-row">` +
-            `<div class="col-3"><div class="input-group mb-2">` +
-            `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-            `<input id="${id}-afterdate" onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)" class="form-control" placeholder="${this.afterDate}" type="text">` +
-            `</div></div>` +
-            `<div class="col-2"><div class="input-group mb-2">` +
-            `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-            `<input id="${id}-aftertime" onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)" class="form-control" placeholder="${this.afterTime}" type="text">` +
-            `</div></div>` +
-            `<div class="col-auto"><label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label></div>` +
-            `<div class="col-3"><div class="input-group mb-2">` +
-            `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-calendar"></i></div></div>` +
-            `<input id="${id}-beforedate" onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)" class="form-control" placeholder="${this.beforeDate}" type="text">` +
-            `</div></div>` +
-            `<div class="col-2"><div class="input-group mb-2">` +
-            `<div class="input-group-prepend"><div class="input-group-text"><i class="far fa-clock"></i></div></div>` +
-            `<input id="${id}-beforetime" onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)" class="form-control" placeholder="${this.beforeTime}" type="text">` +
-            `</div></div>` +
-            `<button class="filter-remover btn btn-outline-secondary float-right"
-                style="position: absolute;right: 0.8rem;"
-                onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>` +
-            `</div></div>`
+            `<div id="${id}">
+                <label class="ml-2 mt-0 mb-0">${select}${this.label}:</label>
+                <div class="mt-2 input-group input-row">
+                    <div class="col-3">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend"><div class="input-group-text">
+                                <i class="far fa-calendar"></i>
+                            </div></div>
+                            <input id="${id}-afterdate" class="form-control" placeholder="${this.afterDate}" type="text"
+                                onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend"><div class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </div></div>
+                            <input id="${id}-aftertime" class="form-control" placeholder="${this.afterTime}" type="text"
+                                onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label>
+                    </div>
+                    <div class="col-3">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend"><div class="input-group-text">
+                                <i class="far fa-calendar"></i>
+                            </div></div>
+                            <input id="${id}-beforedate" class="form-control" placeholder="${this.beforeDate}" type="text"
+                                onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend"><div class="input-group-text">
+                                <i class="far fa-clock"></i>
+                            </div></div>
+                            <input id="${id}-beforetime"  class="form-control" placeholder="${this.beforeTime}" type="text"
+                                onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)">
+                        </div>
+                    </div>
+                    <button class="filter-remover btn btn-outline-secondary float-right"
+                        style="position: absolute;right: 0.8rem;"
+                        onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                </div>
+            </div>`
         );
     }
 
