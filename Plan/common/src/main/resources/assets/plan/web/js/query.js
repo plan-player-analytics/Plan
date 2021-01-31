@@ -272,6 +272,7 @@ function runQuery() {
 }
 
 function renderResultPath(json) {
+    const gotResults = Boolean(json.data);
     let pathHtml = ``;
     for (let i = 0; i < json.path.length; i++) {
         const step = json.path[i];
@@ -282,12 +283,13 @@ function renderResultPath(json) {
         pathHtml += `<i class="fa fa-fw fa-filter"></i> ${step.kind} matched ${step.size} players</p>`
     }
 
-    const placeBefore = document.querySelector('.tab .row .card');
-    const element = document.createElement('div');
-    element.id = "result-path"
-    element.classList.add("alert", "alert-warning", "shadow");
-    element.innerHTML = pathHtml
-    placeBefore.insertAdjacentElement('beforebegin', element);
+    insertElementBefore('.tab .row .card', () => {
+        const element = document.createElement('div');
+        element.id = "result-path"
+        element.classList.add("alert", gotResults ? "alert-success" : "alert-warning", "shadow");
+        element.innerHTML = pathHtml;
+        return element;
+    });
     window.scrollTo(0, 0); // Scroll to top
 }
 
