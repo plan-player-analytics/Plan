@@ -1,28 +1,28 @@
-let filterCount = 0;
-
-let timestamp = undefined;
-let filterView = {
-    afterDate: null,
-    afterTime: null,
-    beforeDate: null,
-    beforeTime: null
-};
-let filterQuery = [];
-
-const InvalidEntries = {
-    ids: [],
-    setAsInvalid: function (id) {
-        if (this.ids.includes(id)) return;
-        this.ids.push(id);
-        this.updateQueryButton();
+const loadedFilters = [];
+const queryState = {
+    filterCount: 0,
+    filters: [],
+    view: {
+        afterDate: null,
+        afterTime: null,
+        beforeDate: null,
+        beforeTime: null
     },
-    setAsValid: function (id) {
-        this.ids = this.ids.filter(invalidID => invalidID !== id);
-        this.updateQueryButton();
+    invalidFormFields: {
+        ids: [],
+        setAsInvalid: function (id) {
+            if (this.ids.includes(id)) return;
+            this.ids.push(id);
+            queryState.updateQueryButton();
+        },
+        setAsValid: function (id) {
+            this.ids = this.ids.filter(invalidID => invalidID !== id);
+            queryState.updateQueryButton();
+        },
     },
     updateQueryButton: function () {
         const queryButton = document.getElementById('query-button');
-        if (this.ids.length === 0) {
+        if (this.invalidFormFields.ids.length === 0) {
             queryButton.removeAttribute('disabled');
             queryButton.classList.remove('disabled');
         } else {
@@ -32,10 +32,10 @@ const InvalidEntries = {
     }
 }
 
-function loadFilters(json) {
-    filters.push(...json.filters);
+let timestamp = undefined;
 
-    filterView = json.view;
+function loadView(json) {
+    queryState.view = json.view;
 
     document.getElementById('viewFromDateField').setAttribute('placeholder', json.view.afterDate);
     document.getElementById('viewFromTimeField').setAttribute('placeholder', json.view.afterTime);
@@ -76,34 +76,38 @@ function loadFilters(json) {
                         document.getElementById('viewToDateField').value = beforeDate;
                         document.getElementById('viewToTimeField').value = beforeTime;
                         const dontUpdateGraph = true;
-                        setFilterOption('view', 'viewFromDateField', 'afterDate', isValidDate, correctDate, dontUpdateGraph);
-                        setFilterOption('view', 'viewFromTimeField', 'afterTime', isValidTime, correctTime, dontUpdateGraph);
-                        setFilterOption('view', 'viewToDateField', 'beforeDate', isValidDate, correctDate, dontUpdateGraph);
-                        setFilterOption('view', 'viewToTimeField', 'beforeTime', isValidTime, correctTime, dontUpdateGraph);
+                        setViewOption('viewFromDateField', 'afterDate', isValidDate, correctDate, dontUpdateGraph);
+                        setViewOption('viewFromTimeField', 'afterTime', isValidTime, correctTime, dontUpdateGraph);
+                        setViewOption('viewToDateField', 'beforeDate', isValidDate, correctDate, dontUpdateGraph);
+                        setViewOption('viewToTimeField', 'beforeTime', isValidTime, correctTime, dontUpdateGraph);
                     }
                 }
             }
         }
     }));
+}
+
+function loadFilters(json) {
+    loadedFilters.push(...json.filters);
 
     let filterElements = '';
-    for (let i = 0; i < filters.length; i++) {
-        filterElements += createFilterSelector('#filters', i, filters[i]);
+    for (let i = 0; i < loadedFilters.length; i++) {
+        filterElements += createFilterSelector('#filters', i, loadedFilters[i]);
     }
     document.getElementById('filter-dropdown').innerHTML = filterElements;
 }
 
 function addFilter(parentSelector, filterIndex) {
-    const id = "f" + filterCount;
-    const filter = createFilter(filters[filterIndex], id);
-    filterQuery.push(filter);
-    document.querySelector(parentSelector).innerHTML += filter.render(filterCount);
-    filterCount++;
+    const id = "f" + queryState.filterCount;
+    const filter = createFilter(loadedFilters[filterIndex], id);
+    queryState.filters.push(filter);
+    document.querySelector(parentSelector).innerHTML += filter.render(queryState.filterCount);
+    queryState.filterCount++;
 }
 
 function removeFilter(filterIndex) {
     document.getElementById(filterIndex).remove();
-    filterQuery = filterQuery.filter(f => f.id !== filterIndex);
+    queryState.filters = queryState.filters.filter(f => f.id !== filterIndex);
 }
 
 function createFilterSelector(parent, index, filter) {
@@ -163,6 +167,32 @@ function correctTime(value) {
     return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
 }
 
+function setViewOption(
+    elementId,
+    propertyName,
+    isValidFunction,
+    correctionFunction,
+    dontUpdateGraph
+) {
+    const view = queryState.view;
+    const element = document.getElementById(elementId);
+    let value = element.value;
+
+    value = correctionFunction.apply(element, [value]);
+    element.value = value;
+
+    const isValid = isValidFunction.apply(element, [value]);
+    if (isValid) {
+        element.classList.remove("is-invalid");
+        view[propertyName] = value;
+        queryState.invalidFormFields.setAsValid(elementId);
+        if (!dontUpdateGraph) updateViewGraph();
+    } else {
+        element.classList.add("is-invalid");
+        queryState.invalidFormFields.setAsInvalid(elementId);
+    }
+}
+
 function setFilterOption(
     id,
     elementId,
@@ -171,7 +201,7 @@ function setFilterOption(
     correctionFunction,
     dontUpdateGraph
 ) {
-    const query = id === 'view' ? filterView : filterQuery.find(function (f) {
+    const query = queryState.filters.find(function (f) {
         return f.id === id;
     });
     const element = document.getElementById(elementId);
@@ -183,12 +213,11 @@ function setFilterOption(
     const isValid = isValidFunction.apply(element, [value]);
     if (isValid) {
         element.classList.remove("is-invalid");
-        query[propertyName] = value; // Updates either the query or filterView properties
-        InvalidEntries.setAsValid(elementId);
-        if (id === 'view' && !dontUpdateGraph) updateViewGraph();
+        query[propertyName] = value;
+        queryState.invalidFormFields.setAsValid(elementId);
     } else {
         element.classList.add("is-invalid");
-        InvalidEntries.setAsInvalid(elementId);
+        queryState.invalidFormFields.setAsInvalid(elementId);
     }
 }
 
@@ -211,8 +240,8 @@ function updateViewGraph() {
 
     const graph = graphs[0];
 
-    const min = parseTime(filterView.afterDate, filterView.afterTime);
-    const max = parseTime(filterView.beforeDate, filterView.beforeTime);
+    const min = parseTime(queryState.view.afterDate, queryState.view.afterTime);
+    const max = parseTime(queryState.view.beforeDate, queryState.view.beforeTime);
     for (const axis of graph.xAxis) {
         axis.setExtremes(min, max);
     }
@@ -221,7 +250,7 @@ function updateViewGraph() {
 let query = [];
 
 function performQuery() {
-    for (let filter of filterQuery) {
+    for (let filter of queryState.filters) {
         query.push(filter.toObject());
     }
     runQuery();
@@ -231,7 +260,7 @@ function getQueryAddress() {
     if (timestamp) return `./v1/query?timestamp=${timestamp}`;
 
     const encodedQuery = encodeURIComponent(JSON.stringify(query));
-    const encodedView = encodeURIComponent(JSON.stringify(filterView));
+    const encodedView = encodeURIComponent(JSON.stringify(queryState.filters));
     return `./v1/query?q=${encodedQuery}&view=${encodedView}`;
 }
 
@@ -355,10 +384,10 @@ function renderResults(json) {
 }
 
 function renderDataResultScreen(resultCount, view) {
-    const afterDate = filterView.afterDate ? filterView.afterDate : view.afterDate;
-    const beforeDate = filterView.beforeDate ? filterView.beforeDate : view.beforeDate;
-    const afterTime = filterView.afterTime ? filterView.afterTime : view.afterTime;
-    const beforeTime = filterView.beforeTime ? filterView.beforeTime : view.beforeTime;
+    const afterDate = queryState.view.afterDate ? queryState.view.afterDate : view.afterDate;
+    const beforeDate = queryState.view.beforeDate ? queryState.view.beforeDate : view.beforeDate;
+    const afterTime = queryState.view.afterTime ? queryState.view.afterTime : view.afterTime;
+    const beforeTime = queryState.view.beforeTime ? queryState.view.beforeTime : view.beforeTime;
     document.querySelector('#content .tab').innerHTML =
         `<div class="container-fluid mt-4">
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
