@@ -25,6 +25,8 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.file.JarResource;
+import com.djrapitops.plan.storage.json.JSONFileStorage;
+import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import dagger.Module;
@@ -94,6 +96,12 @@ public class SystemObjectProvidingModule {
     @Singleton
     DataService provideDataService(DataSvc dataService) {
         return dataService;
+    }
+
+    @Provides
+    @Singleton
+    JSONStorage provideJSONStorage(JSONFileStorage jsonFileStorage) {
+        return jsonFileStorage;
     }
 
 }

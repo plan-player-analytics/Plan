@@ -152,6 +152,8 @@ Enable FAIL - Database Patch                    || Upgrade del Database fallito,
 Enable FAIL - GeoDB Write                       || Qualcosa è andato storto durante lo scaricamento del database GeoLite2
 Enable FAIL - WebServer (Proxy)                 || WebServer non avviato!
 Enable FAIL - Wrong Database Type               || ${0} non è un Database supportato
+HTML - AND_BUG_REPORTERS                        || & Bug reporters!
+HTML - BANNED (Filters)                         || Banned
 HTML - COMPARING_15_DAYS                        || Comparazione di 15 giorni
 HTML - COMPARING_60_DAYS                        || Comparazione di 30g fa a Ora
 HTML - COMPARING_7_DAYS                         || Comparazione di 7 giorni
@@ -167,14 +169,18 @@ HTML - KILLED                                   || Ucciso
 HTML - LABEL_1ST_WEAPON                         || Arma PvP Preferita
 HTML - LABEL_2ND_WEAPON                         || 2° Arma PvP Preferita
 HTML - LABEL_3RD_WEAPON                         || 3° Arma PvP Preferita
+HTML - LABEL_ACTIVE_PLAYTIME                    || Active Playtime
 HTML - LABEL_ACTIVITY_INDEX                     || Indice Inattività
 HTML - LABEL_AFK                                || AFK
 HTML - LABEL_AFK_TIME                           || Tempo AFK
 HTML - LABEL_AVG                                || Media
+HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
+HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
 HTML - LABEL_AVG_KDR                            || Media KDR
 HTML - LABEL_AVG_MOB_KDR                        || Media Mob KDR
 HTML - LABEL_AVG_PLAYTIME                       || Media Tempo di Gioco
 HTML - LABEL_AVG_SESSION_LENGTH                 || Media Lunghezza Sessione
+HTML - LABEL_AVG_SESSIONS                       || Average Sessions
 HTML - LABEL_AVG_TPS                            || Media TPS
 HTML - LABEL_BANNED                             || Bannato
 HTML - LABEL_BEST_PEAK                          || Record Migliore
@@ -241,17 +247,70 @@ HTML - LINK_QUICK_VIEW                          || Vista Rapida
 HTML - LINK_SERVER_ANALYSIS                     || Analisi Server
 HTML - LINK_WIKI                                || Plan Wiki, Tutorial e Documentazione
 HTML - LOCAL_MACHINE                            || Macchina Locale
+HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
+HTML - LOGIN_FAILED                             || Login failed: 
+HTML - LOGIN_FORGOT_PASSWORD                    || Forgot Password?
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Forgot password? Unregister and register again.
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Use the following command in game to remove your current user:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Or using console:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || After using the command, 
+HTML - LOGIN_LOGIN                              || Login
+HTML - LOGIN_LOGOUT                             || Logout
+HTML - LOGIN_PASSWORD                           || "Password"
+HTML - LOGIN_USERNAME                           || "Username"
 HTML - NAV_PLUGINS                              || Plugins
 HTML - NEW_CALENDAR                             || Nuovo:
 HTML - NO_KILLS                                 || Nessuna Uccisione
 HTML - NO_USER_PRESENT                          || User cookie not present
+HTML - NON_OPERATORS (Filters)                  || Non operators
+HTML - NOT_BANNED (Filters)                     || Not banned
 HTML - OFFLINE                                  ||  Offline
 HTML - ONLINE                                   ||  Online
+HTML - OPERATORS (Filters)                      || Operators
 HTML - PER_DAY                                  || / Giorno
 HTML - PLAYERS_TEXT                             || Giocatori
+HTML - QUERY                                    || Query<
+HTML - QUERY_ACTIVITY_OF_MATCHED_PLAYERS        || Activity of matched players
+HTML - QUERY_ACTIVITY_ON                        || Activity on <span id="activity-date"></span>
+HTML - QUERY_ADD_FILTER                         || Add a filter..
+HTML - QUERY_AND                                || and 
+HTML - QUERY_ARE                                || `are`
+HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
+HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
+HTML - QUERY_LOADING_FILTERS                    || Loading filters..
+HTML - QUERY_MAKE                               || Make a query
+HTML - QUERY_MAKE_ANOTHER                       || Make another query
+HTML - QUERY_OF_PLAYERS                         || of Players who 
+HTML - QUERY_PERFORM_QUERY                      || Perform Query!
+HTML - QUERY_PLAYED_BETWEEN                     || Played between
+HTML - QUERY_REGISTERED_BETWEEN                 || Registered between
+HTML - QUERY_RESULTS                            || Query Results
+HTML - QUERY_RESULTS_MATCH                      || matched ${resultCount} players
+HTML - QUERY_SESSIONS_WITHIN_VIEW               || Sessions within view
+HTML - QUERY_SHOW_VIEW                          || Show a view
+HTML - QUERY_TIME_FROM                          || >from</label>
+HTML - QUERY_TIME_TO                            || >to</label>
+HTML - QUERY_VIEW                               ||   View:
+HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
+HTML - REGISTER                                 || Register
+HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
+HTML - REGISTER_COMPLETE                        || Complete Registration
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Code expires in 15 minutes
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Use the following command in game to finish registration:
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Or using console:
+HTML - REGISTER_CREATE_USER                     || Create a new user
+HTML - REGISTER_FAILED                          || Registration failed: 
+HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
+HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
+HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
+HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
+HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
+HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 characters.
 HTML - SESSION                                  || Session
 HTML - SIDE_GEOLOCATIONS                        || Geolocalizazione
 HTML - SIDE_INFORMATION                         || INFORMAZIONE
+HTML - SIDE_LINKS                               || LINKS
 HTML - SIDE_NETWORK_OVERVIEW                    || Informazioni sul Network
 HTML - SIDE_OVERVIEW                            || Informazioni
 HTML - SIDE_PERFORMANCE                         || Performance
@@ -280,6 +339,7 @@ HTML - TEXT_NO_SERVER                           || Nessun server con cui mostare
 HTML - TEXT_NO_SERVERS                          || Nessun server trovato in questo database
 HTML - TEXT_PLUGIN_INFORMATION                  || Informazioni su questo plugin
 HTML - TEXT_PREDICTED_RETENTION                 || Questo valore è una previsione basata sui giocatori precedenti
+HTML - TEXT_SERVER_INSTRUCTIONS                 || It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.
 HTML - TEXT_VERSION                             || Una nuova versione è stata rilasciata ed è ora disponibile da scaricare.
 HTML - TITLE_30_DAYS                            || 30 giorni
 HTML - TITLE_30_DAYS_AGO                        || 30 giorni fa
@@ -295,6 +355,7 @@ HTML - TITLE_CPU_RAM                            || CPU & RAM
 HTML - TITLE_CURRENT_PLAYERBASE                 || Playerbase Corrente
 HTML - TITLE_DISK                               || Spazio sul Disco
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || Giorno Per Giorno
+HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || Hour by Hour
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Attività Online Network
 HTML - TITLE_GRAPH_PUNCHCARD                    || Attività in 30 giorni
 HTML - TITLE_INSIGHTS                           || Grafico in 30 giorni
@@ -348,7 +409,15 @@ HTML - UNIT_NO_DATA                             || Nessun Dato
 HTML - UNIT_THE_PLAYERS                         || Giocatori
 HTML - USER_AND_PASS_NOT_SPECIFIED              || Utente e Password non specificati
 HTML - USER_DOES_NOT_EXIST                      || Utente non esistente
+HTML - USER_INFORMATION_NOT_FOUND               || Registration failed, try again (The code expires after 15 minutes)
 HTML - USER_PASS_MISMATCH                       || Utente e Password non corrispondono
+HTML - Version Change log                       || View Changelog
+HTML - Version Current                          || You have version ${0}
+HTML - Version Download                         || Download Plan-${0}.jar
+HTML - Version Update                           || Update
+HTML - Version Update Available                 || Version ${0} is Available!
+HTML - Version Update Dev                       || This version is a DEV release.
+HTML - Version Update Info                      || A new version has been released and is now available for download.
 HTML - WITH                                     || <th>Con
 HTML ERRORS - ACCESS_DENIED_403                 || Acccesso Bloccato
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Assicurati di registare un nuovo utente usando <b>/plan register</b><br>- Controlla che il nome e password siano corretti<br>- Nome e password sono case-sensitive<br><br>Se hai dimenticato la tua passwrod, chiedi a uno staff di rimuovere i tuoi dati e registrarti di nuovo.
@@ -419,7 +488,7 @@ WebServer - Notify HTTPS User Auth              || WebServer: User Authorization
 Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
 Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
 WebServer - Notify no Cert file                 || WebServer: Chiave del Certfiicato non trovato: ${0}
-WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Link points to the Proxy
+WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Address points to the Proxy
 WebServer FAIL - EOF                            || WebServer: EOF when reading Certificate file. (Check that the file is not empty)
 WebServer FAIL - Port Bind                      || WebServer non avviato. La porta (${0}) è già occupata?
 WebServer FAIL - SSL Context                    || WebServer: Inilizazione Contenuto SSL Fallito.

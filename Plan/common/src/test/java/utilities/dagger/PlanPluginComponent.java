@@ -19,6 +19,7 @@ package utilities.dagger;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import dagger.BindsInstance;
@@ -38,6 +39,7 @@ import java.nio.file.Path;
         PlanPluginModule.class,
         TestSystemObjectProvidingModule.class,
         TestAPFModule.class,
+        FiltersModule.class,
         PlaceholderModule.class,
 
         PluginServerPropertiesModule.class,

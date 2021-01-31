@@ -24,7 +24,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
@@ -41,6 +41,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
+import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
+import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 
 import javax.inject.Inject;
@@ -80,7 +82,7 @@ public class JSONFactory {
         this.formatters = formatters;
     }
 
-    public String serverPlayersTableJSON(UUID serverUUID) {
+    public Map<String, Object> serverPlayersTableJSON(UUID serverUUID) {
         Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE);
         Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         boolean openPlayerLinksInNewTab = config.isTrue(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
@@ -89,13 +91,13 @@ public class JSONFactory {
 
         return new PlayersTableJSONCreator(
                 database.query(new ServerTablePlayersQuery(serverUUID, System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
-                database.query(new ExtensionServerPlayerDataTableQuery(serverUUID, xMostRecentPlayers)),
+                database.query(new ExtensionServerTableDataQuery(serverUUID, xMostRecentPlayers)),
                 openPlayerLinksInNewTab,
                 formatters, locale
-        ).toJSONString();
+        ).toJSONMap();
     }
 
-    public String networkPlayersTableJSON() {
+    public Map<String, Object> networkPlayersTableJSON() {
         Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_PLAYERS_PAGE);
         Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         boolean openPlayerLinksInNewTab = config.isTrue(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
@@ -103,14 +105,14 @@ public class JSONFactory {
         Database database = dbSystem.getDatabase();
 
         UUID mainServerUUID = database.query(ServerQueries.fetchProxyServerInformation()).map(Server::getUuid).orElse(serverInfo.getServerUUID());
-        Map<UUID, ExtensionTabData> pluginData = database.query(new ExtensionServerPlayerDataTableQuery(mainServerUUID, xMostRecentPlayers));
+        Map<UUID, ExtensionTabData> pluginData = database.query(new ExtensionServerTableDataQuery(mainServerUUID, xMostRecentPlayers));
 
         return new PlayersTableJSONCreator(
                 database.query(new NetworkTablePlayersQuery(System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
                 pluginData,
                 openPlayerLinksInNewTab,
                 formatters, locale
-        ).toJSONString();
+        ).toJSONMap();
     }
 
     public List<Map<String, Object>> serverSessionsAsJSONMap(UUID serverUUID) {

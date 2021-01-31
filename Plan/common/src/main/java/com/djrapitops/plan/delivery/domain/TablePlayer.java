@@ -33,7 +33,7 @@ public class TablePlayer implements Comparable<TablePlayer> {
     private UUID uuid;
     private String name;
     private ActivityIndex activityIndex;
-    private Long playtime;
+    private Long activePlaytime;
     private Integer sessionCount;
     private Long registered;
     private Long lastSeen;
@@ -67,8 +67,8 @@ public class TablePlayer implements Comparable<TablePlayer> {
         return Optional.ofNullable(activityIndex);
     }
 
-    public Optional<Long> getPlaytime() {
-        return Optional.ofNullable(playtime);
+    public Optional<Long> getActivePlaytime() {
+        return Optional.ofNullable(activePlaytime);
     }
 
     public Optional<Integer> getSessionCount() {
@@ -105,7 +105,7 @@ public class TablePlayer implements Comparable<TablePlayer> {
         if (this == o) return true;
         if (!(o instanceof TablePlayer)) return false;
         TablePlayer that = (TablePlayer) o;
-        return playtime.equals(that.playtime) &&
+        return activePlaytime.equals(that.activePlaytime) &&
                 sessionCount.equals(that.sessionCount) &&
                 registered.equals(that.registered) &&
                 lastSeen.equals(that.lastSeen) &&
@@ -116,7 +116,7 @@ public class TablePlayer implements Comparable<TablePlayer> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, activityIndex, playtime, sessionCount, registered, lastSeen, geolocation);
+        return Objects.hash(name, activityIndex, activePlaytime, sessionCount, registered, lastSeen, geolocation);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class TablePlayer implements Comparable<TablePlayer> {
                 "uuid=" + uuid +
                 ", name='" + name + '\'' +
                 ", activityIndex=" + activityIndex +
-                ", playtime=" + playtime +
+                ", activePlaytime=" + activePlaytime +
                 ", sessionCount=" + sessionCount +
                 ", registered=" + registered +
                 ", lastSeen=" + lastSeen +
@@ -165,8 +165,8 @@ public class TablePlayer implements Comparable<TablePlayer> {
             return this;
         }
 
-        public Builder playtime(long playtime) {
-            player.playtime = playtime;
+        public Builder activePlaytime(long activePlaytime) {
+            player.activePlaytime = activePlaytime;
             return this;
         }
 

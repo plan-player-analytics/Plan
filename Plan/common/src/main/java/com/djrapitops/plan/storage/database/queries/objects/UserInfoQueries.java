@@ -183,4 +183,40 @@ public class UserInfoQueries {
             }
         };
     }
+
+    public static Query<Set<UUID>> uuidsOfOperators() {
+        return getUUIDsForBooleanGroup(UserInfoTable.OP, true);
+    }
+
+    public static Query<Set<UUID>> getUUIDsForBooleanGroup(String column, boolean value) {
+        String sql = SELECT + UserInfoTable.USER_UUID + FROM + UserInfoTable.TABLE_NAME +
+                WHERE + column + "=?";
+        return new QueryStatement<Set<UUID>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, value);
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> uuids = new HashSet<>();
+                while (set.next()) {
+                    uuids.add(UUID.fromString(set.getString(UserInfoTable.USER_UUID)));
+                }
+                return uuids;
+            }
+        };
+    }
+
+    public static Query<Set<UUID>> uuidsOfNonOperators() {
+        return getUUIDsForBooleanGroup(UserInfoTable.OP, false);
+    }
+
+    public static Query<Set<UUID>> uuidsOfBanned() {
+        return getUUIDsForBooleanGroup(UserInfoTable.BANNED, true);
+    }
+
+    public static Query<Set<UUID>> uuidsOfNotBanned() {
+        return getUUIDsForBooleanGroup(UserInfoTable.BANNED, false);
+    }
 }

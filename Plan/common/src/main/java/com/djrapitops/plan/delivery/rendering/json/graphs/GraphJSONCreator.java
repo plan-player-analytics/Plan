@@ -138,8 +138,9 @@ public class GraphJSONCreator {
         long now = System.currentTimeMillis();
         long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
 
-        List<Point> points = Lists.map(db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)),
-                point -> new Point(point.getDate(), point.getValue())
+        List<Point> points = Lists.map(
+                db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)),
+                Point::fromDateObj
         );
         return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() +
                 ",\"color\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"}";

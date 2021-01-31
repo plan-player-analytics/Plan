@@ -31,6 +31,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Maps;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -810,6 +811,95 @@ public class SessionQueries {
             @Override
             public Long processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getLong("playtime") : 0L;
+            }
+        };
+    }
+
+    public static Query<Set<UUID>> uuidsOfPlayedBetween(long after, long before) {
+        String sql = SELECT + DISTINCT + SessionsTable.USER_UUID +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return new QueryStatement<Set<UUID>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> uuids = new HashSet<>();
+                while (set.next()) {
+                    uuids.add(UUID.fromString(set.getString(SessionsTable.USER_UUID)));
+                }
+                return uuids;
+            }
+        };
+    }
+
+    public static Query<Map<String, Long>> summaryOfPlayers(Set<UUID> playerUUIDs, long after, long before) {
+        String selectAggregates = SELECT +
+                SessionsTable.USER_UUID + ',' +
+                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
+                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime," +
+                "COUNT(1) as session_count" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_START + ">?" +
+                AND + SessionsTable.SESSION_END + "<?" +
+                AND + SessionsTable.USER_UUID + " IN ('" +
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
+                GROUP_BY + SessionsTable.USER_UUID;
+
+        String sql = SELECT +
+                "SUM(playtime) as total_playtime," +
+                "AVG(playtime) as average_playtime," +
+                "SUM(active_playtime) as total_active_playtime," +
+                "AVG(active_playtime) as average_active_playtime," +
+                "SUM(playtime-active_playtime) as total_afk_playtime," +
+                "AVG(playtime-active_playtime) as average_afk_playtime," +
+                "AVG(playtime) as average_playtime," +
+                "SUM(session_count) as total_sessions," +
+                "AVG(session_count) as average_sessions" +
+                FROM + "(" + selectAggregates + ") s";
+
+        return new QueryStatement<Map<String, Long>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Map<String, Long> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    long sessionCount = set.getLong("total_sessions");
+                    long playtime = set.getLong("total_playtime");
+                    return Maps.builder(String.class, Long.class)
+                            .put("total_playtime", playtime)
+                            .put("average_playtime", set.getLong("average_playtime"))
+                            .put("total_afk_playtime", set.getLong("total_afk_playtime"))
+                            .put("average_afk_playtime", set.getLong("average_afk_playtime"))
+                            .put("total_active_playtime", set.getLong("total_active_playtime"))
+                            .put("average_active_playtime", set.getLong("average_active_playtime"))
+                            .put("total_sessions", sessionCount)
+                            .put("average_sessions", set.getLong("average_sessions"))
+                            .put("average_session_length", sessionCount != 0 ? playtime / sessionCount : -1L)
+                            .build();
+                } else {
+                    return Collections.emptyMap();
+                }
+            }
+        };
+    }
+
+    public static Query<Long> earliestSessionStart() {
+        String sql = SELECT + "MIN(" + SessionsTable.SESSION_START + ") as m" +
+                FROM + SessionsTable.TABLE_NAME;
+        return new QueryAllStatement<Long>(sql) {
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("m") : -1L;
             }
         };
     }

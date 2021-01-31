@@ -54,6 +54,7 @@ import java.util.regex.Pattern;
 public class ResponseResolver {
 
     private final DebugPageResolver debugPageResolver;
+    private QueryPageResolver queryPageResolver;
     private final PlayersPageResolver playersPageResolver;
     private final PlayerPageResolver playerPageResolver;
     private final ServerPageResolver serverPageResolver;
@@ -78,6 +79,7 @@ public class ResponseResolver {
             Lazy<WebServer> webServer,
 
             DebugPageResolver debugPageResolver,
+            QueryPageResolver queryPageResolver,
             PlayersPageResolver playersPageResolver,
             PlayerPageResolver playerPageResolver,
             ServerPageResolver serverPageResolver,
@@ -97,6 +99,7 @@ public class ResponseResolver {
         this.responseFactory = responseFactory;
         this.webServer = webServer;
         this.debugPageResolver = debugPageResolver;
+        this.queryPageResolver = queryPageResolver;
         this.playersPageResolver = playersPageResolver;
         this.playerPageResolver = playerPageResolver;
         this.serverPageResolver = serverPageResolver;
@@ -115,6 +118,7 @@ public class ResponseResolver {
         String plugin = "Plan";
         resolverService.registerResolver(plugin, "/robots.txt", (NoAuthResolver) request -> Optional.of(responseFactory.robotsResponse()));
         resolverService.registerResolver(plugin, "/debug", debugPageResolver);
+        resolverService.registerResolver(plugin, "/query", queryPageResolver);
         resolverService.registerResolver(plugin, "/players", playersPageResolver);
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
         resolverService.registerResolver(plugin, "/favicon.ico", (NoAuthResolver) request -> Optional.of(responseFactory.faviconResponse()));

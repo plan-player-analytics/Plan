@@ -26,9 +26,9 @@ import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
-import com.djrapitops.plan.storage.database.queries.objects.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
+import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
@@ -280,8 +280,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
                 .stream().filter(player -> playerUUID.equals(player.getPlayerUUID())).findAny()
                 .orElseThrow(AssertionError::new);
 
-        long expected = SessionsMutator.forContainer(playerContainer).toPlaytime();
-        long got = tablePlayer.getPlaytime().orElseThrow(AssertionError::new);
+        long expected = SessionsMutator.forContainer(playerContainer).toActivePlaytime();
+        long got = tablePlayer.getActivePlaytime().orElseThrow(AssertionError::new);
         assertEquals(expected, got);
     }
 

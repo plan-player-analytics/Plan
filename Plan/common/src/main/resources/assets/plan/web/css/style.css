@@ -1235,6 +1235,16 @@ body.sidebar-hidden .navbar-nav {
     display: none;
 }
 
+.filter-remover {
+    height: 2.4rem;
+    width: 2.4rem;
+    padding: 0;
+}
+
+.query-buttons {
+    display: none;
+}
+
 .contributors li {
     padding: 0;
 }

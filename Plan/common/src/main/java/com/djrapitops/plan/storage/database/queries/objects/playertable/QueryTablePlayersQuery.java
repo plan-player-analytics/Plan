@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.queries.objects;
+package com.djrapitops.plan.storage.database.queries.objects.playertable;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
@@ -26,35 +26,48 @@ import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Query for displaying players on /players page.
+ * Query for displaying players on /query page players table.
  *
  * @author Rsl1122
  */
-public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
+public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
-    private final long date;
+    private final Collection<UUID> playerUUIDs;
+    private final long afterDate;
+    private final long beforeDate;
     private final long activeMsThreshold;
-    private final int xMostRecentPlayers;
 
-    public NetworkTablePlayersQuery(long date, long activeMsThreshold, int xMostRecentPlayers) {
-        this.date = date;
+    /**
+     * Create a new query.
+     *
+     * @param playerUUIDs       UUIDs of the players in the query
+     * @param beforeDate        Date used for Activity Index calculation
+     * @param activeMsThreshold Playtime threshold for Activity Index calculation
+     */
+    public QueryTablePlayersQuery(Collection<UUID> playerUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {
+        this.playerUUIDs = playerUUIDs;
+        this.afterDate = afterDate;
+        this.beforeDate = beforeDate;
         this.activeMsThreshold = activeMsThreshold;
-        this.xMostRecentPlayers = xMostRecentPlayers;
     }
 
     @Override
     public List<TablePlayer> executeQuery(SQLDB db) {
+        String uuidsInSet = " IN ('" + new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+
         String selectGeolocations = SELECT + DISTINCT +
                 GeoInfoTable.USER_UUID + ", " +
                 GeoInfoTable.GEOLOCATION + ", " +
@@ -75,37 +88,39 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
         String selectSessionData = SELECT + "s." + SessionsTable.USER_UUID + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "COUNT(1) as count," +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
+                WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
+                AND + "s." + SessionsTable.SESSION_END + "<=?" +
+                AND + "s." + SessionsTable.USER_UUID +
+                uuidsInSet +
                 GROUP_BY + "s." + SessionsTable.USER_UUID;
-
-        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_UUID +
-                FROM + UserInfoTable.TABLE_NAME + " ub" +
-                WHERE + UserInfoTable.BANNED + "=?";
 
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +
                 "u." + UsersTable.USER_NAME + ',' +
                 "u." + UsersTable.REGISTERED + ',' +
-                "ban." + UserInfoTable.USER_UUID + " as banned," +
+                UserInfoTable.BANNED + ',' +
                 "geoloc." + GeoInfoTable.GEOLOCATION + ',' +
                 "ses.last_seen," +
                 "ses.count," +
-                "ses.playtime," +
+                "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " on u." + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geoloc on geoloc." + GeoInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
                 LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.USER_UUID + "=act." + UserInfoTable.USER_UUID +
-                ORDER_BY + "ses.last_seen DESC LIMIT ?";
+                LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + SessionsTable.USER_UUID + "=act." + UserInfoTable.USER_UUID +
+                WHERE + "u." + UserInfoTable.USER_UUID +
+                uuidsInSet +
+                ORDER_BY + "ses.last_seen DESC";
 
         return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, true);
-                NetworkActivityIndexQueries.setSelectActivityIndexSQLParameters(statement, 2, activeMsThreshold, date);
-                statement.setInt(10, xMostRecentPlayers);
+                statement.setLong(1, afterDate);
+                statement.setLong(2, beforeDate);
+                NetworkActivityIndexQueries.setSelectActivityIndexSQLParameters(statement, 3, activeMsThreshold, beforeDate);
             }
 
             @Override
@@ -119,9 +134,9 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                             .registered(set.getLong(UsersTable.REGISTERED))
                             .lastSeen(set.getLong("last_seen"))
                             .sessionCount(set.getInt("count"))
-                            .playtime(set.getLong("playtime"))
-                            .activityIndex(new ActivityIndex(set.getDouble("activity_index"), date));
-                    if (set.getString("banned") != null) {
+                            .activePlaytime(set.getLong("active_playtime"))
+                            .activityIndex(new ActivityIndex(set.getDouble("activity_index"), beforeDate));
+                    if (set.getBoolean(UserInfoTable.BANNED)) {
                         player.banned();
                     }
                     players.add(player.build());

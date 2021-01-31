@@ -20,6 +20,7 @@ import com.djrapitops.plan.addons.placeholderapi.BukkitPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ServerCommandModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
@@ -42,6 +43,7 @@ import javax.inject.Singleton;
         BukkitPlanModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
+        FiltersModule.class,
         PlaceholderModule.class,
 
         ServerCommandModule.class,

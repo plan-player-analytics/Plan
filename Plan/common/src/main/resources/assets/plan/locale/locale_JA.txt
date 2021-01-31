@@ -152,6 +152,8 @@ Enable FAIL - Database Patch                    || データベースのパッ�
 Enable FAIL - GeoDB Write                       || ダウンロードした「GeoLite2」の位置情報データベースを保存中に何らかのエラーが発生しました
 Enable FAIL - WebServer (Proxy)                 || ウェブサーバーの初期化に失敗しました!
 Enable FAIL - Wrong Database Type               || 「${0}」はサポートされていないデータベースです
+HTML - AND_BUG_REPORTERS                        || & Bug reporters!
+HTML - BANNED (Filters)                         || Banned
 HTML - COMPARING_15_DAYS                        || 直近15日との比較
 HTML - COMPARING_60_DAYS                        || 30日前との比較
 HTML - COMPARING_7_DAYS                         || 直近1週間との比較
@@ -167,14 +169,18 @@ HTML - KILLED                                   || 殺した人
 HTML - LABEL_1ST_WEAPON                         || 最もPvPで使用されている武器
 HTML - LABEL_2ND_WEAPON                         || 2番目にPvPで使用されている武器
 HTML - LABEL_3RD_WEAPON                         || 3番目にPvPで使用されている武器
+HTML - LABEL_ACTIVE_PLAYTIME                    || Active Playtime
 HTML - LABEL_ACTIVITY_INDEX                     || 活動指数
 HTML - LABEL_AFK                                || 離席
 HTML - LABEL_AFK_TIME                           || 離席時間
 HTML - LABEL_AVG                                || 平均
+HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
+HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
 HTML - LABEL_AVG_KDR                            || 平均KDR
 HTML - LABEL_AVG_MOB_KDR                        || モブに対してのKDR
 HTML - LABEL_AVG_PLAYTIME                       || 平均プレイ時間
 HTML - LABEL_AVG_SESSION_LENGTH                 || 平均接続時間
+HTML - LABEL_AVG_SESSIONS                       || Average Sessions
 HTML - LABEL_AVG_TPS                            || 平均TPS
 HTML - LABEL_BANNED                             || BAN履歴
 HTML - LABEL_BEST_PEAK                          || 全体のピークタイム
@@ -241,17 +247,70 @@ HTML - LINK_QUICK_VIEW                          || クイックビュー
 HTML - LINK_SERVER_ANALYSIS                     || サーバーの分析結果
 HTML - LINK_WIKI                                || 「Plan」のwiki、チュートリアルとドキュメント
 HTML - LOCAL_MACHINE                            || ローカルマシン
+HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
+HTML - LOGIN_FAILED                             || Login failed: 
+HTML - LOGIN_FORGOT_PASSWORD                    || Forgot Password?
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Forgot password? Unregister and register again.
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Use the following command in game to remove your current user:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Or using console:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || After using the command, 
+HTML - LOGIN_LOGIN                              || Login
+HTML - LOGIN_LOGOUT                             || Logout
+HTML - LOGIN_PASSWORD                           || "Password"
+HTML - LOGIN_USERNAME                           || "Username"
 HTML - NAV_PLUGINS                              || プラグイン
 HTML - NEW_CALENDAR                             || New:
 HTML - NO_KILLS                                 || プレイヤーキルなし
 HTML - NO_USER_PRESENT                          || ユーザーのクッキーが存在しません
+HTML - NON_OPERATORS (Filters)                  || Non operators
+HTML - NOT_BANNED (Filters)                     || Not banned
 HTML - OFFLINE                                  ||  オフライン
 HTML - ONLINE                                   ||  オンライン
+HTML - OPERATORS (Filters)                      || Operators
 HTML - PER_DAY                                  || /日
 HTML - PLAYERS_TEXT                             || プレイヤー
+HTML - QUERY                                    || Query<
+HTML - QUERY_ACTIVITY_OF_MATCHED_PLAYERS        || Activity of matched players
+HTML - QUERY_ACTIVITY_ON                        || Activity on <span id="activity-date"></span>
+HTML - QUERY_ADD_FILTER                         || Add a filter..
+HTML - QUERY_AND                                || and 
+HTML - QUERY_ARE                                || `are`
+HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
+HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
+HTML - QUERY_LOADING_FILTERS                    || Loading filters..
+HTML - QUERY_MAKE                               || Make a query
+HTML - QUERY_MAKE_ANOTHER                       || Make another query
+HTML - QUERY_OF_PLAYERS                         || of Players who 
+HTML - QUERY_PERFORM_QUERY                      || Perform Query!
+HTML - QUERY_PLAYED_BETWEEN                     || Played between
+HTML - QUERY_REGISTERED_BETWEEN                 || Registered between
+HTML - QUERY_RESULTS                            || Query Results
+HTML - QUERY_RESULTS_MATCH                      || matched ${resultCount} players
+HTML - QUERY_SESSIONS_WITHIN_VIEW               || Sessions within view
+HTML - QUERY_SHOW_VIEW                          || Show a view
+HTML - QUERY_TIME_FROM                          || >from</label>
+HTML - QUERY_TIME_TO                            || >to</label>
+HTML - QUERY_VIEW                               ||   View:
+HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
+HTML - REGISTER                                 || Register
+HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
+HTML - REGISTER_COMPLETE                        || Complete Registration
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Code expires in 15 minutes
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Use the following command in game to finish registration:
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Or using console:
+HTML - REGISTER_CREATE_USER                     || Create a new user
+HTML - REGISTER_FAILED                          || Registration failed: 
+HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
+HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
+HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
+HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
+HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
+HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 characters.
 HTML - SESSION                                  || オンライン
 HTML - SIDE_GEOLOCATIONS                        || 地域
 HTML - SIDE_INFORMATION                         || インフォメーション
+HTML - SIDE_LINKS                               || LINKS
 HTML - SIDE_NETWORK_OVERVIEW                    || ネットワーク概要
 HTML - SIDE_OVERVIEW                            || 概要
 HTML - SIDE_PERFORMANCE                         || パフォーマンス
@@ -280,6 +339,7 @@ HTML - TEXT_NO_SERVER                           || オンラインアクティ�
 HTML - TEXT_NO_SERVERS                          || データーベース内に登録されたサーバーが見つかりません
 HTML - TEXT_PLUGIN_INFORMATION                  || プラグインに関する情報
 HTML - TEXT_PREDICTED_RETENTION                 || これは以前のプレーヤーから基づいた予測値です
+HTML - TEXT_SERVER_INSTRUCTIONS                 || It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.
 HTML - TEXT_VERSION                             || 新バージョンがリリースされており、ダウンロード可能です
 HTML - TITLE_30_DAYS                            || 1ヶ月
 HTML - TITLE_30_DAYS_AGO                        || 1ヶ月前
@@ -295,6 +355,7 @@ HTML - TITLE_CPU_RAM                            || CPUとメモリー
 HTML - TITLE_CURRENT_PLAYERBASE                 || ログインプレイヤー
 HTML - TITLE_DISK                               || ドライブの容量
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || 詳細情報
+HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || Hour by Hour
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || ネットワーク内の接続状況
 HTML - TITLE_GRAPH_PUNCHCARD                    || 1ヶ月のパンチボード
 HTML - TITLE_INSIGHTS                           || 1ヶ月のパンチボード
@@ -348,7 +409,15 @@ HTML - UNIT_NO_DATA                             || データなし
 HTML - UNIT_THE_PLAYERS                         || プレイヤー
 HTML - USER_AND_PASS_NOT_SPECIFIED              || ユーザーとパスワードが入力されてません
 HTML - USER_DOES_NOT_EXIST                      || 入力されたユーザーは存在しません
+HTML - USER_INFORMATION_NOT_FOUND               || Registration failed, try again (The code expires after 15 minutes)
 HTML - USER_PASS_MISMATCH                       || 入力されたユーザー名とパスワードが間違っています
+HTML - Version Change log                       || View Changelog
+HTML - Version Current                          || You have version ${0}
+HTML - Version Download                         || Download Plan-${0}.jar
+HTML - Version Update                           || Update
+HTML - Version Update Available                 || Version ${0} is Available!
+HTML - Version Update Dev                       || This version is a DEV release.
+HTML - Version Update Info                      || A new version has been released and is now available for download.
 HTML - WITH                                     || <th>死亡原因
 HTML ERRORS - ACCESS_DENIED_403                 || アクセスが拒否されました
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - 登録したユーザーを<b>「/plan register 」</b>で確認できます。<br>- 入力したユーザー名とパスワードが正しいことを確認して下さい<br>- ユーザー名とパスワードは大文字と小文字が区別されています<br><br>パスワードを忘れた場合は、管理者に古いユーザーを削除して新しくユーザーを再登録するよう依頼して下さい
@@ -419,7 +488,7 @@ WebServer - Notify HTTPS User Auth              || Webサーバー: ユーザー
 Webserver - Notify IP Whitelist                 || Webサーバー: IPのホワイトリストが有効になっています
 Webserver - Notify IP Whitelist Block           || Webサーバー: 「${0}」の「${1}」へのアクセスが拒否されました(ホワイトリストには未登録です)
 WebServer - Notify no Cert file                 || Webサーバー: 次のパスに保存された認証キーファイルが存在しません: ${0}
-WebServer - Notify Using Proxy                  || Webサーバー: Proxy-mode HTTPSが有効になっています、リバースプロキシがHTTPSを使用してルーティングされていることと、PlanのAlternative_IP.Linkがプロキシを指定していることを確認してください。
+WebServer - Notify Using Proxy                  || Webサーバー: Proxy-mode HTTPSが有効になっています、リバースプロキシがHTTPSを使用してルーティングされていることと、PlanのAlternative_IP.Addressがプロキシを指定していることを確認してください。
 WebServer FAIL - EOF                            || Webサーバー: 証明書ファイルをロード中にEOFエラーが発生しました (ファイルが殻になっていないか確認してください)
 WebServer FAIL - Port Bind                      || Webサーバー: 初期化が正常に終了しませんでした。ポート番号(${0})は使用されていませんか?
 WebServer FAIL - SSL Context                    || Webサーバー: SSLコンテキストの初期化に失敗しました。
