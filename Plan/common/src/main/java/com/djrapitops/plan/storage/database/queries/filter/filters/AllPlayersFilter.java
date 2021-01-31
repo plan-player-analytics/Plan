@@ -43,7 +43,7 @@ public class AllPlayersFilter implements Filter {
 
     @Override
     public String getKind() {
-        return "all";
+        return "allPlayers";
     }
 
     @Override

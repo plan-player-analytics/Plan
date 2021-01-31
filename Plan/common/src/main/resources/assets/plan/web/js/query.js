@@ -260,7 +260,7 @@ function getQueryAddress() {
     if (timestamp) return `./v1/query?timestamp=${timestamp}`;
 
     const encodedQuery = encodeURIComponent(JSON.stringify(query));
-    const encodedView = encodeURIComponent(JSON.stringify(queryState.filters));
+    const encodedView = encodeURIComponent(JSON.stringify(queryState.view));
     return `./v1/query?q=${encodedQuery}&view=${encodedView}`;
 }
 
@@ -280,10 +280,11 @@ function runQuery() {
         if (previousPath) previousPath.remove();
         if (json) {
             if (json.data) {
-                renderResults(json);
+                displayResults(json);
+                displayResultPath(json);
             } else if (json.path) {
                 // filters resulted in 0 players matched
-                renderResultPath(json);
+                displayResultPath(json);
                 // Reset query
                 queryButton.removeAttribute('disabled');
                 queryButton.classList.remove('disabled');
@@ -300,7 +301,7 @@ function runQuery() {
     });
 }
 
-function renderResultPath(json) {
+function displayResultPath(json) {
     const gotResults = Boolean(json.data);
     let pathHtml = ``;
     for (let i = 0; i < json.path.length; i++) {
@@ -322,8 +323,8 @@ function renderResultPath(json) {
     window.scrollTo(0, 0); // Scroll to top
 }
 
-function renderResults(json) {
-    renderDataResultScreen(json.data.players.data.length, json.view ? json.view : {});
+function displayResults(json) {
+    displayDataResultScreen(json.data.players.data.length, json.view ? json.view : {});
 
     // Set URL so that the query result can be shared
     window.history.replaceState({}, '', `${location.pathname}?timestamp=${json.timestamp}`);
@@ -383,7 +384,7 @@ function renderResults(json) {
     document.querySelector("#data_average_session_length").innerHTML = session_data.average_session_length;
 }
 
-function renderDataResultScreen(resultCount, view) {
+function displayDataResultScreen(resultCount, view) {
     const afterDate = queryState.view.afterDate ? queryState.view.afterDate : view.afterDate;
     const beforeDate = queryState.view.beforeDate ? queryState.view.beforeDate : view.beforeDate;
     const afterTime = queryState.view.afterTime ? queryState.view.afterTime : view.afterTime;
