@@ -271,11 +271,17 @@ function runQuery() {
     queryButton.setAttribute('disabled', 'true');
     queryButton.classList.add('disabled');
 
-    // document.querySelector('#content .tab').innerHTML =
-    //     `<div class="page-loader">
-    //         <span class="loader"></span>
-    //         <p class="loader-text">Loading..</p>
-    //     </div>`;
+    if (timestamp) {
+        document.querySelector('#content .tab').innerHTML =
+            `<div class="page-loader">
+            <span class="loader"></span>
+            <p class="loader-text">Loading..</p>
+        </div>`;
+    } else {
+        const icon = document.createElement('template');
+        icon.innerHTML = '<span class="loader"></span>'
+        queryButton.querySelector('.fa').replaceWith(icon.content);
+    }
 
     jsonRequest(getQueryAddress(), function (json, error) {
         const previousPath = document.getElementById('result-path');
@@ -290,6 +296,9 @@ function runQuery() {
                 // Reset query
                 queryButton.removeAttribute('disabled');
                 queryButton.classList.remove('disabled');
+                const icon = document.createElement('template');
+                icon.innerHTML = '<i class="fa fa-search"></i>'
+                queryButton.querySelector('.loader').replaceWith(icon.content);
                 query.splice(0, query.length);
             } else {
                 // Cached query expired
