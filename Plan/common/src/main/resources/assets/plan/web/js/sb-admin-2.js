@@ -46,7 +46,7 @@ content.style.transform = "translate3d(0px,0px,0)";
 content.style.width = (Math.max(100, tabCount * 100)) + "%";
 content.style.opacity = "1";
 for (let tab of tabs) {
-    tab.style.width = (100 / tabCount) + "%";
+    tab.style.width = `${100 / tabCount}%`;
 }
 
 window.addEventListener('hashchange', openPage);
@@ -81,17 +81,19 @@ function reduceSidebar() {
         return;
     }
 
-    const $body = $('body')
-    const closeModal = $('.sidebar-close-modal');
+    const body = document.querySelector('body');
+    const closeModal = document.querySelector('.sidebar-close-modal');
+    const isSidebarHidden = body.classList.contains('sidebar-hidden');
+    const isModalCloserHidden = closeModal.classList.contains('hidden');
     if ($(window).width() < 1350) {
-        if (!$body.hasClass('sidebar-hidden')) $body.addClass('sidebar-hidden');
-        if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
+        if (!isSidebarHidden) body.classList.add('sidebar-hidden');
+        if (!isModalCloserHidden) closeModal.classList.add('hidden');
 
         // Close any open menu accordions when window is resized
         $('.sidebar .collapse').collapse('hide');
-    } else if ($(window).width() > 1400 && $body.hasClass('sidebar-hidden')) {
-        $body.removeClass('sidebar-hidden');
-        if (!closeModal.hasClass('hidden')) closeModal.addClass('hidden');
+    } else if ($(window).width() > 1400 && isSidebarHidden) {
+        body.classList.remove('sidebar-hidden');
+        if (!isModalCloserHidden) closeModal.classList.add('hidden');
     }
     oldWidth = newWidth;
 }
