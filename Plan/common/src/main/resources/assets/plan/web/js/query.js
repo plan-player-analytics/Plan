@@ -1,9 +1,5 @@
 let filterCount = 0;
 
-/* {
-    id: "DOM id",
-    options...
-}*/
 let timestamp = undefined;
 let filterView = {
     afterDate: null,
