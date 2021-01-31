@@ -41,9 +41,9 @@ public interface Filter {
      * @throws IllegalArgumentException If the arguments are not valid.
      * @throws CompleteSetException     If the arguments produce a complete set.
      */
-    Set<UUID> getMatchingUUIDs(FilterQuery query);
+    Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query);
 
-    default Result apply(FilterQuery query) {
+    default Result apply(SpecifiedFilterInformation query) {
         return new Result(null, getKind(), getMatchingUUIDs(query));
     }
 
@@ -61,7 +61,7 @@ public interface Filter {
             this.currentUUIDs = currentUUIDs;
         }
 
-        public Result apply(Filter filter, FilterQuery query) {
+        public Result apply(Filter filter, SpecifiedFilterInformation query) {
             Set<UUID> got = filter.getMatchingUUIDs(query);
             currentUUIDs.retainAll(got);
             return new Result(this, filter.getKind(), currentUUIDs);

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
+import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 
 import javax.inject.Inject;
@@ -28,7 +28,7 @@ import java.util.UUID;
 @Singleton
 public class PlayedBetweenDateRangeFilter extends DateRangeFilter {
 
-    private DBSystem dbSystem;
+    private final DBSystem dbSystem;
 
     @Inject
     public PlayedBetweenDateRangeFilter(DBSystem dbSystem) {
@@ -42,7 +42,7 @@ public class PlayedBetweenDateRangeFilter extends DateRangeFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(FilterQuery query) {
+    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
         long after = getAfter(query);
         long before = getBefore(query);
         return dbSystem.getDatabase().query(SessionQueries.uuidsOfPlayedBetween(after, before));

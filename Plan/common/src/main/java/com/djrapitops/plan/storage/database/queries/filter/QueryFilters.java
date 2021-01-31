@@ -78,26 +78,26 @@ public class QueryFilters {
      * @return the result object or null if none of the filterQueries could be applied.
      * @throws BadRequestException If the request kind is not supported or if filter was given bad options.
      */
-    public Filter.Result apply(List<FilterQuery> filterQueries) {
+    public Filter.Result apply(List<SpecifiedFilterInformation> filterQueries) {
         prepareFilters();
         Filter.Result current = null;
         if (filterQueries.isEmpty()) return allPlayersFilter.apply(null);
-        for (FilterQuery filterQuery : filterQueries) {
-            current = apply(current, filterQuery);
+        for (SpecifiedFilterInformation specifiedFilterInformation : filterQueries) {
+            current = apply(current, specifiedFilterInformation);
             if (current != null && current.isEmpty()) break;
         }
         return current;
     }
 
-    private Filter.Result apply(Filter.Result current, FilterQuery filterQuery) {
-        String kind = filterQuery.getKind();
+    private Filter.Result apply(Filter.Result current, SpecifiedFilterInformation specifiedFilterInformation) {
+        String kind = specifiedFilterInformation.getKind();
         Filter filter = getFilter(kind).orElseThrow(() -> new BadRequestException("Filter kind not supported: '" + kind + "'"));
 
-        current = getResult(current, filter, filterQuery);
+        current = getResult(current, filter, specifiedFilterInformation);
         return current;
     }
 
-    private Filter.Result getResult(Filter.Result current, Filter filter, FilterQuery query) {
+    private Filter.Result getResult(Filter.Result current, Filter filter, SpecifiedFilterInformation query) {
         try {
             return current == null ? filter.apply(query) : current.apply(filter, query);
         } catch (IllegalArgumentException badOptions) {

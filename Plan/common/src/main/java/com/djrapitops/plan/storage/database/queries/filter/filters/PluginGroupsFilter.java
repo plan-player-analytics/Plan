@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.queries.filter.filters;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionUUIDsInGroupQuery;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
-import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
+import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionGroupsTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
@@ -66,7 +66,7 @@ public class PluginGroupsFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(FilterQuery query) {
+    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
         return dbSystem.getDatabase().query(
                 new ExtensionUUIDsInGroupQuery(pluginName, groupProvider, getSelected(query))
         );

@@ -27,18 +27,18 @@ import java.util.*;
  *
  * @author Rsl1122
  */
-public class FilterQuery {
+public class SpecifiedFilterInformation {
 
     private final String kind;
     private final Map<String, String> parameters;
 
-    public FilterQuery(String kind, Map<String, String> parameters) {
+    public SpecifiedFilterInformation(String kind, Map<String, String> parameters) {
         this.kind = kind;
         this.parameters = parameters;
     }
 
-    public static List<FilterQuery> parse(String json) throws IOException {
-        return new Gson().getAdapter(new TypeToken<List<FilterQuery>>() {}).fromJson(json);
+    public static List<SpecifiedFilterInformation> parse(String json) throws IOException {
+        return new Gson().getAdapter(new TypeToken<List<SpecifiedFilterInformation>>() {}).fromJson(json);
     }
 
     public String getKind() {

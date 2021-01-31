@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
-import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
+import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -60,15 +60,15 @@ public abstract class DateRangeFilter implements Filter {
                 .build();
     }
 
-    protected long getAfter(FilterQuery query) {
+    protected long getAfter(SpecifiedFilterInformation query) {
         return getTime(query, "afterDate", "afterTime");
     }
 
-    protected long getBefore(FilterQuery query) {
+    protected long getBefore(SpecifiedFilterInformation query) {
         return getTime(query, "beforeDate", "beforeTime");
     }
 
-    private long getTime(FilterQuery query, String dateKey, String timeKey) {
+    private long getTime(SpecifiedFilterInformation query, String dateKey, String timeKey) {
         String date = query.get(dateKey).orElseThrow(IllegalArgumentException::new);
         String time = query.get(timeKey).orElseThrow(IllegalArgumentException::new);
 

@@ -23,7 +23,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
-import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
+import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -63,7 +63,7 @@ public class ActivityIndexFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(FilterQuery query) {
+    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
         List<String> selected = getSelected(query);
         String[] options = getOptionsArray();
 

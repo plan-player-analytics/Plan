@@ -20,7 +20,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.FilterLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
-import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
+import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
 
 import javax.inject.Inject;
@@ -57,7 +57,7 @@ public class OperatorsFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(FilterQuery query) {
+    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
         List<String> selected = getSelected(query);
         Set<UUID> uuids = new HashSet<>();
         String[] options = getOptionsArray();

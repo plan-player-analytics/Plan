@@ -27,7 +27,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryPlayerDataTableQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryResultTableDataQuery;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -36,8 +36,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
-import com.djrapitops.plan.storage.database.queries.filter.FilterQuery;
 import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
+import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
@@ -118,7 +118,7 @@ public class QueryJSONResolver implements Resolver {
 
         try {
             q = URLDecoder.decode(q, "UTF-8");
-            List<FilterQuery> queries = FilterQuery.parse(q);
+            List<SpecifiedFilterInformation> queries = SpecifiedFilterInformation.parse(q);
             Filter.Result result = filters.apply(queries);
             List<Filter.ResultPath> resultPath = result.getInverseResultPath();
             Collections.reverse(resultPath);
@@ -198,7 +198,7 @@ public class QueryJSONResolver implements Resolver {
         Database database = dbSystem.getDatabase();
         return new PlayersTableJSONCreator(
                 database.query(new QueryTablePlayersQuery(playerUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
-                database.query(new ExtensionQueryPlayerDataTableQuery(playerUUIDs)),
+                database.query(new ExtensionQueryResultTableDataQuery(playerUUIDs)),
                 config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                 formatters, locale
         ).toJSONMap();

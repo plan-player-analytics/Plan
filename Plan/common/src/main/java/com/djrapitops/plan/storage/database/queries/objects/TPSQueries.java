@@ -154,7 +154,7 @@ public class TPSQueries {
         };
     }
 
-    public static Query<List<DateObj<Integer>>> fetchQueryPreviewPlayersOnline(UUID serverUUID) {
+    public static Query<List<DateObj<Integer>>> fetchViewPreviewGraphData(UUID serverUUID) {
         String sql = SELECT + min(DATE) + " as " + DATE + ',' +
                 max(PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE +
                 FROM + TABLE_NAME +

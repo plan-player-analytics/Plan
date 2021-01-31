@@ -80,7 +80,7 @@ public class FiltersJSONResolver implements Resolver {
     }
 
     private Response getResponse() {
-        List<DateObj<Integer>> data = dbSystem.getDatabase().query(TPSQueries.fetchQueryPreviewPlayersOnline(serverInfo.getServerUUID()));
+        List<DateObj<Integer>> data = dbSystem.getDatabase().query(TPSQueries.fetchViewPreviewGraphData(serverInfo.getServerUUID()));
         Long earliestStart = dbSystem.getDatabase().query(SessionQueries.earliestSessionStart());
         data.add(0, new DateObj<>(earliestStart, 1));
 
