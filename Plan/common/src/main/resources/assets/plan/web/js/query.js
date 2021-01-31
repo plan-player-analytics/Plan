@@ -42,12 +42,6 @@ function loadFilters(json) {
     document.getElementById('viewToDateField').setAttribute('placeholder', json.view.beforeDate);
     document.getElementById('viewToTimeField').setAttribute('placeholder', json.view.beforeTime);
 
-    const s = {
-        name: {playersOnline: 'Players Online'},
-        tooltip: {zeroDecimals: {valueDecimals: 0}},
-        type: {areaSpline: 'areaspline'}
-    };
-
     const playersOnlineSeries = {
         name: 'Players Online', type: 'areaspline', tooltip: {valueDecimals: 0},
         data: json.viewPoints, color: '#9E9E9E', yAxis: 0
