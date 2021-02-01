@@ -103,7 +103,7 @@ subprojects {
             url = "https://papermc.io/repo/repository/maven-public/"
         }
         maven { // Sponge Repository
-            url = "https://repo.spongepowered.org/maven"
+            url = "https://repo.spongepowered.org/repository/maven-public/"
         }
         maven { // BungeeCord Repository
             url = "https://oss.sonatype.org/content/repositories/snapshots"
