@@ -71,8 +71,9 @@ public class UserInfoQueries {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
 
-                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, banned));
+                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, banned, hostname));
                 }
                 return serverMap;
             }
@@ -107,8 +108,9 @@ public class UserInfoQueries {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
                     UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
-                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, banned));
+                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, banned, hostname));
                 }
                 return userInformation;
             }
@@ -146,8 +148,9 @@ public class UserInfoQueries {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
 
-                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, banned));
+                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, banned, hostname));
                 }
                 return userInformation;
             }
