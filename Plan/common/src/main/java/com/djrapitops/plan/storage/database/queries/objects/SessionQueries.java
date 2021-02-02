@@ -745,7 +745,7 @@ public class SessionQueries {
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
         String sql = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
-                ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + ',' +
+                "s." + ServerTable.SERVER_ID + ',' +
                 ServerTable.NAME +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.SERVER_UUID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID +

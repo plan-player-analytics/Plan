@@ -23,16 +23,19 @@ import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plugin.api.TimeAmount;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -320,5 +323,23 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
                 () -> "Activity Indexes between queries differed, expected: <" + expected + "> but was: <" + got + ">" +
                         ". Playtime for reference container: <w1:" + playtime1 + ", w2:" + playtime2 + ", w3:" + playtime3 + ">"
         );
+    }
+
+    @Test
+    default void serverPreferencePieValuesAreCorrect() {
+        prepareForSessionSave();
+        UUID serverTwoUuid = TestConstants.SERVER_TWO_UUID;
+        executeTransactions(new StoreServerInformationTransaction(new Server(serverTwoUuid, TestConstants.SERVER_TWO_NAME, "")));
+        List<Session> server1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
+        List<Session> server2Sessions = RandomData.randomSessions(serverTwoUuid, worlds, playerUUID, player2UUID);
+        server1Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
+        server2Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
+
+        Map<String, Long> expected = Maps.builder(String.class, Long.class)
+                .put(TestConstants.SERVER_NAME, new SessionsMutator(server1Sessions).toPlaytime())
+                .put(TestConstants.SERVER_TWO_NAME, new SessionsMutator(server2Sessions).toPlaytime())
+                .build();
+        Map<String, Long> results = db().query(SessionQueries.playtimePerServer(Long.MIN_VALUE, Long.MAX_VALUE));
+        assertEquals(expected, results);
     }
 }

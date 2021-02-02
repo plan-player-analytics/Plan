@@ -29,6 +29,8 @@ public class TestConstants {
         /* Static variable class */
     }
 
+    public static final String SERVER_NAME = "ServerName";
+    public static final String SERVER_TWO_NAME = "ServerName2";
     public static final UUID SERVER_UUID = UUID.fromString("e4ec2edd-e0ed-3c58-a87d-8a9021899479");
     public static final UUID SERVER_TWO_UUID = UUID.fromString("c4ec2edd-e0ed-3c58-a87d-8a9024791899");
     public static final UUID PLAYER_ONE_UUID = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
