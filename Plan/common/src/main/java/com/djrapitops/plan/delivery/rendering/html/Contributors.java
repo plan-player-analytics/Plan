@@ -69,6 +69,8 @@ public class Contributors {
             new Contributor("Mastory_Md5", LANG),
             new Contributor("FluxCapacitor2", CODE),
             new Contributor("galexrt", LANG),
+            new Contributor("QuakyCZ", LANG),
+            new Contributor("MrFriggo", LANG),
     };
 
     private Contributors() {
