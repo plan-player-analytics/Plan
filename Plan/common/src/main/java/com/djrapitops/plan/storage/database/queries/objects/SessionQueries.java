@@ -746,12 +746,12 @@ public class SessionQueries {
         String sql = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
                 "s." + ServerTable.SERVER_ID + ',' +
-                ServerTable.NAME +
+                "s." + ServerTable.NAME +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.SERVER_UUID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + ServerTable.NAME;
+                GROUP_BY + "s." + ServerTable.SERVER_ID;
         return new QueryStatement<Map<String, Long>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

@@ -328,11 +328,14 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     @Test
     default void serverPreferencePieValuesAreCorrect() {
         prepareForSessionSave();
+        List<Session> server1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
+        server1Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
+
         UUID serverTwoUuid = TestConstants.SERVER_TWO_UUID;
         executeTransactions(new StoreServerInformationTransaction(new Server(serverTwoUuid, TestConstants.SERVER_TWO_NAME, "")));
-        List<Session> server1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new WorldNameStoreTransaction(serverTwoUuid, worlds[0]));
+        db().executeTransaction(new WorldNameStoreTransaction(serverTwoUuid, worlds[1]));
         List<Session> server2Sessions = RandomData.randomSessions(serverTwoUuid, worlds, playerUUID, player2UUID);
-        server1Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
         server2Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
 
         Map<String, Long> expected = Maps.builder(String.class, Long.class)
