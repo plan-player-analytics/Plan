@@ -27,7 +27,7 @@ public enum LangCode {
     EN("English", "Rsl1122"),
     ES("Spanish", "Catalina & itaquito & Elguerrero"),
     CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f) & qsefthuopq & shaokeyibb & Fur_xia"),
-    CS("Czech", "Shadowhackercz"),
+    CS("Czech", "Shadowhackercz & QuakyCZ & MrFriggo"),
     DE("Deutsch", "Eyremba & fuzzlemann & Morsmorse & hallo1142"),
     FI("Finnish", "Rsl1122"),
     FR("French", "CyanTech & Aurelien & Nogapra"),
