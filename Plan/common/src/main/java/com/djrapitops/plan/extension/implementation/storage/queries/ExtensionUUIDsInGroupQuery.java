@@ -32,19 +32,21 @@ public class ExtensionUUIDsInGroupQuery extends QueryStatement<Set<UUID>> {
 
     private final String pluginName;
     private final String groupProvider;
+    private final UUID serverUUID;
     private final List<String> inGroups;
 
-    public ExtensionUUIDsInGroupQuery(String pluginName, String groupProvider, List<String> inGroups) {
+    public ExtensionUUIDsInGroupQuery(String pluginName, String groupProvider, UUID serverUUID, List<String> inGroups) {
         super(buildSQL(inGroups), 100);
         this.pluginName = pluginName;
         this.groupProvider = groupProvider;
+        this.serverUUID = serverUUID;
         this.inGroups = inGroups;
     }
 
     private static String buildSQL(Collection<String> inGroups) {
         TextStringBuilder dynamicInClauseAllocation = new TextStringBuilder();
         dynamicInClauseAllocation.appendWithSeparators(inGroups.stream().map(group -> "?").toArray(), ",");
-        return SELECT + ExtensionGroupsTable.USER_UUID +
+        return SELECT + DISTINCT + ExtensionGroupsTable.USER_UUID +
                 FROM + ExtensionGroupsTable.TABLE_NAME +
                 WHERE + ExtensionGroupsTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
                 AND + ExtensionGroupsTable.GROUP_NAME + " IN (" + dynamicInClauseAllocation.build() + ")";
@@ -52,10 +54,11 @@ public class ExtensionUUIDsInGroupQuery extends QueryStatement<Set<UUID>> {
 
     @Override
     public void prepare(PreparedStatement statement) throws SQLException {
-        statement.setString(1, groupProvider);
-        statement.setString(2, pluginName);
-        for (int i = 1; i <= inGroups.size(); i++) {
-            statement.setString(i + 2, inGroups.get(i));
+        ExtensionProviderTable.set3PluginValuesToStatement(statement, 1, groupProvider, pluginName, serverUUID);
+        int index = 4;
+        for (String group : inGroups) {
+            statement.setString(index, group);
+            index++;
         }
     }
 

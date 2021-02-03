@@ -80,9 +80,9 @@ class OperatorsFilter extends MultipleChoiceFilter {
 
 class PluginGroupsFilter extends MultipleChoiceFilter {
     constructor(
-        id, plugin, group, options
+        id, kind, options
     ) {
-        super(id, `pluginGroups: ${plugin} ${group}`, `are in ${plugin}'s ${group} Groups`, options);
+        super(id, kind, `are in ${options.plugin}'s ${options.group} Groups`, options);
     }
 }
 
@@ -177,6 +177,9 @@ class RegisteredBetweenFilter extends BetweenDateFilter {
 }
 
 function createFilter(filter, id) {
+    if (filter.kind.startsWith("pluginGroups-")) {
+        return new PluginGroupsFilter(id, filter.kind, filter.options);
+    }
     switch (filter.kind) {
         case "activityIndexNow":
             return new ActivityIndexFilter(id, filter.options);
@@ -184,8 +187,6 @@ function createFilter(filter, id) {
             return new BannedFilter(id, filter.options);
         case "operators":
             return new OperatorsFilter(id, filter.options);
-        case "pluginGroups":
-            return new PluginGroupsFilter(id, filter.plugin, filter.group, filter.options);
         case "playedBetween":
             return new PlayedBetweenFilter(id, filter.options);
         case "registeredBetween":

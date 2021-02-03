@@ -38,6 +38,7 @@ public class QueryFilters {
     private final Map<String, Filter> filters;
     private final AllPlayersFilter allPlayersFilter;
     private final DBSystem dbSystem;
+    private final PluginGroupsFilter.PluginGroupsFilterQuery filterQuery;
 
     private final AtomicBoolean fetchedPluginFilters = new AtomicBoolean(false);
 
@@ -45,10 +46,12 @@ public class QueryFilters {
     public QueryFilters(
             Set<Filter> filters,
             AllPlayersFilter allPlayersFilter,
-            DBSystem dbSystem
+            DBSystem dbSystem,
+            PluginGroupsFilter.PluginGroupsFilterQuery filterQuery
     ) {
         this.allPlayersFilter = allPlayersFilter;
         this.dbSystem = dbSystem;
+        this.filterQuery = filterQuery;
         this.filters = new HashMap<>();
         put(filters);
     }
@@ -61,7 +64,7 @@ public class QueryFilters {
 
     private void prepareFilters() {
         if (!fetchedPluginFilters.get()) {
-            put(dbSystem.getDatabase().query(new PluginGroupsFilter.PluginGroupsFilterQuery(dbSystem)));
+            put(dbSystem.getDatabase().query(filterQuery));
             fetchedPluginFilters.set(true);
         }
     }
