@@ -1248,3 +1248,8 @@ body.sidebar-hidden .navbar-nav {
 .contributors li {
     padding: 0;
 }
+
+#filter-dropdown {
+    max-height: 18rem;
+    overflow-y: scroll;
+}

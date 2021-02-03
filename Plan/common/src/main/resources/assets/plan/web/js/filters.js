@@ -195,3 +195,23 @@ function createFilter(filter, id) {
             throw new Error("Unsupported filter kind: '" + filter.kind + "'");
     }
 }
+
+function getReadableFilterName(filter) {
+    if (filter.kind.startsWith("pluginGroups-")) {
+        return "Group: " + filter.kind.substring(13);
+    }
+    switch (filter.kind) {
+        case "activityIndexNow":
+            return "Current activity group";
+        case "banned":
+            return "Ban status";
+        case "operators":
+            return "Operator status";
+        case "playedBetween":
+            return "Played between";
+        case "registeredBetween":
+            return "Registered between";
+        default:
+            return filter.kind;
+    }
+}

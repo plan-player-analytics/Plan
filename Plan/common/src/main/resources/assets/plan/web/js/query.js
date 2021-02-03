@@ -113,7 +113,7 @@ function removeFilter(filterIndex) {
 }
 
 function createFilterSelector(parent, index, filter) {
-    return `<a class="dropdown-item" href="javascript:void(0)" onclick="addFilter('${parent}', ${index})">${filter.kind}</a>`;
+    return `<a class="dropdown-item" href="javascript:void(0)" onclick="addFilter('${parent}', ${index})">${getReadableFilterName(filter)}</a>`;
 }
 
 function isValidDate(value) {

@@ -37,10 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -116,6 +113,7 @@ public class FiltersJSONResolver implements Resolver {
             for (Map.Entry<String, Filter> entry : filtersByKind.entrySet()) {
                 filters.add(new FilterJSON(entry.getKey(), entry.getValue()));
             }
+            Collections.sort(filters);
             this.view = view;
         }
     }
@@ -123,7 +121,7 @@ public class FiltersJSONResolver implements Resolver {
     /**
      * JSON serialization class.
      */
-    static class FilterJSON {
+    static class FilterJSON implements Comparable<FilterJSON> {
         final String kind;
         final Map<String, Object> options;
         final String[] expectedParameters;
@@ -132,6 +130,11 @@ public class FiltersJSONResolver implements Resolver {
             this.kind = kind;
             this.options = filter.getOptions();
             this.expectedParameters = filter.getExpectedParameters();
+        }
+
+        @Override
+        public int compareTo(FilterJSON o) {
+            return String.CASE_INSENSITIVE_ORDER.compare(this.kind, o.kind);
         }
     }
 
