@@ -28,6 +28,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryResultTableDataQuery;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -61,6 +62,7 @@ public class QueryJSONResolver implements Resolver {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
     private final JSONStorage jsonStorage;
     private final GraphJSONCreator graphJSONCreator;
     private final Locale locale;
@@ -71,7 +73,7 @@ public class QueryJSONResolver implements Resolver {
             QueryFilters filters,
             PlanConfig config,
             DBSystem dbSystem,
-            JSONStorage jsonStorage,
+            ServerInfo serverInfo, JSONStorage jsonStorage,
             GraphJSONCreator graphJSONCreator,
             Locale locale,
             Formatters formatters
@@ -79,6 +81,7 @@ public class QueryJSONResolver implements Resolver {
         this.filters = filters;
         this.config = config;
         this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
         this.graphJSONCreator = graphJSONCreator;
         this.locale = locale;
@@ -205,7 +208,7 @@ public class QueryJSONResolver implements Resolver {
         Database database = dbSystem.getDatabase();
         return new PlayersTableJSONCreator(
                 database.query(new QueryTablePlayersQuery(playerUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
-                database.query(new ExtensionQueryResultTableDataQuery(playerUUIDs)),
+                database.query(new ExtensionQueryResultTableDataQuery(serverInfo.getServerUUID(), playerUUIDs)),
                 config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                 formatters, locale
         ).toJSONMap();

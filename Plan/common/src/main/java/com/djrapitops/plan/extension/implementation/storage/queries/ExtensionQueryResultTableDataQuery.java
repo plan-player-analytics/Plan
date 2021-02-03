@@ -23,7 +23,6 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import org.apache.commons.text.TextStringBuilder;
@@ -48,9 +47,11 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, ExtensionTabData>> {
 
+    private final UUID serverUUID;
     private final Collection<UUID> playerUUIDs;
 
-    public ExtensionQueryResultTableDataQuery(Collection<UUID> playerUUIDs) {
+    public ExtensionQueryResultTableDataQuery(UUID serverUUID, Collection<UUID> playerUUIDs) {
+        this.serverUUID = serverUUID;
         this.playerUUIDs = playerUUIDs;
     }
 
@@ -97,13 +98,15 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
                 WHERE + "v1." + ExtensionPlayerValueTable.USER_UUID + " IN ('" +
                 new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
                 AND + "p1." + ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE + "=?" +
-                AND + "p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?";
+                AND + "p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?" +
+                AND + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
 
         return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);                  // Select only values that should be shown
                 statement.setBoolean(2, false);                 // Don't select player_name String values
+                statement.setString(3, serverUUID.toString());
             }
 
             @Override
@@ -126,9 +129,15 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on e1." + ExtensionPluginTable.ID + "=p1." + ExtensionProviderTable.PLUGIN_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 WHERE + "v1." + ExtensionPlayerValueTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
+                AND + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
 
-        return new QueryAllStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
+        return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
             @Override
             public Map<UUID, ExtensionTabData> processResults(ResultSet set) throws SQLException {
                 return extractDataByPlayer(set);
