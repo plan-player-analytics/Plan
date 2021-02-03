@@ -321,7 +321,7 @@ function displayResultPath(json) {
         for (let j = 0; j < i * 4; j++) {
             pathHtml += "&nbsp;";
         }
-        pathHtml += `<i class="fa fa-fw fa-filter"></i> ${getReadableFilterName(step.kind)} matched ${step.size} players</p>`
+        pathHtml += `<i class="fa fa-fw fa-filter"></i> ${getReadableFilterName(step)} matched ${step.size} players</p>`
     }
 
     insertElementBefore('.tab .row .card', () => {

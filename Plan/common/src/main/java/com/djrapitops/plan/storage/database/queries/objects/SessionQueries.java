@@ -859,7 +859,7 @@ public class SessionQueries {
             @Override
             public Map<String, Long> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    long sessionCount = set.getLong("total_sessions");
+                    long sessionCount = set.getLong("session_count");
                     long playtime = set.getLong("playtime");
                     long activePlaytime = set.getLong("active_playtime");
                     int playerCount = playerUUIDs.size();
