@@ -44,22 +44,9 @@ public class TPSQueries {
         /* Static method class */
     }
 
-    public static Query<List<TPS>> fetchTPSDataOfServer(UUID serverUUID) {
+    public static Query<List<TPS>> fetchTPSDataOfServerInResolution(long after, long before, long resolution, UUID serverUUID) {
         return db -> {
-            String selectLowestResolution = SELECT +
-                    min("t." + DATE) + " as " + DATE + ',' +
-                    min("t." + TPS) + " as " + TPS + ',' +
-                    max("t." + PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE + ',' +
-                    max("t." + RAM_USAGE) + " as " + RAM_USAGE + ',' +
-                    max("t." + CPU_USAGE) + " as " + CPU_USAGE + ',' +
-                    max("t." + ENTITIES) + " as " + ENTITIES + ',' +
-                    max("t." + CHUNKS) + " as " + CHUNKS + ',' +
-                    max("t." + FREE_DISK) + " as " + FREE_DISK +
-                    FROM + TABLE_NAME + " t" +
-                    WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
-                    AND + DATE + "<?" +
-                    GROUP_BY + floor(DATE + "/?");
-            String selectLowerResolution = SELECT +
+            String sql = SELECT +
                     min("t." + DATE) + " as " + DATE + ',' +
                     min("t." + TPS) + " as " + TPS + ',' +
                     max("t." + PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE + ',' +
@@ -72,34 +59,16 @@ public class TPSQueries {
                     WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
                     AND + DATE + ">=?" +
                     AND + DATE + "<?" +
-                    GROUP_BY + floor(DATE + "/?");
-            String selectNormalResolution = SELECT +
-                    DATE + ',' + TPS + ',' + PLAYERS_ONLINE + ',' +
-                    RAM_USAGE + ',' + CPU_USAGE + ',' + ENTITIES + ',' + CHUNKS + ',' + FREE_DISK +
-                    FROM + TABLE_NAME +
-                    WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
-                    AND + DATE + ">=?";
-
-            String sql = selectLowestResolution +
-                    UNION + selectLowerResolution +
-                    UNION + selectNormalResolution +
+                    GROUP_BY + floor(DATE + "/?") +
                     ORDER_BY + DATE;
 
             return db.query(new QueryStatement<List<TPS>>(sql, 50000) {
                 @Override
                 public void prepare(PreparedStatement statement) throws SQLException {
-                    long now = System.currentTimeMillis();
-                    long lowestResolution = TimeUnit.MINUTES.toMillis(20);
-                    long lowResolution = TimeUnit.MINUTES.toMillis(5);
                     statement.setString(1, serverUUID.toString());
-                    statement.setLong(2, now - TimeUnit.DAYS.toMillis(60));
-                    statement.setLong(3, lowestResolution);
-                    statement.setString(4, serverUUID.toString());
-                    statement.setLong(5, now - TimeUnit.DAYS.toMillis(60));
-                    statement.setLong(6, now - TimeUnit.DAYS.toMillis(30));
-                    statement.setLong(7, lowResolution);
-                    statement.setString(8, serverUUID.toString());
-                    statement.setLong(9, now - TimeUnit.DAYS.toMillis(30));
+                    statement.setLong(2, after);
+                    statement.setLong(3, before);
+                    statement.setLong(4, resolution);
                 }
 
                 @Override
