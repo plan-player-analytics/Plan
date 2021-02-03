@@ -29,12 +29,22 @@ import java.util.concurrent.TimeUnit;
  */
 public class LineGraph implements HighChart {
 
-    private final boolean displayGaps;
     private final List<Point> points;
+    private final GapStrategy gapStrategy;
 
     public LineGraph(List<Point> points, boolean displayGaps) {
+        this(points, new GapStrategy(
+                displayGaps,
+                TimeUnit.MINUTES.toMillis(3),  // Acceptable gap
+                TimeUnit.MINUTES.toMillis(1),  // To first filler
+                TimeUnit.MINUTES.toMillis(30), // Filler frequency
+                null
+        ));
+    }
+
+    public LineGraph(List<Point> points, GapStrategy gapStrategy) {
         this.points = points;
-        this.displayGaps = displayGaps;
+        this.gapStrategy = gapStrategy;
     }
 
     @Override
@@ -48,7 +58,7 @@ public class LineGraph implements HighChart {
             Double y = point.getY();
             long date = (long) point.getX();
 
-            if (displayGaps && lastX != null && date - lastX > TimeUnit.MINUTES.toMillis(3L)) {
+            if (gapStrategy.fillGaps && lastX != null && date - lastX > gapStrategy.acceptableGapMs) {
                 addMissingPoints(arrayBuilder, lastX, date);
             }
             lastX = date;
@@ -64,17 +74,48 @@ public class LineGraph implements HighChart {
     }
 
     public List<Point> getPoints() {
-        if (displayGaps) {
-            return MutatorFunctions.addMissing(points, TimeUnit.MINUTES.toMillis(1L), null);
+        if (gapStrategy.fillGaps) {
+            return MutatorFunctions.addMissing(points, gapStrategy);
         }
         return points;
     }
 
     private void addMissingPoints(StringBuilder arrayBuilder, Long lastX, long date) {
-        long iterate = lastX + TimeUnit.MINUTES.toMillis(1L);
+        long iterate = lastX + gapStrategy.diffToFirstGapPointMs;
         while (iterate < date) {
-            arrayBuilder.append("[").append(iterate).append(",null],");
-            iterate += TimeUnit.MINUTES.toMillis(30L);
+            arrayBuilder.append("[").append(iterate).append(",").append(gapStrategy.fillWith).append("],");
+            iterate += gapStrategy.fillFrequencyMs;
+        }
+    }
+
+    public static class GapStrategy {
+        public final boolean fillGaps;
+        public final long acceptableGapMs;
+        public final long diffToFirstGapPointMs;
+        public final long fillFrequencyMs;
+        public final Double fillWith;
+
+        /**
+         * Create a GapStrategy.
+         *
+         * @param fillGaps              true/false, should the gaps in data be filled with something?
+         * @param acceptableGapMs       How many milliseconds is acceptable between points before filling in points.
+         * @param diffToFirstGapPointMs How many milliseconds to last data point are added to add first filler point.
+         * @param fillFrequencyMs       How many milliseconds should be added after each filler point.
+         * @param fillWith              Data value for the fill, null for no data, value for some data.
+         */
+        public GapStrategy(
+                boolean fillGaps,
+                long acceptableGapMs,
+                long diffToFirstGapPointMs,
+                long fillFrequencyMs,
+                Double fillWith
+        ) {
+            this.fillGaps = fillGaps;
+            this.acceptableGapMs = acceptableGapMs;
+            this.diffToFirstGapPointMs = diffToFirstGapPointMs;
+            this.fillFrequencyMs = fillFrequencyMs;
+            this.fillWith = fillWith;
         }
     }
 }

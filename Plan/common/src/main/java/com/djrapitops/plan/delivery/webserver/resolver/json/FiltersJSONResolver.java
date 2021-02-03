@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
@@ -91,12 +92,15 @@ public class FiltersJSONResolver implements Resolver {
         Long earliestStart = dbSystem.getDatabase().query(SessionQueries.earliestSessionStart());
         data.add(0, new DateObj<>(earliestStart, 1));
 
-        boolean displayGaps = true;
-        return graphs.line().lineGraph(Lists.map(data, Point::fromDateObj), displayGaps).getPoints()
-                .stream().map(point -> {
-                    if (point.getY() == null) point.setY(0.0);
-                    return point.toArray();
-                }).collect(Collectors.toList());
+        LineGraph.GapStrategy gapStrategy = new LineGraph.GapStrategy(
+                true,
+                TimeUnit.MINUTES.toMillis(16), // Acceptable gap
+                TimeUnit.MINUTES.toMillis(1),
+                TimeUnit.MINUTES.toMillis(30),
+                0.0
+        );
+        return graphs.line().lineGraph(Lists.map(data, Point::fromDateObj), gapStrategy).getPoints()
+                .stream().map(Point::toArray).collect(Collectors.toList());
     }
 
     /**
