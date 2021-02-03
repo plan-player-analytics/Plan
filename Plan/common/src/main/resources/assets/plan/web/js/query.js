@@ -251,7 +251,7 @@ function updateViewGraph() {
 
 let query = [];
 
-function performNewQuery() {
+function performNextQuery() {
     for (let filter of queryState.filters) {
         query.push(filter.toObject());
     }
@@ -340,7 +340,7 @@ function displayResults(json) {
     // Set URL so that the query result can be shared
     window.history.replaceState({}, '', `${location.pathname}?timestamp=${json.timestamp}`);
 
-    // Player table
+    /* Player table */
     $('.player-table').DataTable({
         responsive: true,
         columns: json.data.players.columns,
