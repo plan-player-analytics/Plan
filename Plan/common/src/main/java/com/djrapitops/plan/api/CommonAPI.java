@@ -106,7 +106,7 @@ public class CommonAPI implements PlanAPI {
 
     @Override
     public ServerContainer fetchServerContainer(UUID serverUUID) {
-        return new ServerContainer(queryDB(ContainerFetchQueries.fetchServerContainer(serverUUID)));
+        return new ServerContainer(new com.djrapitops.plan.delivery.domain.container.ServerContainer());
     }
 
     @Override

@@ -18,7 +18,6 @@ package com.djrapitops.plan.storage.database.queries.containers;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.delivery.domain.container.ServerContainer;
 import com.djrapitops.plan.storage.database.queries.Query;
 
 import java.util.UUID;
@@ -32,17 +31,6 @@ public class ContainerFetchQueries {
 
     private ContainerFetchQueries() {
         /* Static method class */
-    }
-
-    /**
-     * Used to get a ServerContainer, some limitations apply to values returned by DataContainer keys.
-     *
-     * @param serverUUID UUID of the Server.
-     * @return a new ServerContainer.
-     * @see ServerContainerQuery
-     */
-    public static Query<ServerContainer> fetchServerContainer(UUID serverUUID) {
-        return new ServerContainerQuery(serverUUID);
     }
 
     /**
