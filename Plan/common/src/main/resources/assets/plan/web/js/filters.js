@@ -201,6 +201,8 @@ function getReadableFilterName(filter) {
         return "Group: " + filter.kind.substring(13);
     }
     switch (filter.kind) {
+        case "allPlayers":
+            return "All players"
         case "activityIndexNow":
             return "Current activity group";
         case "banned":

@@ -160,6 +160,11 @@ HTML - COMPARING_7_DAYS                         || 지난 7일 비교
 HTML - DATABASE_NOT_OPEN                        || 데이터베이스가 열려 있지 않습니다. /plan info 로 데이터베이스 상태를 확인하십시오.
 HTML - ERROR                                    || 오류로 인해 인증에 실패했습니다.
 HTML - EXPIRED_COOKIE                           || 사용자 쿠키가 만료되었습니다.
+HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
+HTML - FILTER_ALL_PLAYERS                       || All players
+HTML - FILTER_BANNED                            || Ban status
+HTML - FILTER_GROUP                             || Group: 
+HTML - FILTER_OPS                               || Operator status
 HTML - INDEX_ACTIVE                             || 활동적인
 HTML - INDEX_INACTIVE                           || 비활성
 HTML - INDEX_IRREGULAR                          || 불규칙한
@@ -176,6 +181,8 @@ HTML - LABEL_AFK_TIME                           || AFK 시간
 HTML - LABEL_AVG                                || 평균
 HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
 HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
+HTML - LABEL_AVG_CHUNKS                         || Average Chunks
+HTML - LABEL_AVG_ENTITIES                       || Average Entities
 HTML - LABEL_AVG_KDR                            || 평균 사망 횟수(KDR)
 HTML - LABEL_AVG_MOB_KDR                        || 평균 몬스터 사망 횟수(Mob KDR)
 HTML - LABEL_AVG_PLAYTIME                       || 평균 플레이 타임

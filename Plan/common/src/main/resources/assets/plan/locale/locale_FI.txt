@@ -160,6 +160,11 @@ HTML - COMPARING_7_DAYS                         || Verrataan 7 päivää
 HTML - DATABASE_NOT_OPEN                        || Tietokanta ei ole auki, tarkista tietokannan status /plan info komennolla
 HTML - ERROR                                    || Todennus epäonnistui virheen vuoksi
 HTML - EXPIRED_COOKIE                           || Käyttäjän kirjautumiseväste vanheni
+HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
+HTML - FILTER_ALL_PLAYERS                       || All players
+HTML - FILTER_BANNED                            || Ban status
+HTML - FILTER_GROUP                             || Group: 
+HTML - FILTER_OPS                               || Operator status
 HTML - INDEX_ACTIVE                             || Aktiivinen
 HTML - INDEX_INACTIVE                           || Inaktiivinen
 HTML - INDEX_IRREGULAR                          || Epäsäännöllinen
@@ -176,6 +181,8 @@ HTML - LABEL_AFK_TIME                           || Aika AFK:ina
 HTML - LABEL_AVG                                || Keskimäräinen
 HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Keskimäräinen Aktiivinen peliaika
 HTML - LABEL_AVG_AFK_TIME                       || Keskimäräinen AFK aika
+HTML - LABEL_AVG_CHUNKS                         || Average Chunks
+HTML - LABEL_AVG_ENTITIES                       || Average Entities
 HTML - LABEL_AVG_KDR                            || Keskimäräinen Tapposuhde
 HTML - LABEL_AVG_MOB_KDR                        || Keskimäräinen Otus-Tapposuhde
 HTML - LABEL_AVG_PLAYTIME                       || Keskimäräinen peliaika

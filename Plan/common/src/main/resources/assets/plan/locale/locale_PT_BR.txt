@@ -160,6 +160,11 @@ HTML - COMPARING_7_DAYS                         || Comparing 7 days
 HTML - DATABASE_NOT_OPEN                        || Database is not open, check db status with /plan info
 HTML - ERROR                                    || Falha ao autenticar
 HTML - EXPIRED_COOKIE                           || User cookie has expired
+HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
+HTML - FILTER_ALL_PLAYERS                       || All players
+HTML - FILTER_BANNED                            || Ban status
+HTML - FILTER_GROUP                             || Group: 
+HTML - FILTER_OPS                               || Operator status
 HTML - INDEX_ACTIVE                             || Ativo
 HTML - INDEX_INACTIVE                           || Inativo
 HTML - INDEX_IRREGULAR                          || Irregular
@@ -176,6 +181,8 @@ HTML - LABEL_AFK_TIME                           || AFK Time
 HTML - LABEL_AVG                                || Average
 HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
 HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
+HTML - LABEL_AVG_CHUNKS                         || Average Chunks
+HTML - LABEL_AVG_ENTITIES                       || Average Entities
 HTML - LABEL_AVG_KDR                            || Average KDR
 HTML - LABEL_AVG_MOB_KDR                        || Average Mob KDR
 HTML - LABEL_AVG_PLAYTIME                       || Average Playtime
