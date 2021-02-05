@@ -50,6 +50,8 @@ public interface JSONStorage {
 
     Optional<StoredJSON> fetchJsonMadeAfter(String identifier, long timestamp);
 
+    void invalidateOlder(String identifier, long timestamp);
+
     final class StoredJSON {
         public final String json;
         public final long timestamp;

@@ -35,15 +35,17 @@ import javax.inject.Singleton;
 @Singleton
 public class NetworkJSONResolver {
 
+    private final AsyncJSONResolverService asyncJSONResolverService;
     private final CompositeResolver resolver;
 
     @Inject
     public NetworkJSONResolver(
-            JSONFactory jsonFactory,
+            AsyncJSONResolverService asyncJSONResolverService, JSONFactory jsonFactory,
             NetworkOverviewJSONCreator networkOverviewJSONCreator,
             NetworkPlayerBaseOverviewJSONCreator networkPlayerBaseOverviewJSONCreator,
             NetworkSessionsOverviewJSONCreator networkSessionsOverviewJSONCreator
     ) {
+        this.asyncJSONResolverService = asyncJSONResolverService;
         resolver = CompositeResolver.builder()
                 .add("overview", forJSON(DataID.SERVER_OVERVIEW, networkOverviewJSONCreator))
                 .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, networkPlayerBaseOverviewJSONCreator))
@@ -54,7 +56,7 @@ public class NetworkJSONResolver {
     }
 
     private <T> NetworkTabJSONResolver<T> forJSON(DataID dataID, NetworkTabJSONCreator<T> tabJSONCreator) {
-        return new NetworkTabJSONResolver<>(dataID, tabJSONCreator);
+        return new NetworkTabJSONResolver<>(dataID, tabJSONCreator, asyncJSONResolverService);
     }
 
     public CompositeResolver getResolver() {

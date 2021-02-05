@@ -27,6 +27,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
@@ -133,5 +135,34 @@ public class JSONFileStorage implements JSONStorage {
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void invalidateOlder(String identifier, long timestamp) {
+        File[] stored = jsonDirectory.toFile().listFiles();
+        if (stored == null) return;
+
+        List<File> toDelete = new ArrayList<>();
+        for (File file : stored) {
+            try {
+                String fileName = file.getName();
+                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {
+                    Matcher timestampMatch = timestampRegex.matcher(fileName);
+                    if (timestampMatch.find() && Long.parseLong(timestampMatch.group(1)) < timestamp) {
+                        toDelete.add(file);
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Ignore this file, malformed timestamp
+            }
+        }
+        for (File fileToDelete : toDelete) {
+            try {
+                Files.delete(fileToDelete.toPath());
+            } catch (IOException e) {
+                // Failed to delete, set for deletion on next server shutdown.
+                fileToDelete.deleteOnExit();
+            }
+        }
     }
 }
