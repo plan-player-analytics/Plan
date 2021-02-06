@@ -47,7 +47,6 @@ public class WebserverSettings {
     public static final Setting<Long> INVALIDATE_QUERY_RESULTS = new TimeSetting("Webserver.Cache.Invalidate_query_results_on_disk_after");
     public static final Setting<Long> INVALIDATE_DISK_CACHE = new TimeSetting("Webserver.Cache.Invalidate_disk_cache_after");
     public static final Setting<Long> INVALIDATE_MEMORY_CACHE = new TimeSetting("Webserver.Cache.Invalidate_memory_cache_after");
-    public static final Setting<Long> INVALIDATE_FILE_CACHE = new TimeSetting("Webserver.Cache.Invalidate_file_cache_after");
 
     private WebserverSettings() {
         /* static variable class */

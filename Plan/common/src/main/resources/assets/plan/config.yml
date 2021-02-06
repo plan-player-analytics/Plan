@@ -58,8 +58,6 @@ Webserver:
       Unit: DAYS
     Invalidate_memory_cache_after: 5
       Unit: MINUTES
-    Invalidate_file_cache_after: 10
-      Unit: MINUTES
   Security:
     SSL_certificate:
       KeyStore_path: Cert.jks
