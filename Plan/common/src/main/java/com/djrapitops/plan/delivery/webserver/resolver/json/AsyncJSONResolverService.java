@@ -26,7 +26,6 @@ import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -68,9 +67,11 @@ public class AsyncJSONResolverService {
         String identifier = dataID.of(serverUUID);
 
         // Attempt to find a newer version of the json file from cache
-        Optional<JSONStorage.StoredJSON> storedJSON = jsonStorage.fetchJsonMadeAfter(identifier, newerThanTimestamp);
-        if (storedJSON.isPresent()) {
-            return storedJSON.get();
+        JSONStorage.StoredJSON storedJSON = jsonStorage.fetchExactJson(identifier, newerThanTimestamp)
+                .orElseGet(() -> jsonStorage.fetchJsonMadeAfter(identifier, newerThanTimestamp)
+                        .orElse(null));
+        if (storedJSON != null) {
+            return storedJSON;
         }
         // No new enough version, let's refresh and send old version of the file
 
@@ -97,9 +98,9 @@ public class AsyncJSONResolverService {
         }
 
         // Get an old version from cache
-        storedJSON = jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp);
-        if (storedJSON.isPresent()) {
-            return storedJSON.get();
+        storedJSON = jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp).orElse(null);
+        if (storedJSON != null) {
+            return storedJSON;
         } else {
             // If there is no version available, block thread until the new finishes being generated.
             try {
@@ -119,9 +120,11 @@ public class AsyncJSONResolverService {
         String identifier = dataID.name();
 
         // Attempt to find a newer version of the json file from cache
-        Optional<JSONStorage.StoredJSON> storedJSON = jsonStorage.fetchJsonMadeAfter(identifier, newerThanTimestamp);
-        if (storedJSON.isPresent()) {
-            return storedJSON.get();
+        JSONStorage.StoredJSON storedJSON = jsonStorage.fetchExactJson(identifier, newerThanTimestamp)
+                .orElseGet(() -> jsonStorage.fetchJsonMadeAfter(identifier, newerThanTimestamp)
+                        .orElse(null));
+        if (storedJSON != null) {
+            return storedJSON;
         }
         // No new enough version, let's refresh and send old version of the file
 
@@ -148,9 +151,9 @@ public class AsyncJSONResolverService {
         }
 
         // Get an old version from cache
-        storedJSON = jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp);
-        if (storedJSON.isPresent()) {
-            return storedJSON.get();
+        storedJSON = jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp).orElse(null);
+        if (storedJSON != null) {
+            return storedJSON;
         } else {
             // If there is no version available, block thread until the new finishes being generated.
             try {

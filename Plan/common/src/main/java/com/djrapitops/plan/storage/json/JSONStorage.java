@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.json;
 
+import com.djrapitops.plan.SubSystem;
 import com.google.gson.Gson;
 
 import java.util.Objects;
@@ -26,7 +27,15 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public interface JSONStorage {
+public interface JSONStorage extends SubSystem {
+
+    @Override
+    default void enable() {
+    }
+
+    @Override
+    default void disable() {
+    }
 
     default StoredJSON storeJson(String identifier, String json) {
         return storeJson(identifier, json, System.currentTimeMillis());
