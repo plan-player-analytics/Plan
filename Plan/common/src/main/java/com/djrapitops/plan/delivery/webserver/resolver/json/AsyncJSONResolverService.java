@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver.resolver.json;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 
@@ -30,7 +31,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -74,7 +74,7 @@ public class AsyncJSONResolverService {
         }
         // No new enough version, let's refresh and send old version of the file
 
-        long updateThreshold = TimeUnit.MINUTES.toMillis(1L); // TODO make configurable
+        long updateThreshold = config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);
 
         // Check if the json is already being created
         Future<JSONStorage.StoredJSON> updatedJSON;
@@ -125,7 +125,7 @@ public class AsyncJSONResolverService {
         }
         // No new enough version, let's refresh and send old version of the file
 
-        long updateThreshold = TimeUnit.MINUTES.toMillis(1L); // TODO make configurable
+        long updateThreshold = config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);
 
         // Check if the json is already being created
         Future<JSONStorage.StoredJSON> updatedJSON;
