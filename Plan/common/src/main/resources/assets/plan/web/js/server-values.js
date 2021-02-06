@@ -42,83 +42,83 @@ function displayError(element, error) {
 
 /* This function loads Server Overview tab */
 function loadserverOverviewValues(json, error) {
-    tab = $('#server-overview');
+    const tab = document.getElementById('server-overview');
 
     if (error) {
-        displayError(tab, error);
+        displayError($('#server-overview'), error);
         return;
     }
 
     // Last 7 days
-    data = json.last_7_days;
-    element = $(tab).find('#data_7_days');
+    let data = json.last_7_days;
+    let element = tab.querySelector('#data_7_days');
 
-    $(element).find('#data_unique').text(data.unique_players);
-    $(element).find('#data_unique_day').text(data.unique_players_day);
-    $(element).find('#data_new').text(data.new_players);
-    $(element).find('#data_retention').text('(' + data.new_players_retention + '/' + data.new_players + ')');
-    $(element).find('#data_retention_perc').text(data.new_players_retention_perc);
+    element.querySelector('#data_unique').innerText = data.unique_players;
+    element.querySelector('#data_unique_day').innerText = data.unique_players_day;
+    element.querySelector('#data_new').innerText = data.new_players;
+    element.querySelector('#data_retention').innerText = '(' + data.new_players_retention + '/' + data.new_players + ')';
+    element.querySelector('#data_retention_perc').innerText = data.new_players_retention_perc;
 
-    $(element).find('#data_avg_tps').text(data.average_tps);
-    $(element).find('#data_low_tps_spikes').text(data.low_tps_spikes);
-    $(element).find('#data_downtime').text(data.downtime);
+    element.querySelector('#data_avg_tps').innerText = data.average_tps;
+    element.querySelector('#data_low_tps_spikes').innerText = data.low_tps_spikes;
+    element.querySelector('#data_downtime').innerText = data.downtime;
 
     // Server As Numbers
     data = json.numbers;
-    element = $(tab).find('#data_numbers');
+    element = tab.querySelector('#data_numbers');
 
-    $(element).find('#data_total').text(data.total_players);
-    $(element).find('#data_regular').text(data.regular_players);
-    $(element).find('#data_online').text(data.online_players);
+    element.querySelector('#data_total').innerText = data.total_players;
+    element.querySelector('#data_regular').innerText = data.regular_players;
+    element.querySelector('#data_online').innerText = data.online_players;
 
-    $(element).find('#data_last_peak_date').text(data.last_peak_date);
-    $(element).find('#data_last_peak_players').text(data.last_peak_players);
-    $(element).find('#data_best_peak_date').text(data.best_peak_date);
-    $(element).find('#data_best_peak_players').text(data.best_peak_players);
+    element.querySelector('#data_last_peak_date').innerText = data.last_peak_date;
+    element.querySelector('#data_last_peak_players').innerText = data.last_peak_players;
+    element.querySelector('#data_best_peak_date').innerText = data.best_peak_date;
+    element.querySelector('#data_best_peak_players').innerText = data.best_peak_players;
 
-    $(element).find('#data_playtime').text(data.playtime);
-    $(element).find('#data_player_playtime').text(data.player_playtime);
-    $(element).find('#data_sessions').text(data.sessions);
+    element.querySelector('#data_playtime').innerText = data.playtime;
+    element.querySelector('#data_player_playtime').innerText = data.player_playtime;
+    element.querySelector('#data_sessions').innerText = data.sessions;
 
-    $(element).find('#data_player_kills').text(data.player_kills);
-    $(element).find('#data_mob_kills').text(data.mob_kills);
-    $(element).find('#data_deaths').text(data.deaths);
+    element.querySelector('#data_player_kills').innerText = data.player_kills;
+    element.querySelector('#data_mob_kills').innerText = data.mob_kills;
+    element.querySelector('#data_deaths').innerText = data.deaths;
 
     // Week Comparison
     data = json.weeks;
-    element = $(tab).find('#data_weeks');
+    element = tab.querySelector('#data_weeks');
 
-    $(element).find('#data_start').text(data.start);
-    $(element).find('#data_midpoint').text(data.midpoint);
-    $(element).find('#data_midpoint2').text(data.midpoint);
-    $(element).find('#data_end').text(data.end);
+    element.querySelector('#data_start').innerText = data.start;
+    element.querySelector('#data_midpoint').innerText = data.midpoint;
+    element.querySelector('#data_midpoint2').innerText = data.midpoint;
+    element.querySelector('#data_end').innerText = data.end;
 
-    $(element).find('#data_unique_before').text(data.unique_before);
-    $(element).find('#data_unique_after').text(data.unique_after);
-    $(element).find('#data_unique_trend').replaceWith(trend(data.unique_trend));
-    $(element).find('#data_new_before').text(data.new_before);
-    $(element).find('#data_new_after').text(data.new_after);
-    $(element).find('#data_new_trend').replaceWith(trend(data.new_trend));
-    $(element).find('#data_regular_before').text(data.regular_before);
-    $(element).find('#data_regular_after').text(data.regular_after);
-    $(element).find('#data_regular_trend').replaceWith(trend(data.regular_trend));
+    element.querySelector('#data_unique_before').innerText = data.unique_before;
+    element.querySelector('#data_unique_after').innerText = data.unique_after;
+    element.querySelector('#data_unique_trend').innerHTML = trend(data.unique_trend);
+    element.querySelector('#data_new_before').innerText = data.new_before;
+    element.querySelector('#data_new_after').innerText = data.new_after;
+    element.querySelector('#data_new_trend').innerHTML = trend(data.new_trend);
+    element.querySelector('#data_regular_before').innerText = data.regular_before;
+    element.querySelector('#data_regular_after').innerText = data.regular_after;
+    element.querySelector('#data_regular_trend').innerHTML = trend(data.regular_trend);
 
-    $(element).find('#data_average_playtime_before').text(data.average_playtime_before);
-    $(element).find('#data_average_playtime_after').text(data.average_playtime_after);
-    $(element).find('#data_average_playtime_trend').replaceWith(trend(data.average_playtime_trend));
-    $(element).find('#data_sessions_before').text(data.sessions_before);
-    $(element).find('#data_sessions_after').text(data.sessions_after);
-    $(element).find('#data_sessions_trend').replaceWith(trend(data.sessions_trend));
+    element.querySelector('#data_average_playtime_before').innerText = data.average_playtime_before;
+    element.querySelector('#data_average_playtime_after').innerText = data.average_playtime_after;
+    element.querySelector('#data_average_playtime_trend').innerHTML = trend(data.average_playtime_trend);
+    element.querySelector('#data_sessions_before').innerText = data.sessions_before;
+    element.querySelector('#data_sessions_after').innerText = data.sessions_after;
+    element.querySelector('#data_sessions_trend').innerHTML = trend(data.sessions_trend);
 
-    $(element).find('#data_player_kills_before').text(data.player_kills_before);
-    $(element).find('#data_player_kills_after').text(data.player_kills_after);
-    $(element).find('#data_player_kills_trend').replaceWith(trend(data.player_kills_trend));
-    $(element).find('#data_mob_kills_before').text(data.mob_kills_before);
-    $(element).find('#data_mob_kills_after').text(data.mob_kills_after);
-    $(element).find('#data_mob_kills_trend').replaceWith(trend(data.mob_kills_trend));
-    $(element).find('#data_deaths_before').text(data.deaths_before);
-    $(element).find('#data_deaths_after').text(data.deaths_after);
-    $(element).find('#data_deaths_trend').replaceWith(trend(data.deaths_trend))
+    element.querySelector('#data_player_kills_before').innerText = data.player_kills_before;
+    element.querySelector('#data_player_kills_after').innerText = data.player_kills_after;
+    element.querySelector('#data_player_kills_trend').innerHTML = trend(data.player_kills_trend);
+    element.querySelector('#data_mob_kills_before').innerText = data.mob_kills_before;
+    element.querySelector('#data_mob_kills_after').innerText = data.mob_kills_after;
+    element.querySelector('#data_mob_kills_trend').innerHTML = trend(data.mob_kills_trend);
+    element.querySelector('#data_deaths_before').innerText = data.deaths_before;
+    element.querySelector('#data_deaths_after').innerText = data.deaths_after;
+    element.querySelector('#data_deaths_trend').innerHTML = trend(data.deaths_trend);
 }
 
 /* This function loads Online Activity Overview tab */

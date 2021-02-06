@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.json;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.google.gson.Gson;
 
 import java.util.Objects;
@@ -65,11 +66,13 @@ public interface JSONStorage extends SubSystem {
         public final String json;
         public final long timestamp;
 
-        public StoredJSON(String json, long timestamp) {
+        public StoredJSON(String json, long timestamp, Formatter<Long> dateFormatter) {
             if (!json.startsWith("{\"") || json.contains("timestamp")) {
                 this.json = json;
             } else {
-                this.json = "{\"timestamp\": " + timestamp + ",\"" + json.substring(2);
+                this.json = "{\"timestamp\": " + timestamp +
+                        ",\"timestamp_f\":\"" + dateFormatter.apply(timestamp) +
+                        "\",\"" + json.substring(2);
             }
             this.timestamp = timestamp;
         }

@@ -1,3 +1,37 @@
+function refreshingJsonRequest(address, callback, tabID) {
+    const timestamp = Date.now();
+    const addressWithTimestamp = address.includes('?')
+        ? `${address}&timestamp=${timestamp}`
+        : `${address}?timestamp=${timestamp}`
+
+    function makeTheRequest() {
+        jsonRequest(addressWithTimestamp, (json, error) => {
+            const refreshElement = document.querySelector(`#${tabID} .refresh-element`);
+            if (error) {
+                if (error.status === 400 && error.error.includes('Attempt to get data from the future!')) {
+                    console.error(error.error); // System time not in sync with UTC
+                    refreshElement.innerHTML = "System times out of sync with UTC";
+                    return jsonRequest(address, callback);
+                }
+                refreshElement.querySelector('.refresh-notice').remove();
+                return callback(json, error);
+            }
+
+            refreshElement.querySelector('.refresh-time').innerText = json.timestamp_f;
+
+            const lastUpdated = json.timestamp;
+            if (lastUpdated < timestamp) {
+                setTimeout(makeTheRequest, 5000);
+            } else {
+                refreshElement.querySelector('.refresh-notice').remove();
+            }
+            callback(json, error);
+        })
+    }
+
+    makeTheRequest();
+}
+
 /**
  * Make an XMLHttpRequest for JSON data.
  * @param address Address to request from

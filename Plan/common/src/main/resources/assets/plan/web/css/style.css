@@ -1253,3 +1253,8 @@ body.sidebar-hidden .navbar-nav {
     max-height: 18rem;
     overflow-y: scroll;
 }
+
+.refresh-element {
+    font-size: 1rem;
+    margin-left: 1rem;
+}

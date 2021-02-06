@@ -18,6 +18,8 @@ package com.djrapitops.plan.storage.json;
 
 import com.djrapitops.plan.DebugChannels;
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -60,10 +62,18 @@ public class JSONFileStorage implements JSONStorage {
     private static final String JSON_FILE_EXTENSION = ".json";
     private final DebugLogger debugLogger;
 
+    private final Formatter<Long> dateFormatter;
+
     @Inject
-    public JSONFileStorage(PlanFiles files, PluginLogger logger) {
+    public JSONFileStorage(
+            PlanFiles files,
+            Formatters formatters,
+            PluginLogger logger
+    ) {
         this.logger = logger;
         debugLogger = logger.getDebugLogger();
+
+        dateFormatter = formatters.yearLong();
 
         jsonDirectory = files.getJSONStorageDirectory();
     }
@@ -77,7 +87,7 @@ public class JSONFileStorage implements JSONStorage {
         } catch (IOException e) {
             logger.warn("Could not write a file to " + writingTo.toFile().getAbsolutePath() + ": " + e.getMessage());
         }
-        return new StoredJSON(json, timestamp);
+        return new StoredJSON(json, timestamp, dateFormatter);
     }
 
     @Override
@@ -100,7 +110,7 @@ public class JSONFileStorage implements JSONStorage {
                 long timestamp = Long.parseLong(timestampMatch.group(1));
                 StringBuilder json = new StringBuilder();
                 lines.forEach(json::append);
-                return new StoredJSON(json.toString(), timestamp);
+                return new StoredJSON(json.toString(), timestamp, dateFormatter);
             } catch (IOException e) {
                 logger.warn(jsonDirectory.toFile().getAbsolutePath() + " file '" + from.getName() + "' could not be read: " + e.getMessage());
             } catch (NumberFormatException e) {
