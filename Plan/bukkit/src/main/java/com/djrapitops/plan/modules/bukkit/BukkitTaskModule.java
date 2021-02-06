@@ -24,6 +24,7 @@ import com.djrapitops.plan.gathering.timed.BukkitPingCounter;
 import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
+import com.djrapitops.plan.storage.json.JSONFileStorage;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import dagger.Binds;
@@ -73,5 +74,9 @@ public interface BukkitTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindShutdownHookRegistration(ShutdownHook.Registrar registrar);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindJSONFileStorageCleanTask(JSONFileStorage.CleanTask cleanTask);
 
 }

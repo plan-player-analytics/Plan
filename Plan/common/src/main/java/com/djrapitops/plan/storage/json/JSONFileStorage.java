@@ -16,8 +16,15 @@
  */
 package com.djrapitops.plan.storage.json;
 
+import com.djrapitops.plan.DebugChannels;
+import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
+import com.djrapitops.plugin.logging.debug.DebugLogger;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -30,6 +37,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,10 +58,12 @@ public class JSONFileStorage implements JSONStorage {
 
     private final Pattern timestampRegex = Pattern.compile(".*-([0-9]*).json");
     private static final String JSON_FILE_EXTENSION = ".json";
+    private final DebugLogger debugLogger;
 
     @Inject
     public JSONFileStorage(PlanFiles files, PluginLogger logger) {
         this.logger = logger;
+        debugLogger = logger.getDebugLogger();
 
         jsonDirectory = files.getJSONStorageDirectory();
     }
@@ -156,13 +167,84 @@ public class JSONFileStorage implements JSONStorage {
                 // Ignore this file, malformed timestamp
             }
         }
+        deleteFiles(toDelete);
+    }
+
+    private void invalidateOlderButIgnore(long timestamp, String... ignoredIdentifiers) {
+        File[] stored = jsonDirectory.toFile().listFiles();
+        if (stored == null) return;
+
+        List<File> toDelete = new ArrayList<>();
+        outer:
+        for (File file : stored) {
+            try {
+                String fileName = file.getName();
+                if (fileName.endsWith(JSON_FILE_EXTENSION)) {
+                    Matcher timestampMatch = timestampRegex.matcher(fileName);
+                    if (timestampMatch.find() && Long.parseLong(timestampMatch.group(1)) < timestamp) {
+                        for (String ignoredIdentifier : ignoredIdentifiers) {
+                            if (fileName.startsWith(ignoredIdentifier)) continue outer;
+                        }
+                        toDelete.add(file);
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Ignore this file, malformed timestamp
+            }
+        }
+
+        deleteFiles(toDelete);
+    }
+
+    private void deleteFiles(List<File> toDelete) {
         for (File fileToDelete : toDelete) {
             try {
+                debugLogger.logOn(DebugChannels.JSON_CACHE, "Deleting " + fileToDelete.getAbsolutePath());
                 Files.delete(fileToDelete.toPath());
             } catch (IOException e) {
                 // Failed to delete, set for deletion on next server shutdown.
                 fileToDelete.deleteOnExit();
             }
+        }
+    }
+
+    @Singleton
+    public static class CleanTask extends TaskSystem.Task {
+        private final PlanConfig config;
+        private final JSONFileStorage jsonFileStorage;
+        private final DebugLogger debugLogger;
+
+        @Inject
+        public CleanTask(
+                PlanConfig config,
+                JSONFileStorage jsonFileStorage,
+                DebugLogger debugLogger
+        ) {
+            this.config = config;
+            this.jsonFileStorage = jsonFileStorage;
+            this.debugLogger = debugLogger;
+        }
+
+        @Override
+        public void register(RunnableFactory runnableFactory) {
+            long delay = TimeAmount.toTicks(ThreadLocalRandom.current().nextInt(60), TimeUnit.SECONDS);
+            long period = TimeAmount.toTicks(1, TimeUnit.HOURS);
+            runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
+        }
+
+        @Override
+        public void run() {
+            long now = System.currentTimeMillis();
+            long invalidateDiskCacheAfterMs = config.get(WebserverSettings.INVALIDATE_DISK_CACHE);
+            long invalidateQueriesAfterMs = config.get(WebserverSettings.INVALIDATE_QUERY_RESULTS);
+            debugLogger.logOn(DebugChannels.JSON_CACHE, "Running clean task..");
+
+            jsonFileStorage.invalidateOlder("query", now - invalidateQueriesAfterMs);
+            jsonFileStorage.invalidateOlderButIgnore(now - invalidateDiskCacheAfterMs, "query");
+        }
+
+        public DebugLogger getDebugLogger() {
+            return debugLogger;
         }
     }
 }

@@ -49,7 +49,7 @@ Webserver:
       Unit: MINUTES
     Invalidate_query_results_on_disk_after: 7
       Unit: DAYS
-    Invalidate_disk_cache_after: 1
+    Invalidate_disk_cache_after: 2
       Unit: DAYS
     Invalidate_memory_cache_after: 5
       Unit: MINUTES

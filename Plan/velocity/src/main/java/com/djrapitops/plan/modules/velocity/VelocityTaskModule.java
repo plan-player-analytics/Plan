@@ -23,6 +23,7 @@ import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.gathering.timed.VelocityPingCounter;
 import com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask;
+import com.djrapitops.plan.storage.json.JSONFileStorage;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import dagger.Binds;
@@ -68,4 +69,7 @@ public interface VelocityTaskModule {
     @IntoSet
     TaskSystem.Task bindDiskTask(SystemUsageBuffer.DiskTask diskTask);
 
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindJSONFileStorageCleanTask(JSONFileStorage.CleanTask cleanTask);
 }
