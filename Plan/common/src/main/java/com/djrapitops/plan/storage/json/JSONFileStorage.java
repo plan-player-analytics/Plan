@@ -27,6 +27,7 @@ import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.logging.debug.DebugLogger;
 import com.djrapitops.plugin.task.RunnableFactory;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -81,13 +82,33 @@ public class JSONFileStorage implements JSONStorage {
     @Override
     public StoredJSON storeJson(String identifier, String json, long timestamp) {
         Path writingTo = jsonDirectory.resolve(identifier + '-' + timestamp + JSON_FILE_EXTENSION);
+        String jsonToWrite = addMissingTimestamp(json, timestamp);
         try {
             Files.createDirectories(jsonDirectory);
-            Files.write(writingTo, json.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+            Files.write(writingTo, jsonToWrite.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
         } catch (IOException e) {
             logger.warn("Could not write a file to " + writingTo.toFile().getAbsolutePath() + ": " + e.getMessage());
         }
-        return new StoredJSON(json, timestamp, dateFormatter);
+        return new StoredJSON(jsonToWrite, timestamp);
+    }
+
+    private String addMissingTimestamp(String json, long timestamp) {
+        String writtenJSON;
+        if (!json.startsWith("{\"") || json.contains("timestamp")) {
+            if (!json.contains("timestamp_f")) {
+                writtenJSON = StringUtils.replaceOnce(json,
+                        "\"timestamp\"",
+                        "\"timestamp_f\":\"" + dateFormatter.apply(timestamp) + "\",\"timestamp\""
+                );
+            } else {
+                writtenJSON = json;
+            }
+        } else {
+            writtenJSON = "{\"timestamp\": " + timestamp +
+                    ",\"timestamp_f\":\"" + dateFormatter.apply(timestamp) +
+                    "\",\"" + json.substring(2);
+        }
+        return writtenJSON;
     }
 
     @Override
@@ -110,7 +131,7 @@ public class JSONFileStorage implements JSONStorage {
                 long timestamp = Long.parseLong(timestampMatch.group(1));
                 StringBuilder json = new StringBuilder();
                 lines.forEach(json::append);
-                return new StoredJSON(json.toString(), timestamp, dateFormatter);
+                return new StoredJSON(json.toString(), timestamp);
             } catch (IOException e) {
                 logger.warn(jsonDirectory.toFile().getAbsolutePath() + " file '" + from.getName() + "' could not be read: " + e.getMessage());
             } catch (NumberFormatException e) {

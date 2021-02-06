@@ -1258,3 +1258,7 @@ body.sidebar-hidden .navbar-nav {
     font-size: 1rem;
     margin-left: 1rem;
 }
+
+.refresh-element > i {
+    cursor: pointer;
+}

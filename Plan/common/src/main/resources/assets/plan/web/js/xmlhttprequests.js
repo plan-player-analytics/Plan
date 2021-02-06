@@ -4,26 +4,35 @@ function refreshingJsonRequest(address, callback, tabID) {
         ? `${address}&timestamp=${timestamp}`
         : `${address}?timestamp=${timestamp}`
 
+    const refreshElement = document.querySelector(`#${tabID} .refresh-element`);
+    refreshElement.querySelector('i').addEventListener('click', () => {
+        refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
+        refreshingJsonRequest(address, callback, tabID);
+    });
+
+    let timeout = 1000;
+
     function makeTheRequest() {
         jsonRequest(addressWithTimestamp, (json, error) => {
-            const refreshElement = document.querySelector(`#${tabID} .refresh-element`);
             if (error) {
                 if (error.status === 400 && error.error.includes('Attempt to get data from the future!')) {
                     console.error(error.error); // System time not in sync with UTC
                     refreshElement.innerHTML = "System times out of sync with UTC";
                     return jsonRequest(address, callback);
                 }
-                refreshElement.querySelector('.refresh-notice').remove();
+                refreshElement.querySelector('.refresh-notice').innerHTML = "";
                 return callback(json, error);
             }
 
             refreshElement.querySelector('.refresh-time').innerText = json.timestamp_f;
 
             const lastUpdated = json.timestamp;
+            // TODO Work out the kinks with the refresh barrier time
             if (lastUpdated < timestamp) {
-                setTimeout(makeTheRequest, 5000);
+                setTimeout(makeTheRequest, timeout);
+                timeout = timeout >= 12000 ? timeout : timeout * 2;
             } else {
-                refreshElement.querySelector('.refresh-notice').remove();
+                refreshElement.querySelector('.refresh-notice').innerHTML = "";
             }
             callback(json, error);
         })

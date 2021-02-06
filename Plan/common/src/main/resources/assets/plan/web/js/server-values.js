@@ -123,62 +123,62 @@ function loadserverOverviewValues(json, error) {
 
 /* This function loads Online Activity Overview tab */
 function loadOnlineActivityOverviewValues(json, error) {
-    tab = $('#online-activity-overview');
+    const tab = document.getElementById('online-activity-overview');
 
     if (error) {
-        displayError(tab, error);
+        displayError($('#online-activity-overview'), error);
         return;
     }
 
     // Online Activity as Numbers
-    data = json.numbers;
-    element = $(tab).find('#data_numbers');
+    let data = json.numbers;
+    let element = tab.querySelector('#data_numbers');
 
-    $(element).find('#data_unique_players_30d').replaceWith('<td>' + data.unique_players_30d + smallTrend(data.unique_players_30d_trend) + '</td>');
-    $(element).find('#data_unique_players_7d').text(data.unique_players_7d);
-    $(element).find('#data_unique_players_24h').text(data.unique_players_24h);
+    element.querySelector('#data_unique_players_30d').innerHTML = data.unique_players_30d + smallTrend(data.unique_players_30d_trend);
+    element.querySelector('#data_unique_players_7d').innerText = data.unique_players_7d;
+    element.querySelector('#data_unique_players_24h').innerText = data.unique_players_24h;
 
-    $(element).find('#data_unique_players_30d_avg').replaceWith('<td>' + data.unique_players_30d_avg + smallTrend(data.unique_players_30d_avg_trend) + '</td>');
-    $(element).find('#data_unique_players_7d_avg').text(data.unique_players_7d_avg);
-    $(element).find('#data_unique_players_24h_avg').text(data.unique_players_24h_avg);
+    element.querySelector('#data_unique_players_30d_avg').innerHTML = data.unique_players_30d_avg + smallTrend(data.unique_players_30d_avg_trend);
+    element.querySelector('#data_unique_players_7d_avg').innerText = data.unique_players_7d_avg;
+    element.querySelector('#data_unique_players_24h_avg').innerText = data.unique_players_24h_avg;
 
-    $(element).find('#data_new_players_30d').replaceWith('<td>' + data.new_players_30d + smallTrend(data.new_players_30d_trend) + '</td>');
-    $(element).find('#data_new_players_7d').text(data.new_players_7d);
-    $(element).find('#data_new_players_24h').text(data.new_players_24h);
+    element.querySelector('#data_new_players_30d').innerHTML = data.new_players_30d + smallTrend(data.new_players_30d_trend);
+    element.querySelector('#data_new_players_7d').innerText = data.new_players_7d;
+    element.querySelector('#data_new_players_24h').innerText = data.new_players_24h;
 
-    $(element).find('#data_new_players_30d_avg').replaceWith('<td>' + data.new_players_30d_avg + smallTrend(data.new_players_30d_avg_trend) + '</td>');
-    $(element).find('#data_new_players_7d_avg').text(data.new_players_7d_avg);
-    $(element).find('#data_new_players_24h_avg').text(data.new_players_24h_avg);
+    element.querySelector('#data_new_players_30d_avg').innerHTML = data.new_players_30d_avg + smallTrend(data.new_players_30d_avg_trend);
+    element.querySelector('#data_new_players_7d_avg').innerText = data.new_players_7d_avg;
+    element.querySelector('#data_new_players_24h_avg').innerText = data.new_players_24h_avg;
 
-    $(element).find('#data_new_players_retention_30d').text('(' + data.new_players_retention_30d + '/' + data.new_players_30d + ') ' + data.new_players_retention_30d_perc);
-    $(element).find('#data_new_players_retention_7d').text('(' + data.new_players_retention_7d + '/' + data.new_players_7d + ') ' + data.new_players_retention_7d_perc);
-    $(element).find('#data_new_players_retention_24h').replaceWith(`<td title="This value is a prediction based on previous players.">(` + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + '  <i class="far fa-fw fa-eye"></i></td>');
+    element.querySelector('#data_new_players_retention_30d').innerText = '(' + data.new_players_retention_30d + '/' + data.new_players_30d + ') ' + data.new_players_retention_30d_perc;
+    element.querySelector('#data_new_players_retention_7d').innerText = '(' + data.new_players_retention_7d + '/' + data.new_players_7d + ') ' + data.new_players_retention_7d_perc;
+    element.querySelector('#data_new_players_retention_24h').innerHTML = '(' + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + ' <i class="far fa-fw fa-eye"></i>';
 
-    $(element).find('#data_playtime_30d').replaceWith('<td>' + data.playtime_30d + smallTrend(data.playtime_30d_trend) + '</td>');
-    $(element).find('#data_playtime_7d').text(data.playtime_7d);
-    $(element).find('#data_playtime_24h').text(data.playtime_24h);
+    element.querySelector('#data_playtime_30d').innerHTML = data.playtime_30d + smallTrend(data.playtime_30d_trend);
+    element.querySelector('#data_playtime_7d').innerText = data.playtime_7d;
+    element.querySelector('#data_playtime_24h').innerText = data.playtime_24h;
 
-    $(element).find('#data_playtime_30d_avg').replaceWith('<td>' + data.playtime_30d_avg + smallTrend(data.playtime_30d_avg_trend) + '</td>');
-    $(element).find('#data_playtime_7d_avg').text(data.playtime_7d_avg);
-    $(element).find('#data_playtime_24h_avg').text(data.playtime_24h_avg);
+    element.querySelector('#data_playtime_30d_avg').innerHTML = data.playtime_30d_avg + smallTrend(data.playtime_30d_avg_trend);
+    element.querySelector('#data_playtime_7d_avg').innerText = data.playtime_7d_avg;
+    element.querySelector('#data_playtime_24h_avg').innerText = data.playtime_24h_avg;
 
-    $(element).find('#data_session_length_30d_avg').replaceWith('<td>' + data.session_length_30d_avg + smallTrend(data.session_length_30d_trend) + '</td>');
-    $(element).find('#data_session_length_7d_avg').text(data.session_length_7d_avg);
-    $(element).find('#data_session_length_24h_avg').text(data.session_length_24h_avg);
+    element.querySelector('#data_session_length_30d_avg').innerHTML = data.session_length_30d_avg + smallTrend(data.session_length_30d_trend);
+    element.querySelector('#data_session_length_7d_avg').innerText = data.session_length_7d_avg;
+    element.querySelector('#data_session_length_24h_avg').innerText = data.session_length_24h_avg;
 
-    $(element).find('#data_sessions_30d').replaceWith('<td>' + data.sessions_30d + smallTrend(data.sessions_30d_trend) + '</td>');
-    $(element).find('#data_sessions_7d').text(data.sessions_7d);
-    $(element).find('#data_sessions_24h').text(data.sessions_24h);
+    element.querySelector('#data_sessions_30d').innerHTML = data.sessions_30d + smallTrend(data.sessions_30d_trend);
+    element.querySelector('#data_sessions_7d').innerText = data.sessions_7d;
+    element.querySelector('#data_sessions_24h').innerText = data.sessions_24h;
 
     // Insights
     data = json.insights;
-    element = $(tab).find('#data_insights');
+    element = tab.querySelector('#data_insights');
 
-    $(element).find('#data_players_first_join_avg').replaceWith(data.players_first_join_avg + smallTrend(data.players_first_join_trend));
-    $(element).find('#data_first_session_length_avg').replaceWith(data.first_session_length_avg + smallTrend(data.first_session_length_trend));
-    $(element).find('#data_first_session_length_median').replaceWith(data.first_session_length_median + smallTrend(data.first_session_length_median_trend));
-    $(element).find('#data_lone_joins').replaceWith(data.lone_joins + smallTrend(data.lone_joins_trend));
-    $(element).find('#data_lone_new_joins').replaceWith(data.lone_new_joins + smallTrend(data.lone_new_joins_trend))
+    element.querySelector('#data_players_first_join_avg').innerHTML = data.players_first_join_avg + smallTrend(data.players_first_join_trend);
+    element.querySelector('#data_first_session_length_avg').innerHTML = data.first_session_length_avg + smallTrend(data.first_session_length_trend);
+    element.querySelector('#data_first_session_length_median').innerHTML = data.first_session_length_median + smallTrend(data.first_session_length_median_trend);
+    element.querySelector('#data_lone_joins').innerHTML = data.lone_joins + smallTrend(data.lone_joins_trend);
+    element.querySelector('#data_lone_new_joins').innerHTML = data.lone_new_joins + smallTrend(data.lone_new_joins_trend);
 }
 
 /* This function loads Sessions tab */

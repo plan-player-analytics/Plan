@@ -104,8 +104,16 @@ public class AsyncJSONResolverService {
         } else {
             // If there is no version available, block thread until the new finishes being generated.
             try {
-                // updatedJSON is not null in this case ever because previousUpdates.getOrDefault(..., 0L) gets 0.
-                //noinspection ConstantConditions
+                // Can be null if the last update was recent and the file is deleted before next update
+                if (updatedJSON == null) {
+                    updatedJSON = processing.submitNonCritical(() -> {
+                        JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.apply(serverUUID));
+                        currentlyProcessing.remove(identifier);
+                        jsonStorage.invalidateOlder(identifier, created.timestamp);
+                        previousUpdates.put(identifier, created.timestamp);
+                        return created;
+                    }); // TODO Refactor this spaghetti code
+                }
                 return updatedJSON.get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -157,8 +165,16 @@ public class AsyncJSONResolverService {
         } else {
             // If there is no version available, block thread until the new finishes being generated.
             try {
-                // updatedJSON is not null in this case ever because previousUpdates.getOrDefault(..., 0L) gets 0.
-                //noinspection ConstantConditions
+                // Can be null if the last update was recent and the file is deleted before next update.
+                if (updatedJSON == null) {
+                    updatedJSON = processing.submitNonCritical(() -> {
+                        JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.get());
+                        currentlyProcessing.remove(identifier);
+                        jsonStorage.invalidateOlder(identifier, created.timestamp);
+                        previousUpdates.put(identifier, created.timestamp);
+                        return created;
+                    }); // TODO Refactor this spaghetti code
+                }
                 return updatedJSON.get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
