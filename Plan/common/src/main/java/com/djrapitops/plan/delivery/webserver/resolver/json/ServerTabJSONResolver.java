@@ -28,6 +28,7 @@ import com.djrapitops.plan.identification.Identifiers;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -72,9 +73,14 @@ public class ServerTabJSONResolver<T> implements Resolver {
 
     private long getTimestamp(Request request) {
         try {
-            return request.getQuery().get("timestamp")
+            long currentTime = System.currentTimeMillis();
+            long timestamp = request.getQuery().get("timestamp")
                     .map(Long::parseLong)
-                    .orElseGet(System::currentTimeMillis);
+                    .orElse(currentTime);
+            if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
+                throw new BadRequestException("Attempt to get data from the future! " + timestamp + " > " + currentTime);
+            }
+            return timestamp;
         } catch (NumberFormatException nonNumberTimestamp) {
             throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
         }

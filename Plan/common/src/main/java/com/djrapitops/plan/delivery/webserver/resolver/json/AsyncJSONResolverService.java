@@ -18,7 +18,9 @@ package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.json.JSONStorage;
+import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,6 +30,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -39,19 +42,26 @@ import java.util.function.Supplier;
 @Singleton
 public class AsyncJSONResolverService {
 
+    private final PlanConfig config;
     private final Processing processing;
     private final JSONStorage jsonStorage;
     private final Map<String, Future<JSONStorage.StoredJSON>> currentlyProcessing;
+    private final Map<String, Long> previousUpdates;
+    private final UnitSemaphoreAccessLock accessLock; // Access lock prevents double processing same resource
 
     @Inject
     public AsyncJSONResolverService(
+            PlanConfig config,
             Processing processing,
             JSONStorage jsonStorage
     ) {
+        this.config = config;
         this.processing = processing;
         this.jsonStorage = jsonStorage;
 
         currentlyProcessing = new ConcurrentHashMap<>();
+        previousUpdates = new ConcurrentHashMap<>();
+        accessLock = new UnitSemaphoreAccessLock();
     }
 
     public <T> JSONStorage.StoredJSON resolve(long newerThanTimestamp, DataID dataID, UUID serverUUID, Function<UUID, T> creator) {
@@ -64,17 +74,26 @@ public class AsyncJSONResolverService {
         }
         // No new enough version, let's refresh and send old version of the file
 
+        long updateThreshold = TimeUnit.MINUTES.toMillis(1L); // TODO make configurable
+
         // Check if the json is already being created
-        Future<JSONStorage.StoredJSON> updatedJSON = currentlyProcessing.get(identifier);
-        if (updatedJSON == null) {
-            // Submit a task to refresh the data if the json is old
-            updatedJSON = processing.submitNonCritical(() -> {
-                JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.apply(serverUUID));
-                currentlyProcessing.remove(identifier);
-                jsonStorage.invalidateOlder(identifier, created.timestamp);
-                return created;
-            });
-            currentlyProcessing.put(identifier, updatedJSON);
+        Future<JSONStorage.StoredJSON> updatedJSON;
+        accessLock.enter();
+        try {
+            updatedJSON = currentlyProcessing.get(identifier);
+            if (updatedJSON == null && previousUpdates.getOrDefault(identifier, 0L) < newerThanTimestamp - updateThreshold) {
+                // Submit a task to refresh the data if the json is old
+                updatedJSON = processing.submitNonCritical(() -> {
+                    JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.apply(serverUUID));
+                    currentlyProcessing.remove(identifier);
+                    jsonStorage.invalidateOlder(identifier, created.timestamp);
+                    previousUpdates.put(identifier, created.timestamp);
+                    return created;
+                });
+                currentlyProcessing.put(identifier, updatedJSON);
+            }
+        } finally {
+            accessLock.exit();
         }
 
         // Get an old version from cache
@@ -84,6 +103,8 @@ public class AsyncJSONResolverService {
         } else {
             // If there is no version available, block thread until the new finishes being generated.
             try {
+                // updatedJSON is not null in this case ever because previousUpdates.getOrDefault(..., 0L) gets 0.
+                //noinspection ConstantConditions
                 return updatedJSON.get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -104,17 +125,26 @@ public class AsyncJSONResolverService {
         }
         // No new enough version, let's refresh and send old version of the file
 
+        long updateThreshold = TimeUnit.MINUTES.toMillis(1L); // TODO make configurable
+
         // Check if the json is already being created
-        Future<JSONStorage.StoredJSON> updatedJSON = currentlyProcessing.get(identifier);
-        if (updatedJSON == null) {
-            // Submit a task to refresh the data if the json is old
-            updatedJSON = processing.submitNonCritical(() -> {
-                JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.get());
-                currentlyProcessing.remove(identifier);
-                jsonStorage.invalidateOlder(identifier, created.timestamp);
-                return created;
-            });
-            currentlyProcessing.put(identifier, updatedJSON);
+        Future<JSONStorage.StoredJSON> updatedJSON;
+        accessLock.enter();
+        try {
+            updatedJSON = currentlyProcessing.get(identifier);
+            if (updatedJSON == null && previousUpdates.getOrDefault(identifier, 0L) < newerThanTimestamp - updateThreshold) {
+                // Submit a task to refresh the data if the json is old
+                updatedJSON = processing.submitNonCritical(() -> {
+                    JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.get());
+                    currentlyProcessing.remove(identifier);
+                    jsonStorage.invalidateOlder(identifier, created.timestamp);
+                    previousUpdates.put(identifier, created.timestamp);
+                    return created;
+                });
+                currentlyProcessing.put(identifier, updatedJSON);
+            }
+        } finally {
+            accessLock.exit();
         }
 
         // Get an old version from cache
@@ -124,6 +154,8 @@ public class AsyncJSONResolverService {
         } else {
             // If there is no version available, block thread until the new finishes being generated.
             try {
+                // updatedJSON is not null in this case ever because previousUpdates.getOrDefault(..., 0L) gets 0.
+                //noinspection ConstantConditions
                 return updatedJSON.get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
