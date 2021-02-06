@@ -66,7 +66,11 @@ public interface JSONStorage extends SubSystem {
         public final long timestamp;
 
         public StoredJSON(String json, long timestamp) {
-            this.json = json;
+            if (!json.startsWith("{\"") || json.contains("timestamp")) {
+                this.json = json;
+            } else {
+                this.json = "{\"timestamp\": " + timestamp + ",\"" + json.substring(2);
+            }
             this.timestamp = timestamp;
         }
 
