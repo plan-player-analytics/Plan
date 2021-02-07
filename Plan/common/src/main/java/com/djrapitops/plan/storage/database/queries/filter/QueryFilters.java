@@ -96,8 +96,7 @@ public class QueryFilters {
         String kind = specifiedFilterInformation.getKind();
         Filter filter = getFilter(kind).orElseThrow(() -> new BadRequestException("Filter kind not supported: '" + kind + "'"));
 
-        current = getResult(current, filter, specifiedFilterInformation);
-        return current;
+        return getResult(current, filter, specifiedFilterInformation);
     }
 
     private Filter.Result getResult(Filter.Result current, Filter filter, SpecifiedFilterInformation query) {
@@ -107,8 +106,6 @@ public class QueryFilters {
             throw new BadRequestException("Bad parameters for filter '" + filter.getKind() +
                     "': expecting " + Arrays.asList(filter.getExpectedParameters()) +
                     ", but was given " + query.getSetParameters());
-        } catch (CompleteSetException complete) {
-            return current == null ? null : current.notApplied(filter);
         }
     }
 
