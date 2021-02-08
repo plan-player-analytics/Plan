@@ -907,7 +907,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Geolocations</h1>
+                            &middot; Geolocations
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -1604,7 +1609,7 @@
             }
         });
         jsonRequest("../v1/kills?server=${serverUUID}", loadPlayerKills);
-        jsonRequest("../v1/pingTable?server=${serverUUID}", loadPingTable);
+        refreshingJsonRequest("../v1/pingTable?server=${serverUUID}", loadPingTable, 'geolocations');
 
         $('.player-plugin-table').DataTable({
             responsive: true
