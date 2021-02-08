@@ -532,7 +532,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Sessions</h1>
+                            &middot; Sessions
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -1303,7 +1308,7 @@
         setLoadingText('Calculating values..');
         refreshingJsonRequest("../v1/serverOverview?server=${serverUUID}", loadserverOverviewValues, 'server-overview');
         refreshingJsonRequest("../v1/onlineOverview?server=${serverUUID}", loadOnlineActivityOverviewValues, 'online-activity-overview');
-        jsonRequest("../v1/sessionsOverview?server=${serverUUID}", loadSessionValues);
+        refreshingJsonRequest("../v1/sessionsOverview?server=${serverUUID}", loadSessionValues, 'sessions-overview');
         jsonRequest("../v1/playerVersus?server=${serverUUID}", loadPvPPvEValues);
         jsonRequest("../v1/playerbaseOverview?server=${serverUUID}", loadPlayerbaseOverviewValues);
         jsonRequest("../v1/performanceOverview?server=${serverUUID}", loadPerformanceValues);

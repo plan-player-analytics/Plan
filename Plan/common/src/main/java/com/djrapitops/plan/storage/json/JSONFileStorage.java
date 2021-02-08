@@ -79,6 +79,18 @@ public class JSONFileStorage implements JSONStorage {
         jsonDirectory = files.getJSONStorageDirectory();
     }
 
+    // for testing
+    JSONFileStorage(
+            PlanFiles files, Formatter<Long> dateFormatter, PluginLogger logger
+    ) {
+        this.logger = logger;
+        debugLogger = logger.getDebugLogger();
+
+        this.dateFormatter = dateFormatter;
+
+        jsonDirectory = files.getJSONStorageDirectory();
+    }
+
     @Override
     public StoredJSON storeJson(String identifier, String json, long timestamp) {
         Path writingTo = jsonDirectory.resolve(identifier + '-' + timestamp + JSON_FILE_EXTENSION);

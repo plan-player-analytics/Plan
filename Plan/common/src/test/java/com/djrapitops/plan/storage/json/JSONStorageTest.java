@@ -49,7 +49,7 @@ class JSONStorageTest {
         this.tempDir = tempDir;
         when(files.getJSONStorageDirectory()).thenReturn(this.tempDir);
 
-        UNDER_TEST = new JSONFileStorage(files, new TestPluginLogger());
+        UNDER_TEST = new JSONFileStorage(files, value -> Long.toString(value), new TestPluginLogger());
     }
 
     private Optional<File> findTheFile() {
