@@ -728,7 +728,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Playerbase Overview</h1>
+                            &middot; Playerbase Overview
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -1315,7 +1320,7 @@
         refreshingJsonRequest("../v1/onlineOverview?server=${serverUUID}", loadOnlineActivityOverviewValues, 'online-activity-overview');
         refreshingJsonRequest("../v1/sessionsOverview?server=${serverUUID}", loadSessionValues, 'sessions-overview');
         refreshingJsonRequest("../v1/playerVersus?server=${serverUUID}", loadPvPPvEValues, "pvp-pve");
-        jsonRequest("../v1/playerbaseOverview?server=${serverUUID}", loadPlayerbaseOverviewValues);
+        refreshingJsonRequest("../v1/playerbaseOverview?server=${serverUUID}", loadPlayerbaseOverviewValues, 'playerbase-overview');
         jsonRequest("../v1/performanceOverview?server=${serverUUID}", loadPerformanceValues);
         setLoadingText('Rendering graphs..');
 
