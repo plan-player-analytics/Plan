@@ -75,7 +75,7 @@ subprojects {
     ext.nukkitVersion = "1.0-SNAPSHOT"
     ext.bungeeVersion = "1.16-R0.4"
     ext.velocityVersion = "1.0.0-SNAPSHOT"
-    ext.redisBungeeVersion = "0.6-SNAPSHOT"
+    ext.redisBungeeVersion = "0.6"
 
     ext.httpClientVersion = "4.5.13"
     ext.commonsTextVersion = "1.9"
