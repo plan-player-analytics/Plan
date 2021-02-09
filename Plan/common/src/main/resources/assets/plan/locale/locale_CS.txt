@@ -338,7 +338,7 @@ HTML - TEXT_CONTRIBUTORS_THANKS                 || Nadále následující <span 
 HTML - TEXT_DEV_VERSION                         || Toto je vývojářská verze.
 HTML - TEXT_DEVELOPED_BY                        || je vyvíjena od
 HTML - TEXT_FIRST_SESSION                       || První relace
-HTML - TEXT_LICENSED_UNDER                      || Player Analytics je vyvíjeno a licensováno pod
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics je vyvíjeno a licencováno pod
 HTML - TEXT_METRICS                             || bStats Metrics
 HTML - TEXT_NO_EXTENSION_DATA                   || Žádná data rozšíření
 HTML - TEXT_NO_LOW_TPS                          || Žádné nízké TPS rekordy
