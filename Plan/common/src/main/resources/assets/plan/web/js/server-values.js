@@ -37,7 +37,13 @@ function smallTrend(trend) {
 }
 
 function displayError(element, error) {
-    element.find('.d-sm-flex').after(`<div class="alert alert-danger" role="alert">Failed to load values: ` + error + '</div>')
+    insertElementAfterElement(element.querySelector('.d-sm-flex'), () => {
+        const alert = document.createElement('div');
+        alert.classList.add('alert', 'alert-danger');
+        alert.setAttribute('role', 'alert');
+        alert.innerText = `Failed to load values: ${error}`;
+        return alert;
+    })
 }
 
 /* This function loads Server Overview tab */
@@ -45,7 +51,7 @@ function loadserverOverviewValues(json, error) {
     const tab = document.getElementById('server-overview');
 
     if (error) {
-        displayError($('#server-overview'), error);
+        displayError(tab, error);
         return;
     }
 
@@ -126,7 +132,7 @@ function loadOnlineActivityOverviewValues(json, error) {
     const tab = document.getElementById('online-activity-overview');
 
     if (error) {
-        displayError($('#online-activity-overview'), error);
+        displayError(tab, error);
         return;
     }
 
@@ -183,7 +189,7 @@ function loadOnlineActivityOverviewValues(json, error) {
 
 /* This function loads Sessions tab */
 function loadSessionValues(json, error) {
-    tab = $('#sessions-overview');
+    const tab = document.getElementById('sessions-overview');
 
     if (error) {
         displayError(tab, error);
@@ -191,161 +197,160 @@ function loadSessionValues(json, error) {
     }
 
     // Insights
-    data = json.insights;
-    element = $(tab).find('#data_insights');
+    let data = json.insights;
+    const element = tab.querySelector('#data_insights');
 
-    $(element).find('#data_most_active_gamemode').text(data.most_active_gamemode);
-    $(element).find('#data_most_active_gamemode_perc').text(data.most_active_gamemode_perc);
-    $(element).find('#data_server_occupied').text("~" + data.server_occupied);
-    $(element).find('#data_server_occupied_perc').text(data.server_occupied_perc);
-    $(element).find('#data_total_playtime').text(data.total_playtime);
-    $(element).find('#data_afk_time').text(data.afk_time);
-    $(element).find('#data_afk_time_perc').text(data.afk_time_perc)
+    element.querySelector('#data_most_active_gamemode').innerText = data.most_active_gamemode;
+    element.querySelector('#data_most_active_gamemode_perc').innerText = data.most_active_gamemode_perc;
+    element.querySelector('#data_server_occupied').innerText = "~" + data.server_occupied;
+    element.querySelector('#data_server_occupied_perc').innerText = data.server_occupied_perc;
+    element.querySelector('#data_total_playtime').innerText = data.total_playtime;
+    element.querySelector('#data_afk_time').innerText = data.afk_time;
+    element.querySelector('#data_afk_time_perc').innerText = data.afk_time_perc;
 }
 
 /* This function loads PvP & PvE tab */
 function loadPvPPvEValues(json, error) {
-    tab = $('#pvp-pve');
+    const tab = document.getElementById('pvp-pve');
+
     if (error) {
         displayError(tab, error);
         return;
     }
 
     // as Numbers
-    data = json.numbers;
-    element = $(tab).find('#data_numbers');
+    let data = json.numbers;
+    let element = tab.querySelector('#data_numbers');
 
-    $(element).find('#data_player_kills_total').text(data.player_kills_total);
-    $(element).find('#data_player_kills_30d').text(data.player_kills_30d);
-    $(element).find('#data_player_kills_7d').text(data.player_kills_7d);
+    element.querySelector('#data_player_kills_total').innerText = data.player_kills_total;
+    element.querySelector('#data_player_kills_30d').innerText = data.player_kills_30d;
+    element.querySelector('#data_player_kills_7d').innerText = data.player_kills_7d;
 
-    $(element).find('#data_player_kdr_avg').text(data.player_kdr_avg);
-    $(element).find('#data_player_kdr_avg_30d').text(data.player_kdr_avg_30d);
-    $(element).find('#data_player_kdr_avg_7d').text(data.player_kdr_avg_7d);
+    element.querySelector('#data_player_kdr_avg').innerText = data.player_kdr_avg;
+    element.querySelector('#data_player_kdr_avg_30d').innerText = data.player_kdr_avg_30d;
+    element.querySelector('#data_player_kdr_avg_7d').innerText = data.player_kdr_avg_7d;
 
-    $(element).find('#data_mob_kills_total').text(data.mob_kills_total);
-    $(element).find('#data_mob_kills_30d').text(data.mob_kills_30d);
-    $(element).find('#data_mob_kills_7d').text(data.mob_kills_7d);
+    element.querySelector('#data_mob_kills_total').innerText = data.mob_kills_total;
+    element.querySelector('#data_mob_kills_30d').innerText = data.mob_kills_30d;
+    element.querySelector('#data_mob_kills_7d').innerText = data.mob_kills_7d;
 
-    $(element).find('#data_mob_deaths_total').text(data.mob_deaths_total);
-    $(element).find('#data_mob_deaths_30d').text(data.mob_deaths_30d);
-    $(element).find('#data_mob_deaths_7d').text(data.mob_deaths_7d);
+    element.querySelector('#data_mob_deaths_total').innerText = data.mob_deaths_total;
+    element.querySelector('#data_mob_deaths_30d').innerText = data.mob_deaths_30d;
+    element.querySelector('#data_mob_deaths_7d').innerText = data.mob_deaths_7d;
 
-    $(element).find('#data_mob_kdr_total').text(data.mob_kdr_total);
-    $(element).find('#data_mob_kdr_30d').text(data.mob_kdr_30d);
-    $(element).find('#data_mob_kdr_7d').text(data.mob_kdr_7d);
+    element.querySelector('#data_mob_kdr_total').innerText = data.mob_kdr_total;
+    element.querySelector('#data_mob_kdr_30d').innerText = data.mob_kdr_30d;
+    element.querySelector('#data_mob_kdr_7d').innerText = data.mob_kdr_7d;
 
-    $(element).find('#data_deaths_total').text(data.deaths_total);
-    $(element).find('#data_deaths_30d').text(data.deaths_30d);
-    $(element).find('#data_deaths_7d').text(data.deaths_7d);
+    element.querySelector('#data_deaths_total').innerText = data.deaths_total;
+    element.querySelector('#data_deaths_30d').innerText = data.deaths_30d;
+    element.querySelector('#data_deaths_7d').innerText = data.deaths_7d;
 
     // Insights
     data = json.insights;
-    element = $(tab).find('#data_insights');
+    element = tab.querySelector('#data_insights');
 
-    $(element).find('#data_weapon_1st').text(data.weapon_1st);
-    $(element).find('#data_weapon_2nd').text(data.weapon_2nd);
-    $(element).find('#data_weapon_3rd').text(data.weapon_3rd);
+    element.querySelector('#data_weapon_1st').innerText = data.weapon_1st;
+    element.querySelector('#data_weapon_2nd').innerText = data.weapon_2nd;
+    element.querySelector('#data_weapon_3rd').innerText = data.weapon_3rd;
 }
 
 /* This function loads Playerbase Overview tab */
 function loadPlayerbaseOverviewValues(json, error) {
-    tab = $('#playerbase-overview');
+    const tab = document.getElementById('playerbase-overview');
     if (error) {
         displayError(tab, error);
         return;
     }
 
     // Trends
-    data = json.trends;
-    element = $(tab).find('#data_trends');
+    let data = json.trends;
+    let element = tab.querySelector('#data_trends');
 
-    $(element).find('#data_total_players_then').text(data.total_players_then);
-    $(element).find('#data_total_players_now').text(data.total_players_now);
-    $(element).find('#data_total_players_trend').replaceWith(trend(data.total_players_trend));
-    $(element).find('#data_regular_players_then').text(data.regular_players_then);
-    $(element).find('#data_regular_players_now').text(data.regular_players_now);
-    $(element).find('#data_regular_players_trend').replaceWith(trend(data.regular_players_trend));
-    $(element).find('#data_playtime_avg_then').text(data.playtime_avg_then);
-    $(element).find('#data_playtime_avg_now').text(data.playtime_avg_now);
-    $(element).find('#data_playtime_avg_trend').replaceWith(trend(data.playtime_avg_trend));
-    $(element).find('#data_afk_then').text(data.afk_then);
-    $(element).find('#data_afk_now').text(data.afk_now);
-    $(element).find('#data_afk_trend').replaceWith(trend(data.afk_trend));
-    $(element).find('#data_regular_playtime_avg_then').text(data.regular_playtime_avg_then);
-    $(element).find('#data_regular_playtime_avg_now').text(data.regular_playtime_avg_now);
-    $(element).find('#data_regular_playtime_avg_trend').replaceWith(trend(data.regular_playtime_avg_trend));
-    $(element).find('#data_regular_session_avg_then').text(data.regular_session_avg_then);
-    $(element).find('#data_regular_session_avg_now').text(data.regular_session_avg_now);
-    $(element).find('#data_regular_session_avg_trend').replaceWith(trend(data.regular_session_avg_trend));
-    $(element).find('#data_regular_afk_then').text(data.regular_afk_avg_then);
-    $(element).find('#data_regular_afk_now').text(data.regular_afk_avg_now);
-    $(element).find('#data_regular_afk_trend').replaceWith(trend(data.regular_afk_avg_trend));
+    element.querySelector('#data_total_players_then').innerText = data.total_players_then;
+    element.querySelector('#data_total_players_now').innerText = data.total_players_now;
+    element.querySelector('#data_total_players_trend').innerHTML = trend(data.total_players_trend);
+    element.querySelector('#data_regular_players_then').innerText = data.regular_players_then;
+    element.querySelector('#data_regular_players_now').innerText = data.regular_players_now;
+    element.querySelector('#data_regular_players_trend').innerHTML = trend(data.regular_players_trend);
+    element.querySelector('#data_playtime_avg_then').innerText = data.playtime_avg_then;
+    element.querySelector('#data_playtime_avg_now').innerText = data.playtime_avg_now;
+    element.querySelector('#data_playtime_avg_trend').innerHTML = trend(data.playtime_avg_trend);
+    element.querySelector('#data_afk_then').innerText = data.afk_then;
+    element.querySelector('#data_afk_now').innerText = data.afk_now;
+    element.querySelector('#data_afk_trend').innerHTML = trend(data.afk_trend);
+    element.querySelector('#data_regular_playtime_avg_then').innerText = data.regular_playtime_avg_then;
+    element.querySelector('#data_regular_playtime_avg_now').innerText = data.regular_playtime_avg_now;
+    element.querySelector('#data_regular_playtime_avg_trend').innerHTML = trend(data.regular_playtime_avg_trend);
+    element.querySelector('#data_regular_session_avg_then').innerText = data.regular_session_avg_then;
+    element.querySelector('#data_regular_session_avg_now').innerText = data.regular_session_avg_now;
+    element.querySelector('#data_regular_session_avg_trend').innerHTML = trend(data.regular_session_avg_trend);
+    element.querySelector('#data_regular_afk_then').innerText = data.regular_afk_avg_then;
+    element.querySelector('#data_regular_afk_now').innerText = data.regular_afk_avg_now;
+    element.querySelector('#data_regular_afk_trend').innerHTML = trend(data.regular_afk_avg_trend);
 
     // Insights
     data = json.insights;
-    element = $(tab).find('#data_insights');
+    element = tab.querySelector('#data_insights');
 
-    $(element).find('#data_new_to_regular').replaceWith(data.new_to_regular + smallTrend(data.new_to_regular_trend));
-    $(element).find('#data_regular_to_inactive').replaceWith(data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend))
+    element.querySelector('#data_new_to_regular').innerHTML = data.new_to_regular + smallTrend(data.new_to_regular_trend);
+    element.querySelector('#data_regular_to_inactive').innerHTML = data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend);
 }
 
 /* This function loads Performance tab */
 function loadPerformanceValues(json, error) {
-    tab = $('#performance');
+    const tab = document.getElementById('performance');
     if (error) {
         displayError(tab, error);
         return;
     }
 
     // as Numbers
-    data = json.numbers;
-    element = $(tab).find('#data_numbers');
+    let data = json.numbers;
+    let element = tab.querySelector('#data_numbers');
 
-    $(element).find('#data_low_tps_spikes_30d').text(data.low_tps_spikes_30d);
-    $(element).find('#data_low_tps_spikes_7d').text(data.low_tps_spikes_7d);
-    $(element).find('#data_low_tps_spikes_24h').text(data.low_tps_spikes_24h);
-    $(element).find('#data_server_downtime_30d').text(data.server_downtime_30d);
-    $(element).find('#data_server_downtime_7d').text(data.server_downtime_7d);
-    $(element).find('#data_server_downtime_24h').text(data.server_downtime_24h);
-    $(element).find('#data_tps_30d').text(data.tps_30d);
-    $(element).find('#data_tps_7d').text(data.tps_7d);
-    $(element).find('#data_tps_24h').text(data.tps_24h);
-    $(element).find('#data_cpu_30d').text(data.cpu_30d);
-    $(element).find('#data_cpu_7d').text(data.cpu_7d);
-    $(element).find('#data_cpu_24h').text(data.cpu_24h);
-    $(element).find('#data_ram_30d').text(data.ram_30d);
-    $(element).find('#data_ram_7d').text(data.ram_7d);
-    $(element).find('#data_ram_24h').text(data.ram_24h);
-    $(element).find('#data_entities_30d').text(data.entities_30d);
-    $(element).find('#data_entities_7d').text(data.entities_7d);
-    $(element).find('#data_entities_24h').text(data.entities_24h);
-    $(element).find('#data_chunks_30d').text(data.chunks_30d);
-    $(element).find('#data_chunks_7d').text(data.chunks_7d);
-    $(element).find('#data_chunks_24h').text(data.chunks_24h);
-    $(element).find('#data_max_disk_30d').text(data.max_disk_30d);
-    $(element).find('#data_max_disk_7d').text(data.max_disk_7d);
-    $(element).find('#data_max_disk_24h').text(data.max_disk_24h);
-    $(element).find('#data_min_disk_30d').text(data.min_disk_30d);
-    $(element).find('#data_min_disk_7d').text(data.min_disk_7d);
-    $(element).find('#data_min_disk_24h').text(data.min_disk_24h);
+    element.querySelector('#data_low_tps_spikes_30d').innerText = data.low_tps_spikes_30d;
+    element.querySelector('#data_low_tps_spikes_7d').innerText = data.low_tps_spikes_7d;
+    element.querySelector('#data_low_tps_spikes_24h').innerText = data.low_tps_spikes_24h;
+    element.querySelector('#data_server_downtime_30d').innerText = data.server_downtime_30d;
+    element.querySelector('#data_server_downtime_7d').innerText = data.server_downtime_7d;
+    element.querySelector('#data_server_downtime_24h').innerText = data.server_downtime_24h;
+    element.querySelector('#data_tps_30d').innerText = data.tps_30d;
+    element.querySelector('#data_tps_7d').innerText = data.tps_7d;
+    element.querySelector('#data_tps_24h').innerText = data.tps_24h;
+    element.querySelector('#data_cpu_30d').innerText = data.cpu_30d;
+    element.querySelector('#data_cpu_7d').innerText = data.cpu_7d;
+    element.querySelector('#data_cpu_24h').innerText = data.cpu_24h;
+    element.querySelector('#data_ram_30d').innerText = data.ram_30d;
+    element.querySelector('#data_ram_7d').innerText = data.ram_7d;
+    element.querySelector('#data_ram_24h').innerText = data.ram_24h;
+    element.querySelector('#data_entities_30d').innerText = data.entities_30d;
+    element.querySelector('#data_entities_7d').innerText = data.entities_7d;
+    element.querySelector('#data_entities_24h').innerText = data.entities_24h;
+    element.querySelector('#data_chunks_30d').innerText = data.chunks_30d;
+    element.querySelector('#data_chunks_7d').innerText = data.chunks_7d;
+    element.querySelector('#data_chunks_24h').innerText = data.chunks_24h;
+    element.querySelector('#data_max_disk_30d').innerText = data.max_disk_30d;
+    element.querySelector('#data_max_disk_7d').innerText = data.max_disk_7d;
+    element.querySelector('#data_max_disk_24h').innerText = data.max_disk_24h;
+    element.querySelector('#data_min_disk_30d').innerText = data.min_disk_30d;
+    element.querySelector('#data_min_disk_7d').innerText = data.min_disk_7d;
+    element.querySelector('#data_min_disk_24h').innerText = data.min_disk_24h;
 
     // Insights
     data = json.insights;
-    element = $(tab).find('#data_insights');
+    element = tab.querySelector('#data_insights');
 
-    $(element).find('#data_low_tps_players').text(data.low_tps_players);
-    $(element).find('#data_low_tps_entities').text(data.low_tps_entities);
-    $(element).find('#data_low_tps_chunks').text(data.low_tps_chunks);
-    $(element).find('#data_low_tps_cpu').text(data.low_tps_cpu);
+    element.querySelector('#data_low_tps_players').innerText = data.low_tps_players;
+    element.querySelector('#data_low_tps_entities').innerText = data.low_tps_entities;
+    element.querySelector('#data_low_tps_chunks').innerText = data.low_tps_chunks;
+    element.querySelector('#data_low_tps_cpu').innerText = data.low_tps_cpu;
 
-    dates = data.low_disk_space_dates;
-    dateString = '';
-    for (i in dates) {
-        dateString += (dates[i] + '<br>')
+    const dates = data.low_disk_space_dates;
+    let dateString = '';
+    for (let date of dates) {
+        dateString += (date + '<br>')
     }
 
-    $(element).find('#data_low_disk_space_dates').replaceWith(
-        dateString
-    )
+    element.querySelector('#data_low_disk_space_dates').innerHTML = dateString;
 }
