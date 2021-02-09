@@ -1,10 +1,10 @@
-var trend_up_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-up\"></i> ";
-var trend_up_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-up\"></i> ";
-var trend_down_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-down\"></i> ";
-var trend_down_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-down\"></i> ";
-var trend_same = "<span class=\"badge badge-warning\"><i class=\"fa fa-caret-right\"></i> ";
+const trend_up_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-up\"></i> ";
+const trend_up_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-up\"></i> ";
+const trend_down_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-down\"></i> ";
+const trend_down_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-down\"></i> ";
+const trend_same = "<span class=\"badge badge-warning\"><i class=\"fa fa-caret-right\"></i> ";
 
-var trend_end = "</span>";
+const trend_end = "</span>";
 
 function trend(trend) {
     if (!trend) {
@@ -27,12 +27,12 @@ function smallTrend(trend) {
     switch (trend.direction) {
         case '+':
             trend_color = trend.reversed ? 'text-danger' : 'text-success';
-            return ' <i class="' + trend_color + ' fa fa-caret-up" title="' + trend.text + '"></i>';
+            return ` <i class="${trend_color} fa fa-caret-up" title="${trend.text}"></i>`;
         case '-':
             trend_color = trend.reversed ? 'text-success' : 'text-danger';
-            return ' <i class="' + trend_color + ' fa fa-caret-down" title="' + trend.text + '"></i>';
+            return ` <i class="${trend_color} fa fa-caret-down" title="${trend.text}"></i>`;
         default:
-            return ' <i class="text-warning fa fa-caret-right" title="' + trend.text + '"></i>';
+            return ` <i class="text-warning fa fa-caret-right" title="${trend.text}"></i>`;
     }
 }
 
@@ -347,10 +347,5 @@ function loadPerformanceValues(json, error) {
     element.querySelector('#data_low_tps_cpu').innerText = data.low_tps_cpu;
 
     const dates = data.low_disk_space_dates;
-    let dateString = '';
-    for (let date of dates) {
-        dateString += (date + '<br>')
-    }
-
-    element.querySelector('#data_low_disk_space_dates').innerHTML = dateString;
+    element.querySelector('#data_low_disk_space_dates').innerHTML = dates.join('<br>');
 }
