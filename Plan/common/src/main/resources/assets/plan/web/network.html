@@ -147,7 +147,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
-                            &middot; Network Overview</h1>
+                            &middot; Network Overview
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                     </div>
 
                     <div class="row">
@@ -331,7 +336,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
-                            &middot; Servers</h1>
+                            &middot; Servers
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                     </div>
 
                     <div class="row" id="data_servers">
@@ -388,7 +398,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
-                            &middot; Sessions</h1>
+                            &middot; Sessions
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                     </div>
 
                     <div class="row">
@@ -451,7 +466,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
-                            &middot; Playerbase Overview</h1>
+                            &middot; Playerbase Overview
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                     </div>
 
                     <div class="row">
@@ -593,7 +613,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
-                            &middot; Geolocations</h1>
+                            &middot; Geolocations
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                     </div>
 
                     <div class="row">
@@ -812,10 +837,10 @@
 <script id="mainScript">
     try {
         setLoadingText('Calculating values..');
-        jsonRequest("./v1/network/overview", loadNetworkOverviewValues);
-        jsonRequest("./v1/network/servers", loadservers);
-        jsonRequest("./v1/network/sessionsOverview", loadSessionValues);
-        jsonRequest("./v1/network/playerbaseOverview", loadPlayerbaseOverviewValues);
+        refreshingJsonRequest("./v1/network/overview", loadNetworkOverviewValues, 'network-overview');
+        refreshingJsonRequest("./v1/network/servers", loadservers, 'servers');
+        refreshingJsonRequest("./v1/network/sessionsOverview", loadSessionValues, 'sessions-overview');
+        refreshingJsonRequest("./v1/network/playerbaseOverview", loadPlayerbaseOverviewValues, 'playerbase-overview');
         jsonRequest("./v1/sessions", loadSessionAccordion);
         setLoadingText('Rendering graphs..');
 
@@ -965,7 +990,7 @@
 
         setLoadingText('Sorting out plugin tables..');
 
-        jsonRequest("./v1/network/pingTable", loadPingTable);
+        refreshingJsonRequest("./v1/network/pingTable", loadPingTable, 'geolocations');
 
         $('.player-plugin-table').DataTable({
             responsive: true
