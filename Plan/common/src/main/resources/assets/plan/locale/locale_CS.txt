@@ -153,18 +153,18 @@ Enable FAIL - GeoDB Write                       || Něco se pokazilo při uklád
 Enable FAIL - WebServer (Proxy)                 || WebServer se nespustil!
 Enable FAIL - Wrong Database Type               || ${0} není podporovaná databáze
 HTML - AND_BUG_REPORTERS                        || & Nahlášení bugu!
-HTML - BANNED (Filters)                         || Zabanován
+HTML - BANNED (Filters)                         || Zabanovaní
 HTML - COMPARING_15_DAYS                        || Srovnání posledních 15 dní
 HTML - COMPARING_60_DAYS                        || Srovnání posledních 60 dní
 HTML - COMPARING_7_DAYS                         || Srovnání posledních 7 dní
 HTML - DATABASE_NOT_OPEN                        || Databáze není otevřená, ověřte status databáze s /plan info
 HTML - ERROR                                    || Autentifikace neuspěšná kvůli chybě
 HTML - EXPIRED_COOKIE                           || Uživatelské cookie expirovalo
-HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
-HTML - FILTER_ALL_PLAYERS                       || All players
+HTML - FILTER_ACTIVITY_INDEX_NOW                || Aktuální skupina aktivit
+HTML - FILTER_ALL_PLAYERS                       || Všichni hráči
 HTML - FILTER_BANNED                            || Ban status
-HTML - FILTER_GROUP                             || Group: 
-HTML - FILTER_OPS                               || Operator status
+HTML - FILTER_GROUP                             || Skupina: 
+HTML - FILTER_OPS                               || OP status
 HTML - INDEX_ACTIVE                             || Aktivní
 HTML - INDEX_INACTIVE                           || Neaktivní
 HTML - INDEX_IRREGULAR                          || Nepravidelný
@@ -181,8 +181,8 @@ HTML - LABEL_AFK_TIME                           || AFK čas
 HTML - LABEL_AVG                                || Průměr
 HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Průměrná herní aktivita
 HTML - LABEL_AVG_AFK_TIME                       || Průměrný AFK čas
-HTML - LABEL_AVG_CHUNKS                         || Average Chunks
-HTML - LABEL_AVG_ENTITIES                       || Average Entities
+HTML - LABEL_AVG_CHUNKS                         || Průměr chunků
+HTML - LABEL_AVG_ENTITIES                       || Průměr entit
 HTML - LABEL_AVG_KDR                            || Průměr KDR
 HTML - LABEL_AVG_MOB_KDR                        || Průměr Mob KDR
 HTML - LABEL_AVG_PLAYTIME                       || Průměr herní doby
@@ -254,8 +254,8 @@ HTML - LINK_QUICK_VIEW                          || Rychlé zobrazení
 HTML - LINK_SERVER_ANALYSIS                     || Analýza serveru
 HTML - LINK_WIKI                                || Plan Wiki, Tutoriály & Dokumentace
 HTML - LOCAL_MACHINE                            || Lokální stroj
-HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
-HTML - LOGIN_FAILED                             || Login failed: 
+HTML - LOGIN_CREATE_ACCOUNT                     || Vytvořte si účet!
+HTML - LOGIN_FAILED                             || Přihlašování selhalo: 
 HTML - LOGIN_FORGOT_PASSWORD                    || Zapomněl jste heslo?
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Zapomněl jste heslo? Odregistruj se a registruj se znovu.
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Pro odstranění aktuálního uživatele použij následující příkaz ve hře:
@@ -281,7 +281,7 @@ HTML - QUERY_ACTIVITY_OF_MATCHED_PLAYERS        || Aktivita dotyčných hráčů
 HTML - QUERY_ACTIVITY_ON                        || Aktivita <span id="activity-date"></span>
 HTML - QUERY_ADD_FILTER                         || Přidat filtr..
 HTML - QUERY_AND                                || a 
-HTML - QUERY_ARE                                || `jsou`
+HTML - QUERY_ARE                                || ` jsou`
 HTML - QUERY_ARE_ACTIVITY_GROUP                 || jsou ve skupinách aktivit
 HTML - QUERY_ARE_PLUGIN_GROUP                   || jsou v ${plugin}'s ${group} Skupiny
 HTML - QUERY_LOADING_FILTERS                    || Načítání filtrů..
@@ -383,7 +383,7 @@ HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Statistiky výkonu
 HTML - TITLE_PING                               || Ping
 HTML - TITLE_PLAYER                             || Hráč
 HTML - TITLE_PLAYER_OVERVIEW                    || Přehled hráče
-HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Vývoj základny hráčů
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Vývoj aktivity hráčů
 HTML - TITLE_PVP_DEATHS                         || Poslední PvP smrti
 HTML - TITLE_PVP_KILLS                          || Poslední PvP zabití
 HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE v číslech
