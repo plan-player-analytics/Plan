@@ -63,8 +63,8 @@ subprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
-    ext.daggerVersion = "2.31.2"
-    ext.daggerCompilerVersion = "2.31.2"
+    ext.daggerVersion = "2.32"
+    ext.daggerCompilerVersion = "2.32"
 
     ext.abstractPluginFrameworkVersion = "3.4.2"
 
@@ -75,7 +75,7 @@ subprojects {
     ext.nukkitVersion = "1.0-SNAPSHOT"
     ext.bungeeVersion = "1.16-R0.4"
     ext.velocityVersion = "1.0.0-SNAPSHOT"
-    ext.redisBungeeVersion = "0.6-SNAPSHOT"
+    ext.redisBungeeVersion = "0.6"
 
     ext.httpClientVersion = "4.5.13"
     ext.commonsTextVersion = "1.9"
@@ -132,9 +132,9 @@ subprojects {
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
-        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.0"   // JUnit 5
-        testCompile "org.junit.jupiter:junit-jupiter-params:5.7.0"   // JUnit 5, parameterized tests
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.1'
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"   // JUnit 5
+        testCompile "org.junit.jupiter:junit-jupiter-params:5.7.1"   // JUnit 5, parameterized tests
         testCompile "org.mockito:mockito-core:3.7.7"                // Mockito Core
         testCompile "org.mockito:mockito-junit-jupiter:3.7.7"       // Mockito JUnit 5 Extension
         testCompile "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)

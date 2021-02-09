@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.mutators.MutatorFunctions;
 import com.djrapitops.plan.delivery.domain.mutators.PingMutator;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.bar.BarGraph;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraphFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.PingGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
@@ -78,9 +79,11 @@ public class GraphJSONCreator {
     }
 
     public String performanceGraphJSON(UUID serverUUID) {
+        long now = System.currentTimeMillis();
         Database db = dbSystem.getDatabase();
         LineGraphFactory lineGraphs = graphs.line();
-        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
+        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180);
+        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(halfYearAgo, now, serverUUID)));
         return '{' +
                 "\"playersOnline\":" + lineGraphs.playersOnlineGraph(tpsMutator).toHighChartsSeries() +
                 ",\"tps\":" + lineGraphs.tpsGraph(tpsMutator).toHighChartsSeries() +
@@ -107,9 +110,38 @@ public class GraphJSONCreator {
     }
 
     public Map<String, Object> optimizedPerformanceGraphJSON(UUID serverUUID) {
+        long now = System.currentTimeMillis();
+        long twoMonthsAgo = now - TimeUnit.DAYS.toMillis(60);
+        long monthAgo = now - TimeUnit.DAYS.toMillis(30);
+
+        long lowestResolution = TimeUnit.MINUTES.toMillis(20);
+        long lowResolution = TimeUnit.MINUTES.toMillis(5);
         Database db = dbSystem.getDatabase();
-        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(serverUUID)));
-        Number[][] values = tpsMutator.toArrays(config.isTrue(DisplaySettings.GAPS_IN_GRAPH_DATA));
+        TPSMutator lowestResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(0, twoMonthsAgo, lowestResolution, serverUUID)));
+        TPSMutator lowResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(twoMonthsAgo, monthAgo, lowResolution, serverUUID)));
+        TPSMutator highResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID)));
+
+        List<Number[]> values = lowestResolutionData.toArrays(new LineGraph.GapStrategy(
+                config.isTrue(DisplaySettings.GAPS_IN_GRAPH_DATA),
+                lowestResolution + TimeUnit.MINUTES.toMillis(1),
+                TimeUnit.MINUTES.toMillis(1),
+                TimeUnit.MINUTES.toMillis(30),
+                null
+        ));
+        values.addAll(lowResolutionData.toArrays(new LineGraph.GapStrategy(
+                config.isTrue(DisplaySettings.GAPS_IN_GRAPH_DATA),
+                lowResolution + TimeUnit.MINUTES.toMillis(1),
+                TimeUnit.MINUTES.toMillis(1),
+                TimeUnit.MINUTES.toMillis(30),
+                null
+        )));
+        values.addAll(highResolutionData.toArrays(new LineGraph.GapStrategy(
+                config.isTrue(DisplaySettings.GAPS_IN_GRAPH_DATA),
+                TimeUnit.MINUTES.toMillis(3),
+                TimeUnit.MINUTES.toMillis(1),
+                TimeUnit.MINUTES.toMillis(30),
+                null
+        )));
 
         return Maps.builder(String.class, Object.class)
                 .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk"})
@@ -179,14 +211,15 @@ public class GraphJSONCreator {
     }
 
     public String createUniqueAndNewJSON(LineGraphFactory lineGraphs, NavigableMap<Long, Integer> uniquePerDay, NavigableMap<Long, Integer> newPerDay, long gapFillPeriod) {
+        LineGraph.GapStrategy gapStrategy = new LineGraph.GapStrategy(true, gapFillPeriod, 0, gapFillPeriod, 0.0);
         return "{\"uniquePlayers\":" +
                 lineGraphs.lineGraph(MutatorFunctions.toPoints(
                         MutatorFunctions.addMissing(uniquePerDay, gapFillPeriod, 0)
-                )).toHighChartsSeries() +
+                ), gapStrategy).toHighChartsSeries() +
                 ",\"newPlayers\":" +
                 lineGraphs.lineGraph(MutatorFunctions.toPoints(
                         MutatorFunctions.addMissing(newPerDay, gapFillPeriod, 0)
-                )).toHighChartsSeries() +
+                ), gapStrategy).toHighChartsSeries() +
                 ",\"colors\":{" +
                 "\"playersOnline\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"," +
                 "\"newPlayers\":\"" + theme.getValue(ThemeVal.LIGHT_GREEN) + "\"" +

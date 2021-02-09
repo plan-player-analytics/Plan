@@ -9,7 +9,7 @@ function loadPlayerOverviewValues(json, error) {
         return;
     }
 
-    // Player information card
+    /* Player information card */
     data = json.info;
     element = $(tab).find("#data_player_info");
 

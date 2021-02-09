@@ -52,6 +52,11 @@ public class LineGraphFactory {
         return new LineGraph(points, displayGaps);
     }
 
+    public LineGraph lineGraph(List<Point> points, LineGraph.GapStrategy gapStrategy) {
+        points.sort(new PointComparator());
+        return new LineGraph(points, gapStrategy);
+    }
+
     public LineGraph chunkGraph(TPSMutator mutator) {
         return new ChunkGraph(mutator, shouldDisplayGapsInData());
     }

@@ -38,6 +38,7 @@ public class QueryFilters {
     private final Map<String, Filter> filters;
     private final AllPlayersFilter allPlayersFilter;
     private final DBSystem dbSystem;
+    private final PluginGroupsFilter.PluginGroupsFilterQuery filterQuery;
 
     private final AtomicBoolean fetchedPluginFilters = new AtomicBoolean(false);
 
@@ -45,10 +46,12 @@ public class QueryFilters {
     public QueryFilters(
             Set<Filter> filters,
             AllPlayersFilter allPlayersFilter,
-            DBSystem dbSystem
+            DBSystem dbSystem,
+            PluginGroupsFilter.PluginGroupsFilterQuery filterQuery
     ) {
         this.allPlayersFilter = allPlayersFilter;
         this.dbSystem = dbSystem;
+        this.filterQuery = filterQuery;
         this.filters = new HashMap<>();
         put(filters);
     }
@@ -61,7 +64,7 @@ public class QueryFilters {
 
     private void prepareFilters() {
         if (!fetchedPluginFilters.get()) {
-            put(dbSystem.getDatabase().query(new PluginGroupsFilter.PluginGroupsFilterQuery(dbSystem)));
+            put(dbSystem.getDatabase().query(filterQuery));
             fetchedPluginFilters.set(true);
         }
     }
@@ -93,8 +96,7 @@ public class QueryFilters {
         String kind = specifiedFilterInformation.getKind();
         Filter filter = getFilter(kind).orElseThrow(() -> new BadRequestException("Filter kind not supported: '" + kind + "'"));
 
-        current = getResult(current, filter, specifiedFilterInformation);
-        return current;
+        return getResult(current, filter, specifiedFilterInformation);
     }
 
     private Filter.Result getResult(Filter.Result current, Filter filter, SpecifiedFilterInformation query) {
@@ -104,8 +106,6 @@ public class QueryFilters {
             throw new BadRequestException("Bad parameters for filter '" + filter.getKind() +
                     "': expecting " + Arrays.asList(filter.getExpectedParameters()) +
                     ", but was given " + query.getSetParameters());
-        } catch (CompleteSetException complete) {
-            return current == null ? null : current.notApplied(filter);
         }
     }
 

@@ -92,6 +92,8 @@ public enum HtmlLang implements Lang {
     TITLE_30_DAYS("30 days"),
     TITLE_AS_NUMBERS("as Numbers"),
     LABEL_AVG_TPS("Average TPS"),
+    LABEL_AVG_ENTITIES("Average Entities"),
+    LABEL_AVG_CHUNKS("Average Chunks"),
     LABEL_LOW_TPS("Low TPS Spikes"),
     LABEL_DOWNTIME("Downtime"),
     // Sessions tab
