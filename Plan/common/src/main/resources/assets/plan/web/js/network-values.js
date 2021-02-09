@@ -1,10 +1,10 @@
-var trend_up_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-up\"></i> ";
-var trend_up_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-up\"></i> ";
-var trend_down_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-down\"></i> ";
-var trend_down_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-down\"></i> ";
-var trend_same = "<span class=\"badge badge-warning\"><i class=\"fa fa-caret-right\"></i> ";
+const trend_up_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-up\"></i> ";
+const trend_up_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-up\"></i> ";
+const trend_down_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-down\"></i> ";
+const trend_down_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-down\"></i> ";
+const trend_same = "<span class=\"badge badge-warning\"><i class=\"fa fa-caret-right\"></i> ";
 
-var trend_end = "</span>";
+const trend_end = "</span>";
 
 function trend(trend) {
     if (!trend) {
@@ -27,257 +27,263 @@ function smallTrend(trend) {
     switch (trend.direction) {
         case '+':
             trend_color = trend.reversed ? 'text-danger' : 'text-success';
-            return ' <i class="' + trend_color + ' fa fa-caret-up" title="' + trend.text + '"></i>';
+            return ` <i class="${trend_color} fa fa-caret-up" title="${trend.text}"></i>`;
         case '-':
             trend_color = trend.reversed ? 'text-success' : 'text-danger';
-            return ' <i class="' + trend_color + ' fa fa-caret-down" title="' + trend.text + '"></i>';
+            return ` <i class="${trend_color} fa fa-caret-down" title="${trend.text}"></i>`;
         default:
-            return ' <i class="text-warning fa fa-caret-right" title="' + trend.text + '"></i>';
+            return ` <i class="text-warning fa fa-caret-right" title="${trend.text}"></i>`;
     }
 }
 
 function displayError(element, error) {
-    element.find('.d-sm-flex').after('<div class="alert alert-danger" role="alert">Failed to load values: ' + error + '</div>')
+    insertElementAfterElement(element.querySelector('.d-sm-flex'), () => {
+        const alert = document.createElement('div');
+        alert.classList.add('alert', 'alert-danger');
+        alert.setAttribute('role', 'alert');
+        alert.innerText = `Failed to load values: ${error}`;
+        return alert;
+    })
 }
 
 /* This function loads Network Overview tab */
 function loadNetworkOverviewValues(json, error) {
-    tab = $('#network-overview');
+    const tab = document.getElementById('network-overview');
     if (error) {
         displayError(tab, error);
         return;
     }
 
     // Last 7 days
-    data = json.players;
-    element = $(tab).find('#data_players');
+    let data = json.players;
+    let element = tab.querySelector('#data_players');
 
-    $(element).find('#data_unique_players_1d').text(data.unique_players_1d);
-    $(element).find('#data_unique_players_7d').text(data.unique_players_7d);
-    $(element).find('#data_unique_players_30d').text(data.unique_players_30d);
-    $(element).find('#data_new_players_1d').text(data.new_players_1d);
-    $(element).find('#data_new_players_7d').text(data.new_players_7d);
-    $(element).find('#data_new_players_30d').text(data.new_players_30d);
+    element.querySelector('#data_unique_players_1d').innerText = data.unique_players_1d;
+    element.querySelector('#data_unique_players_7d').innerText = data.unique_players_7d;
+    element.querySelector('#data_unique_players_30d').innerText = data.unique_players_30d;
+    element.querySelector('#data_new_players_1d').innerText = data.new_players_1d;
+    element.querySelector('#data_new_players_7d').innerText = data.new_players_7d;
+    element.querySelector('#data_new_players_30d').innerText = data.new_players_30d;
 
     // Server As Numbers
     data = json.numbers;
-    element = $(tab).find('#data_numbers');
+    element = tab.querySelector('#data_numbers');
 
-    $(element).find('#data_total').text(data.total_players);
-    $(element).find('#data_regular').text(data.regular_players);
-    $(element).find('#data_online').text(data.online_players);
+    element.querySelector('#data_total').innerText = data.total_players;
+    element.querySelector('#data_regular').innerText = data.regular_players;
+    element.querySelector('#data_online').innerText = data.online_players;
 
-    $(element).find('#data_last_peak_date').text(data.last_peak_date);
-    $(element).find('#data_last_peak_players').text(data.last_peak_players);
-    $(element).find('#data_best_peak_date').text(data.best_peak_date);
-    $(element).find('#data_best_peak_players').text(data.best_peak_players);
+    element.querySelector('#data_last_peak_date').innerText = data.last_peak_date;
+    element.querySelector('#data_last_peak_players').innerText = data.last_peak_players;
+    element.querySelector('#data_best_peak_date').innerText = data.best_peak_date;
+    element.querySelector('#data_best_peak_players').innerText = data.best_peak_players;
 
-    $(element).find('#data_playtime').text(data.playtime);
-    $(element).find('#data_player_playtime').text(data.player_playtime);
-    $(element).find('#data_session_length_avg').text(data.session_length_avg);
-    $(element).find('#data_sessions').text(data.sessions);
+    element.querySelector('#data_playtime').innerText = data.playtime;
+    element.querySelector('#data_player_playtime').innerText = data.player_playtime;
+    element.querySelector('#data_session_length_avg').innerText = data.session_length_avg;
+    element.querySelector('#data_sessions').innerText = data.sessions;
 
     // Week Comparison
     data = json.weeks;
-    element = $(tab).find('#data_weeks');
+    element = tab.querySelector('#data_weeks');
 
-    $(element).find('#data_start').text(data.start);
-    $(element).find('#data_midpoint').text(data.midpoint);
-    $(element).find('#data_midpoint2').text(data.midpoint);
-    $(element).find('#data_end').text(data.end);
+    element.querySelector('#data_start').innerText = data.start;
+    element.querySelector('#data_midpoint').innerText = data.midpoint;
+    element.querySelector('#data_midpoint2').innerText = data.midpoint;
+    element.querySelector('#data_end').innerText = data.end;
 
-    $(element).find('#data_unique_before').text(data.unique_before);
-    $(element).find('#data_unique_after').text(data.unique_after);
-    $(element).find('#data_unique_trend').replaceWith(trend(data.unique_trend));
-    $(element).find('#data_new_before').text(data.new_before);
-    $(element).find('#data_new_after').text(data.new_after);
-    $(element).find('#data_new_trend').replaceWith(trend(data.new_trend));
-    $(element).find('#data_regular_before').text(data.regular_before);
-    $(element).find('#data_regular_after').text(data.regular_after);
-    $(element).find('#data_regular_trend').replaceWith(trend(data.regular_trend));
+    element.querySelector('#data_unique_before').innerText = data.unique_before;
+    element.querySelector('#data_unique_after').innerText = data.unique_after;
+    element.querySelector('#data_unique_trend').innerHTML = trend(data.unique_trend);
+    element.querySelector('#data_new_before').innerText = data.new_before;
+    element.querySelector('#data_new_after').innerText = data.new_after;
+    element.querySelector('#data_new_trend').innerHTML = trend(data.new_trend);
+    element.querySelector('#data_regular_before').innerText = data.regular_before;
+    element.querySelector('#data_regular_after').innerText = data.regular_after;
+    element.querySelector('#data_regular_trend').innerHTML = trend(data.regular_trend);
 
-    $(element).find('#data_average_playtime_before').text(data.average_playtime_before);
-    $(element).find('#data_average_playtime_after').text(data.average_playtime_after);
-    $(element).find('#data_average_playtime_trend').replaceWith(trend(data.average_playtime_trend));
-    $(element).find('#data_sessions_before').text(data.sessions_before);
-    $(element).find('#data_sessions_after').text(data.sessions_after);
-    $(element).find('#data_sessions_trend').replaceWith(trend(data.sessions_trend));
-    $(element).find('#data_session_length_average_before').text(data.session_length_average_before);
-    $(element).find('#data_session_length_average_after').text(data.session_length_average_after);
-    $(element).find('#data_session_length_average_trend').replaceWith(trend(data.session_length_average_trend));
+    element.querySelector('#data_average_playtime_before').innerText = data.average_playtime_before;
+    element.querySelector('#data_average_playtime_after').innerText = data.average_playtime_after;
+    element.querySelector('#data_average_playtime_trend').innerHTML = trend(data.average_playtime_trend);
+    element.querySelector('#data_sessions_before').innerText = data.sessions_before;
+    element.querySelector('#data_sessions_after').innerText = data.sessions_after;
+    element.querySelector('#data_sessions_trend').innerHTML = trend(data.sessions_trend);
+    element.querySelector('#data_session_length_average_before').innerText = data.session_length_average_before;
+    element.querySelector('#data_session_length_average_after').innerText = data.session_length_average_after;
+    element.querySelector('#data_session_length_average_trend').innerHTML = trend(data.session_length_average_trend);
 
 }
 
 /* This function loads Online Activity Overview tab */
 function loadOnlineActivityOverviewValues(json, error) {
-    tab = $('#online-activity-overview');
+    const tab = document.getElementById('online-activity-overview');
     if (error) {
         displayError(tab, error);
         return;
     }
 
     // Online Activity as Numbers
-    data = json.numbers;
-    element = $(tab).find('#data_numbers');
+    let data = json.numbers;
+    let element = tab.querySelector('#data_numbers');
 
-    $(element).find('#data_unique_players_30d').replaceWith('<td>' + data.unique_players_30d + smallTrend(data.unique_players_30d_trend) + '</td>');
-    $(element).find('#data_unique_players_7d').text(data.unique_players_7d);
-    $(element).find('#data_unique_players_24h').text(data.unique_players_24h);
+    element.querySelector('#data_unique_players_30d').innerHTML = data.unique_players_30d + smallTrend(data.unique_players_30d_trend);
+    element.querySelector('#data_unique_players_7d').innerText = data.unique_players_7d;
+    element.querySelector('#data_unique_players_24h').innerText = data.unique_players_24h;
 
-    $(element).find('#data_unique_players_30d_avg').replaceWith('<td>' + data.unique_players_30d_avg + smallTrend(data.unique_players_30d_avg_trend) + '</td>');
-    $(element).find('#data_unique_players_7d_avg').text(data.unique_players_7d_avg);
-    $(element).find('#data_unique_players_24h_avg').text(data.unique_players_24h_avg);
+    element.querySelector('#data_unique_players_30d_avg').innerHTML = data.unique_players_30d_avg + smallTrend(data.unique_players_30d_avg_trend);
+    element.querySelector('#data_unique_players_7d_avg').innerText = data.unique_players_7d_avg;
+    element.querySelector('#data_unique_players_24h_avg').innerText = data.unique_players_24h_avg;
 
-    $(element).find('#data_new_players_30d').replaceWith('<td>' + data.new_players_30d + smallTrend(data.new_players_30d_trend) + '</td>');
-    $(element).find('#data_new_players_7d').text(data.new_players_7d);
-    $(element).find('#data_new_players_24h').text(data.new_players_24h);
+    element.querySelector('#data_new_players_30d').innerHTML = data.new_players_30d + smallTrend(data.new_players_30d_trend);
+    element.querySelector('#data_new_players_7d').innerText = data.new_players_7d;
+    element.querySelector('#data_new_players_24h').innerText = data.new_players_24h;
 
-    $(element).find('#data_new_players_30d_avg').replaceWith('<td>' + data.new_players_30d_avg + smallTrend(data.new_players_30d_avg_trend) + '</td>');
-    $(element).find('#data_new_players_7d_avg').text(data.new_players_7d_avg);
-    $(element).find('#data_new_players_24h_avg').text(data.new_players_24h_avg);
+    element.querySelector('#data_new_players_30d_avg').innerHTML = data.new_players_30d_avg + smallTrend(data.new_players_30d_avg_trend);
+    element.querySelector('#data_new_players_7d_avg').innerText = data.new_players_7d_avg;
+    element.querySelector('#data_new_players_24h_avg').innerText = data.new_players_24h_avg;
 
-    $(element).find('#data_new_players_retention_30d').text('(' + data.new_players_retention_30d + '/' + data.new_players_30d + ') ' + data.new_players_retention_30d_perc);
-    $(element).find('#data_new_players_retention_7d').text('(' + data.new_players_retention_7d + '/' + data.new_players_7d + ') ' + data.new_players_retention_7d_perc);
-    $(element).find('#data_new_players_retention_24h').replaceWith(`<td title="This value is a prediction based on previous players.">(` + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + '  <i class="far fa-fw fa-eye"></i></td>');
+    element.querySelector('#data_new_players_retention_30d').innerText = '(' + data.new_players_retention_30d + '/' + data.new_players_30d + ') ' + data.new_players_retention_30d_perc;
+    element.querySelector('#data_new_players_retention_7d').innerText = '(' + data.new_players_retention_7d + '/' + data.new_players_7d + ') ' + data.new_players_retention_7d_perc;
+    element.querySelector('#data_new_players_retention_24h').innerHTML = '(' + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + ' <i class="far fa-fw fa-eye"></i>';
 
-    $(element).find('#data_playtime_30d').replaceWith('<td>' + data.playtime_30d + smallTrend(data.playtime_30d_trend) + '</td>');
-    $(element).find('#data_playtime_7d').text(data.playtime_7d);
-    $(element).find('#data_playtime_24h').text(data.playtime_24h);
+    element.querySelector('#data_playtime_30d').innerHTML = data.playtime_30d + smallTrend(data.playtime_30d_trend);
+    element.querySelector('#data_playtime_7d').innerText = data.playtime_7d;
+    element.querySelector('#data_playtime_24h').innerText = data.playtime_24h;
 
-    $(element).find('#data_playtime_30d_avg').replaceWith('<td>' + data.playtime_30d_avg + smallTrend(data.playtime_30d_avg_trend) + '</td>');
-    $(element).find('#data_playtime_7d_avg').text(data.playtime_7d_avg);
-    $(element).find('#data_playtime_24h_avg').text(data.playtime_24h_avg);
+    element.querySelector('#data_playtime_30d_avg').innerHTML = data.playtime_30d_avg + smallTrend(data.playtime_30d_avg_trend);
+    element.querySelector('#data_playtime_7d_avg').innerText = data.playtime_7d_avg;
+    element.querySelector('#data_playtime_24h_avg').innerText = data.playtime_24h_avg;
 
-    $(element).find('#data_session_length_30d_avg').replaceWith('<td>' + data.session_length_30d_avg + smallTrend(data.session_length_30d_trend) + '</td>');
-    $(element).find('#data_session_length_7d_avg').text(data.session_length_7d_avg);
-    $(element).find('#data_session_length_24h_avg').text(data.session_length_24h_avg);
+    element.querySelector('#data_session_length_30d_avg').innerHTML = data.session_length_30d_avg + smallTrend(data.session_length_30d_trend);
+    element.querySelector('#data_session_length_7d_avg').innerText = data.session_length_7d_avg;
+    element.querySelector('#data_session_length_24h_avg').innerText = data.session_length_24h_avg;
 
-    $(element).find('#data_sessions_30d').replaceWith('<td>' + data.sessions_30d + smallTrend(data.sessions_30d_trend) + '</td>');
-    $(element).find('#data_sessions_7d').text(data.sessions_7d);
-    $(element).find('#data_sessions_24h').text(data.sessions_24h);
+    element.querySelector('#data_sessions_30d').innerHTML = data.sessions_30d + smallTrend(data.sessions_30d_trend);
+    element.querySelector('#data_sessions_7d').innerText = data.sessions_7d;
+    element.querySelector('#data_sessions_24h').innerText = data.sessions_24h;
 
     // Insights
     data = json.insights;
-    element = $(tab).find('#data_insights');
+    element = tab.querySelector('#data_insights');
 
-    $(element).find('#data_players_first_join_avg').replaceWith(data.players_first_join_avg + smallTrend(data.players_first_join_trend));
-    $(element).find('#data_first_session_length_avg').replaceWith(data.first_session_length_avg + smallTrend(data.first_session_length_trend));
-    $(element).find('#data_lone_joins').replaceWith(data.lone_joins + smallTrend(data.lone_joins_trend));
-    $(element).find('#data_lone_new_joins').replaceWith(data.lone_new_joins + smallTrend(data.lone_new_joins_trend))
+    element.querySelector('#data_players_first_join_avg').innerHTML = data.players_first_join_avg + smallTrend(data.players_first_join_trend);
+    element.querySelector('#data_first_session_length_avg').innerHTML = data.first_session_length_avg + smallTrend(data.first_session_length_trend);
+    element.querySelector('#data_lone_joins').innerHTML = data.lone_joins + smallTrend(data.lone_joins_trend);
+    element.querySelector('#data_lone_new_joins').innerHTML = data.lone_new_joins + smallTrend(data.lone_new_joins_trend);
 }
 
 /* This function loads Sessions tab */
 function loadSessionValues(json, error) {
-    tab = $('#sessions-overview');
+    const tab = document.getElementById('sessions-overview');
     if (error) {
         displayError(tab, error);
         return;
     }
 
     // Insights
-    data = json.insights;
-    element = $(tab).find('#data_insights');
+    let data = json.insights;
+    let element = tab.querySelector('#data_insights');
 
-    $(element).find('#data_most_active_gamemode').text(data.most_active_gamemode);
-    $(element).find('#data_most_active_gamemode_perc').text(data.most_active_gamemode_perc);
-    $(element).find('#data_server_occupied').text(data.server_occupied);
-    $(element).find('#data_server_occupied_perc').text(data.server_occupied_perc);
-    $(element).find('#data_total_playtime').text(data.total_playtime);
-    $(element).find('#data_afk_time').text(data.afk_time);
-    $(element).find('#data_afk_time_perc').text(data.afk_time_perc)
+    element.querySelector('#data_total_playtime').innerText = data.total_playtime;
+    element.querySelector('#data_afk_time').innerText = data.afk_time;
+    element.querySelector('#data_afk_time_perc').innerText = data.afk_time_perc
 }
 
 /* This function loads Playerbase Overview tab */
 function loadPlayerbaseOverviewValues(json, error) {
-    tab = $('#playerbase-overview');
+    const tab = document.getElementById('playerbase-overview');
     if (error) {
         displayError(tab, error);
         return;
     }
 
     // Trends
-    data = json.trends;
-    element = $(tab).find('#data_trends');
+    let data = json.trends;
+    let element = tab.querySelector('#data_trends');
 
-    $(element).find('#data_total_players_then').text(data.total_players_then);
-    $(element).find('#data_total_players_now').text(data.total_players_now);
-    $(element).find('#data_total_players_trend').replaceWith(trend(data.total_players_trend));
-    $(element).find('#data_regular_players_then').text(data.regular_players_then);
-    $(element).find('#data_regular_players_now').text(data.regular_players_now);
-    $(element).find('#data_regular_players_trend').replaceWith(trend(data.regular_players_trend));
-    $(element).find('#data_playtime_avg_then').text(data.playtime_avg_then);
-    $(element).find('#data_playtime_avg_now').text(data.playtime_avg_now);
-    $(element).find('#data_playtime_avg_trend').replaceWith(trend(data.playtime_avg_trend));
-    $(element).find('#data_afk_then').text(data.afk_then);
-    $(element).find('#data_afk_now').text(data.afk_now);
-    $(element).find('#data_afk_trend').replaceWith(trend(data.afk_trend));
-    $(element).find('#data_regular_playtime_avg_then').text(data.regular_playtime_avg_then);
-    $(element).find('#data_regular_playtime_avg_now').text(data.regular_playtime_avg_now);
-    $(element).find('#data_regular_playtime_avg_trend').replaceWith(trend(data.regular_playtime_avg_trend));
-    $(element).find('#data_regular_session_avg_then').text(data.regular_session_avg_then);
-    $(element).find('#data_regular_session_avg_now').text(data.regular_session_avg_now);
-    $(element).find('#data_regular_session_avg_trend').replaceWith(trend(data.regular_session_avg_trend));
-    $(element).find('#data_regular_afk_then').text(data.regular_afk_avg_then);
-    $(element).find('#data_regular_afk_now').text(data.regular_afk_avg_now);
-    $(element).find('#data_regular_afk_trend').replaceWith(trend(data.regular_afk_avg_trend));
+    element.querySelector('#data_total_players_then').innerText = data.total_players_then;
+    element.querySelector('#data_total_players_now').innerText = data.total_players_now;
+    element.querySelector('#data_total_players_trend').innerHTML = trend(data.total_players_trend);
+    element.querySelector('#data_regular_players_then').innerText = data.regular_players_then;
+    element.querySelector('#data_regular_players_now').innerText = data.regular_players_now;
+    element.querySelector('#data_regular_players_trend').innerHTML = trend(data.regular_players_trend);
+    element.querySelector('#data_playtime_avg_then').innerText = data.playtime_avg_then;
+    element.querySelector('#data_playtime_avg_now').innerText = data.playtime_avg_now;
+    element.querySelector('#data_playtime_avg_trend').innerHTML = trend(data.playtime_avg_trend);
+    element.querySelector('#data_afk_then').innerText = data.afk_then;
+    element.querySelector('#data_afk_now').innerText = data.afk_now;
+    element.querySelector('#data_afk_trend').innerHTML = trend(data.afk_trend);
+    element.querySelector('#data_regular_playtime_avg_then').innerText = data.regular_playtime_avg_then;
+    element.querySelector('#data_regular_playtime_avg_now').innerText = data.regular_playtime_avg_now;
+    element.querySelector('#data_regular_playtime_avg_trend').innerHTML = trend(data.regular_playtime_avg_trend);
+    element.querySelector('#data_regular_session_avg_then').innerText = data.regular_session_avg_then;
+    element.querySelector('#data_regular_session_avg_now').innerText = data.regular_session_avg_now;
+    element.querySelector('#data_regular_session_avg_trend').innerHTML = trend(data.regular_session_avg_trend);
+    element.querySelector('#data_regular_afk_then').innerText = data.regular_afk_avg_then;
+    element.querySelector('#data_regular_afk_now').innerText = data.regular_afk_avg_now;
+    element.querySelector('#data_regular_afk_trend').innerHTML = trend(data.regular_afk_avg_trend);
 
     // Insights
     data = json.insights;
-    element = $(tab).find('#data_insights');
+    element = tab.querySelector('#data_insights');
 
-    $(element).find('#data_new_to_regular').replaceWith(data.new_to_regular + smallTrend(data.new_to_regular_trend));
-    $(element).find('#data_regular_to_inactive').replaceWith(data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend))
+    element.querySelector('#data_new_to_regular').innerHTML = data.new_to_regular + smallTrend(data.new_to_regular_trend);
+    element.querySelector('#data_regular_to_inactive').innerHTML = data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend);
 }
 
 function loadservers(servers, error) {
     if (error) {
-        displayError($('#servers-tab'), error);
+        displayError(document.getElementById('servers-tab'), error);
         return;
     }
 
     if (!servers || !servers.length) {
-        $('#data_server_list').replaceWith(
+        document.getElementById('data_server_list').innerHTML =
             `<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p><p>It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.</p></div></div>`
-        );
-        $('#quick_view_players_online').text(`No server to display online activity for.`);
+        document.getElementById('quick_view_players_online').innerText = `No server to display online activity for.`;
         return;
     }
 
-    var serversHtml = '';
-    for (var i = 0; i < servers.length; i++) {
+    let serversHtml = '';
+    for (let i = 0; i < servers.length; i++) {
         serversHtml += createnetworkserverBox(i, servers[i]);
     }
-    $("#data_server_list").replaceWith(serversHtml);
+    document.getElementById("data_server_list").innerHTML = serversHtml;
 
-    for (var i = 0; i < servers.length; i++) {
-        $('#server_quick_view_' + i).click(onViewserver(i, servers));
+    for (let i = 0; i < servers.length; i++) {
+        document.getElementById(`server_quick_view_${i}`)
+            .addEventListener('click', onViewserver(i, servers));
     }
     onViewserver(0, servers)(); // Open first server.
 }
 
 function createnetworkserverBox(i, server) {
-    return `<div class="card shadow mb-4">` +
-        `<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">` +
-        `<h6 class="m-0 font-weight-bold col-black"><i class="fas fa-fw fa-server col-light-green"></i> ` + server.name + `</h6>` +
-        `<div class="mb-0 col-lg-6">` +
-        `<p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players` +
-        `<span class="float-right"><b>` + server.players + `</b></span></p>` +
-        `<p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online` +
-        `<span class="float-right"><b>` + server.online + `</b></span></p>` +
-        `</div>` + // /column
-        `</div>` + // /header
-        `<div class="d-flex align-items-center justify-content-between">` +
-        `<a class="btn col-light-green ml-2" href="server/` + server.name + `"><i class="fa fa-fw fa-chart-line"></i> Server Analysis</a>` +
-        `<button class="btn bg-blue my-2 mr-2" id="server_quick_view_` + i + `">Quick view <i class="fa fa-fw fa-caret-square-right"></i></button>` +
-        `</div>` + // /buttons
-        `</div>` // /card
+    return `<div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold col-black">
+                        <i class="fas fa-fw fa-server col-light-green"></i> ${server.name}
+                    </h6>
+                    <div class="mb-0 col-lg-6">
+                        <p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players<span class="float-right"><b>${server.players}</b></span></p>
+                        <p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online<span class="float-right"><b>${server.online}</b></span></p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="btn col-light-green ml-2" href="server/${server.name}">
+                        <i class="fa fa-fw fa-chart-line"></i> Server Analysis
+                    </a>
+                    <button class="btn bg-blue my-2 mr-2" id="server_quick_view_${i}">
+                        Quick view <i class="fa fa-fw fa-caret-square-right"></i>
+                    </button>
+                </div>
+            </div>`;
 }
 
 function onViewserver(i, servers) {
     return function () {
         setTimeout(function () {
-            var server = servers[i];
-            var playersOnlineSeries = {
+            const server = servers[i];
+            const playersOnlineSeries = {
                 name: s.name.playersOnline,
                 type: s.type.areaSpline,
                 tooltip: s.tooltip.zeroDecimals,
@@ -285,21 +291,21 @@ function onViewserver(i, servers) {
                 color: v.colors.playersOnline,
                 yAxis: 0
             };
-            $('.data_server_name').text(server.name);
+            document.querySelector('.data_server_name').innerText = server.name
             playersChart('quick_view_players_online', playersOnlineSeries, 2);
 
-            var quickView = $('#data_quick_view');
+            const quickView = document.getElementById('data_quick_view');
 
-            quickView.find('#data_last_peak_date').text(server.last_peak_date);
-            quickView.find('#data_last_peak_players').text(server.last_peak_players);
-            quickView.find('#data_best_peak_date').text(server.best_peak_date);
-            quickView.find('#data_best_peak_players').text(server.best_peak_players);
+            quickView.querySelector('#data_last_peak_date').innerText = server.last_peak_date;
+            quickView.querySelector('#data_last_peak_players').innerText = server.last_peak_players;
+            quickView.querySelector('#data_best_peak_date').innerText = server.best_peak_date;
+            quickView.querySelector('#data_best_peak_players').innerText = server.best_peak_players;
 
-            quickView.find('#data_unique').text(server.unique_players);
-            quickView.find('#data_new').text(server.new_players);
-            quickView.find('#data_avg_tps').text(server.avg_tps);
-            quickView.find('#data_low_tps_spikes').text(server.low_tps_spikes);
-            quickView.find('#data_downtime').text(server.downtime);
+            quickView.querySelector('#data_unique').innerText = server.unique_players;
+            quickView.querySelector('#data_new').innerText = server.new_players;
+            quickView.querySelector('#data_avg_tps').innerText = server.avg_tps;
+            quickView.querySelector('#data_low_tps_spikes').innerText = server.low_tps_spikes;
+            quickView.querySelector('#data_downtime').innerText = server.downtime;
         }, 0);
     }
 }

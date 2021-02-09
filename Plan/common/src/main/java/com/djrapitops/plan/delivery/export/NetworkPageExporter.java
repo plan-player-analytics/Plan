@@ -192,6 +192,7 @@ public class NetworkPageExporter extends FileExporter {
                 "./vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
                 "./vendor/fontawesome-free/webfonts/fa-solid-900.woff",
                 "./vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+                "./js/domUtils.js",
                 "./js/sb-admin-2.js",
                 "./js/xmlhttprequests.js",
                 "./js/color-selector.js",

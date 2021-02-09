@@ -272,7 +272,7 @@
                                     <h6 class="m-0 font-weight-bold col-black"><i class="fa fa-fw fa-exchange-alt"></i>
                                         Week Comparison</h6>
                                 </div>
-                                <table class="table">
+                                <table class="table" id="data_weeks">
                                     <thead>
                                     <tr>
                                         <th><i class="text-success fa fa-caret-up"></i><i
@@ -284,7 +284,7 @@
                                         <th>Trend</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="data_weeks">
+                                    <tbody>
                                     <tr>
                                         <td><i class="col-blue fa fa-fw fa-users"></i> Unique Players</td>
                                         <td id="data_unique_before"></td>
@@ -824,6 +824,7 @@
 <script src="./vendor/highcharts/no-data-to-display.js"></script>
 
 <!-- Custom scripts for all pages-->
+<script src="./js/domUtils.js"></script>
 <script src="./js/sb-admin-2.js"></script>
 <script src="./js/xmlhttprequests.js"></script>
 <script src="./js/color-selector.js"></script>

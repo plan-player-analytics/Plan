@@ -345,7 +345,4 @@ function loadPerformanceValues(json, error) {
     element.querySelector('#data_low_tps_entities').innerText = data.low_tps_entities;
     element.querySelector('#data_low_tps_chunks').innerText = data.low_tps_chunks;
     element.querySelector('#data_low_tps_cpu').innerText = data.low_tps_cpu;
-
-    const dates = data.low_disk_space_dates;
-    element.querySelector('#data_low_disk_space_dates').innerHTML = dates.join('<br>');
 }
