@@ -50,8 +50,8 @@ Webserver:
   # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
   Internal_IP: 0.0.0.0
   Cache:
-    Reduced_refresh_barrier: 1
-      Unit: MINUTES
+    Reduced_refresh_barrier: 15
+      Unit: SECONDS
     Invalidate_query_results_on_disk_after: 7
       Unit: DAYS
     Invalidate_disk_cache_after: 2
