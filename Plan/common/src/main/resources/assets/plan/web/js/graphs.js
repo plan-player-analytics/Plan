@@ -1,4 +1,4 @@
-var linegraphButtons = [{
+const linegraphButtons = [{
     type: 'hour',
     count: 12,
     text: '12h'
@@ -19,7 +19,7 @@ var linegraphButtons = [{
     text: 'All'
 }];
 
-var graphs = [];
+const graphs = [];
 window.calendars = {};
 
 function activityPie(id, activitySeries) {
@@ -406,15 +406,15 @@ function serverPie(id, serverSeries) {
 }
 
 function formatTimeAmount(ms) {
-    var out = "";
+    let out = "";
 
-    var seconds = Math.floor(ms / 1000);
+    let seconds = Math.floor(ms / 1000);
 
-    var dd = Math.floor(seconds / 86400);
+    const dd = Math.floor(seconds / 86400);
     seconds -= (dd * 86400);
-    var dh = Math.floor(seconds / 3600);
+    const dh = Math.floor(seconds / 3600);
     seconds -= (dh * 3600);
-    var dm = Math.floor(seconds / 60);
+    const dm = Math.floor(seconds / 60);
     seconds -= (dm * 60);
     seconds = Math.floor(seconds);
     if (dd !== 0) {
@@ -610,9 +610,9 @@ function worldMap(id, colorMin, colorMax, mapSeries) {
 }
 
 function worldPie(id, worldSeries, gmSeries) {
-    var defaultTitle = '';
-    var defaultSubtitle = 'Click to expand';
-    var chart = Highcharts.chart(id, {
+    const defaultTitle = '';
+    const defaultSubtitle = 'Click to expand';
+    const chart = Highcharts.chart(id, {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,

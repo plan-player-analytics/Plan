@@ -1,3 +1,6 @@
+// Stored by tab {'tab-id': ['address', 'address']}
+const currentlyRefreshing = {};
+
 function refreshingJsonRequest(address, callback, tabID) {
     const timestamp = Date.now();
     const addressWithTimestamp = address.includes('?')
@@ -6,11 +9,17 @@ function refreshingJsonRequest(address, callback, tabID) {
 
     const refreshElement = document.querySelector(`#${tabID} .refresh-element`);
     refreshElement.querySelector('i').addEventListener('click', () => {
+        if (currentlyRefreshing[tabID].includes(address)) {
+            return;
+        }
         refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
         refreshingJsonRequest(address, callback, tabID);
     });
 
     let timeout = 1000;
+
+    if (!currentlyRefreshing[tabID]) currentlyRefreshing[tabID] = [];
+    currentlyRefreshing[tabID].push(address);
 
     function makeTheRequest() {
         jsonRequest(addressWithTimestamp, (json, error) => {
@@ -32,7 +41,10 @@ function refreshingJsonRequest(address, callback, tabID) {
                 setTimeout(makeTheRequest, timeout);
                 timeout = timeout >= 12000 ? timeout : timeout * 2;
             } else {
-                refreshElement.querySelector('.refresh-notice').innerHTML = "";
+                currentlyRefreshing[tabID].splice(currentlyRefreshing[tabID].indexOf(address), 1);
+                if (!currentlyRefreshing[tabID].length) {
+                    refreshElement.querySelector('.refresh-notice').innerHTML = "";
+                }
             }
             callback(json, error);
         })

@@ -27,7 +27,7 @@
 
 <body>
 <script>
-    var gmPieColors = [${gmPieColors}];
+    const gmPieColors = [${gmPieColors}];
 </script>
 <div class="page-loader">
     <span class="loader"></span>
@@ -846,7 +846,7 @@
         setLoadingText('Rendering graphs..');
 
         // TODO remove
-        var v = {
+        const v = {
             colors: {
                 playersOnline: '${playersGraphColor}',
                 newPlayers: '#8BC34A',
@@ -867,7 +867,7 @@
         });
 
         // HighCharts Series
-        var s = {
+        const s = {
             name: {
                 playersOnline: 'Players Online',
                 uniquePlayers: 'Unique Players',
@@ -890,9 +890,9 @@
             }
         };
 
-        jsonRequest("./v1/graph?type=playersOnline&server=${serverUUID}", function (json, error) {
+        refreshingJsonRequest("./v1/graph?type=playersOnline&server=${serverUUID}", function (json, error) {
             if (json) {
-                var series = {
+                const series = {
                     playersOnline: {
                         name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
                         data: json.playersOnline, color: v.colors.playersOnline, yAxis: 0
@@ -902,15 +902,15 @@
             } else if (error) {
                 $('#playersOnlineChart').text("Failed to load graph data: " + error);
             }
-        });
+        }, 'network-overview');
 
-        jsonRequest("./v1/graph?type=uniqueAndNew", function (json, error) {
+        refreshingJsonRequest("./v1/graph?type=uniqueAndNew", function (json, error) {
             if (json) {
-                var uniquePlayers = {
+                const uniquePlayers = {
                     name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
                     data: json.uniquePlayers, color: v.colors.playersOnline
                 };
-                var newPlayers = {
+                const newPlayers = {
                     name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
                     data: json.newPlayers, color: v.colors.newPlayers
                 };
@@ -918,15 +918,15 @@
             } else if (error) {
                 $('#uniqueChart').text("Failed to load graph data: " + error)
             }
-        });
+        }, 'network-overview');
 
-        jsonRequest("./v1/graph?type=hourlyUniqueAndNew", function (json, error) {
+        refreshingJsonRequest("./v1/graph?type=hourlyUniqueAndNew", function (json, error) {
             if (json) {
-                var uniquePlayers = {
+                const uniquePlayers = {
                     name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
                     data: json.uniquePlayers, color: v.colors.playersOnline
                 };
-                var newPlayers = {
+                const newPlayers = {
                     name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
                     data: json.newPlayers, color: v.colors.newPlayers
                 };
@@ -934,9 +934,9 @@
             } else if (error) {
                 $('#uniqueChart').text("Failed to load graph data: " + error)
             }
-        });
+        }, 'network-overview');
 
-        jsonRequest("./v1/graph?type=serverPie", function (json, error) {
+        refreshingJsonRequest("./v1/graph?type=serverPie", function (json, error) {
             if (json) {
                 serverPieSeries = {
                     name: 'Server Playtime',
@@ -948,9 +948,9 @@
             } else if (error) {
                 $('#serverPie').text("Failed to load graph data: " + error)
             }
-        });
+        }, 'sessions-overview');
 
-        jsonRequest("./v1/graph?type=activity", function (json, error) {
+        refreshingJsonRequest("./v1/graph?type=activity", function (json, error) {
             if (json) {
                 activityPie('activityPie', {
                     name: 'Players', colorByPoint: true, data: json.activity_pie_series
@@ -960,25 +960,25 @@
                 $('#activityPie').text("Failed to load graph data: " + error);
                 $('#activityStackGraph').text("Failed to load graph data: " + error);
             }
-        });
+        }, 'playerbase-overview');
 
-        jsonRequest("./v1/graph?type=geolocation", function (json, error) {
+        refreshingJsonRequest("./v1/graph?type=geolocation", function (json, error) {
             if (json) {
-                var geolocationSeries = {
+                const geolocationSeries = {
                     name: 'Players',
                     type: 'map',
                     mapData: Highcharts.maps['custom/world'],
                     data: json.geolocation_series,
                     joinBy: ['iso-a3', 'code']
                 };
-                var geolocationBarSeries = {
+                const geolocationBarSeries = {
                     color: json.colors.bars,
                     name: 'Players',
                     data: json.geolocation_bar_series.map(function (bar) {
                         return bar.value
                     })
                 };
-                var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
+                const geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
                     return bar.label
                 });
                 worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
@@ -987,7 +987,7 @@
                 $('#worldMap').text("Failed to load graph data: " + error);
                 $('#countryBarChart').text("Failed to load graph data: " + error);
             }
-        });
+        }, 'geolocations');
 
         setLoadingText('Sorting out plugin tables..');
 

@@ -1325,6 +1325,34 @@
 <script src="../js/server-values.js"></script>
 
 <script id="mainScript">
+
+    // HighCharts Series
+    const s = {
+        name: {
+            playersOnline: 'Players Online',
+            uniquePlayers: 'Unique Players',
+            newPlayers: 'New Players',
+            tps: 'TPS',
+            cpu: 'CPU (%)',
+            ram: 'RAM (MB)',
+            entities: 'Entities',
+            chunks: 'Chunks',
+            maxPing: 'Worst Ping',
+            minPing: 'Best Ping',
+            avgPing: 'Average Ping',
+            disk: 'Free Disk Space (MB)',
+            unit_players: 'Players'
+        },
+        tooltip: {
+            twoDecimals: {valueDecimals: 2},
+            zeroDecimals: {valueDecimals: 0}
+        },
+        type: {
+            areaSpline: 'areaspline',
+            spline: 'spline'
+        }
+    };
+
     try {
         setLoadingText('Calculating values..');
         refreshingJsonRequest("../v1/serverOverview?server=${serverUUID}", loadserverOverviewValues, 'server-overview');
@@ -1340,265 +1368,15 @@
             time: {timezoneOffset: (${timeZone}) * 60}
         });
 
-        // HighCharts Series
-        const s = {
-            name: {
-                playersOnline: 'Players Online',
-                uniquePlayers: 'Unique Players',
-                newPlayers: 'New Players',
-                tps: 'TPS',
-                cpu: 'CPU (%)',
-                ram: 'RAM (MB)',
-                entities: 'Entities',
-                chunks: 'Chunks',
-                maxPing: 'Worst Ping',
-                minPing: 'Best Ping',
-                avgPing: 'Average Ping',
-                disk: 'Free Disk Space (MB)'
-            },
-            tooltip: {
-                twoDecimals: {
-                    valueDecimals: 2
-                },
-                zeroDecimals: {
-                    valueDecimals: 0
-                }
-            },
-            type: {
-                areaSpline: 'areaspline',
-                spline: 'spline'
-            }
-        };
-
-        jsonRequest("../v1/graph?type=optimizedPerformance&server=${serverUUID}", function (json, error) {
-            if (json) {
-                const zones = {
-                    tps: [{
-                        value: json.zones.tpsThresholdMed,
-                        color: json.colors.low
-                    }, {
-                        value: json.zones.tpsThresholdHigh,
-                        color: json.colors.med
-                    }, {
-                        value: 30,
-                        color: json.colors.high
-                    }],
-                    disk: [{
-                        value: json.zones.diskThresholdMed,
-                        color: json.colors.low
-                    }, {
-                        value: json.zones.tpsThresholdHigh,
-                        color: json.colors.med
-                    }, {
-                        value: Number.MAX_VALUE,
-                        color: json.colors.high
-                    }]
-                };
-                const dataSeries = mapToDataSeries(json.values);
-                const series = {
-                    playersOnline: {
-                        name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.playersOnline, color: json.colors.playersOnline, yAxis: 0
-                    },
-                    tps: {
-                        name: s.name.tps, type: s.type.spline, color: json.colors.high,
-                        zones: zones.tps, tooltip: s.tooltip.twoDecimals, data: dataSeries.tps,
-                        yAxis: 1
-                    },
-                    cpu: {
-                        name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: dataSeries.cpu, color: json.colors.cpu, yAxis: 2
-                    },
-                    cpu_alt: {
-                        name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: dataSeries.cpu, color: json.colors.cpu, yAxis: 1
-                    },
-                    ram: {
-                        name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.ram, color: json.colors.ram, yAxis: 3
-                    },
-                    ram_alt: {
-                        name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.ram, color: json.colors.ram, yAxis: 2
-                    },
-                    entities: {
-                        name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.entities, color: json.colors.entities, yAxis: 4
-                    },
-                    entities_alt: {
-                        name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.entities, color: json.colors.entities, yAxis: 1
-                    },
-                    chunks: {
-                        name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.chunks, color: json.colors.chunks, yAxis: 5
-                    },
-                    chunks_alt: {
-                        name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.chunks, color: json.colors.chunks, yAxis: 2
-                    },
-                    disk: {
-                        name: s.name.disk, type: s.type.spline, color: json.colors.high,
-                        zones: zones.disk, tooltip: s.tooltip.zeroDecimals, data: dataSeries.disk
-                    }
-                };
-                playersChart('playersOnlineChart', series.playersOnline, 2);
-                performanceChart('performanceGraph', series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks);
-                tpsChart('tpsGraph', series.tps, series.playersOnline);
-                resourceChart('resourceGraph', series.cpu_alt, series.ram_alt, series.playersOnline);
-                worldChart('worldGraph', series.entities_alt, series.chunks_alt, series.playersOnline);
-                diskChart('diskGraph', [series.disk]);
-            } else if (error) {
-                $('#playersOnlineChart').text("Failed to load graph data: " + error);
-                $('#performanceGraph').text("Failed to load graph data: " + error);
-                $('#tpsGraph').text("Failed to load graph data: " + error);
-                $('#resourceGraph').text("Failed to load graph data: " + error);
-                $('#worldGraph').text("Failed to load graph data: " + error);
-                $('#diskGraph').text("Failed to load graph data: " + error);
-            }
-        });
-
-        jsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var series = {
-                    avgPing: {
-                        name: s.name.avgPing,
-                        type: s.type.spline,
-                        tooltip: s.tooltip.twoDecimals,
-                        data: json.avg_ping_series,
-                        color: json.colors.avg
-                    },
-                    maxPing: {
-                        name: s.name.maxPing,
-                        type: s.type.spline,
-                        tooltip: s.tooltip.zeroDecimals,
-                        data: json.max_ping_series,
-                        color: json.colors.max
-                    },
-                    minPing: {
-                        name: s.name.minPing,
-                        type: s.type.spline,
-                        tooltip: s.tooltip.zeroDecimals,
-                        data: json.min_ping_series,
-                        color: json.colors.min
-                    }
-                };
-                lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
-            } else if (error) {
-                $('#pingGraph').text("Failed to load graph data: " + error);
-            }
-        });
-
-        jsonRequest("../v1/graph?type=worldPie&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var worldSeries = {name: 'World Playtime', colorByPoint: true, data: json.world_series};
-                var gmSeries = json.gm_series;
-                worldPie("worldPie", worldSeries, gmSeries);
-            } else if (error) {
-                $('#worldPie').text("Failed to load graph data: " + error)
-            }
-        });
-
-        jsonRequest("../v1/graph?type=activity&server=${serverUUID}", function (json, error) {
-            if (json) {
-                activityPie('activityPie', {
-                    name: 'Players', colorByPoint: true, data: json.activity_pie_series
-                });
-                stackChart('activityStackGraph', json.activity_labels, json.activity_series, 'Players');
-            } else if (error) {
-                $('#activityPie').text("Failed to load graph data: " + error);
-                $('#activityStackGraph').text("Failed to load graph data: " + error);
-            }
-        });
-
-        jsonRequest("../v1/graph?type=geolocation&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var geolocationSeries = {
-                    name: 'Players',
-                    type: 'map',
-                    mapData: Highcharts.maps['custom/world'],
-                    data: json.geolocation_series,
-                    joinBy: ['iso-a3', 'code']
-                };
-                var geolocationBarSeries = {
-                    color: json.colors.bars,
-                    name: 'Players',
-                    data: json.geolocation_bar_series.map(function (bar) {
-                        return bar.value
-                    })
-                };
-                var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
-                    return bar.label
-                });
-                worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
-                horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
-            } else if (error) {
-                $('#worldMap').text("Failed to load graph data: " + error);
-                $('#countryBarChart').text("Failed to load graph data: " + error);
-            }
-        });
-
-        jsonRequest("../v1/graph?type=uniqueAndNew&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var uniquePlayers = {
-                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.uniquePlayers, color: json.colors.playersOnline
-                };
-                var newPlayers = {
-                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.newPlayers, color: json.colors.newPlayers
-                };
-                dayByDay('uniqueChart', [uniquePlayers, newPlayers]);
-            } else if (error) {
-                $('#uniqueChart').text("Failed to load graph data: " + error)
-            }
-        });
-
-        jsonRequest("../v1/graph?type=hourlyUniqueAndNew&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var uniquePlayers = {
-                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.uniquePlayers, color: json.colors.playersOnline
-                };
-                var newPlayers = {
-                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.newPlayers, color: json.colors.newPlayers
-                };
-                dayByDay('hourlyUniqueChart', [uniquePlayers, newPlayers]);
-            } else if (error) {
-                $('#uniqueChart').text("Failed to load graph data: " + error)
-            }
-        });
-
-        jsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", function (json, error) {
-            if (json) {
-                $('#calendar').text('');
-                onlineActivityCalendar('#calendar', json.data, json.firstDay);
-                $('#online-calendar-tab').click(function () {
-                    // Wrapping this in a 0ms setTimeout waits for all other event handlers
-                    // to finish. We need this because if the calendar is rendered
-                    // immediately, it renders for a width of 0.
-                    setTimeout(function () {
-                        window.calendars.online_activity.render();
-                    }, 0);
-                });
-            } else if (error) {
-                $('#calendar').text("Failed to load calendar data: " + error)
-            }
-        });
-
-        jsonRequest("../v1/graph?type=punchCard&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var punchCardSeries = {
-                    name: 'Relative Join Activity',
-                    color: json.color,
-                    data: json.punchCard
-                };
-                punchCard('punchCard', punchCardSeries);
-            } else if (error) {
-                $('#punchCard').text("Failed to load graph data: " + error)
-            }
-        });
+        refreshingJsonRequest("../v1/graph?type=optimizedPerformance&server=${serverUUID}", loadOptimizedPerformanceGraph, 'performance');
+        refreshingJsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", loadPingGraph, 'performance');
+        refreshingJsonRequest("../v1/graph?type=worldPie&server=${serverUUID}", loadWorldPie, 'sessions-overview');
+        refreshingJsonRequest("../v1/graph?type=activity&server=${serverUUID}", loadActivityGraph, 'playerbase-overview');
+        refreshingJsonRequest("../v1/graph?type=geolocation&server=${serverUUID}", loadGeolocationGraph, 'geolocations');
+        refreshingJsonRequest("../v1/graph?type=uniqueAndNew&server=${serverUUID}", loadUniqueAndNewGraph, 'online-activity-overview');
+        refreshingJsonRequest("../v1/graph?type=hourlyUniqueAndNew&server=${serverUUID}", loadHourlyUniqueAndNewGraph, 'online-activity-overview');
+        jsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", loadServerCalendar, 'online-activity-overview');
+        refreshingJsonRequest("../v1/graph?type=punchCard&server=${serverUUID}", loadPunchCard, 'online-activity-overview');
 
         setLoadingText('Sorting players table..');
 
