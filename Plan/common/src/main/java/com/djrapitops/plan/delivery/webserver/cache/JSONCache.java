@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
  *
  * @author Rsl1122
  */
+@Deprecated
 public class JSONCache {
 
     private static final Cache<String, byte[]> cache = Caffeine.newBuilder()
@@ -50,6 +51,7 @@ public class JSONCache {
         // Static class
     }
 
+    @Deprecated
     public static Response getOrCache(String identifier, Supplier<Response> jsonResponseSupplier) {
         byte[] found = cache.getIfPresent(identifier);
         if (found == null) {
@@ -63,6 +65,7 @@ public class JSONCache {
                 .build();
     }
 
+    @Deprecated
     public static String getOrCacheString(DataID dataID, UUID serverUUID, Supplier<String> stringSupplier) {
         String identifier = dataID.of(serverUUID);
         byte[] found = cache.getIfPresent(identifier);
@@ -74,6 +77,7 @@ public class JSONCache {
         return new String(found, StandardCharsets.UTF_8);
     }
 
+    @Deprecated
     public static <T> Response getOrCache(DataID dataID, Supplier<T> objectSupplier) {
         return getOrCache(dataID.name(), () -> Response.builder()
                 .setMimeType(MimeType.JSON)
@@ -81,6 +85,7 @@ public class JSONCache {
                 .build());
     }
 
+    @Deprecated
     public static <T> Response getOrCache(DataID dataID, UUID serverUUID, Supplier<T> objectSupplier) {
         return getOrCache(dataID.of(serverUUID), () -> Response.builder()
                 .setMimeType(MimeType.JSON)
@@ -88,24 +93,29 @@ public class JSONCache {
                 .build());
     }
 
+    @Deprecated
     public static void invalidate(String identifier) {
         cache.invalidate(identifier);
     }
 
+    @Deprecated
     public static void invalidate(DataID dataID) {
         invalidate(dataID.name());
     }
 
+    @Deprecated
     public static void invalidate(UUID serverUUID, DataID... dataIDs) {
         for (DataID dataID : dataIDs) {
             invalidate(dataID.of(serverUUID));
         }
     }
 
+    @Deprecated
     public static void invalidate(DataID dataID, UUID serverUUID) {
         invalidate(dataID.of(serverUUID));
     }
 
+    @Deprecated
     public static void invalidateMatching(DataID... dataIDs) {
         Set<String> toInvalidate = Arrays.stream(dataIDs)
                 .map(DataID::name)
@@ -119,6 +129,7 @@ public class JSONCache {
         }
     }
 
+    @Deprecated
     public static void invalidateMatching(DataID dataID) {
         String toInvalidate = dataID.name();
         for (String identifier : cache.asMap().keySet()) {
@@ -128,14 +139,17 @@ public class JSONCache {
         }
     }
 
+    @Deprecated
     public static void invalidateAll() {
         cache.invalidateAll();
     }
 
+    @Deprecated
     public static void cleanUp() {
         cache.cleanUp();
     }
 
+    @Deprecated
     public static List<String> getCachedIDs() {
         List<String> identifiers = new ArrayList<>(cache.asMap().keySet());
         Collections.sort(identifiers);
