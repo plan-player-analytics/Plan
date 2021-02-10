@@ -42,12 +42,14 @@ public interface JSONStorage extends SubSystem {
     }
 
     default StoredJSON storeJson(String identifier, Object json) {
+        if (json instanceof String) return storeJson(identifier, (String) json);
         return storeJson(identifier, new Gson().toJson(json));
     }
 
     StoredJSON storeJson(String identifier, String json, long timestamp);
 
     default StoredJSON storeJson(String identifier, Object json, long timestamp) {
+        if (json instanceof String) return storeJson(identifier, (String) json, timestamp);
         return storeJson(identifier, new Gson().toJson(json), timestamp);
     }
 

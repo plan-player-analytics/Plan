@@ -20,7 +20,6 @@ import com.djrapitops.plan.delivery.rendering.json.ServerTabJSONCreator;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
@@ -29,7 +28,6 @@ import com.djrapitops.plan.identification.Identifiers;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -68,23 +66,7 @@ public class ServerTabJSONResolver<T> implements Resolver {
         UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
         return Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(asyncJSONResolverService.resolve(getTimestamp(request), dataID, serverUUID, jsonCreator).json)
+                .setJSONContent(asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, serverUUID, jsonCreator).json)
                 .build();
     }
-
-    private long getTimestamp(Request request) {
-        try {
-            long currentTime = System.currentTimeMillis();
-            long timestamp = request.getQuery().get("timestamp")
-                    .map(Long::parseLong)
-                    .orElse(currentTime);
-            if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
-                throw new BadRequestException("Attempt to get data from the future! " + timestamp + " > " + currentTime);
-            }
-            return timestamp;
-        } catch (NumberFormatException nonNumberTimestamp) {
-            throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
-        }
-    }
-
 }

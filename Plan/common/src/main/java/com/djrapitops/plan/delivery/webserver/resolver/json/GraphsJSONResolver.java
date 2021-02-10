@@ -17,13 +17,15 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
@@ -41,14 +43,16 @@ import java.util.UUID;
 public class GraphsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
+    private final AsyncJSONResolverService jsonResolverService;
     private final GraphJSONCreator graphJSON;
 
     @Inject
     public GraphsJSONResolver(
             Identifiers identifiers,
-            GraphJSONCreator graphJSON
+            AsyncJSONResolverService jsonResolverService, GraphJSONCreator graphJSON
     ) {
         this.identifiers = identifiers;
+        this.jsonResolverService = jsonResolverService;
         this.graphJSON = graphJSON;
     }
 
@@ -76,12 +80,31 @@ public class GraphsJSONResolver implements Resolver {
 
         DataID dataID = getDataID(type);
 
+        JSONStorage.StoredJSON graphJSON = getGraphJSON(request, dataID);
+
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(graphJSON.json)
+                .build();
+    }
+
+    private JSONStorage.StoredJSON getGraphJSON(Request request, DataID dataID) {
+        long timestamp = Identifiers.getTimestamp(request);
+
+        JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
-            return JSONCache.getOrCache(dataID, serverUUID, () -> generateGraphDataJSONOfType(dataID, serverUUID));
+            storedJSON = jsonResolverService.resolve(
+                    timestamp, dataID, serverUUID,
+                    theServerUUID -> generateGraphDataJSONOfType(dataID, theServerUUID)
+            );
+        } else {
+            // Assume network
+            storedJSON = jsonResolverService.resolve(
+                    timestamp, dataID, () -> generateGraphDataJSONOfType(dataID)
+            );
         }
-        // Assume network
-        return JSONCache.getOrCache(dataID, () -> generateGraphDataJSONOfType(dataID));
+        return storedJSON;
     }
 
     private DataID getDataID(String type) {

@@ -20,11 +20,11 @@ import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONCreator
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.identification.Identifiers;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -62,17 +62,7 @@ public class NetworkTabJSONResolver<T> implements Resolver {
     private Response getResponse(Request request) {
         return Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(asyncJSONResolverService.resolve(getTimestamp(request), dataID, jsonCreator).json)
+                .setJSONContent(asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, jsonCreator).json)
                 .build();
-    }
-
-    private long getTimestamp(Request request) {
-        try {
-            return request.getQuery().get("timestamp")
-                    .map(Long::parseLong)
-                    .orElseGet(System::currentTimeMillis);
-        } catch (NumberFormatException nonNumberTimestamp) {
-            throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
-        }
     }
 }
