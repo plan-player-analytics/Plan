@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.json;
 
+import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.jupiter.api.BeforeEach;

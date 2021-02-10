@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.rendering.json.network.NetworkPlayerBaseOver
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkSessionsOverviewJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONCreator;
 import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 
 import javax.inject.Inject;

@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.rendering.json.*;
 import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.identification.Identifiers;
 

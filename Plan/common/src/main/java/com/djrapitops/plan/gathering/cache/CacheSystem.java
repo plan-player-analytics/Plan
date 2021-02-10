@@ -18,8 +18,8 @@ package com.djrapitops.plan.gathering.cache;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.commands.TabCompleteCache;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
-import com.djrapitops.plan.storage.json.JSONStorage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

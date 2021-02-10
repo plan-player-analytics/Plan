@@ -18,12 +18,12 @@ package com.djrapitops.plan.modules.bungee;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.timed.BungeePingCounter;
 import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask;
-import com.djrapitops.plan.storage.json.JSONFileStorage;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import dagger.Binds;

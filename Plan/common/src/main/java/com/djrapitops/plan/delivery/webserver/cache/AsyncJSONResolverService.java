@@ -14,13 +14,11 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver.resolver.json;
+package com.djrapitops.plan.delivery.webserver.cache;
 
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 
 import javax.inject.Inject;
