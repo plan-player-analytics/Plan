@@ -1262,3 +1262,7 @@ body.sidebar-hidden .navbar-nav {
 .refresh-element > i {
     cursor: pointer;
 }
+
+.sorting, .sorting_desc, .sorting_asc {
+    cursor: pointer;
+}
