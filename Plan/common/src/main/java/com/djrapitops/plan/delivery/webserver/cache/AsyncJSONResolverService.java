@@ -61,126 +61,92 @@ public class AsyncJSONResolverService {
         accessLock = new UnitSemaphoreAccessLock();
     }
 
-    public <T> JSONStorage.StoredJSON resolve(long newerThanTimestamp, DataID dataID, UUID serverUUID, Function<UUID, T> creator) {
+    public <T> JSONStorage.StoredJSON resolve(
+            long newerThanTimestamp, DataID dataID, UUID serverUUID, Function<UUID, T> creator
+    ) {
         String identifier = dataID.of(serverUUID);
-
-        // Attempt to find a newer version of the json file from cache
-        JSONStorage.StoredJSON storedJSON = jsonStorage.fetchExactJson(identifier, newerThanTimestamp)
-                .orElseGet(() -> jsonStorage.fetchJsonMadeAfter(identifier, newerThanTimestamp)
-                        .orElse(null));
-        if (storedJSON != null) {
-            return storedJSON;
-        }
-        // No new enough version, let's refresh and send old version of the file
-
-        long updateThreshold = config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);
-
-        // Check if the json is already being created
-        Future<JSONStorage.StoredJSON> updatedJSON;
-        accessLock.enter();
-        try {
-            updatedJSON = currentlyProcessing.get(identifier);
-            if (updatedJSON == null && previousUpdates.getOrDefault(identifier, 0L) < newerThanTimestamp - updateThreshold) {
-                // Submit a task to refresh the data if the json is old
-                updatedJSON = processing.submitNonCritical(() -> {
-                    JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.apply(serverUUID));
-                    currentlyProcessing.remove(identifier);
-                    jsonStorage.invalidateOlder(identifier, created.timestamp);
-                    previousUpdates.put(identifier, created.timestamp);
-                    return created;
-                });
-                currentlyProcessing.put(identifier, updatedJSON);
-            }
-        } finally {
-            accessLock.exit();
-        }
-
-        // Get an old version from cache
-        storedJSON = jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp).orElse(null);
-        if (storedJSON != null) {
-            return storedJSON;
-        } else {
-            // If there is no version available, block thread until the new finishes being generated.
-            try {
-                // Can be null if the last update was recent and the file is deleted before next update
-                if (updatedJSON == null) {
-                    updatedJSON = processing.submitNonCritical(() -> {
-                        JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.apply(serverUUID));
-                        currentlyProcessing.remove(identifier);
-                        jsonStorage.invalidateOlder(identifier, created.timestamp);
-                        previousUpdates.put(identifier, created.timestamp);
-                        return created;
-                    }); // TODO Refactor this spaghetti code
-                }
-                return updatedJSON.get();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return null;
-            } catch (ExecutionException e) {
-                throw new IllegalStateException(e);
-            }
-        }
+        Supplier<T> jsonCreator = () -> creator.apply(serverUUID);
+        return getStoredOrCreateJSON(newerThanTimestamp, identifier, jsonCreator);
     }
 
-    public <T> JSONStorage.StoredJSON resolve(long newerThanTimestamp, DataID dataID, Supplier<T> creator) {
+
+    public <T> JSONStorage.StoredJSON resolve(
+            long newerThanTimestamp, DataID dataID, Supplier<T> jsonCreator
+    ) {
         String identifier = dataID.name();
+        return getStoredOrCreateJSON(newerThanTimestamp, identifier, jsonCreator);
+    }
 
-        // Attempt to find a newer version of the json file from cache
-        JSONStorage.StoredJSON storedJSON = jsonStorage.fetchExactJson(identifier, newerThanTimestamp)
-                .orElseGet(() -> jsonStorage.fetchJsonMadeAfter(identifier, newerThanTimestamp)
-                        .orElse(null));
+    private <T> JSONStorage.StoredJSON getStoredOrCreateJSON(
+            long timestamp, String identifier, Supplier<T> jsonCreator
+    ) {
+        JSONStorage.StoredJSON storedJSON = getNewFromCache(timestamp, identifier);
+        if (storedJSON != null) return storedJSON;
+
+        // No new enough version, let's refresh and send old version of the file
+        Future<JSONStorage.StoredJSON> updatedJSON = scheduleJSONForUpdate(timestamp, identifier, jsonCreator);
+
+        storedJSON = getOldFromCache(timestamp, identifier);
         if (storedJSON != null) {
             return storedJSON;
+        } else {
+            // Update not performed if the last update was recent and the file is deleted before next update
+            // Fall back to waiting for the updated file if old version of the file doesn't exist.
+            if (updatedJSON == null) {
+                updatedJSON = submitToProcessing(identifier, jsonCreator);
+            }
+            return waitAndGetUpdated(updatedJSON);
         }
-        // No new enough version, let's refresh and send old version of the file
+    }
 
+    private JSONStorage.StoredJSON waitAndGetUpdated(Future<JSONStorage.StoredJSON> updatedJSON) {
+        // If there is no version available, block thread until the new finishes being generated.
+        try {
+            return updatedJSON.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        } catch (ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private JSONStorage.StoredJSON getOldFromCache(long newerThanTimestamp, String identifier) {
+        return jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp).orElse(null);
+    }
+
+    private JSONStorage.StoredJSON getNewFromCache(long newerThanTimestamp, String identifier) {
+        return jsonStorage.fetchExactJson(identifier, newerThanTimestamp)
+                .orElseGet(() -> jsonStorage.fetchJsonMadeAfter(identifier, newerThanTimestamp)
+                        .orElse(null));
+    }
+
+    private <T> Future<JSONStorage.StoredJSON> scheduleJSONForUpdate(long newerThanTimestamp, String identifier, Supplier<T> jsonCreator) {
         long updateThreshold = config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);
 
-        // Check if the json is already being created
         Future<JSONStorage.StoredJSON> updatedJSON;
         accessLock.enter();
         try {
+            // Check if the json is already being created
             updatedJSON = currentlyProcessing.get(identifier);
             if (updatedJSON == null && previousUpdates.getOrDefault(identifier, 0L) < newerThanTimestamp - updateThreshold) {
                 // Submit a task to refresh the data if the json is old
-                updatedJSON = processing.submitNonCritical(() -> {
-                    JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.get());
-                    currentlyProcessing.remove(identifier);
-                    jsonStorage.invalidateOlder(identifier, created.timestamp);
-                    previousUpdates.put(identifier, created.timestamp);
-                    return created;
-                });
+                updatedJSON = submitToProcessing(identifier, jsonCreator);
                 currentlyProcessing.put(identifier, updatedJSON);
             }
         } finally {
             accessLock.exit();
         }
-
-        // Get an old version from cache
-        storedJSON = jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp).orElse(null);
-        if (storedJSON != null) {
-            return storedJSON;
-        } else {
-            // If there is no version available, block thread until the new finishes being generated.
-            try {
-                // Can be null if the last update was recent and the file is deleted before next update.
-                if (updatedJSON == null) {
-                    updatedJSON = processing.submitNonCritical(() -> {
-                        JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, creator.get());
-                        currentlyProcessing.remove(identifier);
-                        jsonStorage.invalidateOlder(identifier, created.timestamp);
-                        previousUpdates.put(identifier, created.timestamp);
-                        return created;
-                    }); // TODO Refactor this spaghetti code
-                }
-                return updatedJSON.get();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return null;
-            } catch (ExecutionException e) {
-                throw new IllegalStateException(e);
-            }
-        }
+        return updatedJSON;
     }
 
+    private <T> Future<JSONStorage.StoredJSON> submitToProcessing(String identifier, Supplier<T> jsonCreator) {
+        return processing.submitNonCritical(() -> {
+            JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, jsonCreator.get());
+            currentlyProcessing.remove(identifier);
+            jsonStorage.invalidateOlder(identifier, created.timestamp);
+            previousUpdates.put(identifier, created.timestamp);
+            return created;
+        });
+    }
 }
