@@ -183,27 +183,40 @@ function onlineActivityCalendar(id, event_data, firstDay) {
 }
 
 function mapToDataSeries(performanceData) {
-    const dataSeries = {
-        playersOnline: [],
-        tps: [],
-        cpu: [],
-        ram: [],
-        entities: [],
-        chunks: [],
-        disk: []
-    };
-    for (let i = 0; i < performanceData.length; i++) {
-        const entry = performanceData[i];
-        const date = entry[0];
-        dataSeries.playersOnline[i] = [date, entry[1]];
-        dataSeries.tps[i] = [date, entry[2]];
-        dataSeries.cpu[i] = [date, entry[3]];
-        dataSeries.ram[i] = [date, entry[4]];
-        dataSeries.entities[i] = [date, entry[5]];
-        dataSeries.chunks[i] = [date, entry[6]];
-        dataSeries.disk[i] = [date, entry[7]];
-    }
-    return dataSeries;
+    const playersOnline = [];
+    const tps = [];
+    const cpu = [];
+    const ram = [];
+    const entities = [];
+    const chunks = [];
+    const disk = [];
+
+    return new Promise((resolve => {
+        let i = 0;
+        const length = performanceData.length;
+
+        function processNextThousand() {
+            const to = Math.min(i + 1000, length);
+            for (i; i < to; i++) {
+                const entry = performanceData[i];
+                const date = entry[0];
+                playersOnline[i] = [date, entry[1]];
+                tps[i] = [date, entry[2]];
+                cpu[i] = [date, entry[3]];
+                ram[i] = [date, entry[4]];
+                entities[i] = [date, entry[5]];
+                chunks[i] = [date, entry[6]];
+                disk[i] = [date, entry[7]];
+            }
+            if (i >= length) {
+                resolve({playersOnline, tps, cpu, ram, entities, chunks, disk})
+            } else {
+                setTimeout(processNextThousand, 10);
+            }
+        }
+
+        processNextThousand();
+    }))
 }
 
 function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries) {

@@ -347,7 +347,7 @@ function loadPerformanceValues(json, error) {
     element.querySelector('#data_low_tps_cpu').innerText = data.low_tps_cpu;
 }
 
-function loadOptimizedPerformanceGraph(json, error) {
+async function loadOptimizedPerformanceGraph(json, error) {
     if (json) {
         const zones = {
             tps: [{
@@ -371,7 +371,7 @@ function loadOptimizedPerformanceGraph(json, error) {
                 color: json.colors.high
             }]
         };
-        const dataSeries = mapToDataSeries(json.values);
+        const dataSeries = await mapToDataSeries(json.values);
         const series = {
             playersOnline: {
                 name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
@@ -419,12 +419,12 @@ function loadOptimizedPerformanceGraph(json, error) {
                 zones: zones.disk, tooltip: s.tooltip.zeroDecimals, data: dataSeries.disk
             }
         };
-        playersChart('playersOnlineChart', series.playersOnline, 2);
-        performanceChart('performanceGraph', series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks);
-        tpsChart('tpsGraph', series.tps, series.playersOnline);
-        resourceChart('resourceGraph', series.cpu_alt, series.ram_alt, series.playersOnline);
-        worldChart('worldGraph', series.entities_alt, series.chunks_alt, series.playersOnline);
-        diskChart('diskGraph', [series.disk]);
+        setTimeout(() => playersChart('playersOnlineChart', series.playersOnline, 2), 10)
+        setTimeout(() => performanceChart('performanceGraph', series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks), 20)
+        setTimeout(() => tpsChart('tpsGraph', series.tps, series.playersOnline), 30)
+        setTimeout(() => resourceChart('resourceGraph', series.cpu_alt, series.ram_alt, series.playersOnline), 40)
+        setTimeout(() => worldChart('worldGraph', series.entities_alt, series.chunks_alt, series.playersOnline), 50)
+        setTimeout(() => diskChart('diskGraph', [series.disk]), 60)
     } else if (error) {
         const errorMessage = `Failed to load graph data: ${error}`;
         document.getElementById('playersOnlineChart').innerText = errorMessage;
