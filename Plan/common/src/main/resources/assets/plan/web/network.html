@@ -856,6 +856,21 @@
             spline: 'spline'
         }
     };
+    // TODO remove
+    const v = {
+        colors: {
+            playersOnline: '${playersGraphColor}',
+            newPlayers: '#8BC34A',
+            geolocationsLow: '${worldMapColLow}',
+            geolocationsHigh: '${worldMapColHigh}',
+            maxPing: '${maxPingColor}',
+            minPing: '${minPingColor}',
+            avgPing: '${avgPingColor}'
+        },
+        values: {
+            timezoneOffset: ${timeZone}
+        }
+    };
     try {
         refreshBarrierMs = ${refreshBarrier};
 
@@ -866,22 +881,6 @@
         refreshingJsonRequest("./v1/network/playerbaseOverview", loadPlayerbaseOverviewValues, 'playerbase-overview');
         refreshingJsonRequest("./v1/sessions", loadSessionAccordion, 'sessions-overview');
         setLoadingText('Rendering graphs..');
-
-        // TODO remove
-        const v = {
-            colors: {
-                playersOnline: '${playersGraphColor}',
-                newPlayers: '#8BC34A',
-                geolocationsLow: '${worldMapColLow}',
-                geolocationsHigh: '${worldMapColHigh}',
-                maxPing: '${maxPingColor}',
-                minPing: '${minPingColor}',
-                avgPing: '${avgPingColor}'
-            },
-            values: {
-                timezoneOffset: ${timeZone}
-            }
-        };
 
         Highcharts.setOptions({
             lang: {noData: "No Data to Display"},
