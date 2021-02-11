@@ -14,10 +14,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.json;
+package com.djrapitops.plan.delivery.webserver.cache;
 
-import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
-import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.jupiter.api.BeforeEach;
