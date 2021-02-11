@@ -18,23 +18,28 @@
         if (selectedColor === null) {
             window.localStorage.setItem('themeColor', currentColor);
         }
-        $('body').removeClass('theme-' + currentColor).addClass('theme-' + nextColor);
+        const bodyElement = document.querySelector('body');
+        bodyElement.classList.remove(`theme-${currentColor}`);
+        bodyElement.classList.add(`theme-${nextColor}`);
+
         if (!nextColor || nextColor == currentColor) {
             return;
         }
 
-        let bgElementSelector = '';
         bgElements.map(element => element + '.bg-' + currentColor + ":not(.color-chooser)")
-            .forEach(selector => bgElementSelector += selector + ',');
-        $(bgElementSelector.substr(0, bgElementSelector.length - 1))
-            .removeClass('bg-' + currentColor)
-            .addClass('bg-' + nextColor);
-        let textElementSelector = '';
+            .forEach(selector => {
+                document.querySelectorAll(selector).forEach(element => {
+                    element.classList.remove(`bg-${currentColor}`);
+                    element.classList.add(`bg-${nextColor}`);
+                });
+            });
         textElements.map(element => element + '.col-' + currentColor)
-            .forEach(selector => textElementSelector += selector + ',');
-        $(textElementSelector.substr(0, textElementSelector.length - 1))
-            .removeClass('col-' + currentColor)
-            .addClass('col-' + nextColor);
+            .forEach(selector => {
+                document.querySelectorAll(selector).forEach(element => {
+                    element.classList.remove(`col-${currentColor}`);
+                    element.classList.add(`col-${nextColor}`);
+                });
+            });
         if (nextColor != 'night') {
             window.localStorage.setItem('themeColor', nextColor);
         }
@@ -43,27 +48,22 @@
 
     // Set the color changing function for all color change buttons
     function enableColorSetters() {
-        function colorSetter(i) {
-            return function () {
-                setColor(colors[i]);
-            }
-        }
-
-        for (let i in colors) {
-            const color = colors[i];
-            const func = colorSetter(i);
-            $('#choose-' + color)
-                .on('click', func)
-                .addClass('bg-' + color);
+        for (const color of colors) {
+            const selector = document.getElementById(`choose-${color}`);
+            selector.removeAttribute('disabled');
+            selector.classList.remove('disabled');
+            selector.classList.add(`bg-${color}`);
+            selector.addEventListener('click', () => setColor(color));
         }
     }
 
     enableColorSetters();
 
     function disableColorSetters() {
-        for (i in colors) {
-            const color = colors[i];
-            $('#choose-' + color).addClass('disabled').unbind('click');
+        for (const color of colors) {
+            const selector = document.getElementById(`choose-${color}`);
+            selector.classList.add('disabled');
+            selector.setAttribute('disabled', 'true');
         }
     }
 
@@ -232,7 +232,6 @@
             // Turn dark tables bright again
             $('.table').removeClass('table-dark');
             // Sidebar is colorful
-            $('.color-chooser').removeClass('disabled');
             enableColorSetters();
             setColor(window.localStorage.getItem('themeColor'));
         }
