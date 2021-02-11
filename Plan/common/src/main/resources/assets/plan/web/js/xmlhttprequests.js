@@ -1,7 +1,8 @@
 // Stored by tab {'tab-id': ['address', 'address']}
 const currentlyRefreshing = {};
+let refreshBarrierMs = 0;
 
-function refreshingJsonRequest(address, callback, tabID) {
+function refreshingJsonRequest(address, callback, tabID, skipOldData) {
     const timestamp = Date.now();
     const addressWithTimestamp = address.includes('?')
         ? `${address}&timestamp=${timestamp}`
@@ -13,7 +14,7 @@ function refreshingJsonRequest(address, callback, tabID) {
             return;
         }
         refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
-        refreshingJsonRequest(address, callback, tabID);
+        refreshingJsonRequest(address, callback, tabID, true);
     });
 
     let timeout = 1000;
@@ -21,9 +22,10 @@ function refreshingJsonRequest(address, callback, tabID) {
     if (!currentlyRefreshing[tabID]) currentlyRefreshing[tabID] = [];
     currentlyRefreshing[tabID].push(address);
 
-    function makeTheRequest() {
+    function makeTheRequest(skipOldData) {
         jsonRequest(addressWithTimestamp, (json, error) => {
             if (error) {
+                currentlyRefreshing[tabID].splice(currentlyRefreshing[tabID].indexOf(address), 1);
                 if (error.status === 400 && error.error.includes('Attempt to get data from the future!')) {
                     console.error(error.error); // System time not in sync with UTC
                     refreshElement.innerHTML = "System times out of sync with UTC";
@@ -36,21 +38,21 @@ function refreshingJsonRequest(address, callback, tabID) {
             refreshElement.querySelector('.refresh-time').innerText = json.timestamp_f;
 
             const lastUpdated = json.timestamp;
-            // TODO Work out the kinks with the refresh barrier time
-            if (lastUpdated < timestamp) {
-                setTimeout(makeTheRequest, timeout);
+            if (lastUpdated + refreshBarrierMs < timestamp) {
+                setTimeout(() => makeTheRequest(true), timeout);
                 timeout = timeout >= 12000 ? timeout : timeout * 2;
+                if (!skipOldData) callback(json, error);
             } else {
                 currentlyRefreshing[tabID].splice(currentlyRefreshing[tabID].indexOf(address), 1);
                 if (!currentlyRefreshing[tabID].length) {
                     refreshElement.querySelector('.refresh-notice').innerHTML = "";
                 }
+                callback(json, error);
             }
-            callback(json, error);
         })
     }
 
-    makeTheRequest();
+    makeTheRequest(skipOldData);
 }
 
 /**

@@ -28,6 +28,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
@@ -84,6 +85,7 @@ public class ServerPage implements Page {
         placeholders.put("serverUUID", serverUUID.toString());
         placeholders.put("serverName", server.getIdentifiableName());
         placeholders.put("serverDisplayName", server.getName());
+        placeholders.put("refreshBarrier", config.get(WebserverSettings.REDUCED_REFRESH_BARRIER));
 
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));

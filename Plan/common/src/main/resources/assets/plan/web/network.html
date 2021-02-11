@@ -837,6 +837,8 @@
 
 <script id="mainScript">
     try {
+        refreshBarrierMs = ${refreshBarrier};
+
         setLoadingText('Calculating values..');
         refreshingJsonRequest("./v1/network/overview", loadNetworkOverviewValues, 'network-overview');
         refreshingJsonRequest("./v1/network/servers", loadservers, 'servers');
