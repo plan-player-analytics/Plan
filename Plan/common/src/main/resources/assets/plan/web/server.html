@@ -714,8 +714,7 @@
                                         Recent Kills</h6>
                                 </div>
                                 <div class="scrollbar">
-                                    <table class="table" id="playerKillTable">
-                                    </table>
+                                    <table class="table" id="playerKillTable"></table>
                                 </div>
                             </div>
                         </div>
@@ -1392,7 +1391,7 @@
                 $('.player-table').text("Failed to load Players table data: " + error);
             }
         });
-        jsonRequest("../v1/kills?server=${serverUUID}", loadPlayerKills);
+        refreshingJsonRequest("../v1/kills?server=${serverUUID}", loadPlayerKills, 'pvp-pve');
         refreshingJsonRequest("../v1/pingTable?server=${serverUUID}", loadPingTable, 'geolocations');
 
         $('.player-plugin-table').DataTable({
