@@ -1402,7 +1402,7 @@
         setLoadingText('Almost done..');
         openPage();
 
-        jsonRequest("../v1/sessions?server=${serverUUID}", loadSessionAccordion);
+        refreshingJsonRequest("../v1/sessions?server=${serverUUID}", loadSessionAccordion, 'sessions-overview');
 
         setLoadingText('Done.');
         setTimeout(function () {

@@ -864,7 +864,7 @@
         refreshingJsonRequest("./v1/network/servers", loadservers, 'servers');
         refreshingJsonRequest("./v1/network/sessionsOverview", loadSessionValues, 'sessions-overview');
         refreshingJsonRequest("./v1/network/playerbaseOverview", loadPlayerbaseOverviewValues, 'playerbase-overview');
-        jsonRequest("./v1/sessions", loadSessionAccordion);
+        refreshingJsonRequest("./v1/sessions", loadSessionAccordion, 'sessions-overview');
         setLoadingText('Rendering graphs..');
 
         // TODO remove
