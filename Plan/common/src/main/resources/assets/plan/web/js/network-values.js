@@ -309,3 +309,104 @@ function onViewserver(i, servers) {
         }, 0);
     }
 }
+
+function loadPlayersOnlineGraph(json, error) {
+    if (json) {
+        const series = {
+            playersOnline: {
+                name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
+                data: json.playersOnline, color: v.colors.playersOnline, yAxis: 0
+            }
+        };
+        playersChart('playersOnlineChart', series.playersOnline, 2);
+    } else if (error) {
+        document.getElementById('playersOnlineChart').innerText = `Failed to load graph data: ${error}`;
+    }
+}
+
+function loadUniqueAndNewGraph(json, error) {
+    if (json) {
+        const uniquePlayers = {
+            name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+            data: json.uniquePlayers, color: v.colors.playersOnline
+        };
+        const newPlayers = {
+            name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+            data: json.newPlayers, color: v.colors.newPlayers
+        };
+        dayByDay('uniqueChart', [uniquePlayers, newPlayers]);
+    } else if (error) {
+        document.getElementById('uniqueChart').innerText = `Failed to load graph data: ${error}`;
+    }
+}
+
+function loadHourlyUniqueAndNewGraph(json, error) {
+    if (json) {
+        const uniquePlayers = {
+            name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+            data: json.uniquePlayers, color: v.colors.playersOnline
+        };
+        const newPlayers = {
+            name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+            data: json.newPlayers, color: v.colors.newPlayers
+        };
+        dayByDay('hourlyUniqueChart', [uniquePlayers, newPlayers]);
+    } else if (error) {
+        document.getElementById('uniqueChart').innerText = `Failed to load graph data: ${error}`;
+    }
+}
+
+function loadServerPie(json, error) {
+    if (json) {
+        serverPieSeries = {
+            name: 'Server Playtime',
+            colorByPoint: true,
+            colors: json.server_pie_colors,
+            data: json.server_pie_series_30d
+        };
+        serverPie('serverPie', serverPieSeries);
+    } else if (error) {
+        document.getElementById('serverPie').innerText = `Failed to load graph data: ${error}`;
+    }
+}
+
+function loadActivityGraphs(json, error) {
+    if (json) {
+        activityPie('activityPie', {
+            name: s.name.unit_players, colorByPoint: true, data: json.activity_pie_series
+        });
+        stackChart('activityStackGraph', json.activity_labels, json.activity_series, s.name.unit_players);
+    } else if (error) {
+        const errorMessage = `Failed to load graph data: ${error}`;
+        document.getElementById('activityPie').innerText = errorMessage;
+        document.getElementById('activityStackGraph').innerText = errorMessage;
+    }
+}
+
+function loadGeolocationGraph(json, error) {
+    if (json) {
+        const geolocationSeries = {
+            name: s.name.unit_players,
+            type: 'map',
+            mapData: Highcharts.maps['custom/world'],
+            data: json.geolocation_series,
+            joinBy: ['iso-a3', 'code']
+        };
+        const geolocationBarSeries = {
+            color: json.colors.bars,
+            name: s.name.unit_players,
+            data: json.geolocation_bar_series.map(function (bar) {
+                return bar.value
+            })
+        };
+        const geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
+            return bar.label
+        });
+        worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
+        horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], s.name.unit_players);
+    } else if (error) {
+        const errorMessage = `Failed to load graph data: ${error}`;
+        document.getElementById('worldMap').innerText = errorMessage;
+        document.getElementById('countryBarChart').innerText = errorMessage;
+    }
+}
