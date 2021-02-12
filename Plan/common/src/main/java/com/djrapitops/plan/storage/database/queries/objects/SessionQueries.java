@@ -867,7 +867,7 @@ public class SessionQueries {
                             .put("total_playtime", playtime)
                             .put("average_playtime", playerCount != 0 ? playtime / playerCount : -1L)
                             .put("total_afk_playtime", playtime - activePlaytime)
-                            .put("average_afk_playtime", playerCount != 0 ? playtime - activePlaytime / playerCount : -1L)
+                            .put("average_afk_playtime", playerCount != 0 ? (playtime - activePlaytime) / playerCount : -1L)
                             .put("total_active_playtime", activePlaytime)
                             .put("average_active_playtime", playerCount != 0 ? activePlaytime / playerCount : -1L)
                             .put("total_sessions", sessionCount)
