@@ -1266,3 +1266,23 @@ body.sidebar-hidden .navbar-nav {
 .sorting, .sorting_desc, .sorting_asc {
     cursor: pointer;
 }
+
+.dataTables_length {
+    padding-top: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.dataTables_filter {
+    padding-top: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.dataTables_info {
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.dataTables_paginate {
+    padding-bottom: 0.5rem;
+    padding-right: 0.5rem;
+}

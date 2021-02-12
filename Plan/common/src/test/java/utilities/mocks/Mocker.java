@@ -79,9 +79,8 @@ abstract class Mocker {
                 "web/js/xmlhttprequests.js",
 
                 "web/vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "web/vendor/datatables/jquery.dataTables.min.js",
-                "web/vendor/datatables/dataTables.bootstrap4.min.css",
-                "web/vendor/datatables/dataTables.bootstrap4.min.js",
+                "web/vendor/datatables/datatables.min.css",
+                "web/vendor/datatables/datatables.min.js",
                 "web/vendor/jquery/jquery.min.js",
                 "web/vendor/fontawesome-free/css/all.min.css",
                 "web/vendor/fontawesome-free/webfonts/fa-brands-400.eot",
