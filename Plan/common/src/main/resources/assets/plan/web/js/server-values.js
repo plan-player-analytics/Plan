@@ -553,6 +553,7 @@ function loadHourlyUniqueAndNewGraph(json, error) {
 function loadServerCalendar(json, error) {
     if (json) {
         document.getElementById('calendar').innerText = '';
+        if (window.calendars.online_activity) window.calendars.online_activity.destroy();
         onlineActivityCalendar('#calendar', json.data, json.firstDay);
         document.getElementById('online-calendar-tab').addEventListener('click', function () {
             // Wrapping this in a 0ms setTimeout waits for all other event handlers
