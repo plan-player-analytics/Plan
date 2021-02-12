@@ -5497,8 +5497,8 @@ p.collapsing {
 .page-item.active .page-link {
     z-index: 1;
     color: #fff;
-    background-color: #4e73df;
-    border-color: #4e73df;
+    background-color: #368F17;
+    border-color: #368F17;
 }
 
 .page-item.disabled .page-link {

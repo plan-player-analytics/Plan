@@ -158,7 +158,7 @@
         `.bg-grey {background-color: ${grey};color: #eee8d5;}` +
         `.bg-blue-grey {background-color: ${blueGrey};color: #eee8d5;}` +
         `.bg-black {background-color: ${black};color: #eee8d5;}` +
-        `.bg-plan {background-color: ${planColor};color: #eee8d5;}` +
+        `.bg-plan,.page-item.active .page-link {background-color: ${planColor};color: #eee8d5;}` +
         `.badge-success {background-color: ${successColor};color: #eee8d5;}` +
         `.bg-night {background-color: #44475a;color: #eee8d5;}` +
         `.bg-red-outline {outline-color: ${red};border-color: ${red};}` +
@@ -211,14 +211,15 @@
             // Background colors from dracula theme
             $('head').append('<style id="nightmode">' +
                 '#content {background-color:#282a36;}' +
-                '.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr,form .btn{background-color:#44475a;border-color:#6272a4!important;}' +
+                '.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr,form .btn, .btn-outline-secondary{background-color:#44475a;border-color:#6272a4!important;}' +
                 '.bg-white.collapse-inner {border:1px solid;}' +
                 '.card-header {background-color:#44475a;border-color:#6272a4;}' +
-                '#content,.col-black,.text-gray-900,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.close,.fc-title,.fc-time,pre,.table-dark{color:#eee8d5 !important;}' +
+                '#content,.col-black,.text-gray-900,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.close,.fc-title,.fc-time,pre,.table-dark,input::placeholder{color:#eee8d5 !important;}' +
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
-                '.fc-popover-body,.fc-popover-header {background-color: #44475a;color: #eee8d5;}' +
+                '.fc-popover-body,.fc-popover-header{background-color: #44475a !important;color: #eee8d5 !important;}' +
+                'select,input,.dataTables_paginate .page-item:not(.active) a,.input-group-prepend > * {background-color:#44475a !important;border-color:#6272a4 !important;color: #eee8d5 !important;}' +
                 nightModeColors +
                 '</style>');
             // Turn bright tables to dark
