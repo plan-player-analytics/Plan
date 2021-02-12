@@ -18,8 +18,6 @@ package com.djrapitops.plan.gathering.listeners.bungee;
 
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.export.Exporter;
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.SessionCache;
@@ -124,10 +122,6 @@ public class PlayerOnlineListener implements Listener {
         }
 
         UUID serverUUID = serverInfo.getServerUUID();
-        JSONCache.invalidateMatching(DataID.SERVER_OVERVIEW);
-        JSONCache.invalidate(DataID.GRAPH_ONLINE, serverUUID);
-        JSONCache.invalidate(DataID.SERVERS);
-        JSONCache.invalidate(DataID.SESSIONS);
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -156,23 +150,6 @@ public class PlayerOnlineListener implements Listener {
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
-        processing.submit(() -> {
-            JSONCache.invalidateMatching(
-                    DataID.SERVER_OVERVIEW,
-                    DataID.SESSIONS,
-                    DataID.GRAPH_WORLD_PIE,
-                    DataID.GRAPH_PUNCHCARD,
-                    DataID.KILLS,
-                    DataID.ONLINE_OVERVIEW,
-                    DataID.SESSIONS_OVERVIEW,
-                    DataID.PVP_PVE,
-                    DataID.GRAPH_UNIQUE_NEW,
-                    DataID.GRAPH_CALENDAR
-            );
-            UUID serverUUID = serverInfo.getServerUUID();
-            JSONCache.invalidate(DataID.GRAPH_ONLINE, serverUUID);
-            JSONCache.invalidate(DataID.SERVERS);
-        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -198,7 +175,5 @@ public class PlayerOnlineListener implements Listener {
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
-
-        JSONCache.invalidate(DataID.SERVERS);
     }
 }

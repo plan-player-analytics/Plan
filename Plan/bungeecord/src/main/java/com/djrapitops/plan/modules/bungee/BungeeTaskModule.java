@@ -17,7 +17,6 @@
 package com.djrapitops.plan.modules.bungee;
 
 import com.djrapitops.plan.TaskSystem;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.timed.BungeePingCounter;
@@ -56,10 +55,6 @@ public interface BungeeTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindDBCleanTask(DBCleanTask cleanTask);
-
-    @Binds
-    @IntoSet
-    TaskSystem.Task bindJSONCacheCleanTask(JSONCache.CleanTask cleanTask);
 
     @Binds
     @IntoSet

@@ -17,7 +17,6 @@
 package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.TaskSystem;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.ShutdownHook;
@@ -58,10 +57,6 @@ public interface SpongeTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindDBCleanTask(DBCleanTask cleanTask);
-
-    @Binds
-    @IntoSet
-    TaskSystem.Task bindJSONCacheCleanTask(JSONCache.CleanTask cleanTask);
 
     @Binds
     @IntoSet

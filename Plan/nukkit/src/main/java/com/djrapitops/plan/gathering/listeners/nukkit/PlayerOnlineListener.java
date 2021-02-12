@@ -27,8 +27,6 @@ import cn.nukkit.event.player.PlayerQuitEvent;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.export.Exporter;
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
@@ -150,8 +148,6 @@ public class PlayerOnlineListener implements Listener {
         UUID playerUUID = player.getUniqueId();
         UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
-        JSONCache.invalidate(DataID.SERVER_OVERVIEW, serverUUID);
-        JSONCache.invalidate(DataID.GRAPH_PERFORMANCE, serverUUID);
 
         NukkitAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
 
@@ -217,8 +213,6 @@ public class PlayerOnlineListener implements Listener {
         if (playerUUID == null) return; // Can be null when player is not signed in to xbox live
 
         UUID serverUUID = serverInfo.getServerUUID();
-        JSONCache.invalidate(DataID.SERVER_OVERVIEW, serverUUID);
-        JSONCache.invalidate(DataID.GRAPH_PERFORMANCE, serverUUID);
 
         NukkitAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
 

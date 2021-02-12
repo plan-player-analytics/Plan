@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
@@ -57,8 +55,6 @@ public class PlayerRegisterTransaction extends Transaction {
             SessionCache.getCachedSession(playerUUID).ifPresent(session -> session.setAsFirstSessionIfMatches(registerDate));
         }
         execute(DataStoreQueries.updatePlayerName(playerUUID, playerName));
-
-        JSONCache.invalidateMatching(DataID.PLAYERS);
     }
 
     private void insertUser(long registerDate) {
