@@ -717,7 +717,7 @@
             lang: {noData: "No Data to Display"}, time: {timezoneOffset: ${timeZone} * 60}
         });
         setLoadingText('Loading player values..');
-        jsonRequest("../v1/player?player=${playerName}", function (json, error) {
+        jsonRequest(`../v1/player?player=${encodeURIComponent('${playerName}')}`, function (json, error) {
             loadPlayerOverviewValues(json, error);
             loadSessionAccordion(json, error);
             loadserverAccordion(json, error);
