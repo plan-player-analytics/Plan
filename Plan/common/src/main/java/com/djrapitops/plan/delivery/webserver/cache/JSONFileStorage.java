@@ -198,19 +198,26 @@ public class JSONFileStorage implements JSONStorage {
 
         List<File> toDelete = new ArrayList<>();
         for (File file : stored) {
-            try {
-                String fileName = file.getName();
-                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {
-                    Matcher timestampMatch = timestampRegex.matcher(fileName);
-                    if (timestampMatch.find() && Long.parseLong(timestampMatch.group(1)) < timestamp) {
-                        toDelete.add(file);
-                    }
-                }
-            } catch (NumberFormatException e) {
-                // Ignore this file, malformed timestamp
+            if (shouldDeleteFile(identifier, timestamp, toDelete, file)) {
+                toDelete.add(file);
             }
         }
         deleteFiles(toDelete);
+    }
+
+    private boolean shouldDeleteFile(String identifier, long timestamp, List<File> toDelete, File file) {
+        try {
+            String fileName = file.getName();
+            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {
+                Matcher timestampMatch = timestampRegex.matcher(fileName);
+                if (timestampMatch.find() && Long.parseLong(timestampMatch.group(1)) < timestamp) {
+                    return true;
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Ignore this file, malformed timestamp
+        }
+        return false;
     }
 
     private void invalidateOlderButIgnore(long timestamp, String... ignoredIdentifiers) {
@@ -218,25 +225,32 @@ public class JSONFileStorage implements JSONStorage {
         if (stored == null) return;
 
         List<File> toDelete = new ArrayList<>();
-        outer:
         for (File file : stored) {
-            try {
-                String fileName = file.getName();
-                if (fileName.endsWith(JSON_FILE_EXTENSION)) {
-                    Matcher timestampMatch = timestampRegex.matcher(fileName);
-                    if (timestampMatch.find() && Long.parseLong(timestampMatch.group(1)) < timestamp) {
-                        for (String ignoredIdentifier : ignoredIdentifiers) {
-                            if (fileName.startsWith(ignoredIdentifier)) continue outer;
-                        }
-                        toDelete.add(file);
-                    }
-                }
-            } catch (NumberFormatException e) {
-                // Ignore this file, malformed timestamp
+            if (shouldDeleteFile(timestamp, file, ignoredIdentifiers)) {
+                toDelete.add(file);
             }
         }
 
         deleteFiles(toDelete);
+    }
+
+    private boolean shouldDeleteFile(long timestamp, File file, String[] ignoredIdentifiers) {
+        try {
+            String fileName = file.getName();
+            if (fileName.endsWith(JSON_FILE_EXTENSION)) {
+                Matcher timestampMatch = timestampRegex.matcher(fileName);
+                boolean isOlder = timestampMatch.find() && Long.parseLong(timestampMatch.group(1)) < timestamp;
+                if (isOlder) {
+                    for (String ignoredIdentifier : ignoredIdentifiers) {
+                        if (fileName.startsWith(ignoredIdentifier)) return false;
+                    }
+                    return true;
+                }
+            }
+        } catch (NumberFormatException e) {
+            // Ignore this file, malformed timestamp
+        }
+        return false;
     }
 
     private void deleteFiles(List<File> toDelete) {
