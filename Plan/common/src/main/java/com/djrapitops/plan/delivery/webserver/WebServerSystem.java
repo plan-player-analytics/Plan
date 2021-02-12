@@ -51,6 +51,7 @@ public class WebServerSystem implements SubSystem {
             ResourceService.getInstance().addStylesToResource("Plan", "player.html", ResourceService.Position.PRE_CONTENT, "../css/noauth.css");
             ResourceService.getInstance().addStylesToResource("Plan", "players.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
             ResourceService.getInstance().addStylesToResource("Plan", "network.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+            ResourceService.getInstance().addStylesToResource("Plan", "query.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
         }
         if (webServer.isEnabled()) {
             ResourceService.getInstance().addStylesToResource("Plan", "server.html", ResourceService.Position.PRE_CONTENT, "../css/querybutton.css");
