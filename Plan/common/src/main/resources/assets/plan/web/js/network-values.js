@@ -238,6 +238,7 @@ function loadservers(servers, error) {
     }
 
     if (!servers || !servers.length) {
+        document.getElementById('game-server-warning').classList.remove('hidden');
         document.getElementById('data_server_list').innerHTML =
             `<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p><p>It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.</p></div></div>`
         document.getElementById('quick_view_players_online').innerText = `No server to display online activity for.`;
@@ -404,6 +405,9 @@ function loadGeolocationGraph(json, error) {
         });
         worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
         horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], s.name.unit_players);
+        if (!json.geolocations_enabled) {
+            document.getElementById('geolocation-warning').classList.remove('hidden');
+        }
     } else if (error) {
         const errorMessage = `Failed to load graph data: ${error}`;
         document.getElementById('worldMap').innerText = errorMessage;

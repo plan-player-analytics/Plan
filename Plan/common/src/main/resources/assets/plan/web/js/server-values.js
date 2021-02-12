@@ -327,6 +327,9 @@ function loadPerformanceValues(json, error) {
     element.querySelector('#data_entities_30d').innerText = data.entities_30d;
     element.querySelector('#data_entities_7d').innerText = data.entities_7d;
     element.querySelector('#data_entities_24h').innerText = data.entities_24h;
+    if ("Unavailable" === data.chunks_30d) {
+        document.getElementById('sponge-chunk-warning').classList.remove('hidden');
+    }
     element.querySelector('#data_chunks_30d').innerText = data.chunks_30d;
     element.querySelector('#data_chunks_7d').innerText = data.chunks_7d;
     element.querySelector('#data_chunks_24h').innerText = data.chunks_24h;
@@ -511,6 +514,9 @@ function loadGeolocationGraph(json, error) {
         });
         worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
         horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], s.name.unit_players);
+        if (!json.geolocations_enabled) {
+            document.getElementById('geolocation-warning').classList.remove('hidden');
+        }
     } else if (error) {
         const errorMessage = `Failed to load graph data:  ${error}`;
         document.getElementById('worldMap').innerText = errorMessage;

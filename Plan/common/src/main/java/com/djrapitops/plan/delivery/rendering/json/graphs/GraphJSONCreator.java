@@ -33,6 +33,7 @@ import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -346,6 +347,7 @@ public class GraphJSONCreator {
         WorldMap worldMap = graphs.special().worldMap(geolocationCounts);
 
         return Maps.builder(String.class, Object.class)
+                .put("geolocations_enabled", config.get(DataGatheringSettings.GEOLOCATIONS) && config.get(DataGatheringSettings.ACCEPT_GEOLITE2_EULA))
                 .put("geolocation_series", worldMap.getEntries())
                 .put("geolocation_bar_series", geolocationBarGraph.getBars())
                 .put("colors", Maps.builder(String.class, String.class)
