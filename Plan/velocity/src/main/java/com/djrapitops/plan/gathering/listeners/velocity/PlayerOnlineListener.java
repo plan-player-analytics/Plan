@@ -125,8 +125,6 @@ public class PlayerOnlineListener {
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
-
-        UUID serverUUID = serverInfo.getServerUUID();
     }
 
     @Subscribe(order = PostOrder.NORMAL)

@@ -120,8 +120,6 @@ public class PlayerOnlineListener implements Listener {
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
-
-        UUID serverUUID = serverInfo.getServerUUID();
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

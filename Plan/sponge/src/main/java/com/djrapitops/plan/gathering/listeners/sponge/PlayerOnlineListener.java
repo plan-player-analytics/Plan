@@ -214,7 +214,6 @@ public class PlayerOnlineListener {
         Player player = event.getTargetEntity();
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
-        UUID serverUUID = serverInfo.getServerUUID();
 
         SpongeAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
 

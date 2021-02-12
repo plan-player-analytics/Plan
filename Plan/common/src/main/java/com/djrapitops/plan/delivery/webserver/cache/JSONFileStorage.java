@@ -198,14 +198,14 @@ public class JSONFileStorage implements JSONStorage {
 
         List<File> toDelete = new ArrayList<>();
         for (File file : stored) {
-            if (shouldDeleteFile(identifier, timestamp, toDelete, file)) {
+            if (shouldDeleteFile(identifier, timestamp, file)) {
                 toDelete.add(file);
             }
         }
         deleteFiles(toDelete);
     }
 
-    private boolean shouldDeleteFile(String identifier, long timestamp, List<File> toDelete, File file) {
+    private boolean shouldDeleteFile(String identifier, long timestamp, File file) {
         try {
             String fileName = file.getName();
             if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {

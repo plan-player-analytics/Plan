@@ -194,7 +194,6 @@ public class ExtensionSvc implements ExtensionService {
         for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
             updateServerValues(gatherer, event);
         }
-        UUID serverUUID = serverInfo.getServerUUID();
     }
 
     public void updateServerValues(ProviderValueGatherer gatherer, CallEvents event) {

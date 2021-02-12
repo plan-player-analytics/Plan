@@ -211,7 +211,6 @@ public class PlayerOnlineListener implements Listener {
         Player player = event.getPlayer();
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
-        UUID serverUUID = serverInfo.getServerUUID();
 
         BukkitAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
 

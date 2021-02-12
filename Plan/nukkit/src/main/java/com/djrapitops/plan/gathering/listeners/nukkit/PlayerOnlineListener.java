@@ -212,8 +212,6 @@ public class PlayerOnlineListener implements Listener {
         UUID playerUUID = player.getUniqueId();
         if (playerUUID == null) return; // Can be null when player is not signed in to xbox live
 
-        UUID serverUUID = serverInfo.getServerUUID();
-
         NukkitAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
 
         nicknameCache.removeDisplayName(playerUUID);
