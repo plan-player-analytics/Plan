@@ -1,3 +1,4 @@
+DEV|5.2 build 1056|https://github.com/plan-player-analytics/Plan/releases/download/5.2.1056/Plan-5.2-dev-build-1056.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.2.1056
 DEV|5.2 build 1022|https://github.com/plan-player-analytics/Plan/releases/download/5.2.1022/Plan-5.2-dev-build-1022.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.2.1022
 DEV|5.2 build 970|https://github.com/plan-player-analytics/Plan/releases/download/5.2.970/Plan-5.2-dev-build-970.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.2.970
 DEV|5.2 build 902|https://github.com/plan-player-analytics/Plan/releases/download/5.2.902/Plan-5.2-dev-build-904.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.2.902
