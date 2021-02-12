@@ -65,12 +65,6 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
         return "plan";
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public String getPlugin() {
-        return "Plan";
-    }
-
     @Override
     public String getAuthor() {
         return "Rsl1122";
@@ -84,6 +78,9 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, String params) {
         UUID uuid = player != null ? player.getUniqueId() : null;
+        if ("Server thread".equalsIgnoreCase(Thread.currentThread().getName())) {
+            return "[placeholder replacement on server thread is not supported by Plan because it can crash the server!]";
+        }
         try {
             String value = placeholders.onPlaceholderRequest(uuid, params, Collections.emptyList());
 
