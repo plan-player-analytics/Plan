@@ -91,9 +91,13 @@ public class ResponseSender {
     }
 
     private void beginSend() throws IOException {
+        String length = response.getHeaders().get("Content-Length");
+        if (length == null || "0".equals(length)) {
+            exchange.getResponseHeaders().remove("Content-Length");
+        }
         // Return a content length of -1 for HTTP code 204 (No content)
         // and HEAD requests to avoid warning messages.
-        exchange.sendResponseHeaders(response.getCode(), (response.getCode() == 204 || "HEAD".equals(exchange.getRequestMethod())) ? -1 : 0);
+        exchange.sendResponseHeaders(response.getCode(), (response.getCode() == 204 || "HEAD".equals(exchange.getRequestMethod()) || length == null) ? -1 : Long.parseLong(length));
     }
 
     private void sendRawBytes() throws IOException {
