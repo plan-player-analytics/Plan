@@ -87,7 +87,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkName}
-                            | Players</h1>
+                            | Players
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                     </div>
 
                     <div class="row">
@@ -265,10 +270,20 @@
 <script src="js/color-selector.js"></script>
 
 <script id="mainScript">
+    refreshBarrierMs = ${refreshBarrier};
     try {
-        jsonRequest("./v1/players", function (playersTableJson, error) {
+        let table;
+        refreshingJsonRequest("./v1/players", function (playersTableJson, error) {
             if (playersTableJson) {
-                $('.player-table').DataTable({
+                if (table) {
+                    table.destroy();
+                    $('.player-table').replaceWith(`<table class="table table-bordered table-striped table-hover player-table dataTable">
+                                        <tr>
+                                            <td>Loading..</td>
+                                        </tr>
+                                    </table>`);
+                }
+                table = $('.player-table').DataTable({
                     responsive: true,
                     columns: playersTableJson.columns,
                     data: playersTableJson.data,
@@ -277,7 +292,7 @@
             } else if (error) {
                 $('.player-table').text("Failed to load Players table data: " + error);
             }
-        });
+        }, 'players', true);
     } catch (loadingError) {
         window.alert("Error occurred, see Developer Console (Ctrl+Shift+I) - Please report this: " + loadingError);
         setTimeout(function () {
