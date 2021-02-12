@@ -1372,7 +1372,7 @@
             time: {timezoneOffset: (${timeZone}) * 60}
         });
 
-        refreshingJsonRequest("../v1/graph?type=optimizedPerformance&server=${serverUUID}", loadOptimizedPerformanceGraph, 'performance');
+        refreshingJsonRequest("../v1/graph?type=optimizedPerformance&server=${serverUUID}", loadOptimizedPerformanceGraph, 'performance', true);
         refreshingJsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", loadPingGraph, 'performance');
         refreshingJsonRequest("../v1/graph?type=worldPie&server=${serverUUID}", loadWorldPie, 'sessions-overview');
         refreshingJsonRequest("../v1/graph?type=activity&server=${serverUUID}", loadActivityGraph, 'playerbase-overview');
