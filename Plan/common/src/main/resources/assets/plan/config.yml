@@ -34,6 +34,7 @@ Database:
     Database: Plan
     # Launch options to append after mysql driver address
     Launch_options: "?rewriteBatchedStatements=true&useSSL=false&serverTimezone=UTC"
+    Max_connections: 8
   H2:
     User: root
     Password: minecraft
