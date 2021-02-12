@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.json;
+package com.djrapitops.plan.delivery.webserver.cache;
 
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plugin.logging.console.TestPluginLogger;
@@ -49,7 +49,7 @@ class JSONStorageTest {
         this.tempDir = tempDir;
         when(files.getJSONStorageDirectory()).thenReturn(this.tempDir);
 
-        UNDER_TEST = new JSONFileStorage(files, new TestPluginLogger());
+        UNDER_TEST = new JSONFileStorage(files, value -> Long.toString(value), new TestPluginLogger());
     }
 
     private Optional<File> findTheFile() {

@@ -21,12 +21,13 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
@@ -53,6 +54,7 @@ public class NetworkPage implements Page {
     private final Theme theme;
     private final Locale locale;
     private final ServerInfo serverInfo;
+    private final JSONStorage jsonStorage;
     private final Formatters formatters;
 
     NetworkPage(
@@ -64,6 +66,7 @@ public class NetworkPage implements Page {
             Theme theme,
             Locale locale,
             ServerInfo serverInfo,
+            JSONStorage jsonStorage,
             Formatters formatters
     ) {
         this.templateHtml = templateHtml;
@@ -73,6 +76,7 @@ public class NetworkPage implements Page {
         this.theme = theme;
         this.locale = locale;
         this.serverInfo = serverInfo;
+        this.jsonStorage = jsonStorage;
         this.formatters = formatters;
     }
 
@@ -84,6 +88,7 @@ public class NetworkPage implements Page {
         placeholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));
         placeholders.put("serverName", config.get(ProxySettings.NETWORK_NAME));
         placeholders.put("serverUUID", serverUUID.toString());
+        placeholders.put("refreshBarrier", config.get(WebserverSettings.REDUCED_REFRESH_BARRIER));
 
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
         placeholders.put("playersGraphColor", theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
@@ -103,8 +108,17 @@ public class NetworkPage implements Page {
             return new ServerPluginTabs(extensionData, formatters);
         });
 
-        String nav = JSONCache.getOrCacheString(DataID.EXTENSION_NAV, serverUUID, () -> pluginTabs.get().getNav());
-        String tabs = JSONCache.getOrCacheString(DataID.EXTENSION_TABS, serverUUID, () -> pluginTabs.get().getTabs());
+        long after = System.currentTimeMillis() - config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);
+        String navIdentifier = DataID.EXTENSION_NAV.of(serverUUID);
+        String tabIdentifier = DataID.EXTENSION_TABS.of(serverUUID);
+        String nav = jsonStorage.fetchJsonMadeAfter(navIdentifier, after).orElseGet(() -> {
+            jsonStorage.invalidateOlder(navIdentifier, after);
+            return jsonStorage.storeJson(navIdentifier, pluginTabs.get().getNav());
+        }).json;
+        String tabs = jsonStorage.fetchJsonMadeAfter(tabIdentifier, after).orElseGet(() -> {
+            jsonStorage.invalidateOlder(tabIdentifier, after);
+            return jsonStorage.storeJson(tabIdentifier, pluginTabs.get().getTabs());
+        }).json;
 
         PlaceholderReplacer pluginPlaceholders = new PlaceholderReplacer();
         pluginPlaceholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));

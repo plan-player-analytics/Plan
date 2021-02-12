@@ -101,7 +101,7 @@ public enum HtmlLang implements Lang {
     TITLE_PLAYER("Player"),
     TITLE_SESSION_START("Session Started"),
     TITLE_LENGTH(" Length"),
-    TITLE_SERVER("Server"), // Can cause issue with jquery.dataTables.js
+    TITLE_SERVER("Server"), // Can cause issue with datatables.js
     TITLE_MOST_PLAYED_WORLD("Most played World"),
     TEXT_CLICK_TO_EXPAND("Click to expand"),
     TITLE_SERVER_PLAYTIME_30("Server Playtime for 30 days"),
@@ -131,6 +131,7 @@ public enum HtmlLang implements Lang {
     SIDE_PVP_PVE("PvP & PvE"),
     SIDE_PERFORMANCE("Performance"),
     LABEL_RETENTION("New Player Retention"),
+    DESCRIBE_RETENTION_PREDICTION("This value is a prediction based on previous players."),
     TITLE_SERVER_AS_NUMBERS("Server as Numbers"),
     TITLE_ONLINE_ACTIVITY_AS_NUMBERS("Online Activity as Numbers"),
     COMPARING_15_DAYS("Comparing 15 days"),

@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.webserver.cache;
 import java.util.UUID;
 
 /**
- * Enum for different JSON data entries that can be stored in {@link JSONCache}.
+ * Enum for different JSON data entries that can be stored in cache.
  *
  * @author Rsl1122
  */

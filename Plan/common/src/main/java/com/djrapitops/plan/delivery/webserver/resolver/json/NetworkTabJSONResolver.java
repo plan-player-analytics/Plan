@@ -17,12 +17,14 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONCreator;
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.identification.Identifiers;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -36,10 +38,15 @@ public class NetworkTabJSONResolver<T> implements Resolver {
 
     private final DataID dataID;
     private final Supplier<T> jsonCreator;
+    private final AsyncJSONResolverService asyncJSONResolverService;
 
-    public NetworkTabJSONResolver(DataID dataID, NetworkTabJSONCreator<T> jsonCreator) {
+    public NetworkTabJSONResolver(
+            DataID dataID, NetworkTabJSONCreator<T> jsonCreator,
+            AsyncJSONResolverService asyncJSONResolverService
+    ) {
         this.dataID = dataID;
         this.jsonCreator = jsonCreator;
+        this.asyncJSONResolverService = asyncJSONResolverService;
     }
 
     @Override
@@ -49,11 +56,13 @@ public class NetworkTabJSONResolver<T> implements Resolver {
 
     @Override
     public Optional<Response> resolve(Request request) {
-        return Optional.of(getResponse());
+        return Optional.of(getResponse(request));
     }
 
-    private Response getResponse() {
-        return JSONCache.getOrCache(dataID, jsonCreator);
+    private Response getResponse(Request request) {
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, jsonCreator).json)
+                .build();
     }
-
 }

@@ -157,7 +157,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Server Overview</h1>
+                            &middot; Server Overview
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -328,7 +333,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Online Activity Overview</h1>
+                            &middot; Online Activity Overview
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -446,7 +456,8 @@
                                         </td>
                                         <td id="data_new_players_retention_30d"></td>
                                         <td id="data_new_players_retention_7d"></td>
-                                        <td id="data_new_players_retention_24h"></td>
+                                        <td id="data_new_players_retention_24h"
+                                            title="This value is a prediction based on previous players."></td>
                                     </tr>
                                     </tbody>
                                     <tbody>
@@ -521,7 +532,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Sessions</h1>
+                            &middot; Sessions
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -595,7 +611,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; PvP & PvE</h1>
+                            &middot; PvP & PvE
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -693,8 +714,7 @@
                                         Recent Kills</h6>
                                 </div>
                                 <div class="scrollbar">
-                                    <table class="table" id="playerKillTable">
-                                    </table>
+                                    <table class="table" id="playerKillTable"></table>
                                 </div>
                             </div>
                         </div>
@@ -707,7 +727,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Playerbase Overview</h1>
+                            &middot; Playerbase Overview
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -850,7 +875,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Player List</h1>
+                            &middot; Player List
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -881,7 +911,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Geolocations</h1>
+                            &middot; Geolocations
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -938,7 +973,12 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${serverDisplayName}
-                            &middot; Performance</h1>
+                            &middot; Performance
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
                         ${backButton}
                     </div>
 
@@ -1264,8 +1304,8 @@
 <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-<script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
+<script src="../vendor/datatables/datatables.min.js"></script>
+<link href='../vendor/datatables/datatables.min.css' rel='stylesheet'/>
 <script src="../vendor/highcharts/highstock.js"></script>
 <script src="../vendor/highcharts/map.js"></script>
 <script src="../vendor/highcharts/world.js"></script>
@@ -1277,6 +1317,7 @@
 <script src='../vendor/fullcalendar/fullcalendar.min.js'></script>
 
 <!-- Custom scripts for all pages-->
+<script src="../js/domUtils.js"></script>
 <script src="../js/sb-admin-2.js"></script>
 <script src="../js/xmlhttprequests.js"></script>
 <script src="../js/color-selector.js"></script>
@@ -1288,14 +1329,42 @@
 <script src="../js/server-values.js"></script>
 
 <script id="mainScript">
+    refreshBarrierMs = ${refreshBarrier};
+    // HighCharts Series
+    const s = {
+        name: {
+            playersOnline: 'Players Online',
+            uniquePlayers: 'Unique Players',
+            newPlayers: 'New Players',
+            tps: 'TPS',
+            cpu: 'CPU (%)',
+            ram: 'RAM (MB)',
+            entities: 'Entities',
+            chunks: 'Chunks',
+            maxPing: 'Worst Ping',
+            minPing: 'Best Ping',
+            avgPing: 'Average Ping',
+            disk: 'Free Disk Space (MB)',
+            unit_players: 'Players'
+        },
+        tooltip: {
+            twoDecimals: {valueDecimals: 2},
+            zeroDecimals: {valueDecimals: 0}
+        },
+        type: {
+            areaSpline: 'areaspline',
+            spline: 'spline'
+        }
+    };
+
     try {
         setLoadingText('Calculating values..');
-        jsonRequest("../v1/serverOverview?server=${serverUUID}", loadserverOverviewValues);
-        jsonRequest("../v1/onlineOverview?server=${serverUUID}", loadOnlineActivityOverviewValues);
-        jsonRequest("../v1/sessionsOverview?server=${serverUUID}", loadSessionValues);
-        jsonRequest("../v1/playerVersus?server=${serverUUID}", loadPvPPvEValues);
-        jsonRequest("../v1/playerbaseOverview?server=${serverUUID}", loadPlayerbaseOverviewValues);
-        jsonRequest("../v1/performanceOverview?server=${serverUUID}", loadPerformanceValues);
+        refreshingJsonRequest("../v1/serverOverview?server=${serverUUID}", loadserverOverviewValues, 'server-overview');
+        refreshingJsonRequest("../v1/onlineOverview?server=${serverUUID}", loadOnlineActivityOverviewValues, 'online-activity-overview');
+        refreshingJsonRequest("../v1/sessionsOverview?server=${serverUUID}", loadSessionValues, 'sessions-overview');
+        refreshingJsonRequest("../v1/playerVersus?server=${serverUUID}", loadPvPPvEValues, "pvp-pve");
+        refreshingJsonRequest("../v1/playerbaseOverview?server=${serverUUID}", loadPlayerbaseOverviewValues, 'playerbase-overview');
+        refreshingJsonRequest("../v1/performanceOverview?server=${serverUUID}", loadPerformanceValues, 'performance');
         setLoadingText('Rendering graphs..');
 
         Highcharts.setOptions({
@@ -1303,282 +1372,41 @@
             time: {timezoneOffset: (${timeZone}) * 60}
         });
 
-        // HighCharts Series
-        const s = {
-            name: {
-                playersOnline: 'Players Online',
-                uniquePlayers: 'Unique Players',
-                newPlayers: 'New Players',
-                tps: 'TPS',
-                cpu: 'CPU (%)',
-                ram: 'RAM (MB)',
-                entities: 'Entities',
-                chunks: 'Chunks',
-                maxPing: 'Worst Ping',
-                minPing: 'Best Ping',
-                avgPing: 'Average Ping',
-                disk: 'Free Disk Space (MB)'
-            },
-            tooltip: {
-                twoDecimals: {
-                    valueDecimals: 2
-                },
-                zeroDecimals: {
-                    valueDecimals: 0
-                }
-            },
-            type: {
-                areaSpline: 'areaspline',
-                spline: 'spline'
-            }
-        };
-
-        jsonRequest("../v1/graph?type=optimizedPerformance&server=${serverUUID}", function (json, error) {
-            if (json) {
-                const zones = {
-                    tps: [{
-                        value: json.zones.tpsThresholdMed,
-                        color: json.colors.low
-                    }, {
-                        value: json.zones.tpsThresholdHigh,
-                        color: json.colors.med
-                    }, {
-                        value: 30,
-                        color: json.colors.high
-                    }],
-                    disk: [{
-                        value: json.zones.diskThresholdMed,
-                        color: json.colors.low
-                    }, {
-                        value: json.zones.tpsThresholdHigh,
-                        color: json.colors.med
-                    }, {
-                        value: Number.MAX_VALUE,
-                        color: json.colors.high
-                    }]
-                };
-                const dataSeries = mapToDataSeries(json.values);
-                const series = {
-                    playersOnline: {
-                        name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.playersOnline, color: json.colors.playersOnline, yAxis: 0
-                    },
-                    tps: {
-                        name: s.name.tps, type: s.type.spline, color: json.colors.high,
-                        zones: zones.tps, tooltip: s.tooltip.twoDecimals, data: dataSeries.tps,
-                        yAxis: 1
-                    },
-                    cpu: {
-                        name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: dataSeries.cpu, color: json.colors.cpu, yAxis: 2
-                    },
-                    cpu_alt: {
-                        name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: dataSeries.cpu, color: json.colors.cpu, yAxis: 1
-                    },
-                    ram: {
-                        name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.ram, color: json.colors.ram, yAxis: 3
-                    },
-                    ram_alt: {
-                        name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.ram, color: json.colors.ram, yAxis: 2
-                    },
-                    entities: {
-                        name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.entities, color: json.colors.entities, yAxis: 4
-                    },
-                    entities_alt: {
-                        name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.entities, color: json.colors.entities, yAxis: 1
-                    },
-                    chunks: {
-                        name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.chunks, color: json.colors.chunks, yAxis: 5
-                    },
-                    chunks_alt: {
-                        name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: dataSeries.chunks, color: json.colors.chunks, yAxis: 2
-                    },
-                    disk: {
-                        name: s.name.disk, type: s.type.spline, color: json.colors.high,
-                        zones: zones.disk, tooltip: s.tooltip.zeroDecimals, data: dataSeries.disk
-                    }
-                };
-                playersChart('playersOnlineChart', series.playersOnline, 2);
-                performanceChart('performanceGraph', series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks);
-                tpsChart('tpsGraph', series.tps, series.playersOnline);
-                resourceChart('resourceGraph', series.cpu_alt, series.ram_alt, series.playersOnline);
-                worldChart('worldGraph', series.entities_alt, series.chunks_alt, series.playersOnline);
-                diskChart('diskGraph', [series.disk]);
-            } else if (error) {
-                $('#playersOnlineChart').text("Failed to load graph data: " + error);
-                $('#performanceGraph').text("Failed to load graph data: " + error);
-                $('#tpsGraph').text("Failed to load graph data: " + error);
-                $('#resourceGraph').text("Failed to load graph data: " + error);
-                $('#worldGraph').text("Failed to load graph data: " + error);
-                $('#diskGraph').text("Failed to load graph data: " + error);
-            }
-        });
-
-        jsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var series = {
-                    avgPing: {
-                        name: s.name.avgPing,
-                        type: s.type.spline,
-                        tooltip: s.tooltip.twoDecimals,
-                        data: json.avg_ping_series,
-                        color: json.colors.avg
-                    },
-                    maxPing: {
-                        name: s.name.maxPing,
-                        type: s.type.spline,
-                        tooltip: s.tooltip.zeroDecimals,
-                        data: json.max_ping_series,
-                        color: json.colors.max
-                    },
-                    minPing: {
-                        name: s.name.minPing,
-                        type: s.type.spline,
-                        tooltip: s.tooltip.zeroDecimals,
-                        data: json.min_ping_series,
-                        color: json.colors.min
-                    }
-                };
-                lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
-            } else if (error) {
-                $('#pingGraph').text("Failed to load graph data: " + error);
-            }
-        });
-
-        jsonRequest("../v1/graph?type=worldPie&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var worldSeries = {name: 'World Playtime', colorByPoint: true, data: json.world_series};
-                var gmSeries = json.gm_series;
-                worldPie("worldPie", worldSeries, gmSeries);
-            } else if (error) {
-                $('#worldPie').text("Failed to load graph data: " + error)
-            }
-        });
-
-        jsonRequest("../v1/graph?type=activity&server=${serverUUID}", function (json, error) {
-            if (json) {
-                activityPie('activityPie', {
-                    name: 'Players', colorByPoint: true, data: json.activity_pie_series
-                });
-                stackChart('activityStackGraph', json.activity_labels, json.activity_series, 'Players');
-            } else if (error) {
-                $('#activityPie').text("Failed to load graph data: " + error);
-                $('#activityStackGraph').text("Failed to load graph data: " + error);
-            }
-        });
-
-        jsonRequest("../v1/graph?type=geolocation&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var geolocationSeries = {
-                    name: 'Players',
-                    type: 'map',
-                    mapData: Highcharts.maps['custom/world'],
-                    data: json.geolocation_series,
-                    joinBy: ['iso-a3', 'code']
-                };
-                var geolocationBarSeries = {
-                    color: json.colors.bars,
-                    name: 'Players',
-                    data: json.geolocation_bar_series.map(function (bar) {
-                        return bar.value
-                    })
-                };
-                var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
-                    return bar.label
-                });
-                worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
-                horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
-            } else if (error) {
-                $('#worldMap').text("Failed to load graph data: " + error);
-                $('#countryBarChart').text("Failed to load graph data: " + error);
-            }
-        });
-
-        jsonRequest("../v1/graph?type=uniqueAndNew&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var uniquePlayers = {
-                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.uniquePlayers, color: json.colors.playersOnline
-                };
-                var newPlayers = {
-                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.newPlayers, color: json.colors.newPlayers
-                };
-                dayByDay('uniqueChart', [uniquePlayers, newPlayers]);
-            } else if (error) {
-                $('#uniqueChart').text("Failed to load graph data: " + error)
-            }
-        });
-
-        jsonRequest("../v1/graph?type=hourlyUniqueAndNew&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var uniquePlayers = {
-                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.uniquePlayers, color: json.colors.playersOnline
-                };
-                var newPlayers = {
-                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                    data: json.newPlayers, color: json.colors.newPlayers
-                };
-                dayByDay('hourlyUniqueChart', [uniquePlayers, newPlayers]);
-            } else if (error) {
-                $('#uniqueChart').text("Failed to load graph data: " + error)
-            }
-        });
-
-        jsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", function (json, error) {
-            if (json) {
-                $('#calendar').text('');
-                onlineActivityCalendar('#calendar', json.data, json.firstDay);
-                $('#online-calendar-tab').click(function () {
-                    // Wrapping this in a 0ms setTimeout waits for all other event handlers
-                    // to finish. We need this because if the calendar is rendered
-                    // immediately, it renders for a width of 0.
-                    setTimeout(function () {
-                        window.calendars.online_activity.render();
-                    }, 0);
-                });
-            } else if (error) {
-                $('#calendar').text("Failed to load calendar data: " + error)
-            }
-        });
-
-        jsonRequest("../v1/graph?type=punchCard&server=${serverUUID}", function (json, error) {
-            if (json) {
-                var punchCardSeries = {
-                    name: 'Relative Join Activity',
-                    color: json.color,
-                    data: json.punchCard
-                };
-                punchCard('punchCard', punchCardSeries);
-            } else if (error) {
-                $('#punchCard').text("Failed to load graph data: " + error)
-            }
-        });
+        refreshingJsonRequest("../v1/graph?type=optimizedPerformance&server=${serverUUID}", loadOptimizedPerformanceGraph, 'performance', true);
+        refreshingJsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", loadPingGraph, 'performance');
+        refreshingJsonRequest("../v1/graph?type=worldPie&server=${serverUUID}", loadWorldPie, 'sessions-overview');
+        refreshingJsonRequest("../v1/graph?type=activity&server=${serverUUID}", loadActivityGraph, 'playerbase-overview');
+        refreshingJsonRequest("../v1/graph?type=geolocation&server=${serverUUID}", loadGeolocationGraph, 'geolocations');
+        refreshingJsonRequest("../v1/graph?type=uniqueAndNew&server=${serverUUID}", loadUniqueAndNewGraph, 'online-activity-overview');
+        refreshingJsonRequest("../v1/graph?type=hourlyUniqueAndNew&server=${serverUUID}", loadHourlyUniqueAndNewGraph, 'online-activity-overview');
+        refreshingJsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", loadServerCalendar, 'online-activity-overview', true);
+        refreshingJsonRequest("../v1/graph?type=punchCard&server=${serverUUID}", loadPunchCard, 'online-activity-overview');
 
         setLoadingText('Sorting players table..');
 
-        jsonRequest("../v1/players?server=${serverUUID}", function (json, error) {
+        let table;
+        refreshingJsonRequest("../v1/players?server=${serverUUID}", function (json, error) {
             if (json) {
-                $('.player-table').DataTable({
+                if (table) {
+                    table.destroy();
+                    $('.player-table').replaceWith(`<table class="table table-bordered table-striped table-hover player-table dataTable">
+                                        <tr>
+                                            <td>Loading..</td>
+                                        </tr>
+                                    </table>`);
+                }
+                table = $('.player-table').DataTable({
                     responsive: true,
                     columns: json.columns,
                     data: json.data,
                     order: [[5, "desc"]]
-                })
+                });
             } else if (error) {
                 $('.player-table').text("Failed to load Players table data: " + error);
             }
-        });
-        jsonRequest("../v1/kills?server=${serverUUID}", loadPlayerKills);
-        jsonRequest("../v1/pingTable?server=${serverUUID}", loadPingTable);
+        }, 'playerlist', true);
+        refreshingJsonRequest("../v1/kills?server=${serverUUID}", loadPlayerKills, 'pvp-pve');
+        refreshingJsonRequest("../v1/pingTable?server=${serverUUID}", loadPingTable, 'geolocations');
 
         $('.player-plugin-table').DataTable({
             responsive: true
@@ -1587,7 +1415,7 @@
         setLoadingText('Almost done..');
         openPage();
 
-        jsonRequest("../v1/sessions?server=${serverUUID}", loadSessionAccordion);
+        refreshingJsonRequest("../v1/sessions?server=${serverUUID}", loadSessionAccordion, 'sessions-overview');
 
         setLoadingText('Done.');
         setTimeout(function () {

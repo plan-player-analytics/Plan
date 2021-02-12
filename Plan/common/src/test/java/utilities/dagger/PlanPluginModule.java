@@ -16,12 +16,12 @@
  */
 package utilities.dagger;
 
+import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerServerInfo;
 import com.djrapitops.plan.settings.BukkitConfigSystem;
 import com.djrapitops.plan.settings.ConfigSystem;
-import com.djrapitops.plan.storage.json.JSONFileStorage;
-import com.djrapitops.plan.storage.json.JSONStorage;
 import dagger.Binds;
 import dagger.Module;
 

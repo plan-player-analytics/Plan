@@ -17,12 +17,13 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.rendering.json.ServerTabJSONCreator;
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.identification.Identifiers;
 
 import java.util.Optional;
@@ -39,15 +40,16 @@ public class ServerTabJSONResolver<T> implements Resolver {
     private final DataID dataID;
     private final Identifiers identifiers;
     private final Function<UUID, T> jsonCreator;
+    private final AsyncJSONResolverService asyncJSONResolverService;
 
     public ServerTabJSONResolver(
-            DataID dataID,
-            Identifiers identifiers,
-            ServerTabJSONCreator<T> jsonCreator
+            DataID dataID, Identifiers identifiers, ServerTabJSONCreator<T> jsonCreator,
+            AsyncJSONResolverService asyncJSONResolverService
     ) {
         this.dataID = dataID;
         this.identifiers = identifiers;
         this.jsonCreator = jsonCreator;
+        this.asyncJSONResolverService = asyncJSONResolverService;
     }
 
     @Override
@@ -57,8 +59,14 @@ public class ServerTabJSONResolver<T> implements Resolver {
 
     @Override
     public Optional<Response> resolve(Request request) {
-        UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
-        return Optional.of(JSONCache.getOrCache(dataID, serverUUID, () -> jsonCreator.apply(serverUUID)));
+        return Optional.of(getResponse(request));
     }
 
+    private Response getResponse(Request request) {
+        UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, serverUUID, jsonCreator).json)
+                .build();
+    }
 }

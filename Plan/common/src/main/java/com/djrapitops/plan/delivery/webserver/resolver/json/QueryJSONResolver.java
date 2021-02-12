@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryResultTableDataQuery;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -42,7 +43,6 @@ import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInform
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
-import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plugin.api.TimeAmount;
 import com.google.gson.Gson;

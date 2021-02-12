@@ -14,8 +14,9 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.json;
+package com.djrapitops.plan.delivery.webserver.cache;
 
+import com.djrapitops.plan.SubSystem;
 import com.google.gson.Gson;
 
 import java.util.Objects;
@@ -26,19 +27,29 @@ import java.util.Optional;
  *
  * @author Rsl1122
  */
-public interface JSONStorage {
+public interface JSONStorage extends SubSystem {
+
+    @Override
+    default void enable() {
+    }
+
+    @Override
+    default void disable() {
+    }
 
     default StoredJSON storeJson(String identifier, String json) {
         return storeJson(identifier, json, System.currentTimeMillis());
     }
 
     default StoredJSON storeJson(String identifier, Object json) {
+        if (json instanceof String) return storeJson(identifier, (String) json);
         return storeJson(identifier, new Gson().toJson(json));
     }
 
     StoredJSON storeJson(String identifier, String json, long timestamp);
 
     default StoredJSON storeJson(String identifier, Object json, long timestamp) {
+        if (json instanceof String) return storeJson(identifier, (String) json, timestamp);
         return storeJson(identifier, new Gson().toJson(json), timestamp);
     }
 
@@ -49,6 +60,8 @@ public interface JSONStorage {
     Optional<StoredJSON> fetchJsonMadeBefore(String identifier, long timestamp);
 
     Optional<StoredJSON> fetchJsonMadeAfter(String identifier, long timestamp);
+
+    void invalidateOlder(String identifier, long timestamp);
 
     final class StoredJSON {
         public final String json;

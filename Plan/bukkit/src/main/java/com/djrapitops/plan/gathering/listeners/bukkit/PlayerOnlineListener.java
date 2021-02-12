@@ -19,8 +19,6 @@ package com.djrapitops.plan.gathering.listeners.bukkit;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.export.Exporter;
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
@@ -152,8 +150,6 @@ public class PlayerOnlineListener implements Listener {
         UUID playerUUID = player.getUniqueId();
         UUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
-        JSONCache.invalidate(DataID.SERVER_OVERVIEW, serverUUID);
-        JSONCache.invalidate(DataID.GRAPH_PERFORMANCE, serverUUID);
 
         BukkitAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
 
@@ -215,9 +211,6 @@ public class PlayerOnlineListener implements Listener {
         Player player = event.getPlayer();
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
-        UUID serverUUID = serverInfo.getServerUUID();
-        JSONCache.invalidate(DataID.SERVER_OVERVIEW, serverUUID);
-        JSONCache.invalidate(DataID.GRAPH_PERFORMANCE, serverUUID);
 
         BukkitAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
 

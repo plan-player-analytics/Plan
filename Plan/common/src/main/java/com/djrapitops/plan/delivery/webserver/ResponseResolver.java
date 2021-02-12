@@ -54,7 +54,7 @@ import java.util.regex.Pattern;
 public class ResponseResolver {
 
     private final DebugPageResolver debugPageResolver;
-    private QueryPageResolver queryPageResolver;
+    private final QueryPageResolver queryPageResolver;
     private final PlayersPageResolver playersPageResolver;
     private final PlayerPageResolver playerPageResolver;
     private final ServerPageResolver serverPageResolver;

@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.rendering.json.*;
 import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.identification.Identifiers;
 
@@ -33,11 +34,13 @@ import javax.inject.Singleton;
 public class RootJSONResolver {
 
     private final Identifiers identifiers;
+    private final AsyncJSONResolverService asyncJSONResolverService;
     private final CompositeResolver resolver;
 
     @Inject
     public RootJSONResolver(
             Identifiers identifiers,
+            AsyncJSONResolverService asyncJSONResolverService,
             JSONFactory jsonFactory,
 
             GraphsJSONResolver graphsJSONResolver,
@@ -57,6 +60,7 @@ public class RootJSONResolver {
             QueryJSONResolver queryJSONResolver
     ) {
         this.identifiers = identifiers;
+        this.asyncJSONResolverService = asyncJSONResolverService;
 
         resolver = CompositeResolver.builder()
                 .add("players", playersTableJSONResolver)
@@ -78,7 +82,7 @@ public class RootJSONResolver {
     }
 
     private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator) {
-        return new ServerTabJSONResolver<>(dataID, identifiers, tabJSONCreator);
+        return new ServerTabJSONResolver<>(dataID, identifiers, tabJSONCreator, asyncJSONResolverService);
     }
 
     public CompositeResolver getResolver() {
