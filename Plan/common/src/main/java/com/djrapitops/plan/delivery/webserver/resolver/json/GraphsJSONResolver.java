@@ -80,11 +80,9 @@ public class GraphsJSONResolver implements Resolver {
 
         DataID dataID = getDataID(type);
 
-        JSONStorage.StoredJSON graphJSON = getGraphJSON(request, dataID);
-
         return Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(graphJSON.json)
+                .setJSONContent(getGraphJSON(request, dataID).json)
                 .build();
     }
 

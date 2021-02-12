@@ -36,7 +36,7 @@ public class UnitSemaphoreAccessLock {
     public void enter() {
         try {
             synchronized (lockObject) {
-                if (accessing.get()) {
+                while (accessing.get()) {
                     lockObject.wait();
                 }
                 accessing.set(true);
