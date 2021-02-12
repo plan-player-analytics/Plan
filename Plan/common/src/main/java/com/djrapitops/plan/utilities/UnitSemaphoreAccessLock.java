@@ -35,20 +35,20 @@ public class UnitSemaphoreAccessLock {
 
     public void enter() {
         try {
-            if (accessing.get()) {
-                synchronized (lockObject) {
+            synchronized (lockObject) {
+                if (accessing.get()) {
                     lockObject.wait();
                 }
+                accessing.set(true);
             }
-            accessing.set(true);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
     }
 
     public void exit() {
-        accessing.set(false);
         synchronized (lockObject) {
+            accessing.set(false);
             lockObject.notify();
         }
     }
