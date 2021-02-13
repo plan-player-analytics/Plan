@@ -50,8 +50,8 @@ import java.util.Optional;
         id = "plan",
         name = "Plan",
         version = "@version@",
-        description = "Player Analytics Plugin by Rsl1122",
-        authors = {"Rsl1122"},
+        description = "Player Analytics Plugin by AuroraLS3",
+        authors = {"AuroraLS3"},
         dependencies = {
                 @Dependency(id = "griefprevention", optional = true),
                 @Dependency(id = "luckperms", optional = true),

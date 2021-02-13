@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Formatter for time amount in milliseconds.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TimeAmountFormatter implements Formatter<Long> {
 

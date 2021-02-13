@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Utility for averaging time based data.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TimerAverage {
 
-    private long savePeriodMs;
+    private final long savePeriodMs;
     private long lastSaveMs;
 
     private double total;

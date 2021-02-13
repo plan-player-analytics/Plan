@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Tests for different functions of the {@link Html} class.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class HtmlTest {
 

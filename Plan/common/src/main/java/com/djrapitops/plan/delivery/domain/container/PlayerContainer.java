@@ -27,7 +27,7 @@ import java.util.Map;
  * <p>
  * Use {@code getValue(PlayerKeys.REGISTERED).isPresent()} to determine if Plan has data about the player.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.delivery.domain.keys.PlayerKeys For Key objects.
  */
 public class PlayerContainer extends DynamicDataContainer {

@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * Interface for splitting different Language categories into different classes.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Lang {
 

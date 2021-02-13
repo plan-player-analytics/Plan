@@ -21,7 +21,7 @@ import com.djrapitops.plugin.utilities.Format;
 /**
  * Represents a structural HTML element that has Tabs on the top.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TabsElement {
 

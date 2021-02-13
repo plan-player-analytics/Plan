@@ -29,7 +29,7 @@ import java.util.Scanner;
 /**
  * {@link Resource} implementation for something that is read via InputStream.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class JarResource implements Resource {
 

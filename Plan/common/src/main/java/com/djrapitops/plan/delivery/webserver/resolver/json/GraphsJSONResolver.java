@@ -37,7 +37,7 @@ import java.util.UUID;
 /**
  * Resolves /v1/graph JSON requests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class GraphsJSONResolver implements Resolver {

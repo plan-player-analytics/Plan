@@ -60,7 +60,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * {@code > 3: Active}
  * {@code > 3.75: Very Active}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ActivityIndexQueries {
 

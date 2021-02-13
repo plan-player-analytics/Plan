@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.rendering.pages;
 /**
  * Interface for generating page HTML String.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Page {
     String toHtml();

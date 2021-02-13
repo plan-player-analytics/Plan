@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * Represents a query filter for /query page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Filter {
 

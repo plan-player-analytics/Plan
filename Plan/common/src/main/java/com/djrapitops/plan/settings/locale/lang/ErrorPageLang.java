@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * {@link Lang} implementation for all error pages.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum ErrorPageLang implements Lang {
     UUID_404("Player UUID was not found in the database."),

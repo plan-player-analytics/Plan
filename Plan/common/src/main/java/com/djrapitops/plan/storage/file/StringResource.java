@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * {@link Resource} implementation for a {@link String}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StringResource implements Resource {
 

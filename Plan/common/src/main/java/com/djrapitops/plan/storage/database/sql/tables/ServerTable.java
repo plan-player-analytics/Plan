@@ -28,7 +28,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Table information about 'plan_servers'.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see Server
  */
 public class ServerTable {

@@ -49,7 +49,7 @@ import java.util.*;
 /**
  * Factory for creating different {@link Page} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PageFactory {

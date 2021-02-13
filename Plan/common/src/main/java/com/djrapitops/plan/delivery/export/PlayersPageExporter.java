@@ -43,7 +43,7 @@ import java.util.Optional;
 /**
  * Handles exporting of /players page html, data and resources.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayersPageExporter extends FileExporter {

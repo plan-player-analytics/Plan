@@ -49,7 +49,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * 2. Join with provider information query
  * 3. Map into ExtensionData objects by PluginID, one per ID
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 

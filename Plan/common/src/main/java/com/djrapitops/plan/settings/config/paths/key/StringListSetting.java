@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 /**
  * Setting implementation for String value settings.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StringListSetting extends Setting<List<String>> {
 

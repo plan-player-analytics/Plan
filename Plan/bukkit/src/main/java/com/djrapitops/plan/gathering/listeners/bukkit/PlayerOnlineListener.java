@@ -53,7 +53,7 @@ import java.util.UUID;
 /**
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerOnlineListener implements Listener {
 

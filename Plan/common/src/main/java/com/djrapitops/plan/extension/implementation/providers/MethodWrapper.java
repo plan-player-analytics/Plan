@@ -27,7 +27,7 @@ import java.util.Objects;
 /**
  * Wrap a Method so that it is easier to call.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class MethodWrapper<T> {
 

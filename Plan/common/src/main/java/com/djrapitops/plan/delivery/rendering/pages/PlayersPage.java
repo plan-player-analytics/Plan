@@ -30,7 +30,7 @@ import com.djrapitops.plan.version.VersionChecker;
 /**
  * Html String generator for /players page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayersPage implements Page {
 

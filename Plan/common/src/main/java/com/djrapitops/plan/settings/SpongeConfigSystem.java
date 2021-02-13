@@ -32,7 +32,7 @@ import java.io.IOException;
 /**
  * Sponge ConfigSystem that disables Geolocations on first enable.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class SpongeConfigSystem extends BukkitConfigSystem {

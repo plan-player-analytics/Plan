@@ -25,7 +25,7 @@ import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.LANG;
 /**
  * Contains list of contributors to add to the about modal.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Contributors {
 

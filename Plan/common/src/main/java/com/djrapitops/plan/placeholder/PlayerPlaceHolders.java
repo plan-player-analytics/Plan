@@ -39,7 +39,7 @@ import static com.djrapitops.plan.utilities.MiscUtils.*;
 /**
  * Placeholders about a player.
  *
- * @author aidn5, Rsl1122
+ * @author aidn5, AuroraLS3
  */
 @Singleton
 public class PlayerPlaceHolders implements Placeholders {

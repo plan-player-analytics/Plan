@@ -31,7 +31,7 @@ import javax.inject.Singleton;
 /**
  * Resolves /v1/network/ JSON requests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NetworkJSONResolver {

@@ -22,7 +22,7 @@ import com.djrapitops.plan.exceptions.connection.WebException;
 /**
  * Thrown when WebUser can not be authorized (WebServer).
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WebUserAuthException extends WebException {
 

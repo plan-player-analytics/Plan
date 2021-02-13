@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 /**
  * Formatter for a timestamp in ISO-8601 format without the clock, without applying timezone offset.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ISO8601NoClockTZIndependentFormatter implements Formatter<Long> {
 

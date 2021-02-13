@@ -19,13 +19,13 @@ package com.djrapitops.plan.utilities.analysis;
 /**
  * Calculates maximum from given values.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Maximum {
 
     class ForInteger {
         private int max;
-        private int startingValue;
+        private final int startingValue;
 
         public ForInteger() {
             this(Integer.MIN_VALUE);

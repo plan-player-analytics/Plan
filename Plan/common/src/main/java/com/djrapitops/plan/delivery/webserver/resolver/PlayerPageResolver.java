@@ -34,7 +34,7 @@ import java.util.UUID;
 /**
  * Resolves /player/${name/uuid} URLs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayerPageResolver implements Resolver {

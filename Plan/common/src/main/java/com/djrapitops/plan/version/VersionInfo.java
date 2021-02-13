@@ -21,9 +21,9 @@ import com.djrapitops.plugin.api.utility.Version;
 import java.util.Objects;
 
 /**
- * Data class for reading version.txt in https://github.com/Rsl1122/Plan-PlayerAnalytics.
+ * Data class for reading version.txt in https://github.com/AuroraLS3/Plan-PlayerAnalytics.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class VersionInfo implements Comparable<VersionInfo> {
 

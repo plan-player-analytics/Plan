@@ -40,7 +40,7 @@ import java.util.UUID;
 /**
  * Listener for World change on Sponge.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SpongeWorldChangeListener {
 

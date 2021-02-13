@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * Enum to determine what color to use for some element.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum Color {
 

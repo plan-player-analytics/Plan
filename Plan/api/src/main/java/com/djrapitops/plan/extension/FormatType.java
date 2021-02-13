@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * Enum for determining additional formatter for a value given by a {@link com.djrapitops.plan.extension.annotation.NumberProvider}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum FormatType {
 

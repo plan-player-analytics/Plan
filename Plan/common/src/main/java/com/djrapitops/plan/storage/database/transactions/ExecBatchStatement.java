@@ -22,7 +22,7 @@ import java.sql.SQLException;
 /**
  * SQL executing batch statement that closes appropriate elements.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class ExecBatchStatement extends ExecStatement {
 

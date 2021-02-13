@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.formatting;
 /**
  * Formatter for percentages.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PercentageFormatter implements Formatter<Double> {
 

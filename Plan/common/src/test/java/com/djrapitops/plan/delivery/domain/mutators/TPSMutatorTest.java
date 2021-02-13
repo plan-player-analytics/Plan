@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Tests for {@link TPSMutator}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class TPSMutatorTest {
 

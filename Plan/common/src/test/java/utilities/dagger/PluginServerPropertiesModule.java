@@ -26,7 +26,7 @@ import java.net.InetSocketAddress;
 /**
  * Dagger module for Bukkit ServerProperties.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public class PluginServerPropertiesModule {

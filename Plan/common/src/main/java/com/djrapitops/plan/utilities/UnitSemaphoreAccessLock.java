@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Synchronizes a critical section of code so that only a single thread can access it at a time.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class UnitSemaphoreAccessLock {
 

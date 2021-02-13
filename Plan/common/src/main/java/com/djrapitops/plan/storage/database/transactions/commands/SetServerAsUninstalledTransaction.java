@@ -30,7 +30,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 /**
  * Transaction for telling Plan that Plan has been uninstalled from the server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SetServerAsUninstalledTransaction extends ThrowawayTransaction {
 

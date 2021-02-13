@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerOnlineListener implements Listener {
 

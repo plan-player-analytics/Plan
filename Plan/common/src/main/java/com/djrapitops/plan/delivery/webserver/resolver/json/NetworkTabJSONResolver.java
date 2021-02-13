@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 /**
  * Functional interface wrapper for resolving network JSON directly from other methods.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NetworkTabJSONResolver<T> implements Resolver {
 

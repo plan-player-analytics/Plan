@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
  * <p>
  * Please note that not all {@link ProviderInformation} is present in this annotation.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TableDataProvider {
 

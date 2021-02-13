@@ -22,7 +22,7 @@ import java.util.Collections;
  * Allows sensing values from different server platforms.
  *
  * @param <W> Type of the class representing a minecraft world.
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ServerSensor<W> {
 

@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 /**
  * JUnit 5 Extension that prints what test is being run before each test.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PrintExtension implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
 

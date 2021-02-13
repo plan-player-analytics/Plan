@@ -22,7 +22,7 @@ import com.djrapitops.plan.storage.database.SQLDB;
  * Interface for everything that returns results from the database.
  *
  * @param <T> Type of the result.
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Query<T> {
 

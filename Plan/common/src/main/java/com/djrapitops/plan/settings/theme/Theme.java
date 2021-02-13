@@ -37,7 +37,7 @@ import static com.djrapitops.plan.settings.theme.ThemeVal.*;
  * <p>
  * Change config setting Theme.Base to select one.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class Theme implements SubSystem {

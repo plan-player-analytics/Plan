@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 /**
  * Interface for different tab JSON creators.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface NetworkTabJSONCreator<T> extends Supplier<T> {
 

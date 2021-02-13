@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * Methods that can be used as functional interfaces when dealing with Maps.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Maps {
 
@@ -45,7 +45,7 @@ public class Maps {
     }
 
     public static class Builder<K, V> {
-        private Map<K, V> map;
+        private final Map<K, V> map;
 
         private Builder() {
             map = new HashMap<>();

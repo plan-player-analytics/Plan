@@ -36,7 +36,7 @@ import java.util.UUID;
 /**
  * Event Listener for AsyncPlayerChatEvents.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ChatListener implements Listener {
 

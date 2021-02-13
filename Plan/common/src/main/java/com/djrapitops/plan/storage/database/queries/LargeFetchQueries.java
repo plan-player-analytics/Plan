@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Static method class for queries that use large amount of memory.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class LargeFetchQueries {
 

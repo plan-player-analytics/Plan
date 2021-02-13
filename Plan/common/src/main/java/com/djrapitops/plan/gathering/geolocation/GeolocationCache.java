@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * It caches all IPs with their matching country.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @author Fuzzlemann
  */
 @Singleton

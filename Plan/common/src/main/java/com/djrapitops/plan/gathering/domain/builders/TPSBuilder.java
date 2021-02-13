@@ -21,7 +21,7 @@ import com.djrapitops.plan.gathering.domain.TPS;
 /**
  * Builder for TPS to make it easier to manage.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TPSBuilder {
 

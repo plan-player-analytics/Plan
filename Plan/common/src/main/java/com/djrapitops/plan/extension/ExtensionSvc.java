@@ -44,7 +44,7 @@ import java.util.UUID;
 /**
  * Implementation for {@link ExtensionService}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ExtensionSvc implements ExtensionService {

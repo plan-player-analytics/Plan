@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * This class is used to store active sessions of players in memory.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class SessionCache {

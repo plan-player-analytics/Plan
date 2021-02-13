@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * This is a LineGraph for any set of Points, thus it is Abstract.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class LineGraph implements HighChart {
 

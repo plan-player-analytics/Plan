@@ -31,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Transaction to remove method results that correspond to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RemoveInvalidResultsTransaction extends ThrowawayTransaction {
 

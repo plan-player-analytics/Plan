@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Creates JSON payload for /server-page Sessions tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {

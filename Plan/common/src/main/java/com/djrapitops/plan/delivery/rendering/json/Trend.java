@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 /**
  * Represents a trend in the data - used for JSON format.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Trend {
 

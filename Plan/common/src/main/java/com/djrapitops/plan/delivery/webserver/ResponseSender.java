@@ -29,7 +29,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * Utility for sending a Response to HttpExchange.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ResponseSender {
 

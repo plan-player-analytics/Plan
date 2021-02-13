@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Interface for operating on server information.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ServerLoader {
 

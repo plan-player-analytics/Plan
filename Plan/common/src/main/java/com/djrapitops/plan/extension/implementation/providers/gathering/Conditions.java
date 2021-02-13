@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Utility object for managing conditions.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Conditions {
 

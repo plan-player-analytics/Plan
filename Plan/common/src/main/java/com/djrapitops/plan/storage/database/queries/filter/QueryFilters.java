@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Contains a single instance of each filter kind.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.modules.FiltersModule for list of Filters
  */
 @Singleton

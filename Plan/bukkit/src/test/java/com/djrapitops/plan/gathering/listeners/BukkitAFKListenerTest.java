@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
 /**
  * Test for {@link BukkitAFKListener}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @ExtendWith(MockitoExtension.class)
 class BukkitAFKListenerTest {

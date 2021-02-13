@@ -44,7 +44,7 @@ import java.util.function.Predicate;
 /**
  * Module for binding object instances found inside other systems.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public class SystemObjectProvidingModule {

@@ -50,7 +50,7 @@ import java.util.UUID;
 /**
  * Player Join listener for Bungee.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerOnlineListener implements Listener {
 

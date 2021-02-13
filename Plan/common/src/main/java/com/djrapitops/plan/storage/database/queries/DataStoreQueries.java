@@ -35,7 +35,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 /**
  * Static method class for single item store queries.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DataStoreQueries {
 

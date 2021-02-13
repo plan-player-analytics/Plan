@@ -22,7 +22,7 @@ import java.util.TreeMap;
 /**
  * Basic TreeMap that uses Epoch MS as keys.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DateMap<T> extends TreeMap<Long, T> {
 

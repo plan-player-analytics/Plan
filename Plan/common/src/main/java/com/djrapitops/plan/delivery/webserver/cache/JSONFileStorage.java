@@ -50,7 +50,7 @@ import java.util.stream.Stream;
 /**
  * In charge of storing json files on disk for later retrieval.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class JSONFileStorage implements JSONStorage {

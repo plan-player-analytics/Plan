@@ -26,7 +26,7 @@ import java.util.UUID;
  * <p>
  * Only one per player exists unlike {@link UserInfo} which is available per server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BaseUser {
 

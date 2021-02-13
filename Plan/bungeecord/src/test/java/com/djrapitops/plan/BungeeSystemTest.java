@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 /**
  * Test for Bungee PlanSystem.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class BungeeSystemTest {
 

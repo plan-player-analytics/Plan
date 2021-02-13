@@ -44,7 +44,7 @@ import java.util.logging.Logger;
 /**
  * Main class for Nukkit that manages the plugin.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
 

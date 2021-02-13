@@ -57,7 +57,7 @@ import java.util.UUID;
 /**
  * Listener for Player Join/Leave on Sponge.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerOnlineListener {
 

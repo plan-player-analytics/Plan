@@ -22,7 +22,7 @@ import java.util.function.UnaryOperator;
 /**
  * Utility for combining multiple UnaryOperator modifications.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class UnaryChain<T> {
 

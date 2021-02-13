@@ -34,7 +34,7 @@ import java.util.Map;
  * <p>
  * ConfigReader can write a single file at a time, so it is NOT thread safe.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ConfigWriter {
 

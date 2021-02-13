@@ -56,7 +56,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Perses Graph related Data JSON.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class GraphJSONCreator {

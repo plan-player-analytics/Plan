@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Utility for getting server identifier from different sources.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class Identifiers {

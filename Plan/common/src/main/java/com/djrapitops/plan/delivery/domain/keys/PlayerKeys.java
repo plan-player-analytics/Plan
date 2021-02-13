@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * Class that holds Key objects for PlayerContainer.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see PlayerContainer For DataContainer.
  */
 public class PlayerKeys {

@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  * The returned value should be between (or one of) 0.0 (0%) and 1.0 (100%).
  * Other values will be ignored.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

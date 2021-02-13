@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import java.util.Objects;
 
 /**
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Point {
     private final double x;

@@ -29,7 +29,7 @@ import java.util.SortedMap;
 /**
  * Utility for creating FullCalendar calendar event array on Player page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerCalendar {
 

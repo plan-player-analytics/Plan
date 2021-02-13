@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * System that holds the active databases.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class DBSystem implements SubSystem {

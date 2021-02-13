@@ -27,7 +27,7 @@ import java.util.*;
 /**
  * Abstract representation of an ImportSystem.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ImportSystem implements SubSystem {

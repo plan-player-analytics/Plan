@@ -33,7 +33,7 @@ import java.util.function.Function;
 /**
  * Functional interface wrapper for resolving server specific JSON directly from other methods.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerTabJSONResolver<T> implements Resolver {
 

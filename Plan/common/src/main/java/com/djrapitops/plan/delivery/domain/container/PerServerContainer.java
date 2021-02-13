@@ -29,7 +29,7 @@ import java.util.*;
 /**
  * Container for data about a player linked to a single server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.delivery.domain.keys.PerServerKeys For Key objects.
  */
 public class PerServerContainer extends HashMap<UUID, DataContainer> {

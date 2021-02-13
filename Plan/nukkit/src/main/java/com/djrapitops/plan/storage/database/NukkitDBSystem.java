@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 /**
  * Nukkit Database system that initializes SQLite and MySQL database objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NukkitDBSystem extends DBSystem {

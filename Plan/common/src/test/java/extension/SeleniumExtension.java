@@ -35,7 +35,7 @@ import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
 /**
  * Selenium JUnit 5 Extension.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, AfterAllCallback {
 

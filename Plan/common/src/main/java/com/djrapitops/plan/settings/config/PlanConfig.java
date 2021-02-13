@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Plan configuration file.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlanConfig extends Config {

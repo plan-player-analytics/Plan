@@ -30,7 +30,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
  * <p>
  * See https://github.com/plan-player-analytics/Plan/issues/1678 for more details
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerIsProxyPatch extends Patch {
 

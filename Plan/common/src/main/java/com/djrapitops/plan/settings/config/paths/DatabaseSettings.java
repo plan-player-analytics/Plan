@@ -25,7 +25,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 /**
  * {@link Setting} values that are in "Database" section.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DatabaseSettings {
 

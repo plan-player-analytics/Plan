@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Stack Graph that represents evolution of the PlayerBase in terms of ActivityIndex Groups.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see ActivityIndex
  */
 class ActivityStackGraph extends StackGraph {

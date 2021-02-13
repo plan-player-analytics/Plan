@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 /**
  * DBSystem for Sponge.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class SpongeDBSystem extends DBSystem {

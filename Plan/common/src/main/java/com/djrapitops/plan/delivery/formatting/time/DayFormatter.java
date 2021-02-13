@@ -23,7 +23,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 /**
  * Formatter for a timestamp which includes days as the smallest entry.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DayFormatter extends DateFormatter {
 

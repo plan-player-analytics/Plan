@@ -30,7 +30,7 @@ import java.io.IOException;
 /**
  * Class in charge of updating config.yml.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ConfigUpdater {

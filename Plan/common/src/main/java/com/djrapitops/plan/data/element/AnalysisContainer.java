@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * Container used to hold data for Server page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see TableContainer
  * @see InspectContainer
  * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.

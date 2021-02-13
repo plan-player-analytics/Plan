@@ -25,7 +25,7 @@ import java.util.List;
  * Used for determining in which order elements are placed on a {@link com.djrapitops.plan.extension.annotation.Tab} by
  * using {@link com.djrapitops.plan.extension.annotation.TabInfo}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum ElementOrder {
     /**

@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 /**
  * Bungee Database system that initializes MySQL object.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ProxyDBSystem extends DBSystem {

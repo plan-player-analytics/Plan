@@ -25,7 +25,7 @@ import javax.inject.Singleton;
 /**
  * WebServer subsystem for managing WebServer initialization.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class WebServerSystem implements SubSystem {

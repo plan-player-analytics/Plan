@@ -42,7 +42,7 @@ import static com.djrapitops.plan.utilities.MiscUtils.*;
 /**
  * Placeholders about sessions.
  *
- * @author aidn5, Rsl1122
+ * @author aidn5, AuroraLS3
  */
 @Singleton
 public class SessionPlaceHolders implements Placeholders {

@@ -35,7 +35,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 /**
  * Transaction for storing {@link TabInformation}s.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StoreTabInformationTransaction extends ThrowawayTransaction {
 

@@ -47,8 +47,8 @@ import java.nio.file.Path;
         id = "plan",
         name = "Plan",
         version = "@version@",
-        description = "Player Analytics Plugin by Rsl1122",
-        authors = {"Rsl1122"}
+        description = "Player Analytics Plugin by AuroraLS3",
+        authors = {"AuroraLS3"}
 )
 public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 

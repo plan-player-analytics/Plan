@@ -44,7 +44,7 @@ import java.util.UUID;
 /**
  * Handles exporting of /player page html, data and resources.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayerPageExporter extends FileExporter {

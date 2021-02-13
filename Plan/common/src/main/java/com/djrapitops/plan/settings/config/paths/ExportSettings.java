@@ -24,7 +24,7 @@ import com.djrapitops.plan.settings.config.paths.key.TimeSetting;
 /**
  * {@link Setting} values that are in "Export" section.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExportSettings {
 

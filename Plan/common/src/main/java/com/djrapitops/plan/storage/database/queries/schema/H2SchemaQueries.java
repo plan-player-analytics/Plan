@@ -29,7 +29,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Static method class for H2 Schema related queries.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class H2SchemaQueries {
 

@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 /**
  * Dagger module for Bungee ServerProperties.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public class BungeeServerPropertiesModule {

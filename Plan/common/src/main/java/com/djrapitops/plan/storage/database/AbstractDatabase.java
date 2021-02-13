@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <p>
  * All Operations methods should be only called from an asynchronous thread.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class AbstractDatabase implements Database {
 

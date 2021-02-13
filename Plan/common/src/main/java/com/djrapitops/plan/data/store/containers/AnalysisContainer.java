@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.domain.container.DynamicDataContainer;
 /**
  * Container used for analysis.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @deprecated AnalysisContainer is no longer used.
  */
 @Deprecated

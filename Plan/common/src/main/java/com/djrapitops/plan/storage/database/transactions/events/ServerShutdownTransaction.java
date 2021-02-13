@@ -25,7 +25,7 @@ import java.util.Collection;
 /**
  * Transaction to store sessions on server shutdown.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerShutdownTransaction extends Transaction {
 

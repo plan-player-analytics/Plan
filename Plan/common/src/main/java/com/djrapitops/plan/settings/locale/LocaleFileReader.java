@@ -26,11 +26,11 @@ import java.util.Map;
 /**
  * Utility for reading locale files.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class LocaleFileReader {
 
-    private List<String> lines;
+    private final List<String> lines;
 
     public LocaleFileReader(Resource resource) throws IOException {
         lines = resource.asLines();

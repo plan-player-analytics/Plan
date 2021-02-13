@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Enum for different JSON data entries that can be stored in cache.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum DataID {
     PLAYERS,

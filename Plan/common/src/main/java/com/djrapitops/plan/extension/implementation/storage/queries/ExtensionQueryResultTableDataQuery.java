@@ -43,7 +43,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * <p>
  * Returns Map: Player UUID - {@link ExtensionTabData} (container for provider based data)
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, ExtensionTabData>> {
 

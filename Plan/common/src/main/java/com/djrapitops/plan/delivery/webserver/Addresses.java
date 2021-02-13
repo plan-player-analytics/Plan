@@ -45,7 +45,7 @@ import java.util.Optional;
  * - Redirection
  * - Storing proxy server address in database
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class Addresses {

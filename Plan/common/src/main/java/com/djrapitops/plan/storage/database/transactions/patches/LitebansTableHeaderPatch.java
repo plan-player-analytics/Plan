@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Removes invalid data caused by https://github.com/plan-player-analytics/Plan/issues/1355.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class LitebansTableHeaderPatch extends Patch {
 

@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test for {@link SupplierDataContainer} programming errors.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class SupplierDataContainerTest {
 

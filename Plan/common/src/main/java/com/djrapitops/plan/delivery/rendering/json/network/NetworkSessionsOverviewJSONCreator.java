@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Creates JSON payload for /network-page Sessions tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NetworkSessionsOverviewJSONCreator implements NetworkTabJSONCreator<Map<String, Object>> {

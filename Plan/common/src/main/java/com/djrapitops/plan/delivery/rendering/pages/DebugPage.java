@@ -45,7 +45,7 @@ import java.util.*;
 /**
  * Html String generator for /debug page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DebugPage implements Page {
 

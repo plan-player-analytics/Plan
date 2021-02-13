@@ -29,7 +29,7 @@ import java.util.Map;
  * <p>
  * The field is populated by querying the session table for server ids.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see KillsOptimizationPatch for removal of this field later
  */
 public class KillsServerIDPatch extends Patch {

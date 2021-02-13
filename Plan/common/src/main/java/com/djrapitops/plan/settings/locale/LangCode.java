@@ -19,17 +19,17 @@ package com.djrapitops.plan.settings.locale;
 /**
  * Language enum of supported languages, follows ISO 639-1 for language codes.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum LangCode {
 
     CUSTOM("Custom", ""),
-    EN("English", "Rsl1122"),
+    EN("English", "AuroraLS3"),
     ES("Spanish", "Catalina & itaquito & Elguerrero"),
     CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f) & qsefthuopq & shaokeyibb & Fur_xia"),
     CS("Czech", "Shadowhackercz & QuakyCZ & MrFriggo"),
     DE("Deutsch", "Eyremba & fuzzlemann & Morsmorse & hallo1142"),
-    FI("Finnish", "Rsl1122"),
+    FI("Finnish", "AuroraLS3"),
     FR("French", "CyanTech & Aurelien & Nogapra"),
     IT("Italian", "Malachiel & Mastory_Md5"),
     JA("Japanese", "yukieji"),

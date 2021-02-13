@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * File or Path with a function that is called if the file is modified.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WatchedFile {
 

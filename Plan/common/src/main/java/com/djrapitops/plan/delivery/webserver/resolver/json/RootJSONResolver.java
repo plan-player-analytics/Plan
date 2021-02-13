@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 /**
  * Root resolver for JSON requests, resolves /v1/ URLs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class RootJSONResolver {

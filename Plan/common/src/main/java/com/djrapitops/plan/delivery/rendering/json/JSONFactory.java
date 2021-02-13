@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Factory with different JSON creation methods placed to a single class.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class JSONFactory {

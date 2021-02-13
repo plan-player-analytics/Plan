@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * Represents a change made to the config structure.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ConfigChange {
 

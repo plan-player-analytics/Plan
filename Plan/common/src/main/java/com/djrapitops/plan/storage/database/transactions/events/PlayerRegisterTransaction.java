@@ -28,7 +28,7 @@ import java.util.function.LongSupplier;
 /**
  * Transaction for registering player's BaseUser to the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerRegisterTransaction extends Transaction {
 

@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * Lang enum for all text included in the javascript files.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum JSLang implements Lang {
 

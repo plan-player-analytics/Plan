@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 /**
  * Test for the patching of Plan 4.5.2 MySQL DB into the newest schema.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 

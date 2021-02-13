@@ -28,7 +28,7 @@ import java.util.Optional;
  * <p>
  * The Keys might change in the future, but the Optional API should help dealing with those cases.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).
  */
 @Deprecated

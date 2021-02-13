@@ -31,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * AFKThreshold setting, which lead to AFK threshold being read as 0.
  * This in turn lead to full sessions being regarded as having been AFK.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BadAFKThresholdValuePatch extends Patch {
 

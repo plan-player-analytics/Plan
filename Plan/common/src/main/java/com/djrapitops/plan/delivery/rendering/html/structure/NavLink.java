@@ -22,12 +22,12 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Html utility for creating navigation link html.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NavLink {
 
     private final Icon icon;
-    private String tabID;
+    private final String tabID;
     private final String tabName;
     private final boolean collapsed;
 

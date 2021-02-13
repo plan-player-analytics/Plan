@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * <p>
  * This Test class contains only INVALID implementations of the DataExtension API.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class ExtensionExtractorTest {
 

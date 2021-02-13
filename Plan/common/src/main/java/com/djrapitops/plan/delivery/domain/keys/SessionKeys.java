@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * Class holding Key objects for Session (DataContainer).
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see Session for DataContainer.
  */
 public class SessionKeys {

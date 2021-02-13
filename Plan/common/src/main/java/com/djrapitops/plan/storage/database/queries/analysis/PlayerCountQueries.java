@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Queries for server overview tab data.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerCountQueries {
 

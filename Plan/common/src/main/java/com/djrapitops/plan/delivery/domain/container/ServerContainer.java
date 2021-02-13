@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.domain.container;
 /**
  * DataContainer for a single server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.delivery.domain.keys.ServerKeys For Key objects.
  */
 public class ServerContainer extends DynamicDataContainer {

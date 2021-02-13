@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Task for updating {@link DataExtension} server values periodically.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ExtensionServerDataUpdater extends TaskSystem.Task {

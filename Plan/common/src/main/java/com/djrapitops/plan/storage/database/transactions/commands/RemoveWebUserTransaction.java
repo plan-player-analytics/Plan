@@ -31,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 /**
  * Transaction to remove a Plan {@link com.djrapitops.plan.delivery.domain.auth.User} from the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RemoveWebUserTransaction extends Transaction {
 

@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test for {@link Session} {@link DataContainer}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class SessionTest {
 

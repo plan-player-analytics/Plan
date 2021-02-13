@@ -35,7 +35,7 @@ import java.util.*;
  * Currently very similar to {@link PlayerPluginTab}.
  * This will become more complex once tables are added, since some big tables will be moved to their own tabs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerPluginTabs {
 

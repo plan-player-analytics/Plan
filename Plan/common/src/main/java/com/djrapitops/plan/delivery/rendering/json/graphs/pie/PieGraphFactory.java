@@ -35,7 +35,7 @@ import java.util.UUID;
 /**
  * Factory class for different objects representing HTML pie graphs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PieGraphFactory {

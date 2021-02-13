@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 /**
  * Abstract Mocker for methods that can be used for both Bungee and Bukkit.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 abstract class Mocker {
 

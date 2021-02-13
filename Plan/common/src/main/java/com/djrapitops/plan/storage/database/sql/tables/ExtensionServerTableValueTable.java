@@ -25,7 +25,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.INT;
 /**
  * Table information about 'plan_extension_server_table_values'.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionServerTableValueTable {
 

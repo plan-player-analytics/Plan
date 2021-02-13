@@ -22,7 +22,7 @@ import com.djrapitops.plan.gathering.timed.TPSCounter;
 /**
  * Graph about TPS gathered by TPSCountTimer.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see TPSCounter
  */
 class TPSGraph extends LineGraph {

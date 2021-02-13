@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * TimeKeeper class that tracks the time spent in each GameMode based on Playtime.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class GMTimes extends TimeKeeper {
 

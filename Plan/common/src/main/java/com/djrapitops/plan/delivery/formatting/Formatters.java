@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 /**
  * Factory for new instances of different {@link Formatter}s.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class Formatters {

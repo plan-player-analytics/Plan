@@ -24,7 +24,7 @@ import com.djrapitops.plan.settings.config.paths.key.StringSetting;
 /**
  * {@link Setting} values that are in "Server" or "Plugin" section.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PluginSettings {
 

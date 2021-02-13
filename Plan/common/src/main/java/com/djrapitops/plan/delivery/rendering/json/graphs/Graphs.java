@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 /**
  * Factory class for different objects representing HTML graphs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class Graphs {

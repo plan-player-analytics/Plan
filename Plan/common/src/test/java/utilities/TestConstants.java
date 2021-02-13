@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Test Constants go here.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TestConstants {
 

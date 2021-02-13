@@ -42,7 +42,7 @@ import java.sql.SQLException;
 import java.util.Objects;
 
 /**
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SQLiteDB extends SQLDB {
 

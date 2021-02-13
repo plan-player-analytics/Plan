@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Export utility that takes care of path replacement for different resources referenced in other files.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExportPaths {
 

@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * eg. "/flyplugin/flying" to avoid collisions with other plugins.
  * You can also use {@link #getResolver(String)} to check if target already has a resolver.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ResolverService {
 

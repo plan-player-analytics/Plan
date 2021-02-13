@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when;
  * The setup assumes CI environment with MySQL service running.
  * 'MYSQL_DB' database should be created before the test.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see DatabaseTest
  * @see ExtensionsDatabaseTest
  * @see utilities.CIProperties for assumed MySQL setup.

@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Table information about 'plan_extension_icons'.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionIconTable {
 

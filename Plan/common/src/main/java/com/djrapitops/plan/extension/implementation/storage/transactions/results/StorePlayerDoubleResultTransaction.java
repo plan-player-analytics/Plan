@@ -38,7 +38,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerVal
  * - {@link com.djrapitops.plan.extension.annotation.DoubleProvider}
  * - {@link com.djrapitops.plan.extension.annotation.PercentageProvider}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StorePlayerDoubleResultTransaction extends ThrowawayTransaction {
 

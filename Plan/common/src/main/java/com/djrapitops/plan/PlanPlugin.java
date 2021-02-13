@@ -26,7 +26,7 @@ import java.io.InputStream;
 /**
  * Abstraction interface for both Plan and PlanBungee.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface PlanPlugin extends IPlugin {
 

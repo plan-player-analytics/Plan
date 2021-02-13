@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * Html String generator for /server page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerPage implements Page {
 

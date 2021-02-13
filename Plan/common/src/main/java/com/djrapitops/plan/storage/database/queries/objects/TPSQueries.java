@@ -36,7 +36,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.TPSTable.*;
 /**
  * Queries for {@link com.djrapitops.plan.gathering.domain.TPS} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TPSQueries {
 

@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * Mutator for lists of GeoInfo objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see GeoInfo for the object.
  */
 public class GeoInfoMutator {

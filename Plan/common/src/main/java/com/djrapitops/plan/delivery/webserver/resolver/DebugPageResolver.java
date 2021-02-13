@@ -28,7 +28,7 @@ import java.util.Optional;
 /**
  * Resolves /debug URL.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class DebugPageResolver implements Resolver {

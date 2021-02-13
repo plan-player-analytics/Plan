@@ -23,7 +23,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 /**
  * Transaction for storing a session after a session has ended.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SessionEndTransaction extends Transaction {
 

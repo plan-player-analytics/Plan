@@ -32,7 +32,7 @@ import java.util.UUID;
  * API-section of documentation has examples on the usage of this class and how
  * to register objects extending this class.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
  */
 @Deprecated

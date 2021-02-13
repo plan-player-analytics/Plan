@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Test class for {@link LineGraph}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class LineGraphTest {
 

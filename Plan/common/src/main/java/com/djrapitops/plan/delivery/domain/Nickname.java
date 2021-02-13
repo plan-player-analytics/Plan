@@ -22,7 +22,7 @@ import java.util.UUID;
 /**
  * Object storing nickname information.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Nickname implements DateHolder {
 

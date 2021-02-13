@@ -30,7 +30,7 @@ import java.io.IOException;
 /**
  * Config that keeps track of theme.yml.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ThemeConfig extends Config {
 

@@ -21,7 +21,7 @@ import com.djrapitops.plan.storage.database.sql.tables.*;
 /**
  * Transaction that creates the table schema of Plan database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CreateTablesTransaction extends OperationCriticalTransaction {
 

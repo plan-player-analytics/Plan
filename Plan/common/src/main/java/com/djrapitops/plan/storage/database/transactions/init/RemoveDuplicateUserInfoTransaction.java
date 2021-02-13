@@ -36,7 +36,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * https://github.com/plan-player-analytics/Plan/issues/956
  * https://github.com/plan-player-analytics/Plan/issues/967
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RemoveDuplicateUserInfoTransaction extends ThrowawayTransaction {
 

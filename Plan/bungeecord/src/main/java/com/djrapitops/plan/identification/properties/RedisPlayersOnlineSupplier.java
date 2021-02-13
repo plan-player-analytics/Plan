@@ -24,7 +24,7 @@ import java.util.function.IntSupplier;
 /**
  * Players online supplier when using RedisBungee.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RedisPlayersOnlineSupplier implements IntSupplier {
 

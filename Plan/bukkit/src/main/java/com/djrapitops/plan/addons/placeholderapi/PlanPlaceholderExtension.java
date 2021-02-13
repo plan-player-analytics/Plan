@@ -67,7 +67,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
     @Override
     public String getAuthor() {
-        return "Rsl1122";
+        return "AuroraLS3";
     }
 
     @Override

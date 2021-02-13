@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Creates JSON payload for /network-page Network Overview tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<String, Object>> {

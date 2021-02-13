@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * Tests for {@link PlayerKill}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class PlayerKillTest {
 

@@ -35,7 +35,7 @@ import java.util.UUID;
 /**
  * Resolves /v1/players JSON requests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayersTableJSONResolver implements Resolver {

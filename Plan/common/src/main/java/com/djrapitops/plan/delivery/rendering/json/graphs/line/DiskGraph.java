@@ -22,7 +22,7 @@ import com.djrapitops.plan.gathering.timed.TPSCounter;
 /**
  * Graph about Disk Usage gathered by TPSCountTimer.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see TPSCounter
  */
 class DiskGraph extends LineGraph {

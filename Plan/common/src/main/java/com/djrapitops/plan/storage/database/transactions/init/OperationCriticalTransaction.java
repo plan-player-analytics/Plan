@@ -26,7 +26,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
  * <p>
  * If this transaction fails the database failed to open.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class OperationCriticalTransaction extends Transaction {
 

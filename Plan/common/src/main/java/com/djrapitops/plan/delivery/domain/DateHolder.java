@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.domain;
 /**
  * Interface for objects that have a epoch ms date.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface DateHolder {
 

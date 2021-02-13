@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * Interface for resolving requests of Plan webserver.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see NoAuthResolver if resource is always accessible regardless of user.
  */
 public interface Resolver {

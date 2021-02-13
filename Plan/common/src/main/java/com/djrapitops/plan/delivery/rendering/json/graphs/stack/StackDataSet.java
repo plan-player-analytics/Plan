@@ -25,7 +25,7 @@ import java.util.List;
  * <p>
  * Each StackDataSet can have a HTML color hex.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StackDataSet {
 

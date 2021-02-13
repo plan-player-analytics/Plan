@@ -21,7 +21,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
  * <p>
  * See https://github.com/plan-player-analytics/Plan/issues/1240 for more details
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CommandUsageTableRemovalPatch extends Patch {
 

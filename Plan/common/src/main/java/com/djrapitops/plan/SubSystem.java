@@ -21,7 +21,7 @@ import com.djrapitops.plan.exceptions.EnableException;
 /**
  * Represents a system that can be enabled and disabled.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface SubSystem {
 

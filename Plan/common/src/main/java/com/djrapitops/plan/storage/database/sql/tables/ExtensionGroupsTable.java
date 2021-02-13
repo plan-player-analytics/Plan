@@ -23,7 +23,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 /**
  * Table information about 'plan_extension_groups'.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionGroupsTable {
 

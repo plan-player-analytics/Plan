@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * {@link Setting} values that are in "Webserver" section.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WebserverSettings {
 

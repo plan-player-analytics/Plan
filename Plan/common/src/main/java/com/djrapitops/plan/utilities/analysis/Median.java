@@ -23,7 +23,7 @@ import java.util.List;
  * Math utility for calculating the median from Integer values.
  *
  * @param <T> a {@code Number} object which implements {@code Comparable} (In general every standard Java number)
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Median<T extends Number & Comparable<? super T>> {
 

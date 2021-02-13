@@ -27,7 +27,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ServerTable.UPDATE
 /**
  * Transaction for keeping Plan Server information up to date in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StoreServerInformationTransaction extends Transaction {
 

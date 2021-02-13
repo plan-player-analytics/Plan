@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  * <p>
  * Refreshes the value if 30 seconds have passed since the last call.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CachingSupplier<T> implements Supplier<T> {
 

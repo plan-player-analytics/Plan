@@ -26,7 +26,7 @@ import java.util.*;
 /**
  * Class holding Key objects that are commonly used across multiple DataContainers.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CommonKeys {
 

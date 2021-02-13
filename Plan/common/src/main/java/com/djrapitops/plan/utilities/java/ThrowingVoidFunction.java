@@ -21,7 +21,7 @@ package com.djrapitops.plan.utilities.java;
  * <p>
  * Follows naming scheme of Java 8 functional interfaces.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ThrowingVoidFunction<T extends Throwable> {
 

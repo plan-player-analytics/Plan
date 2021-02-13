@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 /**
  * DataContainer implementation that stores everything in {@link Supplier} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SupplierDataContainer implements DataContainer {
 

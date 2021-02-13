@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 /**
  * Mocking Utility for Bungee version of Plan (PlanBungee).
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanBungeeMocker extends Mocker {
 
@@ -115,7 +115,7 @@ public class PlanBungeeMocker extends Mocker {
     PlanBungeeMocker withPluginDescription() {
         File pluginYml = getFile("/bungee.yml");
         HashSet<String> empty = new HashSet<>();
-        PluginDescription pluginDescription = new PluginDescription("Plan", "", "9.9.9", "Rsl1122", empty, empty, pluginYml, "");
+        PluginDescription pluginDescription = new PluginDescription("Plan", "", "9.9.9", "AuroraLS3", empty, empty, pluginYml, "");
         when(planMock.getDescription()).thenReturn(pluginDescription);
         return this;
     }

@@ -35,7 +35,7 @@ import java.util.UUID;
 /**
  * Used for caching nicknames when the player is online.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NicknameCache implements SubSystem {

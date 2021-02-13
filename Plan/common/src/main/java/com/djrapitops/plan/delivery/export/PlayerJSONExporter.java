@@ -30,7 +30,7 @@ import java.util.UUID;
 /**
  * Handles exporting of player json.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayerJSONExporter extends FileExporter {

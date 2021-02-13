@@ -41,7 +41,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class MySQLDB extends SQLDB {

@@ -24,7 +24,7 @@ import dagger.Module;
 /**
  * Dagger module for binding Plan instance.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public interface NukkitPlanModule {

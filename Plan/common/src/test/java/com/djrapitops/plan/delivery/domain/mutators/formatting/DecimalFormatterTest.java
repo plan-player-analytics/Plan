@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 /**
  * Test for {@link DecimalFormatter} class.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class DecimalFormatterTest {
 

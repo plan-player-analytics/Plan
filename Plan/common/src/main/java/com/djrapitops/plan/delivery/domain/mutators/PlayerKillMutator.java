@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Mutator functions for {@link PlayerKill} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerKillMutator {
 

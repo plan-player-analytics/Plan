@@ -155,7 +155,7 @@ public class ResponseBuilder {
     /**
      * Thrown when {@link ResponseBuilder} is missing some parameters.
      *
-     * @author Rsl1122
+     * @author AuroraLS3
      */
     public static class InvalidResponseException extends IllegalStateException {
         public InvalidResponseException(String s) {

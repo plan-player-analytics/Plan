@@ -26,12 +26,12 @@ import java.util.*;
 /**
  * Utility for loading version information from github.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class VersionInfoLoader {
 
     private static final String VERSION_TXT_URL =
-            "https://raw.githubusercontent.com/Rsl1122/Plan-PlayerAnalytics/master/versions.txt";
+            "https://raw.githubusercontent.com/plan-player-analytics/Plan/master/versions.txt";
 
     private VersionInfoLoader() {
         /* Static method class */

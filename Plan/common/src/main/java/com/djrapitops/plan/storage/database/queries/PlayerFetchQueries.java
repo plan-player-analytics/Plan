@@ -30,7 +30,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Static method class for queries that return information related to a single player.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerFetchQueries {
 

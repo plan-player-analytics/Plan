@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * Class for saving test data to a database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TestData {
 

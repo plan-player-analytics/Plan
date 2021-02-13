@@ -49,7 +49,7 @@ import static org.mockito.Mockito.when;
 /**
  * Mocking Utility for Sponge version of Plan.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanSpongeMocker extends Mocker {
 

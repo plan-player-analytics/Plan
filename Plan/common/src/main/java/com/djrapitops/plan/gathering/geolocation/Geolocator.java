@@ -26,7 +26,7 @@ import java.util.Optional;
 /**
  * Interface for different Geolocation service calls.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Geolocator {
 

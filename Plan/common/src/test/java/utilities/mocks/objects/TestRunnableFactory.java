@@ -31,11 +31,11 @@ import static org.mockito.Mockito.mock;
  * Does not run the {@link AbsRunnable} supplied to it to prevent test collisions
  * from improperly scheduled tasks.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TestRunnableFactory extends RunnableFactory {
 
-    private boolean callOnSameThread;
+    private final boolean callOnSameThread;
 
     public TestRunnableFactory() {
         this(false);

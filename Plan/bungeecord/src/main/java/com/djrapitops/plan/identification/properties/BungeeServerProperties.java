@@ -25,7 +25,7 @@ import net.md_5.bungee.api.ProxyServer;
  * <p>
  * Supports RedisBungee for Players online getting.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BungeeServerProperties extends ServerProperties {
 

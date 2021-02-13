@@ -33,7 +33,7 @@ import java.nio.file.Path;
 /**
  * Test to check that configs contain all values required to run the plugin.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class ConfigSettingKeyTest {
 

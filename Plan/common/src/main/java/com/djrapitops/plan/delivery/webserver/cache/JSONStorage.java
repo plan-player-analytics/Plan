@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * In charge of storing json somewhere for later retrieval.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface JSONStorage extends SubSystem {
 

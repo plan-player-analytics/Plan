@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 /**
  * System in charge of {@link Locale}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class LocaleSystem implements SubSystem {

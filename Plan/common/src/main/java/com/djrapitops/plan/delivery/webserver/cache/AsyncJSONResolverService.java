@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 /**
  * Service for resolving json asynchronously in order to move database queries off server thread.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class AsyncJSONResolverService {

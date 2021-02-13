@@ -47,7 +47,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * 2. Join with provider information
  * 3. Map to ExtensionData objects, one per Plugin ID
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionAggregateGroupsQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 

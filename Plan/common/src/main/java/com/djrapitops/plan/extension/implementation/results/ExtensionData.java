@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * Represents data of a single extension about a server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionData implements Comparable<ExtensionData> {
 

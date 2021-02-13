@@ -19,7 +19,7 @@ package com.djrapitops.plan.exceptions.connection;
 /**
  * Thrown when Connection gets a 403 response.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ForbiddenException extends WebException {
     public ForbiddenException(String url) {

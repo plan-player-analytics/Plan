@@ -21,7 +21,7 @@ import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 /**
  * Adds disk usage information to tps table.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DiskUsagePatch extends Patch {
 

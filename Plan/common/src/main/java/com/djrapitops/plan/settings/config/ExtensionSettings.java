@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Class responsible for generating and generating settings for DataExtensions to the config.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionSettings {
 

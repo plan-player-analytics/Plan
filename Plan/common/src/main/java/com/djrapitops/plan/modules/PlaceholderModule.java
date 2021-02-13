@@ -24,7 +24,7 @@ import dagger.multibindings.IntoSet;
 /**
  * Module for the Placeholder API related objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public interface PlaceholderModule {

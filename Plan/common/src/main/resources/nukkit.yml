@@ -1,5 +1,5 @@
 name: Plan
-author: Rsl1122
+author: AuroraLS3
 main: com.djrapitops.plan.PlanNukkit
 version: "@version@"
 api: ["1.0.5"]

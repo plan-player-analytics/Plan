@@ -28,7 +28,7 @@ import dagger.Module;
 /**
  * Module for binding Bungee specific classes as interface implementations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public interface BungeeSuperClassBindingModule {

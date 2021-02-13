@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * TPSCounter extension for game server platforms.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ProxyTPSCounter extends TPSCounter {

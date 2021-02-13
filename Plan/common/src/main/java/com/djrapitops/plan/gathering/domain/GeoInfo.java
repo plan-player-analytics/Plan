@@ -24,7 +24,7 @@ import java.util.Objects;
 /**
  * Data class that contains information about IP and Geolocation.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class GeoInfo implements DateHolder, Serializable {
 

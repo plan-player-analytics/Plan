@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * Html String generator for /network page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NetworkPage implements Page {
 

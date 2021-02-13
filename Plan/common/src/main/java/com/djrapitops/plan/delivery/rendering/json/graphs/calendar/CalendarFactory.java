@@ -30,7 +30,7 @@ import java.util.SortedMap;
 /**
  * Factory class for different objects representing HTML calendars.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class CalendarFactory {

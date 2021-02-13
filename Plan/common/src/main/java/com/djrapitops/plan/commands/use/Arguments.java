@@ -27,7 +27,7 @@ import java.util.Optional;
 /**
  * Command argument mutation and access utility.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Arguments {
 

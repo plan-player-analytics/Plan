@@ -19,7 +19,7 @@ package com.djrapitops.plan;
 /**
  * Identifiers for different Debug channels.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DebugChannels {
 

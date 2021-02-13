@@ -25,7 +25,7 @@ import com.djrapitops.plan.settings.config.paths.key.StringSetting;
 /**
  * {@link Setting} values that are in "Display_options" section.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DisplaySettings {
 

@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * {@link Lang} implementation for in depth help language when /command ? is used.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum DeepHelpLang implements Lang {
     SERVER("In Depth Help - /plan server", "Obtain a link to the /server page of a specific server, or the current server if no arguments are given."),

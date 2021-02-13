@@ -36,7 +36,7 @@ import java.util.UUID;
 /**
  * Resolves /v1/kills JSON requests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayerKillsJSONResolver implements Resolver {

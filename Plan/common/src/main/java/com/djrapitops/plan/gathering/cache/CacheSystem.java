@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 /**
  * System that holds data caches of the plugin.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class CacheSystem implements SubSystem {

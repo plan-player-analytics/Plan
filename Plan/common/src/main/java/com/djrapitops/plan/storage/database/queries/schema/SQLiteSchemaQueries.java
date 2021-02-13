@@ -29,7 +29,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Static method class for SQLite Schema related queries.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SQLiteSchemaQueries {
 

@@ -19,11 +19,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.addons.placeholderapi.BukkitPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
-import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FiltersModule;
-import com.djrapitops.plan.modules.PlaceholderModule;
-import com.djrapitops.plan.modules.ServerCommandModule;
-import com.djrapitops.plan.modules.SystemObjectProvidingModule;
+import com.djrapitops.plan.modules.*;
 import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
 import com.djrapitops.plan.modules.bukkit.BukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.bukkit.BukkitSuperClassBindingModule;
@@ -36,7 +32,7 @@ import javax.inject.Singleton;
 /**
  * Dagger Component that constructs the plugin systems running on Bukkit.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 @Component(modules = {

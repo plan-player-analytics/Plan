@@ -45,7 +45,7 @@ import java.util.UUID;
 /**
  * Event Listener for detecting player and mob deaths.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DeathEventListener implements Listener {
 

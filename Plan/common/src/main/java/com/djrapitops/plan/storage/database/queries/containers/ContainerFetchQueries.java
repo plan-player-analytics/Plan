@@ -25,7 +25,7 @@ import java.util.UUID;
 /**
  * Static method class for queries that return some kind of {@link DataContainer}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ContainerFetchQueries {
 

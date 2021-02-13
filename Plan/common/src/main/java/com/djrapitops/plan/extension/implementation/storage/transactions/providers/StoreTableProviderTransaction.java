@@ -38,7 +38,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProv
 /**
  * Transaction to store information about a {@link com.djrapitops.plan.extension.implementation.providers.TableDataProvider}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StoreTableProviderTransaction extends ThrowawayTransaction {
 

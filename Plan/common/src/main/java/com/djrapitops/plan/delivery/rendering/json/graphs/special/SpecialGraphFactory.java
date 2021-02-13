@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Factory class for different objects representing special HTML graphs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class SpecialGraphFactory {

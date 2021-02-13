@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Transaction to store a server's configuration file in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StoreConfigTransaction extends Transaction {
 

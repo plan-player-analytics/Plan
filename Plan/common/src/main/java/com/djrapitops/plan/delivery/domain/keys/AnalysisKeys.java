@@ -21,7 +21,7 @@ package com.djrapitops.plan.delivery.domain.keys;
  * <p>
  * PlaceholderKey objects can be used for directly replacing a value on the html.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.data.store.containers.AnalysisContainer for Suppliers for each Key.
  * @deprecated AnalysisContainer can no longer be obtained, so this is deprecated.
  */

@@ -37,7 +37,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Queries for information about DataExtensions stored in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionInformationQueries {
 

@@ -31,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Static method class for queries that count how many entries of particular kinds there are for a server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerAggregateQueries {
 

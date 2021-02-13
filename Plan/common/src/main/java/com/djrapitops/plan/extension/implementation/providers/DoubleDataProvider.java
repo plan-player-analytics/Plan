@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
 /**
  * Contains code that acts on {@link DoubleProvider} annotations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DoubleDataProvider {
 

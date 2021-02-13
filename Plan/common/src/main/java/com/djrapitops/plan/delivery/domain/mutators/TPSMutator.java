@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * <p>
  * Can be used to get properties of a large number of TPS entries easily.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TPSMutator {
 
