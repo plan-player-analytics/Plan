@@ -18,10 +18,7 @@ package com.djrapitops.plan.placeholder;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 
@@ -55,10 +52,7 @@ public final class PlanPlaceholders {
 
     @Inject
     public PlanPlaceholders(
-            PlanConfig config,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            Formatters formatters,
             Set<Placeholders> placeholderRegistries
     ) {
         this.dbSystem = dbSystem;
