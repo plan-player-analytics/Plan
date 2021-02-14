@@ -62,18 +62,26 @@ import java.util.Optional;
 )
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
-    @com.google.inject.Inject
-    private Metrics.Factory metrics;
+    private final Metrics metrics;
+    private final Logger slf4jLogger;
+    private final File dataFolder;
 
-    @com.google.inject.Inject
-    private Logger slf4jLogger;
-
-    @com.google.inject.Inject
-    @ConfigDir(sharedRoot = false)
-    private File dataFolder;
     private PlanSystem system;
     private Locale locale;
     private ServerShutdownSave serverShutdownSave;
+
+    @com.google.inject.Inject
+    public PlanSponge(
+            Logger slf4jLogger,
+            @ConfigDir(sharedRoot = false) File dataFolder,
+            Metrics.Factory metrics
+    ) {
+        this.slf4jLogger = slf4jLogger;
+        this.dataFolder = dataFolder;
+
+        int pluginId = 3086;
+        this.metrics = metrics.make(pluginId);
+    }
 
     private final Map<String, CommandMapping> commands = new HashMap<>();
 
@@ -96,10 +104,8 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
-            int pluginId = 3086;
             new BStatsSponge(
-                    metrics.make(pluginId),
-                    system.getDatabaseSystem().getDatabase()
+                    metrics, system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 
             logger.info(locale.getString(PluginLang.ENABLED));

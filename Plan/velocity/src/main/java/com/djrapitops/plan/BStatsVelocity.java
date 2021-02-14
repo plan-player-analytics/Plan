@@ -17,42 +17,35 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import org.bstats.charts.SimplePie;
-import org.bstats.sponge.Metrics;
+import org.bstats.velocity.Metrics;
 
-import java.io.Serializable;
+import java.util.function.Supplier;
 
-public class BStatsSponge extends AbsRunnable {
+public class BStatsVelocity {
 
-    private final Metrics metrics;
+    private final PlanVelocity plugin;
     private final Database database;
 
-    public BStatsSponge(Metrics metrics, Database database) {
-        this.metrics = metrics;
-        this.database = database;
-    }
+    private final Metrics metrics;
 
-    @Override
-    public void run() {
-        registerMetrics();
+    public BStatsVelocity(PlanVelocity plugin, Database database, Metrics metrics) {
+        this.plugin = plugin;
+        this.database = database;
+        this.metrics = metrics;
     }
 
     public void registerMetrics() {
-        if (metrics != null) {
-            registerConfigSettingGraphs();
-        }
+        registerConfigSettingGraphs();
     }
 
     private void registerConfigSettingGraphs() {
-        String serverType = "Sponge";
-        String databaseType = database.getType().getName();
-
-        addStringSettingPie("server_type", serverType);
-        addStringSettingPie("database_type", databaseType);
+        addStringSettingPie("database_type", () -> database.getType().getName());
+        addStringSettingPie("network_servers", () -> String.valueOf(database.query(ServerQueries.fetchPlanServerInformationCollection()).size()));
     }
 
-    protected void addStringSettingPie(String id, Serializable setting) {
-        metrics.addCustomChart(new SimplePie(id, setting::toString));
+    protected void addStringSettingPie(String id, Supplier<String> setting) {
+        metrics.addCustomChart(new SimplePie(id, setting::get));
     }
 }
