@@ -97,7 +97,7 @@ public class TPS implements DateHolder {
      * @return 0-100 double
      */
     public double getCPUUsage() {
-        return cpuUsage;
+        return Double.isNaN(cpuUsage) ? -1.0 : cpuUsage;
     }
 
     /**
