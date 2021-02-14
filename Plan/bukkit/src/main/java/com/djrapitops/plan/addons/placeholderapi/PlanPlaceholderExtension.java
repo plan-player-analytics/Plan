@@ -120,8 +120,6 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
     private String getCached(String params, UUID uuid) {
         String key = params + "-" + uuid;
-        String found = cache.getIfPresent(key);
-        if (found != null) return found;
 
         if (!currentlyProcessing.contains(key)) {
             currentlyProcessing.add(key);
@@ -130,6 +128,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
                 currentlyProcessing.remove(key);
             });
         }
-        return null;
+
+        return cache.getIfPresent(key);
     }
 }
