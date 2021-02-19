@@ -231,11 +231,13 @@ function loadPlayerbaseOverviewValues(json, error) {
     element.querySelector('#data_regular_to_inactive').innerHTML = data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend);
 }
 
-function loadservers(servers, error) {
+function loadservers(json, error) {
     if (error) {
         displayError(document.getElementById('servers-tab'), error);
         return;
     }
+
+    const servers = json.servers;
 
     if (!servers || !servers.length) {
         document.getElementById('game-server-warning').classList.remove('hidden');

@@ -163,7 +163,7 @@ public class JSONFactory {
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
     }
 
-    public List<Map<String, Object>> serversAsJSONMaps() {
+    public Map<String, Object> serversAsJSONMaps() {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
@@ -220,7 +220,7 @@ public class JSONFactory {
                             .orElse(locale.get(HtmlLang.UNIT_NO_DATA).toString()));
                     servers.add(server);
                 });
-        return servers;
+        return Collections.singletonMap("servers", servers);
     }
 
     public Map<String, Object> pingPerGeolocation(UUID serverUUID) {
