@@ -105,7 +105,21 @@ public class ServerPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.serverPage(serverUUID);
-        export(to, exportPaths.resolveExportPaths(page.toHtml()));
+
+        // Fixes refreshingJsonRequest ignoring old data of export
+        String html = StringUtils.replaceEach(page.toHtml(),
+                new String[]{
+                        "loadOptimizedPerformanceGraph, 'performance', true);",
+                        "loadServerCalendar, 'online-activity-overview', true);",
+                        "}, 'playerlist', true);"
+                },
+                new String[]{
+                        "loadOptimizedPerformanceGraph, 'performance');",
+                        "loadServerCalendar, 'online-activity-overview');",
+                        "}, 'playerlist');"
+                });
+
+        export(to, exportPaths.resolveExportPaths(html));
     }
 
     /**

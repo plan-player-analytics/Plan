@@ -93,7 +93,13 @@ public class PlayersPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.playersPage();
-        export(to, exportPaths.resolveExportPaths(page.toHtml()));
+
+        // Fixes refreshingJsonRequest ignoring old data of export
+        String html = StringUtils.replaceEach(page.toHtml(),
+                new String[]{"}, 'playerlist', true);"},
+                new String[]{"}, 'playerlist');"});
+
+        export(to, exportPaths.resolveExportPaths(html));
     }
 
     private void exportJSON(Path toDirectory) throws IOException {

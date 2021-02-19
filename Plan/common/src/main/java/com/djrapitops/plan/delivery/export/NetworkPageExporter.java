@@ -95,7 +95,13 @@ public class NetworkPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.networkPage();
-        export(to, exportPaths.resolveExportPaths(page.toHtml()));
+
+        // Fixes refreshingJsonRequest ignoring old data of export
+        String html = StringUtils.replaceEach(page.toHtml(),
+                new String[]{"loadPlayersOnlineGraph, 'network-overview', true);"},
+                new String[]{"loadPlayersOnlineGraph, 'network-overview');"});
+
+        export(to, exportPaths.resolveExportPaths(html));
     }
 
     /**
