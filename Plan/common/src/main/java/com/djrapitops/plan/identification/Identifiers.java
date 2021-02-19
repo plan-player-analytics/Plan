@@ -112,7 +112,7 @@ public class Identifiers {
                     .map(Long::parseLong)
                     .orElse(currentTime);
             if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
-                throw new BadRequestException("Attempt to get data from the future! " + timestamp + " > " + currentTime);
+                return currentTime;
             }
             return timestamp;
         } catch (NumberFormatException nonNumberTimestamp) {
