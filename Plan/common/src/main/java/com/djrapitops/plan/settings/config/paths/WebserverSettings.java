@@ -36,6 +36,7 @@ public class WebserverSettings {
     public static final Setting<String> CERTIFICATE_KEYPASS = new StringSetting("Webserver.Security.SSL_certificate.Key_pass");
     public static final Setting<String> CERTIFICATE_STOREPASS = new StringSetting("Webserver.Security.SSL_certificate.Store_pass");
     public static final Setting<String> CERTIFICATE_ALIAS = new StringSetting("Webserver.Security.SSL_certificate.Alias");
+    public static final Setting<Boolean> IP_WHITELIST_X_FORWARDED = new BooleanSetting("Webserver.Security.Use_X-Forwarded-For_Header");
     public static final Setting<Boolean> IP_WHITELIST = new BooleanSetting("Webserver.Security.IP_whitelist");
     public static final Setting<List<String>> WHITELIST = new StringListSetting("Webserver.Security.IP_whitelist.Whitelist");
     public static final Setting<Boolean> DISABLED = new BooleanSetting("Webserver.Disable_Webserver");

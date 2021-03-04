@@ -16,12 +16,12 @@
  */
 package utilities.dagger;
 
-import com.djrapitops.plan.gathering.importing.EmptyImportSystem;
-import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerServerInfo;
 import com.djrapitops.plan.settings.BukkitConfigSystem;
 import com.djrapitops.plan.settings.ConfigSystem;
+import com.djrapitops.plan.storage.json.JSONFileStorage;
+import com.djrapitops.plan.storage.json.JSONStorage;
 import dagger.Binds;
 import dagger.Module;
 
@@ -34,12 +34,12 @@ import dagger.Module;
 public interface PlanPluginModule {
 
     @Binds
-    ImportSystem bindImportSystem(EmptyImportSystem emptyImportSystem);
-
-    @Binds
     ConfigSystem bindBukkitConfigSystem(BukkitConfigSystem bukkitConfigSystem);
 
     @Binds
     ServerInfo bindServerInfo(ServerServerInfo serverServerInfo);
+
+    @Binds
+    JSONStorage bindJSONStorage(JSONFileStorage jsonFileStorage);
 
 }

@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -34,6 +35,7 @@ import java.nio.file.Path;
 @Component(modules = {
         DBSystemModule.class,
         TestSystemObjectProvidingModule.class,
+        FiltersModule.class,
 
         TestAPFModule.class,
         PlanPluginModule.class,

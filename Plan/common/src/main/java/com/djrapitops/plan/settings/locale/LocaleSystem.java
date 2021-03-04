@@ -69,14 +69,15 @@ public class LocaleSystem implements SubSystem {
     public static Map<String, Lang> getIdentifiers() {
         Lang[][] lang = new Lang[][]{
                 CommandLang.values(),
-                HelpLang.values(),
                 DeepHelpLang.values(),
-                PluginLang.values(),
-                GenericLang.values(),
-                HtmlLang.values(),
                 ErrorPageLang.values(),
                 FailReason.values(),
+                FilterLang.values(),
+                GenericLang.values(),
+                HelpLang.values(),
+                HtmlLang.values(),
                 JSLang.values(),
+                PluginLang.values(),
         };
 
         return Arrays.stream(lang)

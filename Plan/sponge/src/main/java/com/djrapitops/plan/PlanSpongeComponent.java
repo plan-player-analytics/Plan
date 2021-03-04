@@ -19,12 +19,14 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ServerCommandModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.sponge.SpongePlanModule;
 import com.djrapitops.plan.modules.sponge.SpongeServerPropertiesModule;
 import com.djrapitops.plan.modules.sponge.SpongeSuperClassBindingModule;
+import com.djrapitops.plan.modules.sponge.SpongeTaskModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -40,11 +42,13 @@ import javax.inject.Singleton;
         SpongePlanModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
+        FiltersModule.class,
         PlaceholderModule.class,
 
         ServerCommandModule.class,
         SpongeSuperClassBindingModule.class,
-        SpongeServerPropertiesModule.class
+        SpongeServerPropertiesModule.class,
+        SpongeTaskModule.class
 })
 public interface PlanSpongeComponent {
 

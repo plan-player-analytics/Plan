@@ -19,6 +19,14 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 
+/**
+ * Adds linked_to_uuid field to plan_security table that stores web users.
+ * <p>
+ * This patch allows web users to have a username other than the minecraft username.
+ *
+ * @author Rsl1122
+ * @see LinkUsersToPlayersSecurityTablePatch for the patch that populates the field afterwards.
+ */
 public class LinkedToSecurityTablePatch extends Patch {
 
     @Override

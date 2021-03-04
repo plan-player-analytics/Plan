@@ -234,7 +234,7 @@ public class ServerPageExporter extends FileExporter {
                 () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
         Path to = toDirectory.resolve(resourceName);
 
-        if (resourceName.endsWith(".css")) {
+        if (resourceName.endsWith(".css") || resourceName.endsWith("color-selector.js")) {
             export(to, theme.replaceThemeColors(resource.asString()));
         } else if (Resource.isTextResource(resourceName)) {
             export(to, resource.asString());

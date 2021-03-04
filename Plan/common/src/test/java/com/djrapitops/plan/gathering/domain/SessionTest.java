@@ -68,7 +68,7 @@ class SessionTest {
         List<PlayerKill> before = beforeOptional.get();
         assertTrue(before.isEmpty());
 
-        session.playerKilled(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
+        session.playerKilled(new PlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
 
         Optional<List<PlayerKill>> afterOptional = session.getValue(SessionKeys.PLAYER_KILLS);
         assertTrue(afterOptional.isPresent());
@@ -82,7 +82,7 @@ class SessionTest {
     void killsAreAdded2() {
         Session session = new Session(null, serverUUID, System.currentTimeMillis(), "", "");
 
-        session.playerKilled(new PlayerKill(TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
+        session.playerKilled(new PlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
 
         Optional<List<PlayerKill>> afterOptional = session.getValue(SessionKeys.PLAYER_KILLS);
         assertTrue(afterOptional.isPresent());

@@ -63,7 +63,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
         } catch (Exception e) {
             errorHandler.log(L.CRITICAL, this.getClass(), e);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
-            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
         registerCommand(component.planCommand().build());
@@ -74,6 +74,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
+        cancelAllTasks();
         if (system != null) system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));

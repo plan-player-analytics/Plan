@@ -21,7 +21,6 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -29,6 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.TPSTable.*;
@@ -45,27 +45,72 @@ public class TPSQueries {
     }
 
     public static Query<List<TPS>> fetchTPSDataOfServer(UUID serverUUID) {
-        String sql = Select.all(TABLE_NAME)
-                .where(SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID)
-                .toString();
+        return db -> {
+            String selectLowestResolution = SELECT +
+                    min("t." + DATE) + " as " + DATE + ',' +
+                    min("t." + TPS) + " as " + TPS + ',' +
+                    max("t." + PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE + ',' +
+                    max("t." + RAM_USAGE) + " as " + RAM_USAGE + ',' +
+                    max("t." + CPU_USAGE) + " as " + CPU_USAGE + ',' +
+                    max("t." + ENTITIES) + " as " + ENTITIES + ',' +
+                    max("t." + CHUNKS) + " as " + CHUNKS + ',' +
+                    max("t." + FREE_DISK) + " as " + FREE_DISK +
+                    FROM + TABLE_NAME + " t" +
+                    WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                    AND + DATE + "<?" +
+                    GROUP_BY + floor(DATE + "/?");
+            String selectLowerResolution = SELECT +
+                    min("t." + DATE) + " as " + DATE + ',' +
+                    min("t." + TPS) + " as " + TPS + ',' +
+                    max("t." + PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE + ',' +
+                    max("t." + RAM_USAGE) + " as " + RAM_USAGE + ',' +
+                    max("t." + CPU_USAGE) + " as " + CPU_USAGE + ',' +
+                    max("t." + ENTITIES) + " as " + ENTITIES + ',' +
+                    max("t." + CHUNKS) + " as " + CHUNKS + ',' +
+                    max("t." + FREE_DISK) + " as " + FREE_DISK +
+                    FROM + TABLE_NAME + " t" +
+                    WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                    AND + DATE + ">=?" +
+                    AND + DATE + "<?" +
+                    GROUP_BY + floor(DATE + "/?");
+            String selectNormalResolution = SELECT +
+                    DATE + ',' + TPS + ',' + PLAYERS_ONLINE + ',' +
+                    RAM_USAGE + ',' + CPU_USAGE + ',' + ENTITIES + ',' + CHUNKS + ',' + FREE_DISK +
+                    FROM + TABLE_NAME +
+                    WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                    AND + DATE + ">=?";
 
-        return new QueryStatement<List<TPS>>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
+            String sql = selectLowestResolution +
+                    UNION + selectLowerResolution +
+                    UNION + selectNormalResolution +
+                    ORDER_BY + DATE;
 
-            @Override
-            public List<TPS> processResults(ResultSet set) throws SQLException {
-                List<TPS> data = new ArrayList<>();
-                while (set.next()) {
-
-                    com.djrapitops.plan.gathering.domain.TPS tps = extractTPS(set);
-
-                    data.add(tps);
+            return db.query(new QueryStatement<List<TPS>>(sql, 50000) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    long now = System.currentTimeMillis();
+                    long lowestResolution = TimeUnit.MINUTES.toMillis(20);
+                    long lowResolution = TimeUnit.MINUTES.toMillis(5);
+                    statement.setString(1, serverUUID.toString());
+                    statement.setLong(2, now - TimeUnit.DAYS.toMillis(60));
+                    statement.setLong(3, lowestResolution);
+                    statement.setString(4, serverUUID.toString());
+                    statement.setLong(5, now - TimeUnit.DAYS.toMillis(60));
+                    statement.setLong(6, now - TimeUnit.DAYS.toMillis(30));
+                    statement.setLong(7, lowResolution);
+                    statement.setString(8, serverUUID.toString());
+                    statement.setLong(9, now - TimeUnit.DAYS.toMillis(30));
                 }
-                return data;
-            }
+
+                @Override
+                public List<TPS> processResults(ResultSet set) throws SQLException {
+                    List<TPS> data = new ArrayList<>();
+                    while (set.next()) {
+                        data.add(extractTPS(set));
+                    }
+                    return data;
+                }
+            });
         };
     }
 
@@ -83,10 +128,11 @@ public class TPSQueries {
     }
 
     public static Query<List<TPS>> fetchTPSDataOfServer(long after, long before, UUID serverUUID) {
-        String sql = Select.all(TABLE_NAME)
-                .where(SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID)
-                .and(DATE + ">=?").and(DATE + "<=?")
-                .toString();
+        String sql = SELECT + "*" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                AND + DATE + ">=?" +
+                AND + DATE + "<=?" +
+                ORDER_BY + DATE;
 
         return new QueryStatement<List<TPS>>(sql, 50000) {
             @Override
@@ -104,6 +150,29 @@ public class TPSQueries {
                     data.add(tps);
                 }
                 return data;
+            }
+        };
+    }
+
+    public static Query<List<DateObj<Integer>>> fetchViewPreviewGraphData(UUID serverUUID) {
+        String sql = SELECT + min(DATE) + " as " + DATE + ',' +
+                max(PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE +
+                FROM + TABLE_NAME +
+                WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                GROUP_BY + floor(DATE + "/?");
+
+        return new QueryStatement<List<DateObj<Integer>>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setLong(2, TimeUnit.MINUTES.toMillis(15));
+            }
+
+            @Override
+            public List<DateObj<Integer>> processResults(ResultSet set) throws SQLException {
+                List<DateObj<Integer>> ofServer = new ArrayList<>();
+                while (set.next()) ofServer.add(new DateObj<>(set.getLong(DATE), set.getInt(PLAYERS_ONLINE)));
+                return ofServer;
             }
         };
     }

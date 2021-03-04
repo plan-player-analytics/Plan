@@ -16,10 +16,14 @@
  */
 package com.djrapitops.plan.query;
 
+import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -34,9 +38,11 @@ import java.util.UUID;
 public class CommonQueriesImplementation implements CommonQueries {
 
     private final Database db;
+    private final PlanConfig config;
 
-    CommonQueriesImplementation(Database db) {
+    CommonQueriesImplementation(Database db, PlanConfig config) {
         this.db = db;
+        this.config = config;
     }
 
     @Override
@@ -97,5 +103,15 @@ public class CommonQueriesImplementation implements CommonQueries {
             default:
                 throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
         }
+    }
+
+    @Override
+    public double fetchActivityIndexOf(UUID playerUUID, long epochMs) {
+        return db.query(new PlayerContainerQuery(playerUUID)).getActivityIndex(epochMs, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)).getValue();
+    }
+
+    @Override
+    public String getActivityGroupForIndex(double activityIndex) {
+        return ActivityIndex.getGroup(activityIndex);
     }
 }

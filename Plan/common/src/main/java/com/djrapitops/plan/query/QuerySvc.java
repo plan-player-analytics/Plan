@@ -18,6 +18,7 @@ package com.djrapitops.plan.query;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.QueryAPIExecutable;
@@ -40,6 +41,7 @@ import java.util.function.Consumer;
 @Singleton
 public class QuerySvc implements QueryService {
 
+    private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ErrorLogger errorLogger;
@@ -49,10 +51,12 @@ public class QuerySvc implements QueryService {
 
     @Inject
     public QuerySvc(
+            PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ErrorLogger errorLogger
     ) {
+        this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.errorLogger = errorLogger;
@@ -132,6 +136,6 @@ public class QuerySvc implements QueryService {
     public CommonQueries getCommonQueries() {
         Database database = dbSystem.getDatabase();
         if (database == null) throw new IllegalStateException("Database has not been initialized.");
-        return new CommonQueriesImplementation(database);
+        return new CommonQueriesImplementation(database, config);
     }
 }

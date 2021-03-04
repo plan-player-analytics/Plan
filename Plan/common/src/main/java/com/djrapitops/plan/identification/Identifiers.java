@@ -57,7 +57,7 @@ public class Identifiers {
 
         Optional<UUID> parsed = UUIDUtility.parseFromString(identifier);
         return parsed.orElseGet(() -> getServerUUIDFromName(identifier).orElseThrow(
-                () -> new BadRequestException("Given 'server' was not found in the database: '" + identifier + "'")
+                () -> new BadRequestException("Given 'server' was not found in the database.")
         ));
     }
 
@@ -97,7 +97,7 @@ public class Identifiers {
     private UUID getPlayerUUIDFromName(String playerName) {
         return dbSystem.getDatabase()
                 .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
-                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database: '" + playerName + "'"));
+                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
     }
 
     public UUID getPlayerUUID(String name) {

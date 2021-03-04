@@ -168,4 +168,17 @@ public class TPS implements DateHolder {
                 "chunksLoaded=" + chunksLoaded + ", " +
                 "freeDiskSpace=" + freeDiskSpace + '}';
     }
+
+    public Number[] toArray() {
+        return new Number[]{
+                getDate(),
+                getPlayers(),
+                getTicksPerSecond(),
+                getCPUUsage(),
+                getUsedMemory(),
+                getEntityCount(),
+                getChunksLoaded(),
+                getFreeDiskSpace()
+        };
+    }
 }

@@ -21,14 +21,12 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -144,6 +142,36 @@ public class NetworkActivityIndexQueries {
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?";
+
+        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                setSelectActivityIndexSQLParameters(statement, 1, threshold, date);
+                statement.setLong(9, date);
+            }
+
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> groups = new HashMap<>();
+                while (set.next()) {
+                    double activityIndex = set.getDouble("activity_index");
+                    String group = ActivityIndex.getGroup(activityIndex);
+                    groups.put(group, groups.getOrDefault(group, 0) + 1);
+                }
+                return groups;
+            }
+        };
+    }
+
+    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs) {
+        String selectActivityIndex = selectActivityIndexSQL();
+
+        String selectIndexes = SELECT + "activity_index" +
+                FROM + UsersTable.TABLE_NAME + " u" +
+                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                WHERE + "u." + UsersTable.REGISTERED + "<=?" +
+                AND + "u." + UsersTable.USER_UUID + " IN ('" +
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
 
         return new QueryStatement<Map<String, Integer>>(selectIndexes) {
             @Override
@@ -426,6 +454,28 @@ public class NetworkActivityIndexQueries {
             @Override
             public ActivityIndex processResults(ResultSet set) throws SQLException {
                 return set.next() ? new ActivityIndex(set.getDouble("average"), before) : new ActivityIndex(0.0, before);
+            }
+        };
+    }
+
+    public static Query<Map<UUID, ActivityIndex>> activityIndexForAllPlayers(long date, long playtimeThreshold) {
+        String selectActivityIndex = selectActivityIndexSQL();
+        return new QueryStatement<Map<UUID, ActivityIndex>>(selectActivityIndex, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, date);
+            }
+
+            @Override
+            public Map<UUID, ActivityIndex> processResults(ResultSet set) throws SQLException {
+                Map<UUID, ActivityIndex> indexes = new HashMap<>();
+                while (set.next()) {
+                    indexes.put(
+                            UUID.fromString(set.getString(SessionsTable.USER_UUID)),
+                            new ActivityIndex(set.getDouble("activity_index"), date)
+                    );
+                }
+                return indexes;
             }
         };
     }

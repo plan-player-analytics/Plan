@@ -26,6 +26,8 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Patch that replaces plan_ips with plan_geolocations table.
+ * <p>
+ * Prepares Plan to be GDPR compliant through the easiest to make change.
  *
  * @author Rsl1122
  */

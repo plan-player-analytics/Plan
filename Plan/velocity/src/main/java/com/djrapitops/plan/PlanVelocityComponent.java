@@ -18,13 +18,11 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ProxySuperClassBindingModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
-import com.djrapitops.plan.modules.velocity.VelocityCommandModule;
-import com.djrapitops.plan.modules.velocity.VelocityPlanModule;
-import com.djrapitops.plan.modules.velocity.VelocityServerPropertiesModule;
-import com.djrapitops.plan.modules.velocity.VelocitySuperClassBindingModule;
+import com.djrapitops.plan.modules.velocity.*;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -41,11 +39,13 @@ import javax.inject.Singleton;
         VelocityCommandModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
+        FiltersModule.class,
         PlaceholderModule.class,
 
         ProxySuperClassBindingModule.class,
         VelocitySuperClassBindingModule.class,
-        VelocityServerPropertiesModule.class
+        VelocityServerPropertiesModule.class,
+        VelocityTaskModule.class
 })
 public interface PlanVelocityComponent {
 

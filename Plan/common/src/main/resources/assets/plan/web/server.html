@@ -38,12 +38,10 @@
     <!-- Sidebar -->
     <ul class="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center">
             <img alt="logo" class="w-22" src="../img/Flaticon_circle.png">
         </a>
 
-        <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
         <li class="nav-item nav-button active">
@@ -52,7 +50,6 @@
                 <span>Server Overview</span></a>
         </li>
 
-        <!-- Divider -->
         <hr class="sidebar-divider">
 
         <div class="sidebar-heading">
@@ -109,7 +106,6 @@
                 <span>Performance</span></a>
         </li>
 
-        <!-- Divider -->
         <hr class="sidebar-divider">
 
         <div class="sidebar-heading">
@@ -117,8 +113,20 @@
         </div>
         ${navPluginsTabs}
 
-        <!-- Divider -->
         <hr class="sidebar-divider">
+
+        <div class="query-buttons">
+            <div class="sidebar-heading">
+                LINKS
+            </div>
+            <li class="nav-item nav-button">
+                <a class="nav-link" href="../query">
+                    <i class="fas fa-fw fa-search"></i>
+                    <span>Make a query</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+        </div>
 
         <div class="ml-3 align-items-center justify-content-between">
             <button class="btn bg-plan" data-target="#colorChooserModal" data-toggle="modal" type="button">
@@ -276,8 +284,8 @@
                                         <td><span id="data_regular_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
-                                            Player
+                                        <td><i class="col-green far fa-fw fa-clock"></i>
+                                            Average Playtime / Player
                                         </td>
                                         <td id="data_average_playtime_before"></td>
                                         <td id="data_average_playtime_after"></td>
@@ -349,8 +357,8 @@
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab" href="#punchcard-tab" id="online-punchcard-tab"
-                                           role="tab"><i class="fa fa-fw fa-braille col-black"></i> Punchcard
-                                            for 30 days</a>
+                                           role="tab"><i class="fa fa-fw fa-braille col-black"></i>
+                                            Punchcard for 30 days</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="onlineActivityTabContent">
@@ -425,16 +433,16 @@
                                         <td id="data_new_players_24h"></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players /
-                                            Day
+                                        <td><i class="col-light-green fa fa-fw fa-user-plus"></i>
+                                            New Players / Day
                                         </td>
                                         <td id="data_new_players_30d_avg"></td>
                                         <td id="data_new_players_7d_avg"></td>
                                         <td id="data_new_players_24h_avg"></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-light-green fa fa-fw fa-user-circle"></i> New Player
-                                            Retention
+                                        <td><i class="col-light-green fa fa-fw fa-user-circle"></i>
+                                            New Player Retention
                                         </td>
                                         <td id="data_new_players_retention_30d"></td>
                                         <td id="data_new_players_retention_7d"></td>
@@ -449,8 +457,8 @@
                                         <td id="data_playtime_24h"></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
-                                            Day
+                                        <td><i class="col-green far fa-fw fa-clock"></i>
+                                            Average Playtime / Day
                                         </td>
                                         <td id="data_playtime_30d_avg"></td>
                                         <td id="data_playtime_7d_avg"></td>
@@ -482,16 +490,15 @@
                                         Insights for 30 days</h6>
                                 </div>
                                 <div class="card-body" id="data_insights">
-                                    <p><i class="col-light-green fa fa-fw fa-user-friends"></i> Players online on
-                                        first
-                                        join<span class="float-right"><b><span
-                                                id="data_players_first_join_avg"></span></b></span></p>
-                                    <p><i class="col-light-green fa fa-fw fa-user-clock"></i> Average First session
-                                        length<span class="float-right"><b><span
-                                                id="data_first_session_length_avg"></span></b></span></p>
-                                    <p><i class="col-light-green fa fa-fw fa-user-clock"></i> Median First session
-                                        length<span class="float-right"><b><span
-                                                id="data_first_session_length_median"></span></b></span></p>
+                                    <p><i class="col-light-green fa fa-fw fa-user-friends"></i>
+                                        Players online on first join<span class="float-right"><b>
+                                            <span id="data_players_first_join_avg"></span></b></span></p>
+                                    <p><i class="col-light-green fa fa-fw fa-user-clock"></i>
+                                        Average First session length<span class="float-right"><b>
+                                            <span id="data_first_session_length_avg"></span></b></span></p>
+                                    <p><i class="col-light-green fa fa-fw fa-user-clock"></i>
+                                        Median First session length<span class="float-right"><b>
+                                            <span id="data_first_session_length_median"></span></b></span></p>
                                     <p><i class="col-teal far fa-fw fa-calendar"></i> Lone joins<span
                                             class="float-right"><b><span id="data_lone_joins"></span></b>
                                             </span></p>
@@ -765,43 +772,40 @@
                                         <td><span id="data_regular_players_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
-                                            Player
+                                        <td><i class="col-green far fa-fw fa-clock"></i>
+                                            Average Playtime / Player
                                         </td>
                                         <td id="data_playtime_avg_then"></td>
                                         <td id="data_playtime_avg_now"></td>
                                         <td><span id="data_playtime_avg_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-grey far fa-fw fa-clock"></i> AFK /
-                                            Player
+                                        <td><i class="col-grey far fa-fw fa-clock"></i>
+                                            AFK / Player
                                         </td>
                                         <td id="data_afk_then"></td>
                                         <td id="data_afk_now"></td>
                                         <td><span id="data_afk_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
-                                            Regular
-                                            Player
+                                        <td><i class="col-green far fa-fw fa-clock"></i>
+                                            Average Playtime / Regular Player
                                         </td>
                                         <td id="data_regular_playtime_avg_then"></td>
                                         <td id="data_regular_playtime_avg_now"></td>
                                         <td><span id="data_regular_playtime_avg_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-teal far fa-fw fa-clock"></i> Average Session Length /
-                                            Regular
-                                            Player
+                                        <td><i class="col-teal far fa-fw fa-clock"></i>
+                                            Average Session Length / Regular Player
                                         </td>
                                         <td id="data_regular_session_avg_then"></td>
                                         <td id="data_regular_session_avg_now"></td>
                                         <td><span id="data_regular_session_avg_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-grey far fa-fw fa-clock"></i> AFK /
-                                            Regular
-                                            Player
+                                        <td><i class="col-grey far fa-fw fa-clock"></i>
+                                            AFK / Regular Player
                                         </td>
                                         <td id="data_regular_afk_then"></td>
                                         <td id="data_regular_afk_now"></td>
@@ -958,15 +962,14 @@
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab" href="#cpuram" id="performance-hardware-tab"
                                            role="tab"><i
-                                                class="fa fa-fw fa-microchip col-light-green"></i> CPU
-                                            & RAM</a>
+                                                class="fa fa-fw fa-microchip col-light-green"></i>
+                                            CPU & RAM</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
                                            data-toggle="tab" href="#worldload" id="performance-minecraft-tab"
                                            role="tab"><i class="fa fa-fw fa-map col-purple"></i>
-                                            World
-                                            Load</a>
+                                            World Load</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
@@ -1012,7 +1015,7 @@
                     </div>
 
                     <div class="row">
-                        <!-- Online Activity as Numbers -->
+                        <!-- Performance as Numbers -->
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
@@ -1029,16 +1032,16 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td><i class="fa fa-fw fa-exclamation-circle col-red"></i> Low TPS
-                                            Spikes
+                                        <td><i class="fa fa-fw fa-exclamation-circle col-red"></i>
+                                            Low TPS Spikes
                                         </td>
                                         <td id="data_low_tps_spikes_30d"></td>
                                         <td id="data_low_tps_spikes_7d"></td>
                                         <td id="data_low_tps_spikes_24h"></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="fa fa-fw fa-power-off col-red"></i> Server Downtime (No
-                                            Data)
+                                        <td><i class="fa fa-fw fa-power-off col-red"></i>
+                                            Server Downtime (No Data)
                                         </td>
                                         <td id="data_server_downtime_30d"></td>
                                         <td id="data_server_downtime_7d"></td>
@@ -1089,7 +1092,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </div> <!-- End of Online Activity as numbers-->
+                        </div> <!-- End of Performance as numbers-->
                         <!-- Insights -->
                         <div class="col-lg-4 mb-4 col-sm-12">
                             <div class="card shadow mb-4">
@@ -1176,8 +1179,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
-                        Night
-                        Mode
+                        Night Mode
                     </button>
                     <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
                 </div>
@@ -1188,7 +1190,7 @@
     <!-- Information Modal -->
     <div aria-hidden="true" aria-labelledby="informationModalLabel" class="modal fade" id="informationModal"
          role="dialog" tabindex="-1">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="informationModalLabel"><i class="fa fa-fw fa-question-circle"></i>
@@ -1204,16 +1206,17 @@
                             target="_blank">Lesser General Public License
                         v3.0</a></p>
                     <hr>
-                    <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki"
-                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan Wiki, Tutorials & Documentation</a>
-                    <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/issues"
+                    <a class="btn col-plan" href="https://github.com/plan-player-analytics/Plan/wiki"
+                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i>
+                        Plan Wiki, Tutorials & Documentation</a>
+                    <a class="btn col-plan" href="https://github.com/plan-player-analytics/Plan/issues"
                        rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-bug"></i> Report Issues</a>
                     <a class="btn col-plan" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
                        target="_blank"><i class="fab fa-fw fa-discord"></i> General Support on Discord</a>
                     <hr>
                     <p>Player Analytics is developed by Rsl1122.</p>
                     <p>In addition following <span class="col-plan">awesome people</span> have contributed:</p>
-                    <ul>
+                    <ul class="row contributors">
                         ${contributors}
                         <li>& Bug reporters!</li>
                     </ul>
@@ -1301,7 +1304,7 @@
         });
 
         // HighCharts Series
-        var s = {
+        const s = {
             name: {
                 playersOnline: 'Players Online',
                 uniquePlayers: 'Unique Players',
@@ -1330,9 +1333,9 @@
             }
         };
 
-        jsonRequest("../v1/graph?type=performance&server=${serverUUID}", function (json, error) {
+        jsonRequest("../v1/graph?type=optimizedPerformance&server=${serverUUID}", function (json, error) {
             if (json) {
-                var zones = {
+                const zones = {
                     tps: [{
                         value: json.zones.tpsThresholdMed,
                         color: json.colors.low
@@ -1354,51 +1357,52 @@
                         color: json.colors.high
                     }]
                 };
-                var series = {
+                const dataSeries = mapToDataSeries(json.values);
+                const series = {
                     playersOnline: {
                         name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.playersOnline, color: json.colors.playersOnline, yAxis: 0
+                        data: dataSeries.playersOnline, color: json.colors.playersOnline, yAxis: 0
                     },
                     tps: {
                         name: s.name.tps, type: s.type.spline, color: json.colors.high,
-                        zones: zones.tps, tooltip: s.tooltip.twoDecimals, data: json.tps,
+                        zones: zones.tps, tooltip: s.tooltip.twoDecimals, data: dataSeries.tps,
                         yAxis: 1
                     },
                     cpu: {
                         name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: json.cpu, color: json.colors.cpu, yAxis: 2
+                        data: dataSeries.cpu, color: json.colors.cpu, yAxis: 2
                     },
                     cpu_alt: {
                         name: s.name.cpu, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
-                        data: json.cpu, color: json.colors.cpu, yAxis: 1
+                        data: dataSeries.cpu, color: json.colors.cpu, yAxis: 1
                     },
                     ram: {
                         name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.ram, color: json.colors.ram, yAxis: 3
+                        data: dataSeries.ram, color: json.colors.ram, yAxis: 3
                     },
                     ram_alt: {
                         name: s.name.ram, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.ram, color: json.colors.ram, yAxis: 2
+                        data: dataSeries.ram, color: json.colors.ram, yAxis: 2
                     },
                     entities: {
                         name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.entities, color: json.colors.entities, yAxis: 4
+                        data: dataSeries.entities, color: json.colors.entities, yAxis: 4
                     },
                     entities_alt: {
                         name: s.name.entities, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.entities, color: json.colors.entities, yAxis: 1
+                        data: dataSeries.entities, color: json.colors.entities, yAxis: 1
                     },
                     chunks: {
                         name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.chunks, color: json.colors.chunks, yAxis: 5
+                        data: dataSeries.chunks, color: json.colors.chunks, yAxis: 5
                     },
                     chunks_alt: {
                         name: s.name.chunks, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
-                        data: json.chunks, color: json.colors.chunks, yAxis: 2
+                        data: dataSeries.chunks, color: json.colors.chunks, yAxis: 2
                     },
                     disk: {
                         name: s.name.disk, type: s.type.spline, color: json.colors.high,
-                        zones: zones.disk, tooltip: s.tooltip.zeroDecimals, data: json.disk
+                        zones: zones.disk, tooltip: s.tooltip.zeroDecimals, data: dataSeries.disk
                     }
                 };
                 playersChart('playersOnlineChart', series.playersOnline, 2);
@@ -1537,7 +1541,7 @@
                     // Wrapping this in a 0ms setTimeout waits for all other event handlers
                     // to finish. We need this because if the calendar is rendered
                     // immediately, it renders for a width of 0.
-                    setTimeout(function() {
+                    setTimeout(function () {
                         window.calendars.online_activity.render();
                     }, 0);
                 });

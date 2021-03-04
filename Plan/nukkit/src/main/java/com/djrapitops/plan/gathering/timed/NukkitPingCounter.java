@@ -29,9 +29,12 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
+import com.djrapitops.plan.PlanNukkit;
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
@@ -53,10 +56,11 @@ import java.util.concurrent.TimeUnit;
  * @author games647
  */
 @Singleton
-public class NukkitPingCounter extends AbsRunnable implements Listener {
+public class NukkitPingCounter extends TaskSystem.Task implements Listener {
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
+    private final PlanNukkit plugin;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -64,11 +68,13 @@ public class NukkitPingCounter extends AbsRunnable implements Listener {
 
     @Inject
     public NukkitPingCounter(
+            PlanNukkit plugin,
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             RunnableFactory runnableFactory
     ) {
+        this.plugin = plugin;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -102,6 +108,17 @@ public class NukkitPingCounter extends AbsRunnable implements Listener {
             } else {
                 iterator.remove();
             }
+        }
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        Long enableDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
+        if (enableDelay < TimeUnit.HOURS.toMillis(1L) && config.isTrue(DataGatheringSettings.PING)) {
+            plugin.registerListener(this);
+            long delay = TimeAmount.toTicks(enableDelay, TimeUnit.MILLISECONDS);
+            long period = 40L;
+            runnableFactory.create(null, this).runTaskTimer(delay, period);
         }
     }
 

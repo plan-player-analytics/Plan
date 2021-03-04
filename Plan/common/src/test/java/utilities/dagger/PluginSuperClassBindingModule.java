@@ -19,16 +19,19 @@ package utilities.dagger;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.ServerSensor;
+import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.ElementsIntoSet;
 import org.mockito.Mockito;
 import utilities.mocks.TestProcessing;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.when;
 
@@ -41,13 +44,15 @@ import static org.mockito.Mockito.when;
 public class PluginSuperClassBindingModule {
 
     @Provides
-    @Singleton
-    TaskSystem provideTaskSystem(RunnableFactory runnableFactory) {
-        return new TaskSystem(runnableFactory) {
-            @Override
-            public void enable() {
-            }
-        };
+    @ElementsIntoSet
+    Set<Importer> provideEmptyImporterSet() {
+        return new HashSet<>();
+    }
+
+    @Provides
+    @ElementsIntoSet
+    Set<TaskSystem.Task> provideEmptyTaskSet() {
+        return new HashSet<>();
     }
 
     @Provides

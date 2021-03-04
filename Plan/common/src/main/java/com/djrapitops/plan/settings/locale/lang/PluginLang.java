@@ -45,7 +45,7 @@ public enum PluginLang implements Lang {
     WEB_SERVER_FAIL_EMPTY_FILE("WebServer FAIL - EOF", "WebServer: EOF when reading Certificate file. (Check that the file is not empty)"),
     WEB_SERVER_NOTIFY_NO_CERT_FILE("WebServer - Notify no Cert file", "WebServer: Certificate KeyStore File not Found: ${0}"),
     WEB_SERVER_NOTIFY_HTTP("WebServer - Notify HTTP", "WebServer: No Certificate -> Using HTTP-server for Visualization."),
-    WEB_SERVER_NOTIFY_USING_PROXY_MODE("WebServer - Notify Using Proxy", "WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Link points to the Proxy"),
+    WEB_SERVER_NOTIFY_USING_PROXY_MODE("WebServer - Notify Using Proxy", "WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Address points to the Proxy"),
     WEB_SERVER_NOTIFY_HTTP_USER_AUTH("WebServer - Notify HTTP User Auth", "WebServer: User Authorization Disabled! (Not secure over HTTP)"),
     WEB_SERVER_NOTIFY_HTTPS_USER_AUTH("WebServer - Notify HTTPS User Auth", "WebServer: User Authorization Disabled! (Disabled in config)"),
     WEB_SERVER_NOTIFY_IP_WHITELIST("Webserver - Notify IP Whitelist", "Webserver: IP Whitelist is enabled."),
@@ -63,6 +63,14 @@ public enum PluginLang implements Lang {
     VERSION_AVAILABLE_DEV("Version - DEV", " This is a DEV release."),
     VERSION_FAIL_READ_VERSIONS("Version FAIL - Read versions.txt", "Version information could not be loaded from Github/versions.txt"),
     VERSION_FAIL_READ_OLD("Version FAIL - Read info (old)", "Failed to check newest version number"),
+
+    VERSION_UPDATE("HTML - Version Update", "Update"),
+    VERSION_UPDATE_AVAILABLE("HTML - Version Update Available", "Version ${0} is Available!"),
+    VERSION_UPDATE_INFO("HTML - Version Update Info", "A new version has been released and is now available for download."),
+    VERSION_UPDATE_DEV("HTML - Version Update Dev", "This version is a DEV release."),
+    VERSION_CHANGE_LOG("HTML - Version Change log", "View Changelog"),
+    VERSION_DOWNLOAD("HTML - Version Download", "Download Plan-${0}.jar"),
+    VERSION_CURRENT("HTML - Version Current", "You have version ${0}"),
 
     DB_APPLY_PATCH("Database - Apply Patch", "Applying Patch: ${0}.."),
     DB_APPLIED_PATCHES("Database - Patches Applied", "All database patches applied successfully."),

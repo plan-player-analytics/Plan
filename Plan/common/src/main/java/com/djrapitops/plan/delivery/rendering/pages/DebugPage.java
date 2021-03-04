@@ -98,7 +98,7 @@ public class DebugPage implements Page {
     private String createContent() {
         StringBuilder preContent = new StringBuilder();
 
-        String issueLink = Html.LINK_EXTERNAL.create("https://github.com/Rsl1122/Plan-PlayerAnalytics/issues/new", "Create new issue on Github");
+        String issueLink = Html.LINK_EXTERNAL.create("https://github.com/plan-player-analytics/Plan/issues/new", "Create new issue on Github");
         String hastebinLink = Html.LINK_EXTERNAL.create("https://hastebin.com/", "Create a new hastebin paste");
 
         preContent.append("<p>")

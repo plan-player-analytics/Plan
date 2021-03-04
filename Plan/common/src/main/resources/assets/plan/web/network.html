@@ -40,28 +40,23 @@
     <!-- Sidebar -->
     <ul class="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center">
             <img alt="logo" class="w-22" src="./img/Flaticon_circle.png">
         </a>
 
-        <!-- Divider -->
         <hr class="sidebar-divider my-0">
 
-        <!-- Nav Item - Dashboard -->
         <li class="nav-item nav-button active">
             <a class="nav-link" href="#tab-network-overview">
                 <i class="fas fa-fw fa-info-circle"></i>
                 <span>Network Overview</span></a>
         </li>
 
-        <!-- Divider -->
         <hr class="sidebar-divider">
-        <!-- Heading -->
         <div class="sidebar-heading">
             Information
         </div>
-        <!-- Nav Item - Pages Collapse Menu -->
+
         <li class="nav-item">
             <a aria-controls="serverPages" aria-expanded="true" class="nav-link collapsed" data-target="#serverPages"
                data-toggle="collapse" href="#">
@@ -79,7 +74,7 @@
                 </div>
             </div>
         </li>
-        <!-- Nav Item - Pages Collapse Menu -->
+
         <li class="nav-item">
             <a aria-controls="playerbasePages" aria-expanded="true" class="nav-link collapsed"
                data-target="#playerbasePages"
@@ -100,19 +95,28 @@
                 </div>
             </div>
         </li>
-        <!-- Nav Item - Pages Collapse Menu -->
 
-        <!-- Divider -->
         <hr class="sidebar-divider">
 
-        <!-- Heading -->
         <div class="sidebar-heading">
             Plugins
         </div>
         ${navPluginsTabs}
 
-        <!-- Divider -->
         <hr class="sidebar-divider">
+
+        <div class="query-buttons">
+            <div class="sidebar-heading">
+                LINKS
+            </div>
+            <li class="nav-item nav-button">
+                <a class="nav-link" href="./query">
+                    <i class="fas fa-fw fa-search"></i>
+                    <span>Make a query</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+        </div>
 
         <div class="ml-3 align-items-center justify-content-between">
             <button class="btn bg-plan" data-target="#colorChooserModal" data-toggle="modal" type="button">
@@ -295,8 +299,8 @@
                                         <td><span id="data_regular_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
-                                            Player
+                                        <td><i class="col-green far fa-fw fa-clock"></i>
+                                            Average Playtime / Player
                                         </td>
                                         <td id="data_average_playtime_before"></td>
                                         <td id="data_average_playtime_after"></td>
@@ -512,43 +516,40 @@
                                         <td><span id="data_regular_players_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
-                                            Player
+                                        <td><i class="col-green far fa-fw fa-clock"></i>
+                                            Average Playtime / Player
                                         </td>
                                         <td id="data_playtime_avg_then"></td>
                                         <td id="data_playtime_avg_now"></td>
                                         <td><span id="data_playtime_avg_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-grey far fa-fw fa-clock"></i> AFK /
-                                            Player
+                                        <td><i class="col-grey far fa-fw fa-clock"></i>
+                                            AFK / Player
                                         </td>
                                         <td id="data_afk_then"></td>
                                         <td id="data_afk_now"></td>
                                         <td><span id="data_afk_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-green far fa-fw fa-clock"></i> Average Playtime /
-                                            Regular
-                                            Player
+                                        <td><i class="col-green far fa-fw fa-clock"></i>
+                                            Average Playtime / Regular Player
                                         </td>
                                         <td id="data_regular_playtime_avg_then"></td>
                                         <td id="data_regular_playtime_avg_now"></td>
                                         <td><span id="data_regular_playtime_avg_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-teal far fa-fw fa-clock"></i> Average Session Length /
-                                            Regular
-                                            Player
+                                        <td><i class="col-teal far fa-fw fa-clock"></i>
+                                            Average Session Length / Regular Player
                                         </td>
                                         <td id="data_regular_session_avg_then"></td>
                                         <td id="data_regular_session_avg_now"></td>
                                         <td><span id="data_regular_session_avg_trend"></span></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="col-grey far fa-fw fa-clock"></i> AFK /
-                                            Regular
-                                            Player
+                                        <td><i class="col-grey far fa-fw fa-clock"></i>
+                                            AFK / Regular Player
                                         </td>
                                         <td id="data_regular_afk_then"></td>
                                         <td id="data_regular_afk_now"></td>
@@ -722,8 +723,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
-                        Night
-                        Mode
+                        Night Mode
                     </button>
                     <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
                 </div>
@@ -734,7 +734,7 @@
     <!-- Information Modal -->
     <div aria-hidden="true" aria-labelledby="informationModalLabel" class="modal fade" id="informationModal"
          role="dialog" tabindex="-1">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="informationModalLabel"><i class="fa fa-fw fa-question-circle"></i>
@@ -750,16 +750,17 @@
                             target="_blank">Lesser General Public License
                         v3.0</a></p>
                     <hr>
-                    <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki"
-                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i> Plan Wiki, Tutorials & Documentation</a>
-                    <a class="btn col-plan" href="https://github.com/Rsl1122/Plan-PlayerAnalytics/issues"
+                    <a class="btn col-plan" href="https://github.com/plan-player-analytics/Plan/wiki"
+                       rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-graduation-cap"></i>
+                        Plan Wiki, Tutorials & Documentation</a>
+                    <a class="btn col-plan" href="https://github.com/plan-player-analytics/Plan/issues"
                        rel="noopener noreferrer" target="_blank"><i class="fa fa-fw fa-bug"></i> Report Issues</a>
                     <a class="btn col-plan" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
                        target="_blank"><i class="fab fa-fw fa-discord"></i> General Support on Discord</a>
                     <hr>
                     <p>Player Analytics is developed by Rsl1122.</p>
                     <p>In addition following <span class="col-plan">awesome people</span> have contributed:</p>
-                    <ul>
+                    <ul class="row contributors">
                         ${contributors}
                         <li>& Bug reporters!</li>
                     </ul>
@@ -977,7 +978,7 @@
                     joinBy: ['iso-a3', 'code']
                 };
                 var geolocationBarSeries = {
-                    color: '#4CAF50',
+                    color: json.colors.bars,
                     name: 'Players',
                     data: json.geolocation_bar_series.map(function (bar) {
                         return bar.value
@@ -986,7 +987,7 @@
                 var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
                     return bar.label
                 });
-                worldMap('worldMap', v.colors.geolocationsLow, v.colors.geolocationsHigh, geolocationSeries);
+                worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
                 horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
             } else if (error) {
                 $('#worldMap').text("Failed to load graph data: " + error);

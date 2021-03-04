@@ -20,12 +20,14 @@ import com.djrapitops.plan.addons.placeholderapi.BukkitPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ServerCommandModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
 import com.djrapitops.plan.modules.bukkit.BukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.bukkit.BukkitSuperClassBindingModule;
+import com.djrapitops.plan.modules.bukkit.BukkitTaskModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -41,11 +43,13 @@ import javax.inject.Singleton;
         BukkitPlanModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
+        FiltersModule.class,
         PlaceholderModule.class,
 
         ServerCommandModule.class,
         BukkitServerPropertiesModule.class,
-        BukkitSuperClassBindingModule.class
+        BukkitSuperClassBindingModule.class,
+        BukkitTaskModule.class
 })
 public interface PlanBukkitComponent {
 

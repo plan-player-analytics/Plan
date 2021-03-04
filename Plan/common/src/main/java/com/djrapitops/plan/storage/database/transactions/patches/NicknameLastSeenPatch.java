@@ -35,6 +35,13 @@ import java.util.UUID;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
+/**
+ * Adds last_seen to nickname table by populating it with the data in actions table, and removes the actions table.
+ * <p>
+ * Actions table contained nickname change events and change to "last seen" saved space on the interface.
+ *
+ * @author Rsl1122
+ */
 public class NicknameLastSeenPatch extends Patch {
 
     @Override

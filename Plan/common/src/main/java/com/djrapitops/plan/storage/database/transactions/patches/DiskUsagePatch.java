@@ -18,6 +18,11 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 
+/**
+ * Adds disk usage information to tps table.
+ *
+ * @author Rsl1122
+ */
 public class DiskUsagePatch extends Patch {
 
     @Override

@@ -57,6 +57,7 @@ public interface ServerQueriesTest extends DatabaseTestPreparer {
 
         UUID bungeeUUID = UUID.randomUUID();
         Server bungeeCord = new Server(bungeeUUID, "BungeeCord", "Random:1234");
+        bungeeCord.setProxy(true);
         db().executeTransaction(new StoreServerInformationTransaction(bungeeCord));
 
         forcePersistenceCheck();

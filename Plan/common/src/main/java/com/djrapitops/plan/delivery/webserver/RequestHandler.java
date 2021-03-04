@@ -47,6 +47,7 @@ import org.apache.commons.text.TextStringBuilder;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * HttpHandler for WebServer request management.
@@ -67,6 +68,8 @@ public class RequestHandler implements HttpHandler {
 
     private final PassBruteForceGuard bruteForceGuard;
     private List<String> ipWhitelist = null;
+
+    private final AtomicBoolean warnedAboutXForwardedSecurityIssue = new AtomicBoolean(false);
 
     @Inject
     RequestHandler(
@@ -120,7 +123,7 @@ public class RequestHandler implements HttpHandler {
                     ? config.get(WebserverSettings.WHITELIST)
                     : Collections.emptyList();
         }
-        String accessor = exchange.getRemoteAddress().getAddress().getHostAddress();
+        String accessor = getAccessorAddress(exchange);
         Request request = null;
         Response response;
         try {
@@ -157,6 +160,29 @@ public class RequestHandler implements HttpHandler {
             bruteForceGuard.resetAttemptCount(accessor);
         }
         return response;
+    }
+
+    private String getAccessorAddress(HttpExchange exchange) {
+        if (config.isTrue(WebserverSettings.IP_WHITELIST_X_FORWARDED)) {
+            String header = exchange.getRequestHeaders().getFirst("X-Forwarded-For");
+            if (header == null) {
+                warnAboutXForwardedForSecurityIssue();
+            } else {
+                return header;
+            }
+        }
+        return exchange.getRemoteAddress().getAddress().getHostAddress();
+    }
+
+    private void warnAboutXForwardedForSecurityIssue() {
+        if (!warnedAboutXForwardedSecurityIssue.get()) {
+            logger.warn("Security Vulnerability due to misconfiguration: X-Forwarded-For header was not present in a request & '" +
+                            WebserverSettings.IP_WHITELIST_X_FORWARDED.getPath() + "' is 'true'!",
+                    "This could mean non-reverse-proxy access is not blocked & someone can use IP Spoofing to bypass security!",
+                    "Make sure you can only access Plan panel from your reverse-proxy or disable this setting."
+            );
+        }
+        warnedAboutXForwardedSecurityIssue.set(true);
     }
 
     private Request buildRequest(HttpExchange exchange) {

@@ -25,6 +25,7 @@ public enum JSLang implements Lang {
 
     TEXT_PREDICTED_RETENTION("This value is a prediction based on previous players"),
     TEXT_NO_SERVERS("No servers found in the database"),
+    TEXT_SERVER_INSTRUCTIONS("It appears that Plan is not installed on any game servers or not connected to the same database. See <a href=\"https://github.com/plan-player-analytics/Plan/wiki\">wiki</a> for Network tutorial."),
     TEXT_NO_SERVER("No server to display online activity for"),
     LABEL_REGISTERED_PLAYERS("Registered Players"),
     LINK_SERVER_ANALYSIS("Server Analysis"),
@@ -37,7 +38,23 @@ public enum JSLang implements Lang {
     UNIT_CHUNKS("Chunks"),
     LABEL_RELATIVE_JOIN_ACTIVITY("Relative Join Activity"),
     LABEL_DAY_OF_WEEK("Day of the Week"),
-    LABEL_WEEK_DAYS("'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'");
+    LABEL_WEEK_DAYS("'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'"),
+
+    QUERY_ARE_ACTIVITY_GROUP("are in Activity Groups"),
+    QUERY_ARE_PLUGIN_GROUP("are in ${plugin}'s ${group} Groups"),
+    QUERY_OF_PLAYERS("of Players who "),
+    QUERY_AND("and "),
+    QUERY_PLAYED_BETWEEN("Played between"),
+    QUERY_REGISTERED_BETWEEN("Registered between"),
+    QUERY_ZERO_RESULTS("Query produced 0 results"),
+    QUERY_RESULTS("Query Results"),
+    QUERY_RESULTS_MATCH("matched ${resultCount} players"),
+    QUERY_VIEW("  View:"),
+    QUERY_ACTIVITY_OF_MATCHED_PLAYERS("Activity of matched players"),
+    QUERY_ACTIVITY_ON("Activity on <span id=\"activity-date\"></span>"),
+    QUERY_ARE("`are`"),
+    QUERY_SESSIONS_WITHIN_VIEW("Sessions within view"),
+    ;
 
     private final String defaultValue;
 

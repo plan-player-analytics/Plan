@@ -71,7 +71,7 @@ public class LoginResolver implements NoAuthResolver {
         String username = query.get("user").orElseThrow(() -> new BadRequestException("'user' parameter not defined"));
         String password = query.get("password").orElseThrow(() -> new BadRequestException("'password' parameter not defined"));
         User user = dbSystem.getDatabase().query(WebUserQueries.fetchUser(username))
-                .orElseThrow(() -> new BadRequestException(FailReason.USER_DOES_NOT_EXIST.getReason() + ": " + username));
+                .orElseThrow(() -> new WebUserAuthException(FailReason.USER_PASS_MISMATCH));
 
         boolean correctPass = user.doesPasswordMatch(password);
         if (!correctPass) {

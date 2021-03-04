@@ -20,6 +20,11 @@ import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
+/**
+ * Replaces user_id foreign keys with user_uuid fields in geolocation table.
+ *
+ * @author Rsl1122
+ */
 public class GeoInfoOptimizationPatch extends Patch {
 
     private final String tempTableName;

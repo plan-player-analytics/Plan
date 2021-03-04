@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.upkeep;
 
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
@@ -29,15 +30,18 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldSampledDataTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,6 +51,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -56,7 +61,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * @author Rsl1122
  */
 @Singleton
-public class DBCleanTask extends AbsRunnable {
+public class DBCleanTask extends TaskSystem.Task {
 
     private final Locale locale;
     private final DBSystem dbSystem;
@@ -97,6 +102,7 @@ public class DBCleanTask extends AbsRunnable {
         Database database = dbSystem.getDatabase();
         try {
             if (database.getState() != Database.State.CLOSED) {
+
                 database.executeTransaction(new RemoveOldSampledDataTransaction(
                         serverInfo.getServerUUID(),
                         config.get(TimeSettings.DELETE_TPS_DATA_AFTER),
@@ -118,6 +124,31 @@ public class DBCleanTask extends AbsRunnable {
             errorLogger.log(L.ERROR, e);
             cancel();
         }
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        AbsRunnable taskToRegister = this;
+        // Secondary task for registration due to database queries.
+        runnableFactory.create(null, new AbsRunnable() {
+            @Override
+            public void run() {
+                // Distribute clean task evenly between multiple servers.
+                // see https://github.com/plan-player-analytics/Plan/issues/1641 for why
+                Integer biggestId = dbSystem.getDatabase().query(ServerQueries.fetchBiggestServerID());
+                Integer id = serverInfo.getServer().getId().orElse(1);
+
+                double distributor = id * 1.0 / biggestId; // 0 < distributor <= 1
+                long distributingOverTime = config.get(TimeSettings.CLEAN_DATABASE_PERIOD);
+
+                // -40 seconds to start first at 20 seconds if only one server is present.
+                long startAfter = (long) (distributor * distributingOverTime) - 40L;
+
+                long delay = TimeAmount.toTicks(startAfter, TimeUnit.MILLISECONDS);
+                long period = TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS);
+                runnableFactory.create(null, taskToRegister).runTaskTimerAsynchronously(delay, period);
+            }
+        }).runTaskAsynchronously();
     }
 
     // VisibleForTesting

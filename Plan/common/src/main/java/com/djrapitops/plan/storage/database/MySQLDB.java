@@ -94,7 +94,7 @@ public class MySQLDB extends SQLDB {
             String database = config.get(DatabaseSettings.MYSQL_DATABASE);
             String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
             // REGEX: match "?", match "word=word&" *-times, match "word=word"
-            if (launchOptions.isEmpty() || !launchOptions.matches("\\?((\\w*=\\w*)&)*(\\w*=\\w*)")) {
+            if (launchOptions.isEmpty() || !launchOptions.matches("\\?(((\\w|[-])+=.+)&)*((\\w|[-])+=.+)")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
@@ -127,13 +127,10 @@ public class MySQLDB extends SQLDB {
         Connection connection = dataSource.getConnection();
         if (!connection.isValid(5)) {
             connection.close();
-            dataSource.close();
             try {
-                setupDataSource();
-                // get new connection after restarting pool
-                connection = dataSource.getConnection();
-            } catch (DBInitException e) {
-                throw new DBOpException("Failed to restart DataSource after a connection was invalid: " + e.getMessage(), e);
+                return getConnection();
+            } catch (StackOverflowError databaseHasGoneDown) {
+                throw new DBOpException("Valid connection could not be fetched (Is MySQL down?) - attempted until StackOverflowError occurred.", databaseHasGoneDown);
             }
         }
         if (connection.getAutoCommit()) connection.setAutoCommit(false);

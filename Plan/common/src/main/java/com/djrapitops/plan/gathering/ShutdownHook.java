@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.gathering;
 
+import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plugin.task.RunnableFactory;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.concurrent.ExecutionException;
@@ -76,6 +79,24 @@ public class ShutdownHook extends Thread {
             Thread.currentThread().interrupt();
         } catch (ExecutionException e) {
             Logger.getGlobal().log(Level.SEVERE, "Plan failed to save sessions on JVM shutdown.", e);
+        }
+    }
+
+    @Singleton
+    public static class Registrar extends TaskSystem.Task {
+        private final ShutdownHook shutdownHook;
+
+        @Inject
+        public Registrar(ShutdownHook shutdownHook) {this.shutdownHook = shutdownHook;}
+
+        @Override
+        public void run() {
+            shutdownHook.register();
+        }
+
+        @Override
+        public void register(RunnableFactory runnableFactory) {
+            runnableFactory.create(null, this).runTaskAsynchronously();
         }
     }
 }

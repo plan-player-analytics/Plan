@@ -47,7 +47,8 @@ public class MethodWrapper<T> {
         try {
             return returnType.cast(with.usingOn(extension, method));
         } catch (InvocationTargetException notReadyToBeCalled) {
-            if (notReadyToBeCalled.getCause() instanceof NotReadyException) {
+            if (notReadyToBeCalled.getCause() instanceof NotReadyException
+                    || notReadyToBeCalled.getCause() instanceof UnsupportedOperationException) {
                 return null; // Data or API not available to make the call.
             } else {
                 throw new IllegalArgumentException(method.getDeclaringClass() + " method " + method.getName() + " could not be called: " + notReadyToBeCalled.getMessage(), notReadyToBeCalled);

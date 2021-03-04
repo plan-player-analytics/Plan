@@ -1,14 +1,14 @@
 # -----------------------------------------------------
 # Plan Bukkit Configuration file
 # More information about each setting:
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Bukkit-Configuration
+# https://github.com/plan-player-analytics/Plan/wiki/Bukkit-Configuration
 # -----------------------------------------------------
 Server:
   ServerName: 'Plan'
 
 # -----------------------------------------------------
 # More information about Locale
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Localization
+# https://github.com/plan-player-analytics/Plan/wiki/Localization
 # -----------------------------------------------------
 Plugin:
   Debug: false
@@ -23,7 +23,7 @@ Plugin:
 
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
+# https://github.com/plan-player-analytics/Plan/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
 # -----------------------------------------------------
 WebServer:
   Port: 8804
@@ -37,7 +37,7 @@ WebServer:
       StorePass: 'default'
       Alias: 'alias'
   # For those that want to serve Html from their own WebServer instead.
-  # Set up Html Export (https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/External-WebServer-Use)
+  # Set up Html Export (https://github.com/plan-player-analytics/Plan/wiki/External-WebServer-Use)
   # ATTENTION: On BungeeCord systems it is not possible to disable the WebServer on the plugin due to connection requirements.
   # If the WebServer is disabled with this setting BungeeCord systems will cease to function.
   DisableWebServer: false
@@ -129,7 +129,7 @@ Customization:
 
 # -----------------------------------------------------
 # More information about Themes:
-# https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki/Themes
+# https://github.com/plan-player-analytics/Plan/wiki/Themes
 #
 # Since 4.1.0 colors are set in theme.yml
 # -----------------------------------------------------

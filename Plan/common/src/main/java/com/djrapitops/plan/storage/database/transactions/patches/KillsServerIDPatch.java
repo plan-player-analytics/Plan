@@ -24,6 +24,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 
+/**
+ * Adds server_id field to kills table.
+ * <p>
+ * The field is populated by querying the session table for server ids.
+ *
+ * @author Rsl1122
+ * @see KillsOptimizationPatch for removal of this field later
+ */
 public class KillsServerIDPatch extends Patch {
 
     @Override

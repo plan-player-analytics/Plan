@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.utilities.java.Lists;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -134,6 +135,37 @@ public class GeoInfoQueries {
                 GeoInfoTable.GEOLOCATION + ", " +
                 GeoInfoTable.LAST_USED +
                 FROM + GeoInfoTable.TABLE_NAME;
+        String subQuery2 = SELECT +
+                GeoInfoTable.USER_UUID + ", " +
+                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
+                FROM + GeoInfoTable.TABLE_NAME +
+                GROUP_BY + GeoInfoTable.USER_UUID;
+        String sql = SELECT + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM " +
+                "(" + subQuery1 + ") AS q1" +
+                INNER_JOIN + "(" + subQuery2 + ") AS q2 ON q1.uuid = q2.uuid" +
+                WHERE + GeoInfoTable.LAST_USED + "=m" +
+                GROUP_BY + GeoInfoTable.GEOLOCATION;
+
+        return new QueryAllStatement<Map<String, Integer>>(sql) {
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> geolocationCounts = new HashMap<>();
+                while (set.next()) {
+                    geolocationCounts.put(set.getString(GeoInfoTable.GEOLOCATION), set.getInt("c"));
+                }
+                return geolocationCounts;
+            }
+        };
+    }
+
+    public static Query<Map<String, Integer>> networkGeolocationCounts(Collection<UUID> playerUUIDs) {
+        String subQuery1 = SELECT +
+                GeoInfoTable.USER_UUID + ", " +
+                GeoInfoTable.GEOLOCATION + ", " +
+                GeoInfoTable.LAST_USED +
+                FROM + GeoInfoTable.TABLE_NAME +
+                WHERE + GeoInfoTable.USER_UUID + " IN ('" +
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
         String subQuery2 = SELECT +
                 GeoInfoTable.USER_UUID + ", " +
                 "MAX(" + GeoInfoTable.LAST_USED + ") as m" +

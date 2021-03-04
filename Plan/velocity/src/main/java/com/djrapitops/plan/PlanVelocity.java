@@ -90,7 +90,7 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
         } catch (Exception e) {
             errorHandler.log(L.CRITICAL, this.getClass(), e);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
-            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
 
@@ -102,7 +102,8 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        system.disable();
+        cancelAllTasks();
+        if (system != null) system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));
     }

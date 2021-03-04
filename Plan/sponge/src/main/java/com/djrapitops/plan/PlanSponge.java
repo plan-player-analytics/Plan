@@ -26,7 +26,7 @@ import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plugin.SpongePlugin;
 import com.djrapitops.plugin.command.ColorScheme;
 import com.djrapitops.plugin.logging.L;
-import org.bstats.sponge.Metrics2;
+import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
@@ -38,6 +38,7 @@ import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.scheduler.Task;
 
 import java.io.File;
 import java.io.InputStream;
@@ -62,7 +63,7 @@ import java.util.Optional;
 public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @com.google.inject.Inject
-    private Metrics2 metrics;
+    private Metrics.Factory metrics;
 
     @com.google.inject.Inject
     private Logger slf4jLogger;
@@ -95,8 +96,9 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
+            int pluginId = 3086;
             new BStatsSponge(
-                    metrics,
+                    metrics.make(pluginId),
                     system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 
@@ -112,7 +114,7 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         } catch (Exception e) {
             errorHandler.log(L.CRITICAL, this.getClass(), e);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
         registerCommand(component.planCommand().build());
@@ -123,14 +125,19 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        if (serverShutdownSave != null) {
-            serverShutdownSave.performSave();
-        }
-        if (system != null) {
-            system.disable();
-        }
+        if (serverShutdownSave != null) serverShutdownSave.performSave();
+        cancelAllTasks();
+        if (system != null) system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));
+    }
+
+    @Override
+    public void cancelAllTasks() {
+        runnableFactory.cancelAllKnownTasks();
+        for (Task task : Sponge.getScheduler().getScheduledTasks(this)) {
+            task.cancel();
+        }
     }
 
     @Override

@@ -1,7 +1,7 @@
 API - css+                                      || Rozšíření: ${0} přidán stylesheet(s) k ${1}, ${2}
 API - js+                                       || Rozšíření: ${0} přidán javascript(s) k ${1}, ${2}
 Cmd - Click Me                                  || Klikni na mě
-Cmd - Link                                      ||   §2Odkaz: §f
+Cmd - Link                                      || Odkaz
 Cmd - Link Network                              || Stránka sítě: 
 Cmd - Link Player                               || Stránka hráče: 
 Cmd - Link Player JSON                          || Hráč json: 
@@ -152,6 +152,8 @@ Enable FAIL - Database Patch                    || Patch databáze selhal, plugi
 Enable FAIL - GeoDB Write                       || Něco se pokazilo při ukládání stažené GeoLite2 Geolocation databáze
 Enable FAIL - WebServer (Proxy)                 || WebServer se nespustil!
 Enable FAIL - Wrong Database Type               || ${0} není podporovaná databáze
+HTML - AND_BUG_REPORTERS                        || & Bug reporters!
+HTML - BANNED (Filters)                         || Banned
 HTML - COMPARING_15_DAYS                        || Srovnání 15 dnů
 HTML - COMPARING_60_DAYS                        || Srovnání 30d zpět do Dnes
 HTML - COMPARING_7_DAYS                         || Srovnání 7 dnů
@@ -167,14 +169,18 @@ HTML - KILLED                                   || Zabit
 HTML - LABEL_1ST_WEAPON                         || Nejsmrtelnější PvP zbraň
 HTML - LABEL_2ND_WEAPON                         || 2. PvP Zbraň
 HTML - LABEL_3RD_WEAPON                         || 3. PvP Zbraň
+HTML - LABEL_ACTIVE_PLAYTIME                    || Active Playtime
 HTML - LABEL_ACTIVITY_INDEX                     || Index aktivity
 HTML - LABEL_AFK                                || AFK
 HTML - LABEL_AFK_TIME                           || AFK čas
 HTML - LABEL_AVG                                || Průměr
+HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
+HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
 HTML - LABEL_AVG_KDR                            || Průměr KDR
 HTML - LABEL_AVG_MOB_KDR                        || Průměr Mob KDR
 HTML - LABEL_AVG_PLAYTIME                       || Průměr herní doby
 HTML - LABEL_AVG_SESSION_LENGTH                 || Průměr délky sezení
+HTML - LABEL_AVG_SESSIONS                       || Average Sessions
 HTML - LABEL_AVG_TPS                            || Průměr TPS
 HTML - LABEL_BANNED                             || Zabanován
 HTML - LABEL_BEST_PEAK                          || Celková špička
@@ -241,17 +247,70 @@ HTML - LINK_QUICK_VIEW                          || Rychlé zobrazení
 HTML - LINK_SERVER_ANALYSIS                     || Analýza serveru
 HTML - LINK_WIKI                                || Plan Wiki, Tutoriály & Dokumentace
 HTML - LOCAL_MACHINE                            || Lokální stroj
+HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
+HTML - LOGIN_FAILED                             || Login failed: 
+HTML - LOGIN_FORGOT_PASSWORD                    || Forgot Password?
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Forgot password? Unregister and register again.
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Use the following command in game to remove your current user:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Or using console:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || After using the command, 
+HTML - LOGIN_LOGIN                              || Login
+HTML - LOGIN_LOGOUT                             || Logout
+HTML - LOGIN_PASSWORD                           || "Password"
+HTML - LOGIN_USERNAME                           || "Username"
 HTML - NAV_PLUGINS                              || Pluginy
 HTML - NEW_CALENDAR                             || Nové:
 HTML - NO_KILLS                                 || Žádné zabití
 HTML - NO_USER_PRESENT                          || User cookie not present
+HTML - NON_OPERATORS (Filters)                  || Non operators
+HTML - NOT_BANNED (Filters)                     || Not banned
 HTML - OFFLINE                                  ||  Offline
 HTML - ONLINE                                   ||  Online
+HTML - OPERATORS (Filters)                      || Operators
 HTML - PER_DAY                                  || / Den
 HTML - PLAYERS_TEXT                             || Hráči
+HTML - QUERY                                    || Query<
+HTML - QUERY_ACTIVITY_OF_MATCHED_PLAYERS        || Activity of matched players
+HTML - QUERY_ACTIVITY_ON                        || Activity on <span id="activity-date"></span>
+HTML - QUERY_ADD_FILTER                         || Add a filter..
+HTML - QUERY_AND                                || and 
+HTML - QUERY_ARE                                || `are`
+HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
+HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
+HTML - QUERY_LOADING_FILTERS                    || Loading filters..
+HTML - QUERY_MAKE                               || Make a query
+HTML - QUERY_MAKE_ANOTHER                       || Make another query
+HTML - QUERY_OF_PLAYERS                         || of Players who 
+HTML - QUERY_PERFORM_QUERY                      || Perform Query!
+HTML - QUERY_PLAYED_BETWEEN                     || Played between
+HTML - QUERY_REGISTERED_BETWEEN                 || Registered between
+HTML - QUERY_RESULTS                            || Query Results
+HTML - QUERY_RESULTS_MATCH                      || matched ${resultCount} players
+HTML - QUERY_SESSIONS_WITHIN_VIEW               || Sessions within view
+HTML - QUERY_SHOW_VIEW                          || Show a view
+HTML - QUERY_TIME_FROM                          || >from</label>
+HTML - QUERY_TIME_TO                            || >to</label>
+HTML - QUERY_VIEW                               ||   View:
+HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
+HTML - REGISTER                                 || Register
+HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
+HTML - REGISTER_COMPLETE                        || Complete Registration
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Code expires in 15 minutes
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Use the following command in game to finish registration:
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Or using console:
+HTML - REGISTER_CREATE_USER                     || Create a new user
+HTML - REGISTER_FAILED                          || Registration failed: 
+HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
+HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
+HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
+HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
+HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
+HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 characters.
 HTML - SESSION                                  || Sezení
 HTML - SIDE_GEOLOCATIONS                        || Geolokace
 HTML - SIDE_INFORMATION                         || INFORMACE
+HTML - SIDE_LINKS                               || LINKS
 HTML - SIDE_NETWORK_OVERVIEW                    || Přehled sítě
 HTML - SIDE_OVERVIEW                            || Přehled
 HTML - SIDE_PERFORMANCE                         || Výkon
@@ -280,6 +339,7 @@ HTML - TEXT_NO_SERVER                           || Žádný server pro který lz
 HTML - TEXT_NO_SERVERS                          || Žádné servery nenalezeny v databázi
 HTML - TEXT_PLUGIN_INFORMATION                  || Informace o pluginu
 HTML - TEXT_PREDICTED_RETENTION                 || Tato hodnota je odhad založený na předchozích hráčích
+HTML - TEXT_SERVER_INSTRUCTIONS                 || It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.
 HTML - TEXT_VERSION                             || Byla vydána nová verze a je dostupná ke stažení.
 HTML - TITLE_30_DAYS                            || 30 dní
 HTML - TITLE_30_DAYS_AGO                        || před 30 dny
@@ -295,6 +355,7 @@ HTML - TITLE_CPU_RAM                            || CPU & RAM
 HTML - TITLE_CURRENT_PLAYERBASE                 || Aktuální základna hráčů
 HTML - TITLE_DISK                               || Místo na disku
 HTML - TITLE_GRAPH_DAY_BY_DAY                   || Den po dni
+HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || Hour by Hour
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Síťová online aktivita
 HTML - TITLE_GRAPH_PUNCHCARD                    || Štítek pro 30 dní
 HTML - TITLE_INSIGHTS                           || Postřehy za 30 dní
@@ -348,7 +409,15 @@ HTML - UNIT_NO_DATA                             || Žádná data
 HTML - UNIT_THE_PLAYERS                         || Hráči
 HTML - USER_AND_PASS_NOT_SPECIFIED              || Uživatel a heslo nespecifikováno
 HTML - USER_DOES_NOT_EXIST                      || Uživatel neexistuje
+HTML - USER_INFORMATION_NOT_FOUND               || Registration failed, try again (The code expires after 15 minutes)
 HTML - USER_PASS_MISMATCH                       || Uživatel a heslo nesouhlasí
+HTML - Version Change log                       || View Changelog
+HTML - Version Current                          || You have version ${0}
+HTML - Version Download                         || Download Plan-${0}.jar
+HTML - Version Update                           || Update
+HTML - Version Update Available                 || Version ${0} is Available!
+HTML - Version Update Dev                       || This version is a DEV release.
+HTML - Version Update Info                      || A new version has been released and is now available for download.
 HTML - WITH                                     || <th>S
 HTML ERRORS - ACCESS_DENIED_403                 || Přístup zamítnut
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ujistěte se, že jste zaregistrovaní s uživatelem s <b>/plan register</b><br>- Zkontrolujte zda je jméno a heslo správné<br>- Jméno a heslo jsou citlivá na velká/malá písmena<br><br>Pokud jste zapomněli heslo, zeptejte se člena týmu ke smazání vašeho starého uživatele či nové registraci.
@@ -398,7 +467,7 @@ Manage - Fail Same server                       || Nelze označit tento server j
 Manage - Fail, Confirmation                     || > §cPřidejte '-a' argument k potvrzení provedení: ${0}
 Manage - List Importers                         || Importery:
 Manage - Progress                               || ${0} / ${1} zpracovávání..
-Manage - Remind HotSwap                         || §eNezapomeňte přehodit na novou databázi (/plan m hotswap ${0}) & reload pluginu.
+Manage - Remind HotSwap                         || §eNezapomeňte přehodit na novou databázi (/plan db hotswap ${0}) & reload pluginu.
 Manage - Start                                  || > §2Zpracovávám data..
 Manage - Success                                || > §aÚspěch!
 Negative                                        || Ne
@@ -419,7 +488,7 @@ WebServer - Notify HTTPS User Auth              || WebServer: Autorizace uživat
 Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist je zapnutý.
 Webserver - Notify IP Whitelist Block           || Webserver: ${0} byl odmítnut přístup na '${1}'. (není na whitelistu)
 WebServer - Notify no Cert file                 || WebServer: Certifikační KeyStore soubor nenalezen: ${0}
-WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS zapnut, ujistěte se, že reverse-proxy je funkčí s HTTPS a Plan Alternative_IP.Link míří na proxy
+WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS zapnut, ujistěte se, že reverse-proxy je funkčí s HTTPS a Plan Alternative_IP.Address míří na proxy
 WebServer FAIL - EOF                            || WebServer: EOF při čtení souboru Certifikátu. (Zkontrolujte, zda soubor není prázdný)
 WebServer FAIL - Port Bind                      || WebServer nebyl úspěšně spuštěn. Je port (${0}) již používán?
 WebServer FAIL - SSL Context                    || WebServer: SSL Context spuštění selhalo.

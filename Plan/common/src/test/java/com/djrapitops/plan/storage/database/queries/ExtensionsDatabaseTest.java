@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
-import com.djrapitops.plan.data.element.TableContainer;
+import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
@@ -27,7 +27,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerPlayerDataTableQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
@@ -116,7 +116,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
         execute(DataStoreQueries.storeSession(session));
 
-        Map<UUID, ExtensionTabData> result = db().query(new ExtensionServerPlayerDataTableQuery(serverUUID(), 50));
+        Map<UUID, ExtensionTabData> result = db().query(new ExtensionServerTableDataQuery(serverUUID(), 50));
         assertEquals(1, result.size());
         ExtensionTabData playerData = result.get(playerUUID);
         assertNotNull(playerData);
@@ -176,8 +176,9 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
         List<ExtensionTableData> tableData = tabData.getTableData();
         assertEquals(1, tableData.size());
-        TableContainer table = tableData.get(0).getHtmlTable();
-        assertEquals("<tbody><tr><td>Group</td><td>1</td></tr></tbody>", table.parseBody());
+        HtmlTable table = tableData.get(0).getHtmlTable();
+        String result = table.toHtml();
+        assertTrue(result.contains("<tbody><tr><td>Group</td><td>1</td></tr></tbody>"), result);
     }
 
     @Test
@@ -305,15 +306,16 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(1, tableData.size());
         ExtensionTableData table = tableData.get(0);
 
-        TableContainer expected = new TableContainer(
-                "<i class=\" fa fa-gavel\"></i> first",
-                "<i class=\" fa fa-what\"></i> second",
-                "<i class=\" fa fa-question\"></i> third"
-        );
-        expected.setColor("amber");
-        expected.addRow("value", 3, 0.5, 400L);
+        HtmlTable expected = HtmlTable.fromExtensionTable(
+                Table.builder()
+                        .columnOne("first", Icon.called("gavel").build())
+                        .columnTwo("second", Icon.called("what").build())
+                        .columnThree("third", Icon.called("question").build())
+                        .addRow("value", 3, 0.5, 400L)
+                        .build(),
+                com.djrapitops.plan.delivery.rendering.html.icon.Color.AMBER);
 
-        assertEquals(expected.buildHtml(), table.getHtmlTable().buildHtml());
+        assertEquals(expected.toHtml(), table.getHtmlTable().toHtml());
     }
 
     @Test
@@ -338,15 +340,16 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(1, tableData.size());
         ExtensionTableData table = tableData.get(0);
 
-        TableContainer expected = new TableContainer(
-                "<i class=\" fa fa-gavel\"></i> first",
-                "<i class=\" fa fa-what\"></i> second",
-                "<i class=\" fa fa-question\"></i> third"
-        );
-        expected.setColor("amber");
-        expected.addRow("value", 3, 0.5, 400L);
+        HtmlTable expected = HtmlTable.fromExtensionTable(
+                Table.builder()
+                        .columnOne("first", Icon.called("gavel").build())
+                        .columnTwo("second", Icon.called("what").build())
+                        .columnThree("third", Icon.called("question").build())
+                        .addRow("value", 3, 0.5, 400L)
+                        .build(),
+                com.djrapitops.plan.delivery.rendering.html.icon.Color.AMBER);
 
-        assertEquals(expected.buildHtml(), table.getHtmlTable().buildHtml());
+        assertEquals(expected.toHtml(), table.getHtmlTable().toHtml());
     }
 
     @PluginInfo(name = "ConditionalExtension")

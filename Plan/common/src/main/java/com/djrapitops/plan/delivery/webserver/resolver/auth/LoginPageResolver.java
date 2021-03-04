@@ -31,8 +31,8 @@ import java.util.Optional;
 @Singleton
 public class LoginPageResolver implements NoAuthResolver {
 
-    private ResponseFactory responseFactory;
-    private Lazy<WebServer> webServer;
+    private final ResponseFactory responseFactory;
+    private final Lazy<WebServer> webServer;
 
     @Inject
     public LoginPageResolver(
@@ -47,7 +47,8 @@ public class LoginPageResolver implements NoAuthResolver {
     public Optional<Response> resolve(Request request) {
         Optional<WebUser> user = request.getUser();
         if (user.isPresent() || !webServer.get().isAuthRequired()) {
-            Optional<String> from = request.getQuery().get("from");
+            Optional<String> from = request.getQuery().get("from")
+                    .filter(redirectBackTo -> !redirectBackTo.startsWith("http"));
             return Optional.of(responseFactory.redirectResponse(from.orElse("/")));
         }
         return Optional.of(responseFactory.loginPageResponse());

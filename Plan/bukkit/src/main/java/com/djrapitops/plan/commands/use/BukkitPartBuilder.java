@@ -52,7 +52,7 @@ class BukkitPartBuilder implements MessageBuilder {
         try {
             nextPart.part.appendLegacy(text);
         } catch (NoSuchMethodError oldVersion) { // not supported in 1.8
-            nextPart.part.append(ChatColor.translateAlternateColorCodes('§', text));
+            nextPart.part.append(ChatColor.translateAlternateColorCodes('\u00a7', text));
         }
         return nextPart;
     }

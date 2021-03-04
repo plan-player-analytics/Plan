@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import com.djrapitops.plan.addons.placeholderapi.NukkitPlaceholderRegistrar;
@@ -36,6 +37,7 @@ import com.djrapitops.plugin.task.AbsRunnable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,7 +80,7 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
         } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + getVersion(), e);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            logger.error("This error should be reported at https://github.com/Rsl1122/Plan-PlayerAnalytics/issues");
+            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
 
@@ -98,14 +100,17 @@ public class PlanNukkit extends NukkitPlugin implements PlanPlugin {
      */
     @Override
     public void onDisable() {
-        if (serverShutdownSave != null) {
-            serverShutdownSave.performSave();
-        }
-        if (system != null) {
-            system.disable();
-        }
+        if (serverShutdownSave != null) serverShutdownSave.performSave();
+        cancelAllTasks();
+        if (system != null) system.disable();
 
         logger.info(locale != null ? locale.getString(PluginLang.DISABLED) : PluginLang.DISABLED.getDefault());
+    }
+
+    @Override
+    public void cancelAllTasks() {
+        runnableFactory.cancelAllKnownTasks();
+        Optional.ofNullable(Server.getInstance().getScheduler()).ifPresent(scheduler -> scheduler.cancelTask(this));
     }
 
     @Override

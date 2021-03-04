@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.storage.file.ResourceCache;
-import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.api.TimeAmount;
+import com.djrapitops.plugin.task.RunnableFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.lang3.StringUtils;
@@ -141,7 +143,7 @@ public class JSONCache {
     }
 
     @Singleton
-    public static class CleanTask extends AbsRunnable {
+    public static class CleanTask extends TaskSystem.Task {
 
         @Inject
         public CleanTask() {
@@ -152,6 +154,12 @@ public class JSONCache {
         public void run() {
             cleanUp();
             ResourceCache.cleanUp();
+        }
+
+        @Override
+        public void register(RunnableFactory runnableFactory) {
+            long minute = TimeAmount.toTicks(1, TimeUnit.MINUTES);
+            runnableFactory.create(null, this).runTaskTimerAsynchronously(minute, minute);
         }
     }
 }

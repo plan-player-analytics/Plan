@@ -140,7 +140,7 @@ public class ExtensionRegister {
         try {
             // Creates the extension with factory and registers it
             createExtension.apply(factory).ifPresent(this::register);
-        } catch (NotReadyException ignore) {
+        } catch (NotReadyException | UnsupportedOperationException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
         } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
@@ -155,7 +155,7 @@ public class ExtensionRegister {
         try {
             // Creates the extension with factory and registers it
             createExtension.apply(factory).forEach(this::register);
-        } catch (NotReadyException ignore) {
+        } catch (NotReadyException | UnsupportedOperationException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
         } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
@@ -173,7 +173,7 @@ public class ExtensionRegister {
             createExtension.apply(factory)
                     .flatMap(this::register)
                     .ifPresent(caller -> registerListener.accept(factory, caller));
-        } catch (NotReadyException ignore) {
+        } catch (NotReadyException | UnsupportedOperationException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
         } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.

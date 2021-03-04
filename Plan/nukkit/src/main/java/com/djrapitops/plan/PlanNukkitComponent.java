@@ -20,12 +20,14 @@ import com.djrapitops.plan.addons.placeholderapi.NukkitPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.APFModule;
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.ServerCommandModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.nukkit.NukkitPlanModule;
 import com.djrapitops.plan.modules.nukkit.NukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.nukkit.NukkitSuperClassBindingModule;
+import com.djrapitops.plan.modules.nukkit.NukkitTaskModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -41,11 +43,13 @@ import javax.inject.Singleton;
         NukkitPlanModule.class,
         SystemObjectProvidingModule.class,
         APFModule.class,
+        FiltersModule.class,
         PlaceholderModule.class,
 
         ServerCommandModule.class,
         NukkitServerPropertiesModule.class,
-        NukkitSuperClassBindingModule.class
+        NukkitSuperClassBindingModule.class,
+        NukkitTaskModule.class
 })
 public interface PlanNukkitComponent {
 
