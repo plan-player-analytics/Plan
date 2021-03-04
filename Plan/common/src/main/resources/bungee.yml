@@ -1,5 +1,5 @@
 name: Plan
-author: Rsl1122
+author: AuroraLS3
 main: com.djrapitops.plan.PlanBungee
 version: @version@
 softDepends:

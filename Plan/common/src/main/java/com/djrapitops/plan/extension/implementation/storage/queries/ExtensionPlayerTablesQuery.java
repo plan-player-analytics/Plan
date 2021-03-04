@@ -48,7 +48,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * 2. Table values are queried and merged
  * 3. QueriedTables is mapped into ExtensionData objects by PluginID, one per ID
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 

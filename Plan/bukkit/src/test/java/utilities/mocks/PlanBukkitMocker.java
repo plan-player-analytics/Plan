@@ -47,7 +47,7 @@ import static org.mockito.Mockito.doReturn;
 /**
  * Mocking Utility for Bukkit version of Plan.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanBukkitMocker extends Mocker {
 

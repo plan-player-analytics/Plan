@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
 /**
  * Represents loaded language information.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Locale extends HashMap<Lang, Message> {
 

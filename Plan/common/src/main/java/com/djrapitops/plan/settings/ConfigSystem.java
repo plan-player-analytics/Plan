@@ -38,7 +38,7 @@ import java.util.*;
 /**
  * System for Config and other user customizable options.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public abstract class ConfigSystem implements SubSystem {

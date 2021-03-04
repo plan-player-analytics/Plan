@@ -41,7 +41,7 @@ import java.util.Optional;
  * <p>
  * If a table has no columns or rows, it is ignored.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.extension.annotation.TableProvider for associated annotation.
  */
 public final class Table {

@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * <p>
  * Usage: {@code @DoubleProvider double method(UUID playerUUID)}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

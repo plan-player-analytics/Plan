@@ -27,7 +27,7 @@ import java.sql.SQLException;
 /**
  * SQL query that closes proper elements.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class QueryStatement<T> implements Query<T> {
 

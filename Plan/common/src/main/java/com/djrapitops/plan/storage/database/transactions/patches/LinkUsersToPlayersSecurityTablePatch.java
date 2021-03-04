@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Populates new linked_to_uuid field with the uuid of a username (same as minecraft name) or 'console'.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see LinkedToSecurityTablePatch for addition of the field.
  */
 public class LinkUsersToPlayersSecurityTablePatch extends Patch {

@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 /**
  * New logger that logs errors to specific files.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PluginErrorLogger implements ErrorLogger {

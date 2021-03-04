@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.theme;
 /**
  * Enum class used for getting the Html colors that match the config settings.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum ThemeVal {
 

@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * Describes information about an extension value given by a Provider method.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionDescriptive implements Comparable<ExtensionDescriptive> {
 

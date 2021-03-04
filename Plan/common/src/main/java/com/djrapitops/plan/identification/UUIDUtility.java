@@ -36,7 +36,7 @@ import java.util.UUID;
  * - Find an UUID from the database matching the player name
  * - Find an UUID from Mojang API that matches the player name
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class UUIDUtility {

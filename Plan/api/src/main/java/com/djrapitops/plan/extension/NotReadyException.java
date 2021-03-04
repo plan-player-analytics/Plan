@@ -23,7 +23,7 @@ package com.djrapitops.plan.extension;
  * <p>
  * Requires Capability#DATA_EXTENSION_NOT_READY_EXCEPTION.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NotReadyException extends IllegalStateException {
 

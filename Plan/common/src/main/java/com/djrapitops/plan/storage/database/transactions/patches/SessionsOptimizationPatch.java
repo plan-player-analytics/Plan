@@ -26,7 +26,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
  * <p>
  * This was to "reduce the amount of joins when querying sessions".
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SessionsOptimizationPatch extends Patch {
 

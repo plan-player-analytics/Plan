@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * Lang for short help messages in Commands.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum HelpLang implements Lang {
     ARG_SERVER("CMD Arg Name - server", "server"),

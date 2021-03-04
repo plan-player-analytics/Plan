@@ -33,7 +33,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 /**
  * Class for watching files for changes.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class FileWatcher extends Thread {
 

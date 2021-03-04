@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 /**
  * Mocking Utility for Velocity version of Plan (PlanVelocity).
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanVelocityMocker extends Mocker {
 

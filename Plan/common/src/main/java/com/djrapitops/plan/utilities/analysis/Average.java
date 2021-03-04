@@ -19,7 +19,7 @@ package com.djrapitops.plan.utilities.analysis;
 /**
  * Utility for averaging data.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Average {
 

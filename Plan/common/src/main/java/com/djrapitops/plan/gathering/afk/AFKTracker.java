@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Keeps track how long player has been afk during a session
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class AFKTracker {
 

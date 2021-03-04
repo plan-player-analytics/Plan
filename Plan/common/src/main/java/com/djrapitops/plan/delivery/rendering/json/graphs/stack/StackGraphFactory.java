@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Factory class for different objects representing HTML stack graphs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class StackGraphFactory {

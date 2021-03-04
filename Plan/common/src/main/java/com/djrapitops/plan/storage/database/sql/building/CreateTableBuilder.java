@@ -22,7 +22,7 @@ import com.djrapitops.plugin.utilities.Verify;
 /**
  * SQL Builder creating statements for table creation, removal and modification.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CreateTableBuilder {
 

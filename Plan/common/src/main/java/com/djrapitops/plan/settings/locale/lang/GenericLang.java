@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * {@link Lang} implementation for single words.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum GenericLang implements Lang {
     YES("Positive", "Yes"),

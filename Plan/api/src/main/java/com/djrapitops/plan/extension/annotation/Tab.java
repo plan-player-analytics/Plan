@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * <p>
  * If not specified Plan places the item on the default tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see TabInfo if you want to determine an icon or element order for a Tab.
  * @see TabOrder to determine preferred tab ordering if you use Tabs.
  */

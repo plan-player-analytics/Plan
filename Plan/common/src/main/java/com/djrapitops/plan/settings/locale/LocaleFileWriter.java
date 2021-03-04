@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 /**
  * Utility for writing a Locale into a file.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class LocaleFileWriter {
 

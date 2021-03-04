@@ -29,7 +29,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 /**
  * Transaction to store information in the database when a player is kicked from the server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class KickStoreTransaction extends ThrowawayTransaction {
 

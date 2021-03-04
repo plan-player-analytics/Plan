@@ -6,20 +6,15 @@ labels: 'Bug'
 ---
 
 ### Describe the issue
-<!-- A clear and concise description of what the issue is. Post possible exceptions further down below -->
-
-
-
-### Server information
-<!-- This information can be found on the /debug page (Server version, Plan version, etc.) -->
-
+<!-- A clear and concise description of what the issue is, and when it occurred. Post possible exceptions further down below -->
 
 
 ### Exceptions & Other Logs
-<!-- This information can be found on the /debug page, or from /plugins/Plan/logs if not available -->
-<!-- Try to only include relevant information -->
+<!-- If reporting an Exception, please provide the error log from /plugins/Plan/logs, it has context in it -->
 
-
+```
+Place log contents here
+```
 
 ### Additional information
-<!-- Any additional information -->
+<!-- Any additional information, plugin versions, context, what was attempted, etc -->

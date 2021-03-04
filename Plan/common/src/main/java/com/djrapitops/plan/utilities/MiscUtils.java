@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Utility method class containing various static methods.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class MiscUtils {
 

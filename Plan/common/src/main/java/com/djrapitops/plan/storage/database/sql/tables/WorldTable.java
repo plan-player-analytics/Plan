@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * {@link WorldsServerIDPatch}
  * {@link WorldsOptimizationPatch}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WorldTable {
 

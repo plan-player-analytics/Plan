@@ -22,7 +22,7 @@ package com.djrapitops.plan.utilities.java;
  * @param <T> Type of first argument
  * @param <V> Type of second argument
  * @param <K> Type of third argument.
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface TriConsumer<T, V, K> {
 

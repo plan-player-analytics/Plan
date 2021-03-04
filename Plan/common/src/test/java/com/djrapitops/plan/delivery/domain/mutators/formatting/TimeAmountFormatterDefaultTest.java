@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 /**
  * Test class for {@link TimeAmountFormatter} that checks extra zeros config example.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class TimeAmountFormatterDefaultTest {
 

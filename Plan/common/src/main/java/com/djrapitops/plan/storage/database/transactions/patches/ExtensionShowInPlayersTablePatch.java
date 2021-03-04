@@ -22,7 +22,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 /**
  * Patch to add 'show_in_players_table' to 'plan_extension_providers'
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionShowInPlayersTablePatch extends Patch {
 

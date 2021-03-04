@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Utility for asserts containing Optionals.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class OptionalAssert {
 

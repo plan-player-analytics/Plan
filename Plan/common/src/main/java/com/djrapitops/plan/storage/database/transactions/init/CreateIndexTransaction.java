@@ -25,7 +25,7 @@ import org.apache.commons.text.TextStringBuilder;
 /**
  * Transaction that creates the database index if it has not yet been created.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CreateIndexTransaction extends Transaction {
 

@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * Previously known as StickyData.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RetentionData {
     private final double activityIndex;

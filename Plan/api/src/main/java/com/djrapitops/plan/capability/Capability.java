@@ -30,7 +30,7 @@ import java.util.UUID;
  * <p>
  * If a capability is not available, attempting to use the capability might lead to exceptions.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 enum Capability {
 

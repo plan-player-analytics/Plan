@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Creates JSON payload for /network-page Playerbase Overview tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NetworkPlayerBaseOverviewJSONCreator implements NetworkTabJSONCreator<Map<String, Object>> {

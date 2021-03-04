@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.rendering.json.graphs;
 /**
  * Interface for Graphs with HighCharts data support.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface HighChart {
 

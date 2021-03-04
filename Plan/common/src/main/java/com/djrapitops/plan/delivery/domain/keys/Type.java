@@ -23,7 +23,7 @@ import java.util.Objects;
  * <p>
  * Create new instance with {@code new Type<YourObject>() {}}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class Type<T> {
 

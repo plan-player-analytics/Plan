@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 /**
  * System in charge of exporting html.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ExportSystem implements SubSystem {

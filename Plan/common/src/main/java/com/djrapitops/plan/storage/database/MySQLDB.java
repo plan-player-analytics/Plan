@@ -41,7 +41,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class MySQLDB extends SQLDB {
@@ -112,7 +112,12 @@ public class MySQLDB extends SQLDB {
             increment();
 
             hikariConfig.setAutoCommit(true);
-            hikariConfig.setMaximumPoolSize(8);
+            try {
+                hikariConfig.setMaximumPoolSize(config.get(DatabaseSettings.MAX_CONNECTIONS));
+            } catch (IllegalStateException e) {
+                logger.warn(e.getMessage() + ", using 1 as maximum for now.");
+                hikariConfig.setMaximumPoolSize(1);
+            }
             hikariConfig.setMaxLifetime(TimeUnit.MINUTES.toMillis(25L));
             hikariConfig.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(10L));
 

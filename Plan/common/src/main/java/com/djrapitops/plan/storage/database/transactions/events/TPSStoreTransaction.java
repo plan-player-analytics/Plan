@@ -25,7 +25,7 @@ import java.util.UUID;
 /**
  * Transaction to store server's TPS data.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TPSStoreTransaction extends Transaction {
 

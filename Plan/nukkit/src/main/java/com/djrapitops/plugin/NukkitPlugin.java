@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2019 Risto Lahtela
+ * Copyright (c) 2021 AuroraLS3
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * APFPlugin implementation for Nukkit.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NukkitPlugin extends PluginBase implements APFPlugin {
 

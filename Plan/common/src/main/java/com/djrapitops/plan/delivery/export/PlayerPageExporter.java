@@ -44,7 +44,7 @@ import java.util.UUID;
 /**
  * Handles exporting of /player page html, data and resources.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayerPageExporter extends FileExporter {
@@ -145,8 +145,8 @@ public class PlayerPageExporter extends FileExporter {
                 "../css/style.css",
                 "../vendor/jquery/jquery.min.js",
                 "../vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "../vendor/datatables/jquery.dataTables.min.js",
-                "../vendor/datatables/dataTables.bootstrap4.min.js",
+                "../vendor/datatables/datatables.min.js",
+                "../vendor/datatables/datatables.min.css",
                 "../vendor/highcharts/highstock.js",
                 "../vendor/highcharts/map.js",
                 "../vendor/highcharts/world.js",

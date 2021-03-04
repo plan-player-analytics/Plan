@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * Represents table data from a single TableProvider.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionTableData implements Comparable<ExtensionTableData> {
 

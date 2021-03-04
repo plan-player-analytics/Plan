@@ -30,7 +30,7 @@ import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
  * {@link UserInfoOptimizationPatch}
  * {@link com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class UserInfoTable {
 

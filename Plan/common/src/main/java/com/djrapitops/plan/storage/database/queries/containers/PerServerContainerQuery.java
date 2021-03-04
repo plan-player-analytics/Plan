@@ -37,7 +37,7 @@ import java.util.UUID;
 /**
  * Used to get a PerServerContainer for a specific player.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PerServerContainerQuery implements Query<PerServerContainer> {
 

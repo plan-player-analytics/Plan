@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Group class for handling multiple different types of {@link DataProvider}s.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DataProviders {
 

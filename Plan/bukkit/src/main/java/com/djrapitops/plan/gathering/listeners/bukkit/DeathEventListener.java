@@ -42,7 +42,7 @@ import java.util.UUID;
 /**
  * Event Listener for EntityDeathEvents.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DeathEventListener implements Listener {
 

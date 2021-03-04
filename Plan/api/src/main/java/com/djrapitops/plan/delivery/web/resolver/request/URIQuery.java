@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * Represents URI parameters described with {@code ?param=value&param2=value2} in the URL.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public final class URIQuery {
 

@@ -23,8 +23,8 @@ import java.util.Objects;
 /**
  * Object containing webserver security user information.
  *
- * @author Rsl1122
- *
+ * @author AuroraLS3
+ * <p>
  * TODO Rewrite Authentication stuff
  */
 @Deprecated

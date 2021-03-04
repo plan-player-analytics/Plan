@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Compares Locale Map Entries and sorts them alphabetically according to the Enum Names.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class LocaleEntryComparator implements Comparator<Map.Entry<Lang, Message>> {
 

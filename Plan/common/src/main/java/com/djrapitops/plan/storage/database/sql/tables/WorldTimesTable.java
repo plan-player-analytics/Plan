@@ -41,7 +41,7 @@ import java.util.UUID;
  * {@link WorldsServerIDPatch}
  * {@link WorldTimesOptimizationPatch}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WorldTimesTable {
 

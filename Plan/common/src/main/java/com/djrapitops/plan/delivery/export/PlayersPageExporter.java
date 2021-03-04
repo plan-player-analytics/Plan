@@ -43,7 +43,7 @@ import java.util.Optional;
 /**
  * Handles exporting of /players page html, data and resources.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayersPageExporter extends FileExporter {
@@ -93,7 +93,13 @@ public class PlayersPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.playersPage();
-        export(to, exportPaths.resolveExportPaths(page.toHtml()));
+
+        // Fixes refreshingJsonRequest ignoring old data of export
+        String html = StringUtils.replaceEach(page.toHtml(),
+                new String[]{"}, 'playerlist', true);"},
+                new String[]{"}, 'playerlist');"});
+
+        export(to, exportPaths.resolveExportPaths(html));
     }
 
     private void exportJSON(Path toDirectory) throws IOException {
@@ -132,8 +138,8 @@ public class PlayersPageExporter extends FileExporter {
                 "css/style.css",
                 "vendor/jquery/jquery.min.js",
                 "vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "vendor/datatables/jquery.dataTables.min.js",
-                "vendor/datatables/dataTables.bootstrap4.min.js",
+                "vendor/datatables/datatables.min.js",
+                "vendor/datatables/datatables.min.css",
                 "vendor/fontawesome-free/css/all.min.css",
                 "vendor/fontawesome-free/webfonts/fa-brands-400.eot",
                 "vendor/fontawesome-free/webfonts/fa-brands-400.ttf",

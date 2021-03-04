@@ -41,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Tests for ConfigUpdater.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class ConfigUpdaterTest {
 

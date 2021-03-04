@@ -52,7 +52,7 @@ import javax.inject.Singleton;
  * <p>
  * This is an abstraction layer on top of Plugin instances so that tests can be run with less mocks.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlanSystem implements SubSystem {

@@ -18,7 +18,6 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.web.ResourceService;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,7 +25,7 @@ import javax.inject.Singleton;
 /**
  * WebServer subsystem for managing WebServer initialization.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class WebServerSystem implements SubSystem {
@@ -52,6 +51,7 @@ public class WebServerSystem implements SubSystem {
             ResourceService.getInstance().addStylesToResource("Plan", "player.html", ResourceService.Position.PRE_CONTENT, "../css/noauth.css");
             ResourceService.getInstance().addStylesToResource("Plan", "players.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
             ResourceService.getInstance().addStylesToResource("Plan", "network.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+            ResourceService.getInstance().addStylesToResource("Plan", "query.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
         }
         if (webServer.isEnabled()) {
             ResourceService.getInstance().addStylesToResource("Plan", "server.html", ResourceService.Position.PRE_CONTENT, "../css/querybutton.css");
@@ -63,8 +63,6 @@ public class WebServerSystem implements SubSystem {
     @Override
     public void disable() {
         webServer.disable();
-        JSONCache.invalidateAll();
-        JSONCache.cleanUp();
     }
 
     public WebServer getWebServer() {

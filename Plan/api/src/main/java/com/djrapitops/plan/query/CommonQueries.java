@@ -26,7 +26,7 @@ import java.util.UUID;
  * This exists so that SQL does not necessarily need to be written.
  * Obtain an instance from {@link QueryService}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface CommonQueries {
 

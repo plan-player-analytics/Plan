@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 /**
  * Transaction to update command usage information in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StorePluginTransaction extends ThrowawayTransaction {
 

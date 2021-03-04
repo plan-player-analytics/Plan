@@ -26,7 +26,7 @@ import com.djrapitops.plugin.api.Check;
 /**
  * Html String generator for /login and /register page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class LoginPage implements Page {
 

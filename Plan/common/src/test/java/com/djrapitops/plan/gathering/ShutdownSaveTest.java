@@ -54,7 +54,7 @@ import static org.mockito.Mockito.when;
 /**
  * Test ensures that unsaved sessions are saved on server shutdown.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @ExtendWith(PrintExtension.class)
 class ShutdownSaveTest {

@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * Represents a player displayed on a player table on players tab or /players page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TablePlayer implements Comparable<TablePlayer> {
 

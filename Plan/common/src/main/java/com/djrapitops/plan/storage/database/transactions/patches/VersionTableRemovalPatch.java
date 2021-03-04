@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 /**
  * Removes the table schema versioning table.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class VersionTableRemovalPatch extends Patch {
 

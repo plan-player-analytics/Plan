@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * Directly executing version of Processing for Tests to avoid concurrency issues during tests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class TestProcessing extends Processing {

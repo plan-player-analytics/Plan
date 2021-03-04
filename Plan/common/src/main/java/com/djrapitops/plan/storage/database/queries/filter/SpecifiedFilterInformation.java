@@ -25,7 +25,7 @@ import java.util.*;
 /**
  * Represents parameters for a single {@link Filter} parsed from the query json.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SpecifiedFilterInformation {
 

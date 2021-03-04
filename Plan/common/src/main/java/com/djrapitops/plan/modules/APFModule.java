@@ -34,7 +34,7 @@ import javax.inject.Singleton;
 /**
  * Dagger module for defining Abstract Plugin Framework utilities.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public class APFModule {

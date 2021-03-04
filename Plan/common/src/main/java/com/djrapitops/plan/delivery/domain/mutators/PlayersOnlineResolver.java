@@ -28,7 +28,7 @@ import java.util.TreeMap;
  * <p>
  * Time Complexity of O(n / 2) with the use of TreeMap.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayersOnlineResolver extends TreeMap<Long, Integer> {
 

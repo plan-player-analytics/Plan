@@ -30,7 +30,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
 /**
  * Query to fetch server id for each session, used by 2 patches.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.storage.database.transactions.patches.KillsServerIDPatch
  * @see com.djrapitops.plan.storage.database.transactions.patches.WorldTimesSeverIDPatch
  */

@@ -26,7 +26,7 @@ import javax.inject.Singleton;
 /**
  * Placeholders about operators.
  *
- * @author aidn5, Rsl1122
+ * @author aidn5, AuroraLS3
  */
 @Singleton
 public class OperatorPlaceholders implements Placeholders {

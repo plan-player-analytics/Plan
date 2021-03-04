@@ -36,7 +36,7 @@ import java.util.UUID;
 /**
  * Html String generator for /player page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerPage implements Page {
 

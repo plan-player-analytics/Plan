@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.domain.keys;
 /**
  * Special Key object that can be used for placeholders when replacing values in html files.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlaceholderKey<T> extends Key<T> {
 

@@ -19,14 +19,15 @@ package com.djrapitops.plan.modules;
 import com.djrapitops.plan.DataService;
 import com.djrapitops.plan.DataSvc;
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
+import com.djrapitops.plan.delivery.webserver.cache.JSONMemoryStorageShim;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.file.JarResource;
-import com.djrapitops.plan.storage.json.JSONFileStorage;
-import com.djrapitops.plan.storage.json.JSONStorage;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import dagger.Module;
@@ -43,7 +44,7 @@ import java.util.function.Predicate;
 /**
  * Module for binding object instances found inside other systems.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public class SystemObjectProvidingModule {
@@ -100,8 +101,11 @@ public class SystemObjectProvidingModule {
 
     @Provides
     @Singleton
-    JSONStorage provideJSONStorage(JSONFileStorage jsonFileStorage) {
-        return jsonFileStorage;
+    JSONStorage provideJSONStorage(
+            PlanConfig config,
+            JSONFileStorage jsonFileStorage
+    ) {
+        return new JSONMemoryStorageShim(config, jsonFileStorage);
     }
 
 }

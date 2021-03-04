@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 /**
  * In charge of holding tab completion data for commands, as tab completion is done on server thread.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class TabCompleteCache implements SubSystem {

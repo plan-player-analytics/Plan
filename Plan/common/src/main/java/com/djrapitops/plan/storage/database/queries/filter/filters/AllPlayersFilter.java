@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * Special filter only used in cases where no filters are specified.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class AllPlayersFilter implements Filter {

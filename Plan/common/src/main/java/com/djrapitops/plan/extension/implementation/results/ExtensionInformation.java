@@ -21,7 +21,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 /**
  * Information about a DataExtension stored in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionInformation {
 

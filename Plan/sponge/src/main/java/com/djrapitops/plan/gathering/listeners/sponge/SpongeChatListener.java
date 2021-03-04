@@ -36,7 +36,7 @@ import java.util.UUID;
 /**
  * Listener that keeps track of player display name.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SpongeChatListener {
 

@@ -25,7 +25,7 @@ import java.util.UUID;
 /**
  * Represents a player vs player kill.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerKill implements DateHolder {
 

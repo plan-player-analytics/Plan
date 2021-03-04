@@ -18,7 +18,7 @@ package com.djrapitops.plan.modules.nukkit;
 
 import cn.nukkit.level.Level;
 import com.djrapitops.plan.TaskSystem;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.NukkitPingCounter;
@@ -60,10 +60,6 @@ public interface NukkitTaskModule {
 
     @Binds
     @IntoSet
-    TaskSystem.Task bindJSONCacheCleanTask(JSONCache.CleanTask cleanTask);
-
-    @Binds
-    @IntoSet
     TaskSystem.Task bindRamAndCpuTask(SystemUsageBuffer.RamAndCpuTask ramAndCpuTask);
 
     @Binds
@@ -74,4 +70,7 @@ public interface NukkitTaskModule {
     @IntoSet
     TaskSystem.Task bindShutdownHookRegistration(ShutdownHook.Registrar registrar);
 
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindJSONFileStorageCleanTask(JSONFileStorage.CleanTask cleanTask);
 }

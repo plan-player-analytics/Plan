@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  * <p>
  * See {@link Capability} for list of capabilities provided by the current version.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface CapabilityService {
 

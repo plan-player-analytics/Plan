@@ -28,7 +28,7 @@ import java.util.Optional;
 /**
  * Resolves /players URL.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayersPageResolver implements Resolver {

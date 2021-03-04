@@ -33,7 +33,7 @@ import java.util.Arrays;
  * Basic access authentication (Wikipedia):
  * https://en.wikipedia.org/wiki/Basic_access_authentication
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BasicAuthentication implements Authentication {
 

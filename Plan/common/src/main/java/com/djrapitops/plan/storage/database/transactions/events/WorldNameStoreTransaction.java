@@ -31,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Transaction to store world name after an event.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WorldNameStoreTransaction extends Transaction {
 

@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Sanity Test for different timezones.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class TimeZoneUtilityTest {
 

@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.identification.Server;
@@ -48,7 +49,7 @@ import java.util.*;
 /**
  * Factory for creating different {@link Page} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PageFactory {
@@ -60,6 +61,7 @@ public class PageFactory {
     private final Lazy<Theme> theme;
     private final Lazy<DBSystem> dbSystem;
     private final Lazy<ServerInfo> serverInfo;
+    private final Lazy<JSONStorage> jsonStorage;
     private final Lazy<Formatters> formatters;
     private final Lazy<DebugLogger> debugLogger;
     private final Lazy<Timings> timings;
@@ -74,6 +76,7 @@ public class PageFactory {
             Lazy<Theme> theme,
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
+            Lazy<JSONStorage> jsonStorage,
             Lazy<Formatters> formatters,
             Lazy<DebugLogger> debugLogger,
             Lazy<Timings> timings,
@@ -86,6 +89,7 @@ public class PageFactory {
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.jsonStorage = jsonStorage;
         this.formatters = formatters;
         this.debugLogger = debugLogger;
         this.timings = timings;
@@ -125,6 +129,7 @@ public class PageFactory {
                 versionChecker.get(),
                 dbSystem.get(),
                 serverInfo.get(),
+                jsonStorage.get(),
                 formatters.get()
         );
     }
@@ -178,7 +183,9 @@ public class PageFactory {
                 dbSystem.get(),
                 versionChecker.get(),
                 config.get(), theme.get(), locale.get(),
-                serverInfo.get(), formatters.get());
+                serverInfo.get(),
+                jsonStorage.get(),
+                formatters.get());
     }
 
     public Page internalErrorPage(String message, Throwable error) {

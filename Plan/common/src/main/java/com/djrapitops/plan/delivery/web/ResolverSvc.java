@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 /**
  * ResolverService Implementation.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ResolverSvc implements ResolverService {

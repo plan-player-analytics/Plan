@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * Represents a query filter for /query page.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Filter {
 
@@ -39,12 +39,15 @@ public interface Filter {
      * @param query Query for the filter
      * @return Set of UUIDs this filter applies to
      * @throws IllegalArgumentException If the arguments are not valid.
-     * @throws CompleteSetException     If the arguments produce a complete set.
      */
     Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query);
 
     default Result apply(SpecifiedFilterInformation query) {
-        return new Result(null, getKind(), getMatchingUUIDs(query));
+        try {
+            return new Result(null, getKind(), getMatchingUUIDs(query));
+        } catch (CompleteSetException allMatch) {
+            return new Result(null, getKind() + " (skip)", new HashSet<>());
+        }
     }
 
     class Result {
@@ -62,9 +65,13 @@ public interface Filter {
         }
 
         public Result apply(Filter filter, SpecifiedFilterInformation query) {
-            Set<UUID> got = filter.getMatchingUUIDs(query);
-            currentUUIDs.retainAll(got);
-            return new Result(this, filter.getKind(), currentUUIDs);
+            try {
+                Set<UUID> got = filter.getMatchingUUIDs(query);
+                currentUUIDs.retainAll(got);
+                return new Result(this, filter.getKind(), currentUUIDs);
+            } catch (CompleteSetException allMatch) {
+                return notApplied(filter);
+            }
         }
 
         public Result notApplied(Filter filter) {

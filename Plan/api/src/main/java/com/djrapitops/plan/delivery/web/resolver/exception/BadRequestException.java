@@ -22,7 +22,7 @@ package com.djrapitops.plan.delivery.web.resolver.exception;
  * Plan will construct bad request error json automatically.
  * Note that you might need to handle the error page, which is json: {@code {"status": 400, "error": "message"}}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BadRequestException extends IllegalArgumentException {
 

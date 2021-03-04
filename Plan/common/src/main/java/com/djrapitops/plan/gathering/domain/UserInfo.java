@@ -25,7 +25,7 @@ import java.util.UUID;
  * Unlike {@link BaseUser} one instance is stored per server for a single player.
  * Proxy servers are an exception, and UserInfo is not stored for them.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class UserInfo {
 
@@ -36,9 +36,7 @@ public class UserInfo {
     private final boolean opped;
     private final String hostname;
 
-    public UserInfo(UUID playerUUID, UUID serverUUID, long registered, boolean opped,
-                    boolean banned, String hostname)
-    {
+    public UserInfo(UUID playerUUID, UUID serverUUID, long registered, boolean opped, String hostname, boolean banned) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
         this.registered = registered;
@@ -55,6 +53,10 @@ public class UserInfo {
         return serverUUID;
     }
 
+    public String getHostname() {
+        return hostname;
+    }
+
     public long getRegistered() {
         return registered;
     }
@@ -67,10 +69,6 @@ public class UserInfo {
         return opped;
     }
 
-    public String getHostname() {
-        return hostname;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,14 +77,13 @@ public class UserInfo {
         return registered == userInfo.registered &&
                 banned == userInfo.banned &&
                 opped == userInfo.opped &&
-                hostname == userInfo.hostname &&
                 playerUUID.equals(userInfo.playerUUID) &&
                 serverUUID.equals(userInfo.serverUUID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(playerUUID, serverUUID, registered, banned, opped, hostname);
+        return Objects.hash(playerUUID, serverUUID, registered, banned, hostname, opped);
     }
 
     @Override

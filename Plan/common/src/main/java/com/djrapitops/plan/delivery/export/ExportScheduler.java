@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Schedules export tasks so that they are not all run at once.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ExportScheduler {

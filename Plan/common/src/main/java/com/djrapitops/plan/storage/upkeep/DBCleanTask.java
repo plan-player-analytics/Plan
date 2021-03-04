@@ -58,7 +58,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Task for cleaning the active database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class DBCleanTask extends TaskSystem.Task {

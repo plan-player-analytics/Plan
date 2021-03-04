@@ -25,7 +25,7 @@ import com.djrapitops.plugin.logging.console.PluginLogger;
 /**
  * ColorScheme that uses values in config settings specific to Plan or PlanBungee.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanColorScheme extends ColorScheme {
 

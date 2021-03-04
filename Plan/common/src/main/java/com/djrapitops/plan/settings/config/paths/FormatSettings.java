@@ -23,7 +23,7 @@ import com.djrapitops.plan.settings.config.paths.key.StringSetting;
 /**
  * {@link Setting} values that are in "Formatting" section.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class FormatSettings {
 

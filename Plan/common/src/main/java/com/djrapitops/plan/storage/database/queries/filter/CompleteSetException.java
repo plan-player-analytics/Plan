@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.queries.filter;
 /**
  * Exception to throw when a {@link Filter} results in a complete set.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CompleteSetException extends IllegalStateException {
 }

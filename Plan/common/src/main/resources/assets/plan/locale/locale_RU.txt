@@ -160,6 +160,11 @@ HTML - COMPARING_7_DAYS                         || Сравнение 7 дней
 HTML - DATABASE_NOT_OPEN                        || База данных не открыта, проверьте статус БД с помощью /plan info
 HTML - ERROR                                    || Неуспешная авторизация из-за ошибки
 HTML - EXPIRED_COOKIE                           || Срок действия файла cookie пользователя истек
+HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
+HTML - FILTER_ALL_PLAYERS                       || All players
+HTML - FILTER_BANNED                            || Ban status
+HTML - FILTER_GROUP                             || Group: 
+HTML - FILTER_OPS                               || Operator status
 HTML - INDEX_ACTIVE                             || Активный
 HTML - INDEX_INACTIVE                           || Неактивный
 HTML - INDEX_IRREGULAR                          || Нерегулярный
@@ -176,6 +181,8 @@ HTML - LABEL_AFK_TIME                           || Время AFK
 HTML - LABEL_AVG                                || Сред.
 HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
 HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
+HTML - LABEL_AVG_CHUNKS                         || Average Chunks
+HTML - LABEL_AVG_ENTITIES                       || Average Entities
 HTML - LABEL_AVG_KDR                            || Сред. KDR
 HTML - LABEL_AVG_MOB_KDR                        || Сред. моб KDR
 HTML - LABEL_AVG_PLAYTIME                       || Среднее время игры

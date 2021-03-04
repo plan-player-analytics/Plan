@@ -1248,3 +1248,41 @@ body.sidebar-hidden .navbar-nav {
 .contributors li {
     padding: 0;
 }
+
+#filter-dropdown {
+    max-height: 18rem;
+    overflow-y: scroll;
+}
+
+.refresh-element {
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+.refresh-element > i {
+    cursor: pointer;
+}
+
+.sorting, .sorting_desc, .sorting_asc {
+    cursor: pointer;
+}
+
+.dataTables_length {
+    padding-top: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.dataTables_filter {
+    padding-top: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.dataTables_info {
+    padding-bottom: 0.5rem;
+    padding-left: 0.5rem;
+}
+
+.dataTables_paginate {
+    padding-bottom: 0.5rem;
+    padding-right: 0.5rem;
+}

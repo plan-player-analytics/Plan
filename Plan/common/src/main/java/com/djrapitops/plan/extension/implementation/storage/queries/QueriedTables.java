@@ -32,7 +32,7 @@ import java.util.Map;
 /**
  * Query utility for extracting Tables.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class QueriedTables {
 

@@ -27,7 +27,7 @@ import java.util.List;
  * Utilities for parsing config values.
  *
  * @param <T> Type of the object being parsed.
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ConfigValueParser<T> {
 

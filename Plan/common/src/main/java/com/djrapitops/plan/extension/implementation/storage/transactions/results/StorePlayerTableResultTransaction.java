@@ -40,7 +40,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTab
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.TableDataProvider}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
 

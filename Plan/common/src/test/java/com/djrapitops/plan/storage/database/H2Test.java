@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for the H2 database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see DatabaseTest
  * @see ExtensionsDatabaseTest
  */

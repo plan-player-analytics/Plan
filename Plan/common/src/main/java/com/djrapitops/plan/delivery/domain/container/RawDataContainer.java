@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 /**
  * DataContainer that stores everything as raw object value.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RawDataContainer implements DataContainer {
 

@@ -38,7 +38,7 @@ import java.util.UUID;
 /**
  * Static method class for large storage queries.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class LargeStoreQueries {
 

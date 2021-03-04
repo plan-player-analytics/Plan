@@ -32,7 +32,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerVal
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StorePlayerBooleanResultTransaction extends ThrowawayTransaction {
 

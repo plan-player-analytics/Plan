@@ -18,16 +18,23 @@ package com.djrapitops.plan.addons.placeholderapi;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plugin.logging.L;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Placeholder expansion used to provide data from Plan on Bukkit.
@@ -40,14 +47,24 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
     private final VersionChecker versionChecker;
     private final PlanPlaceholders placeholders;
 
+    private final Set<String> currentlyProcessing;
+    private final Processing processing;
+    private final Cache<String, String> cache;
+
     public PlanPlaceholderExtension(
             PlanPlaceholders placeholders,
             PlanSystem system,
             ErrorLogger errorLogger
     ) {
         this.placeholders = placeholders;
+        processing = system.getProcessing();
         this.versionChecker = system.getVersionChecker();
         this.errorLogger = errorLogger;
+
+        currentlyProcessing = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        cache = Caffeine.newBuilder()
+                .expireAfterWrite(60, TimeUnit.SECONDS)
+                .build();
     }
 
     @Override
@@ -65,15 +82,9 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
         return "plan";
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public String getPlugin() {
-        return "Plan";
-    }
-
     @Override
     public String getAuthor() {
-        return "Rsl1122";
+        return "AuroraLS3";
     }
 
     @Override
@@ -84,6 +95,13 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, String params) {
         UUID uuid = player != null ? player.getUniqueId() : null;
+        if ("Server thread".equalsIgnoreCase(Thread.currentThread().getName())) {
+            return getCached(params, uuid);
+        }
+        return getPlaceholderValue(params, uuid);
+    }
+
+    private String getPlaceholderValue(String params, UUID uuid) {
         try {
             String value = placeholders.onPlaceholderRequest(uuid, params, Collections.emptyList());
 
@@ -98,5 +116,19 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
             errorLogger.log(L.WARN, e, ErrorContext.builder().whatToDo("Report this").related("Placeholder Request", params, uuid).build());
             return null;
         }
+    }
+
+    private String getCached(String params, UUID uuid) {
+        String key = params + "-" + uuid;
+
+        if (!currentlyProcessing.contains(key)) {
+            currentlyProcessing.add(key);
+            processing.submitNonCritical(() -> {
+                cache.put(key, Objects.requireNonNull(getPlaceholderValue(params, uuid)));
+                currentlyProcessing.remove(key);
+            });
+        }
+
+        return cache.getIfPresent(key);
     }
 }

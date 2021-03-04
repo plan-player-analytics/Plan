@@ -17,12 +17,14 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
@@ -34,20 +36,23 @@ import java.util.UUID;
 /**
  * Resolves /v1/kills JSON requests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayerKillsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
+    private final AsyncJSONResolverService jsonResolverService;
     private final JSONFactory jsonFactory;
 
     @Inject
     public PlayerKillsJSONResolver(
             Identifiers identifiers,
+            AsyncJSONResolverService jsonResolverService,
             JSONFactory jsonFactory
     ) {
         this.identifiers = identifiers;
+        this.jsonResolverService = jsonResolverService;
         this.jsonFactory = jsonFactory;
     }
 
@@ -63,6 +68,13 @@ public class PlayerKillsJSONResolver implements Resolver {
 
     private Response getResponse(Request request) {
         UUID serverUUID = identifiers.getServerUUID(request);
-        return JSONCache.getOrCache(DataID.KILLS, serverUUID, () -> Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(serverUUID)));
+        long timestamp = Identifiers.getTimestamp(request);
+        JSONStorage.StoredJSON storedJSON = jsonResolverService.resolve(timestamp, DataID.KILLS, serverUUID,
+                theUUID -> Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(theUUID))
+        );
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(storedJSON.json)
+                .build();
     }
 }

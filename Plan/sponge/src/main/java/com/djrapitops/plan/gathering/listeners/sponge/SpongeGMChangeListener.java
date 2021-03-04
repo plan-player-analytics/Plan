@@ -37,7 +37,7 @@ import java.util.UUID;
 /**
  * Listener for GameMode change on Sponge.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SpongeGMChangeListener {
 

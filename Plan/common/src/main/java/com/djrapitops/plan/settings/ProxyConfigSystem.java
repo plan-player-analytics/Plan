@@ -34,7 +34,7 @@ import java.io.IOException;
  * <p>
  * Bukkit and Bungee have different default config file inside the jar.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ProxyConfigSystem extends ConfigSystem {

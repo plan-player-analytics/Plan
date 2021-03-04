@@ -23,7 +23,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 /**
  * Formatter for timestamp which includes seconds as the smallest entry.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SecondFormatter extends DateFormatter {
 

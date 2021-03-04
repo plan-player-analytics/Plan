@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * DataContainer for information about a player's play session.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see SessionKeys for Key objects.
  */
 public class Session extends DynamicDataContainer implements DateHolder {

@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Task for performing system resource usage checks asynchronously
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class SystemUsageBuffer {

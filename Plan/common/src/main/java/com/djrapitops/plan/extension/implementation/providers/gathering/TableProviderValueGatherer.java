@@ -42,7 +42,7 @@ import java.util.function.Function;
 /**
  * Gathers TableProvider method data.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class TableProviderValueGatherer {
 

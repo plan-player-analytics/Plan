@@ -18,11 +18,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
-import com.djrapitops.plan.modules.APFModule;
-import com.djrapitops.plan.modules.FiltersModule;
-import com.djrapitops.plan.modules.PlaceholderModule;
-import com.djrapitops.plan.modules.ServerCommandModule;
-import com.djrapitops.plan.modules.SystemObjectProvidingModule;
+import com.djrapitops.plan.modules.*;
 import com.djrapitops.plan.modules.sponge.SpongePlanModule;
 import com.djrapitops.plan.modules.sponge.SpongeServerPropertiesModule;
 import com.djrapitops.plan.modules.sponge.SpongeSuperClassBindingModule;
@@ -35,7 +31,7 @@ import javax.inject.Singleton;
 /**
  * Dagger Component that constructs the plugin systems running on Sponge.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 @Component(modules = {

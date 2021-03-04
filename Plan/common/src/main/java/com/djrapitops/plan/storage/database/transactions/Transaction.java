@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Represents a database transaction.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class Transaction {
 

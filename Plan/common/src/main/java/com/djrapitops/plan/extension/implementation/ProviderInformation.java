@@ -29,7 +29,7 @@ import java.util.Optional;
 /**
  * Represents the annotation information provided on a method.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ProviderInformation extends ExtensionDescriptive {
 

@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerVal
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.DoubleDataProvider}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StoreServerDoubleResultTransaction extends ThrowawayTransaction {
 

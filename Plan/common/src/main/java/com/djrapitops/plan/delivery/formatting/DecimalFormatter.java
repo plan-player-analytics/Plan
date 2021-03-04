@@ -24,7 +24,7 @@ import java.text.DecimalFormat;
 /**
  * Formatter for decimal points that depends on settings.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DecimalFormatter implements Formatter<Double> {
 

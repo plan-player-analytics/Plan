@@ -55,7 +55,7 @@ import java.util.concurrent.TimeUnit;
  * - Database update operations related to server configs
  * - File update operations from database related to server configs
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NetworkSettingManager implements SubSystem {

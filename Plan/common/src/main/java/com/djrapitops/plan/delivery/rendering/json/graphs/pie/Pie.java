@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * This is a PieChart for any set of PieSlices, thus it is Abstract.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Pie {
 

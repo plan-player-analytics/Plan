@@ -31,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Static method class for MySQL Schema related queries.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class MySQLSchemaQueries {
 
@@ -131,7 +131,7 @@ public class MySQLSchemaQueries {
     /**
      * Represents a FOREIGN KEY constraint in a MySQL database.
      *
-     * @author Rsl1122
+     * @author AuroraLS3
      */
     public static class ForeignKeyConstraint {
 

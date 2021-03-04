@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * <p>
  * Goal of this class is to abstract away DataExtension API annotations so that they will not be needed outside when calling methods.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionWrapper {
 

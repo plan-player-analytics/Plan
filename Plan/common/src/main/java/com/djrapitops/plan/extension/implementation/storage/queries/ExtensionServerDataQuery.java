@@ -46,7 +46,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * - {@link QueriedTables}
  * These utilities allow combining incomplete information.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
 

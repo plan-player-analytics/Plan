@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
  * {@code @BooleanProvider(condition="example") boolean condition(UUID playerUUID);}
  * {@code @Conditional("example") @NumberProvider long someValue(UUID playerUUID);}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

@@ -34,7 +34,7 @@ import java.lang.annotation.Target;
  * If the value is a player name, provide value for playerName=true.
  * This will allow linking between pages.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

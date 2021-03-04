@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * {@link Lang} implementation for Language that is logged when the plugin enables or disables.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum PluginLang implements Lang {
     ENABLED("Enable", "Player Analytics Enabled."),

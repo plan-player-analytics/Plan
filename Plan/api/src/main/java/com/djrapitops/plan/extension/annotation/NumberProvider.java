@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * <p>
  * Usage: {@code @NumberProvider long method(UUID playerUUID)}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

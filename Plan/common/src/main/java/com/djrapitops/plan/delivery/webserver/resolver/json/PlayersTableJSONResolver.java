@@ -17,12 +17,14 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 
 import javax.inject.Inject;
@@ -33,20 +35,23 @@ import java.util.UUID;
 /**
  * Resolves /v1/players JSON requests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlayersTableJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
+    private final AsyncJSONResolverService jsonResolverService;
     private final JSONFactory jsonFactory;
 
     @Inject
     public PlayersTableJSONResolver(
             Identifiers identifiers,
+            AsyncJSONResolverService jsonResolverService,
             JSONFactory jsonFactory
     ) {
         this.identifiers = identifiers;
+        this.jsonResolverService = jsonResolverService;
         this.jsonFactory = jsonFactory;
     }
 
@@ -66,11 +71,22 @@ public class PlayersTableJSONResolver implements Resolver {
     }
 
     private Response getResponse(Request request) {
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(getStoredJSON(request).json)
+                .build();
+    }
+
+    private JSONStorage.StoredJSON getStoredJSON(Request request) {
+        long timestamp = Identifiers.getTimestamp(request);
+        JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
             UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
-            return JSONCache.getOrCache(DataID.PLAYERS, serverUUID, () -> jsonFactory.serverPlayersTableJSON(serverUUID));
+            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS, serverUUID, jsonFactory::serverPlayersTableJSON);
+        } else {
+            // Assume players page
+            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS, jsonFactory::networkPlayersTableJSON);
         }
-        // Assume players page
-        return JSONCache.getOrCache(DataID.PLAYERS, jsonFactory::networkPlayersTableJSON);
+        return storedJSON;
     }
 }

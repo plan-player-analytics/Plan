@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 /**
  * Bukkit Database system that initializes SQLite and MySQL database objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class BukkitDBSystem extends DBSystem {

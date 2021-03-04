@@ -27,15 +27,15 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class WorldTimesTest {
 
     private final String worldOne = "ONE";
     private final String worldTwo = "TWO";
     private final String[] gms = GMTimes.getGMKeyArray();
-    private long time = System.currentTimeMillis();
-    private WorldTimes worldTimes = new WorldTimes(worldOne, gms[0], time);
+    private final long time = System.currentTimeMillis();
+    private final WorldTimes worldTimes = new WorldTimes(worldOne, gms[0], time);
 
     @Test
     void stateAffectedByWorldChange() {

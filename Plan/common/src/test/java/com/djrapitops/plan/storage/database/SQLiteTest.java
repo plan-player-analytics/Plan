@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for SQLite Database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see DatabaseTest
  * @see ExtensionsDatabaseTest
  */

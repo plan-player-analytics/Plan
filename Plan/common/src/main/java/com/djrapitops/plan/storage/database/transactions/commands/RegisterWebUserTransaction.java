@@ -28,7 +28,7 @@ import java.sql.Types;
 /**
  * Transaction to save a new Plan {@link User} to the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RegisterWebUserTransaction extends Transaction {
 

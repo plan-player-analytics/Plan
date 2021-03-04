@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
  * {@link NicknameLastSeenPatch}
  * {@link NicknamesOptimizationPatch}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NicknamesTable {
 

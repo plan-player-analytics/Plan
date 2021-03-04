@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Resource decorator to cache result of asString method call in {@link ResourceCache}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StringCachingResource implements Resource {
 

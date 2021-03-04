@@ -25,7 +25,7 @@ import java.util.Arrays;
 /**
  * Formatter for Item names, that capitalizes each part and separates them with spaces instead of underscores.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ItemNameFormatter implements Formatter<String> {
 

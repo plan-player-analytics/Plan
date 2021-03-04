@@ -36,7 +36,7 @@ import java.lang.annotation.Target;
  * <p>
  * Requires Capability {@code DATA_EXTENSION_GROUPS}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

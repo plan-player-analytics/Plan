@@ -23,7 +23,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 /**
  * Formatter for a timestamp that only includes a clock.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ClockFormatter extends DateFormatter {
 

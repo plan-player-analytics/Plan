@@ -19,7 +19,7 @@ package com.djrapitops.plan.exceptions.database;
 /**
  * Thrown when something goes wrong with {@code Database#init}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DBInitException extends DBOpException {
 

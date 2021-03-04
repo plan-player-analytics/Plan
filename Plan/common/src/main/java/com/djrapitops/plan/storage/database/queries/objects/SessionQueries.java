@@ -44,7 +44,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Queries for {@link Session} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SessionQueries {
 
@@ -745,13 +745,13 @@ public class SessionQueries {
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
         String sql = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
-                ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + ',' +
-                ServerTable.NAME +
+                "s." + ServerTable.SERVER_ID + ',' +
+                "s." + ServerTable.NAME +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.SERVER_UUID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + ServerTable.NAME;
+                GROUP_BY + "s." + ServerTable.SERVER_ID;
         return new QueryStatement<Map<String, Long>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -840,7 +840,6 @@ public class SessionQueries {
 
     public static Query<Map<String, Long>> summaryOfPlayers(Set<UUID> playerUUIDs, long after, long before) {
         String selectAggregates = SELECT +
-                SessionsTable.USER_UUID + ',' +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime," +
                 "COUNT(1) as session_count" +
@@ -848,22 +847,9 @@ public class SessionQueries {
                 WHERE + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
                 AND + SessionsTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
-                GROUP_BY + SessionsTable.USER_UUID;
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
 
-        String sql = SELECT +
-                "SUM(playtime) as total_playtime," +
-                "AVG(playtime) as average_playtime," +
-                "SUM(active_playtime) as total_active_playtime," +
-                "AVG(active_playtime) as average_active_playtime," +
-                "SUM(playtime-active_playtime) as total_afk_playtime," +
-                "AVG(playtime-active_playtime) as average_afk_playtime," +
-                "AVG(playtime) as average_playtime," +
-                "SUM(session_count) as total_sessions," +
-                "AVG(session_count) as average_sessions" +
-                FROM + "(" + selectAggregates + ") s";
-
-        return new QueryStatement<Map<String, Long>>(sql) {
+        return new QueryStatement<Map<String, Long>>(selectAggregates) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -873,17 +859,19 @@ public class SessionQueries {
             @Override
             public Map<String, Long> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    long sessionCount = set.getLong("total_sessions");
-                    long playtime = set.getLong("total_playtime");
+                    long sessionCount = set.getLong("session_count");
+                    long playtime = set.getLong("playtime");
+                    long activePlaytime = set.getLong("active_playtime");
+                    int playerCount = playerUUIDs.size();
                     return Maps.builder(String.class, Long.class)
                             .put("total_playtime", playtime)
-                            .put("average_playtime", set.getLong("average_playtime"))
-                            .put("total_afk_playtime", set.getLong("total_afk_playtime"))
-                            .put("average_afk_playtime", set.getLong("average_afk_playtime"))
-                            .put("total_active_playtime", set.getLong("total_active_playtime"))
-                            .put("average_active_playtime", set.getLong("average_active_playtime"))
+                            .put("average_playtime", playerCount != 0 ? playtime / playerCount : -1L)
+                            .put("total_afk_playtime", playtime - activePlaytime)
+                            .put("average_afk_playtime", playerCount != 0 ? (playtime - activePlaytime) / playerCount : -1L)
+                            .put("total_active_playtime", activePlaytime)
+                            .put("average_active_playtime", playerCount != 0 ? activePlaytime / playerCount : -1L)
                             .put("total_sessions", sessionCount)
-                            .put("average_sessions", set.getLong("average_sessions"))
+                            .put("average_sessions", playerCount != 0 ? sessionCount / playerCount : -1L)
                             .put("average_session_length", sessionCount != 0 ? playtime / sessionCount : -1L)
                             .build();
                 } else {

@@ -35,7 +35,7 @@ import java.util.*;
  * Currently very similar to {@link PlayerPluginTab}.
  * This will become more complex once tables are added, since some big tables will be moved to their own tabs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerPluginTabs {
 
@@ -89,7 +89,7 @@ public class ServerPluginTabs {
         if (serverData.isEmpty()) {
             nav = new StringBuilder(NavLink.main(Icon.called("cubes").build(), tabID, "Overview (No Data)").toHtml());
             tab = wrapInWideColumnTab(
-                    "overview", "<div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div>"
+                    "Overview", "<div class=\"card\"><div class=\"card-body\"><p>No Extension Data</p></div></div>"
             );
         } else {
             nav = new StringBuilder(NavLink.main(Icon.called("cubes").build(), tabID, "Overview").toHtml());

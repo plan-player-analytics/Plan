@@ -18,12 +18,14 @@ package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +37,7 @@ import java.util.stream.Collectors;
  * <p>
  * Can be used to get properties of a large number of TPS entries easily.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TPSMutator {
 
@@ -250,28 +252,29 @@ public class TPSMutator {
         return Optional.of(tpsData.get(tpsData.size() - 1));
     }
 
-    public Number[][] toArrays(boolean displayGaps) {
+    public List<Number[]> toArrays(LineGraph.GapStrategy gapStrategy) {
         List<Number[]> arrays = new ArrayList<>();
         Long lastX = null;
         for (TPS tps : tpsData) {
             long date = tps.getDate();
-            if (displayGaps && lastX != null && date - lastX > TimeUnit.MINUTES.toMillis(3L)) {
-                addMissingPoints(arrays, lastX, date);
+            if (gapStrategy.fillGaps && lastX != null && date - lastX > gapStrategy.acceptableGapMs) {
+                addMissingPoints(arrays, lastX, date, gapStrategy);
             }
             lastX = date;
 
             arrays.add(tps.toArray());
         }
-        return arrays.toArray(new Number[0][]);
+        return arrays;
     }
 
-    private void addMissingPoints(List<Number[]> arrays, Long lastX, long date) {
-        long iterate = lastX + TimeUnit.MINUTES.toMillis(1L);
+    private void addMissingPoints(List<Number[]> arrays, Long lastX, long date, LineGraph.GapStrategy gapStrategy) {
+        long iterate = lastX + gapStrategy.diffToFirstGapPointMs;
         while (iterate < date) {
             Number[] entry = new Number[7];
+            if (gapStrategy.fillWith != null) Arrays.fill(entry, gapStrategy.fillWith);
             entry[0] = iterate;
             arrays.add(entry);
-            iterate += TimeUnit.MINUTES.toMillis(30L);
+            iterate += gapStrategy.fillFrequencyMs;
         }
     }
 }

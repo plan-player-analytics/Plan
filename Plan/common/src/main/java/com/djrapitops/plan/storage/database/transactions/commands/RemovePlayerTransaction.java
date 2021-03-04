@@ -30,7 +30,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Transaction for removing a player's data from the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RemovePlayerTransaction extends ThrowawayTransaction {
 

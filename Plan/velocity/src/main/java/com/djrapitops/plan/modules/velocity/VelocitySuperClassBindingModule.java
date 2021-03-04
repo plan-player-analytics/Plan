@@ -28,7 +28,7 @@ import dagger.Module;
 /**
  * Module for binding Velocity specific classes as interface implementations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public interface VelocitySuperClassBindingModule {

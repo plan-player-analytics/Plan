@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 import utilities.TestConstants;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public interface DatabaseTestPreparer {
 
@@ -57,17 +58,25 @@ public interface DatabaseTestPreparer {
     }
 
     default void execute(Executable executable) {
-        db().executeTransaction(new Transaction() {
-            @Override
-            protected void performOperations() {
-                execute(executable);
-            }
-        });
+        try {
+            db().executeTransaction(new Transaction() {
+                @Override
+                protected void performOperations() {
+                    execute(executable);
+                }
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new AssertionError(e);
+        }
     }
 
     default void executeTransactions(Transaction... transactions) {
         for (Transaction transaction : transactions) {
-            db().executeTransaction(transaction);
+            try {
+                db().executeTransaction(transaction).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new AssertionError(e);
+            }
         }
     }
 

@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Factory class for different objects representing HTML line graphs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class LineGraphFactory {
@@ -50,6 +50,11 @@ public class LineGraphFactory {
     public LineGraph lineGraph(List<Point> points, boolean displayGaps) {
         points.sort(new PointComparator());
         return new LineGraph(points, displayGaps);
+    }
+
+    public LineGraph lineGraph(List<Point> points, LineGraph.GapStrategy gapStrategy) {
+        points.sort(new PointComparator());
+        return new LineGraph(points, gapStrategy);
     }
 
     public LineGraph chunkGraph(TPSMutator mutator) {

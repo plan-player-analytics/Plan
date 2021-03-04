@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * {@link Resource} implementation for Sponge Asset API.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SpongeAssetResource implements Resource {
 

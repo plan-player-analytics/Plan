@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * Pie about different Activity Groups defined by ActivityIndex.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see ActivityIndex
  */
 public class ActivityPie extends Pie {

@@ -25,7 +25,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
  * <p>
  * Supports RedisBungee for Players online getting.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class VelocityServerProperties extends ServerProperties {
 

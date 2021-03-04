@@ -23,7 +23,7 @@ import java.util.Objects;
 /**
  * Representation of all values a Provider annotation provides.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DataProvider<T> {
 

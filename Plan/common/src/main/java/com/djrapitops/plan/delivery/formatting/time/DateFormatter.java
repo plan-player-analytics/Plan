@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Abstract formatter for a timestamp.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class DateFormatter implements Formatter<Long> {
 

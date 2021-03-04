@@ -24,7 +24,7 @@ import java.util.TimeZone;
 /**
  * Utility for getting a {@link java.util.TimeZone} from Plan {@link com.djrapitops.plan.settings.config.paths.FormatSettings#TIMEZONE} value.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TimeZoneUtility {
 

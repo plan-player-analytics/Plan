@@ -22,7 +22,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 /**
  * Formatter for a timestamp in ISO-8601 format without the clock.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ISO8601NoClockFormatter extends DateFormatter {
 

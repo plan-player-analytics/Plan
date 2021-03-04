@@ -36,7 +36,7 @@ import java.util.UUID;
 /**
  * Resolves /network, /server and /server/${name/uuid} URLs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ServerPageResolver implements Resolver {

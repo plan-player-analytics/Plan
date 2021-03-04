@@ -28,7 +28,7 @@ import java.util.function.Function;
 /**
  * Transaction that performs a clear + copy operation to duplicate a source database in the current one.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BackupCopyTransaction extends RemoveEverythingTransaction {
 

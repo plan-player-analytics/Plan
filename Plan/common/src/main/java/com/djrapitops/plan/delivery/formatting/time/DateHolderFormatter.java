@@ -22,7 +22,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 /**
  * Formatter for a DateHolder object that uses a different formatter.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DateHolderFormatter implements Formatter<DateHolder> {
 

@@ -36,7 +36,7 @@ import java.util.Optional;
 /**
  * Resolves '/' URL (Address Root).
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class RootPageResolver implements NoAuthResolver {

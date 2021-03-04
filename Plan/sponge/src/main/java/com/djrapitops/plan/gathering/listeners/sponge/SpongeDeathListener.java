@@ -48,7 +48,7 @@ import java.util.UUID;
 /**
  * Listener for Deaths and Kills on Sponge.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SpongeDeathListener {
 

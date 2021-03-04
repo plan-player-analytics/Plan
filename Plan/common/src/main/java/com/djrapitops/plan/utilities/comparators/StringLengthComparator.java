@@ -21,7 +21,7 @@ import java.util.Comparator;
 /**
  * Compares Strings and sorts them by length (Longest fist).
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StringLengthComparator implements Comparator<String> {
 

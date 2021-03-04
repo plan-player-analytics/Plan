@@ -62,7 +62,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Contains common Database Tests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface DatabaseTest extends DatabaseTestPreparer {
 

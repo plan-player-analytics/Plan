@@ -29,7 +29,7 @@ import java.io.IOException;
 /**
  * In charge of disabling Webserver if a Proxy server is detected in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NonProxyWebserverDisableChecker implements Runnable {
 

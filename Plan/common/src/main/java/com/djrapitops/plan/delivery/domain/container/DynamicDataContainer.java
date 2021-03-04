@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 /**
  * DataContainer implementation that delegates the method calls to other DataContainer implementations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DynamicDataContainer implements DataContainer {
 

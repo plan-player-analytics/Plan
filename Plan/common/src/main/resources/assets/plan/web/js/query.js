@@ -113,7 +113,7 @@ function removeFilter(filterIndex) {
 }
 
 function createFilterSelector(parent, index, filter) {
-    return `<a class="dropdown-item" href="javascript:void(0)" onclick="addFilter('${parent}', ${index})">${filter.kind}</a>`;
+    return `<a class="dropdown-item" href="javascript:void(0)" onclick="addFilter('${parent}', ${index})">${getReadableFilterName(filter)}</a>`;
 }
 
 function isValidDate(value) {
@@ -251,7 +251,7 @@ function updateViewGraph() {
 
 let query = [];
 
-function performNewQuery() {
+function performNextQuery() {
     for (let filter of queryState.filters) {
         query.push(filter.toObject());
     }
@@ -321,7 +321,7 @@ function displayResultPath(json) {
         for (let j = 0; j < i * 4; j++) {
             pathHtml += "&nbsp;";
         }
-        pathHtml += `<i class="fa fa-fw fa-filter"></i> ${step.kind} matched ${step.size} players</p>`
+        pathHtml += `<i class="fa fa-fw fa-filter"></i> ${getReadableFilterName(step)} matched ${step.size} players</p>`
     }
 
     insertElementBefore('.tab .row .card', () => {
@@ -340,7 +340,7 @@ function displayResults(json) {
     // Set URL so that the query result can be shared
     window.history.replaceState({}, '', `${location.pathname}?timestamp=${json.timestamp}`);
 
-    // Player table
+    /* Player table */
     $('.player-table').DataTable({
         responsive: true,
         columns: json.data.players.columns,

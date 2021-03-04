@@ -29,7 +29,7 @@ import javax.inject.Singleton;
 /**
  * ServerShutdownSave implementation for Bukkit based servers.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class BukkitServerShutdownSave extends ServerShutdownSave {

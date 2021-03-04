@@ -28,7 +28,7 @@ import java.util.UUID;
  * <p>
  * Most information is accessible via static methods.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class ServerInfo implements SubSystem {
 

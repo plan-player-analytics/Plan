@@ -40,7 +40,7 @@ import java.util.Optional;
 /**
  * System for checking if new Version is available when the System initializes.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class VersionChecker implements SubSystem {

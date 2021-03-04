@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.domain.keys;
 /**
  * Similar to {@link CommonKeys}, but for {@link PlaceholderKey}s.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see PlaceholderKey for placeholder information
  */
 class CommonPlaceholderKeys {

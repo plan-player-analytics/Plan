@@ -23,7 +23,7 @@ import java.util.Comparator;
 /**
  * Compares DateHolder objects so that most recent is first.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DateHolderRecentComparator implements Comparator<DateHolder> {
 

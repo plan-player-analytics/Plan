@@ -51,7 +51,6 @@ shadowJar {
     relocate 'com.maxmind', 'plan.com.maxmind'
     relocate 'com.fasterxml', 'plan.com.fasterxml'
     relocate 'com.zaxxer', 'plan.com.zaxxer'
-    relocate 'com.github.benmanes', 'plan.com.github.benmanes'
     relocate 'com.googlecode.htmlcompressor', 'plan.com.google.htmlcompressor'
     relocate 'com.google.protobuf', 'plan.com.google.protobuf'
     relocate 'com.google.gson', 'plan.com.google.gson'

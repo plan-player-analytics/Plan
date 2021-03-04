@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * Responsible for generating /player page plugin tabs based on DataExtension API data.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
 

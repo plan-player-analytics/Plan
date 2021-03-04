@@ -36,7 +36,7 @@ import java.util.UUID;
  * <p>
  * Also manages Server ID required for MySQL database independence.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ServerServerInfo extends ServerInfo {

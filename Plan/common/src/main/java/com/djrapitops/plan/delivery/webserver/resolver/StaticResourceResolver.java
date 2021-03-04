@@ -30,7 +30,7 @@ import java.util.Optional;
 /**
  * Resolves all static resources for the pages.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class StaticResourceResolver implements NoAuthResolver {

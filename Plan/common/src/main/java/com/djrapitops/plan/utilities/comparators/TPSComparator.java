@@ -23,7 +23,7 @@ import java.util.Comparator;
 /**
  * Compares TPS objects so that earliest is first.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TPSComparator implements Comparator<TPS> {
 

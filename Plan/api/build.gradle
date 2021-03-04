@@ -1,47 +1,28 @@
-plugins {
-    id "com.jfrog.bintray" version "1.8.5"
-}
-
 dependencies {
     compileOnly "org.apache.commons:commons-text:$commonsTextVersion"
     testCompile "org.apache.commons:commons-text:$commonsTextVersion"
     compileOnly "com.google.code.gson:gson:$gsonVersion"
 }
 
-ext.apiVersion = '5.1-R0.4'
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    pkg {
-        repo = 'Plan-repository'
-        name = 'Plan-API'
-        licenses = ['LGPL-v3.0']
-        vcsUrl = 'https://github.com/plan-player-analytics/Plan'
-        issueTrackerUrl = 'https://github.com/plan-player-analytics/Plan/issues'
-        version {
-            name = "$apiVersion"
-            desc = "Plan API version $apiVersion"
-        }
-        publications = ['BintrayPublication']
-    }
-}
+ext.apiVersion = '5.2-R0.1'
 
 publishing {
-    publications {
-        BintrayPublication(MavenPublication) {
-            groupId = 'com.djrapitops'
-            artifactId = 'Plan-api'
-            version = "$apiVersion"
-
-            artifact jar
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/plan-player-analytics/Plan")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
         }
-        mavenJava(MavenPublication) {
-            groupId = 'com.djrapitops'
-            artifactId = 'Plan-api'
-            version = "$apiVersion"
-
-            artifact jar
+    }
+    publications {
+        gpr(MavenPublication) {
+            from components.java
+            groupId 'com.djrapitops'
+            artifactId 'plan-api'
+            version "$apiVersion"
         }
     }
 }

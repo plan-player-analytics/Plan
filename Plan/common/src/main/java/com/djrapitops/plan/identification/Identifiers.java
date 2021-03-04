@@ -26,11 +26,12 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility for getting server identifier from different sources.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class Identifiers {
@@ -102,5 +103,20 @@ public class Identifiers {
 
     public UUID getPlayerUUID(String name) {
         return uuidUtility.getUUIDOf(name);
+    }
+
+    public static long getTimestamp(Request request) {
+        try {
+            long currentTime = System.currentTimeMillis();
+            long timestamp = request.getQuery().get("timestamp")
+                    .map(Long::parseLong)
+                    .orElse(currentTime);
+            if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
+                return currentTime;
+            }
+            return timestamp;
+        } catch (NumberFormatException nonNumberTimestamp) {
+            throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
+        }
     }
 }

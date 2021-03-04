@@ -21,7 +21,7 @@ import java.sql.Connection;
 /**
  * Interface for everything that updates rows in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Executable {
 

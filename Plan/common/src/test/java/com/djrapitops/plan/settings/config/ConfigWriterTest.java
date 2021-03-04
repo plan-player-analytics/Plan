@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 /**
  * Test for {@link ConfigWriter}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class ConfigWriterTest {
 

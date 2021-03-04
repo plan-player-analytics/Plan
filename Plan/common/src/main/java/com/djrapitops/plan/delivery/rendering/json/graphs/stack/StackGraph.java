@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.stack;
 /**
  * Utility for creating HighCharts Stack graphs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StackGraph {
 

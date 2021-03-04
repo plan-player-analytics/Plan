@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.rendering.html.Html;
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionStringData implements DescribedExtensionData {
 

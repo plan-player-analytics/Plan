@@ -38,7 +38,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Queries for web user objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WebUserQueries {
 

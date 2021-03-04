@@ -27,7 +27,7 @@ import java.util.function.Predicate;
  * <p>
  * All values return milliseconds.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TimeSetting extends Setting<Long> {
 

@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 /**
  * Class responsible for managing config settings for World Aliases.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class WorldAliasSettings {

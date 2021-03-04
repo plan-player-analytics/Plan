@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Key objects for PerServerContainer container.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.storage.database.queries.containers.PerServerContainerQuery For Suppliers for each key
  * @see PerServerContainer For the DataContainer.
  */

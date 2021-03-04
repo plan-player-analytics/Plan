@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.implementation.results;
 /**
  * Represents boolean data returned by a BooleanProvider method.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionBooleanData implements DescribedExtensionData {
 

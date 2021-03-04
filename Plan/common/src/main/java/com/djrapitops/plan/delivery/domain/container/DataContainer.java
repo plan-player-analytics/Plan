@@ -32,7 +32,7 @@ import java.util.function.Supplier;
  * Implementations should mainly be concerned on how the data given to it is stored.
  * Retrieval has some details that should be followed.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface DataContainer {
 

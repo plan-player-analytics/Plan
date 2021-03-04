@@ -30,7 +30,7 @@ import java.util.Optional;
  * Represents a tab of {@link com.djrapitops.plan.extension.DataExtension} defined by {@link com.djrapitops.plan.extension.annotation.Tab} and
  * {@link com.djrapitops.plan.extension.annotation.TabInfo} annotations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TabInformation {
 

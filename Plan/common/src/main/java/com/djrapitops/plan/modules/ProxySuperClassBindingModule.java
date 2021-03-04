@@ -27,7 +27,7 @@ import dagger.Module;
 /**
  * Dagger module for binding proxy server classes to super classes.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public interface ProxySuperClassBindingModule {

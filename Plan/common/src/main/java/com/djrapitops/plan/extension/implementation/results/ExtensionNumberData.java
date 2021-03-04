@@ -22,7 +22,7 @@ import com.djrapitops.plan.extension.FormatType;
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionNumberData implements DescribedExtensionData {
 
