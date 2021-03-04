@@ -130,11 +130,13 @@ public class UserInfoQueries {
         String sql = SELECT +
                 UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
+                UserInfoTable.HOSTNAME + ',' +
                 UserInfoTable.OP + ',' +
                 UserInfoTable.USER_UUID + ',' +
                 UserInfoTable.SERVER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_UUID + "=?";
+
         return new QueryStatement<Map<UUID, UserInfo>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

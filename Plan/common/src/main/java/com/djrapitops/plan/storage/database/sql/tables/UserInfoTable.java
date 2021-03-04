@@ -62,7 +62,7 @@ public class UserInfoTable {
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(HOSTNAME, Sql.varchar(255)).notNull()
+                .column(HOSTNAME, Sql.varchar(255)).notNull().defaultValue("'Unknown'")
                 .column(REGISTERED, Sql.LONG).notNull()
                 .column(OP, Sql.BOOL).notNull().defaultValue(false)
                 .column(BANNED, Sql.BOOL).notNull().defaultValue(false)
