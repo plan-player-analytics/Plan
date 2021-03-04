@@ -34,13 +34,15 @@ public class UserInfo {
     private final long registered;
     private final boolean banned;
     private final boolean opped;
+    private final String hostname;
 
-    public UserInfo(UUID playerUUID, UUID serverUUID, long registered, boolean opped, boolean banned) {
+    public UserInfo(UUID playerUUID, UUID serverUUID, long registered, boolean opped, String hostname, boolean banned) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
         this.registered = registered;
         this.opped = opped;
         this.banned = banned;
+        this.hostname = hostname;
     }
 
     public UUID getPlayerUuid() {
@@ -49,6 +51,10 @@ public class UserInfo {
 
     public UUID getServerUUID() {
         return serverUUID;
+    }
+
+    public String getHostname() {
+        return hostname;
     }
 
     public long getRegistered() {
@@ -77,7 +83,7 @@ public class UserInfo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(playerUUID, serverUUID, registered, banned, opped);
+        return Objects.hash(playerUUID, serverUUID, registered, banned, hostname, opped);
     }
 
     @Override
@@ -88,6 +94,7 @@ public class UserInfo {
                 ", registered=" + registered +
                 ", banned=" + banned +
                 ", opped=" + opped +
+                ", hostname=" + hostname +
                 '}';
     }
 }

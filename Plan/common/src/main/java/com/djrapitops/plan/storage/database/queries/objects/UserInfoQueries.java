@@ -55,7 +55,8 @@ public class UserInfoQueries {
                 UserInfoTable.BANNED + ',' +
                 UserInfoTable.OP + ',' +
                 UserInfoTable.USER_UUID + ',' +
-                UserInfoTable.SERVER_UUID +
+                UserInfoTable.SERVER_UUID + ',' +
+                UserInfoTable.HOSTNAME +
                 FROM + UserInfoTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
@@ -71,8 +72,9 @@ public class UserInfoQueries {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
 
-                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, banned));
+                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, hostname, banned));
                 }
                 return serverMap;
             }
@@ -90,7 +92,8 @@ public class UserInfoQueries {
                 UserInfoTable.TABLE_NAME + '.' + UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
                 UserInfoTable.OP + ',' +
-                UserInfoTable.SERVER_UUID +
+                UserInfoTable.SERVER_UUID + ',' +
+                UserInfoTable.HOSTNAME +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID + "=?";
 
@@ -108,7 +111,9 @@ public class UserInfoQueries {
                     boolean op = set.getBoolean(UserInfoTable.OP);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
-                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, banned));
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
+
+                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, hostname, banned));
                 }
                 return userInformation;
             }
@@ -147,7 +152,9 @@ public class UserInfoQueries {
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
 
-                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, banned));
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
+
+                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, hostname, banned));
                 }
                 return userInformation;
             }

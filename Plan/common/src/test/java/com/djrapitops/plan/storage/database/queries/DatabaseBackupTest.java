@@ -96,6 +96,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
             assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
             assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllUsers());
+
         } finally {
             backup.close();
         }
