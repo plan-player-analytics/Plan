@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Test for {@link PingStoreTransaction#getMeanValue()}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class PingMedianTest {
 

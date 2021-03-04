@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Task that stores a server config in the database on boot.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ConfigStoreTask extends TaskSystem.Task {

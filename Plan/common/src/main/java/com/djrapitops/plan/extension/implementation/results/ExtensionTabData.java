@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 /**
  * Represents data on an extension tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionTabData implements Comparable<ExtensionTabData> {
 

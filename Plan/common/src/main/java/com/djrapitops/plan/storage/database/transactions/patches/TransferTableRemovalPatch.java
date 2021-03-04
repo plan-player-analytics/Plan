@@ -21,7 +21,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
  * <p>
  * The idea turned out to use a lot of disk space and improper use of a database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TransferTableRemovalPatch extends Patch {
 

@@ -26,7 +26,7 @@ package com.djrapitops.plan.extension;
  * <p>
  * This method parameter is used since it is not possible to differentiate String playerName and String groupName.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Group {
 

@@ -37,7 +37,7 @@ import java.nio.file.Path;
 /**
  * Test for the patching of Plan 4.5.2 H2 DB into the newest schema.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class DBPatchH2RegressionTest extends DBPatchRegressionTest {
 

@@ -23,7 +23,7 @@ import java.lang.management.OperatingSystemMXBean;
 /**
  * Utility class for obtaining System usage statistics.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SystemUsage {
 

@@ -30,7 +30,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * Patch to fix incorrect register dates for nukkit.
  * https://github.com/plan-player-analytics/Plan/issues/1320
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BadNukkitRegisterValuePatch extends Patch {
 

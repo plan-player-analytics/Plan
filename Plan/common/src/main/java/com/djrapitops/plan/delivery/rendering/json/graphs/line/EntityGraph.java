@@ -22,7 +22,7 @@ import com.djrapitops.plan.gathering.timed.TPSCounter;
 /**
  * Graph about Entity Counts gathered by TPSCountTimer.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see TPSCounter
  */
 class EntityGraph extends LineGraph {

@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Represents a Message that can be modified by the caller.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Message {
 

@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Queries for {@link UserInfo} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class UserInfoQueries {
 

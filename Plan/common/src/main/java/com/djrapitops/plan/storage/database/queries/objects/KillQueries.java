@@ -37,7 +37,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Queries for {@link PlayerKill} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class KillQueries {
 

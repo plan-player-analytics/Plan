@@ -39,7 +39,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Query for displaying players on /server page players tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
 

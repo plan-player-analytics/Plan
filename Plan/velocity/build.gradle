@@ -13,6 +13,7 @@ dependencies {
     compileOnly project(":api")
 
     compile "com.djrapitops:AbstractPluginFramework-velocity:$abstractPluginFrameworkVersion"
+    compile "org.bstats:bstats-velocity:$bstatsVersion"
 
     compileOnly "com.velocitypowered:velocity-api:$velocityVersion"
     testCompile "com.velocitypowered:velocity-api:$velocityVersion"
@@ -24,6 +25,7 @@ dependencies {
 
 shadowJar {
     dependsOn blossomSourceReplacementJava
+    relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
 
     configurations = [project.configurations.compile]
 }

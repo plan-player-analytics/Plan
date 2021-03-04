@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018 Risto Lahtela
+ * Copyright (c) 2021 AuroraLS3
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,9 +35,9 @@ import java.util.stream.Collectors;
  * Represents a single node in a configuration file
  * <p>
  * Based on
- * https://github.com/Rsl1122/Abstract-Plugin-Framework/blob/72e221d3571ef200727713d10d3684c51e9f469d/AbstractPluginFramework/api/src/main/java/com/djrapitops/plugin/config/ConfigNode.java
+ * https://github.com/AuroraLS3/Abstract-Plugin-Framework/blob/72e221d3571ef200727713d10d3684c51e9f469d/AbstractPluginFramework/api/src/main/java/com/djrapitops/plugin/config/ConfigNode.java
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ConfigNode {
 

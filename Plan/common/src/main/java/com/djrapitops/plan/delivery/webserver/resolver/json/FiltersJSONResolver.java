@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
@@ -37,10 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -94,12 +92,15 @@ public class FiltersJSONResolver implements Resolver {
         Long earliestStart = dbSystem.getDatabase().query(SessionQueries.earliestSessionStart());
         data.add(0, new DateObj<>(earliestStart, 1));
 
-        boolean displayGaps = true;
-        return graphs.line().lineGraph(Lists.map(data, Point::fromDateObj), displayGaps).getPoints()
-                .stream().map(point -> {
-                    if (point.getY() == null) point.setY(0.0);
-                    return point.toArray();
-                }).collect(Collectors.toList());
+        LineGraph.GapStrategy gapStrategy = new LineGraph.GapStrategy(
+                true,
+                TimeUnit.MINUTES.toMillis(16), // Acceptable gap
+                TimeUnit.MINUTES.toMillis(1),
+                TimeUnit.MINUTES.toMillis(30),
+                0.0
+        );
+        return graphs.line().lineGraph(Lists.map(data, Point::fromDateObj), gapStrategy).getPoints()
+                .stream().map(Point::toArray).collect(Collectors.toList());
     }
 
     /**
@@ -116,6 +117,7 @@ public class FiltersJSONResolver implements Resolver {
             for (Map.Entry<String, Filter> entry : filtersByKind.entrySet()) {
                 filters.add(new FilterJSON(entry.getKey(), entry.getValue()));
             }
+            Collections.sort(filters);
             this.view = view;
         }
     }
@@ -123,7 +125,7 @@ public class FiltersJSONResolver implements Resolver {
     /**
      * JSON serialization class.
      */
-    static class FilterJSON {
+    static class FilterJSON implements Comparable<FilterJSON> {
         final String kind;
         final Map<String, Object> options;
         final String[] expectedParameters;
@@ -132,6 +134,11 @@ public class FiltersJSONResolver implements Resolver {
             this.kind = kind;
             this.options = filter.getOptions();
             this.expectedParameters = filter.getExpectedParameters();
+        }
+
+        @Override
+        public int compareTo(FilterJSON o) {
+            return String.CASE_INSENSITIVE_ORDER.compare(this.kind, o.kind);
         }
     }
 

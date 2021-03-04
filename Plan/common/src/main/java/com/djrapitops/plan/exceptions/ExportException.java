@@ -19,7 +19,7 @@ package com.djrapitops.plan.exceptions;
 /**
  * Exception thrown by {@link com.djrapitops.plan.delivery.export.Exporter} if something goes wrong with export.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExportException extends Exception {
 

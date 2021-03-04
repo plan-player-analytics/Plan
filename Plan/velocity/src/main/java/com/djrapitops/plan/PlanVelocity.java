@@ -31,6 +31,7 @@ import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 import java.io.InputStream;
@@ -47,17 +48,24 @@ import java.nio.file.Path;
         id = "plan",
         name = "Plan",
         version = "@version@",
-        description = "Player Analytics Plugin by Rsl1122",
-        authors = {"Rsl1122"}
+        description = "Player Analytics Plugin by AuroraLS3",
+        authors = {"AuroraLS3"}
 )
 public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
+    private final Metrics.Factory metricsFactory;
     private PlanSystem system;
     private Locale locale;
 
     @com.google.inject.Inject
-    public PlanVelocity(ProxyServer proxy, Logger slf4jLogger, @DataDirectory Path dataFolderPath) {
+    public PlanVelocity(
+            ProxyServer proxy,
+            Logger slf4jLogger,
+            @DataDirectory Path dataFolderPath,
+            Metrics.Factory metricsFactory
+    ) {
         super(proxy, slf4jLogger, dataFolderPath);
+        this.metricsFactory = metricsFactory;
     }
 
     @Subscribe
@@ -77,6 +85,13 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             system = component.system();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
+
+            int pluginId = 10326;
+            new BStatsVelocity(
+                    this,
+                    system.getDatabaseSystem().getDatabase(),
+                    metricsFactory.make(this, pluginId)
+            ).registerMetrics();
 
             logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {

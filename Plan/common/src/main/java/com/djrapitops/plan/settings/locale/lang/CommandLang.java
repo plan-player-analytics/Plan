@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * {@link Lang} implementation for general command language.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum CommandLang implements Lang {
     CONFIRM_EXPIRED("Cmd Confirm - Expired", "Confirmation expired, use the command again"),

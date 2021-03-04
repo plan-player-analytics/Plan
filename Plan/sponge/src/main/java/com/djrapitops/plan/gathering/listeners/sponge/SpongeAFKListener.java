@@ -43,7 +43,7 @@ import java.util.UUID;
  * <p>
  * Additional Listener calls in PlayerOnlineListener to avoid having HIGHEST priority listeners.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see PlayerOnlineListener
  */
 public class SpongeAFKListener {

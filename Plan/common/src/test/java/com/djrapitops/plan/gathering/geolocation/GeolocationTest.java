@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for Geolocation functionality.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @author Fuzzlemann
  */
 @ExtendWith(MockitoExtension.class)

@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * Transaction to update a player's operator status.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class OperatorStatusTransaction extends ThrowawayTransaction {
 

@@ -50,7 +50,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * 3. Combine with provider information
  * 4. Map into ExtensionData objects by PluginID, one per ID
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 

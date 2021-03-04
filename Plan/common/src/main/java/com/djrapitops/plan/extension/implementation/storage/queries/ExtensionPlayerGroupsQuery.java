@@ -47,7 +47,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * - Tabs are placed to plugin they belong to
  * - The map is returned
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 

@@ -24,7 +24,7 @@ import java.util.function.UnaryOperator;
 /**
  * Methods that can be used as functional interfaces when dealing with Maps.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Lists {
 

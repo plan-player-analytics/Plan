@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Holds registrations of users before they are confirmed.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RegistrationBin {
 

@@ -29,7 +29,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 /**
  * Adds server_id field to world times table.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see WorldTimesOptimizationPatch for removal of this field later
  */
 public class WorldTimesSeverIDPatch extends Patch {

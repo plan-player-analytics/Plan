@@ -35,7 +35,7 @@ import org.bukkit.World;
 /**
  * Module for binding Bukkit specific classes as interface implementations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public interface BukkitSuperClassBindingModule {

@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * Example:
  * Fetch how much a player has played on servers
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PerServerAggregateQueries {
 

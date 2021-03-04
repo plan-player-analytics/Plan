@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 /**
  * Implementation for {@link SettingsService}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class SettingsSvc implements SettingsService {

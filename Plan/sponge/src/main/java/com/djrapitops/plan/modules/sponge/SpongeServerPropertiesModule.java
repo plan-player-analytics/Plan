@@ -27,7 +27,7 @@ import javax.inject.Singleton;
 /**
  * Dagger module for Sponge ServerProperties.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public class SpongeServerPropertiesModule {

@@ -23,7 +23,7 @@ import java.util.Comparator;
 /**
  * Comparator for PieSlices to descending Percentage order.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PieSliceComparator implements Comparator<PieSlice> {
 

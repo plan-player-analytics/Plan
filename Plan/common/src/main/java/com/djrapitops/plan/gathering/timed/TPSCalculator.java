@@ -34,16 +34,16 @@ import java.util.concurrent.TimeUnit;
  * - If 20 seconds, TPS is 1
  * - If more than 20 seconds, TPS is 0 for 20 seconds and then according to the other rules.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TPSCalculator {
 
     public static final long SECOND_NS = TimeUnit.SECONDS.toNanos(1L);
 
-    private long maxBeforeZeroTPS;
+    private final long maxBeforeZeroTPS;
     private long lastPulse;
 
-    private TimerAverage averager;
+    private final TimerAverage averager;
 
     public TPSCalculator() {
         maxBeforeZeroTPS = SECOND_NS * 20L; // 20 ticks

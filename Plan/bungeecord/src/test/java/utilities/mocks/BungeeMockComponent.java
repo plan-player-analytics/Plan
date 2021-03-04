@@ -26,7 +26,7 @@ import java.nio.file.Path;
 /**
  * Test utility for creating a dagger PlanComponent using a mocked PlanBungee.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BungeeMockComponent {
 

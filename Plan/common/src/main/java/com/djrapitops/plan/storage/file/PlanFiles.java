@@ -33,7 +33,7 @@ import java.util.Optional;
 /**
  * Abstracts File methods of Plugin classes so that they can be tested without Mocks.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PlanFiles implements SubSystem {

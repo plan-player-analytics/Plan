@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 /**
  * Equals test for Key objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class KeyTest {
 

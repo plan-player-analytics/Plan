@@ -47,7 +47,7 @@ import java.util.zip.GZIPInputStream;
  * This product includes GeoLite2 data created by MaxMind, available from
  * <a href="http://www.maxmind.com">http://www.maxmind.com</a>.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see <a href="http://maxmind.com">http://maxmind.com</a>
  */
 @Singleton
@@ -88,7 +88,7 @@ public class GeoLite2Geolocator implements Geolocator {
 
     private void downloadDatabase() throws IOException {
         // Avoid Socket leak with the parameters in case download url has proxy
-        // https://rsl1122.github.io/mishaps/java_socket_leak_incident
+        // https://AuroraLS3.github.io/mishaps/java_socket_leak_incident
         Properties properties = System.getProperties();
         properties.setProperty("sun.net.client.defaultConnectTimeout", Long.toString(TimeUnit.MINUTES.toMillis(1L)));
         properties.setProperty("sun.net.client.defaultReadTimeout", Long.toString(TimeUnit.MINUTES.toMillis(1L)));

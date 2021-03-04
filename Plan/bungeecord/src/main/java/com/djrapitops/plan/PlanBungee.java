@@ -31,7 +31,7 @@ import java.io.InputStream;
 /**
  * Bungee Main class.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanBungee extends BungeePlugin implements PlanPlugin {
 

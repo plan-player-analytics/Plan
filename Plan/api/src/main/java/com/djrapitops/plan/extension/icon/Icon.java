@@ -21,7 +21,7 @@ package com.djrapitops.plan.extension.icon;
  * <p>
  * See https://fontawesome.com/icons (select 'free')) for icons and their {@link Family}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Icon {
 

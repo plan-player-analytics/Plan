@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * HttpHandler for WebServer request management.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class RequestHandler implements HttpHandler {

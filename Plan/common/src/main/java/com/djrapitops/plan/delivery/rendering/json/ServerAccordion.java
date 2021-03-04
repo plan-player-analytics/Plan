@@ -32,7 +32,7 @@ import java.util.*;
 /**
  * Utility for creating JSON for Server Accordion
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerAccordion {
 

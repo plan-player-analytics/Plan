@@ -39,7 +39,7 @@ import java.util.UUID;
  * {@link KillsServerIDPatch}
  * {@link KillsOptimizationPatch}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class KillsTable {
 

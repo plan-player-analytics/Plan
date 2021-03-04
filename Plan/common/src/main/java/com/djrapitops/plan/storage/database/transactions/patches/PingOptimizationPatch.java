@@ -24,7 +24,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 /**
  * Replaces user_id and server_id foreign keys with respective uuid fields in ping table.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PingOptimizationPatch extends Patch {
 

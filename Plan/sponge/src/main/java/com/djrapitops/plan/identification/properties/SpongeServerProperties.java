@@ -23,7 +23,7 @@ import java.net.InetSocketAddress;
 /**
  * ServerProperties for Sponge.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SpongeServerProperties extends ServerProperties {
 

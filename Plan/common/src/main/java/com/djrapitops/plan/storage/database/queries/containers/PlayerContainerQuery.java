@@ -39,7 +39,7 @@ import java.util.UUID;
  * <p>
  * Blocking methods are not called until DataContainer getter methods are called.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayerContainerQuery implements Query<PlayerContainer> {
 

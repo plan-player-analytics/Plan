@@ -21,7 +21,7 @@ import org.bukkit.Server;
 /**
  * ServerProperties for Bukkit.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BukkitServerProperties extends ServerProperties {
 

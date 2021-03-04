@@ -32,7 +32,7 @@ import java.nio.file.Path;
 /**
  * Dagger component for {@link com.djrapitops.plan.PlanPlugin} based Plan system.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 @Component(modules = {

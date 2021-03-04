@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Code that handles writing the actual files that are exported.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 abstract class FileExporter {
 

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Test for Bukkit PlanSystem.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class BukkitSystemTest {
 

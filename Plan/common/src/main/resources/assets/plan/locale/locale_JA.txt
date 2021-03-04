@@ -160,6 +160,11 @@ HTML - COMPARING_7_DAYS                         || 直近1週間との比較
 HTML - DATABASE_NOT_OPEN                        || データベースを開くことができませんでした。「/plan info」コマンドを実行して状況を確認して下さい
 HTML - ERROR                                    || エラーが発生したため認証に失敗しました
 HTML - EXPIRED_COOKIE                           || ユーザーのクッキーの有効期限切れです
+HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
+HTML - FILTER_ALL_PLAYERS                       || All players
+HTML - FILTER_BANNED                            || Ban status
+HTML - FILTER_GROUP                             || Group: 
+HTML - FILTER_OPS                               || Operator status
 HTML - INDEX_ACTIVE                             || よくログインしている
 HTML - INDEX_INACTIVE                           || 休止中
 HTML - INDEX_IRREGULAR                          || たまにログインしている
@@ -176,6 +181,8 @@ HTML - LABEL_AFK_TIME                           || 離席時間
 HTML - LABEL_AVG                                || 平均
 HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
 HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
+HTML - LABEL_AVG_CHUNKS                         || Average Chunks
+HTML - LABEL_AVG_ENTITIES                       || Average Entities
 HTML - LABEL_AVG_KDR                            || 平均KDR
 HTML - LABEL_AVG_MOB_KDR                        || モブに対してのKDR
 HTML - LABEL_AVG_PLAYTIME                       || 平均プレイ時間

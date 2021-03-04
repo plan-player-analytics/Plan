@@ -31,7 +31,7 @@ import java.util.logging.Logger;
  * <p>
  * Saves active sessions to the Database (PlayerQuitEvent is not called)
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ShutdownHook extends Thread {

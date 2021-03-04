@@ -23,7 +23,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 /**
  * Utility for accessing implementation variables inside {@link Table.Factory} object.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TableAccessor {
 

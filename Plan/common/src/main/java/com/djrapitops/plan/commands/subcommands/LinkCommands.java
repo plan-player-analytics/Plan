@@ -43,7 +43,7 @@ import java.util.UUID;
 /**
  * Implementation of commands that send a link to the command sender.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class LinkCommands {

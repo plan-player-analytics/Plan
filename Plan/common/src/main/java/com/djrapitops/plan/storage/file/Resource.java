@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Interface for accessing plugin resources in jar or plugin files.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Resource {
 

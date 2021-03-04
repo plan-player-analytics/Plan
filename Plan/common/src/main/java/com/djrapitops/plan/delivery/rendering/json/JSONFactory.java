@@ -44,6 +44,7 @@ import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Factory with different JSON creation methods placed to a single class.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class JSONFactory {
@@ -162,7 +163,7 @@ public class JSONFactory {
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
     }
 
-    public List<Map<String, Object>> serversAsJSONMaps() {
+    public Map<String, Object> serversAsJSONMaps() {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
@@ -219,17 +220,21 @@ public class JSONFactory {
                             .orElse(locale.get(HtmlLang.UNIT_NO_DATA).toString()));
                     servers.add(server);
                 });
-        return servers;
+        return Collections.singletonMap("servers", servers);
     }
 
-    public List<Map<String, Object>> pingPerGeolocation(UUID serverUUID) {
+    public Map<String, Object> pingPerGeolocation(UUID serverUUID) {
         Map<String, Ping> pingByGeolocation = dbSystem.getDatabase().query(PingQueries.fetchPingDataOfServerByGeolocation(serverUUID));
-        return turnToTableEntries(pingByGeolocation);
+        return Maps.builder(String.class, Object.class)
+                .put("table", turnToTableEntries(pingByGeolocation))
+                .build();
     }
 
-    public List<Map<String, Object>> pingPerGeolocation() {
+    public Map<String, Object> pingPerGeolocation() {
         Map<String, Ping> pingByGeolocation = dbSystem.getDatabase().query(PingQueries.fetchPingDataOfNetworkByGeolocation());
-        return turnToTableEntries(pingByGeolocation);
+        return Maps.builder(String.class, Object.class)
+                .put("table", turnToTableEntries(pingByGeolocation))
+                .build();
     }
 
     private List<Map<String, Object>> turnToTableEntries(Map<String, Ping> pingByGeolocation) {
@@ -238,12 +243,12 @@ public class JSONFactory {
             String geolocation = entry.getKey();
             Ping ping = entry.getValue();
 
-            Map<String, Object> tableEntry = new HashMap<>();
-            tableEntry.put("country", geolocation);
-            tableEntry.put("avg_ping", formatters.decimals().apply(ping.getAverage()) + " ms");
-            tableEntry.put("min_ping", ping.getMin() + " ms");
-            tableEntry.put("max_ping", ping.getMax() + " ms");
-            tableEntries.add(tableEntry);
+            tableEntries.add(Maps.builder(String.class, Object.class)
+                    .put("country", geolocation)
+                    .put("avg_ping", formatters.decimals().apply(ping.getAverage()) + " ms")
+                    .put("min_ping", ping.getMin() + " ms")
+                    .put("max_ping", ping.getMax() + " ms")
+                    .build());
         }
         return tableEntries;
     }

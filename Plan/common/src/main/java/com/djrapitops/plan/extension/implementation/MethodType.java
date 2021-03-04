@@ -26,7 +26,7 @@ import java.util.UUID;
  * <p>
  * This also allows figuring out where to save method results.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum MethodType {
 

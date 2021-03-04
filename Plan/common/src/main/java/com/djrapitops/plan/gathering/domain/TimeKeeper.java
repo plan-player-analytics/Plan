@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * Keeps track of time spent in each state.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TimeKeeper {
 

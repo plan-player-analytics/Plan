@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.formatting;
 /**
  * Formatter for amount of Megabytes (MB)
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ByteSizeFormatter implements Formatter<Double> {
 

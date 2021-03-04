@@ -25,7 +25,7 @@ import java.util.UUID;
  * Unlike {@link BaseUser} one instance is stored per server for a single player.
  * Proxy servers are an exception, and UserInfo is not stored for them.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class UserInfo {
 

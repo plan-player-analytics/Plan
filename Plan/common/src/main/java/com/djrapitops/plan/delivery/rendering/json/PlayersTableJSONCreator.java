@@ -39,7 +39,7 @@ import java.util.*;
  * <p>
  * See https://www.datatables.net/manual/data/orthogonal-data#HTML-5 for sort kinds
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayersTableJSONCreator {
 

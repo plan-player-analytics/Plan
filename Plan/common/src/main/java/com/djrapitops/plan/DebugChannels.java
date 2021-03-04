@@ -19,7 +19,7 @@ package com.djrapitops.plan;
 /**
  * Identifiers for different Debug channels.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DebugChannels {
 
@@ -30,5 +30,6 @@ public class DebugChannels {
     public static final String IMPORTING = "Importing";
     public static final String SQL = "SQL";
     public static final String DATA_EXTENSIONS = "DataExtensions";
+    public static final String JSON_CACHE = "JSON Cache";
 
 }

@@ -31,7 +31,7 @@ import java.util.Scanner;
  * <p>
  * ConfigReader can read a single file at a time, so it is NOT thread safe.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ConfigReader implements Closeable {
 

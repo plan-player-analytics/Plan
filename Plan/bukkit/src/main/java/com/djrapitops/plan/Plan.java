@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 /**
  * Main class for Bukkit that manages the plugin.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Plan extends BukkitPlugin implements PlanPlugin {
 

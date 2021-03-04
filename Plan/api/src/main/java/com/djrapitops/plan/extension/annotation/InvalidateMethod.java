@@ -25,7 +25,7 @@ import java.lang.annotation.*;
  * Only first 50 characters of the method name are stored.
  * If you need to change a method name add this class annotation with the old method name.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

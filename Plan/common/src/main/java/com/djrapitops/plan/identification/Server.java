@@ -23,7 +23,7 @@ import java.util.UUID;
 /**
  * Represents a Server that is running Plan.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Server implements Comparable<Server> {
     private final UUID uuid;

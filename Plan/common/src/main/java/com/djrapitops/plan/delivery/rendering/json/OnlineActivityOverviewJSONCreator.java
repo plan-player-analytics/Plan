@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Creates JSON payload for /server-page Online Activity Overview tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {

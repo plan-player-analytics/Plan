@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 /**
  * Represents a path to a config value.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class Setting<T> {
 

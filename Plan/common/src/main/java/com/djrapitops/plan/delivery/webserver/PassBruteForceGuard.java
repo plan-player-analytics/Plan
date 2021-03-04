@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Guards against password brute-force break attempts.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PassBruteForceGuard {
 

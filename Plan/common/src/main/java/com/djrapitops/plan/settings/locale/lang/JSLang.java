@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * Lang enum for all text included in the javascript files.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum JSLang implements Lang {
 
@@ -54,6 +54,12 @@ public enum JSLang implements Lang {
     QUERY_ACTIVITY_ON("Activity on <span id=\"activity-date\"></span>"),
     QUERY_ARE("`are`"),
     QUERY_SESSIONS_WITHIN_VIEW("Sessions within view"),
+
+    FILTER_GROUP("Group: "),
+    FILTER_ALL_PLAYERS("All players"),
+    FILTER_ACTIVITY_INDEX_NOW("Current activity group"),
+    FILTER_BANNED("Ban status"),
+    FILTER_OPS("Operator status"),
     ;
 
     private final String defaultValue;

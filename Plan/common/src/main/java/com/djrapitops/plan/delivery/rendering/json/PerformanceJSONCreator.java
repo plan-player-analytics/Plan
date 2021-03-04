@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Creates JSON payload for /server-page Performance tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {

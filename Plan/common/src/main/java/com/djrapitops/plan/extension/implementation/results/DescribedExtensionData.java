@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.implementation.results;
 /**
  * Represents a data-point given by a Provider method of a DataExtension.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface DescribedExtensionData {
 

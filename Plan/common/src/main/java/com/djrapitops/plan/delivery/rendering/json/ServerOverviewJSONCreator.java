@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Creates JSON payload for /server-page Server Overview tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {

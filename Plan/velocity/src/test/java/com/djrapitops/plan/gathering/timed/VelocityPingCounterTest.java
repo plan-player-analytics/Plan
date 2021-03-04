@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for {@link VelocityPingCounter}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class VelocityPingCounterTest {
 

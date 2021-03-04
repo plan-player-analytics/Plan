@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
  * {@link GeoInfoLastUsedPatch}
  * {@link GeoInfoOptimizationPatch}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class GeoInfoTable {
 

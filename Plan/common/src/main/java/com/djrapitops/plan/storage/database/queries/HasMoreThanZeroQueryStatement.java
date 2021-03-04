@@ -22,7 +22,7 @@ import java.sql.SQLException;
 /**
  * SQL query of a COUNT statement that closes proper elements.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class HasMoreThanZeroQueryStatement extends QueryStatement<Boolean> {
 

@@ -27,7 +27,7 @@ import com.djrapitops.plan.storage.database.transactions.patches.PingOptimizatio
  * Patches related to this table:
  * {@link PingOptimizationPatch}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PingTable {
 

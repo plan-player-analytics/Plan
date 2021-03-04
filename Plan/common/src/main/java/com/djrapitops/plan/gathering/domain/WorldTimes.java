@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * Class that tracks the time spent in each World based on GMTimes.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WorldTimes {
 

@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
  * Improves performance by avoiding a double for-each loop since this class can be considered final in the lambda
  * expression in {@link Locale#replaceLanguageInHtml(String)}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class TranslatedString {
     private static final Pattern LINK_MATCHER = Pattern.compile("http(s|)://[\\w.\\-_%/?$#@!()&=]+");

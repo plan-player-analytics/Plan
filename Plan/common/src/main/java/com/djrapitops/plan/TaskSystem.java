@@ -27,7 +27,7 @@ import java.util.Set;
  * TaskSystem that registers tasks for the plugin.
  * See platform specific [Platform]TaskModule classes for what Tasks are registered.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class TaskSystem implements SubSystem {

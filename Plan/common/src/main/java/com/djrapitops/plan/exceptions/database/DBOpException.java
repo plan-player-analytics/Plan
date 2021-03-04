@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * Runtime exception for wrapping database errors.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DBOpException extends IllegalStateException implements ExceptionWithContext {
 

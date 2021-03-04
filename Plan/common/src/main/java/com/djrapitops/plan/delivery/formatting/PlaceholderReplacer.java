@@ -24,7 +24,7 @@ import java.util.HashMap;
 /**
  * Formatter for replacing ${placeholder} values inside strings.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlaceholderReplacer extends HashMap<String, Serializable> implements Formatter<String> {
 

@@ -38,7 +38,7 @@ import java.util.concurrent.Future;
 /**
  * Class in charge of performing save operations when the server shuts down.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class ServerShutdownSave {
 

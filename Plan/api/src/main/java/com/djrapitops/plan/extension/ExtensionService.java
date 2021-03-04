@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * - Register your {@link DataExtension} with {@link ExtensionService#register(DataExtension)}
  * - Catch a possible IllegalArgumentException in case the DataExtension implementation is invalid.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ExtensionService {
 

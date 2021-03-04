@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Class responsible for calculating TPS every second.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class TPSCounter extends TaskSystem.Task {
 

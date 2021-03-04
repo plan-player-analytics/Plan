@@ -50,7 +50,7 @@ import java.util.function.Supplier;
 /**
  * Class containing main logic for different data related save and load functionality.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public abstract class SQLDB extends AbstractDatabase {
 

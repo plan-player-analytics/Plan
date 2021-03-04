@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * Exception that is thrown when a call to a DataExtension method throws an exception.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DataExtensionMethodCallException extends IllegalStateException {
 

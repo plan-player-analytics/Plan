@@ -21,7 +21,7 @@ import com.djrapitops.plugin.api.Check;
 /**
  * Utility class for checking if RedisBungee API is available.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RedisCheck {
 

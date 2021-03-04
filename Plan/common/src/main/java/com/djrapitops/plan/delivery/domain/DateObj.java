@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.domain;
 /**
  * Object that has a value tied to a date.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DateObj<T> implements DateHolder {
 

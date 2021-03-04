@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Transaction that removes outdated plugin's data after configurable threshold.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
 

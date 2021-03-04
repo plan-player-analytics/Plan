@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Task on networks that stores server configs in /plugins/Plan/serverConfiguration in database on boot.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NetworkConfigStoreTask extends TaskSystem.Task {

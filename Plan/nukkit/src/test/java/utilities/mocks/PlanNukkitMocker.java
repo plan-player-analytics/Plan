@@ -43,7 +43,7 @@ import static org.mockito.Mockito.doReturn;
 /**
  * Mocking Utility for Nukkit version of Plan.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanNukkitMocker extends Mocker {
 

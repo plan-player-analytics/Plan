@@ -28,7 +28,7 @@ package com.djrapitops.plan.api.events;
  * {@code event.isPlanSystemEnabled()} can be called to determine if the enable was successful.
  * It is not guaranteed that this event is called when the plugin fails to enable properly.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlanVelocityEnableEvent {
 

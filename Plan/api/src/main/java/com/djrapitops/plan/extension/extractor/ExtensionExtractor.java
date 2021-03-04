@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * This class can be used for testing validity of annotation implementations
  * in your unit tests to avoid runtime errors. {@link ExtensionExtractor#validateAnnotations()}
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public final class ExtensionExtractor {
 

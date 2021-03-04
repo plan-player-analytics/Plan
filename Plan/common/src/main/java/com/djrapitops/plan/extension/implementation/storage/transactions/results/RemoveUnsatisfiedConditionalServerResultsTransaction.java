@@ -40,7 +40,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * - Filter the join query for values where the condition did not match any provided condition in the join (Is null)
  * - Delete all server values with IDs that are returned by the left join query after filtering
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RemoveUnsatisfiedConditionalServerResultsTransaction extends ThrowawayTransaction {
 

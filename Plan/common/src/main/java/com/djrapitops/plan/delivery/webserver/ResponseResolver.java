@@ -48,13 +48,13 @@ import java.util.regex.Pattern;
  * - Some URLs are resolved with other PageResolvers pointed at pages.
  * - Some URLs point to resources that are resolved differently, those implementations are in this file.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ResponseResolver {
 
     private final DebugPageResolver debugPageResolver;
-    private QueryPageResolver queryPageResolver;
+    private final QueryPageResolver queryPageResolver;
     private final PlayersPageResolver playersPageResolver;
     private final PlayerPageResolver playerPageResolver;
     private final ServerPageResolver serverPageResolver;

@@ -23,7 +23,7 @@ import java.util.Optional;
 /**
  * Special Resolver that gives responses without user authentication.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface NoAuthResolver extends Resolver {
 

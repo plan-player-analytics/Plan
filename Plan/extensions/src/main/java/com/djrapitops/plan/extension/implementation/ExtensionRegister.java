@@ -36,7 +36,7 @@ import java.util.function.Predicate;
 /**
  * In charge of registering built in {@link com.djrapitops.plan.extension.DataExtension} implementations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ExtensionRegister {

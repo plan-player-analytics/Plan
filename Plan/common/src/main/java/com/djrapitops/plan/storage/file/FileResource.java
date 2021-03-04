@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 /**
  * {@link Resource} implementation for a {@link File}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class FileResource implements Resource {
 

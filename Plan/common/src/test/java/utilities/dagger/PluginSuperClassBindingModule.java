@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 /**
  * Module for binding Bukkit specific classes to the interface implementations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public class PluginSuperClassBindingModule {

@@ -30,7 +30,7 @@ import java.util.function.BooleanSupplier;
 /**
  * Transaction to update a player's ban status.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class BanStatusTransaction extends Transaction {
 

@@ -23,7 +23,7 @@ import java.util.function.Consumer;
  * <p>
  * Only one instance exists per runtime in order to notify others when the plugin enables.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CapabilitySvc implements CapabilityService {
 

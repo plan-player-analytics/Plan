@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Tests for {@link Median}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class MedianTest {
 

@@ -38,7 +38,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * join date than the first session Plan sees. This patch changes the register date in
  * plan_users if a smaller register date in plan_user_info is found.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RegisterDateMinimizationPatch extends Patch {
 

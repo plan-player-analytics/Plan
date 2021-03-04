@@ -22,7 +22,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 /**
  * Formats epoch milliseconds to the date format Javascript Date constructor expects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class JavascriptDateFormatter extends DateFormatter {
 

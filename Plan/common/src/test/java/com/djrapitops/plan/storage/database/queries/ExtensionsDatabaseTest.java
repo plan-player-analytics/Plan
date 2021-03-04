@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Contains database tests for DataExtension API.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 

@@ -19,7 +19,7 @@ package com.djrapitops.plan.exceptions.connection;
 /**
  * Thrown when Connection POST-request fails, general Exception.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WebException extends IllegalStateException {
 

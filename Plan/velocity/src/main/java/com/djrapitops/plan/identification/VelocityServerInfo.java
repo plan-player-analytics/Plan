@@ -32,7 +32,7 @@ import java.util.UUID;
 /**
  * Manages Server information on the Velocity instance.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class VelocityServerInfo extends ServerInfo {

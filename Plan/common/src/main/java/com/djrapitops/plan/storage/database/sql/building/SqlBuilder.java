@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.sql.building;
 /**
  * Class for building different SQL strings.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class SqlBuilder {
 

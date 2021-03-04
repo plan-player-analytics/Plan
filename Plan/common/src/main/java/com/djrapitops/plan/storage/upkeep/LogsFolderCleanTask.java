@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Task in charge of removing old log files
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class LogsFolderCleanTask extends TaskSystem.Task {

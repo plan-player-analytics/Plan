@@ -23,7 +23,7 @@ import java.util.*;
 /**
  * Bubble Chart that represents login "punches" of players.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PunchCard {
 

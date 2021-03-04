@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 /**
  * Utility class for different Predicates used in the plugin.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Predicates {
 

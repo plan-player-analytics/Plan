@@ -35,7 +35,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Transaction for cleaning up old data from the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class RemoveOldSampledDataTransaction extends ThrowawayTransaction {
 

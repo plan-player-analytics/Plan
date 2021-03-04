@@ -29,7 +29,7 @@ import java.util.function.Supplier;
  * <p>
  * Requires Capability SETTINGS_API
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface SettingsService {
 

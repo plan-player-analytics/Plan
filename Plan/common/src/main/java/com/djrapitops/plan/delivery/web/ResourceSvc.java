@@ -44,7 +44,7 @@ import java.util.function.Supplier;
 /**
  * ResourceService implementation.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ResourceSvc implements ResourceService {

@@ -26,7 +26,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValue
 /**
  * Increases the length of Strings in extension tables to 250 to avoid cutoffs and exceptions.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ExtensionTableRowValueLengthPatch extends Patch {
 

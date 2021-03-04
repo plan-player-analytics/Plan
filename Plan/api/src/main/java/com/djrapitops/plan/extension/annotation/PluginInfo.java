@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
 /**
  * Class Annotation for informing Plan about a plugin.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see TabOrder to determine preferred tab ordering if you use {@link Tab}s.
  */
 @Retention(RetentionPolicy.RUNTIME)

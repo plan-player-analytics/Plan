@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerVal
 /**
  * Transaction to store Extension String data for a server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StoreServerStringResultTransaction extends ThrowawayTransaction {
 

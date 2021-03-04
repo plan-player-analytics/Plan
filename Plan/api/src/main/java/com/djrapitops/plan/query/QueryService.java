@@ -29,7 +29,7 @@ import java.util.function.Consumer;
  * <p>
  * Requires Capability QUERY_API
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface QueryService {
 

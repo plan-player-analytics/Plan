@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2018 Risto Lahtela
+ * Copyright (c) 2021 AuroraLS3
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
 /**
  * {@link com.djrapitops.plugin.logging.console.PluginLogger} implementation for Nukkit.
  *
- * @author Rsl1222
+ * @author AuroraLS3
  */
 public class NukkitPluginLogger implements com.djrapitops.plugin.logging.console.PluginLogger {
 

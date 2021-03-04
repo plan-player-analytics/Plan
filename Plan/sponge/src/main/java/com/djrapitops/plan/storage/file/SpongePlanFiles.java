@@ -27,7 +27,7 @@ import java.io.File;
 /**
  * Implements jar resource fetching with Sponge Asset API.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class SpongePlanFiles extends PlanFiles {

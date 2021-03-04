@@ -50,7 +50,7 @@ import java.util.UUID;
 /**
  * Factory for creating different {@link Response} objects.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ResponseFactory {

@@ -39,7 +39,7 @@ import java.util.function.Function;
 /**
  * Gathers BooleanProvider method data.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class BooleanProviderValueGatherer {
 

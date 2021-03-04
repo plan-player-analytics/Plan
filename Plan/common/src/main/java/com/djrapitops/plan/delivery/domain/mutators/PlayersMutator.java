@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * Mutator for a bunch of {@link PlayerContainer}s.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PlayersMutator {
 

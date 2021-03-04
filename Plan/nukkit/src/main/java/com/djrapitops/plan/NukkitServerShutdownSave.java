@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 /**
  * ServerShutdownSave implementation for Nukkit based servers.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NukkitServerShutdownSave extends ServerShutdownSave {

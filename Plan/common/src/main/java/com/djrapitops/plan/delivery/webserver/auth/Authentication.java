@@ -22,7 +22,7 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 /**
  * Interface for different WebUser authentication methods used by Requests.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Authentication {
 

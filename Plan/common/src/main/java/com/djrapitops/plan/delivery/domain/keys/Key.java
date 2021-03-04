@@ -22,7 +22,7 @@ import java.util.Objects;
  * Identifier used for storing and fetching data from DataContainers.
  *
  * @param <T> Type of the object returned by the Value identified by this Key.
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Key<T> {
 

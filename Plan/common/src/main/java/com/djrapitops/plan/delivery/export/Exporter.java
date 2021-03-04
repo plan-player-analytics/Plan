@@ -33,7 +33,7 @@ import java.util.UUID;
 /**
  * Handles export for different pages.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class Exporter extends FileExporter {

@@ -44,7 +44,7 @@ import java.util.Optional;
 /**
  * Handles exporting of /network page html, data and resources.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class NetworkPageExporter extends FileExporter {
@@ -95,7 +95,13 @@ public class NetworkPageExporter extends FileExporter {
                 .resolve("index.html");
 
         Page page = pageFactory.networkPage();
-        export(to, exportPaths.resolveExportPaths(page.toHtml()));
+
+        // Fixes refreshingJsonRequest ignoring old data of export
+        String html = StringUtils.replaceEach(page.toHtml(),
+                new String[]{"loadPlayersOnlineGraph, 'network-overview', true);"},
+                new String[]{"loadPlayersOnlineGraph, 'network-overview');"});
+
+        export(to, exportPaths.resolveExportPaths(html));
     }
 
     /**
@@ -117,6 +123,7 @@ public class NetworkPageExporter extends FileExporter {
                 "network/playerbaseOverview",
                 "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=uniqueAndNew",
+                "graph?type=hourlyUniqueAndNew",
                 "graph?type=serverPie",
                 "graph?type=hostnamePie",
                 "graph?type=activity",
@@ -172,8 +179,8 @@ public class NetworkPageExporter extends FileExporter {
                 "./css/style.css",
                 "./vendor/jquery/jquery.min.js",
                 "./vendor/bootstrap/js/bootstrap.bundle.min.js",
-                "./vendor/datatables/jquery.dataTables.min.js",
-                "./vendor/datatables/dataTables.bootstrap4.min.js",
+                "./vendor/datatables/datatables.min.js",
+                "./vendor/datatables/datatables.min.css",
                 "./vendor/highcharts/highstock.js",
                 "./vendor/highcharts/map.js",
                 "./vendor/highcharts/world.js",
@@ -193,6 +200,7 @@ public class NetworkPageExporter extends FileExporter {
                 "./vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
                 "./vendor/fontawesome-free/webfonts/fa-solid-900.woff",
                 "./vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
+                "./js/domUtils.js",
                 "./js/sb-admin-2.js",
                 "./js/xmlhttprequests.js",
                 "./js/color-selector.js",

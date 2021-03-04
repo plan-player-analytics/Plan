@@ -29,7 +29,7 @@ import java.nio.charset.StandardCharsets;
  * <p>
  * It is assumed that any text based files are encoded in UTF-8.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface WebResource {
 

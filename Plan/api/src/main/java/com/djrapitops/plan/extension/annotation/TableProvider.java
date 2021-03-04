@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  * <p>
  * It is recommended to place each table on their own tab with a {@link Tab} annotation on the same method.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

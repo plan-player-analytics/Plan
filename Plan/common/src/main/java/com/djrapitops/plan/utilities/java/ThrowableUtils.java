@@ -21,7 +21,7 @@ import com.djrapitops.plugin.utilities.ArrayUtil;
 /**
  * Utilities for manipulating different Throwables.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ThrowableUtils {
 

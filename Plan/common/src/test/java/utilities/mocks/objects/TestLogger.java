@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 /**
  * Logger to use during tests with Mockito.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class TestLogger extends Logger {
 

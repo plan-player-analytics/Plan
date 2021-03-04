@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * Factory class for Bar Graphs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class BarGraphFactory {

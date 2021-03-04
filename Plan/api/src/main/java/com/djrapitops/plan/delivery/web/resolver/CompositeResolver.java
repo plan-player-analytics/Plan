@@ -34,7 +34,7 @@ import java.util.function.Predicate;
  * Example: {@code resolverService.registerResolver("/test/", compositeResolver);}
  * The Resolvers added to CompositeResolver will be given Request with URIPath "/".
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public final class CompositeResolver implements Resolver {
 

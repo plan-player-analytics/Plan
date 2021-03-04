@@ -1,4 +1,4 @@
-var linegraphButtons = [{
+const linegraphButtons = [{
     type: 'hour',
     count: 12,
     text: '12h'
@@ -19,7 +19,7 @@ var linegraphButtons = [{
     text: 'All'
 }];
 
-var graphs = [];
+const graphs = [];
 window.calendars = {};
 
 function activityPie(id, activitySeries) {
@@ -183,27 +183,40 @@ function onlineActivityCalendar(id, event_data, firstDay) {
 }
 
 function mapToDataSeries(performanceData) {
-    const dataSeries = {
-        playersOnline: [],
-        tps: [],
-        cpu: [],
-        ram: [],
-        entities: [],
-        chunks: [],
-        disk: []
-    };
-    for (let i = 0; i < performanceData.length; i++) {
-        const entry = performanceData[i];
-        const date = entry[0];
-        dataSeries.playersOnline[i] = [date, entry[1]];
-        dataSeries.tps[i] = [date, entry[2]];
-        dataSeries.cpu[i] = [date, entry[3]];
-        dataSeries.ram[i] = [date, entry[4]];
-        dataSeries.entities[i] = [date, entry[5]];
-        dataSeries.chunks[i] = [date, entry[6]];
-        dataSeries.disk[i] = [date, entry[7]];
-    }
-    return dataSeries;
+    const playersOnline = [];
+    const tps = [];
+    const cpu = [];
+    const ram = [];
+    const entities = [];
+    const chunks = [];
+    const disk = [];
+
+    return new Promise((resolve => {
+        let i = 0;
+        const length = performanceData.length;
+
+        function processNextThousand() {
+            const to = Math.min(i + 1000, length);
+            for (i; i < to; i++) {
+                const entry = performanceData[i];
+                const date = entry[0];
+                playersOnline[i] = [date, entry[1]];
+                tps[i] = [date, entry[2]];
+                cpu[i] = [date, entry[3]];
+                ram[i] = [date, entry[4]];
+                entities[i] = [date, entry[5]];
+                chunks[i] = [date, entry[6]];
+                disk[i] = [date, entry[7]];
+            }
+            if (i >= length) {
+                resolve({playersOnline, tps, cpu, ram, entities, chunks, disk})
+            } else {
+                setTimeout(processNextThousand, 10);
+            }
+        }
+
+        processNextThousand();
+    }))
 }
 
 function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries) {
@@ -434,15 +447,15 @@ function hostnamePie(id, hostnameTotals) {
 }
 
 function formatTimeAmount(ms) {
-    var out = "";
+    let out = "";
 
-    var seconds = Math.floor(ms / 1000);
+    let seconds = Math.floor(ms / 1000);
 
-    var dd = Math.floor(seconds / 86400);
+    const dd = Math.floor(seconds / 86400);
     seconds -= (dd * 86400);
-    var dh = Math.floor(seconds / 3600);
+    const dh = Math.floor(seconds / 3600);
     seconds -= (dh * 3600);
-    var dm = Math.floor(seconds / 60);
+    const dm = Math.floor(seconds / 60);
     seconds -= (dm * 60);
     seconds = Math.floor(seconds);
     if (dd !== 0) {
@@ -638,9 +651,9 @@ function worldMap(id, colorMin, colorMax, mapSeries) {
 }
 
 function worldPie(id, worldSeries, gmSeries) {
-    var defaultTitle = '';
-    var defaultSubtitle = 'Click to expand';
-    var chart = Highcharts.chart(id, {
+    const defaultTitle = '';
+    const defaultSubtitle = 'Click to expand';
+    const chart = Highcharts.chart(id, {
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: null,

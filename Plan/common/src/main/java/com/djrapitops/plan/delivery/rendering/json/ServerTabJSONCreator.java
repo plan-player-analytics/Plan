@@ -22,7 +22,7 @@ import java.util.function.Function;
 /**
  * Interface using Server UUID for creating Objects that can be turned into JSON with Gson.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ServerTabJSONCreator<T> extends Function<UUID, T> {
 

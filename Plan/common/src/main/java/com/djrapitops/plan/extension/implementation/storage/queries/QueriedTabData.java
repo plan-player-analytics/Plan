@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * Query utility for extracting Tabs.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class QueriedTabData {
 

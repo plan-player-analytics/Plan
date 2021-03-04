@@ -22,7 +22,7 @@ import com.djrapitops.plan.settings.config.paths.key.Setting;
 /**
  * {@link Setting} values that are in "Data_gathering" section.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DataGatheringSettings {
 

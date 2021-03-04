@@ -19,7 +19,7 @@ package com.djrapitops.plan.exceptions;
 /**
  * Illegal State somewhere during preparation.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PreparationException extends IllegalStateException {
 

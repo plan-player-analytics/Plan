@@ -26,7 +26,7 @@ import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalT
  * - OperationCriticalTransactions pass through the Access lock without blocking to allow the initial transactions.
  * - Queries inside Transactions skip access log to allow OperationCriticalTransactions perform queries.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DBAccessLock {
 

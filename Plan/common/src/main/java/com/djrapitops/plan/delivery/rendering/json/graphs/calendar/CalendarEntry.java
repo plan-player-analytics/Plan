@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * Represents an entry for FullCalendar json calendar.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CalendarEntry {
 

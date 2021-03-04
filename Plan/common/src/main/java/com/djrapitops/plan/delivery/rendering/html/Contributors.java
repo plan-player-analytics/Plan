@@ -25,7 +25,7 @@ import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.LANG;
 /**
  * Contains list of contributors to add to the about modal.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Contributors {
 
@@ -69,6 +69,8 @@ public class Contributors {
             new Contributor("Mastory_Md5", LANG),
             new Contributor("FluxCapacitor2", CODE),
             new Contributor("galexrt", LANG),
+            new Contributor("QuakyCZ", LANG),
+            new Contributor("MrFriggo", LANG),
     };
 
     private Contributors() {

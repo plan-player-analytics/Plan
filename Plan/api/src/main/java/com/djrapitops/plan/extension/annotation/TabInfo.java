@@ -24,7 +24,7 @@ import java.lang.annotation.*;
 /**
  * Class Annotation that allows determining an Icon and {@link ElementOrder} of a tab.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

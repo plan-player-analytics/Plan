@@ -40,7 +40,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
  * <p>
  * Actions table contained nickname change events and change to "last seen" saved space on the interface.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NicknameLastSeenPatch extends Patch {
 

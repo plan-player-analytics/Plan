@@ -22,7 +22,7 @@ import java.util.*;
 /**
  * Contains context for an error that might help debugging it.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ErrorContext implements Serializable {
 

@@ -35,7 +35,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerVal
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.StringDataProvider}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
 

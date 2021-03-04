@@ -21,7 +21,7 @@ import cn.nukkit.Server;
 /**
  * ServerProperties for Nukkit.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NukkitServerProperties extends ServerProperties {
 

@@ -40,7 +40,7 @@ import java.util.UUID;
 /**
  * Object that can be called to place data about players to the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ProviderValueGatherer {
 

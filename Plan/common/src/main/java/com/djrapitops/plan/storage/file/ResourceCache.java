@@ -28,7 +28,7 @@ import java.util.function.Supplier;
 /**
  * In-memory cache for different resources on disk or jar.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ResourceCache {
 

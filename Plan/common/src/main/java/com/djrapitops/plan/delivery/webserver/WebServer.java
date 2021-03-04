@@ -47,7 +47,7 @@ import java.security.cert.CertificateException;
 import java.util.concurrent.*;
 
 /**
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class WebServer implements SubSystem {

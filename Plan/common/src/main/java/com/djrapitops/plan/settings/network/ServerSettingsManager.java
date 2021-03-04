@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  * - Database updating related to config.yml
  * - File update operations from database related to config.yml
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ServerSettingsManager implements SubSystem {

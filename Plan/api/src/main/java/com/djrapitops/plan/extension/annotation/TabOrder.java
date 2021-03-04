@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * <p>
  * If tab order is not defined alphabetical order is used.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

@@ -36,6 +36,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
+import utilities.TestConstants;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -50,7 +51,7 @@ import static org.mockito.Mockito.when;
  * The setup assumes CI environment with MySQL service running.
  * 'MYSQL_DB' database should be created before the test.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see DatabaseTest
  * @see ExtensionsDatabaseTest
  * @see utilities.CIProperties for assumed MySQL setup.
@@ -106,7 +107,7 @@ class MySQLTest implements DatabaseTest,
         db().executeTransaction(new CreateTablesTransaction());
         db().executeTransaction(new RemoveEverythingTransaction());
 
-        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), "ServerName", "")));
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), TestConstants.SERVER_NAME, "")));
         assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
     }
     @AfterAll

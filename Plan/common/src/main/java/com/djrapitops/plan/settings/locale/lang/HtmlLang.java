@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings.locale.lang;
 /**
  * Lang enum for all text included in the html files.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum HtmlLang implements Lang {
 
@@ -92,6 +92,8 @@ public enum HtmlLang implements Lang {
     TITLE_30_DAYS("30 days"),
     TITLE_AS_NUMBERS("as Numbers"),
     LABEL_AVG_TPS("Average TPS"),
+    LABEL_AVG_ENTITIES("Average Entities"),
+    LABEL_AVG_CHUNKS("Average Chunks"),
     LABEL_LOW_TPS("Low TPS Spikes"),
     LABEL_DOWNTIME("Downtime"),
     // Sessions tab
@@ -99,7 +101,7 @@ public enum HtmlLang implements Lang {
     TITLE_PLAYER("Player"),
     TITLE_SESSION_START("Session Started"),
     TITLE_LENGTH(" Length"),
-    TITLE_SERVER("Server"), // Can cause issue with jquery.dataTables.js
+    TITLE_SERVER("Server"), // Can cause issue with datatables.js
     TITLE_MOST_PLAYED_WORLD("Most played World"),
     TEXT_CLICK_TO_EXPAND("Click to expand"),
     TITLE_SERVER_PLAYTIME_30("Server Playtime for 30 days"),
@@ -129,6 +131,7 @@ public enum HtmlLang implements Lang {
     SIDE_PVP_PVE("PvP & PvE"),
     SIDE_PERFORMANCE("Performance"),
     LABEL_RETENTION("New Player Retention"),
+    DESCRIBE_RETENTION_PREDICTION("This value is a prediction based on previous players."),
     TITLE_SERVER_AS_NUMBERS("Server as Numbers"),
     TITLE_ONLINE_ACTIVITY_AS_NUMBERS("Online Activity as Numbers"),
     COMPARING_15_DAYS("Comparing 15 days"),
@@ -256,6 +259,10 @@ public enum HtmlLang implements Lang {
     QUERY("Query<"),
     QUERY_MAKE_ANOTHER("Make another query"),
     QUERY_MAKE("Make a query"),
+
+    WARNING_NO_GAME_SERVERS("Some data requires Plan to be installed on game servers."),
+    WARNING_NO_GEOLOCATIONS("Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."),
+    WARNING_NO_SPONGE_CHUNKS("Chunks unavailable on Sponge"),
     ;
 
     private final String defaultValue;

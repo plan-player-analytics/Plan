@@ -21,7 +21,7 @@ package com.djrapitops.plan.extension;
  * <p>
  * You can also call the update methods via {@link Caller} manually.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum CallEvents {
 

@@ -34,6 +34,7 @@ Database:
     Database: Plan
     # Launch options to append after mysql driver address
     Launch_options: "?rewriteBatchedStatements=true&useSSL=false&serverTimezone=UTC"
+    Max_connections: 8
   H2:
     User: root
     Password: minecraft
@@ -49,6 +50,15 @@ Webserver:
   # InternalIP usually does not need to be changed, only change it if you know what you're doing!
   # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
   Internal_IP: 0.0.0.0
+  Cache:
+    Reduced_refresh_barrier: 15
+      Unit: SECONDS
+    Invalidate_query_results_on_disk_after: 7
+      Unit: DAYS
+    Invalidate_disk_cache_after: 2
+      Unit: DAYS
+    Invalidate_memory_cache_after: 5
+      Unit: MINUTES
   Security:
     SSL_certificate:
       KeyStore_path: Cert.jks

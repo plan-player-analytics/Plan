@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * World Map that uses iso-a3 specification of Country codes.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class WorldMap {
 

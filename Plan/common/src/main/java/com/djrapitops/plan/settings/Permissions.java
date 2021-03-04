@@ -19,7 +19,7 @@ package com.djrapitops.plan.settings;
 /**
  * Permissions class is used easily check every permission node.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum Permissions {
     SERVER("plan.server"),

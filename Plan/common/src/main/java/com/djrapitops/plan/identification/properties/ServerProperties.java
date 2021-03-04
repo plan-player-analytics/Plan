@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  * Class responsible for holding server variable values that do not change
  * without a reload.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ServerProperties {
 

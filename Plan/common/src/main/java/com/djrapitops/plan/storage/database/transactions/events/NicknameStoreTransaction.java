@@ -26,7 +26,7 @@ import java.util.function.BiPredicate;
 /**
  * Transaction to store player's nickname information in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NicknameStoreTransaction extends ThrowawayTransaction {
 

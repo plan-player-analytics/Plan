@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.domain.DateHolder;
 /**
  * Compares DateHolder objects so that most recent is last.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class DateHolderOldestComparator extends DateHolderRecentComparator {
 

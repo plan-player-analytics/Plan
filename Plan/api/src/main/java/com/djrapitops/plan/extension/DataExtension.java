@@ -65,7 +65,7 @@ package com.djrapitops.plan.extension;
  * - Annotation variable is over 50 characters (Or 150 if description)
  * - Method name is over 50 characters (Used as an identifier for storage)
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see com.djrapitops.plan.extension.annotation.PluginInfo Required Annotation
  * @see CallEvents for method call event types.
  */

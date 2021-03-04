@@ -30,7 +30,7 @@ import java.util.UUID;
 /**
  * Transaction to store player's Ping value on a server.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PingStoreTransaction extends Transaction {
 

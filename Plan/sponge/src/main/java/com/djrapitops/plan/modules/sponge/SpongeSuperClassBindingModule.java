@@ -37,7 +37,7 @@ import org.spongepowered.api.world.World;
 /**
  * Module for binding Sponge specific classes as interface implementations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Module
 public interface SpongeSuperClassBindingModule {

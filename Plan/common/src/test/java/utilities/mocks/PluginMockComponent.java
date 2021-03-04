@@ -27,7 +27,7 @@ import java.nio.file.Path;
 /**
  * Test utility for creating a dagger PlanComponent using a mocked Plan.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PluginMockComponent {
 

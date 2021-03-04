@@ -17,8 +17,6 @@
 package com.djrapitops.plan.extension;
 
 import com.djrapitops.plan.DebugChannels;
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONCache;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
@@ -46,7 +44,7 @@ import java.util.UUID;
 /**
  * Implementation for {@link ExtensionService}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 @Singleton
 public class ExtensionSvc implements ExtensionService {
@@ -196,9 +194,6 @@ public class ExtensionSvc implements ExtensionService {
         for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
             updateServerValues(gatherer, event);
         }
-        UUID serverUUID = serverInfo.getServerUUID();
-        JSONCache.invalidate(DataID.EXTENSION_NAV, serverUUID);
-        JSONCache.invalidate(DataID.EXTENSION_TABS, serverUUID);
     }
 
     public void updateServerValues(ProviderValueGatherer gatherer, CallEvents event) {

@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Test against exceptions due to unnamed geolocations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class WorldMapTest {
 

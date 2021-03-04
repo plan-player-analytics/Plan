@@ -19,7 +19,7 @@ package utilities;
 /**
  * Test Utility class that holds System property names used in Travis.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class CIProperties {
 

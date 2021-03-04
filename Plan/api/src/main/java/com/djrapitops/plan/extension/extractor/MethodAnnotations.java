@@ -26,7 +26,7 @@ import java.util.Optional;
 /**
  * Implementation detail, utility class for handling method annotations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class MethodAnnotations {
 

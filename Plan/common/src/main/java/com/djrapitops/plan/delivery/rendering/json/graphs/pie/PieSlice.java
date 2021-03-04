@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 /**
  * Represents a slice of a pie.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class PieSlice {
     private final String name;

@@ -27,7 +27,7 @@ import java.util.function.UnaryOperator;
 /**
  * Transaction to update Geo information of a player in the database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class GeoInfoStoreTransaction extends Transaction {
 

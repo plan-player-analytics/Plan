@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 /**
  * Service for making plugin resources customizable by user or Plan API.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface ResourceService {
 

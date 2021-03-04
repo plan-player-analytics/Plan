@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
 /**
  * Interface for interacting with a Plan SQL database.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public interface Database {
 

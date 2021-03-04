@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * Enum to determine font-awesome icon family.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public enum Family {
     SOLID,

@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.GroupDataProvider}.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class StorePlayerGroupsResultTransaction extends ThrowawayTransaction {
 

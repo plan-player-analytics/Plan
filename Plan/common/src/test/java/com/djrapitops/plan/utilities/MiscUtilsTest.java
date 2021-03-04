@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for various {@link MiscUtils} methods.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 class MiscUtilsTest {
 
@@ -43,10 +43,10 @@ class MiscUtilsTest {
 
     @Test
     void getNameShouldReturnNameWithPermission() {
-        String[] args = new String[]{"Rsl1122", "Test"};
+        String[] args = new String[]{"AuroraLS3", "Test"};
         Sender sender = mockAPlayerSender("TestName", true);
 
-        String expResult = "Rsl1122";
+        String expResult = "AuroraLS3";
         String result = MiscUtils.getPlayerName(args, sender);
 
         assertEquals(expResult, result);
@@ -54,7 +54,7 @@ class MiscUtilsTest {
 
     @Test
     void getNameShouldReturnNullWithoutPermission() {
-        String[] args = new String[]{"Rsl1122", "Test"};
+        String[] args = new String[]{"AuroraLS3", "Test"};
         Sender sender = mockAPlayerSender("TestName", false);
 
         String result = MiscUtils.getPlayerName(args, sender);

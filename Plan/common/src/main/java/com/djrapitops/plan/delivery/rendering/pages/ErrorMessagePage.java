@@ -27,7 +27,7 @@ import com.djrapitops.plan.version.VersionChecker;
 /**
  * Page to display error stacktrace.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class ErrorMessagePage implements Page {
 

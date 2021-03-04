@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Utility for performing Base64 operations.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class Base64Util {
 

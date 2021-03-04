@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * Represents a response that will be sent over HTTP.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see MimeType for MIME types that are commonly used.
  */
 public final class Response {

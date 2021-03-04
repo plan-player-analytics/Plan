@@ -21,7 +21,7 @@ package com.djrapitops.plan.delivery.web.resolver.exception;
  * <p>
  * Plan will create a "404 Not found" error page automatically.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  */
 public class NotFoundException extends IllegalArgumentException {
     public NotFoundException(String message) {

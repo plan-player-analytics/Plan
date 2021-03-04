@@ -37,7 +37,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Adds server_id field to worlds table.
  *
- * @author Rsl1122
+ * @author AuroraLS3
  * @see WorldsOptimizationPatch for removal of the field.
  */
 public class WorldsServerIDPatch extends Patch {
