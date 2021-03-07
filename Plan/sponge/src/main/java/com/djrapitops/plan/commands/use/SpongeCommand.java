@@ -18,9 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import org.spongepowered.api.command.CommandCallable;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -52,17 +50,14 @@ public class SpongeCommand implements CommandCallable {
 
     @Override
     public CommandResult process(CommandSource source, String arguments) {
-        runnableFactory.create("", new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    command.getExecutor().accept(getSender(source), new Arguments(arguments));
-                } catch (Exception e) {
-                    errorLogger.log(L.ERROR, e, ErrorContext.builder()
-                            .related(source.getClass())
-                            .related(arguments)
-                            .build());
-                }
+        runnableFactory.create(() -> {
+            try {
+                command.getExecutor().accept(getSender(source), new Arguments(arguments));
+            } catch (Exception e) {
+                errorLogger.error(e, ErrorContext.builder()
+                        .related(source.getClass())
+                        .related(arguments)
+                        .build());
             }
         }).runTaskAsynchronously();
         return CommandResult.success();
@@ -82,7 +77,7 @@ public class SpongeCommand implements CommandCallable {
             return command.getArgumentResolver()
                     .apply(getSender(source), new Arguments(arguments));
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+            errorLogger.error(e, ErrorContext.builder()
                     .related(source.getClass())
                     .related("tab completion")
                     .related(arguments)

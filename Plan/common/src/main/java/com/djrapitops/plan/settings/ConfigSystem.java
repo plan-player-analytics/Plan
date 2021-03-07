@@ -21,19 +21,17 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.TimeZoneUtility;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.debug.*;
-import com.djrapitops.plugin.utilities.Verify;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.TimeZone;
 
 /**
  * System for Config and other user customizable options.
@@ -81,13 +79,9 @@ public abstract class ConfigSystem implements SubSystem {
             ));
             config.save();
 
-            if (logger.getDebugLogger() instanceof CombineDebugLogger) {
-                setDebugMode();
-            }
-
             checkWrongTimeZone();
         } catch (IOException e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.getConfigFilePath()).build());
+            errorLogger.error(e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.getConfigFilePath()).build());
             throw new EnableException("Failed to save default config: " + e.getMessage(), e);
         }
         theme.enable();
@@ -99,24 +93,6 @@ public abstract class ConfigSystem implements SubSystem {
         if (!foundTZ.isPresent()) {
             logger.warn("Config: " + FormatSettings.TIMEZONE.getPath() + " has invalid value '" + timeZone + "', using GMT+0");
         }
-    }
-
-    private void setDebugMode() {
-        CombineDebugLogger debugLogger = (CombineDebugLogger) logger.getDebugLogger();
-
-        String debugMode = config.get(PluginSettings.DEBUG);
-
-        List<DebugLogger> loggers = new ArrayList<>();
-        if (Verify.containsOne(debugMode, "true", "both", "all", "console")) {
-            loggers.add(new ConsoleDebugLogger(logger));
-        }
-        if (Verify.containsOne(debugMode, "true", "both", "all", "file")) {
-            loggers.add(new FolderTimeStampFileDebugLogger(files.getLogsFolder(), () -> errorLogger));
-        }
-        if (Verify.containsOne(debugMode, "true", "both", "all", "memory")) {
-            loggers.add(debugLogger.getDebugLogger(MemoryDebugLogger.class).orElse(new MemoryDebugLogger()));
-        }
-        debugLogger.setDebugLoggers(loggers.toArray(new DebugLogger[0]));
     }
 
     /**
@@ -135,7 +111,7 @@ public abstract class ConfigSystem implements SubSystem {
         try {
             config.read();
         } catch (IOException e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix read permissions to " + config.getConfigFilePath()).build());
+            errorLogger.error(e, ErrorContext.builder().whatToDo("Fix read permissions to " + config.getConfigFilePath()).build());
         }
     }
 }

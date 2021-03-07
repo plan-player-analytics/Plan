@@ -33,7 +33,7 @@ public class FormatSettings {
     public static final Setting<String> DATE_FULL = new StringSetting("Formatting.Dates.Full");
     public static final Setting<String> DATE_NO_SECONDS = new StringSetting("Formatting.Dates.NoSeconds");
     public static final Setting<String> DATE_CLOCK = new StringSetting("Formatting.Dates.JustClock");
-    public static final Setting<String> TIMEZONE = new StringSetting("Formatting.Dates.TimeZone");
+    public static final Setting<String> TIMEZONE = new StringSetting("Formatting.Dates.TimeZone", "server");
     public static final Setting<String> YEAR = new StringSetting("Formatting.Time_amount.Year");
     public static final Setting<String> YEARS = new StringSetting("Formatting.Time_amount.Years");
     public static final Setting<String> MONTH = new StringSetting("Formatting.Time_amount.Month");

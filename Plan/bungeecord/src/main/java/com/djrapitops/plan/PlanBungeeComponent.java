@@ -21,6 +21,7 @@ import com.djrapitops.plan.modules.*;
 import com.djrapitops.plan.modules.bungee.*;
 import dagger.BindsInstance;
 import dagger.Component;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
 
 import javax.inject.Singleton;
 
@@ -34,7 +35,7 @@ import javax.inject.Singleton;
         BungeePlanModule.class,
         BungeeCommandModule.class,
         SystemObjectProvidingModule.class,
-        APFModule.class,
+        PlatformAbstractionLayerModule.class,
         FiltersModule.class,
         PlaceholderModule.class,
 
@@ -54,6 +55,9 @@ public interface PlanBungeeComponent {
 
         @BindsInstance
         Builder plan(PlanBungee plan);
+
+        @BindsInstance
+        Builder abstractionLayer(PlatformAbstractionLayer abstractionLayer);
 
         PlanBungeeComponent build();
     }

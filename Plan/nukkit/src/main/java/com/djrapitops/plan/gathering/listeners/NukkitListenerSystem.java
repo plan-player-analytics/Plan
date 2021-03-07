@@ -16,16 +16,15 @@
  */
 package com.djrapitops.plan.gathering.listeners;
 
-import cn.nukkit.event.HandlerList;
-import com.djrapitops.plan.PlanNukkit;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.gathering.listeners.nukkit.*;
+import net.playeranalytics.plugin.server.Listeners;
 
 import javax.inject.Inject;
 
 public class NukkitListenerSystem extends ListenerSystem {
 
-    private final PlanNukkit plugin;
+    private final Listeners listeners;
 
     private final Status status;
     private final PlayerOnlineListener playerOnlineListener;
@@ -36,16 +35,17 @@ public class NukkitListenerSystem extends ListenerSystem {
     private final NukkitAFKListener afkListener;
 
     @Inject
-    public NukkitListenerSystem(PlanNukkit plugin,
-                                Status status,
-                                PlayerOnlineListener playerOnlineListener,
-                                ChatListener chatListener,
-                                GameModeChangeListener gamemodeChangeListener,
-                                WorldChangeListener worldChangeListener,
-                                DeathEventListener deathEventListener,
-                                NukkitAFKListener afkListener
+    public NukkitListenerSystem(
+            Listeners listeners,
+            Status status,
+            PlayerOnlineListener playerOnlineListener,
+            ChatListener chatListener,
+            GameModeChangeListener gamemodeChangeListener,
+            WorldChangeListener worldChangeListener,
+            DeathEventListener deathEventListener,
+            NukkitAFKListener afkListener
     ) {
-        this.plugin = plugin;
+        this.listeners = listeners;
         this.status = status;
 
         this.playerOnlineListener = playerOnlineListener;
@@ -58,20 +58,18 @@ public class NukkitListenerSystem extends ListenerSystem {
 
     @Override
     protected void registerListeners() {
-        plugin.registerListener(
-                playerOnlineListener,
-                chatListener,
-                gamemodeChangeListener,
-                worldChangeListener,
-                deathEventListener,
-                afkListener
-        );
+        listeners.registerListener(playerOnlineListener);
+        listeners.registerListener(chatListener);
+        listeners.registerListener(gamemodeChangeListener);
+        listeners.registerListener(worldChangeListener);
+        listeners.registerListener(deathEventListener);
+        listeners.registerListener(afkListener);
         status.setCountKicks(true);
     }
 
     @Override
     protected void unregisterListeners() {
-        HandlerList.unregisterAll(plugin);
+        listeners.unregisterListeners();
     }
 
     @Override

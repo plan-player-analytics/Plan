@@ -18,7 +18,7 @@ package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
-import com.djrapitops.plugin.api.TimeAmount;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

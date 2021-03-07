@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
-import com.djrapitops.plugin.utilities.Verify;
-
 import java.util.Map;
 import java.util.Optional;
 
@@ -92,7 +90,7 @@ public class GMTimes extends TimeKeeper {
      * @throws IllegalArgumentException If any parameter is null.
      */
     public void setAllGMTimes(long... times) {
-        Verify.nullCheck(times);
+        if (times == null) throw new IllegalArgumentException("'times' should not be null!");
         String[] gms = getGMKeyArray();
         int size = times.length;
         for (int i = 0; i < 4; i++) {

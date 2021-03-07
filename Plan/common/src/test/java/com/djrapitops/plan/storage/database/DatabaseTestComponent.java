@@ -24,8 +24,14 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import dagger.BindsInstance;
 import dagger.Component;
+import dagger.Module;
+import dagger.Provides;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.server.PluginLogger;
 import utilities.DBPreparer;
+import utilities.TestPluginLogger;
 import utilities.dagger.*;
+import utilities.mocks.objects.TestRunnableFactory;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -37,7 +43,7 @@ import java.nio.file.Path;
         TestSystemObjectProvidingModule.class,
         FiltersModule.class,
 
-        TestAPFModule.class,
+        DatabaseTestComponent.DBTestModule.class,
         PlanPluginModule.class,
         PluginServerPropertiesModule.class,
         PluginSuperClassBindingModule.class
@@ -76,6 +82,28 @@ public interface DatabaseTestComponent extends DBPreparer.Dependencies {
         Builder bindTemporaryDirectory(@Named("tempDir") Path tempDir);
 
         DatabaseTestComponent build();
+    }
+
+    @Module
+    class DBTestModule {
+        @Provides
+        @Singleton
+        PluginLogger provideLogger() {
+            return new TestPluginLogger();
+        }
+
+        @Provides
+        @Singleton
+        RunnableFactory provideRunnableFactory() {
+            return new TestRunnableFactory();
+        }
+
+        @Provides
+        @Singleton
+        @Named("currentVersion")
+        String provideCurrentVersion() {
+            return "1.0.0";
+        }
     }
 
 }

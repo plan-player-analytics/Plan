@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
+import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.database.DBOpException;
@@ -42,8 +43,6 @@ import com.djrapitops.plan.storage.database.transactions.commands.SetServerAsUni
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -128,7 +127,7 @@ public class DatabaseCommands {
             toDB.init();
             toDB.executeTransaction(new BackupCopyTransaction(fromDB, toDB)).get();
         } catch (DBOpException | ExecutionException e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, arguments).build());
+            errorLogger.error(e, ErrorContext.builder().related(sender, arguments).build());
         } catch (InterruptedException e) {
             toDB.close();
             Thread.currentThread().interrupt();
@@ -203,7 +202,7 @@ public class DatabaseCommands {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(backupDBFile, toDB.getType(), toDB.getState()).build());
+            errorLogger.error(e, ErrorContext.builder().related(backupDBFile, toDB.getType(), toDB.getState()).build());
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
@@ -265,7 +264,7 @@ public class DatabaseCommands {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, fromDB.getName() + "->" + toDB.getName()).build());
+            errorLogger.error(e, ErrorContext.builder().related(sender, fromDB.getName() + "->" + toDB.getName()).build());
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
@@ -320,7 +319,7 @@ public class DatabaseCommands {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, fromDB.getName()).build());
+            errorLogger.error(e, ErrorContext.builder().related(sender, fromDB.getName()).build());
         }
     }
 
@@ -372,7 +371,7 @@ public class DatabaseCommands {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(sender, database.getType().getName(), playerToRemove).build());
+            errorLogger.error(e, ErrorContext.builder().related(sender, database.getType().getName(), playerToRemove).build());
         }
     }
 
@@ -415,7 +414,7 @@ public class DatabaseCommands {
             config.set(DatabaseSettings.TYPE, toDB.getName());
             config.save();
         } catch (DBOpException | IOException e) {
-            errorLogger.log(L.WARN, e, ErrorContext.builder().related(toDB).build());
+            errorLogger.warn(e, ErrorContext.builder().related(toDB).build());
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
             return;
         }

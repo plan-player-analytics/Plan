@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
-import com.djrapitops.plugin.utilities.Verify;
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,8 +34,8 @@ public class BaseUser {
     private final int timesKicked;
 
     public BaseUser(UUID uuid, String name, long registered, int timesKicked) {
-        Verify.nullCheck(uuid, () -> new IllegalArgumentException("'uuid' can not be null"));
-        Verify.nullCheck(name, () -> new IllegalArgumentException("'name' can not be null"));
+        if (uuid == null) throw new IllegalArgumentException("'uuid' can not be null");
+        if (name == null) throw new IllegalArgumentException("'name' can not be null");
 
         this.uuid = uuid;
         this.name = name;

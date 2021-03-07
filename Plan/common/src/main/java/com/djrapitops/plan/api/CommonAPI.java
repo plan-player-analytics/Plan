@@ -28,8 +28,7 @@ import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQue
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -94,7 +93,7 @@ public class CommonAPI implements PlanAPI {
         try {
             return queryDB(UserIdentifierQueries.fetchAllPlayerNames());
         } catch (DBOpException e) {
-            errorLogger.log(L.ERROR, this.getClass(), e);
+            errorLogger.error(e);
             return new HashMap<>();
         }
     }

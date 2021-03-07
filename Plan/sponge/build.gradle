@@ -12,7 +12,7 @@ dependencies {
     compile project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compile "com.djrapitops:AbstractPluginFramework-sponge:$abstractPluginFrameworkVersion"
+    compile "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
     compile "org.bstats:bstats-sponge:$bstatsVersion"
 
     compileOnly "org.spongepowered:spongeapi:$spongeVersion"

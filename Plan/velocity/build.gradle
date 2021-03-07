@@ -12,7 +12,7 @@ dependencies {
     compile project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compile "com.djrapitops:AbstractPluginFramework-velocity:$abstractPluginFrameworkVersion"
+    compile "net.playeranalytics:platform-abstraction-layer-velocity:$palVersion"
     compile "org.bstats:bstats-velocity:$bstatsVersion"
 
     compileOnly "com.velocitypowered:velocity-api:$velocityVersion"

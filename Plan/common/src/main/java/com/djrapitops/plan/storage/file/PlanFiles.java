@@ -18,7 +18,6 @@ package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -95,13 +94,11 @@ public class PlanFiles implements SubSystem {
     public void enable() {
         ResourceCache.invalidateAll();
         ResourceCache.cleanUp();
-        Verify.isTrue((dataFolder.exists() && dataFolder.isDirectory()) || dataFolder.mkdirs(),
-                () -> new EnableException("Could not create data folder at " + dataFolder.getAbsolutePath()));
         try {
-            Verify.isTrue((configFile.exists() && configFile.isFile()) || configFile.createNewFile(),
-                    () -> new EnableException("Could not create config file at " + configFile.getAbsolutePath()));
+            Files.createDirectories(dataFolder.toPath());
+            if (!configFile.exists()) Files.createFile(configFile.toPath());
         } catch (IOException e) {
-            throw new EnableException("Failed to create config.yml", e);
+            throw new EnableException("Failed to create config.yml, " + e.getMessage(), e);
         }
     }
 

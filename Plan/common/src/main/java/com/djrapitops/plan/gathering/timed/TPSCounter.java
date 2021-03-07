@@ -19,10 +19,9 @@ package com.djrapitops.plan.gathering.timed;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.util.concurrent.TimeUnit;
 
@@ -50,7 +49,7 @@ public abstract class TPSCounter extends TaskSystem.Task {
             pulse();
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
             logger.error("TPS Count Task Disabled due to error, reload Plan to re-enable.");
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("See if a restart fixes this or Report this").build());
+            errorLogger.error(e, ErrorContext.builder().whatToDo("See if a restart fixes this or Report this").build());
             cancel();
         }
     }
@@ -58,7 +57,7 @@ public abstract class TPSCounter extends TaskSystem.Task {
     public void register(RunnableFactory runnableFactory) {
         long delay = TimeAmount.toTicks(1L, TimeUnit.MINUTES);
         long period = TimeAmount.toTicks(1L, TimeUnit.SECONDS);
-        runnableFactory.create(null, this).runTaskTimer(delay, period);
+        runnableFactory.create(this).runTaskTimer(delay, period);
     }
 
     public abstract void pulse();

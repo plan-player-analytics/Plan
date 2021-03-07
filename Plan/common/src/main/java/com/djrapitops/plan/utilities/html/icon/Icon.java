@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.utilities.html.icon;
 
-import com.djrapitops.plugin.utilities.Verify;
-
 /**
  * @deprecated This Class exists to keep plugins that used PluginData from breaking.
  */
@@ -100,7 +98,6 @@ public class Icon {
         }
 
         public Icon build() {
-            Verify.nullCheck(icon.name, () -> new IllegalStateException("'name' was not defined yet!"));
             return icon;
         }
 

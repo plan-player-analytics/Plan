@@ -26,6 +26,8 @@ import com.djrapitops.plan.modules.bukkit.BukkitSuperClassBindingModule;
 import com.djrapitops.plan.modules.bukkit.BukkitTaskModule;
 import dagger.BindsInstance;
 import dagger.Component;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
+import org.bukkit.Server;
 
 import javax.inject.Singleton;
 
@@ -38,7 +40,7 @@ import javax.inject.Singleton;
 @Component(modules = {
         BukkitPlanModule.class,
         SystemObjectProvidingModule.class,
-        APFModule.class,
+        PlatformAbstractionLayerModule.class,
         FiltersModule.class,
         PlaceholderModule.class,
 
@@ -61,7 +63,13 @@ public interface PlanBukkitComponent {
     interface Builder {
 
         @BindsInstance
-        Builder plan(Plan plan);
+        Builder plan(PlanPlugin plan);
+
+        @BindsInstance
+        Builder abstractionLayer(PlatformAbstractionLayer abstractionLayer);
+
+        @BindsInstance
+        Builder server(Server server);
 
         PlanBukkitComponent build();
     }

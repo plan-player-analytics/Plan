@@ -43,12 +43,8 @@ import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.jupiter.api.Test;
-import utilities.FieldFetcher;
-import utilities.RandomData;
-import utilities.TestConstants;
-import utilities.TestData;
+import utilities.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

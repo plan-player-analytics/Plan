@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plugin.api.Check;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 
@@ -38,13 +37,22 @@ public class BStatsBukkit {
 
     private void registerConfigSettingGraphs() {
         String serverType = plugin.getServer().getName();
-        if ("CraftBukkit".equals(serverType) && Check.isSpigotAvailable()) {
+        if ("CraftBukkit".equals(serverType) && isSpigotAvailable()) {
             serverType = "Spigot";
         }
         String databaseType = plugin.getSystem().getDatabaseSystem().getDatabase().getType().getName();
 
         addStringSettingPie("server_type", serverType);
         addStringSettingPie("database_type", databaseType);
+    }
+
+    private boolean isSpigotAvailable() {
+        try {
+            Class.forName("org.spigotmc.CustomTimingsHandler");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     protected void addStringSettingPie(String id, String setting) {

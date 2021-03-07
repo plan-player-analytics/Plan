@@ -16,10 +16,10 @@
  */
 package utilities.mocks.objects;
 
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.PluginRunnable;
-import com.djrapitops.plugin.task.PluginTask;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.PluginRunnable;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.Task;
+import net.playeranalytics.plugin.scheduling.UnscheduledTask;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.lenient;
@@ -27,13 +27,10 @@ import static org.mockito.Mockito.mock;
 
 /**
  * Test implementation of {@link RunnableFactory}.
- * <p>
- * Does not run the {@link AbsRunnable} supplied to it to prevent test collisions
- * from improperly scheduled tasks.
  *
  * @author AuroraLS3
  */
-public class TestRunnableFactory extends RunnableFactory {
+public class TestRunnableFactory implements RunnableFactory {
 
     private final boolean callOnSameThread;
 
@@ -50,8 +47,18 @@ public class TestRunnableFactory extends RunnableFactory {
     }
 
     @Override
-    protected PluginRunnable createNewRunnable(String name, AbsRunnable runnable, long l) {
-        PluginRunnable mock = mock(PluginRunnable.class);
+    public UnscheduledTask create(Runnable runnable) {
+        return create(new PluginRunnable() {
+            @Override
+            public void run() {
+                runnable.run();
+            }
+        });
+    }
+
+    @Override
+    public UnscheduledTask create(PluginRunnable runnable) {
+        UnscheduledTask mock = mock(UnscheduledTask.class);
         if (callOnSameThread) {
             lenient().when(mock.runTask()).then(invocation -> run(runnable));
             lenient().when(mock.runTaskAsynchronously()).then(invocation -> run(runnable));
@@ -63,9 +70,9 @@ public class TestRunnableFactory extends RunnableFactory {
         return mock;
     }
 
-    private PluginTask run(AbsRunnable runnable) {
+    private Task run(PluginRunnable runnable) {
         runnable.run();
-        return null;
+        return Mockito.mock(Task.class);
     }
 
     @Override

@@ -24,14 +24,12 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.upkeep.DBKeepAliveTask;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.PluginTask;
-import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.Task;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,7 +47,7 @@ public class SQLiteDB extends SQLDB {
     private final File databaseFile;
     private final String dbName;
     private Connection connection;
-    private PluginTask connectionPingTask;
+    private Task connectionPingTask;
 
     private SQLiteDB(
             File databaseFile,
@@ -81,14 +79,13 @@ public class SQLiteDB extends SQLDB {
         try {
             Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
-            errorLogger.log(L.CRITICAL, e, ErrorContext.builder().whatToDo("Install SQLite Driver to the server").build());
+            errorLogger.critical(e, ErrorContext.builder().whatToDo("Install SQLite Driver to the server").build());
             return null;
         }
 
         String dbFilePath = dbFile.getAbsolutePath();
 
         Connection newConnection = getConnectionFor(dbFilePath);
-        logger.debug("SQLite " + dbName + ": Opened a new Connection");
         newConnection.setAutoCommit(false);
         return newConnection;
     }
@@ -106,7 +103,7 @@ public class SQLiteDB extends SQLDB {
         stopConnectionPingTask();
         try {
             // Maintains Connection.
-            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
+            connectionPingTask = runnableFactory.create(
                     new DBKeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorLogger)
             ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
         } catch (Exception ignored) {
@@ -140,13 +137,10 @@ public class SQLiteDB extends SQLDB {
 
     @Override
     public void close() {
-        logger.debug("SQLite Connection close prompted by: " + ThrowableUtils.findCallerAfterClass(Thread.currentThread().getStackTrace(), SQLiteDB.class));
-
         super.close();
         stopConnectionPingTask();
 
         if (connection != null) {
-            logger.debug("SQLite " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
         }
     }

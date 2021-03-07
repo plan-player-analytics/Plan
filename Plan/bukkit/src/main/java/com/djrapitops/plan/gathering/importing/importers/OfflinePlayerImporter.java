@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.gathering.importing.importers;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 import com.djrapitops.plan.gathering.importing.data.ServerImportData;
 import com.djrapitops.plan.gathering.importing.data.UserImportData;
@@ -40,12 +39,11 @@ public class OfflinePlayerImporter extends BukkitImporter {
 
     @Inject
     public OfflinePlayerImporter(
-            Plan plugin,
             GeolocationCache geolocationCache,
             DBSystem dbSystem,
             ServerInfo serverInfo
     ) {
-        super(plugin, geolocationCache, dbSystem, serverInfo, "offline");
+        super(geolocationCache, dbSystem, serverInfo, "offline");
     }
 
     @Override

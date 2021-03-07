@@ -24,7 +24,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -68,7 +67,7 @@ public class GameModeChangeListener implements Listener {
         try {
             actOnEvent(event);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, event.getPlayer().getGameMode() + "->" + event.getNewGameMode()).build());
+            errorLogger.error(e, ErrorContext.builder().related(event, event.getPlayer().getGameMode() + "->" + event.getNewGameMode()).build());
         }
     }
 

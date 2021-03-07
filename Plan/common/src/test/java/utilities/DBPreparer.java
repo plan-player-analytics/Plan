@@ -26,8 +26,6 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
-import com.djrapitops.plugin.utilities.Format;
-import com.djrapitops.plugin.utilities.Verify;
 import com.google.common.util.concurrent.MoreExecutors;
 
 import java.util.Optional;
@@ -74,24 +72,19 @@ public class DBPreparer {
         String user = System.getenv(CIProperties.MYSQL_USER);
         String pass = System.getenv(CIProperties.MYSQL_PASS);
         String port = System.getenv(CIProperties.MYSQL_PORT);
-        if (Verify.containsNull(database, user)) {
+        if (database == null || user == null) {
             return Optional.empty();
         }
 
-        // Attempt to Prevent SQL Injection with Environment variable.
-        String formattedDatabase = new Format(database)
-                .removeSymbols()
-                .toString();
-
         String dbName = DBType.MYSQL.getName();
 
-        config.set(DatabaseSettings.MYSQL_DATABASE, formattedDatabase);
+        config.set(DatabaseSettings.MYSQL_DATABASE, database);
         config.set(DatabaseSettings.MYSQL_USER, user);
         config.set(DatabaseSettings.MYSQL_PASS, pass != null ? pass : "");
         config.set(DatabaseSettings.MYSQL_HOST, "127.0.0.1");
         config.set(DatabaseSettings.MYSQL_PORT, port != null ? port : "3306");
         config.set(DatabaseSettings.TYPE, dbName);
-        return Optional.of(formattedDatabase);
+        return Optional.of(database);
     }
 
     public Optional<Database> prepareMySQL() {

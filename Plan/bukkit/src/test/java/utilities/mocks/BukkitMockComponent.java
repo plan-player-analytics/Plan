@@ -17,11 +17,18 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.DaggerPlanBukkitComponent;
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanBukkitComponent;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
+import org.bukkit.Server;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.mockito.Mockito;
+import utilities.TestConstants;
 
 import java.nio.file.Path;
+
+import static org.mockito.Mockito.doReturn;
 
 /**
  * Test utility for creating a dagger PlanComponent using a mocked Plan.
@@ -32,20 +39,17 @@ public class BukkitMockComponent {
 
     private final Path tempDir;
 
-    private Plan planMock;
+    private PlanPlugin planMock;
     private PlanBukkitComponent component;
 
     public BukkitMockComponent(Path tempDir) {
         this.tempDir = tempDir;
     }
 
-    public Plan getPlanMock() throws Exception {
+    public PlanPlugin getPlanMock() throws Exception {
         if (planMock == null) {
-            planMock = PlanBukkitMocker.setUp()
+            planMock = PlanPluginMocker.setUp()
                     .withDataFolder(tempDir.toFile())
-                    .withPluginDescription()
-                    .withResourceFetchingFromJar()
-                    .withServer()
                     .getPlanMock();
         }
         return planMock;
@@ -53,8 +57,30 @@ public class BukkitMockComponent {
 
     public PlanSystem getPlanSystem() throws Exception {
         if (component == null) {
-            component = DaggerPlanBukkitComponent.builder().plan(getPlanMock()).build();
+            PlanPlugin planMock = getPlanMock();
+            component = DaggerPlanBukkitComponent.builder()
+                    .plan(planMock)
+                    .abstractionLayer(new TestPlatformAbstractionLayer(planMock))
+                    .server(mockServer())
+                    .build();
         }
         return component.system();
+    }
+
+    private Server mockServer() {
+        Server serverMock = Mockito.mock(Server.class);
+        doReturn("").when(serverMock).getIp();
+        doReturn("Bukkit").when(serverMock).getName();
+        doReturn(25565).when(serverMock).getPort();
+        doReturn("1.12.2").when(serverMock).getVersion();
+        doReturn("32423").when(serverMock).getBukkitVersion();
+        doReturn(TestConstants.SERVER_MAX_PLAYERS).when(serverMock).getMaxPlayers();
+
+        ConsoleCommandSender sender = Mockito.mock(ConsoleCommandSender.class);
+        doReturn(sender).when(serverMock).getConsoleSender();
+
+        BukkitScheduler bukkitScheduler = Mockito.mock(BukkitScheduler.class);
+        doReturn(bukkitScheduler).when(serverMock).getScheduler();
+        return serverMock;
     }
 }

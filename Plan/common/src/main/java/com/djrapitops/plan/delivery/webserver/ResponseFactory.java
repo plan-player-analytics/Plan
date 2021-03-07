@@ -81,14 +81,6 @@ public class ResponseFactory {
                 () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
     }
 
-    public Response debugPageResponse() {
-        try {
-            return forPage(pageFactory.debugPage());
-        } catch (IOException e) {
-            return forInternalError(e, "Failed to generate debug page");
-        }
-    }
-
     private Response forPage(Page page) {
         return Response.builder()
                 .setMimeType(MimeType.HTML)

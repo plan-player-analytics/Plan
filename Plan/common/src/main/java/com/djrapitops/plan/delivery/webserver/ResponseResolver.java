@@ -33,7 +33,6 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -53,7 +52,6 @@ import java.util.regex.Pattern;
 @Singleton
 public class ResponseResolver {
 
-    private final DebugPageResolver debugPageResolver;
     private final QueryPageResolver queryPageResolver;
     private final PlayersPageResolver playersPageResolver;
     private final PlayerPageResolver playerPageResolver;
@@ -78,7 +76,6 @@ public class ResponseResolver {
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
 
-            DebugPageResolver debugPageResolver,
             QueryPageResolver queryPageResolver,
             PlayersPageResolver playersPageResolver,
             PlayerPageResolver playerPageResolver,
@@ -98,7 +95,6 @@ public class ResponseResolver {
         this.resolverService = resolverService;
         this.responseFactory = responseFactory;
         this.webServer = webServer;
-        this.debugPageResolver = debugPageResolver;
         this.queryPageResolver = queryPageResolver;
         this.playersPageResolver = playersPageResolver;
         this.playerPageResolver = playerPageResolver;
@@ -117,7 +113,6 @@ public class ResponseResolver {
     public void registerPages() {
         String plugin = "Plan";
         resolverService.registerResolver(plugin, "/robots.txt", (NoAuthResolver) request -> Optional.of(responseFactory.robotsResponse()));
-        resolverService.registerResolver(plugin, "/debug", debugPageResolver);
         resolverService.registerResolver(plugin, "/query", queryPageResolver);
         resolverService.registerResolver(plugin, "/players", playersPageResolver);
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
@@ -149,7 +144,7 @@ public class ResponseResolver {
         } catch (WebUserAuthException e) {
             throw e; // Pass along
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(request).build());
+            errorLogger.error(e, ErrorContext.builder().related(request).build());
             return responseFactory.internalErrorResponse(e, "Failed to get a response");
         }
     }

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -73,5 +74,9 @@ public enum ElementOrder {
         }
 
         return order.toArray(new ElementOrder[0]);
+    }
+
+    public static List<ElementOrder> valuesAsList() {
+        return Arrays.asList(values());
     }
 }

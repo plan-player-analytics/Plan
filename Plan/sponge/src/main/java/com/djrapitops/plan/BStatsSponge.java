@@ -17,13 +17,12 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plugin.task.AbsRunnable;
 import org.bstats.charts.SimplePie;
 import org.bstats.sponge.Metrics;
 
 import java.io.Serializable;
 
-public class BStatsSponge extends AbsRunnable {
+public class BStatsSponge implements Runnable {
 
     private final Metrics metrics;
     private final Database database;

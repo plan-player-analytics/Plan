@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.utilities.java;
 
-import com.djrapitops.plugin.utilities.ArrayUtil;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * Utilities for manipulating different Throwables.
@@ -34,7 +35,13 @@ public class ThrowableUtils {
         while (cause.getCause() != null) {
             cause = cause.getCause();
         }
-        cause.setStackTrace(ArrayUtil.merge(cause.getStackTrace(), originPoint.getStackTrace()));
+
+        cause.setStackTrace(
+                Stream.concat(
+                        Arrays.stream(cause.getStackTrace()),
+                        Arrays.stream(originPoint.getStackTrace())
+                ).toArray(StackTraceElement[]::new)
+        );
     }
 
     public static String findCallerAfterClass(StackTraceElement[] stackTrace, Class<?> afterThis) {

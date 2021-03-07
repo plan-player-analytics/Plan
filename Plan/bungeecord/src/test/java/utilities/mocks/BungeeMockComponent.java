@@ -53,7 +53,11 @@ public class BungeeMockComponent {
 
     public PlanSystem getPlanSystem() throws Exception {
         if (component == null) {
-            component = DaggerPlanBungeeComponent.builder().plan(getPlanMock()).build();
+            PlanBungee planMock = getPlanMock();
+            component = DaggerPlanBungeeComponent.builder()
+                    .plan(planMock)
+                    .abstractionLayer(new TestPlatformAbstractionLayer(this.planMock))
+                    .build();
         }
         return component.system();
     }

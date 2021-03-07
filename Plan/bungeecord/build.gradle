@@ -3,7 +3,7 @@ dependencies {
     compile project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compile "com.djrapitops:AbstractPluginFramework-bungeecord:$abstractPluginFrameworkVersion"
+    compile "net.playeranalytics:platform-abstraction-layer-bungeecord:$palVersion"
     compile "org.bstats:bstats-bungeecord:$bstatsVersion"
 
     compileOnly "net.md-5:bungeecord-api:$bungeeVersion"

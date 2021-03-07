@@ -17,11 +17,11 @@
 package com.djrapitops.plan.settings;
 
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import utilities.TestPluginLogger;
 import utilities.TestResources;
 import utilities.TestSettings;
 

@@ -29,8 +29,6 @@ import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.utilities.Verify;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -83,18 +81,18 @@ public class WorldAliasSettings {
      * @param world World name
      */
     public void addWorld(String world) {
-        Verify.isFalse(Verify.isEmpty(world), () -> new IllegalArgumentException("Attempted to save empty world alias"));
+        if (world == null || world.isEmpty()) throw new IllegalArgumentException("Attempted to save empty world alias");
 
         ConfigNode aliasSect = getAliasSection();
 
         String previousValue = aliasSect.getString(world);
-        if (Verify.isEmpty(previousValue)) {
+        if (previousValue == null || previousValue.isEmpty()) {
             aliasSect.set(world, world);
             processing.submitNonCritical(() -> {
                 try {
                     aliasSect.save();
                 } catch (IOException e) {
-                    errorLogger.log(L.ERROR, e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.get().getConfigFilePath()).build());
+                    errorLogger.error(e, ErrorContext.builder().whatToDo("Fix write permissions to " + config.get().getConfigFilePath()).build());
                 }
             });
         }

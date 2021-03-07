@@ -39,10 +39,7 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
-import com.djrapitops.plugin.benchmarking.Benchmark;
-import com.djrapitops.plugin.benchmarking.Timings;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -81,7 +78,6 @@ public class PlanSystem implements SubSystem {
     private final QuerySvc queryService;
     private final SettingsSvc settingsService;
     private final PluginLogger logger;
-    private final Timings timings;
     private final ErrorLogger errorLogger;
 
     @Inject
@@ -106,7 +102,6 @@ public class PlanSystem implements SubSystem {
             QuerySvc queryService,
             SettingsSvc settingsService,
             PluginLogger logger,
-            Timings timings,
             ErrorLogger errorLogger,
             PlanAPI.PlanAPIHolder apiHolder
     ) {
@@ -130,17 +125,14 @@ public class PlanSystem implements SubSystem {
         this.queryService = queryService;
         this.settingsService = settingsService;
         this.logger = logger;
-        this.timings = timings;
         this.errorLogger = errorLogger;
 
-        logger.log(L.INFO_COLOR,
-                "",
-                "§2           ██▌",
-                "§2     ██▌   ██▌",
-                "§2  ██▌██▌██▌██▌  §2Player Analytics",
-                "§2  ██▌██▌██▌██▌  §fv" + versionChecker.getCurrentVersion(),
-                ""
-        );
+        logger.info("");
+        logger.info("§2           ██▌");
+        logger.info("§2     ██▌   ██▌");
+        logger.info("§2  ██▌██▌██▌██▌  §2Player Analytics");
+        logger.info("§2  ██▌██▌██▌██▌  §fv" + versionChecker.getCurrentVersion());
+        logger.info("");
     }
 
     @Deprecated
@@ -185,13 +177,7 @@ public class PlanSystem implements SubSystem {
 
     private void enableSystems(SubSystem... systems) {
         for (SubSystem system : systems) {
-            logger.debug("Enabling: " + system.getClass().getSimpleName());
-            timings.start("subsystem-enable");
             system.enable();
-            timings.end("subsystem-enable")
-                    .map(Benchmark::toDurationString)
-                    .map(duration -> "Took " + duration)
-                    .ifPresent(logger::debug);
         }
     }
 
@@ -222,7 +208,7 @@ public class PlanSystem implements SubSystem {
                     system.disable();
                 }
             } catch (Exception e) {
-                errorLogger.log(L.WARN, e, ErrorContext.builder().related("Disabling PlanSystem: " + system).build());
+                errorLogger.warn(e, ErrorContext.builder().related("Disabling PlanSystem: " + system).build());
             }
         }
     }

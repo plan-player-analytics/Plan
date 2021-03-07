@@ -19,13 +19,13 @@ package com.djrapitops.plan.settings.config.changes;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;
+import utilities.TestPluginLogger;
 import utilities.TestResources;
 import utilities.TestSettings;
 

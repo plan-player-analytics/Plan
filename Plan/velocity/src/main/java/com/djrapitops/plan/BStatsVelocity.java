@@ -25,13 +25,11 @@ import java.util.function.Supplier;
 
 public class BStatsVelocity {
 
-    private final PlanVelocity plugin;
     private final Database database;
 
     private final Metrics metrics;
 
-    public BStatsVelocity(PlanVelocity plugin, Database database, Metrics metrics) {
-        this.plugin = plugin;
+    public BStatsVelocity(Database database, Metrics metrics) {
         this.database = database;
         this.metrics = metrics;
     }

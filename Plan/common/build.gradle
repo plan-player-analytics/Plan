@@ -1,5 +1,5 @@
 dependencies {
-    compile "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
+    compile "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     compile project(":api")
     compileOnly project(":extensions")
     compile project(path: ":extensions", configuration: 'shadow')

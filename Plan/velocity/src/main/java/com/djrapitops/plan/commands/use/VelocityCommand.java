@@ -18,12 +18,10 @@ package com.djrapitops.plan.commands.use;
 
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,17 +41,14 @@ public class VelocityCommand implements Command {
 
     @Override
     public void execute(CommandSource source, String[] args) {
-        runnableFactory.create("", new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    command.getExecutor().accept(getSender(source), new Arguments(args));
-                } catch (Exception e) {
-                    errorLogger.log(L.ERROR, e, ErrorContext.builder()
-                            .related(source.getClass())
-                            .related(Arrays.toString(args))
-                            .build());
-                }
+        runnableFactory.create(() -> {
+            try {
+                command.getExecutor().accept(getSender(source), new Arguments(args));
+            } catch (Exception e) {
+                errorLogger.error(e, ErrorContext.builder()
+                        .related(source.getClass())
+                        .related(Arrays.toString(args))
+                        .build());
             }
         }).runTaskAsynchronously();
     }
@@ -71,7 +66,7 @@ public class VelocityCommand implements Command {
         try {
             return command.getArgumentResolver().apply(getSender(source), new Arguments(currentArgs));
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+            errorLogger.error(e, ErrorContext.builder()
                     .related(source.getClass())
                     .related("tab completion")
                     .related(Arrays.toString(currentArgs))

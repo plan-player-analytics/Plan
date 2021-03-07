@@ -31,10 +31,9 @@ import com.djrapitops.plan.storage.database.queries.objects.NewerConfigQuery;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -90,7 +89,6 @@ public class ServerSettingsManager implements SubSystem {
     public void enable() {
         watcher = prepareFileWatcher();
         watcher.start();
-        logger.debug("Server Settings folder FileWatcher started.");
         scheduleDBCheckTask();
     }
 
@@ -117,7 +115,6 @@ public class ServerSettingsManager implements SubSystem {
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config read = reader.read();
             database.executeTransaction(new StoreConfigTransaction(serverUUID.get(), read, file.lastModified()));
-            logger.debug("Server config saved to database.");
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -126,12 +123,8 @@ public class ServerSettingsManager implements SubSystem {
     private void scheduleDBCheckTask() {
         long checkPeriod = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS);
 
-        runnableFactory.create("Config Update DB Checker", new AbsRunnable() {
-            @Override
-            public void run() {
-                checkDBForNewConfigSettings(dbSystem.getDatabase());
-            }
-        }).runTaskTimerAsynchronously(checkPeriod, checkPeriod);
+        runnableFactory.create(() -> checkDBForNewConfigSettings(dbSystem.getDatabase()))
+                .runTaskTimerAsynchronously(checkPeriod, checkPeriod);
     }
 
     private void checkDBForNewConfigSettings(Database database) {

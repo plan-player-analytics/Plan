@@ -23,9 +23,9 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -64,13 +64,12 @@ public class ConfigStoreTask extends TaskSystem.Task {
     public void run() {
         long lastModified = files.getConfigFile().lastModified();
         dbSystem.getDatabase().executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), config, lastModified));
-        logger.debug("Config Store Task - Config in db now up to date.");
         cancel();
     }
 
     @Override
     public void register(RunnableFactory runnableFactory) {
         long delay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
-        runnableFactory.create(null, this).runTaskLaterAsynchronously(delay);
+        runnableFactory.create(this).runTaskLaterAsynchronously(delay);
     }
 }

@@ -37,11 +37,10 @@ import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUse
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldSampledDataTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.PluginRunnable;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -121,33 +120,30 @@ public class DBCleanTask extends TaskSystem.Task {
                 }
             }
         } catch (DBOpException e) {
-            errorLogger.log(L.ERROR, e);
+            errorLogger.error(e);
             cancel();
         }
     }
 
     @Override
     public void register(RunnableFactory runnableFactory) {
-        AbsRunnable taskToRegister = this;
+        PluginRunnable taskToRegister = this;
         // Secondary task for registration due to database queries.
-        runnableFactory.create(null, new AbsRunnable() {
-            @Override
-            public void run() {
-                // Distribute clean task evenly between multiple servers.
-                // see https://github.com/plan-player-analytics/Plan/issues/1641 for why
-                Integer biggestId = dbSystem.getDatabase().query(ServerQueries.fetchBiggestServerID());
-                Integer id = serverInfo.getServer().getId().orElse(1);
+        runnableFactory.create(() -> {
+            // Distribute clean task evenly between multiple servers.
+            // see https://github.com/plan-player-analytics/Plan/issues/1641 for why
+            Integer biggestId = dbSystem.getDatabase().query(ServerQueries.fetchBiggestServerID());
+            Integer id = serverInfo.getServer().getId().orElse(1);
 
-                double distributor = id * 1.0 / biggestId; // 0 < distributor <= 1
-                long distributingOverTime = config.get(TimeSettings.CLEAN_DATABASE_PERIOD);
+            double distributor = id * 1.0 / biggestId; // 0 < distributor <= 1
+            long distributingOverTime = config.get(TimeSettings.CLEAN_DATABASE_PERIOD);
 
-                // -40 seconds to start first at 20 seconds if only one server is present.
-                long startAfter = (long) (distributor * distributingOverTime) - 40L;
+            // -40 seconds to start first at 20 seconds if only one server is present.
+            long startAfter = (long) (distributor * distributingOverTime) - 40L;
 
-                long delay = TimeAmount.toTicks(startAfter, TimeUnit.MILLISECONDS);
-                long period = TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS);
-                runnableFactory.create(null, taskToRegister).runTaskTimerAsynchronously(delay, period);
-            }
+            long delay = TimeAmount.toTicks(startAfter, TimeUnit.MILLISECONDS);
+            long period = TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS);
+            runnableFactory.create(taskToRegister).runTaskTimerAsynchronously(delay, period);
         }).runTaskAsynchronously();
     }
 

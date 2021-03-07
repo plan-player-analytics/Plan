@@ -25,13 +25,12 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.HikariPool;
 import dagger.Lazy;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -75,7 +74,7 @@ public class MySQLDB extends SQLDB {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            errorLogger.log(L.CRITICAL, e, ErrorContext.builder().whatToDo("Install MySQL Driver to the server").build());
+            errorLogger.critical(e, ErrorContext.builder().whatToDo("Install MySQL Driver to the server").build());
         }
     }
 
@@ -156,7 +155,7 @@ public class MySQLDB extends SQLDB {
                 connection.close();
             }
         } catch (SQLException e) {
-            errorLogger.log(L.CRITICAL, e, ErrorContext.builder().related("Closing connection").build());
+            errorLogger.critical(e, ErrorContext.builder().related("Closing connection").build());
         }
     }
 

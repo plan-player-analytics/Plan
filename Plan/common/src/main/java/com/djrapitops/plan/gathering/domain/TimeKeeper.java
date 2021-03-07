@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
-import com.djrapitops.plugin.utilities.Verify;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -63,11 +61,14 @@ public class TimeKeeper {
      * @throws IllegalArgumentException If given state is null
      */
     public void setTime(String state, long time) {
-        times.put(Verify.nullCheck(state), time);
+        if (state == null) throw new IllegalArgumentException("'state' should not be null");
+        times.put(state, time);
     }
 
     public void renameState(String state, String renameTo) {
-        Verify.nullCheck(state, renameTo);
+        if (state == null) throw new IllegalArgumentException("'state' should not be null");
+        if (renameTo == null) throw new IllegalArgumentException("'renameTo' should not be null");
+
         Long time = times.get(state);
         if (time != null) {
             times.put(renameTo, time);
@@ -82,11 +83,12 @@ public class TimeKeeper {
      * Adds time to the last state while updating the status of other parameters.
      *
      * @param newState New State seen in.
-     * @param ms Epoch ms the change occurred.
+     * @param ms       Epoch ms the change occurred.
      * @throws IllegalArgumentException If newState is null.
      */
     public void changeState(String newState, long ms) {
-        Verify.nullCheck(newState);
+        if (newState == null) throw new IllegalArgumentException("'newState' should not be null");
+
         if (state == null) {
             state = newState;
         }
@@ -98,12 +100,14 @@ public class TimeKeeper {
     }
 
     protected void resetState(String state) {
-        times.remove(Verify.nullCheck(state));
+        if (state == null) throw new IllegalArgumentException("'state' should not be null");
+        times.remove(state);
     }
 
     protected void resetState(String state, long time) {
+        if (state == null) throw new IllegalArgumentException("'state' should not be null");
         if (time > 0) {
-            times.put(Verify.nullCheck(state), time);
+            times.put(state, time);
             lastStateChange = time;
             this.state = state;
         } else {

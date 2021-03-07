@@ -21,6 +21,7 @@ import com.djrapitops.plan.modules.*;
 import com.djrapitops.plan.modules.velocity.*;
 import dagger.BindsInstance;
 import dagger.Component;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
 
 import javax.inject.Singleton;
 
@@ -34,7 +35,7 @@ import javax.inject.Singleton;
         VelocityPlanModule.class,
         VelocityCommandModule.class,
         SystemObjectProvidingModule.class,
-        APFModule.class,
+        PlatformAbstractionLayerModule.class,
         FiltersModule.class,
         PlaceholderModule.class,
 
@@ -54,6 +55,9 @@ public interface PlanVelocityComponent {
 
         @BindsInstance
         Builder plan(PlanVelocity plan);
+
+        @BindsInstance
+        Builder abstractionLayer(PlatformAbstractionLayer abstractionLayer);
 
         PlanVelocityComponent build();
     }

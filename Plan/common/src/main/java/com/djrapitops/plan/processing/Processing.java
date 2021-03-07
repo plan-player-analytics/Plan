@@ -21,9 +21,8 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 import dagger.Lazy;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import javax.inject.Inject;
@@ -59,7 +58,7 @@ public class Processing implements SubSystem {
                 new BasicThreadFactory.Builder()
                         .namingPattern(s)
                         .uncaughtExceptionHandler((thread, throwable) ->
-                                errorLogger.log(L.WARN, throwable, ErrorContext.builder().build())
+                                errorLogger.warn(throwable, ErrorContext.builder().build())
                         ).build());
     }
 
@@ -111,14 +110,14 @@ public class Processing implements SubSystem {
 
     private <T> T exceptionHandlerNonCritical(T t, Throwable throwable) {
         if (throwable != null) {
-            errorLogger.log(L.WARN, throwable.getCause(), ErrorContext.builder().build());
+            errorLogger.warn(throwable.getCause(), ErrorContext.builder().build());
         }
         return t;
     }
 
     private <T> T exceptionHandlerCritical(T t, Throwable throwable) {
         if (throwable != null) {
-            errorLogger.log(L.ERROR, throwable.getCause(), ErrorContext.builder().build());
+            errorLogger.error(throwable.getCause(), ErrorContext.builder().build());
         }
         return t;
     }
@@ -164,7 +163,7 @@ public class Processing implements SubSystem {
             try {
                 runnable.run();
             } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-                errorLogger.log(L.WARN, e, ErrorContext.builder().build());
+                errorLogger.warn(e, ErrorContext.builder().build());
             }
         }
     }

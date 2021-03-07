@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.commands.use.SpongeCommand;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
@@ -23,9 +24,10 @@ import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
-import com.djrapitops.plugin.SpongePlugin;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.L;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
+import net.playeranalytics.plugin.SpongePlatformLayer;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -45,6 +47,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 
 @Plugin(
         id = "plan",
@@ -60,7 +63,7 @@ import java.util.Optional;
                 @Dependency(id = "nuvotifier", optional = true)
         }
 )
-public class PlanSponge extends SpongePlugin implements PlanPlugin {
+public class PlanSponge implements PlanPlugin {
 
     private final Metrics metrics;
     private final Logger slf4jLogger;
@@ -69,6 +72,8 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     private PlanSystem system;
     private Locale locale;
     private ServerShutdownSave serverShutdownSave;
+    private PluginLogger logger;
+    private RunnableFactory runnableFactory;
 
     @com.google.inject.Inject
     public PlanSponge(
@@ -95,9 +100,15 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         onDisable();
     }
 
-    @Override
     public void onEnable() {
-        PlanSpongeComponent component = DaggerPlanSpongeComponent.builder().plan(this).build();
+        PlatformAbstractionLayer abstractionLayer = new SpongePlatformLayer(this, dataFolder, slf4jLogger);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+        PlanSpongeComponent component = DaggerPlanSpongeComponent.builder()
+                .plan(this)
+                .abstractionLayer(abstractionLayer)
+                .game(Sponge.getGame())
+                .build();
         try {
             system = component.system();
             serverShutdownSave = component.serverShutdownSave();
@@ -118,7 +129,8 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             onDisable();
         } catch (Exception e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            String version = abstractionLayer.getPluginInformation().getVersion();
+            java.util.logging.Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + version, e);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
@@ -129,7 +141,6 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         }
     }
 
-    @Override
     public void onDisable() {
         if (serverShutdownSave != null) serverShutdownSave.performSave();
         cancelAllTasks();
@@ -138,7 +149,6 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
         logger.info(locale.getString(PluginLang.DISABLED));
     }
 
-    @Override
     public void cancelAllTasks() {
         runnableFactory.cancelAllKnownTasks();
         for (Task task : Sponge.getScheduler().getScheduledTasks(this)) {
@@ -154,16 +164,6 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     @Override
     public ColorScheme getColorScheme() {
         return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
-    }
-
-    @Override
-    public void onReload() {
-        // Nothing to be done, systems are disabled
-    }
-
-    @Override
-    public boolean isReloading() {
-        return false;
     }
 
     @Override
@@ -186,26 +186,16 @@ public class PlanSponge extends SpongePlugin implements PlanPlugin {
     }
 
     @Override
-    public Logger getLogger() {
-        return slf4jLogger;
-    }
-
-    @Override
-    public File getDataFolder() {
-        return dataFolder;
-    }
-
-    @Override
-    public String getVersion() {
-        return getClass().getAnnotation(Plugin.class).version();
-    }
-
-    @Override
     public PlanSystem getSystem() {
         return system;
     }
 
     public Game getGame() {
         return Sponge.getGame();
+    }
+
+    @Override
+    public File getDataFolder() {
+        return dataFolder;
     }
 }

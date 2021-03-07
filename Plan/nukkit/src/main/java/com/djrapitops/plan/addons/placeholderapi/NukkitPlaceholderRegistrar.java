@@ -26,7 +26,6 @@ import com.djrapitops.plan.placeholder.PlanPlaceholders;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -62,7 +61,7 @@ public class NukkitPlaceholderRegistrar {
                             try {
                                 return loader.apply(getPlayer(player), params.get());
                             } catch (Exception e) {
-                                errorLogger.log(L.WARN, e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
+                                errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
                                 return null;
                             }
                         }
@@ -73,7 +72,7 @@ public class NukkitPlaceholderRegistrar {
                             try {
                                 return loader.apply(params.get());
                             } catch (Exception e) {
-                                errorLogger.log(L.WARN, e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
+                                errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
                                 return null;
                             }
                         }

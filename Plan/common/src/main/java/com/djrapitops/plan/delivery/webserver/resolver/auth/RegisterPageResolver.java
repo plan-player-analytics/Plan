@@ -31,8 +31,8 @@ import java.util.Optional;
 @Singleton
 public class RegisterPageResolver implements NoAuthResolver {
 
-    private ResponseFactory responseFactory;
-    private Lazy<WebServer> webServer;
+    private final ResponseFactory responseFactory;
+    private final Lazy<WebServer> webServer;
 
     @Inject
     public RegisterPageResolver(

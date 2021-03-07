@@ -16,10 +16,8 @@
  */
 package com.djrapitops.plan.gathering.importing.data;
 
-import com.djrapitops.plan.DebugChannels;
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plugin.api.utility.UUIDFetcher;
-import com.djrapitops.plugin.benchmarking.Timings;
+import net.playeranalytics.plugin.player.UUIDFetcher;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import java.util.*;
@@ -36,8 +34,6 @@ import java.util.stream.Collectors;
  */
 public class BukkitUserImportRefiner {
 
-    private final Plan plugin;
-    private final Timings timings;
     private final boolean onlineMode;
 
     private final List<UserImportData> importers = new ArrayList<>();
@@ -48,29 +44,18 @@ public class BukkitUserImportRefiner {
     private final Map<UserImportData, String> foundUUIDs = new HashMap<>();
     private final Map<UserImportData, String> foundNames = new HashMap<>();
 
-    public BukkitUserImportRefiner(Plan plugin, List<UserImportData> importers) {
-        this.plugin = plugin;
-        this.timings = plugin.getTimings();
+    public BukkitUserImportRefiner(List<UserImportData> importers) {
         this.importers.addAll(importers);
 
-        onlineMode = plugin.getServer().getOnlineMode();
+        onlineMode = Bukkit.getOnlineMode();
     }
 
     public List<UserImportData> refineData() {
-        String benchmarkName = "Refining UserImportData";
-
-        timings.start(benchmarkName);
         processMissingIdentifiers();
-        timings.end(DebugChannels.IMPORTING, benchmarkName);
-
         return importers;
     }
 
     private void processMissingIdentifiers() {
-        String benchmarkName = "Processing missing identifiers";
-
-        timings.start(benchmarkName);
-
         List<UserImportData> invalidData = new ArrayList<>();
 
         importers.parallelStream().forEach(importer -> {
@@ -93,15 +78,9 @@ public class BukkitUserImportRefiner {
 
         processMissingUUIDs();
         processMissingNames();
-
-        timings.end(DebugChannels.IMPORTING, benchmarkName);
     }
 
     private void processMissingUUIDs() {
-        String benchmarkName = "Processing missing UUIDs";
-
-        timings.start(benchmarkName);
-
         if (onlineMode) {
             addMissingUUIDsOverFetcher();
             addMissingUUIDsOverOfflinePlayer();
@@ -119,8 +98,6 @@ public class BukkitUserImportRefiner {
                 });
 
         importers.removeAll(missingUUIDs.keySet());
-
-        timings.end(DebugChannels.IMPORTING, benchmarkName);
     }
 
     private void addMissingUUIDsOverFetcher() {
@@ -172,7 +149,7 @@ public class BukkitUserImportRefiner {
 
     @SuppressWarnings("deprecation")
     private String getUuidByOfflinePlayer(String name) {
-        OfflinePlayer player = plugin.getServer().getOfflinePlayer(name);
+        OfflinePlayer player = Bukkit.getOfflinePlayer(name);
 
         if (!player.hasPlayedBefore()) {
             return null;
@@ -184,15 +161,11 @@ public class BukkitUserImportRefiner {
     private void processMissingNames() {
         String benchmarkNames = "Processing missing names";
 
-        timings.start(benchmarkNames);
-
         findMissingNames();
 
         foundNames.entrySet().parallelStream().forEach(entry -> entry.getKey().setName(entry.getValue()));
 
         importers.removeAll(missingNames.keySet());
-
-        timings.end(DebugChannels.IMPORTING, benchmarkNames);
     }
 
     private void findMissingNames() {
@@ -224,7 +197,7 @@ public class BukkitUserImportRefiner {
     }
 
     private String getNameByOfflinePlayer(String uuid) {
-        OfflinePlayer player = plugin.getServer().getOfflinePlayer(UUID.fromString(uuid));
+        OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
 
         if (!player.hasPlayedBefore()) {
             return null;

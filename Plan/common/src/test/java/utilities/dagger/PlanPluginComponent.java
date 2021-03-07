@@ -21,9 +21,11 @@ import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
+import com.djrapitops.plan.modules.PlatformAbstractionLayerModule;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import dagger.BindsInstance;
 import dagger.Component;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -38,7 +40,7 @@ import java.nio.file.Path;
 @Component(modules = {
         PlanPluginModule.class,
         TestSystemObjectProvidingModule.class,
-        TestAPFModule.class,
+        PlatformAbstractionLayerModule.class,
         FiltersModule.class,
         PlaceholderModule.class,
 
@@ -60,6 +62,9 @@ public interface PlanPluginComponent {
 
         @BindsInstance
         Builder plan(PlanPlugin plan);
+
+        @BindsInstance
+        Builder abstractionLayer(PlatformAbstractionLayer plan);
 
         PlanPluginComponent build();
     }

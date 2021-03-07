@@ -18,6 +18,8 @@ package com.djrapitops.plan.identification.properties;
 
 import org.spongepowered.api.Game;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.InetSocketAddress;
 
 /**
@@ -25,8 +27,10 @@ import java.net.InetSocketAddress;
  *
  * @author AuroraLS3
  */
+@Singleton
 public class SpongeServerProperties extends ServerProperties {
 
+    @Inject
     public SpongeServerProperties(Game game) {
         super(
                 "Sponge",

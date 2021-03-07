@@ -18,8 +18,6 @@ package com.djrapitops.plan.settings.upkeep;
 
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,7 +57,9 @@ public class FileWatcher extends Thread {
         this.running = false;
         this.watchedFiles = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
-        Verify.isTrue(watchedPath.toFile().isDirectory(), () -> new IllegalArgumentException("Given File " + watchedPath.toString() + " was not a folder."));
+        if (!watchedPath.toFile().isDirectory()) {
+            throw new IllegalArgumentException("Given File " + watchedPath.toString() + " was not a folder.");
+        }
 
         this.watchedPath = watchedPath;
     }
@@ -76,7 +76,7 @@ public class FileWatcher extends Thread {
             watchedPath.register(watcher, ENTRY_MODIFY);
             runLoop(watcher);
         } catch (IOException e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().build());
+            errorLogger.error(e, ErrorContext.builder().build());
             interrupt();
         } catch (InterruptedException e) {
             interrupt();

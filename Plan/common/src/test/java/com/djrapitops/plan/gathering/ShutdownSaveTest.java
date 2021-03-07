@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.gathering;
 
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.cache.SessionCache;
@@ -30,7 +31,6 @@ import com.djrapitops.plan.storage.database.transactions.StoreServerInformationT
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import extension.PrintExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,9 +39,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestPluginLogger;
 import utilities.dagger.DaggerPlanPluginComponent;
 import utilities.dagger.PlanPluginComponent;
 import utilities.mocks.PlanPluginMocker;
+import utilities.mocks.TestPlatformAbstractionLayer;
 
 import java.nio.file.Path;
 import java.util.Map;
@@ -66,14 +68,15 @@ class ShutdownSaveTest {
 
     @BeforeEach
     void setupShutdownSaveObject(@TempDir Path temporaryFolder) throws Exception {
+        PlanPlugin planMock = PlanPluginMocker.setUp()
+                .withDataFolder(temporaryFolder.resolve("ShutdownSaveTest").toFile())
+                .withLogging()
+                .getPlanMock();
         PlanPluginComponent pluginComponent = DaggerPlanPluginComponent.builder()
                 .bindTemporaryDirectory(temporaryFolder)
-                .plan(
-                        PlanPluginMocker.setUp()
-                                .withDataFolder(temporaryFolder.resolve("ShutdownSaveTest").toFile())
-                                .withLogging()
-                                .getPlanMock()
-                ).build();
+                .plan(planMock)
+                .abstractionLayer(new TestPlatformAbstractionLayer(planMock))
+                .build();
         PlanSystem system = pluginComponent.system();
 
         database = system.getDatabaseSystem().getSqLiteFactory().usingFileCalled("test");

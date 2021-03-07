@@ -16,11 +16,10 @@
  */
 package com.djrapitops.plan.settings.theme;
 
+import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 /**
  * ColorScheme that uses values in config settings specific to Plan or PlanBungee.
@@ -41,7 +40,7 @@ public class PlanColorScheme extends ColorScheme {
 
             return new PlanColorScheme(main, secondary, tertiary);
         } catch (Exception e) {
-            logger.log(L.INFO_COLOR, "§cCustomization, Chat colors set-up wrong, using defaults.");
+            logger.info("§cCustomization, Chat colors set-up wrong, using defaults.");
             return new PlanColorScheme("§2", "§7", "§f");
         }
     }

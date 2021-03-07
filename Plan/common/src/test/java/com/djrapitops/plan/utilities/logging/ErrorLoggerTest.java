@@ -17,7 +17,6 @@
 package com.djrapitops.plan.utilities.logging;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plugin.logging.L;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -90,7 +89,7 @@ class ErrorLoggerTest {
 
         IllegalStateException error = new IllegalStateException();
         assertTimeoutPreemptively(Duration.ofMillis(500), () ->
-                UNDER_TEST.log(L.WARN, error, ErrorContext.builder()
+                UNDER_TEST.warn(error, ErrorContext.builder()
                         .whatToDo("Succeed the test")
                         .related("Test object")
                         .build())
@@ -109,7 +108,7 @@ class ErrorLoggerTest {
         );
 
         assertTimeoutPreemptively(Duration.ofMillis(500), () ->
-                UNDER_TEST.log(L.WARN, error, ErrorContext.builder()
+                UNDER_TEST.warn(error, ErrorContext.builder()
                         .whatToDo("Succeed the test")
                         .related("Test object")
                         .build())
@@ -129,7 +128,7 @@ class ErrorLoggerTest {
         error.addSuppressed(new NullPointerException());
 
         assertTimeoutPreemptively(Duration.ofMillis(500), () ->
-                UNDER_TEST.log(L.WARN, error, ErrorContext.builder()
+                UNDER_TEST.warn(error, ErrorContext.builder()
                         .whatToDo("Succeed the test")
                         .related("Test object")
                         .build())

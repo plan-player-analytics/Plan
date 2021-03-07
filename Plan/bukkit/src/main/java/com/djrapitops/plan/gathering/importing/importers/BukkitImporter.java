@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.gathering.importing.importers;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
@@ -29,7 +28,6 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -49,10 +47,8 @@ public abstract class BukkitImporter implements Importer {
     private final GeolocationCache geolocationCache;
     private final DBSystem dbSystem;
     private final String name;
-    private final Plan plugin;
 
     protected BukkitImporter(
-            Plan plugin,
             GeolocationCache geolocationCache,
             DBSystem dbSystem,
             ServerInfo serverInfo,
@@ -63,7 +59,6 @@ public abstract class BukkitImporter implements Importer {
         this.serverUUID = serverInfo::getServerUUID;
 
         this.name = name;
-        this.plugin = plugin;
     }
 
     @Override
@@ -105,11 +100,11 @@ public abstract class BukkitImporter implements Importer {
     private void processUserData() {
         List<UserImportData> userImportData = getUserImportData();
 
-        if (Verify.isEmpty(userImportData)) {
+        if (userImportData == null || userImportData.isEmpty()) {
             return;
         }
 
-        BukkitUserImportRefiner userImportRefiner = new BukkitUserImportRefiner(plugin, userImportData);
+        BukkitUserImportRefiner userImportRefiner = new BukkitUserImportRefiner(userImportData);
         userImportData = userImportRefiner.refineData();
 
         Database db = dbSystem.getDatabase();

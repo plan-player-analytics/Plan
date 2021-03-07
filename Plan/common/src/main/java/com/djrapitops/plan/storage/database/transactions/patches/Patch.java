@@ -23,7 +23,6 @@ import com.djrapitops.plan.storage.database.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.SQLiteSchemaQueries;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -131,7 +130,9 @@ public abstract class Patch extends OperationCriticalTransaction {
 
         List<MySQLSchemaQueries.ForeignKeyConstraint> constraints = query(MySQLSchemaQueries.foreignKeyConstraintsOf(table));
 
-        Verify.isTrue(constraints.isEmpty(), () -> new DBOpException("Table '" + table + "' has constraints '" + constraints + "'"));
+        if (constraints != null && !constraints.isEmpty()) {
+            throw new DBOpException("Table '" + table + "' has constraints '" + constraints + "'");
+        }
     }
 
     protected boolean allValuesHaveValueZero(String tableName, String column) {

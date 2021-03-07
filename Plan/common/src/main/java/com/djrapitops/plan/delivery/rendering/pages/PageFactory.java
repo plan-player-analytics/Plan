@@ -34,10 +34,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
-import com.djrapitops.plugin.benchmarking.Timings;
-import com.djrapitops.plugin.logging.debug.DebugLogger;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -63,9 +60,6 @@ public class PageFactory {
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<JSONStorage> jsonStorage;
     private final Lazy<Formatters> formatters;
-    private final Lazy<DebugLogger> debugLogger;
-    private final Lazy<Timings> timings;
-    private final Lazy<ErrorLogger> errorLogger;
 
     @Inject
     public PageFactory(
@@ -77,10 +71,7 @@ public class PageFactory {
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
             Lazy<JSONStorage> jsonStorage,
-            Lazy<Formatters> formatters,
-            Lazy<DebugLogger> debugLogger,
-            Lazy<Timings> timings,
-            Lazy<ErrorLogger> errorLogger
+            Lazy<Formatters> formatters
     ) {
         this.versionChecker = versionChecker;
         this.files = files;
@@ -91,17 +82,6 @@ public class PageFactory {
         this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
-        this.debugLogger = debugLogger;
-        this.timings = timings;
-        this.errorLogger = errorLogger;
-    }
-
-    public DebugPage debugPage() throws IOException {
-        return new DebugPage(
-                getResource("error.html"),
-                dbSystem.get().getDatabase(), serverInfo.get(), formatters.get(), versionChecker.get(),
-                debugLogger.get(), timings.get(), errorLogger.get()
-        );
     }
 
     public PlayersPage playersPage() throws IOException {

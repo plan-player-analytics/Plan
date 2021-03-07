@@ -20,11 +20,12 @@ import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plugin.utilities.ArrayUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.TextStringBuilder;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * Represents a tab of {@link com.djrapitops.plan.extension.DataExtension} defined by {@link com.djrapitops.plan.extension.annotation.Tab} and
@@ -36,10 +37,19 @@ public class TabInformation {
 
     private final String tabName;
     private final Icon icon; // can be null
-    private ElementOrder[] elementOrder; // can be null / miss values
+    private final List<ElementOrder> elementOrder; // can be null / miss values
     private final int tabPriority;
 
     public TabInformation(String tabName, Icon icon, ElementOrder[] elementOrder, int tabPriority) {
+        this(
+                tabName,
+                icon,
+                elementOrder == null ? new ArrayList<>() : Arrays.asList(elementOrder),
+                tabPriority
+        );
+    }
+
+    public TabInformation(String tabName, Icon icon, List<ElementOrder> elementOrder, int tabPriority) {
         this.tabName = tabName;
         this.icon = icon;
         this.elementOrder = elementOrder;
@@ -62,23 +72,23 @@ public class TabInformation {
         return tabPriority;
     }
 
-    public Optional<ElementOrder[]> getTabElementOrder() {
-        if (elementOrder == null) {
-            return Optional.empty();
+    public List<ElementOrder> getTabElementOrder() {
+        if (elementOrder.isEmpty()) {
+            return ElementOrder.valuesAsList();
         }
 
         ElementOrder[] possibleValues = ElementOrder.values();
-        if (elementOrder.length < possibleValues.length) {
+        if (elementOrder.size() < possibleValues.length) {
             addMissingElements(possibleValues);
         }
 
-        return Optional.of(elementOrder);
+        return elementOrder;
     }
 
     private void addMissingElements(ElementOrder[] possibleValues) {
         for (ElementOrder possibleValue : possibleValues) {
-            if (Arrays.binarySearch(elementOrder, possibleValue) < 0) {
-                elementOrder = ArrayUtil.merge(elementOrder, new ElementOrder[]{possibleValue});
+            if (!elementOrder.contains(possibleValue)) {
+                elementOrder.add(possibleValue);
             }
         }
     }
@@ -88,8 +98,12 @@ public class TabInformation {
         return "TabInformation{" +
                 "tabName='" + tabName + '\'' +
                 ", icon=" + icon +
-                ", elementOrder=" + Arrays.toString(elementOrder) +
+                ", elementOrder=" + elementOrder +
                 ", tabPriority=" + tabPriority +
                 '}';
+    }
+
+    public String getSerializedTabElementOrder() {
+        return new TextStringBuilder().appendWithSeparators(getTabElementOrder(), ",").build();
     }
 }

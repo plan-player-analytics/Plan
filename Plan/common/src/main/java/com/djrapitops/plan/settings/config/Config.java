@@ -23,10 +23,7 @@
  */
 package com.djrapitops.plan.settings.config;
 
-import com.djrapitops.plugin.utilities.Verify;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -50,10 +47,8 @@ public class Config extends ConfigNode {
         this.configFilePath = configFile.toPath();
 
         try {
-            Verify.isTrue(folder.exists() || folder.mkdirs(), () ->
-                    new FileNotFoundException("Folders could not be created for config file " + configFile.getAbsolutePath()));
-            Verify.isTrue(configFile.exists() || configFile.createNewFile(), () ->
-                    new FileNotFoundException("Could not create file: " + configFile.getAbsolutePath()));
+            Files.createDirectories(folder.toPath());
+            if (!Files.exists(configFilePath)) Files.createFile(configFilePath);
             read();
             save();
         } catch (IOException e) {

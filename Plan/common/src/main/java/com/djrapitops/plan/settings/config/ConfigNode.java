@@ -23,7 +23,6 @@
  */
 package com.djrapitops.plan.settings.config;
 
-import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -306,7 +305,7 @@ public class ConfigNode {
         }
 
         // Override value conditionally
-        if (Verify.isEmpty(value) && from.value != null) {
+        if (value == null || value.isEmpty() && from.value != null) {
             value = from.value;
         }
 

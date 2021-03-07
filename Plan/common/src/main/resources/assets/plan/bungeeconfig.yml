@@ -13,7 +13,6 @@ Plugin:
   Logging:
     Locale: default
     Create_new_locale_file_on_next_enable: false
-    Debug: false
     Dev: false
     Delete_logs_after_days: 7
   Update_notifications:

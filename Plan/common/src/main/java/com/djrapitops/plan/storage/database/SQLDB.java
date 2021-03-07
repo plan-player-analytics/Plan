@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.DebugChannels;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.exceptions.database.FatalDBException;
@@ -33,11 +32,10 @@ import com.djrapitops.plan.storage.database.transactions.patches.*;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.PluginRunnable;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.sql.Connection;
@@ -65,8 +63,6 @@ public abstract class SQLDB extends AbstractDatabase {
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
 
-    private final boolean devMode;
-
     protected SQLDB(
             Supplier<UUID> serverUUIDSupplier,
             Locale locale,
@@ -82,15 +78,13 @@ public abstract class SQLDB extends AbstractDatabase {
         this.logger = logger;
         this.errorLogger = errorLogger;
 
-        devMode = config.isTrue(PluginSettings.DEV_MODE);
-
         this.transactionExecutorServiceProvider = () -> {
             String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
             return Executors.newSingleThreadExecutor(new BasicThreadFactory.Builder()
                     .namingPattern(nameFormat)
                     .uncaughtExceptionHandler((thread, throwable) -> {
-                        if (devMode) {
-                            errorLogger.log(L.WARN, throwable, ErrorContext.builder()
+                        if (config.isTrue(PluginSettings.DEV_MODE)) {
+                            errorLogger.warn(throwable, ErrorContext.builder()
                                     .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
                                     .build());
                         }
@@ -200,7 +194,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private void registerIndexCreationTask() {
         try {
-            runnableFactory.create("Database Index Creation", new AbsRunnable() {
+            runnableFactory.create(new PluginRunnable() {
                 @Override
                 public void run() {
                     if (getState() == State.CLOSED || getState() == State.CLOSING) {
@@ -210,7 +204,7 @@ public abstract class SQLDB extends AbstractDatabase {
                     try {
                         executeTransaction(new CreateIndexTransaction());
                     } catch (DBOpException e) {
-                        errorLogger.log(L.WARN, e);
+                        errorLogger.warn(e);
                     }
                 }
             }).runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
@@ -253,9 +247,6 @@ public abstract class SQLDB extends AbstractDatabase {
 
         return CompletableFuture.supplyAsync(() -> {
             accessLock.checkAccess(transaction);
-            if (devMode) {
-                logger.getDebugLogger().logOn(DebugChannels.SQL, "Executing: " + transaction.getClass().getSimpleName());
-            }
             transaction.executeTransaction(this);
             return CompletableFuture.completedFuture(null);
         }, getTransactionExecutor()).handle(errorHandler(transaction, origin));
@@ -276,10 +267,15 @@ public abstract class SQLDB extends AbstractDatabase {
             }
             ThrowableUtils.appendEntryPointToCause(throwable, origin);
 
-            errorLogger.log(getState() == State.CLOSED ? L.CRITICAL : L.ERROR, throwable, ErrorContext.builder()
+            ErrorContext errorContext = ErrorContext.builder()
                     .related("Transaction: " + transaction.getClass())
                     .related("DB State: " + getState())
-                    .build());
+                    .build();
+            if (getState() == State.CLOSED) {
+                errorLogger.critical(throwable, errorContext);
+            } else {
+                errorLogger.error(throwable, errorContext);
+            }
             return CompletableFuture.completedFuture(null);
         };
     }

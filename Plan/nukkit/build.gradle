@@ -3,7 +3,7 @@ dependencies {
     compile project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compileOnly "com.djrapitops:AbstractPluginFramework-api:$abstractPluginFrameworkVersion"
+    compile "net.playeranalytics:platform-abstraction-layer-nukkit:$palVersion"
     compileOnly "cn.nukkit:nukkit:$nukkitVersion"
     compileOnly "com.creeperface.nukkit.placeholderapi:PlaceholderAPI:$nkPlaceholderapiVersion"
     testCompile "cn.nukkit:nukkit:$nukkitVersion"

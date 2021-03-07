@@ -24,12 +24,11 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.upkeep.DBKeepAliveTask;
 import com.djrapitops.plan.utilities.MiscUtils;
-import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.PluginTask;
-import com.djrapitops.plugin.task.RunnableFactory;
 import dagger.Lazy;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.Task;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.h2.jdbcx.JdbcDataSource;
 
 import javax.inject.Inject;
@@ -49,7 +48,7 @@ public class H2DB extends SQLDB {
     private final File databaseFile;
     private final String dbName;
     private Connection connection;
-    private PluginTask connectionPingTask;
+    private Task connectionPingTask;
 
     private H2DB(
             File databaseFile,
@@ -80,7 +79,6 @@ public class H2DB extends SQLDB {
         String dbFilePath = dbFile.getAbsolutePath();
 
         Connection newConnection = getConnectionFor(dbFilePath);
-        logger.debug("H2 " + dbName + ": Opened a new Connection");
         newConnection.setAutoCommit(false);
         return newConnection;
     }
@@ -105,7 +103,7 @@ public class H2DB extends SQLDB {
         logger.warn("! ! ! ---------- ! ! !");
         try {
             // Maintains Connection.
-            connectionPingTask = runnableFactory.create("DBConnectionPingTask " + getType().getName(),
+            connectionPingTask = runnableFactory.create(
                     new DBKeepAliveTask(connection, () -> getNewConnection(databaseFile), logger, errorLogger)
             ).runTaskTimerAsynchronously(60L * 20L, 60L * 20L);
         } catch (Exception ignored) {
@@ -144,11 +142,7 @@ public class H2DB extends SQLDB {
         stopConnectionPingTask();
 
         if (connection != null) {
-            logger.debug("H2 Connection close prompted by: " + ThrowableUtils.findCallerAfterClass(Thread.currentThread().getStackTrace(), H2DB.class));
-            logger.debug("H2 " + dbName + ": Closed Connection");
             MiscUtils.close(connection);
-        } else {
-            logger.debug("H2 " + dbName + ": Connection was null when closing");
         }
     }
 

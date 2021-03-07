@@ -18,13 +18,18 @@ package com.djrapitops.plan.identification.properties;
 
 import org.bukkit.Server;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 /**
  * ServerProperties for Bukkit.
  *
  * @author AuroraLS3
  */
+@Singleton
 public class BukkitServerProperties extends ServerProperties {
 
+    @Inject
     public BukkitServerProperties(Server server) {
         super(
                 server.getName(),

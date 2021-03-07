@@ -181,7 +181,7 @@ public class ServerPluginTabs {
     private String buildContentHtml(ExtensionTabData tabData) {
         TabInformation tabInformation = tabData.getTabInformation();
 
-        ElementOrder[] order = tabInformation.getTabElementOrder().orElse(ElementOrder.values());
+        List<ElementOrder> order = tabInformation.getTabElementOrder();
         String values = buildValuesHtml(tabData);
         String valuesHtml = values.isEmpty() ? "" : "<div class=\"card-body\">" + values + "</div>";
         String tablesHtml = buildTablesHtml(tabData);
