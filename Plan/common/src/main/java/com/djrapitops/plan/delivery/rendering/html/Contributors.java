@@ -71,6 +71,7 @@ public class Contributors {
             new Contributor("galexrt", LANG),
             new Contributor("QuakyCZ", LANG),
             new Contributor("MrFriggo", LANG),
+            new Contributor("vacoup", CODE),
     };
 
     private Contributors() {

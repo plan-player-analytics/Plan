@@ -418,6 +418,34 @@ function serverPie(id, serverSeries) {
     }));
 }
 
+function hostnamePie(id, hostnameTotals) {
+    graphs.push(Highcharts.chart(id, {
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            type: 'pie'
+        },
+        title: {text: ''},
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: false
+                },
+                showInLegend: true
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.point.name + ':</b> ' + this.y + ' (' + this.percentage.toFixed(2) + '%)';
+            }
+        },
+        series: [hostnameTotals]
+    }));
+}
+
 function formatTimeAmount(ms) {
     let out = "";
 

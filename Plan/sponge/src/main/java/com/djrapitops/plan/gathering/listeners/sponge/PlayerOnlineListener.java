@@ -158,6 +158,7 @@ public class PlayerOnlineListener {
         String world = player.getWorld().getName();
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
         String gm = gameMode.map(mode -> mode.getName().toUpperCase()).orElse("ADVENTURE");
+        String hostname = player.getConnection().getVirtualHost().getHostString();
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
@@ -174,7 +175,8 @@ public class PlayerOnlineListener {
             );
         }
 
-        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time, playerName, serverUUID));
+        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time,
+                playerName, serverUUID, hostname));
         Session session = new Session(playerUUID, serverUUID, time, world, gm);
         session.putRawData(SessionKeys.NAME, playerName);
         session.putRawData(SessionKeys.SERVER_NAME, serverInfo.getServer().getIdentifiableName());

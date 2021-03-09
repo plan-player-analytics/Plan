@@ -416,3 +416,17 @@ function loadGeolocationGraph(json, error) {
         document.getElementById('countryBarChart').innerText = errorMessage;
     }
 }
+
+function loadHostnamePie(json, error) {
+    if (json) {
+        hostnamePieSeries = {
+            name: 'Used IP Addresses',
+            colorByPoint: true,
+            colors: json.hostname_pie_colors,
+            data: json.hostname_pie_slices
+        };
+        hostnamePie('hostnamePie', hostnamePieSeries);
+    } else if (error) {
+        document.getElementById('hostnamePie').innerText = `Failed to load graph data: ${error}`;
+    }
+}

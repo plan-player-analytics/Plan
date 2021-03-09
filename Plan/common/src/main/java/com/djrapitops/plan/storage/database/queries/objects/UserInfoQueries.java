@@ -20,6 +20,7 @@ import com.djrapitops.plan.gathering.domain.UserInfo;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -54,7 +55,8 @@ public class UserInfoQueries {
                 UserInfoTable.BANNED + ',' +
                 UserInfoTable.OP + ',' +
                 UserInfoTable.USER_UUID + ',' +
-                UserInfoTable.SERVER_UUID +
+                UserInfoTable.SERVER_UUID + ',' +
+                UserInfoTable.HOSTNAME +
                 FROM + UserInfoTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
@@ -70,8 +72,9 @@ public class UserInfoQueries {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
 
-                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, banned));
+                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, hostname, banned));
                 }
                 return serverMap;
             }
@@ -89,7 +92,8 @@ public class UserInfoQueries {
                 UserInfoTable.TABLE_NAME + '.' + UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
                 UserInfoTable.OP + ',' +
-                UserInfoTable.SERVER_UUID +
+                UserInfoTable.SERVER_UUID + ',' +
+                UserInfoTable.HOSTNAME +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID + "=?";
 
@@ -107,7 +111,9 @@ public class UserInfoQueries {
                     boolean op = set.getBoolean(UserInfoTable.OP);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
-                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, banned));
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
+
+                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, hostname, banned));
                 }
                 return userInformation;
             }
@@ -124,11 +130,13 @@ public class UserInfoQueries {
         String sql = SELECT +
                 UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
+                UserInfoTable.HOSTNAME + ',' +
                 UserInfoTable.OP + ',' +
                 UserInfoTable.USER_UUID + ',' +
                 UserInfoTable.SERVER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_UUID + "=?";
+
         return new QueryStatement<Map<UUID, UserInfo>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -146,7 +154,9 @@ public class UserInfoQueries {
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
 
-                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, banned));
+                    String hostname = set.getString(UserInfoTable.HOSTNAME);
+
+                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, hostname, banned));
                 }
                 return userInformation;
             }
@@ -180,6 +190,28 @@ public class UserInfoQueries {
                     );
                 }
                 return registerDates;
+            }
+        };
+    }
+
+    public static Query<Map<String, Integer>> hostnameTotals() {
+        String sql = SELECT +
+                "COUNT(hostname) as total," +
+                UserInfoTable.HOSTNAME +
+                FROM + UserInfoTable.TABLE_NAME +
+                GROUP_BY + UserInfoTable.HOSTNAME;
+
+        return new QueryStatement<Map<String, Integer>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) {}
+
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> hostnames = new HashMap<>();
+                while (set.next()) {
+                    hostnames.put(set.getString(UserInfoTable.HOSTNAME), set.getInt("total"));
+                }
+                return hostnames;
             }
         };
     }
