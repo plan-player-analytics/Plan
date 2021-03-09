@@ -159,8 +159,6 @@ public class BukkitUserImportRefiner {
     }
 
     private void processMissingNames() {
-        String benchmarkNames = "Processing missing names";
-
         findMissingNames();
 
         foundNames.entrySet().parallelStream().forEach(entry -> entry.getKey().setName(entry.getValue()));

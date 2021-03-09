@@ -130,7 +130,7 @@ public class PlanSponge implements PlanPlugin {
             onDisable();
         } catch (Exception e) {
             String version = abstractionLayer.getPluginInformation().getVersion();
-            java.util.logging.Logger.getGlobal().log(Level.SEVERE, this.getClass().getSimpleName() + "-v" + version, e);
+            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();

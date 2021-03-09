@@ -25,7 +25,6 @@ import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
-import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,21 +42,18 @@ public class ConfigStoreTask extends TaskSystem.Task {
     private final PlanConfig config;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
-    private final PluginLogger logger;
 
     @Inject
     public ConfigStoreTask(
             PlanFiles files,
             PlanConfig config,
             ServerInfo serverInfo,
-            DBSystem dbSystem,
-            PluginLogger logger
+            DBSystem dbSystem
     ) {
         this.files = files;
         this.config = config;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
-        this.logger = logger;
     }
 
     @Override
