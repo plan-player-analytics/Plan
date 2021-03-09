@@ -65,7 +65,7 @@ public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
                 return getAsInputStream(fileName);
             }
 
-            File getFile(String fileName) {
+            private File getFile(String fileName) {
                 // Read the resource from jar to a temporary file
                 File file = getDataDirectory().resolve("jar").resolve(fileName).toFile();
                 TestResources.copyResourceIntoFile(file, fileName);
@@ -77,7 +77,7 @@ public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
                     throw new IllegalStateException("withDataFolder needs to be called before setting files");
                 }
                 try {
-                    File file = getFile("/" + fileName);
+                    File file = getFile(fileName);
                     return Files.newInputStream(file.toPath());
                 } catch (NullPointerException | IOException e) {
                     System.out.println("File is missing! " + fileName);
