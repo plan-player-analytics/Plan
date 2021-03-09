@@ -21,13 +21,11 @@ import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,17 +59,14 @@ public class BungeeCommand extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        runnableFactory.create("", new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    command.getExecutor().accept(getSender(sender), new Arguments(args));
-                } catch (Exception e) {
-                    errorLogger.log(L.ERROR, e, ErrorContext.builder()
-                            .related(sender.getClass())
-                            .related(Arrays.toString(args))
-                            .build());
-                }
+        runnableFactory.create(() -> {
+            try {
+                command.getExecutor().accept(getSender(sender), new Arguments(args));
+            } catch (Exception e) {
+                errorLogger.error(e, ErrorContext.builder()
+                        .related(sender.getClass())
+                        .related(Arrays.toString(args))
+                        .build());
             }
         }).runTaskAsynchronously();
     }
@@ -81,7 +76,7 @@ public class BungeeCommand extends Command implements TabExecutor {
         try {
             return command.getArgumentResolver().apply(getSender(sender), new Arguments(args));
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+            errorLogger.error(e, ErrorContext.builder()
                     .related(sender.getClass())
                     .related("tab completion")
                     .related(Arrays.toString(args))

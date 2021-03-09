@@ -35,6 +35,14 @@ public class StringSetting extends Setting<String> {
         super(path, String.class, validator);
     }
 
+    public StringSetting(String path, String defaultValue) {
+        super(path, defaultValue);
+    }
+
+    public StringSetting(String path, Predicate<String> validator, String defaultValue) {
+        super(path, validator, defaultValue);
+    }
+
     @Override
     public String getValueFrom(ConfigNode node) {
         return node.getString(path);

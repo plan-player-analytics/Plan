@@ -21,7 +21,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.java.Reflection;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.console.PluginLogger;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,7 +49,6 @@ public class BukkitServerShutdownSave extends ServerShutdownSave {
         try {
             return performCheck();
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-            logger.debug("Server shutdown check failed, using JVM ShutdownHook instead. Error: " + e.toString());
             return false; // ShutdownHook handles save in case this fails upon plugin disable.
         }
     }

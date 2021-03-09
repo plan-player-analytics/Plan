@@ -24,9 +24,9 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.H2DB;
 import com.djrapitops.plan.storage.database.MySQLDB;
 import com.djrapitops.plan.storage.database.SQLiteDB;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 import dagger.Module;
 import dagger.Provides;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Singleton;
 

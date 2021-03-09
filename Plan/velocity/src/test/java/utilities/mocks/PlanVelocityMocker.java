@@ -17,26 +17,15 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.PlanVelocity;
-import com.djrapitops.plugin.benchmarking.Timings;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.debug.CombineDebugLogger;
-import com.djrapitops.plugin.logging.debug.DebugLogger;
-import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
-import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plan.commands.use.ColorScheme;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.mockito.Mockito;
-import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 
 /**
  * Mocking Utility for Velocity version of Plan (PlanVelocity).
@@ -59,30 +48,12 @@ public class PlanVelocityMocker extends Mocker {
         super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
-        doReturn("1.0.0").when(planMock).getVersion();
-
-        RunnableFactory runnableFactory = new TestRunnableFactory();
-        PluginLogger testPluginLogger = new TestPluginLogger();
-        DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
-        ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
-        Timings timings = new Timings(debugLogger);
-
-        doReturn(runnableFactory).when(planMock).getRunnableFactory();
-        doReturn(testPluginLogger).when(planMock).getPluginLogger();
-        doReturn(debugLogger).when(planMock).getDebugLogger();
-        doReturn(consoleErrorLogger).when(planMock).getErrorHandler();
-        doReturn(timings).when(planMock).getTimings();
 
         return this;
     }
 
     public PlanVelocityMocker withDataFolder(File tempFolder) {
-        when(planMock.getDataFolder()).thenReturn(tempFolder);
-        return this;
-    }
-
-    public PlanVelocityMocker withResourceFetchingFromJar() throws Exception {
-        withPluginFiles();
+        doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 

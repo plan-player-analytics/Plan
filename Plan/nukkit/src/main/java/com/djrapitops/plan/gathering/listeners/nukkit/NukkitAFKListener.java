@@ -26,7 +26,6 @@ import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -83,7 +82,7 @@ public class NukkitAFKListener implements Listener {
 
             AFK_TRACKER.performedAction(uuid, time);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event).build());
+            errorLogger.error(e, ErrorContext.builder().related(event).build());
         }
     }
 

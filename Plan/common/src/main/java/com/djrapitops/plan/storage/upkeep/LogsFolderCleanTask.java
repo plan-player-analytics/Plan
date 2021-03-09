@@ -20,9 +20,9 @@ import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -76,7 +76,7 @@ public class LogsFolderCleanTask extends TaskSystem.Task {
     @Override
     public void register(RunnableFactory runnableFactory) {
         long delay = TimeAmount.toTicks(30L, TimeUnit.SECONDS);
-        runnableFactory.create(null, this).runTaskLaterAsynchronously(delay);
+        runnableFactory.create(this).runTaskLaterAsynchronously(delay);
     }
 
     private void cleanFolder() {

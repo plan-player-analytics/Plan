@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.settings.config;
 
-import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -64,7 +63,7 @@ public class ConfigWriter {
      * @throws IllegalStateException If the Path is null
      */
     public void write(ConfigNode writing) throws IOException {
-        Verify.nullCheck(outputPath, () -> new IllegalStateException("Output path was null."));
+        if (outputPath == null) throw new IllegalStateException("Output path was null.");
 
         ConfigNode storedParent = writing.parent;
         writing.updateParent(null);

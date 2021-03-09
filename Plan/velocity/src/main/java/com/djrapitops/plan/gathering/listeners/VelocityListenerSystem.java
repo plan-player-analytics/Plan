@@ -21,6 +21,7 @@ import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.api.events.PlanVelocityEnableEvent;
 import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.velocity.PlayerOnlineListener;
+import net.playeranalytics.plugin.server.Listeners;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,27 +29,27 @@ import javax.inject.Singleton;
 @Singleton
 public class VelocityListenerSystem extends ListenerSystem {
 
-    private final PlanVelocity plugin;
+    private final Listeners listeners;
 
     private final PlayerOnlineListener playerOnlineListener;
 
     @Inject
     public VelocityListenerSystem(
-            PlanVelocity plugin,
+            Listeners listeners,
             PlayerOnlineListener playerOnlineListener
     ) {
-        this.plugin = plugin;
+        this.listeners = listeners;
         this.playerOnlineListener = playerOnlineListener;
     }
 
     @Override
     protected void registerListeners() {
-        plugin.registerListener(playerOnlineListener);
+        listeners.registerListener(playerOnlineListener);
     }
 
     @Override
     protected void unregisterListeners() {
-        plugin.getProxy().getEventManager().unregisterListeners(plugin);
+        listeners.unregisterListeners();
     }
 
     @Override

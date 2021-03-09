@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.gathering;
 
-import com.djrapitops.plan.Plan;
-import com.djrapitops.plugin.api.Check;
 import org.bukkit.Server;
 import org.bukkit.World;
 
@@ -27,7 +25,7 @@ import javax.inject.Singleton;
 @Singleton
 public class BukkitSensor implements ServerSensor<World> {
 
-    private final Plan plugin;
+    private final Server server;
 
     private final boolean hasTPSMethod;
     private final boolean hasEntityCountMethod;
@@ -35,13 +33,22 @@ public class BukkitSensor implements ServerSensor<World> {
 
     @Inject
     public BukkitSensor(
-            Plan plugin
+            Server server
     ) {
-        this.plugin = plugin;
-        boolean hasPaper = Check.isPaperAvailable();
+        this.server = server;
+        boolean hasPaper = isPaperAvailable();
         hasTPSMethod = hasPaper && hasPaperMethod(Server.class, "getTPS");
         hasEntityCountMethod = hasPaper && hasPaperMethod(World.class, "getEntityCount");
         hasChunkCountMethod = hasPaper && hasPaperMethod(World.class, "getChunkCount");
+    }
+
+    public static boolean isPaperAvailable() {
+        try {
+            Class.forName("co.aikar.timings.Timing");
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -51,7 +58,7 @@ public class BukkitSensor implements ServerSensor<World> {
 
     @Override
     public double getTPS() {
-        return plugin.getServer().getTPS()[0];
+        return server.getTPS()[0];
     }
 
     @Override
@@ -96,12 +103,12 @@ public class BukkitSensor implements ServerSensor<World> {
 
     @Override
     public int getOnlinePlayerCount() {
-        return plugin.getServer().getOnlinePlayers().size();
+        return server.getOnlinePlayers().size();
     }
 
     @Override
     public Iterable<World> getWorlds() {
-        return plugin.getServer().getWorlds();
+        return server.getWorlds();
     }
 
     private boolean hasPaperMethod(Class<?> clazz, String methodName) {

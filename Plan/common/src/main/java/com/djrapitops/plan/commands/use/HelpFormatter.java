@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import com.djrapitops.plugin.command.ColorScheme;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.ArrayList;

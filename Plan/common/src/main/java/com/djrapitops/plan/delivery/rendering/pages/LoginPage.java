@@ -21,7 +21,6 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.utilities.java.UnaryChain;
-import com.djrapitops.plugin.api.Check;
 
 /**
  * Html String generator for /login and /register page.
@@ -59,9 +58,7 @@ public class LoginPage implements Page {
     }
 
     private String getCommand() {
-        if (serverInfo.getServer().isNotProxy()) return "plan";
-        if (Check.isBungeeAvailable()) return "planbungee";
-        if (Check.isVelocityAvailable()) return "planvelocity";
+        if (serverInfo.getServer().isProxy()) return "planproxy";
         return "plan";
     }
 }

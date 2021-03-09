@@ -16,19 +16,18 @@
  */
 package com.djrapitops.plan.gathering.listeners;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.events.PlanBukkitEnableEvent;
 import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.bukkit.*;
+import net.playeranalytics.plugin.server.Listeners;
 import org.bukkit.Bukkit;
-import org.bukkit.event.HandlerList;
 
 import javax.inject.Inject;
 
 public class BukkitListenerSystem extends ListenerSystem {
 
-    private final Plan plugin;
+    private final Listeners listeners;
 
     private final Status status;
     private final PlayerOnlineListener playerOnlineListener;
@@ -40,7 +39,7 @@ public class BukkitListenerSystem extends ListenerSystem {
 
     @Inject
     public BukkitListenerSystem(
-            Plan plugin,
+            Listeners listeners,
             Status status,
             PlayerOnlineListener playerOnlineListener,
             ChatListener chatListener,
@@ -49,7 +48,7 @@ public class BukkitListenerSystem extends ListenerSystem {
             DeathEventListener deathEventListener,
             BukkitAFKListener afkListener
     ) {
-        this.plugin = plugin;
+        this.listeners = listeners;
         this.status = status;
 
         this.playerOnlineListener = playerOnlineListener;
@@ -62,20 +61,18 @@ public class BukkitListenerSystem extends ListenerSystem {
 
     @Override
     protected void registerListeners() {
-        plugin.registerListener(
-                playerOnlineListener,
-                chatListener,
-                gamemodeChangeListener,
-                worldChangeListener,
-                deathEventListener,
-                afkListener
-        );
+        listeners.registerListener(playerOnlineListener);
+        listeners.registerListener(chatListener);
+        listeners.registerListener(gamemodeChangeListener);
+        listeners.registerListener(worldChangeListener);
+        listeners.registerListener(deathEventListener);
+        listeners.registerListener(afkListener);
         status.setCountKicks(true);
     }
 
     @Override
     protected void unregisterListeners() {
-        HandlerList.unregisterAll(plugin);
+        listeners.unregisterListeners();
     }
 
     @Override

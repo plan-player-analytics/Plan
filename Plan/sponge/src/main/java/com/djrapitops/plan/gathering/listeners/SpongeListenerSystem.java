@@ -22,6 +22,7 @@ import com.djrapitops.plan.SpongeServerShutdownSave;
 import com.djrapitops.plan.api.events.PlanSpongeEnableEvent;
 import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.sponge.*;
+import net.playeranalytics.plugin.server.Listeners;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
 
@@ -29,7 +30,7 @@ import javax.inject.Inject;
 
 public class SpongeListenerSystem extends ListenerSystem {
 
-    private final PlanSponge plugin;
+    private final Listeners listeners;
 
     private final SpongeAFKListener afkListener;
     private final SpongeChatListener chatListener;
@@ -41,7 +42,7 @@ public class SpongeListenerSystem extends ListenerSystem {
 
     @Inject
     public SpongeListenerSystem(
-            PlanSponge plugin,
+            Listeners listeners,
             SpongeAFKListener afkListener,
             SpongeChatListener chatListener,
             SpongeDeathListener deathListener,
@@ -50,7 +51,7 @@ public class SpongeListenerSystem extends ListenerSystem {
             SpongeWorldChangeListener worldChangeListener,
             SpongeServerShutdownSave spongeServerShutdownSave
     ) {
-        this.plugin = plugin;
+        this.listeners = listeners;
 
         this.afkListener = afkListener;
         this.chatListener = chatListener;
@@ -63,24 +64,18 @@ public class SpongeListenerSystem extends ListenerSystem {
 
     @Override
     protected void registerListeners() {
-        plugin.registerListener(
-                afkListener,
-                chatListener,
-                deathListener,
-                playerListener,
-                gmChangeListener,
-                worldChangeListener,
-                spongeServerShutdownSave
-        );
+        listeners.registerListener(afkListener);
+        listeners.registerListener(chatListener);
+        listeners.registerListener(deathListener);
+        listeners.registerListener(playerListener);
+        listeners.registerListener(gmChangeListener);
+        listeners.registerListener(worldChangeListener);
+        listeners.registerListener(spongeServerShutdownSave);
     }
 
     @Override
     protected void unregisterListeners() {
-        try {
-            Sponge.getEventManager().unregisterPluginListeners(plugin);
-        } catch (IllegalStateException ignore) {
-            /* Ignore, Sponge is not initialized */
-        }
+        listeners.unregisterListeners();
     }
 
     @Override

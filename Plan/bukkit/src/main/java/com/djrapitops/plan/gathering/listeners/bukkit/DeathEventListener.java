@@ -25,7 +25,6 @@ import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -80,7 +79,7 @@ public class DeathEventListener implements Listener {
             UUID uuid = dead instanceof Player ? dead.getUniqueId() : null;
             handleKill(time, uuid, killerEntity);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, dead).build());
+            errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
     }
 

@@ -25,12 +25,11 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpsConfigurator;
 import com.sun.net.httpserver.HttpsParameters;
 import com.sun.net.httpserver.HttpsServer;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import javax.inject.Inject;
@@ -129,13 +128,11 @@ public class WebServer implements SubSystem {
         try {
             usingHttps = startHttpsServer();
 
-            logger.debug(usingHttps ? "Https Start Successful." : "Https Start Failed.");
-
             if (!usingHttps) {
-                logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
+                logger.info("§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
                 server = HttpServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
             } else if (server == null) {
-                logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_USING_PROXY_MODE));
+                logger.info("§e" + locale.getString(PluginLang.WEB_SERVER_NOTIFY_USING_PROXY_MODE));
                 server = HttpServer.create(new InetSocketAddress(config.get(WebserverSettings.INTERNAL_IP), port), 10);
             } else if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION)) {
                 logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTPS_USER_AUTH));
@@ -148,7 +145,7 @@ public class WebServer implements SubSystem {
                             .namingPattern("Plan WebServer Thread-%d")
                             .uncaughtExceptionHandler((thread, throwable) -> {
                                 if (config.isTrue(PluginSettings.DEV_MODE)) {
-                                    errorLogger.log(L.WARN, throwable, ErrorContext.builder()
+                                    errorLogger.warn(throwable, ErrorContext.builder()
                                             .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
                                             .build());
                                 }
@@ -164,13 +161,13 @@ public class WebServer implements SubSystem {
 
             boolean usingAlternativeIP = config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP);
             if (!usingAlternativeIP && !addresses.getAccessAddress().isPresent()) {
-                logger.log(L.INFO_COLOR, "§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
+                logger.info("§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
             }
         } catch (BindException failedToBind) {
             logger.error("Webserver failed to bind port: " + failedToBind.toString());
             enabled = false;
         } catch (IllegalArgumentException | IllegalStateException | IOException e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related("Trying to enable webserver", config.get(WebserverSettings.INTERNAL_IP) + ":" + port).build());
+            errorLogger.error(e, ErrorContext.builder().related("Trying to enable webserver", config.get(WebserverSettings.INTERNAL_IP) + ":" + port).build());
             enabled = false;
         }
     }
@@ -188,7 +185,7 @@ public class WebServer implements SubSystem {
             }
         } catch (InvalidPathException e) {
             logger.error("WebServer: Could not find Keystore: " + e.getMessage());
-            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+            errorLogger.error(e, ErrorContext.builder()
                     .whatToDo(e.getMessage() + ", Fix this path to point to a valid keystore file: " + keyStorePath)
                     .related(keyStorePath).build());
         }
@@ -239,7 +236,7 @@ public class WebServer implements SubSystem {
             logger.error(e.getMessage());
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(keyStoreKind).build());
+            errorLogger.error(e, ErrorContext.builder().related(keyStoreKind).build());
         } catch (EOFException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_EMPTY_FILE));
         } catch (FileNotFoundException e) {
@@ -248,10 +245,10 @@ public class WebServer implements SubSystem {
         } catch (BindException e) {
             throw e; // Pass to above error handler
         } catch (IOException e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(config.get(WebserverSettings.INTERNAL_IP) + ":" + port).build());
+            errorLogger.error(e, ErrorContext.builder().related(config.get(WebserverSettings.INTERNAL_IP) + ":" + port).build());
         } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
             logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
-            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+            errorLogger.error(e, ErrorContext.builder()
                     .whatToDo("Make sure the Certificate settings are correct / You can try remaking the keystore without -passin or -passout parameters.")
                     .related(keyStorePath).build());
         }

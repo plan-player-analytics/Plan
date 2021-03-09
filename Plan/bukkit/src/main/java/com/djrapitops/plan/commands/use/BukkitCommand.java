@@ -18,9 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,17 +55,14 @@ public class BukkitCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        runnableFactory.create("", new AbsRunnable() {
-            @Override
-            public void run() {
-                try {
-                    command.getExecutor().accept(getSender(sender), new Arguments(args));
-                } catch (Exception e) {
-                    errorLogger.log(L.ERROR, e, ErrorContext.builder()
-                            .related(sender.getClass())
-                            .related(label + " " + Arrays.toString(args))
-                            .build());
-                }
+        runnableFactory.create(() -> {
+            try {
+                command.getExecutor().accept(getSender(sender), new Arguments(args));
+            } catch (Exception e) {
+                errorLogger.error(e, ErrorContext.builder()
+                        .related(sender.getClass())
+                        .related(label + " " + Arrays.toString(args))
+                        .build());
             }
         }).runTaskAsynchronously();
         return true;
@@ -78,7 +73,7 @@ public class BukkitCommand implements CommandExecutor, TabCompleter {
         try {
             return command.getArgumentResolver().apply(getSender(sender), new Arguments(args));
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+            errorLogger.error(e, ErrorContext.builder()
                     .related(sender.getClass())
                     .related("tab completion")
                     .related(label + " " + Arrays.toString(args))

@@ -22,9 +22,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.utilities.Verify;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
 
 import java.sql.*;
 import java.util.UUID;
@@ -58,8 +56,8 @@ public abstract class Transaction {
     }
 
     public void executeTransaction(SQLDB db) {
-        Verify.nullCheck(db, () -> new IllegalArgumentException("Given database was null"));
-        Verify.isFalse(success, () -> new IllegalStateException("Transaction has already been executed"));
+        if (db == null) throw new IllegalArgumentException("Given database was null");
+        if (success) throw new IllegalStateException("Transaction has already been executed");
 
         this.db = db;
         this.dbType = db.getType();
@@ -110,12 +108,8 @@ public abstract class Transaction {
         if (dbType == DBType.MYSQL && errorCode == 1205) {
             if (!db.isUnderHeavyLoad()) {
                 db.getLogger().warn("Database appears to be under heavy load. Dropping some unimportant transactions and adding short pauses for next 10 minutes.");
-                db.getRunnableFactory().create("Increase load", new AbsRunnable() {
-                    @Override
-                    public void run() {
-                        db.assumeNoMoreHeavyLoad();
-                    }
-                }).runTaskLaterAsynchronously(TimeAmount.toTicks(10, TimeUnit.MINUTES));
+                db.getRunnableFactory().create(db::assumeNoMoreHeavyLoad)
+                        .runTaskLaterAsynchronously(TimeAmount.toTicks(10, TimeUnit.MINUTES));
             }
             db.increaseHeavyLoadDelay();
             executeTransaction(db); // Recurse to attempt again.
@@ -139,7 +133,7 @@ public abstract class Transaction {
         } else {
             // Rollbacks are supported.
             try {
-                if (Verify.notNull(connection, savepoint)) {
+                if (connection != null && savepoint != null) {
                     connection.rollback(savepoint);
                 }
             } catch (SQLException rollbackFail) {
@@ -212,8 +206,9 @@ public abstract class Transaction {
     }
 
     protected void executeSwallowingExceptions(String... statements) {
-        Verify.nullCheck(statements);
+        if (statements == null) return;
         for (String statement : statements) {
+            if (statement == null) continue;
             try {
                 execute(statement);
             } catch (DBOpException ignore) {

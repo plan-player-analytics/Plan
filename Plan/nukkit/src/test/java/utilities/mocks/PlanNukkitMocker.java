@@ -21,22 +21,11 @@ import cn.nukkit.command.ConsoleCommandSender;
 import cn.nukkit.plugin.PluginDescription;
 import cn.nukkit.scheduler.ServerScheduler;
 import com.djrapitops.plan.PlanNukkit;
-import com.djrapitops.plugin.benchmarking.Timings;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.debug.CombineDebugLogger;
-import com.djrapitops.plugin.logging.debug.DebugLogger;
-import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
-import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plan.commands.use.ColorScheme;
 import org.mockito.Mockito;
 import utilities.TestConstants;
-import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.mockito.Mockito.doReturn;
 
@@ -61,21 +50,10 @@ public class PlanNukkitMocker extends Mocker {
         super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
-        doReturn("1.0.0").when(planMock).getVersion();
 
         cn.nukkit.plugin.PluginLogger mockedLogger = Mockito.mock(cn.nukkit.plugin.PluginLogger.class);
-        RunnableFactory runnableFactory = new TestRunnableFactory();
-        PluginLogger testPluginLogger = new TestPluginLogger();
-        DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
-        ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
-        Timings timings = new Timings(debugLogger);
 
         doReturn(mockedLogger).when(planMock).getLogger();
-        doReturn(runnableFactory).when(planMock).getRunnableFactory();
-        doReturn(testPluginLogger).when(planMock).getPluginLogger();
-        doReturn(debugLogger).when(planMock).getDebugLogger();
-        doReturn(consoleErrorLogger).when(planMock).getErrorHandler();
-        doReturn(timings).when(planMock).getTimings();
 
         return this;
     }
@@ -89,11 +67,6 @@ public class PlanNukkitMocker extends Mocker {
         PluginDescription description = Mockito.mock(PluginDescription.class);
         doReturn("1.0.0").when(description).getVersion();
         doReturn(description).when(planMock).getDescription();
-        return this;
-    }
-
-    PlanNukkitMocker withResourceFetchingFromJar() throws IOException {
-        withPluginFiles();
         return this;
     }
 

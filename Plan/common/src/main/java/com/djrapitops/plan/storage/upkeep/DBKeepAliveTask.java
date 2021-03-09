@@ -19,9 +19,8 @@ package com.djrapitops.plan.storage.upkeep;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
+import net.playeranalytics.plugin.scheduling.PluginRunnable;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,7 +32,7 @@ import java.sql.Statement;
  *
  * @author Fuzzlemann
  */
-public class DBKeepAliveTask extends AbsRunnable {
+public class DBKeepAliveTask extends PluginRunnable {
     private final IReconnect iReconnect;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
@@ -56,11 +55,10 @@ public class DBKeepAliveTask extends AbsRunnable {
                 resultSet = statement.executeQuery("/* ping */ SELECT 1");
             }
         } catch (SQLException pingException) {
-            logger.debug("Something went wrong during SQL Connection upkeep task.");
             try {
                 connection = iReconnect.reconnect();
             } catch (SQLException reconnectionError) {
-                errorLogger.log(L.ERROR, reconnectionError, ErrorContext.builder()
+                errorLogger.error(reconnectionError, ErrorContext.builder()
                         .whatToDo("Reload Plan and Report this if the issue persists").build());
                 logger.error("SQL connection maintaining task had to be closed due to exception.");
                 this.cancel();

@@ -21,28 +21,29 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.api.events.PlanBungeeEnableEvent;
 import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.bungee.PlayerOnlineListener;
+import net.playeranalytics.plugin.server.Listeners;
 
 import javax.inject.Inject;
 
 public class BungeeListenerSystem extends ListenerSystem {
 
-    private final PlanBungee plugin;
-    private PlayerOnlineListener playerOnlineListener;
+    private final Listeners listeners;
+    private final PlayerOnlineListener playerOnlineListener;
 
     @Inject
-    public BungeeListenerSystem(PlanBungee plugin, PlayerOnlineListener playerOnlineListener) {
-        this.plugin = plugin;
+    public BungeeListenerSystem(Listeners listeners, PlayerOnlineListener playerOnlineListener) {
+        this.listeners = listeners;
         this.playerOnlineListener = playerOnlineListener;
     }
 
     @Override
     protected void registerListeners() {
-        plugin.registerListener(playerOnlineListener);
+        listeners.registerListener(playerOnlineListener);
     }
 
     @Override
     protected void unregisterListeners() {
-        plugin.getProxy().getPluginManager().unregisterListeners(plugin);
+        listeners.unregisterListeners();
     }
 
     @Override

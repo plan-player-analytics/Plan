@@ -30,7 +30,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -69,7 +68,7 @@ public class GameModeChangeListener implements Listener {
         try {
             actOnEvent(event);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, event.getPlayer().getGamemode() + "->" + event.getNewGamemode()).build());
+            errorLogger.error(e, ErrorContext.builder().related(event, event.getPlayer().getGamemode() + "->" + event.getNewGamemode()).build());
         }
     }
 

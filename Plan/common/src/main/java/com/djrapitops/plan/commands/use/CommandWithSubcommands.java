@@ -19,7 +19,6 @@ package com.djrapitops.plan.commands.use;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.utilities.java.TriConsumer;
-import com.djrapitops.plugin.command.ColorScheme;
 
 import java.util.ArrayList;
 import java.util.Collections;

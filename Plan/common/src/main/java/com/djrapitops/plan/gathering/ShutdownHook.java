@@ -17,7 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.TaskSystem;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -96,7 +96,7 @@ public class ShutdownHook extends Thread {
 
         @Override
         public void register(RunnableFactory runnableFactory) {
-            runnableFactory.create(null, this).runTaskAsynchronously();
+            runnableFactory.create(this).runTaskAsynchronously();
         }
     }
 }

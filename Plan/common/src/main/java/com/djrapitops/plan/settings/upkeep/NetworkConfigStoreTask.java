@@ -20,8 +20,8 @@ import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.network.NetworkSettingManager;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,7 +59,7 @@ public class NetworkConfigStoreTask extends TaskSystem.Task {
     public void register(RunnableFactory runnableFactory) {
         long delay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
 
-        runnableFactory.create(null, this).runTaskLaterAsynchronously(delay);
+        runnableFactory.create(this).runTaskLaterAsynchronously(delay);
     }
 
     private void updateDBConfigs() {

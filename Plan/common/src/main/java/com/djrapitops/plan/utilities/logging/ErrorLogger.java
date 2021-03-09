@@ -17,21 +17,23 @@
 package com.djrapitops.plan.utilities.logging;
 
 import com.djrapitops.plan.exceptions.ExceptionWithContext;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
 
-public interface ErrorLogger extends ErrorHandler {
-    default <T extends ExceptionWithContext> void log(L level, T throwable) {
-        log(level, (Throwable) throwable, throwable.getContext().orElse(ErrorContext.builder().related("Missing Context").build()));
+public interface ErrorLogger {
+    default <T extends ExceptionWithContext> void critical(T throwable) {
+        critical((Throwable) throwable, throwable.getContext().orElse(ErrorContext.builder().related("Missing Context").build()));
     }
 
-    void log(L level, Throwable throwable, ErrorContext context);
+    void critical(Throwable throwable, ErrorContext context);
 
-    @Override
-    @Deprecated
-    default void log(L level, Class caughtBy, Throwable throwable) {
-        log(level, throwable, ErrorContext.builder()
-                .related("Caught by " + caughtBy.getName())
-                .build());
+    default <T extends ExceptionWithContext> void error(T throwable) {
+        error((Throwable) throwable, throwable.getContext().orElse(ErrorContext.builder().related("Missing Context").build()));
     }
+
+    void error(Throwable throwable, ErrorContext context);
+
+    default <T extends ExceptionWithContext> void warn(T throwable) {
+        warn((Throwable) throwable, throwable.getContext().orElse(ErrorContext.builder().related("Missing Context").build()));
+    }
+
+    void warn(Throwable throwable, ErrorContext context);
 }

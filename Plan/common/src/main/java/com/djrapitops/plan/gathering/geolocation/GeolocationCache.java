@@ -22,11 +22,10 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -77,12 +76,9 @@ public class GeolocationCache implements SubSystem {
     @Override
     public void enable() {
         if (config.isTrue(DataGatheringSettings.GEOLOCATIONS)) {
-            runnableFactory.create("Geolocator init", new AbsRunnable() {
-                @Override
-                public void run() {
-                    if (inUseGeolocator == null) tryToPrepareGeoLite2();
-                    if (inUseGeolocator == null) logger.error("Failed to enable geolocation.");
-                }
+            runnableFactory.create(() -> {
+                if (inUseGeolocator == null) tryToPrepareGeoLite2();
+                if (inUseGeolocator == null) logger.error("Failed to enable geolocation.");
             }).runTaskAsynchronously();
         } else {
             logger.info(locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_DISABLED));

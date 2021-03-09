@@ -22,10 +22,9 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -92,7 +91,7 @@ public class SystemUsageBuffer {
         public void register(RunnableFactory runnableFactory) {
             long delay = TimeAmount.toTicks(1, TimeUnit.MINUTES) - TimeAmount.toTicks(500, TimeUnit.MILLISECONDS);
             long period = TimeAmount.toTicks(1, TimeUnit.SECONDS);
-            runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
+            runnableFactory.create(this).runTaskTimerAsynchronously(delay, period);
         }
     }
 
@@ -122,7 +121,7 @@ public class SystemUsageBuffer {
                 buffer.freeDiskSpace = SystemUsage.getFreeDiskSpace();
             } catch (SecurityException noPermission) {
                 if (!diskErrored) {
-                    errorLogger.log(L.WARN, noPermission, ErrorContext.builder()
+                    errorLogger.warn(noPermission, ErrorContext.builder()
                             .whatToDo("Resolve " + noPermission.getMessage() + " via OS or JVM permissions").build());
                 }
                 diskErrored = true;
@@ -136,7 +135,7 @@ public class SystemUsageBuffer {
         public void register(RunnableFactory runnableFactory) {
             long delay = TimeAmount.toTicks(50, TimeUnit.SECONDS);
             long period = TimeAmount.toTicks(1, TimeUnit.SECONDS);
-            runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
+            runnableFactory.create(this).runTaskTimerAsynchronously(delay, period);
         }
     }
 

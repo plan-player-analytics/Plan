@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.PluginRunnable;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,7 +54,7 @@ public class TaskSystem implements SubSystem {
         runnableFactory.cancelAllKnownTasks();
     }
 
-    public static abstract class Task extends AbsRunnable {
+    public static abstract class Task extends PluginRunnable {
         public abstract void register(RunnableFactory runnableFactory);
     }
 

@@ -22,7 +22,6 @@ import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
-import com.djrapitops.plugin.logging.L;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
@@ -113,7 +112,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
             return value;
         } catch (Exception e) {
-            errorLogger.log(L.WARN, e, ErrorContext.builder().whatToDo("Report this").related("Placeholder Request", params, uuid).build());
+            errorLogger.warn(e, ErrorContext.builder().whatToDo("Report this").related("Placeholder Request", params, uuid).build());
             return null;
         }
     }

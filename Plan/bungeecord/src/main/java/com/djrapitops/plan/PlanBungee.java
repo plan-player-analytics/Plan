@@ -17,30 +17,44 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.command.use.BungeeCommand;
+import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
-import com.djrapitops.plugin.BungeePlugin;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.L;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.playeranalytics.plugin.BungeePlatformLayer;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Bungee Main class.
  *
  * @author AuroraLS3
  */
-public class PlanBungee extends BungeePlugin implements PlanPlugin {
+public class PlanBungee extends Plugin implements PlanPlugin {
 
     private PlanSystem system;
     private Locale locale;
 
+    private PluginLogger logger;
+    private RunnableFactory runnableFactory;
+
     @Override
     public void onEnable() {
-        PlanBungeeComponent component = DaggerPlanBungeeComponent.builder().plan(this).build();
+        PlatformAbstractionLayer abstractionLayer = new BungeePlatformLayer(this);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+        PlanBungeeComponent component = DaggerPlanBungeeComponent.builder()
+                .plan(this)
+                .abstractionLayer(abstractionLayer)
+                .build();
         try {
             system = component.system();
             locale = system.getLocaleSystem().getLocale();
@@ -61,7 +75,8 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
             onDisable();
         } catch (Exception e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            String version = abstractionLayer.getPluginInformation().getVersion();
+            Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
             logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
@@ -74,20 +89,10 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        cancelAllTasks();
+        runnableFactory.cancelAllKnownTasks();
         if (system != null) system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));
-    }
-
-    @Override
-    public String getVersion() {
-        return super.getDescription().getVersion();
-    }
-
-    @Override
-    public void onReload() {
-        // Nothing to be done, systems are disabled
     }
 
     @Override
@@ -114,10 +119,5 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
     @Override
     public PlanSystem getSystem() {
         return system;
-    }
-
-    @Override
-    public boolean isReloading() {
-        return reloading;
     }
 }

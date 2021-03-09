@@ -44,7 +44,7 @@ public class TestResources {
     public static void copyResourceIntoFile(File toFile, String resourcePath) {
         createEmptyFile(toFile);
         writeResourceToFile(toFile, resourcePath);
-        assertTrue(toFile.exists(), () -> "Failed to copy resource: '" + resourcePath + "'");
+        assertTrue(toFile.exists(), () -> "Failed to copy resource: '" + resourcePath + "', it was not written");
     }
 
     private static void copyResourceToFile(File toFile, InputStream testResource) {
@@ -68,7 +68,7 @@ public class TestResources {
             }
             copy(in, out);
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("Failed to write resource " + resourcePath + " to file " + toFile.getAbsolutePath() + ", " + e.getMessage(), e);
         }
     }
 
@@ -88,7 +88,7 @@ public class TestResources {
                 Files.createFile(toFile.toPath());
             }
         } catch (IOException e) {
-            throw new UncheckedIOException(e);
+            throw new UncheckedIOException("Failed to create file " + toFile.getAbsolutePath() + ", " + e.getMessage(), e);
         }
     }
 }

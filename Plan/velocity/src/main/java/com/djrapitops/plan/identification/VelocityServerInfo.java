@@ -23,7 +23,7 @@ import com.djrapitops.plan.identification.storage.ServerDBLoader;
 import com.djrapitops.plan.identification.storage.ServerFileLoader;
 import com.djrapitops.plan.identification.storage.ServerLoader;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plugin.logging.console.PluginLogger;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

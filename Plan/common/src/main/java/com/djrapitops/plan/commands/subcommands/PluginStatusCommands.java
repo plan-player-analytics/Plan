@@ -29,7 +29,7 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
-import com.djrapitops.plugin.logging.L;
+import net.playeranalytics.plugin.PluginInformation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,6 +39,7 @@ import java.util.Optional;
 public class PluginStatusCommands {
 
     private final PlanPlugin plugin;
+    private final PluginInformation pluginInformation;
     private final Locale locale;
     private final DBSystem dbSystem;
     private final Status status;
@@ -48,6 +49,7 @@ public class PluginStatusCommands {
     @Inject
     public PluginStatusCommands(
             PlanPlugin plugin,
+            PluginInformation pluginInformation,
             Locale locale,
             DBSystem dbSystem,
             Status status,
@@ -55,6 +57,7 @@ public class PluginStatusCommands {
             ErrorLogger errorLogger
     ) {
         this.plugin = plugin;
+        this.pluginInformation = pluginInformation;
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.status = status;
@@ -65,10 +68,11 @@ public class PluginStatusCommands {
     public void onReload(CMDSender sender) {
         new Thread(() -> {
             try {
-                plugin.reloadPlugin(true);
+                plugin.onDisable();
+                plugin.onEnable();
                 sender.send(locale.getString(CommandLang.RELOAD_COMPLETE));
             } catch (Exception e) {
-                errorLogger.log(L.CRITICAL, e, ErrorContext.builder().related(sender, "reload", Thread.currentThread().getName()).build());
+                errorLogger.critical(e, ErrorContext.builder().related(sender, "reload", Thread.currentThread().getName()).build());
                 sender.send(locale.getString(CommandLang.RELOAD_FAILED));
             } finally {
                 Thread.currentThread().interrupt();
@@ -105,7 +109,7 @@ public class PluginStatusCommands {
         String[] messages = {
                 locale.getString(CommandLang.HEADER_INFO),
                 "",
-                locale.getString(CommandLang.INFO_VERSION, plugin.getVersion()),
+                locale.getString(CommandLang.INFO_VERSION, pluginInformation.getVersion()),
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
                 locale.getString(CommandLang.INFO_DATABASE, database.getType().getName() + " (" + database.getState().name() + ")"),
                 locale.getString(CommandLang.INFO_PROXY_CONNECTION, proxyAvailable),

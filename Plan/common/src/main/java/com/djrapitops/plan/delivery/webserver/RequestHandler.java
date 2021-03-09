@@ -35,12 +35,10 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.utilities.Verify;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -107,7 +105,7 @@ public class RequestHandler implements HttpHandler {
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                errorLogger.warn(e, ErrorContext.builder()
                         .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
                         .related(exchange.getRequestMethod(), exchange.getRemoteAddress(), exchange.getRequestHeaders(), exchange.getResponseHeaders(), exchange.getRequestURI())
                         .build());
@@ -177,10 +175,9 @@ public class RequestHandler implements HttpHandler {
     private void warnAboutXForwardedForSecurityIssue() {
         if (!warnedAboutXForwardedSecurityIssue.get()) {
             logger.warn("Security Vulnerability due to misconfiguration: X-Forwarded-For header was not present in a request & '" +
-                            WebserverSettings.IP_WHITELIST_X_FORWARDED.getPath() + "' is 'true'!",
-                    "This could mean non-reverse-proxy access is not blocked & someone can use IP Spoofing to bypass security!",
-                    "Make sure you can only access Plan panel from your reverse-proxy or disable this setting."
-            );
+                    WebserverSettings.IP_WHITELIST_X_FORWARDED.getPath() + "' is 'true'!");
+            logger.warn("This could mean non-reverse-proxy access is not blocked & someone can use IP Spoofing to bypass security!");
+            logger.warn("Make sure you can only access Plan panel from your reverse-proxy or disable this setting.");
         }
         warnedAboutXForwardedSecurityIssue.set(true);
     }
@@ -228,7 +225,7 @@ public class RequestHandler implements HttpHandler {
         }
 
         List<String> authorization = requestHeaders.get("Authorization");
-        if (Verify.isEmpty(authorization)) return Optional.empty();
+        if (authorization == null || authorization.isEmpty()) return Optional.empty();
 
         String authLine = authorization.get(0);
         if (StringUtils.contains(authLine, "Basic ")) {

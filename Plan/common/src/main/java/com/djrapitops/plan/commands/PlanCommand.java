@@ -17,10 +17,7 @@
 package com.djrapitops.plan.commands;
 
 import com.djrapitops.plan.commands.subcommands.*;
-import com.djrapitops.plan.commands.use.Arguments;
-import com.djrapitops.plan.commands.use.CMDSender;
-import com.djrapitops.plan.commands.use.CommandWithSubcommands;
-import com.djrapitops.plan.commands.use.Subcommand;
+import com.djrapitops.plan.commands.use.*;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -29,8 +26,6 @@ import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -91,7 +86,7 @@ public class PlanCommand {
         if (error instanceof IllegalArgumentException) {
             sender.send("§c" + error.getMessage());
         } else {
-            errorLogger.log(L.WARN, error, ErrorContext.builder().related(sender, arguments).build());
+            errorLogger.warn(error, ErrorContext.builder().related(sender, arguments).build());
         }
     }
 

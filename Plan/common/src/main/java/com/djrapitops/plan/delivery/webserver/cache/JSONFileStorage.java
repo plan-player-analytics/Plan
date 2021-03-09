@@ -16,17 +16,15 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
-import com.djrapitops.plan.DebugChannels;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.debug.DebugLogger;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -61,7 +59,6 @@ public class JSONFileStorage implements JSONStorage {
 
     private final Pattern timestampRegex = Pattern.compile(".*-([0-9]*).json");
     private static final String JSON_FILE_EXTENSION = ".json";
-    private final DebugLogger debugLogger;
 
     private final Formatter<Long> dateFormatter;
 
@@ -72,7 +69,6 @@ public class JSONFileStorage implements JSONStorage {
             PluginLogger logger
     ) {
         this.logger = logger;
-        debugLogger = logger.getDebugLogger();
 
         dateFormatter = formatters.yearLong();
 
@@ -84,7 +80,6 @@ public class JSONFileStorage implements JSONStorage {
             PlanFiles files, Formatter<Long> dateFormatter, PluginLogger logger
     ) {
         this.logger = logger;
-        debugLogger = logger.getDebugLogger();
 
         this.dateFormatter = dateFormatter;
 
@@ -256,7 +251,6 @@ public class JSONFileStorage implements JSONStorage {
     private void deleteFiles(List<File> toDelete) {
         for (File fileToDelete : toDelete) {
             try {
-                debugLogger.logOn(DebugChannels.JSON_CACHE, "Deleting " + fileToDelete.getAbsolutePath());
                 Files.delete(fileToDelete.toPath());
             } catch (IOException e) {
                 // Failed to delete, set for deletion on next server shutdown.
@@ -269,24 +263,21 @@ public class JSONFileStorage implements JSONStorage {
     public static class CleanTask extends TaskSystem.Task {
         private final PlanConfig config;
         private final JSONFileStorage jsonFileStorage;
-        private final DebugLogger debugLogger;
 
         @Inject
         public CleanTask(
                 PlanConfig config,
-                JSONFileStorage jsonFileStorage,
-                DebugLogger debugLogger
+                JSONFileStorage jsonFileStorage
         ) {
             this.config = config;
             this.jsonFileStorage = jsonFileStorage;
-            this.debugLogger = debugLogger;
         }
 
         @Override
         public void register(RunnableFactory runnableFactory) {
             long delay = TimeAmount.toTicks(ThreadLocalRandom.current().nextInt(60), TimeUnit.SECONDS);
             long period = TimeAmount.toTicks(1, TimeUnit.HOURS);
-            runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
+            runnableFactory.create(this).runTaskTimerAsynchronously(delay, period);
         }
 
         @Override
@@ -294,14 +285,9 @@ public class JSONFileStorage implements JSONStorage {
             long now = System.currentTimeMillis();
             long invalidateDiskCacheAfterMs = config.get(WebserverSettings.INVALIDATE_DISK_CACHE);
             long invalidateQueriesAfterMs = config.get(WebserverSettings.INVALIDATE_QUERY_RESULTS);
-            debugLogger.logOn(DebugChannels.JSON_CACHE, "Running clean task..");
 
             jsonFileStorage.invalidateOlder("query", now - invalidateQueriesAfterMs);
             jsonFileStorage.invalidateOlderButIgnore(now - invalidateDiskCacheAfterMs, "query");
-        }
-
-        public DebugLogger getDebugLogger() {
-            return debugLogger;
         }
     }
 }

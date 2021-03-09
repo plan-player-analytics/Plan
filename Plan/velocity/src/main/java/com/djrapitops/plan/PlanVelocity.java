@@ -16,26 +16,30 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.commands.use.VelocityCommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
-import com.djrapitops.plugin.VelocityPlugin;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.L;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
+import net.playeranalytics.plugin.VelocityPlatformLayer;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.logging.Level;
 
 /**
  * Velocity Main class.
@@ -51,11 +55,16 @@ import java.nio.file.Path;
         description = "Player Analytics Plugin by AuroraLS3",
         authors = {"AuroraLS3"}
 )
-public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
+public class PlanVelocity implements PlanPlugin {
 
     private final Metrics.Factory metricsFactory;
+    private final ProxyServer proxy;
+    private final Logger slf4jLogger;
+    private final Path dataFolderPath;
     private PlanSystem system;
     private Locale locale;
+    private PluginLogger logger;
+    private RunnableFactory runnableFactory;
 
     @com.google.inject.Inject
     public PlanVelocity(
@@ -64,7 +73,9 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             @DataDirectory Path dataFolderPath,
             Metrics.Factory metricsFactory
     ) {
-        super(proxy, slf4jLogger, dataFolderPath);
+        this.proxy = proxy;
+        this.slf4jLogger = slf4jLogger;
+        this.dataFolderPath = dataFolderPath;
         this.metricsFactory = metricsFactory;
     }
 
@@ -78,8 +89,10 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
         onDisable();
     }
 
-    @Override
     public void onEnable() {
+        PlatformAbstractionLayer abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
         PlanVelocityComponent component = DaggerPlanVelocityComponent.builder().plan(this).build();
         try {
             system = component.system();
@@ -88,7 +101,6 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
 
             int pluginId = 10326;
             new BStatsVelocity(
-                    this,
                     system.getDatabaseSystem().getDatabase(),
                     metricsFactory.make(this, pluginId)
             ).registerMetrics();
@@ -103,7 +115,8 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
             onDisable();
         } catch (Exception e) {
-            errorHandler.log(L.CRITICAL, this.getClass(), e);
+            String version = abstractionLayer.getPluginInformation().getVersion();
+            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
             logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
@@ -115,18 +128,13 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
         }
     }
 
-    @Override
     public void onDisable() {
-        cancelAllTasks();
+        runnableFactory.cancelAllKnownTasks();
         if (system != null) system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));
     }
 
-    @Override
-    public void onReload() {
-        // Nothing to be done, systems are disabled
-    }
 
     @Override
     public void registerCommand(Subcommand command) {
@@ -134,7 +142,7 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
             logger.warn("Attempted to register a null command!");
             return;
         }
-        getProxy().getCommandManager().register(
+        proxy.getCommandManager().register(
                 new VelocityCommand(runnableFactory, system.getErrorLogger(), command),
                 command.getAliases().toArray(new String[0])
         );
@@ -155,8 +163,16 @@ public class PlanVelocity extends VelocityPlugin implements PlanPlugin {
         return system;
     }
 
+    public ProxyServer getProxy() {
+        return proxy;
+    }
+
+    public Logger getSlf4jLogger() {
+        return slf4jLogger;
+    }
+
     @Override
-    public boolean isReloading() {
-        return reloading;
+    public File getDataFolder() {
+        return dataFolderPath.toFile();
     }
 }

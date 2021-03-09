@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions;
 
-import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
@@ -75,7 +74,7 @@ public class StoreTabInformationTransaction extends ThrowawayTransaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, tabInformation.getTabPriority());
-                statement.setString(2, ElementOrder.serialize(tabInformation.getTabElementOrder().orElse(ElementOrder.values())));
+                statement.setString(2, tabInformation.getSerializedTabElementOrder());
                 ExtensionIconTable.set3IconValuesToStatement(statement, 3, tabInformation.getTabIcon());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 6, pluginName, serverUUID);
                 statement.setString(8, tabInformation.getTabName());
@@ -95,7 +94,7 @@ public class StoreTabInformationTransaction extends ThrowawayTransaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tabInformation.getTabName());
-                statement.setString(2, ElementOrder.serialize(tabInformation.getTabElementOrder().orElse(ElementOrder.values())));
+                statement.setString(2, tabInformation.getSerializedTabElementOrder());
                 statement.setInt(3, tabInformation.getTabPriority());
                 ExtensionIconTable.set3IconValuesToStatement(statement, 4, tabInformation.getTabIcon());
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 7, pluginName, serverUUID);

@@ -20,8 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.api.utility.UUIDFetcher;
-import com.djrapitops.plugin.logging.L;
+import net.playeranalytics.plugin.player.UUIDFetcher;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -93,7 +92,7 @@ public class UUIDUtility {
         try {
             return dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName));
         } catch (DBOpException e) {
-            errorLogger.log(L.ERROR, e);
+            errorLogger.error(e);
             return Optional.empty();
         }
     }

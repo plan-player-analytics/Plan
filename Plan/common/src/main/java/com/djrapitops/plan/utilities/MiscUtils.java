@@ -16,10 +16,6 @@
  */
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.settings.Permissions;
-import com.djrapitops.plugin.command.CommandUtils;
-import com.djrapitops.plugin.command.Sender;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,44 +30,6 @@ public class MiscUtils {
      */
     private MiscUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    /**
-     * Get a players name that matches the given arguments or name of the sender.
-     *
-     * @param args   Arguments of command.
-     * @param sender Sender of command
-     * @return Player name.
-     */
-    public static String getPlayerName(String[] args, Sender sender) {
-        return getPlayerName(args, sender, Permissions.PLAYER_OTHER);
-    }
-
-    /**
-     * Used by the inspect command.
-     *
-     * @param args   Arguments of a command, must not be empty if console sender.
-     * @param sender Command sender
-     * @param perm   Permission to use when checking.
-     * @return The name of the player (first argument or sender) or null if sender has no permission.
-     */
-    public static String getPlayerName(String[] args, Sender sender, Permissions perm) {
-        String playerName;
-        boolean isConsole = !CommandUtils.isPlayer(sender);
-        if (isConsole) {
-            playerName = args[0];
-        } else if (args.length > 0) {
-            if (sender.hasPermission(perm.getPermission())) {
-                playerName = args[0];
-            } else if (args[0].equalsIgnoreCase(sender.getName())) {
-                playerName = sender.getName();
-            } else {
-                return null;
-            }
-        } else {
-            playerName = sender.getName();
-        }
-        return playerName;
     }
 
     public static void close(AutoCloseable... close) {

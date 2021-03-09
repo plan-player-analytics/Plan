@@ -26,7 +26,6 @@ import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -108,7 +107,7 @@ public class QuerySvc implements QueryService {
             try {
                 subscriber.accept(playerUUID);
             } catch (DBOpException e) {
-                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                errorLogger.warn(e, ErrorContext.builder()
                         .whatToDo("Report to this Query API user " + subscriber.getClass().getName())
                         .related("Subscriber: " + subscriber.getClass().getName()).build());
             }
@@ -120,7 +119,7 @@ public class QuerySvc implements QueryService {
             try {
                 function.apply();
             } catch (DBOpException e) {
-                errorLogger.log(L.WARN, e, ErrorContext.builder()
+                errorLogger.warn(e, ErrorContext.builder()
                         .whatToDo("Report to this Query API user " + function.getClass().getName())
                         .related("Subscriber: " + function.getClass().getName()).build());
             }

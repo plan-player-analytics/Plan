@@ -27,7 +27,7 @@ import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
-import com.djrapitops.plugin.api.TimeAmount;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
 
 import java.util.*;
 import java.util.function.Function;

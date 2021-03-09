@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.version;
 
-import com.djrapitops.plugin.api.utility.Version;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -53,7 +52,7 @@ public class VersionInfoLoader {
             while (websiteScanner.hasNextLine()) {
                 checkLine(websiteScanner).ifPresent(lineParts -> {
                     boolean release = lineParts[0].equals("REL");
-                    Version version = new Version(lineParts[1]);
+                    String version = lineParts[1];
                     String downloadUrl = lineParts[2];
                     String changeLogUrl = lineParts[3];
 

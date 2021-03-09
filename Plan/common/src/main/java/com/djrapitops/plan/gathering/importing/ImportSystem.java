@@ -18,7 +18,6 @@ package com.djrapitops.plan.gathering.importing;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.gathering.importing.importers.Importer;
-import com.djrapitops.plugin.utilities.Verify;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,7 +48,7 @@ public class ImportSystem implements SubSystem {
     }
 
     public void registerImporter(Importer importer) {
-        Verify.nullCheck(importer, () -> new IllegalArgumentException("Importer cannot be null"));
+        if (importer == null) throw new IllegalArgumentException("Importer cannot be null");
 
         importers.put(importer.getName(), importer);
     }

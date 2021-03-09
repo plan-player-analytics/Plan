@@ -17,11 +17,11 @@
 package com.djrapitops.plan.delivery.webserver.cache;
 
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mockito;
+import utilities.TestPluginLogger;
 
 import java.io.File;
 import java.io.IOException;

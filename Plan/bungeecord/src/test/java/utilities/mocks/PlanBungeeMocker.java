@@ -17,16 +17,7 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.PlanBungee;
-import com.djrapitops.plugin.benchmarking.Timings;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.logging.console.TestPluginLogger;
-import com.djrapitops.plugin.logging.debug.CombineDebugLogger;
-import com.djrapitops.plugin.logging.debug.DebugLogger;
-import com.djrapitops.plugin.logging.debug.MemoryDebugLogger;
-import com.djrapitops.plugin.logging.error.ConsoleErrorLogger;
-import com.djrapitops.plugin.logging.error.ErrorHandler;
-import com.djrapitops.plugin.task.RunnableFactory;
+import com.djrapitops.plan.commands.use.ColorScheme;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyConfig;
 import net.md_5.bungee.api.ProxyServer;
@@ -35,7 +26,6 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import org.mockito.Mockito;
 import utilities.TestConstants;
 import utilities.mocks.objects.TestLogger;
-import utilities.mocks.objects.TestRunnableFactory;
 
 import java.io.File;
 import java.util.HashSet;
@@ -64,21 +54,10 @@ public class PlanBungeeMocker extends Mocker {
         super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
-        doReturn("1.0.0").when(planMock).getVersion();
 
         TestLogger testLogger = new TestLogger();
-        RunnableFactory runnableFactory = new TestRunnableFactory();
-        PluginLogger testPluginLogger = new TestPluginLogger();
-        DebugLogger debugLogger = new CombineDebugLogger(new MemoryDebugLogger());
-        ErrorHandler consoleErrorLogger = new ConsoleErrorLogger(testPluginLogger);
-        Timings timings = new Timings(debugLogger);
 
         doReturn(testLogger).when(planMock).getLogger();
-        doReturn(runnableFactory).when(planMock).getRunnableFactory();
-        doReturn(testPluginLogger).when(planMock).getPluginLogger();
-        doReturn(debugLogger).when(planMock).getDebugLogger();
-        doReturn(consoleErrorLogger).when(planMock).getErrorHandler();
-        doReturn(timings).when(planMock).getTimings();
 
         return this;
     }
@@ -89,7 +68,6 @@ public class PlanBungeeMocker extends Mocker {
     }
 
     PlanBungeeMocker withResourceFetchingFromJar() throws Exception {
-        withPluginFiles();
         return this;
     }
 

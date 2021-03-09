@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.version;
 
-import com.djrapitops.plugin.api.utility.Version;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -32,7 +31,7 @@ class VersionInfoLoaderTest {
         List<VersionInfo> versions = VersionInfoLoader.load();
 
         VersionInfo oldest = versions.get(versions.size() - 1);
-        assertEquals(new Version("4.1.7"), oldest.getVersion());
+        assertEquals(new VersionNumber("4.1.7"), oldest.getVersion());
         assertTrue(oldest.isRelease());
     }
 

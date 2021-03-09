@@ -37,7 +37,6 @@ import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -79,7 +78,7 @@ public class DeathEventListener implements Listener {
             UUID uuid = dead.getUniqueId();
             handleKill(time, uuid, killerEntity);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, dead).build());
+            errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
     }
 
@@ -99,7 +98,7 @@ public class DeathEventListener implements Listener {
 
             handleKill(time, /* Not a player */ null, killerEntity);
         } catch (Exception e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder().related(event, dead).build());
+            errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
     }
 

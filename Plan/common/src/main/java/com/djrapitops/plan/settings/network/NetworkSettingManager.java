@@ -31,10 +31,9 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -98,7 +97,6 @@ public class NetworkSettingManager implements SubSystem {
 
         watcher = prepareFileWatcher();
         watcher.start();
-        logger.debug("Server Settings folder FileWatcher started.");
 
         scheduleDBCheckTask();
     }
@@ -145,12 +143,8 @@ public class NetworkSettingManager implements SubSystem {
 
     private void scheduleDBCheckTask() {
         long checkPeriod = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS);
-        runnableFactory.create("Config Update DB Checker", new AbsRunnable() {
-            @Override
-            public void run() {
-                updateConfigFromDBIfUpdated();
-            }
-        }).runTaskTimerAsynchronously(checkPeriod, checkPeriod);
+        runnableFactory.create(this::updateConfigFromDBIfUpdated)
+                .runTaskTimerAsynchronously(checkPeriod, checkPeriod);
     }
 
     private File createServerSettingsFolder() {
@@ -207,8 +201,6 @@ public class NetworkSettingManager implements SubSystem {
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
             Config config = reader.read();
             database.executeTransaction(new StoreConfigTransaction(serverUUID, config, file.lastModified()));
-            String serverName = config.getNode(PluginSettings.SERVER_NAME.getPath()).map(ConfigNode::getString).orElse("Unknown");
-            logger.debug("Server config '" + serverName + "' in db now up to date.");
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

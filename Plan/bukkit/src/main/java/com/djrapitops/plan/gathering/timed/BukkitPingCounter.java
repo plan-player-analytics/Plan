@@ -23,7 +23,6 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -33,9 +32,9 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
 import com.djrapitops.plan.utilities.java.Reflection;
-import com.djrapitops.plugin.api.TimeAmount;
-import com.djrapitops.plugin.task.AbsRunnable;
-import com.djrapitops.plugin.task.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.Listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -75,7 +74,7 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
-    private final Plan plugin;
+    private final Listeners listeners;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -83,13 +82,13 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
 
     @Inject
     public BukkitPingCounter(
-            Plan plugin,
+            Listeners listeners,
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             RunnableFactory runnableFactory
     ) {
-        this.plugin = plugin;
+        this.listeners = listeners;
         BukkitPingCounter.loadPingMethodDetails();
         this.config = config;
         this.dbSystem = dbSystem;
@@ -146,10 +145,10 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
     public void register(RunnableFactory runnableFactory) {
         Long startDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
         if (startDelay < TimeUnit.HOURS.toMillis(1L) && config.isTrue(DataGatheringSettings.PING)) {
-            plugin.registerListener(this);
+            listeners.registerListener(this);
             long delay = TimeAmount.toTicks(startDelay, TimeUnit.MILLISECONDS);
             long period = 40L;
-            runnableFactory.create(null, this).runTaskTimer(delay, period);
+            runnableFactory.create(this).runTaskTimer(delay, period);
         }
     }
 
@@ -217,12 +216,9 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
         if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
             return;
         }
-        runnableFactory.create("Add Player to Ping list", new AbsRunnable() {
-            @Override
-            public void run() {
-                if (player.isOnline()) {
-                    addPlayer(player);
-                }
+        runnableFactory.create(() -> {
+            if (player.isOnline()) {
+                addPlayer(player);
             }
         }).runTaskLater(TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS));
     }

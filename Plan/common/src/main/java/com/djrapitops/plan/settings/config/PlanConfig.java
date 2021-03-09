@@ -20,8 +20,7 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.utilities.Verify;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -75,9 +74,17 @@ public class PlanConfig extends Config {
 
     public <T> T get(Setting<T> setting) {
         T value = setting.getValueFrom(this);
-        Verify.isTrue(setting.isValid(value), () -> new IllegalStateException(
-                "Config value for " + setting.getPath() + " has a bad value: '" + value + "'"
-        ));
+        if (setting.isInvalid(value)) {
+            T defaultValue = setting.getDefaultValue();
+            if (defaultValue == null) {
+                throw new IllegalStateException(
+                        "Config value for " + setting.getPath() + " has a bad value: '" + value + "'"
+                );
+            } else {
+                logger.warn("Config value for " + setting.getPath() + " has a bad value: '" + value + "', using '" + defaultValue + "'");
+                return defaultValue;
+            }
+        }
         return value;
     }
 

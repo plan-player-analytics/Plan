@@ -17,8 +17,6 @@
 package com.djrapitops.plan.data.element;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
-import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
-import com.djrapitops.plugin.utilities.ArrayUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,9 +51,7 @@ public class TableContainer {
     }
 
     public TableContainer(boolean players, String... header) {
-        this(
-                ArrayUtil.merge(new String[]{Icon.called("user").build() + " Player"}, header)
-        );
+        this(header);
     }
 
     public final void addRow(Serializable... values) {

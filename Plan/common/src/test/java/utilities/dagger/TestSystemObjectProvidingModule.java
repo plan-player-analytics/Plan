@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.file.JarResource;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Module;
 import dagger.Provides;
+import utilities.TestErrorLogger;
 import utilities.TestResources;
 
 import javax.inject.Named;
@@ -75,8 +76,6 @@ public class TestSystemObjectProvidingModule {
     @Provides
     @Singleton
     ErrorLogger provideErrorLogger() {
-        return (level, throwable, context) -> {
-            throw new AssertionError("Test had an Exception: " + level.name() + " " + throwable.toString() + " " + context, throwable);
-        };
+        return new TestErrorLogger();
     }
 }

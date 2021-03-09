@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.html.icon;
 
-import com.djrapitops.plugin.utilities.Verify;
-
 public class Icon {
 
     private Family type;
@@ -107,7 +105,7 @@ public class Icon {
         }
 
         public Icon build() {
-            Verify.nullCheck(icon.name, () -> new IllegalStateException("'name' was not defined yet!"));
+            if (icon.name == null) throw new IllegalStateException("'name' was not defined yet!");
             return icon;
         }
 

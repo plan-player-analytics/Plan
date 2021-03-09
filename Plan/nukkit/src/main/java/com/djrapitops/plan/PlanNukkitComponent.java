@@ -26,6 +26,7 @@ import com.djrapitops.plan.modules.nukkit.NukkitSuperClassBindingModule;
 import com.djrapitops.plan.modules.nukkit.NukkitTaskModule;
 import dagger.BindsInstance;
 import dagger.Component;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
 
 import javax.inject.Singleton;
 
@@ -38,7 +39,7 @@ import javax.inject.Singleton;
 @Component(modules = {
         NukkitPlanModule.class,
         SystemObjectProvidingModule.class,
-        APFModule.class,
+        PlatformAbstractionLayerModule.class,
         FiltersModule.class,
         PlaceholderModule.class,
 
@@ -62,6 +63,9 @@ public interface PlanNukkitComponent {
 
         @BindsInstance
         Builder plan(PlanNukkit plan);
+
+        @BindsInstance
+        Builder abstractionLayer(PlatformAbstractionLayer abstractionLayer);
 
         PlanNukkitComponent build();
     }

@@ -21,10 +21,9 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.utilities.java.ThrowingConsumer;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.task.AbsRunnable;
+import net.playeranalytics.plugin.scheduling.PluginRunnable;
 
-public class ExportTask extends AbsRunnable {
+public class ExportTask extends PluginRunnable {
 
     private final Exporter exporter;
     private final ThrowingConsumer<Exporter, ExportException> exportAction;
@@ -45,11 +44,11 @@ public class ExportTask extends AbsRunnable {
         try {
             exportAction.accept(exporter);
         } catch (ExportException e) {
-            errorLogger.log(L.WARN, e, ErrorContext.builder().related("Export task run").build());
+            errorLogger.warn(e, ErrorContext.builder().related("Export task run").build());
         } catch (DBOpException dbException) {
             handleDBException(dbException);
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-            errorLogger.log(L.ERROR, e, ErrorContext.builder()
+            errorLogger.error(e, ErrorContext.builder()
                     .whatToDo("Export Task Disabled due to error - reload Plan to re-enable.")
                     .related("Export task run").build());
             cancel();
@@ -58,11 +57,11 @@ public class ExportTask extends AbsRunnable {
 
     private void handleDBException(DBOpException dbException) {
         if (dbException.getMessage().contains("closed")) {
-            errorLogger.log(L.ERROR, dbException, ErrorContext.builder()
+            errorLogger.error(dbException, ErrorContext.builder()
                     .whatToDo("Export Task Disabled due to error - database is closing, so this error can be ignored.).")
                     .related("Export task run").build());
         } else {
-            errorLogger.log(L.ERROR, dbException, ErrorContext.builder()
+            errorLogger.error(dbException, ErrorContext.builder()
                     .whatToDo("Export Task Disabled due to error - reload Plan to re-enable.")
                     .related("Export task run").build());
         }

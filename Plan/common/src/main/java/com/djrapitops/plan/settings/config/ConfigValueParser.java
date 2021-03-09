@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.settings.config;
 
-import com.djrapitops.plugin.utilities.Verify;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -94,7 +93,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(String value) {
-            Verify.nullCheck(value, ConfigValueParser::nullInvalidException);
+            if (value == null) throw nullInvalidException();
 
             boolean surroundedByQuotes = value.startsWith("'") || value.endsWith("'");
             boolean surroundedByDoubleQuotes = value.startsWith("\"") || value.endsWith("\"");
@@ -121,7 +120,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(Integer ofValue) {
-            Verify.nullCheck(ofValue, ConfigValueParser::nullInvalidException);
+            if (ofValue == null) throw nullInvalidException();
             return Integer.toString(ofValue);
         }
     }
@@ -138,7 +137,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(Long ofValue) {
-            Verify.nullCheck(ofValue, ConfigValueParser::nullInvalidException);
+            if (ofValue == null) throw nullInvalidException();
             return Long.toString(ofValue);
         }
     }
@@ -151,7 +150,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(Boolean ofValue) {
-            Verify.nullCheck(ofValue, ConfigValueParser::nullInvalidException);
+            if (ofValue == null) throw nullInvalidException();
             return Boolean.toString(ofValue);
         }
     }
@@ -179,7 +178,7 @@ public interface ConfigValueParser<T> {
 
         @Override
         public String decompose(List<String> ofValue) {
-            Verify.nullCheck(ofValue, ConfigValueParser::nullInvalidException);
+            if (ofValue == null) throw nullInvalidException();
 
             StringBuilder decomposedString = new StringBuilder();
             for (String value : ofValue) {

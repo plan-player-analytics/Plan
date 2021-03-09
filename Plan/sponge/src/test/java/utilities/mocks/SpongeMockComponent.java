@@ -17,11 +17,24 @@
 package utilities.mocks;
 
 import com.djrapitops.plan.DaggerPlanSpongeComponent;
-import com.djrapitops.plan.PlanSponge;
+import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSpongeComponent;
 import com.djrapitops.plan.PlanSystem;
+import org.mockito.Mockito;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.MinecraftVersion;
+import org.spongepowered.api.Platform;
+import org.spongepowered.api.Server;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 
+import java.net.InetSocketAddress;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.Mockito.doReturn;
 
 /**
  * Test utility for creating a dagger PlanComponent using a mocked PlanSponge.
@@ -32,19 +45,18 @@ public class SpongeMockComponent {
 
     private final Path tempDir;
 
-    private PlanSponge planMock;
+    private PlanPlugin planMock;
     private PlanSpongeComponent component;
 
     public SpongeMockComponent(Path tempDir) {
         this.tempDir = tempDir;
     }
 
-    public PlanSponge getPlanMock() throws Exception {
+    public PlanPlugin getPlanMock() throws Exception {
         if (planMock == null) {
-            planMock = PlanSpongeMocker.setUp()
+            planMock = PlanPluginMocker.setUp()
+                    .withLogging()
                     .withDataFolder(tempDir.toFile())
-                    .withResourceFetchingFromJar()
-                    .withGame()
                     .getPlanMock();
         }
         return planMock;
@@ -52,8 +64,51 @@ public class SpongeMockComponent {
 
     public PlanSystem getPlanSystem() throws Exception {
         if (component == null) {
-            component = DaggerPlanSpongeComponent.builder().plan(getPlanMock()).build();
+            PlanPlugin planMock = getPlanMock();
+            component = DaggerPlanSpongeComponent.builder()
+                    .plan(planMock)
+                    .abstractionLayer(new TestPlatformAbstractionLayer(planMock))
+                    .game(mockGame())
+                    .build();
         }
         return component.system();
+    }
+
+    private Game mockGame() {
+        Game game = Mockito.mock(Game.class);
+
+        Platform platform = mockPlatform();
+        Server server = mockServer();
+        doReturn(platform).when(game).getPlatform();
+        doReturn(server).when(game).getServer();
+
+        return game;
+    }
+
+    private Platform mockPlatform() {
+        Platform platform = Mockito.mock(Platform.class);
+
+        MinecraftVersion version = Mockito.mock(MinecraftVersion.class);
+        doReturn("1.12").when(version).getName();
+        doReturn(version).when(platform).getMinecraftVersion();
+
+        return platform;
+    }
+
+    private Server mockServer() {
+        Server server = Mockito.mock(Server.class);
+
+        Text motd = Mockito.mock(Text.class);
+        doReturn("Motd").when(motd).toPlain();
+        Optional<InetSocketAddress> ip = Optional.of(new InetSocketAddress(25565));
+        int maxPlayers = 20;
+        List<Player> online = new ArrayList<>();
+
+        doReturn(motd).when(server).getMotd();
+        doReturn(ip).when(server).getBoundAddress();
+        doReturn(maxPlayers).when(server).getMaxPlayers();
+        doReturn(online).when(server).getOnlinePlayers();
+
+        return server;
     }
 }

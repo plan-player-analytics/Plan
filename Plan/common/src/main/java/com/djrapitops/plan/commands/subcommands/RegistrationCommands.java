@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.subcommands;
 
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
+import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
@@ -34,9 +35,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserT
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.djrapitops.plugin.command.ColorScheme;
-import com.djrapitops.plugin.logging.L;
-import com.djrapitops.plugin.logging.console.PluginLogger;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -161,7 +160,7 @@ public class RegistrationCommands {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
-            errorLogger.log(L.WARN, e, ErrorContext.builder().related(sender, user, permissionLevel).build());
+            errorLogger.warn(e, ErrorContext.builder().related(sender, user, permissionLevel).build());
         }
     }
 
@@ -221,7 +220,7 @@ public class RegistrationCommands {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException e) {
-                    errorLogger.log(L.WARN, e, ErrorContext.builder().related("unregister command", sender, sender.getPlayerName().orElse("console"), arguments).build());
+                    errorLogger.warn(e, ErrorContext.builder().related("unregister command", sender, sender.getPlayerName().orElse("console"), arguments).build());
                 }
             } else {
                 sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_UNREGISTER, presentUser.getUsername()));

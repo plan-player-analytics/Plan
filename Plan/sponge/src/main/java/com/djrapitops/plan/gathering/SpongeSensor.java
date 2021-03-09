@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.gathering;
 
-import com.djrapitops.plan.PlanSponge;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.World;
 
@@ -27,11 +27,11 @@ import java.util.Iterator;
 @Singleton
 public class SpongeSensor implements ServerSensor<World> {
 
-    private final PlanSponge plugin;
+    private final Game game;
 
     @Inject
-    public SpongeSensor(PlanSponge plugin) {
-        this.plugin = plugin;
+    public SpongeSensor(Game game) {
+        this.game = game;
     }
 
     @Override
@@ -41,17 +41,17 @@ public class SpongeSensor implements ServerSensor<World> {
 
     @Override
     public int getOnlinePlayerCount() {
-        return plugin.getGame().getServer().getOnlinePlayers().size();
+        return game.getServer().getOnlinePlayers().size();
     }
 
     @Override
     public double getTPS() {
-        return plugin.getGame().getServer().getTicksPerSecond();
+        return game.getServer().getTicksPerSecond();
     }
 
     @Override
     public Iterable<World> getWorlds() {
-        return plugin.getGame().getServer().getWorlds();
+        return game.getServer().getWorlds();
     }
 
     @Override

@@ -18,7 +18,6 @@ package com.djrapitops.plan.modules;
 
 import com.djrapitops.plan.DataService;
 import com.djrapitops.plan.DataSvc;
-import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.delivery.webserver.cache.JSONMemoryStorageShim;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
@@ -33,6 +32,7 @@ import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.ElementsIntoSet;
+import net.playeranalytics.plugin.PluginInformation;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -76,15 +76,15 @@ public class SystemObjectProvidingModule {
 
     @Provides
     @Singleton
-    JarResource.StreamFunction provideJarStreamFunction(PlanPlugin plugin) {
-        return plugin::getResource;
+    JarResource.StreamFunction provideJarStreamFunction(PluginInformation pluginInformation) {
+        return pluginInformation::getResourceFromJar;
     }
 
     @Provides
     @Singleton
     @Named("dataFolder")
-    File provideDataFolder(PlanPlugin plugin) {
-        return plugin.getDataFolder();
+    File provideDataFolder(PluginInformation pluginInformation) {
+        return pluginInformation.getDataFolder();
     }
 
     @Provides

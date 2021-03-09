@@ -19,7 +19,6 @@ package com.djrapitops.plan.delivery.domain.mutators;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.utilities.java.Lists;
-import com.djrapitops.plugin.utilities.Verify;
 
 import java.util.*;
 
@@ -30,7 +29,7 @@ public class MutatorFunctions {
     }
 
     public static NavigableMap<Long, Integer> addMissing(NavigableMap<Long, Integer> points, long accuracy, Integer replacement) {
-        if (Verify.isEmpty(points)) return points;
+        if (points == null || points.isEmpty()) return points;
 
         NavigableMap<Long, Integer> filled = new TreeMap<>();
         Long lastX = null;
@@ -45,7 +44,7 @@ public class MutatorFunctions {
         }
 
         long now = System.currentTimeMillis();
-        if (lastX != null && now - lastX > accuracy) {
+        if (now - lastX > accuracy) {
             addMissing(lastX, now, filled, accuracy, replacement);
         }
 
@@ -61,7 +60,7 @@ public class MutatorFunctions {
     }
 
     public static List<Point> addMissing(List<Point> points, LineGraph.GapStrategy gapStrategy) {
-        if (Verify.isEmpty(points)) return points;
+        if (points == null || points.isEmpty()) return points;
 
         List<Point> filled = new ArrayList<>();
         Long lastX = null;

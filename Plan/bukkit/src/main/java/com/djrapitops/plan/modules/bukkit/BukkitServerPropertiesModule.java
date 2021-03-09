@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.modules.bukkit;
 
-import com.djrapitops.plan.Plan;
 import com.djrapitops.plan.identification.properties.BukkitServerProperties;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import dagger.Module;
@@ -34,7 +33,7 @@ public class BukkitServerPropertiesModule {
 
     @Provides
     @Singleton
-    ServerProperties provideServerProperties(Plan plugin) {
-        return new BukkitServerProperties(plugin.getServer());
+    ServerProperties provideServerProperties(BukkitServerProperties serverProperties) {
+        return serverProperties;
     }
 }
