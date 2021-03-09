@@ -68,7 +68,7 @@ public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
             private File getFile(String fileName) {
                 // Read the resource from jar to a temporary file
                 File file = getDataDirectory().resolve("jar").resolve(fileName).toFile();
-                TestResources.copyResourceIntoFile(file, fileName);
+                TestResources.copyResourceIntoFile(file, "/" + fileName);
                 return file;
             }
 
