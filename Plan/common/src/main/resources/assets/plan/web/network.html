@@ -505,6 +505,7 @@
                     </div>
 
                     <div class="row">
+
                         <!-- Trends for 30 days -->
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
@@ -582,32 +583,49 @@
                                 </table>
                             </div>
                         </div> <!-- Trends for 30 days-->
+
                         <!-- Insights -->
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
-                                            class="far fa-fw fa-life-ring col-red"></i>
-                                        Insights for 30 days</h6>
+                        <div class="col-lg-4 col-sm-12">
+                            <div class="mb-4 col-lg-12 col-sm-12">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold col-black"><i
+                                                class="far fa-fw fa-life-ring col-red"></i>
+                                            Insights for 30 days</h6>
+                                    </div>
+                                    <div class="card-body" id="data_insights">
+                                        <p><i class="fa fa-fw fa-user col-light-green"></i> New <i
+                                                class="fa fa-fw fa-long-arrow-alt-right"></i> <i
+                                                class="fa fa-fw fa-user col-lime"></i> Regular<span
+                                                class="float-right"><b><span
+                                                id="data_new_to_regular"></span></b></span></p>
+                                        <p><i class="fa fa-fw fa-user col-lime"></i> Regular <i
+                                                class="fa fa-fw fa-long-arrow-alt-right"></i> <i
+                                                class="fa fa-fw fa-user col-blue-grey"></i> Inactive<span
+                                                class="float-right"><b><span
+                                                id="data_regular_to_inactive"></span></b></span></p>
+                                        <p class="float-right"><i class="text-success fa fa-caret-up"></i><i
+                                                class="text-danger fa fa-caret-down"></i>
+                                            <small>Comparing 30d ago to Now</small>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="card-body" id="data_insights">
-                                    <p><i class="fa fa-fw fa-user col-light-green"></i> New <i
-                                            class="fa fa-fw fa-long-arrow-alt-right"></i> <i
-                                            class="fa fa-fw fa-user col-lime"></i> Regular<span
-                                            class="float-right"><b><span
-                                            id="data_new_to_regular"></span></b></span></p>
-                                    <p><i class="fa fa-fw fa-user col-lime"></i> Regular <i
-                                            class="fa fa-fw fa-long-arrow-alt-right"></i> <i
-                                            class="fa fa-fw fa-user col-blue-grey"></i> Inactive<span
-                                            class="float-right"><b><span
-                                            id="data_regular_to_inactive"></span></b></span></p>
-                                    <p class="float-right"><i class="text-success fa fa-caret-up"></i><i
-                                            class="text-danger fa fa-caret-down"></i>
-                                        <small>Comparing 30d ago to Now</small>
-                                    </p>
+                            </div>
+
+                            <!-- Hostname Analytics -->
+                            <div class="col-lg-12 col-sm-12">
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold col-black">
+                                            <i class="fa fa-fw fa-users col-amber"></i>
+                                            Used hostnames
+                                        </h6>
+                                    </div>
+                                    <div class="chart-area" id="hostnamePie"></div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Playerbase Overview tab -->
@@ -898,12 +916,150 @@
             time: {timezoneOffset: v.values.timezoneOffset * 60}
         });
 
+        // HighCharts Series
+        var s = {
+            name: {
+                playersOnline: 'Players Online',
+                uniquePlayers: 'Unique Players',
+                newPlayers: 'New Players',
+                maxPing: 'Worst Ping',
+                minPing: 'Best Ping',
+                avgPing: 'Average Ping'
+            },
+            tooltip: {
+                twoDecimals: {
+                    valueDecimals: 2
+                },
+                zeroDecimals: {
+                    valueDecimals: 0
+                }
+            },
+            type: {
+                areaSpline: 'areaspline',
+                spline: 'spline'
+            }
+        };
+
+        jsonRequest("./v1/graph?type=playersOnline&server=${serverUUID}", function (json, error) {
+            if (json) {
+                var series = {
+                    playersOnline: {
+                        name: s.name.playersOnline, type: s.type.areaSpline, tooltip: s.tooltip.zeroDecimals,
+                        data: json.playersOnline, color: v.colors.playersOnline, yAxis: 0
+                    }
+                };
+                playersChart('playersOnlineChart', series.playersOnline, 2);
+            } else if (error) {
+                $('#playersOnlineChart').text("Failed to load graph data: " + error);
+            }
+        });
+
+        jsonRequest("./v1/graph?type=uniqueAndNew", function (json, error) {
+            if (json) {
+                var uniquePlayers = {
+                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: json.uniquePlayers, color: v.colors.playersOnline
+                };
+                var newPlayers = {
+                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: json.newPlayers, color: v.colors.newPlayers
+                };
+                dayByDay('uniqueChart', [uniquePlayers, newPlayers]);
+            } else if (error) {
+                $('#uniqueChart').text("Failed to load graph data: " + error)
+            }
+        });
+
+        jsonRequest("./v1/graph?type=hourlyUniqueAndNew", function (json, error) {
+            if (json) {
+                var uniquePlayers = {
+                    name: s.name.uniquePlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: json.uniquePlayers, color: v.colors.playersOnline
+                };
+                var newPlayers = {
+                    name: s.name.newPlayers, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                    data: json.newPlayers, color: v.colors.newPlayers
+                };
+                dayByDay('hourlyUniqueChart', [uniquePlayers, newPlayers]);
+            } else if (error) {
+                $('#uniqueChart').text("Failed to load graph data: " + error)
+            }
+        });
+
+        jsonRequest("./v1/graph?type=serverPie", function (json, error) {
+            if (json) {
+                serverPieSeries = {
+                    name: 'Server Playtime',
+                    colorByPoint: true,
+                    colors: json.server_pie_colors,
+                    data: json.server_pie_series_30d
+                };
+                serverPie('serverPie', serverPieSeries);
+            } else if (error) {
+                $('#serverPie').text("Failed to load graph data: " + error)
+            }
+        });
+
+        jsonRequest("./v1/graph?type=hostnamePie", function (json, error) {
+            if (json) {
+                hostnamePieSeries = {
+                    name: 'Used IP Addresses',
+                    colorByPoint: true,
+                    colors: json.hostname_pie_colors,
+                    data: json.hostname_pie_slices
+                };
+                hostnamePie('hostnamePie', hostnamePieSeries);
+            } else if (error) {
+                $('#hostnamePie').text("Failed to load graph data: " + error)
+            }
+        });
+
+        jsonRequest("./v1/graph?type=activity", function (json, error) {
+            if (json) {
+                activityPie('activityPie', {
+                    name: 'Players', colorByPoint: true, data: json.activity_pie_series
+                });
+                stackChart('activityStackGraph', json.activity_labels, json.activity_series, 'Players');
+            } else if (error) {
+                $('#activityPie').text("Failed to load graph data: " + error);
+                $('#activityStackGraph').text("Failed to load graph data: " + error);
+            }
+        });
+
+        jsonRequest("./v1/graph?type=geolocation", function (json, error) {
+            if (json) {
+                var geolocationSeries = {
+                    name: 'Players',
+                    type: 'map',
+                    mapData: Highcharts.maps['custom/world'],
+                    data: json.geolocation_series,
+                    joinBy: ['iso-a3', 'code']
+                };
+                var geolocationBarSeries = {
+                    color: json.colors.bars,
+                    name: 'Players',
+                    data: json.geolocation_bar_series.map(function (bar) {
+                        return bar.value
+                    })
+                };
+                var geolocationBarCategories = json.geolocation_bar_series.map(function (bar) {
+                    return bar.label
+                });
+                worldMap('worldMap', json.colors.low, json.colors.high, geolocationSeries);
+                horizontalBarChart('countryBarChart', geolocationBarCategories, [geolocationBarSeries], 'Players');
+            } else if (error) {
+                $('#worldMap').text("Failed to load graph data: " + error);
+                $('#countryBarChart').text("Failed to load graph data: " + error);
+            }
+        });
+      
         refreshingJsonRequest("./v1/graph?type=playersOnline&server=${serverUUID}", loadPlayersOnlineGraph, 'network-overview', true);
         refreshingJsonRequest("./v1/graph?type=uniqueAndNew", loadUniqueAndNewGraph, 'network-overview');
         refreshingJsonRequest("./v1/graph?type=hourlyUniqueAndNew", loadHourlyUniqueAndNewGraph, 'network-overview');
         refreshingJsonRequest("./v1/graph?type=serverPie", loadServerPie, 'sessions-overview');
         refreshingJsonRequest("./v1/graph?type=activity", loadActivityGraphs, 'playerbase-overview');
         refreshingJsonRequest("./v1/graph?type=geolocation", loadGeolocationGraph, 'geolocations');
+
 
         setLoadingText('Sorting out plugin tables..');
 

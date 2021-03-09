@@ -405,4 +405,14 @@ public class GraphJSONCreator {
                 .put("server_pie_series_30d", graphs.pie().serverPreferencePie(playtimePerServer).getSlices())
                 .build();
     }
+
+    public Map<String, Object> playerHostnamePieJSONAsMap() {
+        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+        Map<String, Integer> hostnameResults = dbSystem.getDatabase().query(UserInfoQueries.hostnameTotals());
+
+        return Maps.builder(String.class, Object.class)
+                .put("hostname_pie_colors", pieColors)
+                .put("hostname_pie_slices", graphs.pie().HostnamePie(hostnameResults).getSlices())
+                .build();
+    }
 }

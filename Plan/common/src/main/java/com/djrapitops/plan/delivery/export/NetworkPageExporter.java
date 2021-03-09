@@ -125,6 +125,7 @@ public class NetworkPageExporter extends FileExporter {
                 "graph?type=uniqueAndNew",
                 "graph?type=hourlyUniqueAndNew",
                 "graph?type=serverPie",
+                "graph?type=hostnamePie",
                 "graph?type=activity",
                 "graph?type=geolocation",
                 "graph?type=uniqueAndNew",

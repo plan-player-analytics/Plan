@@ -31,10 +31,13 @@ import java.util.function.LongSupplier;
 public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
 
     private final UUID serverUUID;
+    private final String hostname;
 
-    public PlayerServerRegisterTransaction(UUID playerUUID, LongSupplier registered, String playerName, UUID serverUUID) {
+    public PlayerServerRegisterTransaction(UUID playerUUID, LongSupplier registered,
+                                           String playerName, UUID serverUUID, String hostname) {
         super(playerUUID, registered, playerName);
         this.serverUUID = serverUUID;
+        this.hostname = hostname;
     }
 
     @Override
@@ -42,7 +45,7 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
         super.performOperations();
         long registerDate = registered.getAsLong();
         if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)))) {
-            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID));
+            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID, hostname));
         }
 
         // Updates register date to smallest possible value.

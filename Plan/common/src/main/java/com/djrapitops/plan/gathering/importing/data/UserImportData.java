@@ -44,7 +44,11 @@ public class UserImportData {
     private int mobKills;
     private int deaths;
 
-    private UserImportData(String name, UUID uuid, List<Nickname> nicknames, long registered, boolean op, boolean banned, int timesKicked, List<String> ips, Map<String, GMTimes> worldTimes, List<PlayerKill> kills, int mobKills, int deaths) {
+    private String hostname;
+
+    private UserImportData(String name, UUID uuid, List<Nickname> nicknames, long registered, boolean op,
+                           boolean banned, int timesKicked, List<String> ips, Map<String, GMTimes> worldTimes, List<PlayerKill> kills,
+                           int mobKills, int deaths, String hostname) {
         this.name = name;
         this.uuid = uuid;
         this.nicknames = nicknames;
@@ -57,6 +61,7 @@ public class UserImportData {
         this.kills = kills;
         this.mobKills = mobKills;
         this.deaths = deaths;
+        this.hostname = hostname;
     }
 
     public static UserImportDataBuilder builder(UUID serverUUID) {
@@ -109,6 +114,14 @@ public class UserImportData {
 
     public void setBanned(boolean banned) {
         this.banned = banned;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public String getHostname() {
+        return hostname;
     }
 
     public int getTimesKicked() {
@@ -174,6 +187,7 @@ public class UserImportData {
         private int timesKicked;
         private int mobKills;
         private int deaths;
+        private String hostname;
 
         private UserImportDataBuilder(UUID serverUUID) {
             this.serverUUID = serverUUID;
@@ -284,7 +298,8 @@ public class UserImportData {
         }
 
         public UserImportData build() {
-            return new UserImportData(name, uuid, nicknames, registered, op, banned, timesKicked, ips, worldTimes, kills, mobKills, deaths);
+            return new UserImportData(name, uuid, nicknames, registered, op, banned, timesKicked, ips,
+                    worldTimes, kills, mobKills, deaths, hostname);
         }
     }
 
@@ -299,6 +314,7 @@ public class UserImportData {
                 timesKicked == that.timesKicked &&
                 mobKills == that.mobKills &&
                 deaths == that.deaths &&
+                hostname.equals(that.hostname) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(uuid, that.uuid) &&
                 Objects.equals(nicknames, that.nicknames) &&
@@ -309,6 +325,7 @@ public class UserImportData {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, uuid, nicknames, registered, op, banned, timesKicked, ips, worldTimes, kills, mobKills, deaths);
+        return Objects.hash(name, uuid, nicknames, registered, op, banned, timesKicked, ips,
+                worldTimes, kills, mobKills, deaths, hostname);
     }
 }

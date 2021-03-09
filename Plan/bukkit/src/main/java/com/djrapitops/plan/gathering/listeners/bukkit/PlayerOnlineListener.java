@@ -155,6 +155,7 @@ public class PlayerOnlineListener implements Listener {
 
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
+        String hostname = player.getAddress().getHostName();
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
@@ -171,7 +172,9 @@ public class PlayerOnlineListener implements Listener {
             );
         }
 
-        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, player::getFirstPlayed, playerName, serverUUID));
+        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID,
+                player::getFirstPlayed, playerName, serverUUID, hostname));
+
         Session session = new Session(playerUUID, serverUUID, time, world, gm);
         session.putRawData(SessionKeys.NAME, playerName);
         session.putRawData(SessionKeys.SERVER_NAME, serverInfo.getServer().getIdentifiableName());

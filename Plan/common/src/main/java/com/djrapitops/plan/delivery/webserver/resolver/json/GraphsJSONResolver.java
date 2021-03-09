@@ -131,6 +131,8 @@ public class GraphsJSONResolver implements Resolver {
                 return DataID.GRAPH_PUNCHCARD;
             case "serverPie":
                 return DataID.GRAPH_SERVER_PIE;
+            case "hostnamePie":
+                return DataID.GRAPH_HOSTNAME_PIE;
             default:
                 throw new BadRequestException("unknown 'type' parameter.");
         }
@@ -175,6 +177,8 @@ public class GraphsJSONResolver implements Resolver {
                 return graphJSON.hourlyUniqueAndNewGraphJSON();
             case GRAPH_SERVER_PIE:
                 return graphJSON.serverPreferencePieJSONAsMap();
+            case GRAPH_HOSTNAME_PIE:
+                return graphJSON.playerHostnamePieJSONAsMap();
             case GRAPH_WORLD_MAP:
                 return graphJSON.geolocationGraphsJSONAsMap();
             default:
