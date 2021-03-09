@@ -49,7 +49,7 @@ public class BukkitMockComponent {
     public PlanPlugin getPlanMock() throws Exception {
         if (planMock == null) {
             planMock = PlanPluginMocker.setUp()
-                    .withDataFolder(tempDir.toFile())
+                    .withDataFolder(tempDir.resolve("data").toFile())
                     .getPlanMock();
         }
         return planMock;
