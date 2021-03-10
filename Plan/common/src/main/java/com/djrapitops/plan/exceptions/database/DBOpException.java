@@ -128,7 +128,11 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 11:
             case 14:
                 context.related("SQLite file is corrupt.")
-                        .whatToDo("SQLite database is corrupt, restore database.db, .db-shm & .db-wal files from a backup, or repair the database: https://wordpress.semnaitik.com/repair-sqlite-database/.");
+                        .whatToDo("SQLite database is corrupt, restore database.db, .db-shm & .db-wal files from a backup, or repair the database: See https://wordpress.semnaitik.com/repair-sqlite-database/.");
+                break;
+            case 13:
+                context.related("Disk or temporary directory is full.")
+                        .whatToDo("Disk or temporary directory is full, attempt to clear space in the temporary directory. See https://sqlite.org/rescode.html#full");
                 break;
             case 1104:
                 context.whatToDo("MySQL has too small query limits for the query. SET SQL_BIG_SELECTS=1 or SET MAX_JOIN_SIZE=# (higher number)");
