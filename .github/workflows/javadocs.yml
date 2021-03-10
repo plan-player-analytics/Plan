@@ -28,6 +28,7 @@ jobs:
           mkdir javadocs/api
           cp -r Plan/build/docs/javadoc/* javadocs/all/
           cp -r Plan/api/build/docs/javadoc/* javadocs/api/
+          cp scripts/index.html javadocs/index.html
           cd javadocs
           touch .nojekyll
       - name: Deploy 🚀
