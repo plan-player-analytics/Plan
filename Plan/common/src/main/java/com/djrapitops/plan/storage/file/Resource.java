@@ -65,7 +65,10 @@ public interface Resource {
     String asString() throws IOException;
 
     /**
-     * @throws UncheckedIOException if fails to read the file
+     * Map to a WebResource used by {@link com.djrapitops.plan.delivery.web.ResourceService} APIs.
+     *
+     * @return The resource
+     * @throws UncheckedIOException if fails to read the file.
      */
     default WebResource asWebResource() {
         try {

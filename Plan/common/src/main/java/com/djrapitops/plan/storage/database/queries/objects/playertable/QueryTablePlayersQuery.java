@@ -54,7 +54,8 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
      * Create a new query.
      *
      * @param playerUUIDs       UUIDs of the players in the query
-     * @param beforeDate        Date used for Activity Index calculation
+     * @param beforeDate        View data before this epoch ms
+     * @param afterDate         View data after this epoch ms
      * @param activeMsThreshold Playtime threshold for Activity Index calculation
      */
     public QueryTablePlayersQuery(Collection<UUID> playerUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {

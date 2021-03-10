@@ -88,8 +88,9 @@ public final class CompositeResolver implements Resolver {
 
     void add(String prefix, Function<Request, Response> resolver, Predicate<Request> accessCheck) {
         if (prefix == null) throw new IllegalArgumentException("Prefix can not be null");
-        if (resolver == null)
+        if (resolver == null) {
             throw new IllegalArgumentException("Function<Request, Response> resolver can not be null");
+        }
         if (accessCheck == null) throw new IllegalArgumentException("Predicate<Request> accessCheck can not be null");
         prefixes.add(prefix);
         resolvers.add(request -> Optional.ofNullable(resolver.apply(request)));
@@ -132,8 +133,9 @@ public final class CompositeResolver implements Resolver {
         /**
          * Add a new resolver to the CompositeResolver by using functional interfaces
          *
-         * @param prefix   Start of the target (first part of the target string, eg "example" in "/example/target/", or "" in "/")
-         * @param resolver Resolver to call for this target, {@link URIPath#omitFirst()} will be called for Resolver method calls.
+         * @param prefix      Start of the target (first part of the target string, eg "example" in "/example/target/", or "" in "/")
+         * @param resolver    Resolver to call for this target, {@link URIPath#omitFirst()} will be called for Resolver method calls.
+         * @param accessCheck Function for checking if request should be allowed (true, default) or forbidden (false).
          * @return this builder.
          */
         public Builder add(String prefix, Function<Request, Response> resolver, Predicate<Request> accessCheck) {

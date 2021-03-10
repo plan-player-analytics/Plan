@@ -31,7 +31,7 @@ public interface ServerLoader {
     /**
      * Load the server information.
      *
-     * @param serverUUID
+     * @param serverUUID UUID of the server, null if not known
      * @return Optional of the saved information or empty if it has not been stored.
      * @throws com.djrapitops.plan.exceptions.EnableException When the loading fails
      */

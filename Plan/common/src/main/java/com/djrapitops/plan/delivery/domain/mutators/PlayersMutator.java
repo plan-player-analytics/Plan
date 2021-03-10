@@ -186,8 +186,10 @@ public class PlayersMutator {
     /**
      * Compares players in the mutator to other players in terms of player retention.
      *
-     * @param compareTo Players to compare to.
-     * @param dateLimit Epoch ms back limit, if the player registered after this their value is not used.
+     * @param compareTo           Players to compare to.
+     * @param dateLimit           Epoch ms back limit, if the player registered after this their value is not used.
+     * @param onlineResolver      Thing that figures out how many players were online at different dates.
+     * @param activityMsThreshold Threshold for activity index calculation.
      * @return Mutator containing the players that are considered to be retained.
      * @throws IllegalStateException If all players are rejected due to dateLimit.
      */

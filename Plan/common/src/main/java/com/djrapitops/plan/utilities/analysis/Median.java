@@ -37,9 +37,10 @@ public class Median<T extends Number & Comparable<? super T>> {
     }
 
     /**
-     * Creates a Median instance
+     * Creates a Median instance.
      *
      * @param list the input list
+     * @param <T>  Type of the number calculating median for
      * @return an instance of {@code Median} for the List given
      */
     public static <T extends Number & Comparable<? super T>> Median<T> forList(List<T> list) {

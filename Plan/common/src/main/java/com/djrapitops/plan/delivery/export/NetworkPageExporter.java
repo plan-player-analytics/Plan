@@ -107,7 +107,7 @@ public class NetworkPageExporter extends FileExporter {
     /**
      * Perform export for a network page json payload.
      *
-     * @param exportPaths
+     * @param exportPaths Replacement store for player file paths.
      * @param toDirectory Path to Export directory
      * @param server      Server to export as Network page, {@link Server#isProxy()} assumed true.
      * @throws IOException       If a template can not be read from jar/disk or the result written

@@ -161,6 +161,7 @@ public final class Reflection {
      * Retrieve a class in the net.minecraft.server.VERSION.* package.
      *
      * @param name - the name of the class, excluding the package.
+     * @return The found class.
      * @throws IllegalArgumentException If the class doesn't exist.
      */
     public static Class<?> getMinecraftClass(String name) {
@@ -171,6 +172,7 @@ public final class Reflection {
      * Retrieve a class in the org.bukkit.craftbukkit.VERSION.* package.
      *
      * @param name - the name of the class, excluding the package.
+     * @return The found class
      * @throws IllegalArgumentException If the class doesn't exist.
      */
     public static Class<?> getCraftBukkitClass(String name) {
