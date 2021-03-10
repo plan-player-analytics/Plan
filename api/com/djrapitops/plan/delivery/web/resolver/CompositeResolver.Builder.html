@@ -234,6 +234,7 @@ extends java.lang.Object</pre>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>prefix</code> - Start of the target (first part of the target string, eg "example" in "/example/target/", or "" in "/")</dd>
 <dd><code>resolver</code> - Resolver to call for this target, <a href="request/URIPath.html#omitFirst()"><code>URIPath.omitFirst()</code></a> will be called for Resolver method calls.</dd>
+<dd><code>accessCheck</code> - Function for checking if request should be allowed (true, default) or forbidden (false).</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>this builder.</dd>
 </dl>

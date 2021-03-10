@@ -500,6 +500,8 @@ extends java.lang.Object</pre>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>compareTo</code> - Players to compare to.</dd>
 <dd><code>dateLimit</code> - Epoch ms back limit, if the player registered after this their value is not used.</dd>
+<dd><code>onlineResolver</code> - Thing that figures out how many players were online at different dates.</dd>
+<dd><code>activityMsThreshold</code> - Threshold for activity index calculation.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Mutator containing the players that are considered to be retained.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
