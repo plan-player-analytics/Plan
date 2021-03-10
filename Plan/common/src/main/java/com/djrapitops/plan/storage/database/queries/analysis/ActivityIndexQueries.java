@@ -223,8 +223,8 @@ public class ActivityIndexQueries {
         return new QueryStatement<Integer>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, end);
-                setSelectActivityIndexSQLParameters(statement, 12, threshold, serverUUID, start);
+                setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, start);
+                setSelectActivityIndexSQLParameters(statement, 12, threshold, serverUUID, end);
                 statement.setDouble(23, ActivityIndex.REGULAR);
                 statement.setDouble(24, 5.1);
                 statement.setDouble(25, -0.1);
