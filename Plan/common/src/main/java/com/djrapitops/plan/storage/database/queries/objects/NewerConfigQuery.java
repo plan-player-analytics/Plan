@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -25,7 +26,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.SettingsTable.*;
@@ -41,7 +41,7 @@ public class NewerConfigQuery extends QueryStatement<Optional<Config>> {
             WHERE + UPDATED + ">?" +
             AND + SERVER_UUID + "=? LIMIT 1";
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final long updatedAfter;
 
     /**
@@ -50,7 +50,7 @@ public class NewerConfigQuery extends QueryStatement<Optional<Config>> {
      * @param serverUUID   UUID of the server
      * @param updatedAfter Epoch ms.
      */
-    public NewerConfigQuery(UUID serverUUID, long updatedAfter) {
+    public NewerConfigQuery(ServerUUID serverUUID, long updatedAfter) {
         super(SELECT_STATEMENT);
         this.serverUUID = serverUUID;
         this.updatedAfter = updatedAfter;

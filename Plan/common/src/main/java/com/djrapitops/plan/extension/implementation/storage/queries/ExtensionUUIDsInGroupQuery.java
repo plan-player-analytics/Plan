@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.queries;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionGroupsTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
@@ -32,10 +33,10 @@ public class ExtensionUUIDsInGroupQuery extends QueryStatement<Set<UUID>> {
 
     private final String pluginName;
     private final String groupProvider;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final List<String> inGroups;
 
-    public ExtensionUUIDsInGroupQuery(String pluginName, String groupProvider, UUID serverUUID, List<String> inGroups) {
+    public ExtensionUUIDsInGroupQuery(String pluginName, String groupProvider, ServerUUID serverUUID, List<String> inGroups) {
         super(buildSQL(inGroups), 100);
         this.pluginName = pluginName;
         this.groupProvider = groupProvider;

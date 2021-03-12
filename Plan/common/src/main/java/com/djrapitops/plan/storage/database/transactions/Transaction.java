@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
@@ -25,7 +26,6 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 
 import java.sql.*;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -231,7 +231,7 @@ public abstract class Transaction {
         return db.getState();
     }
 
-    protected UUID getServerUUID() {
+    protected ServerUUID getServerUUID() {
         return db.getServerUUIDSupplier().get();
     }
 

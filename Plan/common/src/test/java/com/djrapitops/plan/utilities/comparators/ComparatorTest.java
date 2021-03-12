@@ -16,10 +16,9 @@
  */
 package com.djrapitops.plan.utilities.comparators;
 
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
-import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.settings.locale.Message;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
@@ -51,14 +50,14 @@ class ComparatorTest {
 
     @Test
     void sessionDataComparator() {
-        List<Session> sessions = RandomData.randomSessions();
+        List<FinishedSession> sessions = RandomData.randomSessions();
 
-        List<Long> expected = sessions.stream().map(s -> s.getUnsafe(SessionKeys.START))
+        List<Long> expected = sessions.stream().map(FinishedSession::getStart)
                 .sorted(Long::compare).collect(Collectors.toList());
         Collections.reverse(expected);
 
         sessions.sort(new SessionStartComparator());
-        List<Long> result = Lists.map(sessions, s -> s.getUnsafe(SessionKeys.START));
+        List<Long> result = Lists.map(sessions, FinishedSession::getStart);
 
         assertEquals(expected, result);
     }

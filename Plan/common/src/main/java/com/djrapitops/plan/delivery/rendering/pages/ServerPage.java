@@ -27,6 +27,7 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -37,7 +38,6 @@ import com.djrapitops.plan.utilities.java.UnaryChain;
 import com.djrapitops.plan.version.VersionChecker;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Html String generator for /server page.
@@ -84,7 +84,7 @@ public class ServerPage implements Page {
     public String toHtml() {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-        UUID serverUUID = server.getUuid();
+        ServerUUID serverUUID = server.getUuid();
         placeholders.put("serverUUID", serverUUID.toString());
         placeholders.put("serverName", server.getIdentifiableName());
         placeholders.put("serverDisplayName", server.getName());

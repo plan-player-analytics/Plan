@@ -18,13 +18,17 @@ package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,14 +53,14 @@ public class PvPPvEJSONCreator implements ServerTabJSONCreator<Map<String, Objec
         decimals = formatters.decimals();
     }
 
-    public Map<String, Object> createJSONAsMap(UUID serverUUID) {
+    public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("numbers", createNumbersMap(serverUUID));
         serverOverview.put("insights", createInsightsMap(serverUUID));
         return serverOverview;
     }
 
-    private Map<String, Object> createNumbersMap(UUID serverUUID) {
+    private Map<String, Object> createNumbersMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
@@ -106,7 +110,7 @@ public class PvPPvEJSONCreator implements ServerTabJSONCreator<Map<String, Objec
         return numbers;
     }
 
-    private Map<String, Object> createInsightsMap(UUID serverUUID) {
+    private Map<String, Object> createInsightsMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);

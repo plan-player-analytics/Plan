@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
@@ -30,7 +31,6 @@ import com.djrapitops.plan.settings.theme.ThemeVal;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Factory class for different objects representing HTML pie graphs.
@@ -60,7 +60,7 @@ public class PieGraphFactory {
         return new ActivityPie(activityData, colors, ActivityIndex.getGroups(locale));
     }
 
-    public Pie serverPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes) {
+    public Pie serverPreferencePie(Map<ServerUUID, String> serverNames, Map<ServerUUID, WorldTimes> serverWorldTimes) {
         return new ServerPreferencePie(serverNames, serverWorldTimes, locale.get(GenericLang.UNKNOWN).toString());
     }
 

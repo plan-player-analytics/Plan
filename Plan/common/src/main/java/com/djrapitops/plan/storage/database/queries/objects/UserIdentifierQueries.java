@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -69,7 +70,7 @@ public class UserIdentifierQueries {
      * @param serverUUID UUID of the Plan server.
      * @return Set of UUIDs.
      */
-    public static Query<Set<UUID>> fetchPlayerUUIDsOfServer(UUID serverUUID) {
+    public static Query<Set<UUID>> fetchPlayerUUIDsOfServer(ServerUUID serverUUID) {
         String sql = SELECT +
                 UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + ',' +
                 FROM + UsersTable.TABLE_NAME +

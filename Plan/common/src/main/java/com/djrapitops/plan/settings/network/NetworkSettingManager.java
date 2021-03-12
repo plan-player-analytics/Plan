@@ -19,6 +19,7 @@ package com.djrapitops.plan.settings.network;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.*;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -43,7 +44,6 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -108,10 +108,10 @@ public class NetworkSettingManager implements SubSystem {
         }
     }
 
-    public static UUID getServerUUIDFromFilename(File file) {
+    public static ServerUUID getServerUUIDFromFilename(File file) {
         String fileName = file.getName();
         String uuidString = fileName.substring(0, fileName.length() - 4);
-        return UUID.fromString(uuidString);
+        return ServerUUID.fromString(uuidString);
     }
 
     private FileWatcher prepareFileWatcher() {
@@ -133,7 +133,7 @@ public class NetworkSettingManager implements SubSystem {
 
     private void addFileToWatchList(FileWatcher fileWatcher, File file) {
         try {
-            UUID serverUUID = getServerUUIDFromFilename(file);
+            ServerUUID serverUUID = getServerUUIDFromFilename(file);
 
             fileWatcher.addToWatchlist(new WatchedFile(file, () -> updateConfigInDB(file, serverUUID)));
         } catch (IndexOutOfBoundsException | IllegalArgumentException ignore) {
@@ -157,22 +157,22 @@ public class NetworkSettingManager implements SubSystem {
         }
     }
 
-    private File getServerConfigFile(UUID serverUUID) {
+    private File getServerConfigFile(ServerUUID serverUUID) {
         return new File(serverSettingsFolder, serverUUID + ".yml");
     }
 
     private void updateConfigFromDBIfUpdated() {
         Database database = dbSystem.getDatabase();
-        Set<UUID> serverUUIDs = database.query(ServerQueries.fetchPlanServerInformation()).keySet();
+        Set<ServerUUID> serverUUIDs = database.query(ServerQueries.fetchPlanServerInformation()).keySet();
         // Remove the proxy server from the list
         serverUUIDs.remove(serverInfo.getServerUUID());
 
-        for (UUID serverUUID : serverUUIDs) {
+        for (ServerUUID serverUUID : serverUUIDs) {
             updateConfigFromDBIfUpdated(database, serverUUID);
         }
     }
 
-    private void updateConfigFromDBIfUpdated(Database database, UUID serverUUID) {
+    private void updateConfigFromDBIfUpdated(Database database, ServerUUID serverUUID) {
         File configFile = getServerConfigFile(serverUUID);
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
@@ -191,7 +191,7 @@ public class NetworkSettingManager implements SubSystem {
         }
     }
 
-    public void updateConfigInDB(File file, UUID serverUUID) {
+    public void updateConfigInDB(File file, ServerUUID serverUUID) {
         if (!file.exists()) {
             return;
         }

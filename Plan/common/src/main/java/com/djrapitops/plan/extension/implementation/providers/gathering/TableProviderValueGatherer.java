@@ -30,6 +30,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.provide
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerTableResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerTableResultTransaction;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
@@ -48,14 +49,14 @@ class TableProviderValueGatherer {
 
     private final String pluginName;
     private final DataExtension extension;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
 
     private final Database database;
     private final DataProviders dataProviders;
 
     TableProviderValueGatherer(
             String pluginName,
-            UUID serverUUID, Database database,
+            ServerUUID serverUUID, Database database,
             ExtensionWrapper extensionWrapper
     ) {
         this.pluginName = pluginName;

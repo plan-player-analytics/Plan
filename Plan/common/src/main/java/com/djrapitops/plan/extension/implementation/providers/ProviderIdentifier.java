@@ -16,17 +16,18 @@
  */
 package com.djrapitops.plan.extension.implementation.providers;
 
+import com.djrapitops.plan.identification.ServerUUID;
+
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 public class ProviderIdentifier {
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final String pluginName;
     private final String providerName;
     private String serverName;
 
-    public ProviderIdentifier(UUID serverUUID, String pluginName, String providerName) {
+    public ProviderIdentifier(ServerUUID serverUUID, String pluginName, String providerName) {
         this.serverUUID = serverUUID;
         this.pluginName = pluginName;
         this.providerName = providerName;
@@ -40,7 +41,7 @@ public class ProviderIdentifier {
         this.serverName = serverName;
     }
 
-    public UUID getServerUUID() {
+    public ServerUUID getServerUUID() {
         return serverUUID;
     }
 

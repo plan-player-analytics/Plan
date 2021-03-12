@@ -27,7 +27,6 @@ import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.UUID;
 
 /**
  * Manages Server information on the Velocity instance.
@@ -108,7 +107,7 @@ public class VelocityServerInfo extends ServerInfo {
      * @throws EnableException
      */
     private Server createServerObject() {
-        UUID serverUUID = generateNewUUID();
+        ServerUUID serverUUID = generateNewUUID();
         String accessAddress = addresses.getAccessAddress().orElseThrow(() -> new EnableException("Velocity can not have '0.0.0.0' or '' as an address. Set up 'Server.IP' setting."));
 
         return new Server(-1, serverUUID, "Velocity", accessAddress, true);

@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.gathering.domain.BaseUser;
 import com.djrapitops.plan.gathering.domain.UserInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -116,7 +117,7 @@ public class BaseUserQueries {
      * @param serverUUID UUID of the Plan server.
      * @return Collection: BaseUsers
      */
-    public static Query<Collection<BaseUser>> fetchServerBaseUsers(UUID serverUUID) {
+    public static Query<Collection<BaseUser>> fetchServerBaseUsers(ServerUUID serverUUID) {
         String sql = SELECT +
                 UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + ',' +
                 UsersTable.USER_NAME + ',' +

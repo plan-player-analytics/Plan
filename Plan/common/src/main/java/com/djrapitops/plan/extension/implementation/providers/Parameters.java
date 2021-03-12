@@ -19,21 +19,22 @@ package com.djrapitops.plan.extension.implementation.providers;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.implementation.MethodType;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
 public interface Parameters {
-    static Parameters player(UUID serverUUID, UUID playerUUID, String playerName) {
+    static Parameters player(ServerUUID serverUUID, UUID playerUUID, String playerName) {
         return new PlayerParameters(serverUUID, playerUUID, playerName);
     }
 
-    static Parameters server(UUID serverUUID) {
+    static Parameters server(ServerUUID serverUUID) {
         return new ServerParameters(serverUUID);
     }
 
-    static Parameters group(UUID serverUUID, String groupName) {
+    static Parameters group(ServerUUID serverUUID, String groupName) {
         return new GroupParameters(serverUUID, groupName);
     }
 
@@ -41,20 +42,20 @@ public interface Parameters {
 
     MethodType getMethodType();
 
-    UUID getServerUUID();
+    ServerUUID getServerUUID();
 
     default UUID getPlayerUUID() {
         return null;
     }
 
     class ServerParameters implements Parameters {
-        private final UUID serverUUID;
+        private final ServerUUID serverUUID;
 
-        private ServerParameters(UUID serverUUID) {
+        private ServerParameters(ServerUUID serverUUID) {
             this.serverUUID = serverUUID;
         }
 
-        public UUID getServerUUID() {
+        public ServerUUID getServerUUID() {
             return serverUUID;
         }
 
@@ -70,17 +71,17 @@ public interface Parameters {
     }
 
     class PlayerParameters implements Parameters {
-        private final UUID serverUUID;
+        private final ServerUUID serverUUID;
         private final UUID playerUUID;
         private final String playerName;
 
-        private PlayerParameters(UUID serverUUID, UUID playerUUID, String playerName) {
+        private PlayerParameters(ServerUUID serverUUID, UUID playerUUID, String playerName) {
             this.serverUUID = serverUUID;
             this.playerUUID = playerUUID;
             this.playerName = playerName;
         }
 
-        public UUID getServerUUID() {
+        public ServerUUID getServerUUID() {
             return serverUUID;
         }
 
@@ -106,15 +107,15 @@ public interface Parameters {
     }
 
     class GroupParameters implements Parameters {
-        private final UUID serverUUID;
+        private final ServerUUID serverUUID;
         private final String groupName;
 
-        private GroupParameters(UUID serverUUID, String groupName) {
+        private GroupParameters(ServerUUID serverUUID, String groupName) {
             this.serverUUID = serverUUID;
             this.groupName = groupName;
         }
 
-        public UUID getServerUUID() {
+        public ServerUUID getServerUUID() {
             return serverUUID;
         }
 

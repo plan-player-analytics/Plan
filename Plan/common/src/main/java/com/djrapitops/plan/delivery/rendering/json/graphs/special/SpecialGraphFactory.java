@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.settings.config.PlanConfig;
 
 import javax.inject.Inject;
@@ -41,7 +41,7 @@ public class SpecialGraphFactory {
         this.config = config;
     }
 
-    public PunchCard punchCard(List<Session> sessions) {
+    public PunchCard punchCard(List<FinishedSession> sessions) {
         return punchCard(new SessionsMutator(sessions));
     }
 

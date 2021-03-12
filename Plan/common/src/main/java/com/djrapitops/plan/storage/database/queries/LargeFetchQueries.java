@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
@@ -26,7 +27,10 @@ import com.djrapitops.plan.utilities.java.Maps;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -46,7 +50,7 @@ public class LargeFetchQueries {
      *
      * @return Map: Server UUID - List of TPS data
      */
-    public static Query<Map<UUID, List<TPS>>> fetchAllTPSData() {
+    public static Query<Map<ServerUUID, List<TPS>>> fetchAllTPSData() {
         String serverIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID;
         String serverUUIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_UUID + " as s_uuid";
         String sql = SELECT +
@@ -62,12 +66,12 @@ public class LargeFetchQueries {
                 FROM + TPSTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID;
 
-        return new QueryAllStatement<Map<UUID, List<TPS>>>(sql, 50000) {
+        return new QueryAllStatement<Map<ServerUUID, List<TPS>>>(sql, 50000) {
             @Override
-            public Map<UUID, List<TPS>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<TPS>> serverMap = new HashMap<>();
+            public Map<ServerUUID, List<TPS>> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, List<TPS>> serverMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString("s_uuid"));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString("s_uuid"));
 
                     List<TPS> tpsList = serverMap.computeIfAbsent(serverUUID, Lists::create);
 
@@ -94,15 +98,15 @@ public class LargeFetchQueries {
      *
      * @return Map: Server UUID - List of world names
      */
-    public static Query<Map<UUID, Collection<String>>> fetchAllWorldNames() {
+    public static Query<Map<ServerUUID, Collection<String>>> fetchAllWorldNames() {
         String sql = SELECT + '*' + FROM + WorldTable.TABLE_NAME;
 
-        return new QueryAllStatement<Map<UUID, Collection<String>>>(sql, 1000) {
+        return new QueryAllStatement<Map<ServerUUID, Collection<String>>>(sql, 1000) {
             @Override
-            public Map<UUID, Collection<String>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Collection<String>> worldMap = new HashMap<>();
+            public Map<ServerUUID, Collection<String>> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, Collection<String>> worldMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(WorldTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(WorldTable.SERVER_UUID));
                     Collection<String> worlds = worldMap.computeIfAbsent(serverUUID, Maps::createSet);
                     worlds.add(set.getString(WorldTable.NAME));
                 }

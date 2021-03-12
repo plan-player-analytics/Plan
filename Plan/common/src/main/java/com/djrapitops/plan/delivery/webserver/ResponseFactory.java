@@ -28,6 +28,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -143,7 +144,7 @@ public class ResponseFactory {
         }
     }
 
-    public Response serverPageResponse(UUID serverUUID) {
+    public Response serverPageResponse(ServerUUID serverUUID) {
         Optional<Response> error = checkDbClosedError();
         if (error.isPresent()) return error.get();
         try {

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.gathering.domain.Ping;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -69,7 +70,7 @@ public class PingQueries {
 
         while (set.next()) {
             UUID uuid = UUID.fromString(set.getString(PingTable.USER_UUID));
-            UUID serverUUID = UUID.fromString(set.getString(PingTable.SERVER_UUID));
+            ServerUUID serverUUID = ServerUUID.fromString(set.getString(PingTable.SERVER_UUID));
             long date = set.getLong(PingTable.DATE);
             double avgPing = set.getDouble(PingTable.AVG_PING);
             int minPing = set.getInt(PingTable.MIN_PING);
@@ -108,7 +109,7 @@ public class PingQueries {
                 while (set.next()) {
                     pings.add(new Ping(
                                     set.getLong(PingTable.DATE),
-                                    UUID.fromString(set.getString(PingTable.SERVER_UUID)),
+                                    ServerUUID.fromString(set.getString(PingTable.SERVER_UUID)),
                                     set.getInt(PingTable.MIN_PING),
                                     set.getInt(PingTable.MAX_PING),
                                     set.getDouble(PingTable.AVG_PING)
@@ -121,7 +122,7 @@ public class PingQueries {
         };
     }
 
-    public static Query<Map<UUID, List<Ping>>> fetchPingDataOfServer(UUID serverUUID) {
+    public static Query<Map<UUID, List<Ping>>> fetchPingDataOfServer(ServerUUID serverUUID) {
         String sql = SELECT +
                 PingTable.DATE + ',' +
                 PingTable.MAX_PING + ',' +
@@ -144,7 +145,7 @@ public class PingQueries {
         };
     }
 
-    public static Query<List<Ping>> fetchPingDataOfServer(long after, long before, UUID serverUUID) {
+    public static Query<List<Ping>> fetchPingDataOfServer(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
                 PingTable.DATE + ", " +
                 PingTable.MAX_PING + ", " +
@@ -168,7 +169,7 @@ public class PingQueries {
                 List<Ping> pings = new ArrayList<>();
 
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(PingTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(PingTable.SERVER_UUID));
                     long date = set.getLong(PingTable.DATE);
                     double avgPing = set.getDouble(PingTable.AVG_PING);
                     int minPing = set.getInt(PingTable.MIN_PING);
@@ -185,7 +186,7 @@ public class PingQueries {
         };
     }
 
-    public static Query<Map<String, Ping>> fetchPingDataOfServerByGeolocation(UUID serverUUID) {
+    public static Query<Map<String, Ping>> fetchPingDataOfServerByGeolocation(ServerUUID serverUUID) {
         String selectPingOfServer = SELECT +
                 PingTable.MAX_PING + ", " +
                 PingTable.MIN_PING + ", " +
@@ -292,7 +293,7 @@ public class PingQueries {
         };
     }
 
-    public static Query<Double> averagePing(long after, long before, UUID serverUUID) {
+    public static Query<Double> averagePing(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "AVG(" + PingTable.AVG_PING + ") as average" + FROM + PingTable.TABLE_NAME +
                 WHERE + PingTable.SERVER_UUID + "=?" +
                 AND + PingTable.DATE + ">=?" +

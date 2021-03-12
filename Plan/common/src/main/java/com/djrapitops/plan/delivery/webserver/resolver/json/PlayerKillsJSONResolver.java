@@ -26,12 +26,12 @@ import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Resolves /v1/kills JSON requests.
@@ -67,7 +67,7 @@ public class PlayerKillsJSONResolver implements Resolver {
     }
 
     private Response getResponse(Request request) {
-        UUID serverUUID = identifiers.getServerUUID(request);
+        ServerUUID serverUUID = identifiers.getServerUUID(request);
         long timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON = jsonResolverService.resolve(timestamp, DataID.KILLS, serverUUID,
                 theUUID -> Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(theUUID))

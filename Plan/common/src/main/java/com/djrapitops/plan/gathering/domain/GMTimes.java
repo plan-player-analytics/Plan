@@ -114,4 +114,13 @@ public class GMTimes extends TimeKeeper {
         String state = super.getState();
         return state != null ? state : SURVIVAL;
     }
+
+    @Override
+    public String toString() {
+        return "GMTimes{" +
+                "times=" + times +
+                ", state='" + state + '\'' +
+                ", lastStateChange=" + lastStateChange +
+                '}';
+    }
 }

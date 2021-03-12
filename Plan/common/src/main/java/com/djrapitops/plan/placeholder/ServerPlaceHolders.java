@@ -19,13 +19,13 @@ package com.djrapitops.plan.placeholder;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.UUID;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -60,7 +60,7 @@ public class ServerPlaceHolders implements Placeholders {
         Formatter<Double> percentage = formatters.percentage();
 
         Database database = dbSystem.getDatabase();
-        UUID serverUUID = serverInfo.getServerUUID();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
 
         placeholders.registerStatic("server_tps_day",
                 () -> decimals.apply(database.query(TPSQueries.averageTPS(dayAgo(), now(), serverUUID))));

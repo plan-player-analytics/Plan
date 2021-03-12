@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.gathering.domain.GeoInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -108,7 +109,7 @@ public class GeoInfoQueries {
         };
     }
 
-    public static Query<Map<UUID, List<GeoInfo>>> fetchServerGeoInformation(UUID serverUUID) {
+    public static Query<Map<UUID, List<GeoInfo>>> fetchServerGeoInformation(ServerUUID serverUUID) {
         String sql = SELECT + GeoInfoTable.TABLE_NAME + '.' + GeoInfoTable.USER_UUID + ',' +
                 GeoInfoTable.GEOLOCATION + ',' +
                 GeoInfoTable.LAST_USED +
@@ -189,7 +190,7 @@ public class GeoInfoQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> serverGeolocationCounts(UUID serverUUID) {
+    public static Query<Map<String, Integer>> serverGeolocationCounts(ServerUUID serverUUID) {
         String selectGeolocations = SELECT +
                 GeoInfoTable.USER_UUID + ", " +
                 GeoInfoTable.GEOLOCATION + ", " +

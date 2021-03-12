@@ -26,8 +26,12 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.ServerUUID;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Utility for creating JSON for Server Accordion
@@ -36,7 +40,7 @@ import java.util.*;
  */
 public class ServerAccordion {
 
-    private final Map<UUID, String> serverNames;
+    private final Map<ServerUUID, String> serverNames;
     private final PerServerContainer perServer;
     private final String unknown;
 
@@ -45,7 +49,7 @@ public class ServerAccordion {
     private final Formatter<Long> timeAmount;
 
     public ServerAccordion(
-            PlayerContainer container, Map<UUID, String> serverNames,
+            PlayerContainer container, Map<ServerUUID, String> serverNames,
             Graphs graphs,
             Formatter<Long> year,
             Formatter<Long> timeAmount,
@@ -64,8 +68,8 @@ public class ServerAccordion {
     public List<Map<String, Object>> asMaps() {
         List<Map<String, Object>> servers = new ArrayList<>();
 
-        for (Map.Entry<UUID, DataContainer> entry : perServer.entrySet()) {
-            UUID serverUUID = entry.getKey();
+        for (Map.Entry<ServerUUID, DataContainer> entry : perServer.entrySet()) {
+            ServerUUID serverUUID = entry.getKey();
             DataContainer ofServer = entry.getValue();
             Map<String, Object> server = new HashMap<>();
 

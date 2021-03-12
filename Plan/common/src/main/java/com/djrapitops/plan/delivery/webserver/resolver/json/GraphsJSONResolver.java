@@ -27,12 +27,12 @@ import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Resolves /v1/graph JSON requests.
@@ -91,7 +91,7 @@ public class GraphsJSONResolver implements Resolver {
 
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
-            UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
+            ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
             storedJSON = jsonResolverService.resolve(
                     timestamp, dataID, serverUUID,
                     theServerUUID -> generateGraphDataJSONOfType(dataID, theServerUUID)
@@ -138,7 +138,7 @@ public class GraphsJSONResolver implements Resolver {
         }
     }
 
-    private Object generateGraphDataJSONOfType(DataID id, UUID serverUUID) {
+    private Object generateGraphDataJSONOfType(DataID id, ServerUUID serverUUID) {
         switch (id) {
             case GRAPH_PERFORMANCE:
                 return graphJSON.performanceGraphJSON(serverUUID);

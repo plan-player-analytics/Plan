@@ -17,10 +17,9 @@
 package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
-
-import java.util.UUID;
 
 /**
  * Transaction to store server's TPS data.
@@ -29,10 +28,10 @@ import java.util.UUID;
  */
 public class TPSStoreTransaction extends Transaction {
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final TPS tps;
 
-    public TPSStoreTransaction(UUID serverUUID, TPS tps) {
+    public TPSStoreTransaction(ServerUUID serverUUID, TPS tps) {
         this.serverUUID = serverUUID;
         this.tps = tps;
     }

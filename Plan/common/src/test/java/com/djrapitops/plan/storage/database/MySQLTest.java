@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
@@ -40,7 +41,6 @@ import utilities.TestConstants;
 
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -122,7 +122,7 @@ class MySQLTest implements DatabaseTest,
     }
 
     @Override
-    public UUID serverUUID() {
+    public ServerUUID serverUUID() {
         return component.serverInfo().getServerUUID();
     }
 

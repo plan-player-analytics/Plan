@@ -26,6 +26,7 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -97,7 +98,7 @@ public class PageFactory {
      * @throws NotFoundException If the server can not be found in the database.
      * @throws IOException       If the template files can not be read.
      */
-    public Page serverPage(UUID serverUUID) throws IOException {
+    public Page serverPage(ServerUUID serverUUID) throws IOException {
         Server server = dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
                 .orElseThrow(() -> new NotFoundException("Server not found in the database"));
         return new ServerPage(
@@ -128,15 +129,15 @@ public class PageFactory {
     public PlayerPluginTab inspectPluginTabs(UUID playerUUID) {
         Database database = dbSystem.get().getDatabase();
 
-        Map<UUID, List<ExtensionData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
+        Map<ServerUUID, List<ExtensionData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
 
         if (extensionPlayerData.isEmpty()) {
             return new PlayerPluginTab("", Collections.emptyList(), formatters.get());
         }
 
         List<PlayerPluginTab> playerPluginTabs = new ArrayList<>();
-        for (Map.Entry<UUID, Server> entry : database.query(ServerQueries.fetchPlanServerInformation()).entrySet()) {
-            UUID serverUUID = entry.getKey();
+        for (Map.Entry<ServerUUID, Server> entry : database.query(ServerQueries.fetchPlanServerInformation()).entrySet()) {
+            ServerUUID serverUUID = entry.getKey();
             String serverName = entry.getValue().getIdentifiableName();
 
             List<ExtensionData> ofServer = extensionPlayerData.get(serverUUID);

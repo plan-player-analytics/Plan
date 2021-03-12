@@ -159,17 +159,11 @@ public class WorldTimes {
 
     @Override
     public String toString() {
-        StringBuilder b = new StringBuilder("WorldTimes (Current: " + currentWorld + "){\n");
-
-        for (Map.Entry<String, GMTimes> entry : times.entrySet()) {
-            GMTimes value = entry.getValue();
-            b.append("World '").append(entry.getKey()).append("':\n")
-                    .append("  Total: ").append(value.getTotal()).append("\n")
-                    .append("  ").append(value.toString()).append("\n");
-        }
-
-        b.append("}");
-        return b.toString();
+        return "WorldTimes{" +
+                "times=" + times +
+                ", currentWorld='" + currentWorld + '\'' +
+                ", currentGamemode='" + currentGamemode + '\'' +
+                '}';
     }
 
     public Optional<String> getCurrentWorld() {
@@ -191,5 +185,16 @@ public class WorldTimes {
 
     public boolean contains(String worldName) {
         return times.containsKey(worldName);
+    }
+
+    public boolean isEmpty() {
+        return getWorldTimes().isEmpty();
+    }
+
+    public void setAll(WorldTimes worldTimes) {
+        times.clear();
+        for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
+            setGMTimesForWorld(entry.getKey(), entry.getValue());
+        }
     }
 }

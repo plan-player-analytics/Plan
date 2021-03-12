@@ -19,6 +19,7 @@ package com.djrapitops.plan.identification.storage;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
@@ -26,7 +27,6 @@ import com.djrapitops.plan.storage.database.transactions.StoreServerInformationT
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Singleton
@@ -42,7 +42,7 @@ public class ServerDBLoader implements ServerLoader {
     }
 
     @Override
-    public Optional<Server> load(UUID serverUUID) {
+    public Optional<Server> load(ServerUUID serverUUID) {
         try {
             if (serverUUID == null) {
                 // Assumes that we want the server that has single entry in the database, the proxy

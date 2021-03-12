@@ -17,18 +17,18 @@
 package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.Objects;
-import java.util.UUID;
 
 public class Ping extends DateObj<Double> {
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final double average;
     private final int min;
     private final int max;
 
-    public Ping(long date, UUID serverUUID, int min, int max, double average) {
+    public Ping(long date, ServerUUID serverUUID, int min, int max, double average) {
         super(date, average);
         this.serverUUID = serverUUID;
         this.average = average;
@@ -36,7 +36,7 @@ public class Ping extends DateObj<Double> {
         this.max = max;
     }
 
-    public UUID getServerUUID() {
+    public ServerUUID getServerUUID() {
         return serverUUID;
     }
 

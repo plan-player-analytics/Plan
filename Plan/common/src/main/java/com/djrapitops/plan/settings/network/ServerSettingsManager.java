@@ -18,6 +18,7 @@ package com.djrapitops.plan.settings.network;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.ConfigWriter;
@@ -41,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -107,7 +107,7 @@ public class ServerSettingsManager implements SubSystem {
         }
 
         Database database = dbSystem.getDatabase();
-        Optional<UUID> serverUUID = serverInfo.getServerUUIDSafe();
+        Optional<ServerUUID> serverUUID = serverInfo.getServerUUIDSafe();
         if (!serverUUID.isPresent()) {
             return;
         }
@@ -131,7 +131,7 @@ public class ServerSettingsManager implements SubSystem {
         File configFile = files.getConfigFile();
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
-        Optional<UUID> serverUUID = serverInfo.getServerUUIDSafe();
+        Optional<ServerUUID> serverUUID = serverInfo.getServerUUIDSafe();
         if (!serverUUID.isPresent()) {
             return;
         }

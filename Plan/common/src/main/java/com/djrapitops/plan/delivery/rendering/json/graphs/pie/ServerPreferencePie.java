@@ -17,15 +17,15 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ServerPreferencePie extends Pie {
 
-    ServerPreferencePie(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes, String unknown) {
+    ServerPreferencePie(Map<ServerUUID, String> serverNames, Map<ServerUUID, WorldTimes> serverWorldTimes, String unknown) {
         super(turnToSlices(serverNames, serverWorldTimes, unknown));
     }
 
@@ -33,11 +33,11 @@ public class ServerPreferencePie extends Pie {
         super(turnToSlices(serverPlaytimes));
     }
 
-    private static List<PieSlice> turnToSlices(Map<UUID, String> serverNames, Map<UUID, WorldTimes> serverWorldTimes, String unknown) {
+    private static List<PieSlice> turnToSlices(Map<ServerUUID, String> serverNames, Map<ServerUUID, WorldTimes> serverWorldTimes, String unknown) {
         List<PieSlice> slices = new ArrayList<>();
 
-        for (Map.Entry<UUID, WorldTimes> server : serverWorldTimes.entrySet()) {
-            UUID serverUUID = server.getKey();
+        for (Map.Entry<ServerUUID, WorldTimes> server : serverWorldTimes.entrySet()) {
+            ServerUUID serverUUID = server.getKey();
             WorldTimes worldTimes = server.getValue();
 
             String serverName = serverNames.getOrDefault(serverUUID, unknown);

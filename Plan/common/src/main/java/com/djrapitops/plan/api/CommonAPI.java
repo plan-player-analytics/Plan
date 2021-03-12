@@ -21,6 +21,7 @@ import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -36,6 +37,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * PlanAPI extension for all implementations.
@@ -110,7 +112,8 @@ public class CommonAPI implements PlanAPI {
 
     @Override
     public Collection<UUID> fetchServerUUIDs() {
-        return queryDB(ServerQueries.fetchPlanServerInformation()).keySet();
+        return queryDB(ServerQueries.fetchPlanServerInformation()).keySet()
+                .stream().map(ServerUUID::asUUID).collect(Collectors.toSet());
     }
 
     @Override

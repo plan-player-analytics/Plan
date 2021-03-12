@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.export;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 
@@ -45,7 +46,7 @@ public class Exporter extends FileExporter {
     private final ServerPageExporter serverPageExporter;
     private final NetworkPageExporter networkPageExporter;
 
-    private final Set<UUID> failedServers;
+    private final Set<ServerUUID> failedServers;
 
     @Inject
     public Exporter(
@@ -74,7 +75,7 @@ public class Exporter extends FileExporter {
      * @throws ExportException If the export failed due to IO, NotFound or GenerationException.
      */
     public boolean exportServerPage(Server server) throws ExportException {
-        UUID serverUUID = server.getUuid();
+        ServerUUID serverUUID = server.getUuid();
         if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_PAGE)) return false;
 
         try {
@@ -92,7 +93,7 @@ public class Exporter extends FileExporter {
     }
 
     public boolean exportServerJSON(Server server) throws ExportException {
-        UUID serverUUID = server.getUuid();
+        ServerUUID serverUUID = server.getUuid();
         if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_JSON)) return false;
 
         try {

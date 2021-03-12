@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.analysis;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
@@ -41,7 +42,7 @@ public class PlayerCountQueries {
         // Static method class
     }
 
-    private static QueryStatement<Integer> queryPlayerCount(String sql, long after, long before, UUID serverUUID) {
+    private static QueryStatement<Integer> queryPlayerCount(String sql, long after, long before, ServerUUID serverUUID) {
         return new QueryStatement<Integer>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -72,7 +73,7 @@ public class PlayerCountQueries {
         };
     }
 
-    public static Query<Integer> uniquePlayerCount(long after, long before, UUID serverUUID) {
+    public static Query<Integer> uniquePlayerCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(DISTINCT " + SessionsTable.USER_UUID + ") as player_count" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + "<=?" +
@@ -98,14 +99,14 @@ public class PlayerCountQueries {
         return queryPlayerCount(sql, after, before);
     }
 
-    public static Query<Map<UUID, Integer>> uniquePlayerCounts(long after, long before) {
+    public static Query<Map<ServerUUID, Integer>> uniquePlayerCounts(long after, long before) {
         String sql = SELECT + SessionsTable.SERVER_UUID + ",COUNT(DISTINCT " + SessionsTable.USER_UUID + ") as player_count" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + "<=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
                 GROUP_BY + UserInfoTable.SERVER_UUID;
 
-        return new QueryStatement<Map<UUID, Integer>>(sql) {
+        return new QueryStatement<Map<ServerUUID, Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);
@@ -113,10 +114,10 @@ public class PlayerCountQueries {
             }
 
             @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> byServer = new HashMap<>();
+            public Map<ServerUUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, Integer> byServer = new HashMap<>();
                 while (set.next()) {
-                    byServer.put(UUID.fromString(set.getString(UserInfoTable.SERVER_UUID)), set.getInt("player_count"));
+                    byServer.put(ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID)), set.getInt("player_count"));
                 }
                 return byServer;
             }
@@ -132,7 +133,7 @@ public class PlayerCountQueries {
      * @param serverUUID     UUID of the Plan server
      * @return Map: Epoch ms (Start of day at 0 AM, no offset) - How many unique players played that day
      */
-    public static Query<NavigableMap<Long, Integer>> uniquePlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
+    public static Query<NavigableMap<Long, Integer>> uniquePlayerCounts(long after, long before, long timeZoneOffset, ServerUUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();
             String selectUniquePlayersPerDay = SELECT +
@@ -175,7 +176,7 @@ public class PlayerCountQueries {
      * @param serverUUID     UUID of the Plan server
      * @return Map: Epoch ms (Start of day at 0 AM, no offset) - How many unique players played that day
      */
-    public static Query<NavigableMap<Long, Integer>> hourlyUniquePlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
+    public static Query<NavigableMap<Long, Integer>> hourlyUniquePlayerCounts(long after, long before, long timeZoneOffset, ServerUUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();
             String selectUniquePlayersPerDay = SELECT +
@@ -289,7 +290,7 @@ public class PlayerCountQueries {
         };
     }
 
-    public static Query<Integer> averageUniquePlayerCount(long after, long before, long timeZoneOffset, UUID serverUUID) {
+    public static Query<Integer> averageUniquePlayerCount(long after, long before, long timeZoneOffset, ServerUUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();
             String selectUniquePlayersPerDay = SELECT +
@@ -320,7 +321,7 @@ public class PlayerCountQueries {
         };
     }
 
-    public static Query<Integer> newPlayerCount(long after, long before, UUID serverUUID) {
+    public static Query<Integer> newPlayerCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as player_count" +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
@@ -339,14 +340,14 @@ public class PlayerCountQueries {
         return queryPlayerCount(sql, after, before);
     }
 
-    public static Query<Map<UUID, Integer>> newPlayerCounts(long after, long before) {
+    public static Query<Map<ServerUUID, Integer>> newPlayerCounts(long after, long before) {
         String sql = SELECT + UserInfoTable.SERVER_UUID + ",COUNT(1) as player_count" +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
                 AND + UserInfoTable.REGISTERED + ">=?" +
                 GROUP_BY + UserInfoTable.SERVER_UUID;
 
-        return new QueryStatement<Map<UUID, Integer>>(sql) {
+        return new QueryStatement<Map<ServerUUID, Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);
@@ -354,10 +355,10 @@ public class PlayerCountQueries {
             }
 
             @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> byServer = new HashMap<>();
+            public Map<ServerUUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, Integer> byServer = new HashMap<>();
                 while (set.next()) {
-                    byServer.put(UUID.fromString(set.getString(UserInfoTable.SERVER_UUID)), set.getInt("player_count"));
+                    byServer.put(ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID)), set.getInt("player_count"));
                 }
                 return byServer;
             }
@@ -373,7 +374,7 @@ public class PlayerCountQueries {
      * @param serverUUID     UUID of the Plan server
      * @return Map: Epoch ms (Start of day at 0 AM, no offset) - How many new players joined that day
      */
-    public static Query<NavigableMap<Long, Integer>> newPlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
+    public static Query<NavigableMap<Long, Integer>> newPlayerCounts(long after, long before, long timeZoneOffset, ServerUUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();
             String selectNewPlayersQuery = SELECT +
@@ -530,7 +531,7 @@ public class PlayerCountQueries {
         };
     }
 
-    public static Query<Integer> averageNewPlayerCount(long after, long before, long timeZoneOffset, UUID serverUUID) {
+    public static Query<Integer> averageNewPlayerCount(long after, long before, long timeZoneOffset, ServerUUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();
             String selectNewPlayersQuery = SELECT +
@@ -561,7 +562,7 @@ public class PlayerCountQueries {
         };
     }
 
-    public static Query<Integer> retainedPlayerCount(long after, long before, UUID serverUUID) {
+    public static Query<Integer> retainedPlayerCount(long after, long before, ServerUUID serverUUID) {
         String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.REGISTERED + ">=?" +
@@ -599,7 +600,7 @@ public class PlayerCountQueries {
         };
     }
 
-    public static Query<Integer> operators(UUID serverUUID) {
+    public static Query<Integer> operators(ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as player_count" + FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_UUID + "=?" +
                 AND + UserInfoTable.OP + "=?";

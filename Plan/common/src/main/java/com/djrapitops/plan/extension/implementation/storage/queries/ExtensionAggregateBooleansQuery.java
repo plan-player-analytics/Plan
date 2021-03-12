@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDoubleData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -35,7 +36,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -54,9 +54,9 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
 
-    public ExtensionAggregateBooleansQuery(UUID serverUUID) {
+    public ExtensionAggregateBooleansQuery(ServerUUID serverUUID) {
         this.serverUUID = serverUUID;
     }
 

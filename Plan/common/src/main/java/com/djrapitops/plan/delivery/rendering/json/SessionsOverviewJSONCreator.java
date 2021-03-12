@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
@@ -57,11 +58,11 @@ public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<Str
         percentage = formatters.percentage();
     }
 
-    public Map<String, Object> createJSONAsMap(UUID serverUUID) {
+    public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
         return Collections.singletonMap("insights", createInsightsMap(serverUUID));
     }
 
-    private Map<String, Object> createInsightsMap(UUID serverUUID) {
+    private Map<String, Object> createInsightsMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);

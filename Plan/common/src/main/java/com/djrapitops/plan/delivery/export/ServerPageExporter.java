@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -41,7 +42,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Handles exporting of /server page html, data and resources.
@@ -99,7 +99,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportHtml(Path toDirectory, Server server) throws IOException {
-        UUID serverUUID = server.getUuid();
+        ServerUUID serverUUID = server.getUuid();
         Path to = toDirectory
                 .resolve(serverInfo.getServer().isProxy() ? "server/" + toFileName(server.getName()) : "server")
                 .resolve("index.html");

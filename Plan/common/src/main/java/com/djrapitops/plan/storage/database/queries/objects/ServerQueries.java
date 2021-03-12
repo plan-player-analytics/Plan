@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -47,20 +48,20 @@ public class ServerQueries {
      *
      * @return Map: Server UUID - Plan Server Information
      */
-    public static Query<Map<UUID, Server>> fetchPlanServerInformation() {
+    public static Query<Map<ServerUUID, Server>> fetchPlanServerInformation() {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME + WHERE + ServerTable.INSTALLED + "=?";
 
-        return new QueryStatement<Map<UUID, Server>>(sql, 100) {
+        return new QueryStatement<Map<ServerUUID, Server>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);
             }
 
             @Override
-            public Map<UUID, Server> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Server> servers = new HashMap<>();
+            public Map<ServerUUID, Server> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, Server> servers = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(ServerTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     servers.put(serverUUID, new Server(
                             set.getInt(ServerTable.SERVER_ID),
                             serverUUID,
@@ -78,7 +79,7 @@ public class ServerQueries {
         return db -> db.query(fetchPlanServerInformation()).values();
     }
 
-    public static Query<Optional<Server>> fetchServerMatchingIdentifier(UUID serverUUID) {
+    public static Query<Optional<Server>> fetchServerMatchingIdentifier(ServerUUID serverUUID) {
         return fetchServerMatchingIdentifier(serverUUID.toString());
     }
 
@@ -106,7 +107,7 @@ public class ServerQueries {
                 if (set.next()) {
                     return Optional.of(new Server(
                             set.getInt(ServerTable.SERVER_ID),
-                            UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
                             set.getBoolean(ServerTable.PROXY)
@@ -134,7 +135,7 @@ public class ServerQueries {
                 if (set.next()) {
                     return Optional.of(new Server(
                             set.getInt(ServerTable.SERVER_ID),
-                            UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
                             set.getBoolean(ServerTable.PROXY)
@@ -145,17 +146,17 @@ public class ServerQueries {
         };
     }
 
-    public static Query<Map<UUID, String>> fetchServerNames() {
+    public static Query<Map<ServerUUID, String>> fetchServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
                 ServerTable.SERVER_UUID, ServerTable.NAME)
                 .toString();
 
-        return new QueryAllStatement<Map<UUID, String>>(sql) {
+        return new QueryAllStatement<Map<ServerUUID, String>>(sql) {
             @Override
-            public Map<UUID, String> processResults(ResultSet set) throws SQLException {
-                Map<UUID, String> names = new HashMap<>();
+            public Map<ServerUUID, String> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, String> names = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(ServerTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     names.put(serverUUID, set.getString(ServerTable.NAME));
                 }
                 return names;
@@ -190,7 +191,7 @@ public class ServerQueries {
                 while (set.next()) {
                     matches.add(new Server(
                             set.getInt(ServerTable.SERVER_ID),
-                            UUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
                             set.getBoolean(ServerTable.PROXY)

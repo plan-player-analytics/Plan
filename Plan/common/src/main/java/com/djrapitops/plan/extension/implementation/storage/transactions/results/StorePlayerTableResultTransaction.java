@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
@@ -45,13 +46,13 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTab
 public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final String providerName;
     private final UUID playerUUID;
 
     private final Table table;
 
-    public StorePlayerTableResultTransaction(String pluginName, UUID serverUUID, String providerName, UUID playerUUID, Table table) {
+    public StorePlayerTableResultTransaction(String pluginName, ServerUUID serverUUID, String providerName, UUID playerUUID, Table table) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
         this.providerName = providerName;

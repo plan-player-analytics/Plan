@@ -17,7 +17,7 @@
 package com.djrapitops.plan.gathering.listeners.bukkit;
 
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -75,7 +75,7 @@ public class WorldChangeListener implements Listener {
         dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
         worldAliasSettings.addWorld(worldName);
 
-        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
+        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(uuid);
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
     }
 }

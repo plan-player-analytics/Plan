@@ -19,6 +19,7 @@ package com.djrapitops.plan.commands;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -73,8 +74,8 @@ public class TabCompleteCache implements SubSystem {
     }
 
     private void refreshServerIdentifiers() {
-        Map<UUID, Server> serverNames = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformation());
-        for (Map.Entry<UUID, Server> server : serverNames.entrySet()) {
+        Map<ServerUUID, Server> serverNames = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformation());
+        for (Map.Entry<ServerUUID, Server> server : serverNames.entrySet()) {
             serverIdentifiers.add(server.getKey().toString());
             serverIdentifiers.add(server.getValue().getIdentifiableName());
             server.getValue().getId().ifPresent(id -> serverIdentifiers.add(Integer.toString(id)));

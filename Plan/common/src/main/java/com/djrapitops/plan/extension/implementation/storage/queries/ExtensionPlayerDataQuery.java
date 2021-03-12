@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -52,7 +53,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  *
  * @author AuroraLS3
  */
-public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionData>>> {
+public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<ExtensionData>>> {
 
     private final UUID playerUUID;
 
@@ -61,8 +62,8 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
     }
 
     @Override
-    public Map<UUID, List<ExtensionData>> executeQuery(SQLDB db) {
-        Map<UUID, List<ExtensionInformation>> extensionsByServerUUID = db.query(ExtensionInformationQueries.allExtensions());
+    public Map<ServerUUID, List<ExtensionData>> executeQuery(SQLDB db) {
+        Map<ServerUUID, List<ExtensionInformation>> extensionsByServerUUID = db.query(ExtensionInformationQueries.allExtensions());
         Map<Integer, ExtensionData.Builder> extensionDataByPluginID = db.query(fetchIncompletePlayerDataByPluginID());
 
         combine(extensionDataByPluginID, db.query(new ExtensionPlayerTablesQuery(playerUUID)));
@@ -88,11 +89,11 @@ public class ExtensionPlayerDataQuery implements Query<Map<UUID, List<ExtensionD
         }
     }
 
-    private Map<UUID, List<ExtensionData>> flatMapByServerUUID(Map<UUID, List<ExtensionInformation>> extensionsByServerUUID, Map<Integer, ExtensionData.Builder> extensionDataByPluginID) {
-        Map<UUID, List<ExtensionData>> extensionDataByServerUUID = new HashMap<>();
+    private Map<ServerUUID, List<ExtensionData>> flatMapByServerUUID(Map<ServerUUID, List<ExtensionInformation>> extensionsByServerUUID, Map<Integer, ExtensionData.Builder> extensionDataByPluginID) {
+        Map<ServerUUID, List<ExtensionData>> extensionDataByServerUUID = new HashMap<>();
 
-        for (Map.Entry<UUID, List<ExtensionInformation>> entry : extensionsByServerUUID.entrySet()) {
-            UUID serverUUID = entry.getKey();
+        for (Map.Entry<ServerUUID, List<ExtensionInformation>> entry : extensionsByServerUUID.entrySet()) {
+            ServerUUID serverUUID = entry.getKey();
             for (ExtensionInformation extensionInformation : entry.getValue()) {
                 ExtensionData.Builder data = extensionDataByPluginID.get(extensionInformation.getId());
                 if (data == null) {

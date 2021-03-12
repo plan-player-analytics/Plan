@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.gathering.cache;
 
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.identification.ServerUUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,14 +31,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SessionCacheTest {
 
-    private Session session;
+    private final ServerUUID serverUUID = TestConstants.SERVER_UUID;
     private final UUID uuid = TestConstants.PLAYER_ONE_UUID;
-    private final UUID serverUUID = TestConstants.SERVER_UUID;
+    private ActiveSession session;
     private SessionCache sessionCache;
 
     @BeforeEach
     void setUp() {
-        session = new Session(uuid, serverUUID, 12345L, "World1", "SURVIVAL");
+        session = new ActiveSession(uuid, serverUUID, 12345L, "World1", "SURVIVAL");
 
         sessionCache = new SessionCache();
         sessionCache.cacheSession(uuid, session);
@@ -49,26 +51,26 @@ class SessionCacheTest {
 
     @Test
     void testAtomity() {
-        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
+        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(uuid);
         assertTrue(cachedSession.isPresent());
         assertEquals(session, cachedSession.get());
     }
 
     @Test
     void sessionsAreRemovedFromCacheOnEnd() {
-        Optional<Session> ended = new SessionCache().endSession(uuid, System.currentTimeMillis());
+        Optional<FinishedSession> ended = new SessionCache().endSession(uuid, System.currentTimeMillis());
         assertTrue(ended.isPresent());
-        for (Session session : SessionCache.getActiveSessions().values()) {
+        for (ActiveSession session : SessionCache.getActiveSessions()) {
             fail("Session was still in cache: " + session);
         }
     }
 
     @Test
     void sessionsAreRemovedFromCacheOnStart() {
-        Optional<Session> ended = new SessionCache().cacheSession(uuid, new Session(uuid, serverUUID, 52345L, "World1", "SURVIVAL"));
+        Optional<FinishedSession> ended = new SessionCache().cacheSession(uuid, new ActiveSession(uuid, serverUUID, 52345L, "World1", "SURVIVAL"));
         assertTrue(ended.isPresent());
-        for (Session session : SessionCache.getActiveSessions().values()) {
-            if (session.getDate() == 12345L) {
+        for (ActiveSession session : SessionCache.getActiveSessions()) {
+            if (session.getStart() == 12345L) {
                 fail("Session was still in cache: " + session);
             }
         }

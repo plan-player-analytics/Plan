@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -24,7 +25,6 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -36,10 +36,10 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 public class RemoveInvalidResultsTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final Collection<String> invalidatedMethods;
 
-    public RemoveInvalidResultsTransaction(String pluginName, UUID serverUUID, Collection<String> invalidatedMethods) {
+    public RemoveInvalidResultsTransaction(String pluginName, ServerUUID serverUUID, Collection<String> invalidatedMethods) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
         this.invalidatedMethods = invalidatedMethods;

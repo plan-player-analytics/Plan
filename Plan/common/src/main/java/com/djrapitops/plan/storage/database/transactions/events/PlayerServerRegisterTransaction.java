@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 
@@ -30,11 +31,11 @@ import java.util.function.LongSupplier;
  */
 public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final String hostname;
 
     public PlayerServerRegisterTransaction(UUID playerUUID, LongSupplier registered,
-                                           String playerName, UUID serverUUID, String hostname) {
+                                           String playerName, ServerUUID serverUUID, String hostname) {
         super(playerUUID, registered, playerName);
         this.serverUUID = serverUUID;
         this.hostname = hostname;

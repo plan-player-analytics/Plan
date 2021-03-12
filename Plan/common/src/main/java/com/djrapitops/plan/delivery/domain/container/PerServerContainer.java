@@ -18,30 +18,33 @@ package com.djrapitops.plan.delivery.domain.container;
 
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.Ping;
-import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.UserInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 /**
- * Container for data about a player linked to a single server.
+ * Container for data about a player linked.
  *
  * @author AuroraLS3
  * @see com.djrapitops.plan.delivery.domain.keys.PerServerKeys For Key objects.
  */
-public class PerServerContainer extends HashMap<UUID, DataContainer> {
+public class PerServerContainer extends HashMap<ServerUUID, DataContainer> {
 
-    public <T> void putToContainerOfServer(UUID serverUUID, Key<T> key, T value) {
+    public <T> void putToContainerOfServer(ServerUUID serverUUID, Key<T> key, T value) {
         DataContainer container = getOrDefault(serverUUID, new DynamicDataContainer());
         container.putRawData(key, value);
         put(serverUUID, container);
     }
 
     public void putUserInfo(UserInfo userInfo) {
-        UUID serverUUID = userInfo.getServerUUID();
+        ServerUUID serverUUID = userInfo.getServerUUID();
         putToContainerOfServer(serverUUID, PerServerKeys.REGISTERED, userInfo.getRegistered());
         putToContainerOfServer(serverUUID, PerServerKeys.BANNED, userInfo.isBanned());
         putToContainerOfServer(serverUUID, PerServerKeys.OPERATOR, userInfo.isOperator());
@@ -64,22 +67,22 @@ public class PerServerContainer extends HashMap<UUID, DataContainer> {
         }
     }
 
-    public void putSessions(Collection<Session> sessions) {
+    public void putSessions(Collection<FinishedSession> sessions) {
         if (sessions == null) {
             return;
         }
 
-        for (Session session : sessions) {
+        for (FinishedSession session : sessions) {
             putSession(session);
         }
     }
 
-    private void putSession(Session session) {
+    private void putSession(FinishedSession session) {
         if (session == null) {
             return;
         }
 
-        UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
+        ServerUUID serverUUID = session.getServerUUID();
         DataContainer container = getOrDefault(serverUUID, new DynamicDataContainer());
         if (!container.supports(PerServerKeys.SESSIONS)) {
             container.putRawData(PerServerKeys.SESSIONS, new ArrayList<>());
@@ -103,7 +106,7 @@ public class PerServerContainer extends HashMap<UUID, DataContainer> {
             return;
         }
 
-        UUID serverUUID = ping.getServerUUID();
+        ServerUUID serverUUID = ping.getServerUUID();
         DataContainer container = getOrDefault(serverUUID, new DynamicDataContainer());
         if (!container.supports(PerServerKeys.PING)) {
             container.putRawData(PerServerKeys.PING, new ArrayList<>());

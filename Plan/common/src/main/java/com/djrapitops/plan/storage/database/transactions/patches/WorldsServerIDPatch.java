@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.patches;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -55,10 +56,10 @@ public class WorldsServerIDPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        Collection<UUID> serverUUIDs = query(ServerQueries.fetchPlanServerInformation()).keySet();
+        Collection<ServerUUID> serverUUIDs = query(ServerQueries.fetchPlanServerInformation()).keySet();
 
-        Map<UUID, Collection<String>> worldsPerServer = new HashMap<>();
-        for (UUID serverUUID : serverUUIDs) {
+        Map<ServerUUID, Collection<String>> worldsPerServer = new HashMap<>();
+        for (ServerUUID serverUUID : serverUUIDs) {
             worldsPerServer.put(serverUUID, getWorldNamesOld(serverUUID));
         }
 
@@ -68,7 +69,7 @@ public class WorldsServerIDPatch extends Patch {
         executeSwallowingExceptions(DELETE_FROM + WorldTable.TABLE_NAME + WHERE + "server_id=0");
     }
 
-    private Set<String> getWorldNamesOld(UUID serverUUID) {
+    private Set<String> getWorldNamesOld(ServerUUID serverUUID) {
         String worldIDColumn = WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID;
         String worldSessionIDColumn = WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID;
         String sessionIDColumn = SessionsTable.TABLE_NAME + '.' + SessionsTable.ID;

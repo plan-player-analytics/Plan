@@ -18,10 +18,10 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.PlayerKills;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -45,7 +45,7 @@ public class PlayerCalendar {
     private final Locale locale;
     private final TimeZone timeZone;
 
-    private final List<Session> allSessions;
+    private final List<FinishedSession> allSessions;
     private final long registered;
 
     PlayerCalendar(
@@ -77,14 +77,14 @@ public class PlayerCalendar {
                 ).withColor(theme.getValue(ThemeVal.LIGHT_GREEN))
         );
 
-        Map<String, List<Session>> sessionsByDay = getSessionsByDay();
+        Map<String, List<FinishedSession>> sessionsByDay = getSessionsByDay();
 
-        for (Map.Entry<String, List<Session>> entry : sessionsByDay.entrySet()) {
+        for (Map.Entry<String, List<FinishedSession>> entry : sessionsByDay.entrySet()) {
             String day = entry.getKey();
 
-            List<Session> sessions = entry.getValue();
+            List<FinishedSession> sessions = entry.getValue();
             int sessionCount = sessions.size();
-            long playtime = sessions.stream().mapToLong(Session::getLength).sum();
+            long playtime = sessions.stream().mapToLong(FinishedSession::getLength).sum();
 
             entries.add(CalendarEntry
                     .of(locale.getString(HtmlLang.LABEL_PLAYTIME) + ": " + timeAmount.apply(playtime), day)
@@ -95,10 +95,10 @@ public class PlayerCalendar {
 
         long fiveMinutes = TimeUnit.MINUTES.toMillis(5L);
 
-        for (Session session : allSessions) {
+        for (FinishedSession session : allSessions) {
             String length = timeAmount.apply(session.getLength());
-            Long start = session.getUnsafe(SessionKeys.START);
-            Long end = session.getValue(SessionKeys.END).orElse(System.currentTimeMillis());
+            long start = session.getStart();
+            long end = session.getEnd();
 
             entries.add(CalendarEntry
                     .of(locale.getString(HtmlLang.SESSION) + ": " + length,
@@ -106,7 +106,7 @@ public class PlayerCalendar {
                     .withEnd(end + timeZone.getOffset(end))
             );
 
-            for (PlayerKill kill : session.getPlayerKills()) {
+            for (PlayerKill kill : session.getExtraData(PlayerKills.class).map(PlayerKills::asList).orElseGet(ArrayList::new)) {
                 long time = kill.getDate();
                 String victim = kill.getVictimName().orElse(kill.getVictim().toString());
                 entries.add(CalendarEntry
@@ -120,12 +120,12 @@ public class PlayerCalendar {
         return entries;
     }
 
-    private Map<String, List<Session>> getSessionsByDay() {
-        Map<String, List<Session>> sessionsByDay = new HashMap<>();
-        for (Session session : allSessions) {
+    private Map<String, List<FinishedSession>> getSessionsByDay() {
+        Map<String, List<FinishedSession>> sessionsByDay = new HashMap<>();
+        for (FinishedSession session : allSessions) {
             String day = iso8601Formatter.apply(session.getDate());
 
-            List<Session> sessionsOfDay = sessionsByDay.computeIfAbsent(day, Lists::create);
+            List<FinishedSession> sessionsOfDay = sessionsByDay.computeIfAbsent(day, Lists::create);
             sessionsOfDay.add(session);
         }
         return sessionsByDay;

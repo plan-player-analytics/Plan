@@ -18,7 +18,6 @@ package com.djrapitops.plan.identification;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Represents a Server that is running Plan.
@@ -26,17 +25,17 @@ import java.util.UUID;
  * @author AuroraLS3
  */
 public class Server implements Comparable<Server> {
-    private final UUID uuid;
+    private final ServerUUID uuid;
     private Integer id;
     private String name;
     private String webAddress;
     private boolean proxy;
 
-    public Server(UUID uuid, String name, String webAddress) {
+    public Server(ServerUUID uuid, String name, String webAddress) {
         this(null, uuid, name, webAddress, false);
     }
 
-    public Server(Integer id, UUID uuid, String name, String webAddress, boolean proxy) {
+    public Server(Integer id, ServerUUID uuid, String name, String webAddress, boolean proxy) {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
@@ -52,7 +51,7 @@ public class Server implements Comparable<Server> {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public ServerUUID getUuid() {
         return uuid;
     }
 

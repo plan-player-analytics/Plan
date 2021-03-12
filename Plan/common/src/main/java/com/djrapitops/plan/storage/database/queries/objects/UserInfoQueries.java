@@ -17,10 +17,10 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.gathering.domain.UserInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -49,7 +49,7 @@ public class UserInfoQueries {
      *
      * @return Map: Server UUID - List of user information
      */
-    public static Query<Map<UUID, List<UserInfo>>> fetchAllUserInformation() {
+    public static Query<Map<ServerUUID, List<UserInfo>>> fetchAllUserInformation() {
         String sql = SELECT +
                 UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
@@ -59,12 +59,12 @@ public class UserInfoQueries {
                 UserInfoTable.HOSTNAME +
                 FROM + UserInfoTable.TABLE_NAME;
 
-        return new QueryAllStatement<Map<UUID, List<UserInfo>>>(sql, 50000) {
+        return new QueryAllStatement<Map<ServerUUID, List<UserInfo>>>(sql, 50000) {
             @Override
-            public Map<UUID, List<UserInfo>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<UserInfo>> serverMap = new HashMap<>();
+            public Map<ServerUUID, List<UserInfo>> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, List<UserInfo>> serverMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
                     UUID uuid = UUID.fromString(set.getString(UserInfoTable.USER_UUID));
 
                     List<UserInfo> userInfos = serverMap.computeIfAbsent(serverUUID, Lists::create);
@@ -110,7 +110,7 @@ public class UserInfoQueries {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
-                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
                     String hostname = set.getString(UserInfoTable.HOSTNAME);
 
                     userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, hostname, banned));
@@ -126,7 +126,7 @@ public class UserInfoQueries {
      * @param serverUUID UUID of the Plan server.
      * @return Map: Player UUID - user information
      */
-    public static Query<Map<UUID, UserInfo>> fetchUserInformationOfServer(UUID serverUUID) {
+    public static Query<Map<UUID, UserInfo>> fetchUserInformationOfServer(ServerUUID serverUUID) {
         String sql = SELECT +
                 UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
@@ -147,7 +147,7 @@ public class UserInfoQueries {
             public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
                 Map<UUID, UserInfo> userInformation = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
                     UUID uuid = UUID.fromString(set.getString(UserInfoTable.USER_UUID));
 
                     long registered = set.getLong(UserInfoTable.REGISTERED);
@@ -163,7 +163,7 @@ public class UserInfoQueries {
         };
     }
 
-    public static Query<Map<UUID, Long>> fetchRegisterDates(long after, long before, UUID serverUUID) {
+    public static Query<Map<UUID, Long>> fetchRegisterDates(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
                 UserInfoTable.USER_UUID + ',' +
                 UserInfoTable.REGISTERED +

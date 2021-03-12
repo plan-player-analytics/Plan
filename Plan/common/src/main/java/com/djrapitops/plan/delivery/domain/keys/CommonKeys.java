@@ -40,7 +40,7 @@ public class CommonKeys {
     public static final PlaceholderKey<Long> REGISTERED = new PlaceholderKey<>(Long.class, "registered");
     public static final Key<List<Ping>> PING = new Key<>(new Type<List<Ping>>() {}, "ping");
 
-    public static final Key<List<Session>> SESSIONS = new Key<>(new Type<List<Session>>() {}, "sessions");
+    public static final Key<List<FinishedSession>> SESSIONS = new Key<>(new Type<List<FinishedSession>>() {}, "sessions");
     public static final Key<WorldTimes> WORLD_TIMES = new Key<>(WorldTimes.class, "world_times");
     public static final PlaceholderKey<Long> LAST_SEEN = new PlaceholderKey<>(Long.class, "lastSeen");
 

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.gathering.domain.PlayerKill;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
@@ -45,7 +46,7 @@ public class KillQueries {
         // Static method class
     }
 
-    public static Query<List<PlayerKill>> fetchPlayerKillsOnServer(UUID serverUUID, int limit) {
+    public static Query<List<PlayerKill>> fetchPlayerKillsOnServer(ServerUUID serverUUID, int limit) {
         String sql = SELECT +
                 KillsTable.KILLER_UUID + ", " +
                 KillsTable.VICTIM_UUID + ", " +
@@ -152,7 +153,7 @@ public class KillQueries {
         return Optional.empty();
     }
 
-    public static Query<Long> playerKillCount(long after, long before, UUID serverUUID) {
+    public static Query<Long> playerKillCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as count" +
                 FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.SERVER_UUID + "=?" +
@@ -173,7 +174,7 @@ public class KillQueries {
         };
     }
 
-    public static Query<Double> averageKDR(long after, long before, UUID serverUUID) {
+    public static Query<Double> averageKDR(long after, long before, ServerUUID serverUUID) {
         String selectKillCounts = SELECT + "COUNT(1) as kills," + KillsTable.KILLER_UUID +
                 FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.SERVER_UUID + "=?" +
@@ -219,7 +220,7 @@ public class KillQueries {
         };
     }
 
-    public static Query<Long> mobKillCount(long after, long before, UUID serverUUID) {
+    public static Query<Long> mobKillCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.MOB_KILLS + ") as count" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SERVER_UUID + "=?" +
@@ -240,7 +241,7 @@ public class KillQueries {
         };
     }
 
-    public static Query<Long> deathCount(long after, long before, UUID serverUUID) {
+    public static Query<Long> deathCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as count" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SERVER_UUID + "=?" +
@@ -261,7 +262,7 @@ public class KillQueries {
         };
     }
 
-    public static Query<List<String>> topWeaponsOfServer(long after, long before, UUID serverUUID, int limit) {
+    public static Query<List<String>> topWeaponsOfServer(long after, long before, ServerUUID serverUUID, int limit) {
         String innerSQL = SELECT + KillsTable.WEAPON + ", COUNT(1) as kills" +
                 FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.SERVER_UUID + "=?" +

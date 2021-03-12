@@ -16,61 +16,36 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
-import com.djrapitops.plan.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.identification.ServerUUID;
 import org.junit.jupiter.api.Test;
-import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Test for {@link Session} {@link DataContainer}.
+ * Tests for {@link ActiveSession} and {@link FinishedSession}.
  *
  * @author AuroraLS3
  */
 class SessionTest {
 
-    private final UUID serverUUID = TestConstants.SERVER_UUID;
-
-    @Test
-    void safeStartKeyConstructor() {
-        for (int i = 0; i < 10000; i++) {
-            long expected = RandomData.randomLong(0, System.currentTimeMillis());
-            Session session = new Session(null, serverUUID, expected, null, null);
-
-            // Should not throw
-            assertEquals(expected, session.getUnsafe(SessionKeys.START));
-        }
-    }
-
-    @Test
-    void safeStartKeyDBConstructor() {
-        for (int i = 0; i < 10000; i++) {
-            long expected = RandomData.randomLong(0, System.currentTimeMillis());
-            Session session = new Session(-1, null, null, expected, expected + 1, 0, 0, 0);
-
-            // Should not throw
-            assertEquals(expected, session.getUnsafe(SessionKeys.START));
-        }
-    }
+    private final ServerUUID serverUUID = TestConstants.SERVER_UUID;
 
     @Test
     void killsAreAdded() {
-        Session session = new Session(null, serverUUID, System.currentTimeMillis(), "", "");
+        ActiveSession session = new ActiveSession(null, serverUUID, System.currentTimeMillis(), "", "");
 
-        Optional<List<PlayerKill>> beforeOptional = session.getValue(SessionKeys.PLAYER_KILLS);
+        Optional<List<PlayerKill>> beforeOptional = session.getExtraData().get(PlayerKills.class).map(PlayerKills::asList);
         assertTrue(beforeOptional.isPresent());
         List<PlayerKill> before = beforeOptional.get();
         assertTrue(before.isEmpty());
 
-        session.playerKilled(new PlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
+        session.addPlayerKill(new PlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
 
-        Optional<List<PlayerKill>> afterOptional = session.getValue(SessionKeys.PLAYER_KILLS);
+        Optional<List<PlayerKill>> afterOptional = session.getExtraData().get(PlayerKills.class).map(PlayerKills::asList);
         assertTrue(afterOptional.isPresent());
         List<PlayerKill> after = afterOptional.get();
 
@@ -80,11 +55,11 @@ class SessionTest {
 
     @Test
     void killsAreAdded2() {
-        Session session = new Session(null, serverUUID, System.currentTimeMillis(), "", "");
+        ActiveSession session = new ActiveSession(null, serverUUID, System.currentTimeMillis(), "", "");
 
-        session.playerKilled(new PlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
+        session.addPlayerKill(new PlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
 
-        Optional<List<PlayerKill>> afterOptional = session.getValue(SessionKeys.PLAYER_KILLS);
+        Optional<List<PlayerKill>> afterOptional = session.getExtraData().get(PlayerKills.class).map(PlayerKills::asList);
         assertTrue(afterOptional.isPresent());
         List<PlayerKill> after = afterOptional.get();
 
@@ -94,10 +69,10 @@ class SessionTest {
     @Test
     void worldTimesWorks() {
         long time = System.currentTimeMillis();
-        Session session = new Session(null, serverUUID, time, "One", "Survival");
+        ActiveSession session = new ActiveSession(null, serverUUID, time, "One", "Survival");
         session.changeState("Two", "Three", time + 5L);
 
-        Optional<WorldTimes> optional = session.getValue(SessionKeys.WORLD_TIMES);
+        Optional<WorldTimes> optional = session.getExtraData().get(WorldTimes.class);
         assertTrue(optional.isPresent());
         WorldTimes worldTimes = optional.get();
 

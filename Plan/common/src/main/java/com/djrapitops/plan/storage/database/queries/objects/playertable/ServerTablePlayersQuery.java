@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects.playertable;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -43,7 +44,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final long date;
     private final long activeMsThreshold;
     private final int xMostRecentPlayers;
@@ -56,7 +57,7 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
      * @param activeMsThreshold  Playtime threshold for Activity Index calculation
      * @param xMostRecentPlayers Limit query size
      */
-    public ServerTablePlayersQuery(UUID serverUUID, long date, long activeMsThreshold, int xMostRecentPlayers) {
+    public ServerTablePlayersQuery(ServerUUID serverUUID, long date, long activeMsThreshold, int xMostRecentPlayers) {
         this.serverUUID = serverUUID;
         this.date = date;
         this.activeMsThreshold = activeMsThreshold;

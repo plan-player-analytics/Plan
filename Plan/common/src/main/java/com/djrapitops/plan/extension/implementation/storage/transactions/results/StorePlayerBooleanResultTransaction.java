@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -37,13 +38,13 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerVal
 public class StorePlayerBooleanResultTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final String providerName;
     private final UUID playerUUID;
 
     private final boolean value;
 
-    public StorePlayerBooleanResultTransaction(String pluginName, UUID serverUUID, String providerName, UUID playerUUID, boolean value) {
+    public StorePlayerBooleanResultTransaction(String pluginName, ServerUUID serverUUID, String providerName, UUID playerUUID, boolean value) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
         this.providerName = providerName;

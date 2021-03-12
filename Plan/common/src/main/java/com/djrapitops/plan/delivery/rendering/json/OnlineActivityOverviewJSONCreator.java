@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.PlayersOnlineResolver;
 import com.djrapitops.plan.delivery.domain.mutators.RetentionData;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
@@ -24,6 +23,7 @@ import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -72,14 +72,14 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         percentageFormatter = formatters.percentage();
     }
 
-    public Map<String, Object> createJSONAsMap(UUID serverUUID) {
+    public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("numbers", createNumbersMap(serverUUID));
         serverOverview.put("insights", createInsightsMap(serverUUID));
         return serverOverview;
     }
 
-    private Map<String, Object> createNumbersMap(UUID serverUUID) {
+    private Map<String, Object> createNumbersMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long dayAgo = now - TimeUnit.DAYS.toMillis(1L);
@@ -199,7 +199,7 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         return numbers;
     }
 
-    private Map<String, Object> createInsightsMap(UUID serverUUID) {
+    private Map<String, Object> createInsightsMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long halfMonthAgo = now - TimeUnit.DAYS.toMillis(15L);
@@ -213,7 +213,7 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
 
         PlayersOnlineResolver playersOnlineResolver = new PlayersOnlineResolver(new TPSMutator(tpsData));
         SessionsMutator firstSessions = sessions.filterBy(session -> {
-            long registered = registerDates.getOrDefault(session.getValue(SessionKeys.UUID).orElse(null), -501L);
+            long registered = registerDates.getOrDefault(session.getPlayerUUID(), -501L);
             long start = session.getDate();
             return Math.abs(registered - start) < 500L;
         });

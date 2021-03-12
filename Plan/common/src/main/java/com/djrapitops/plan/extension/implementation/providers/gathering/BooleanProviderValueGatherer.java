@@ -28,6 +28,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerBooleanResultTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerBooleanResultTransaction;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
@@ -45,14 +46,14 @@ class BooleanProviderValueGatherer {
 
     private final String pluginName;
     private final DataExtension extension;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
 
     private final Database database;
     private final DataProviders dataProviders;
 
     BooleanProviderValueGatherer(
             String pluginName,
-            UUID serverUUID, Database database,
+            ServerUUID serverUUID, Database database,
             ExtensionWrapper extensionWrapper
     ) {
         this.pluginName = pluginName;

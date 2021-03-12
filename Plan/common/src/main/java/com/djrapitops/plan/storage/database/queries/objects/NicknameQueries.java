@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -47,7 +48,7 @@ public class NicknameQueries {
      *
      * @return Multimap: Server UUID - (Player UUID - List of nicknames)
      */
-    public static Query<Map<UUID, Map<UUID, List<Nickname>>>> fetchAllNicknameData() {
+    public static Query<Map<ServerUUID, Map<UUID, List<Nickname>>>> fetchAllNicknameData() {
         String sql = SELECT +
                 NicknamesTable.NICKNAME + ',' +
                 NicknamesTable.LAST_USED + ',' +
@@ -55,12 +56,12 @@ public class NicknameQueries {
                 NicknamesTable.SERVER_UUID +
                 FROM + NicknamesTable.TABLE_NAME;
 
-        return new QueryAllStatement<Map<UUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
+        return new QueryAllStatement<Map<ServerUUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
             @Override
-            public Map<UUID, Map<UUID, List<Nickname>>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Map<UUID, List<Nickname>>> map = new HashMap<>();
+            public Map<ServerUUID, Map<UUID, List<Nickname>>> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, Map<UUID, List<Nickname>>> map = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
                     UUID uuid = UUID.fromString(set.getString(NicknamesTable.USER_UUID));
 
                     Map<UUID, List<Nickname>> serverMap = map.computeIfAbsent(serverUUID, Maps::create);
@@ -77,7 +78,7 @@ public class NicknameQueries {
         };
     }
 
-    public static Query<Optional<Nickname>> fetchLastSeenNicknameOfPlayer(UUID playerUUID, UUID serverUUID) {
+    public static Query<Optional<Nickname>> fetchLastSeenNicknameOfPlayer(UUID playerUUID, ServerUUID serverUUID) {
         String subQuery = SELECT + "MAX(" + NicknamesTable.LAST_USED + ") FROM " + NicknamesTable.TABLE_NAME +
                 WHERE + NicknamesTable.USER_UUID + "=?" +
                 AND + NicknamesTable.SERVER_UUID + "=?" +
@@ -130,7 +131,7 @@ public class NicknameQueries {
             public List<Nickname> processResults(ResultSet set) throws SQLException {
                 List<Nickname> nicknames = new ArrayList<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
                     String nickname = set.getString(NicknamesTable.NICKNAME);
                     nicknames.add(new Nickname(nickname, set.getLong(NicknamesTable.LAST_USED), serverUUID));
                 }
@@ -145,12 +146,11 @@ public class NicknameQueries {
      * @param serverUUID UUID the the Plan server.
      * @return Map: Player UUID - List of Nicknames on the server.
      */
-    public static Query<Map<UUID, List<Nickname>>> fetchNicknameDataOfServer(UUID serverUUID) {
+    public static Query<Map<UUID, List<Nickname>>> fetchNicknameDataOfServer(ServerUUID serverUUID) {
         String sql = SELECT +
                 NicknamesTable.NICKNAME + ',' +
                 NicknamesTable.LAST_USED + ',' +
-                NicknamesTable.USER_UUID + ',' +
-                NicknamesTable.SERVER_UUID +
+                NicknamesTable.USER_UUID +
                 FROM + NicknamesTable.TABLE_NAME +
                 WHERE + NicknamesTable.SERVER_UUID + "=?";
 
@@ -164,7 +164,6 @@ public class NicknameQueries {
             public Map<UUID, List<Nickname>> processResults(ResultSet set) throws SQLException {
                 Map<UUID, List<Nickname>> serverMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(NicknamesTable.SERVER_UUID));
                     UUID uuid = UUID.fromString(set.getString(NicknamesTable.USER_UUID));
 
                     List<Nickname> nicknames = serverMap.computeIfAbsent(uuid, Lists::create);

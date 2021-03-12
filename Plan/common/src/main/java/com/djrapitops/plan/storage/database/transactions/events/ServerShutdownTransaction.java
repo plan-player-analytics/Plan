@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
@@ -29,9 +29,9 @@ import java.util.Collection;
  */
 public class ServerShutdownTransaction extends Transaction {
 
-    private final Collection<Session> unsavedSessions;
+    private final Collection<FinishedSession> unsavedSessions;
 
-    public ServerShutdownTransaction(Collection<Session> unsavedSessions) {
+    public ServerShutdownTransaction(Collection<FinishedSession> unsavedSessions) {
         this.unsavedSessions = unsavedSessions;
     }
 

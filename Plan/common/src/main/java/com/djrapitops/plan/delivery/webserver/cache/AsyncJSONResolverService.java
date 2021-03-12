@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -24,7 +25,6 @@ import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -62,7 +62,7 @@ public class AsyncJSONResolverService {
     }
 
     public <T> JSONStorage.StoredJSON resolve(
-            long newerThanTimestamp, DataID dataID, UUID serverUUID, Function<UUID, T> creator
+            long newerThanTimestamp, DataID dataID, ServerUUID serverUUID, Function<ServerUUID, T> creator
     ) {
         String identifier = dataID.of(serverUUID);
         Supplier<T> jsonCreator = () -> creator.apply(serverUUID);

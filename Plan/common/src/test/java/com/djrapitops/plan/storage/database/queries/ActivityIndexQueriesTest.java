@@ -17,10 +17,9 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
@@ -50,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
-    default void storeSessions(Predicate<Session> save) {
+    default void storeSessions(Predicate<FinishedSession> save) {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
@@ -59,7 +58,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
             db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), world));
         }
 
-        for (Session session : RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID)) {
+        for (FinishedSession session : RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID)) {
             if (save.test(session)) execute(DataStoreQueries.storeSession(session));
         }
     }
@@ -80,7 +79,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
         long date = System.currentTimeMillis();
         long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
-        List<Session> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
                 .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
 
         ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
@@ -123,11 +122,11 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
     @RepeatedTest(value = 3, name = "Activity Index calculations match with missing data {currentRepetition}/{totalRepetitions}")
     default void activityIndexCalculationsMatchWithMissingData() {
         long keepAfter = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7L);
-        storeSessions(session -> session.getDate() >= keepAfter && session.getUnsafe(SessionKeys.END) >= keepAfter);
+        storeSessions(session -> session.getDate() >= keepAfter && session.getEnd() >= keepAfter);
 
         long date = System.currentTimeMillis();
         long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
-        List<Session> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
                 .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
 
         ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
@@ -173,7 +172,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
         long date = System.currentTimeMillis();
         long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
-        List<Session> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
                 .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
 
         ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);

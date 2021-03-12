@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.gathering.cache;
 
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,16 +32,16 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class SessionCache {
 
-    private static final Map<UUID, Session> ACTIVE_SESSIONS = new ConcurrentHashMap<>();
+    private static final Map<UUID, ActiveSession> ACTIVE_SESSIONS = new ConcurrentHashMap<>();
 
     @Inject
     public SessionCache() {
         // Dagger requires empty inject constructor
     }
 
-    public static Map<UUID, Session> getActiveSessions() {
+    public static Collection<ActiveSession> getActiveSessions() {
         refreshActiveSessionsState();
-        return Collections.unmodifiableMap(new HashMap<>(ACTIVE_SESSIONS));
+        return new HashSet<>(ACTIVE_SESSIONS.values());
     }
 
     public static void clear() {
@@ -49,7 +49,7 @@ public class SessionCache {
     }
 
     public static void refreshActiveSessionsState() {
-        ACTIVE_SESSIONS.values().forEach(Session::updateState);
+        ACTIVE_SESSIONS.values().forEach(ActiveSession::updateState);
     }
 
     /**
@@ -58,9 +58,9 @@ public class SessionCache {
      * @param playerUUID UUID of the player.
      * @return Optional with the session inside it if found.
      */
-    public static Optional<Session> getCachedSession(UUID playerUUID) {
-        Optional<Session> found = Optional.ofNullable(ACTIVE_SESSIONS.get(playerUUID));
-        found.ifPresent(Session::updateState);
+    public static Optional<ActiveSession> getCachedSession(UUID playerUUID) {
+        Optional<ActiveSession> found = Optional.ofNullable(ACTIVE_SESSIONS.get(playerUUID));
+        found.ifPresent(ActiveSession::updateState);
         return found;
     }
 
@@ -68,32 +68,36 @@ public class SessionCache {
      * Cache a new session.
      *
      * @param playerUUID UUID of the player
-     * @param session    Session to cache.
+     * @param newSession Session to cache.
      * @return Optional: previous session. Recipients of this object should decide if it needs to be saved.
      */
-    public Optional<Session> cacheSession(UUID playerUUID, Session session) {
-        Optional<Session> inProgress = Optional.empty();
-        if (getCachedSession(playerUUID).isPresent()) {
-            inProgress = endSession(playerUUID, session.getUnsafe(SessionKeys.START));
+    public Optional<FinishedSession> cacheSession(UUID playerUUID, ActiveSession newSession) {
+        Optional<ActiveSession> inProgress = getCachedSession(playerUUID);
+        Optional<FinishedSession> finished = Optional.empty();
+        if (inProgress.isPresent()) {
+            finished = endSession(playerUUID, newSession.getStart(), inProgress.get());
         }
-        ACTIVE_SESSIONS.put(playerUUID, session);
-        return inProgress;
+        ACTIVE_SESSIONS.put(playerUUID, newSession);
+        return finished;
     }
 
     /**
      * End a session and save it to database.
      *
-     * @param playerUUID UUID of the player.
-     * @param time       Time the session ended.
+     * @param playerUUID    UUID of the player.
+     * @param time          Time the session ended.
+     * @param activeSession Currently active session
      * @return Optional: ended session. Recipients of this object should decide if it needs to be saved.
      */
-    public Optional<Session> endSession(UUID playerUUID, long time) {
-        Session session = ACTIVE_SESSIONS.get(playerUUID);
-        if (session == null || session.getUnsafe(SessionKeys.START) > time) {
+    public Optional<FinishedSession> endSession(UUID playerUUID, long time, ActiveSession activeSession) {
+        if (activeSession == null || activeSession.getStart() > time) {
             return Optional.empty();
         }
         ACTIVE_SESSIONS.remove(playerUUID);
-        session.endSession(time);
-        return Optional.of(session);
+        return Optional.of(activeSession.toFinishedSession(time));
+    }
+
+    public Optional<FinishedSession> endSession(UUID playerUUID, long time) {
+        return endSession(playerUUID, time, ACTIVE_SESSIONS.get(playerUUID));
     }
 }

@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -37,7 +38,6 @@ import com.djrapitops.plan.version.VersionChecker;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Html String generator for /network page.
@@ -84,7 +84,7 @@ public class NetworkPage implements Page {
     public String toHtml() {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
-        UUID serverUUID = serverInfo.getServerUUID();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
         placeholders.put("networkDisplayName", config.get(ProxySettings.NETWORK_NAME));
         placeholders.put("serverName", config.get(ProxySettings.NETWORK_NAME));
         placeholders.put("serverUUID", serverUUID.toString());

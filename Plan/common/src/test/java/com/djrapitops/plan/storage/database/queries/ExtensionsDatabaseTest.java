@@ -31,7 +31,9 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
@@ -85,7 +87,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        Map<UUID, List<ExtensionData>> playerDataByServerUUID = db().query(new ExtensionPlayerDataQuery(playerUUID));
+        Map<ServerUUID, List<ExtensionData>> playerDataByServerUUID = db().query(new ExtensionPlayerDataQuery(playerUUID));
         List<ExtensionData> ofServer = playerDataByServerUUID.get(serverUUID());
         assertNotNull(ofServer);
         assertFalse(ofServer.isEmpty());
@@ -110,11 +112,9 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
 
         // Store a session to check against issue https://github.com/plan-player-analytics/Plan/issues/1039
-        Session session = new Session(playerUUID, serverUUID(), 32345L, worlds[0], "SURVIVAL");
-        session.endSession(42345L);
-        session.setWorldTimes(RandomData.randomWorldTimes(worlds));
-
-        execute(DataStoreQueries.storeSession(session));
+        ActiveSession session = new ActiveSession(playerUUID, serverUUID(), 32345L, worlds[0], "SURVIVAL");
+        session.getExtraData().put(WorldTimes.class, RandomData.randomWorldTimes(worlds));
+        execute(DataStoreQueries.storeSession(session.toFinishedSession(42345L)));
 
         Map<UUID, ExtensionTabData> result = db().query(new ExtensionServerTableDataQuery(serverUUID(), 50));
         assertEquals(1, result.size());
@@ -326,7 +326,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        Map<UUID, List<ExtensionData>> ofPlayer = db().query(new ExtensionPlayerDataQuery(playerUUID));
+        Map<ServerUUID, List<ExtensionData>> ofPlayer = db().query(new ExtensionPlayerDataQuery(playerUUID));
         assertFalse(ofPlayer.isEmpty());
 
         List<ExtensionData> ofServer = ofPlayer.get(serverUUID());

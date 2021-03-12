@@ -16,11 +16,11 @@
  */
 package com.djrapitops.plan.settings.config;
 
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GMTimes;
-import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
@@ -36,6 +36,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -154,18 +155,26 @@ public class WorldAliasSettings {
         return gmTimesPerAlias;
     }
 
-    public String getLongestWorldPlayed(Session session) {
-        ConfigNode aliases = getAliasSection();
-
-        if (!session.supports(SessionKeys.WORLD_TIMES)) {
+    public String getLongestWorldPlayed(ActiveSession session) {
+        Optional<WorldTimes> foundWorldTimes = session.getExtraData(WorldTimes.class);
+        if (!foundWorldTimes.isPresent()) {
             return locale.get().getString(HtmlLang.UNIT_NO_DATA);
         }
-        WorldTimes worldTimes = session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes());
-        if (!session.supports(SessionKeys.END)) {
-            return worldTimes.getCurrentWorld()
-                    .map(currentWorld -> "Current: " + (aliases.contains(currentWorld) ? aliases.getString(currentWorld) : currentWorld))
-                    .orElse("Current: " + locale.get().getString(GenericLang.UNAVAILABLE));
+        WorldTimes worldTimes = foundWorldTimes.orElseGet(WorldTimes::new);
+
+        ConfigNode aliases = getAliasSection();
+        return worldTimes.getCurrentWorld()
+                .map(currentWorld -> "Current: " + (aliases.contains(currentWorld) ? aliases.getString(currentWorld) : currentWorld))
+                .orElse("Current: " + locale.get().getString(GenericLang.UNAVAILABLE));
+    }
+
+    public String getLongestWorldPlayed(FinishedSession session) {
+
+        Optional<WorldTimes> foundWorldTimes = session.getExtraData(WorldTimes.class);
+        if (!foundWorldTimes.isPresent()) {
+            return locale.get().getString(HtmlLang.UNIT_NO_DATA);
         }
+        WorldTimes worldTimes = foundWorldTimes.orElseGet(WorldTimes::new);
 
         Map<String, Long> playtimePerAlias = getPlaytimePerAlias(worldTimes);
         long total = worldTimes.getTotal();

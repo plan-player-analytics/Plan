@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
-import java.util.UUID;
+import com.djrapitops.plan.identification.ServerUUID;
+
 import java.util.function.Function;
 
 /**
@@ -24,12 +25,12 @@ import java.util.function.Function;
  *
  * @author AuroraLS3
  */
-public interface ServerTabJSONCreator<T> extends Function<UUID, T> {
+public interface ServerTabJSONCreator<T> extends Function<ServerUUID, T> {
 
-    T createJSONAsMap(UUID serverUUID);
+    T createJSONAsMap(ServerUUID serverUUID);
 
     @Override
-    default T apply(UUID uuid) {
+    default T apply(ServerUUID uuid) {
         return createJSONAsMap(uuid);
     }
 }

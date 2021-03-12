@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
@@ -27,9 +27,9 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
  */
 public class SessionEndTransaction extends Transaction {
 
-    private final Session session;
+    private final FinishedSession session;
 
-    public SessionEndTransaction(Session session) {
+    public SessionEndTransaction(FinishedSession session) {
         this.session = session;
     }
 

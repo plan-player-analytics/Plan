@@ -20,11 +20,11 @@ import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.PerServerMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.BaseUser;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -69,8 +69,9 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         container.putSupplier(PlayerKeys.OPERATOR, () -> new PerServerMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer())).isOperator());
 
         container.putCachingSupplier(PlayerKeys.SESSIONS, () -> {
-            List<Session> sessions = new PerServerMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer())).flatMapSessions();
-                    container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(sessions::add);
+                    List<FinishedSession> sessions = new PerServerMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer())).flatMapSessions();
+                    container.getValue(PlayerKeys.ACTIVE_SESSION).map(ActiveSession::toFinishedSessionFromStillActive)
+                            .ifPresent(sessions::add);
                     return sessions;
                 }
         );
@@ -78,7 +79,7 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
         {
             WorldTimes worldTimes = db.query(WorldTimesQueries.fetchPlayerTotalWorldTimes(uuid));
             container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(session -> worldTimes.add(
-                    session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes()))
+                    session.getExtraData(WorldTimes.class).orElseGet(WorldTimes::new))
             );
             return worldTimes;
         });

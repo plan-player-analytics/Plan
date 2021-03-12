@@ -17,6 +17,7 @@
 package com.djrapitops.plan.settings.upkeep;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.network.NetworkSettingManager;
@@ -26,7 +27,6 @@ import net.playeranalytics.plugin.scheduling.TimeAmount;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -66,7 +66,7 @@ public class NetworkConfigStoreTask extends TaskSystem.Task {
         File[] configFiles = networkSettingManager.getConfigFiles();
 
         for (File configFile : configFiles) {
-            UUID serverUUID = NetworkSettingManager.getServerUUIDFromFilename(configFile);
+            ServerUUID serverUUID = NetworkSettingManager.getServerUUIDFromFilename(configFile);
             networkSettingManager.updateConfigInDB(configFile, serverUUID);
         }
     }

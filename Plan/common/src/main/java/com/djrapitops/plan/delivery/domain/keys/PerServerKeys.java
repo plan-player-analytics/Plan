@@ -37,7 +37,7 @@ public class PerServerKeys {
     public static final Key<Long> REGISTERED = CommonKeys.REGISTERED;
     public static final Key<List<Ping>> PING = CommonKeys.PING;
 
-    public static final Key<List<Session>> SESSIONS = CommonKeys.SESSIONS;
+    public static final Key<List<FinishedSession>> SESSIONS = CommonKeys.SESSIONS;
     public static final Key<WorldTimes> WORLD_TIMES = CommonKeys.WORLD_TIMES;
 
     @Deprecated

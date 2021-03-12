@@ -16,12 +16,13 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators;
 
+import com.djrapitops.plan.delivery.domain.AveragePing;
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.keys.CommonKeys;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.Ping;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.utilities.Predicates;
 import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
 import com.djrapitops.plan.utilities.java.Lists;
@@ -45,8 +46,15 @@ public class PingMutator {
         return new PingMutator(Lists.filter(pings, predicate));
     }
 
-    public PingMutator filterByServer(UUID serverUUID) {
-        return filterBy(ping -> serverUUID.equals(ping.getServerUUID()));
+    public static Map<ServerUUID, SortedMap<Long, Ping>> sortByServers(List<Ping> pings) {
+        Map<ServerUUID, SortedMap<Long, Ping>> sorted = new HashMap<>();
+        for (Ping ping : pings) {
+            ServerUUID serverUUID = ping.getServerUUID();
+            SortedMap<Long, Ping> serverSessions = sorted.getOrDefault(serverUUID, new TreeMap<>());
+            serverSessions.put(ping.getDate(), ping);
+            sorted.put(serverUUID, serverSessions);
+        }
+        return sorted;
     }
 
     public PingMutator mutateToByMinutePings() {
@@ -61,37 +69,30 @@ public class PingMutator {
         }));
     }
 
-    public static Map<UUID, SortedMap<Long, Ping>> sortByServers(List<Ping> pings) {
-        Map<UUID, SortedMap<Long, Ping>> sorted = new HashMap<>();
-        for (Ping ping : pings) {
-            UUID serverUUID = ping.getServerUUID();
-            SortedMap<Long, Ping> serverSessions = sorted.getOrDefault(serverUUID, new TreeMap<>());
-            serverSessions.put(ping.getDate(), ping);
-            sorted.put(serverUUID, serverSessions);
-        }
-        return sorted;
+    public PingMutator filterByServer(ServerUUID serverUUID) {
+        return filterBy(ping -> serverUUID.equals(ping.getServerUUID()));
     }
 
-    public void addPingToSessions(List<Session> sessions) {
+    public void addPingToSessions(List<FinishedSession> sessions) {
         if (sessions.isEmpty()) return;
 
         Comparator<DateHolder> comparator = new DateHolderOldestComparator();
         sessions.sort(comparator);
         pings.sort(comparator);
-        Map<UUID, SortedMap<Long, Ping>> pingByServer = sortByServers(pings);
-        Map<UUID, List<Session>> sessionsByServer = SessionsMutator.sortByServers(sessions);
-        for (Map.Entry<UUID, SortedMap<Long, Ping>> entry : pingByServer.entrySet()) {
-            UUID serverUUID = entry.getKey();
+        Map<ServerUUID, SortedMap<Long, Ping>> pingByServer = sortByServers(pings);
+        Map<ServerUUID, List<FinishedSession>> sessionsByServer = SessionsMutator.sortByServers(sessions);
+        for (Map.Entry<ServerUUID, SortedMap<Long, Ping>> entry : pingByServer.entrySet()) {
+            ServerUUID serverUUID = entry.getKey();
             SortedMap<Long, Ping> pingOfServer = entry.getValue();
             if (pingOfServer.isEmpty()) continue;
 
-            List<Session> sessionsOfServer = sessionsByServer.getOrDefault(serverUUID, Collections.emptyList());
+            List<FinishedSession> sessionsOfServer = sessionsByServer.getOrDefault(serverUUID, Collections.emptyList());
             double pingCount = 0.0;
             int pingEntries = 0;
 
-            for (Session session : sessionsOfServer) {
+            for (FinishedSession session : sessionsOfServer) {
                 long start = session.getDate();
-                Long end = session.getValue(SessionKeys.END).orElseGet(System::currentTimeMillis);
+                long end = session.getEnd();
                 if (end < start) continue;
                 // Calculate average ping for each session with a Ping submap
                 SortedMap<Long, Ping> duringSession = pingOfServer.subMap(start, end);
@@ -100,7 +101,7 @@ public class PingMutator {
                     pingEntries++;
                 }
                 if (pingEntries != 0) {
-                    session.putRawData(SessionKeys.AVERAGE_PING, pingCount / pingEntries);
+                    session.getExtraData().put(AveragePing.class, new AveragePing(pingCount / pingEntries));
                 }
                 pingCount = 0.0;
                 pingEntries = 0;

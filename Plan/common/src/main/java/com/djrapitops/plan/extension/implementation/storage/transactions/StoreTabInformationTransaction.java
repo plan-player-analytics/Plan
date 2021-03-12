@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions;
 
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
@@ -26,7 +27,6 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
@@ -39,10 +39,10 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 public class StoreTabInformationTransaction extends ThrowawayTransaction {
 
     private final String pluginName;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final TabInformation tabInformation;
 
-    public StoreTabInformationTransaction(String pluginName, UUID serverUUID, TabInformation tabInformation) {
+    public StoreTabInformationTransaction(String pluginName, ServerUUID serverUUID, TabInformation tabInformation) {
         this.pluginName = pluginName;
         this.serverUUID = serverUUID;
         this.tabInformation = tabInformation;

@@ -20,6 +20,7 @@ import com.djrapitops.plan.extension.implementation.providers.ProviderIdentifier
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionUUIDsInGroupQuery;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
@@ -100,7 +101,7 @@ public class PluginGroupsFilter extends MultiOptionFilter {
             while (set.next()) {
                 String plugin = set.getString("plugin_name");
                 String provider = set.getString("provider_name");
-                UUID serverUUID = UUID.fromString(set.getString("server_uuid"));
+                ServerUUID serverUUID = ServerUUID.fromString(set.getString("server_uuid"));
                 ProviderIdentifier identifier = new ProviderIdentifier(serverUUID, plugin, provider);
                 identifier.setServerName(Server.getIdentifiableName(
                         set.getString("server_name"),

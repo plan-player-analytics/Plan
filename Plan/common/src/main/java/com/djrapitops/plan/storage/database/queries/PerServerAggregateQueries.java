@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 
@@ -48,23 +49,23 @@ public class PerServerAggregateQueries {
      * @param playerUUID UUID of the player.
      * @return Map: Server UUID - Last seen epoch ms.
      */
-    public static Query<Map<UUID, Long>> lastSeenOnServers(UUID playerUUID) {
+    public static Query<Map<ServerUUID, Long>> lastSeenOnServers(UUID playerUUID) {
         String sql = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
                 SessionsTable.SERVER_UUID +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.USER_UUID + "=?" +
                 GROUP_BY + SessionsTable.SERVER_UUID;
-        return new QueryStatement<Map<UUID, Long>>(sql) {
+        return new QueryStatement<Map<ServerUUID, Long>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
             }
 
             @Override
-            public Map<UUID, Long> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Long> lastSeenMap = new HashMap<>();
+            public Map<ServerUUID, Long> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, Long> lastSeenMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(SessionsTable.SERVER_UUID));
                     long lastSeen = set.getLong("last_seen");
                     lastSeenMap.put(serverUUID, lastSeen);
                 }
@@ -79,7 +80,7 @@ public class PerServerAggregateQueries {
      * @param playerUUID UUID of the player.
      * @return Map: Server UUID - Player kill count
      */
-    public static Query<Map<UUID, Integer>> playerKillCountOnServers(UUID playerUUID) {
+    public static Query<Map<ServerUUID, Integer>> playerKillCountOnServers(UUID playerUUID) {
         String sql = SELECT + "COUNT(1) as kill_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.KILLER_UUID + "=?" +
                 GROUP_BY + KillsTable.SERVER_UUID;
@@ -92,7 +93,7 @@ public class PerServerAggregateQueries {
      * @param playerUUID UUID of the player.
      * @return Map: Server UUID - Mob kill count
      */
-    public static Query<Map<UUID, Integer>> mobKillCountOnServers(UUID playerUUID) {
+    public static Query<Map<ServerUUID, Integer>> mobKillCountOnServers(UUID playerUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.MOB_KILLS + ") as kill_count, " +
                 SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.USER_UUID + "=?" +
@@ -100,7 +101,7 @@ public class PerServerAggregateQueries {
         return getQueryForCountOf(playerUUID, sql, "kill_count");
     }
 
-    public static Query<Map<UUID, Integer>> totalDeathCountOnServers(UUID playerUUID) {
+    public static Query<Map<ServerUUID, Integer>> totalDeathCountOnServers(UUID playerUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as death_count, " +
                 SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.USER_UUID + "=?" +
@@ -109,18 +110,18 @@ public class PerServerAggregateQueries {
     }
 
 
-    private static QueryStatement<Map<UUID, Integer>> getQueryForCountOf(UUID playerUUID, String sql, String column) {
-        return new QueryStatement<Map<UUID, Integer>>(sql) {
+    private static QueryStatement<Map<ServerUUID, Integer>> getQueryForCountOf(UUID playerUUID, String sql, String column) {
+        return new QueryStatement<Map<ServerUUID, Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
             }
 
             @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> killCountMap = new HashMap<>();
+            public Map<ServerUUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, Integer> killCountMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(SessionsTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(SessionsTable.SERVER_UUID));
                     int count = set.getInt(column);
                     killCountMap.put(serverUUID, count);
                 }

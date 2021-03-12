@@ -26,12 +26,12 @@ import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Resolves /v1/sessions JSON requests.
@@ -76,7 +76,7 @@ public class SessionsJSONResolver implements Resolver {
     private JSONStorage.StoredJSON getStoredJSON(Request request) {
         long timestamp = Identifiers.getTimestamp(request);
         if (request.getQuery().get("server").isPresent()) {
-            UUID serverUUID = identifiers.getServerUUID(request);
+            ServerUUID serverUUID = identifiers.getServerUUID(request);
             return jsonResolverService.resolve(timestamp, DataID.SESSIONS, serverUUID,
                     theUUID -> Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(theUUID))
             );

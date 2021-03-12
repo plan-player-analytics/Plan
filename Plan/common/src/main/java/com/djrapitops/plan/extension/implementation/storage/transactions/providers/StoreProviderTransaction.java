@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.provid
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
@@ -29,7 +30,6 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
@@ -43,9 +43,9 @@ import static com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderT
 public class StoreProviderTransaction extends ThrowawayTransaction {
 
     private final DataProvider<?> provider;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
 
-    public StoreProviderTransaction(DataProvider<?> provider, UUID serverUUID) {
+    public StoreProviderTransaction(DataProvider<?> provider, ServerUUID serverUUID) {
         this.provider = provider;
         this.serverUUID = serverUUID;
     }

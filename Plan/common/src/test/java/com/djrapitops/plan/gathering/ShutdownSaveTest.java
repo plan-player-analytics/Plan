@@ -18,11 +18,12 @@ package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GMTimes;
-import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -46,7 +47,7 @@ import utilities.mocks.PlanPluginMocker;
 import utilities.mocks.TestPlatformAbstractionLayer;
 
 import java.nio.file.Path;
-import java.util.Map;
+import java.util.Collection;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -110,7 +111,7 @@ class ShutdownSaveTest {
     private void storeNecessaryInformation() throws Exception {
         database.executeTransaction(new RemoveEverythingTransaction());
 
-        UUID serverUUID = TestConstants.SERVER_UUID;
+        ServerUUID serverUUID = TestConstants.SERVER_UUID;
         UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
         String worldName = TestConstants.WORLD_ONE_NAME;
 
@@ -151,11 +152,11 @@ class ShutdownSaveTest {
     }
 
     private void placeSessionToCache() {
-        UUID serverUUID = TestConstants.SERVER_UUID;
+        ServerUUID serverUUID = TestConstants.SERVER_UUID;
         UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
         String worldName = TestConstants.WORLD_ONE_NAME;
 
-        Session session = new Session(playerUUID, serverUUID, 0L, worldName, GMTimes.getGMKeyArray()[0]);
+        ActiveSession session = new ActiveSession(playerUUID, serverUUID, 0L, worldName, GMTimes.getGMKeyArray()[0]);
 
         sessionCache.cacheSession(playerUUID, session);
     }
@@ -164,16 +165,15 @@ class ShutdownSaveTest {
     public void endedSessionsHaveSameEndTime() {
         for (int i = 0; i < 100; i++) {
             UUID playerUUID = UUID.randomUUID();
-            Session session = RandomData.randomUnfinishedSession(
+            ActiveSession session = RandomData.randomUnfinishedSession(
                     TestConstants.SERVER_UUID, new String[]{"w1", "w2"}, playerUUID
             );
             sessionCache.cacheSession(playerUUID, session);
         }
         long endTime = System.currentTimeMillis();
-        Map<UUID, Session> activeSessions = SessionCache.getActiveSessions();
-        underTest.prepareSessionsForStorage(activeSessions, endTime);
-        for (Session session : activeSessions.values()) {
-            assertEquals(endTime, session.getUnsafe(SessionKeys.END), () -> "One of the sessions had differing end time");
+        Collection<ActiveSession> activeSessions = SessionCache.getActiveSessions();
+        for (FinishedSession session : underTest.finishSessions(activeSessions, endTime)) {
+            assertEquals(endTime, session.getEnd(), () -> "One of the sessions had differing end time");
         }
     }
 }

@@ -18,8 +18,8 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
-import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
@@ -52,7 +52,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
 
-        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         execute(DataStoreQueries.storeSession(session));
 
         db().executeTransaction(

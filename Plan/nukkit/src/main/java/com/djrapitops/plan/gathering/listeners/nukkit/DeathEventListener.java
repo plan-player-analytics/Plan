@@ -31,7 +31,7 @@ import cn.nukkit.item.Item;
 import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.delivery.formatting.ItemNameFormatter;
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
@@ -64,7 +64,7 @@ public class DeathEventListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         long time = System.currentTimeMillis();
         Player dead = event.getEntity();
-        SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(Session::died);
+        SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(ActiveSession::addDeath);
 
         try {
             EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();

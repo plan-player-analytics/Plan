@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -36,7 +37,7 @@ public interface DatabaseTestPreparer {
 
     Database db();
 
-    UUID serverUUID();
+    ServerUUID serverUUID();
 
     @Deprecated
     PlanSystem system();

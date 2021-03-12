@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -47,10 +48,10 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, ExtensionTabData>> {
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final Collection<UUID> playerUUIDs;
 
-    public ExtensionQueryResultTableDataQuery(UUID serverUUID, Collection<UUID> playerUUIDs) {
+    public ExtensionQueryResultTableDataQuery(ServerUUID serverUUID, Collection<UUID> playerUUIDs) {
         this.serverUUID = serverUUID;
         this.playerUUIDs = playerUUIDs;
     }

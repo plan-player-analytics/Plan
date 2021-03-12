@@ -31,6 +31,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTa
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.*;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -71,7 +72,7 @@ public class ProviderValueGatherer {
         this.serverInfo = serverInfo;
 
         String pluginName = extension.getPluginName();
-        UUID serverUUID = serverInfo.getServerUUID();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
         Database database = dbSystem.getDatabase();
         dataProviders = extension.getProviders();
         booleanGatherer = new BooleanProviderValueGatherer(
@@ -130,7 +131,7 @@ public class ProviderValueGatherer {
         Icon pluginIcon = extensionWrapper.getPluginIcon();
 
         long time = System.currentTimeMillis();
-        UUID serverUUID = serverInfo.getServerUUID();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new StoreIconTransaction(pluginIcon));

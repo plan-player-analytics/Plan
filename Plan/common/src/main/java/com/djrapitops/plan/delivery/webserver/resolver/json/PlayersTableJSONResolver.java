@@ -26,11 +26,11 @@ import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Resolves /v1/players JSON requests.
@@ -81,7 +81,7 @@ public class PlayersTableJSONResolver implements Resolver {
         long timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
-            UUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
+            ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
             storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS, serverUUID, jsonFactory::serverPlayersTableJSON);
         } else {
             // Assume players page

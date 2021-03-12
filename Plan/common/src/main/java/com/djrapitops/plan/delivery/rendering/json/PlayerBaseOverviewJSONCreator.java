@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -30,7 +31,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,14 +60,14 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
         percentage = formatters.percentage();
     }
 
-    public Map<String, Object> createJSONAsMap(UUID serverUUID) {
+    public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("trends", createTrendsMap(serverUUID));
         serverOverview.put("insights", createInsightsMap(serverUUID));
         return serverOverview;
     }
 
-    private Map<String, Object> createTrendsMap(UUID serverUUID) {
+    private Map<String, Object> createTrendsMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
@@ -125,7 +125,7 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
         return trends;
     }
 
-    private Map<String, Object> createInsightsMap(UUID serverUUID) {
+    private Map<String, Object> createInsightsMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long halfMonthAgo = now - TimeUnit.DAYS.toMillis(15L);

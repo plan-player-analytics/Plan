@@ -18,9 +18,9 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.auth.User;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -82,15 +82,15 @@ public class LargeStoreQueries {
      * @param ofServersAndUsers Multimap: Server UUID - (Player UUID - List of nicknames)
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable storeAllNicknameData(Map<UUID, Map<UUID, List<Nickname>>> ofServersAndUsers) {
+    public static Executable storeAllNicknameData(Map<ServerUUID, Map<UUID, List<Nickname>>> ofServersAndUsers) {
         if (ofServersAndUsers == null || ofServersAndUsers.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(NicknamesTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // Every Server
-                for (Map.Entry<UUID, Map<UUID, List<Nickname>>> serverEntry : ofServersAndUsers.entrySet()) {
-                    UUID serverUUID = serverEntry.getKey();
+                for (Map.Entry<ServerUUID, Map<UUID, List<Nickname>>> serverEntry : ofServersAndUsers.entrySet()) {
+                    ServerUUID serverUUID = serverEntry.getKey();
                     // Every User
                     for (Map.Entry<UUID, List<Nickname>> entry : serverEntry.getValue().entrySet()) {
                         UUID uuid = entry.getKey();
@@ -143,12 +143,12 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (Server server : servers) {
-                    UUID uuid = server.getUuid();
-                    if (uuid == null) {
+                    ServerUUID serverUUID = server.getUuid();
+                    if (serverUUID == null) {
                         continue;
                     }
 
-                    statement.setString(1, uuid.toString());
+                    statement.setString(1, serverUUID.toString());
                     statement.setString(2, server.getName());
                     statement.setString(3, server.getWebAddress());
                     statement.setBoolean(4, true);
@@ -165,15 +165,15 @@ public class LargeStoreQueries {
      * @param ofServers Map: Server UUID - List of TPS data
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable storeAllTPSData(Map<UUID, List<TPS>> ofServers) {
+    public static Executable storeAllTPSData(Map<ServerUUID, List<TPS>> ofServers) {
         if (ofServers == null || ofServers.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(TPSTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // Every Server
-                for (Map.Entry<UUID, List<TPS>> entry : ofServers.entrySet()) {
-                    UUID serverUUID = entry.getKey();
+                for (Map.Entry<ServerUUID, List<TPS>> entry : ofServers.entrySet()) {
+                    ServerUUID serverUUID = entry.getKey();
                     // Every TPS Data point
                     List<TPS> tpsList = entry.getValue();
                     for (TPS tps : tpsList) {
@@ -199,15 +199,15 @@ public class LargeStoreQueries {
      * @param ofServers Map: Server UUID - List of user information
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable storePerServerUserInformation(Map<UUID, List<UserInfo>> ofServers) {
+    public static Executable storePerServerUserInformation(Map<ServerUUID, List<UserInfo>> ofServers) {
         if (ofServers == null || ofServers.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(UserInfoTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 // Every Server
-                for (Map.Entry<UUID, List<UserInfo>> entry : ofServers.entrySet()) {
-                    UUID serverUUID = entry.getKey();
+                for (Map.Entry<ServerUUID, List<UserInfo>> entry : ofServers.entrySet()) {
+                    ServerUUID serverUUID = entry.getKey();
                     // Every User
                     for (UserInfo user : entry.getValue()) {
                         statement.setString(1, user.getPlayerUuid().toString());
@@ -229,14 +229,14 @@ public class LargeStoreQueries {
      * @param ofServers Map: Server UUID - Collection of world names
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable storeAllWorldNames(Map<UUID, Collection<String>> ofServers) {
+    public static Executable storeAllWorldNames(Map<ServerUUID, Collection<String>> ofServers) {
         if (ofServers == null || ofServers.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(WorldTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                for (Map.Entry<UUID, Collection<String>> entry : ofServers.entrySet()) {
-                    UUID serverUUID = entry.getKey();
+                for (Map.Entry<ServerUUID, Collection<String>> entry : ofServers.entrySet()) {
+                    ServerUUID serverUUID = entry.getKey();
                     for (String world : entry.getValue()) {
                         statement.setString(1, StringUtils.truncate(world, 100));
                         statement.setString(2, serverUUID.toString());
@@ -270,27 +270,27 @@ public class LargeStoreQueries {
         };
     }
 
-    public static Executable storeAllSessionsWithoutKillOrWorldData(Collection<Session> sessions) {
+    public static Executable storeAllSessionsWithoutKillOrWorldData(Collection<FinishedSession> sessions) {
         if (sessions == null || sessions.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(SessionsTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                for (Session session : sessions) {
-                    statement.setString(1, session.getUnsafe(SessionKeys.UUID).toString());
-                    statement.setLong(2, session.getUnsafe(SessionKeys.START));
-                    statement.setLong(3, session.getUnsafe(SessionKeys.END));
-                    statement.setInt(4, session.getValue(SessionKeys.DEATH_COUNT).orElse(0));
-                    statement.setInt(5, session.getValue(SessionKeys.MOB_KILL_COUNT).orElse(0));
-                    statement.setLong(6, session.getValue(SessionKeys.AFK_TIME).orElse(0L));
-                    statement.setString(7, session.getUnsafe(SessionKeys.SERVER_UUID).toString());
+                for (FinishedSession session : sessions) {
+                    statement.setString(1, session.getPlayerUUID().toString());
+                    statement.setLong(2, session.getStart());
+                    statement.setLong(3, session.getEnd());
+                    statement.setInt(4, session.getDeathCount());
+                    statement.setInt(5, session.getMobKillCount());
+                    statement.setLong(6, session.getAfkTime());
+                    statement.setString(7, session.getServerUUID().toString());
                     statement.addBatch();
                 }
             }
         };
     }
 
-    public static Executable storeAllSessionsWithKillAndWorldData(Collection<Session> sessions) {
+    public static Executable storeAllSessionsWithKillAndWorldData(Collection<FinishedSession> sessions) {
         return connection -> {
             storeAllSessionsWithoutKillOrWorldData(sessions).execute(connection);
             storeSessionKillData(sessions).execute(connection);
@@ -298,20 +298,20 @@ public class LargeStoreQueries {
         };
     }
 
-    private static Executable storeSessionKillData(Collection<Session> sessions) {
+    private static Executable storeSessionKillData(Collection<FinishedSession> sessions) {
         if (sessions == null || sessions.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(KillsTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                for (Session session : sessions) {
+                for (FinishedSession session : sessions) {
                     KillsTable.addSessionKillsToBatch(statement, session);
                 }
             }
         };
     }
 
-    private static Executable storeSessionWorldTimeData(Collection<Session> sessions) {
+    private static Executable storeSessionWorldTimeData(Collection<FinishedSession> sessions) {
         if (sessions == null || sessions.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(WorldTimesTable.INSERT_STATEMENT) {
@@ -319,7 +319,7 @@ public class LargeStoreQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 String[] gms = GMTimes.getGMKeyArray();
 
-                for (Session session : sessions) {
+                for (FinishedSession session : sessions) {
                     WorldTimesTable.addSessionWorldTimesToBatch(statement, session, gms);
                 }
             }
@@ -336,7 +336,7 @@ public class LargeStoreQueries {
                     UUID uuid = entry.getKey();
                     List<Ping> pings = entry.getValue();
                     for (Ping ping : pings) {
-                        UUID serverUUID = ping.getServerUUID();
+                        ServerUUID serverUUID = ping.getServerUUID();
                         long date = ping.getDate();
                         int minPing = ping.getMin();
                         int maxPing = ping.getMax();

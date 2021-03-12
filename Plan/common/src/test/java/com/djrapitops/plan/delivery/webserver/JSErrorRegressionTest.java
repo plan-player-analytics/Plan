@@ -17,7 +17,9 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.DataMap;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -58,7 +60,7 @@ class JSErrorRegressionTest {
     public static PluginMockComponent component;
 
     private static PlanSystem bukkitSystem;
-    private static UUID serverUUID;
+    private static ServerUUID serverUUID;
 
     @BeforeAll
     static void setUpClass(@TempDir Path tempDir) throws Exception {
@@ -78,8 +80,7 @@ class JSErrorRegressionTest {
         Database database = dbSystem.getDatabase();
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
         database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, "name"));
-        Session session = new Session(uuid, serverUUID, 1000L, "world", "SURVIVAL");
-        session.endSession(11000L);
+        FinishedSession session = new FinishedSession(uuid, serverUUID, 1000L, 11000L, 500L, new DataMap());
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));
         database.executeTransaction(new SessionEndTransaction(session));
     }

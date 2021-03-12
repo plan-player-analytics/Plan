@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
@@ -60,7 +61,7 @@ public class WorldTimesQueries {
      * @param serverUUID Server UUID of the Plan server.
      * @return WorldTimes with world name - playtime ms information.
      */
-    public static Query<WorldTimes> fetchServerTotalWorldTimes(UUID serverUUID) {
+    public static Query<WorldTimes> fetchServerTotalWorldTimes(ServerUUID serverUUID) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID + "=?" +
@@ -130,26 +131,26 @@ public class WorldTimesQueries {
      * @param playerUUID UUID of the player.
      * @return Map: Server UUID - WorldTimes total for the server
      */
-    public static Query<Map<UUID, WorldTimes>> fetchPlayerWorldTimesOnServers(UUID playerUUID) {
+    public static Query<Map<ServerUUID, WorldTimes>> fetchPlayerWorldTimesOnServers(UUID playerUUID) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID + ',' +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.USER_UUID + "=?" +
                 GROUP_BY + WORLD_COLUMN + ',' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID;
 
-        return new QueryStatement<Map<UUID, WorldTimes>>(sql, 1000) {
+        return new QueryStatement<Map<ServerUUID, WorldTimes>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
             }
 
             @Override
-            public Map<UUID, WorldTimes> processResults(ResultSet set) throws SQLException {
+            public Map<ServerUUID, WorldTimes> processResults(ResultSet set) throws SQLException {
                 String[] gms = GMTimes.getGMKeyArray();
 
-                Map<UUID, WorldTimes> worldTimesMap = new HashMap<>();
+                Map<ServerUUID, WorldTimes> worldTimesMap = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(WorldTimesTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(WorldTimesTable.SERVER_UUID));
                     WorldTimes worldTimes = worldTimesMap.getOrDefault(serverUUID, new WorldTimes());
                     String worldName = set.getString(WORLD_COLUMN);
 
@@ -171,7 +172,7 @@ public class WorldTimesQueries {
         return new GMTimes(gmMap);
     }
 
-    public static Query<GMTimes> fetchGMTimes(long after, long before, UUID serverUUID) {
+    public static Query<GMTimes> fetchGMTimes(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
                 "SUM(" + WorldTimesTable.SURVIVAL + ") as SURVIVAL," +
                 "SUM(" + WorldTimesTable.CREATIVE + ") as CREATIVE," +

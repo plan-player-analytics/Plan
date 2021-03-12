@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
-import java.util.UUID;
+import com.djrapitops.plan.identification.ServerUUID;
 
 /**
  * Enum for different JSON data entries that can be stored in cache.
@@ -52,8 +52,7 @@ public enum DataID {
     EXTENSION_TABS
     ;
 
-    public String of(UUID serverUUID) {
+    public String of(ServerUUID serverUUID) {
         return name() + '-' + serverUUID;
     }
-
 }

@@ -16,12 +16,13 @@
  */
 package com.djrapitops.plan.gathering.listeners.velocity;
 
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.domain.PlayerName;
+import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -105,9 +106,9 @@ public class PlayerOnlineListener {
         InetAddress address = player.getRemoteAddress().getAddress();
         long time = System.currentTimeMillis();
 
-        Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
-        session.putRawData(SessionKeys.NAME, playerName);
-        session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
+        ActiveSession session = new ActiveSession(playerUUID, serverInfo.getServerUUID(), time, null, null);
+        session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
+        session.getExtraData().put(ServerName.class, new ServerName("Proxy Server"));
         sessionCache.cacheSession(playerUUID, session);
 
         Database database = dbSystem.getDatabase();
@@ -170,9 +171,9 @@ public class PlayerOnlineListener {
         long time = System.currentTimeMillis();
 
         // Replaces the current session in the cache.
-        Session session = new Session(playerUUID, serverInfo.getServerUUID(), time, null, null);
-        session.putRawData(SessionKeys.NAME, playerName);
-        session.putRawData(SessionKeys.SERVER_NAME, "Proxy Server");
+        ActiveSession session = new ActiveSession(playerUUID, serverInfo.getServerUUID(), time, null, null);
+        session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
+        session.getExtraData().put(ServerName.class, new ServerName("Proxy Server"));
         sessionCache.cacheSession(playerUUID, session);
 
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {

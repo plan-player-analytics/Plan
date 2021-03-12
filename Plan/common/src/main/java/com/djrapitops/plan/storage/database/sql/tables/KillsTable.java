@@ -16,9 +16,10 @@
  */
 package com.djrapitops.plan.storage.database.sql.tables;
 
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.PlayerKills;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
@@ -29,6 +30,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -81,19 +83,22 @@ public class KillsTable {
                 .toString();
     }
 
-    public static void addSessionKillsToBatch(PreparedStatement statement, Session session) throws SQLException {
-        UUID uuid = session.getUnsafe(SessionKeys.UUID);
-        UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
+    public static void addSessionKillsToBatch(PreparedStatement statement, FinishedSession session) throws SQLException {
+        UUID playerUUID = session.getPlayerUUID();
+        ServerUUID serverUUID = session.getServerUUID();
 
-        for (PlayerKill kill : session.getPlayerKills()) {
+        Optional<PlayerKills> playerKills = session.getExtraData().get(PlayerKills.class);
+        if (!playerKills.isPresent()) return;
+
+        for (PlayerKill kill : playerKills.get().asList()) {
             // Session ID select statement parameters
-            statement.setString(1, uuid.toString());
+            statement.setString(1, playerUUID.toString());
             statement.setString(2, serverUUID.toString());
-            statement.setLong(3, session.getUnsafe(SessionKeys.START));
-            statement.setLong(4, session.getUnsafe(SessionKeys.END));
+            statement.setLong(3, session.getStart());
+            statement.setLong(4, session.getEnd());
 
             // Kill data
-            statement.setString(5, uuid.toString());
+            statement.setString(5, playerUUID.toString());
             statement.setString(6, kill.getVictim().toString());
             statement.setString(7, serverUUID.toString());
             statement.setLong(8, kill.getDate());

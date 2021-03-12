@@ -26,12 +26,10 @@ import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.Ping;
-import com.djrapitops.plan.gathering.domain.PlayerKill;
-import com.djrapitops.plan.gathering.domain.Session;
-import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -83,7 +81,7 @@ public class JSONFactory {
         this.formatters = formatters;
     }
 
-    public Map<String, Object> serverPlayersTableJSON(UUID serverUUID) {
+    public Map<String, Object> serverPlayersTableJSON(ServerUUID serverUUID) {
         Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE);
         Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         boolean openPlayerLinksInNewTab = config.isTrue(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
@@ -105,7 +103,7 @@ public class JSONFactory {
 
         Database database = dbSystem.getDatabase();
 
-        UUID mainServerUUID = database.query(ServerQueries.fetchProxyServerInformation()).map(Server::getUuid).orElse(serverInfo.getServerUUID());
+        ServerUUID mainServerUUID = database.query(ServerQueries.fetchProxyServerInformation()).map(Server::getUuid).orElse(serverInfo.getServerUUID());
         Map<UUID, ExtensionTabData> pluginData = database.query(new ExtensionServerTableDataQuery(mainServerUUID, xMostRecentPlayers));
 
         return new PlayersTableJSONCreator(
@@ -116,14 +114,14 @@ public class JSONFactory {
         ).toJSONMap();
     }
 
-    public List<Map<String, Object>> serverSessionsAsJSONMap(UUID serverUUID) {
+    public List<Map<String, Object>> serverSessionsAsJSONMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
 
         Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);
-        List<Session> sessions = db.query(SessionQueries.fetchLatestSessionsOfServer(serverUUID, perPageLimit));
+        List<FinishedSession> sessions = db.query(SessionQueries.fetchLatestSessionsOfServer(serverUUID, perPageLimit));
         // Add online sessions
         if (serverUUID.equals(serverInfo.getServerUUID())) {
-            sessions.addAll(SessionCache.getActiveSessions().values());
+            addActiveSessions(sessions);
             sessions.sort(new SessionStartComparator());
             while (true) {
                 int size = sessions.size();
@@ -139,10 +137,10 @@ public class JSONFactory {
         Database db = dbSystem.getDatabase();
         Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);
 
-        List<Session> sessions = db.query(SessionQueries.fetchLatestSessions(perPageLimit));
+        List<FinishedSession> sessions = db.query(SessionQueries.fetchLatestSessions(perPageLimit));
         // Add online sessions
         if (serverInfo.getServer().isProxy()) {
-            sessions.addAll(SessionCache.getActiveSessions().values());
+            addActiveSessions(sessions);
             sessions.sort(new SessionStartComparator());
             while (true) {
                 int size = sessions.size();
@@ -157,7 +155,13 @@ public class JSONFactory {
         return sessionMaps;
     }
 
-    public List<Map<String, Object>> serverPlayerKillsAsJSONMap(UUID serverUUID) {
+    public void addActiveSessions(List<FinishedSession> sessions) {
+        for (ActiveSession activeSession : SessionCache.getActiveSessions()) {
+            sessions.add(activeSession.toFinishedSessionFromStillActive());
+        }
+    }
+
+    public List<Map<String, Object>> serverPlayerKillsAsJSONMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         List<PlayerKill> kills = db.query(KillQueries.fetchPlayerKillsOnServer(serverUUID, 100));
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
@@ -172,18 +176,18 @@ public class JSONFactory {
         Formatter<Double> decimals = formatters.decimals();
         Formatter<Long> timeAmount = formatters.timeAmount();
 
-        Map<UUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());
-        UUID proxyUUID = serverInformation.values().stream()
+        Map<ServerUUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());
+        ServerUUID proxyUUID = serverInformation.values().stream()
                 .filter(Server::isProxy)
                 .findFirst()
                 .map(Server::getUuid).orElse(null);
 
-        Map<UUID, List<TPS>> tpsData = db.query(
+        Map<ServerUUID, List<TPS>> tpsData = db.query(
                 TPSQueries.fetchTPSDataOfAllServersBut(weekAgo, now, proxyUUID)
         );
-        Map<UUID, Integer> totalPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(0, now));
-        Map<UUID, Integer> newPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(weekAgo, now));
-        Map<UUID, Integer> uniquePlayerCounts = db.query(PlayerCountQueries.uniquePlayerCounts(weekAgo, now));
+        Map<ServerUUID, Integer> totalPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(0, now));
+        Map<ServerUUID, Integer> newPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(weekAgo, now));
+        Map<ServerUUID, Integer> uniquePlayerCounts = db.query(PlayerCountQueries.uniquePlayerCounts(weekAgo, now));
 
         List<Map<String, Object>> servers = new ArrayList<>();
         serverInformation.entrySet()
@@ -191,7 +195,7 @@ public class JSONFactory {
                 .sorted(Comparator.comparing(entry -> entry.getValue().getIdentifiableName().toLowerCase()))
                 .filter(entry -> entry.getValue().isNotProxy())
                 .forEach(entry -> {
-                    UUID serverUUID = entry.getKey();
+                    ServerUUID serverUUID = entry.getKey();
                     Map<String, Object> server = new HashMap<>();
                     server.put("name", entry.getValue().getIdentifiableName());
 
@@ -223,7 +227,7 @@ public class JSONFactory {
         return Collections.singletonMap("servers", servers);
     }
 
-    public Map<String, Object> pingPerGeolocation(UUID serverUUID) {
+    public Map<String, Object> pingPerGeolocation(ServerUUID serverUUID) {
         Map<String, Ping> pingByGeolocation = dbSystem.getDatabase().query(PingQueries.fetchPingDataOfServerByGeolocation(serverUUID));
         return Maps.builder(String.class, Object.class)
                 .put("table", turnToTableEntries(pingByGeolocation))

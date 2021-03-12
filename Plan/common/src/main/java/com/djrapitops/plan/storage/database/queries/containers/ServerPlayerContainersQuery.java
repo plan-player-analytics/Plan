@@ -20,10 +20,10 @@ import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
 import com.djrapitops.plan.delivery.domain.mutators.PerServerMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.objects.*;
@@ -43,9 +43,9 @@ import java.util.*;
  */
 public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>> {
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
 
-    public ServerPlayerContainersQuery(UUID serverUUID) {
+    public ServerPlayerContainersQuery(ServerUUID serverUUID) {
         this.serverUUID = serverUUID;
     }
 
@@ -58,7 +58,7 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
         Map<UUID, List<GeoInfo>> geoInformation = db.query(GeoInfoQueries.fetchServerGeoInformation(serverUUID));
         Map<UUID, List<Nickname>> nicknames = db.query(NicknameQueries.fetchNicknameDataOfServer(serverUUID));
         Map<UUID, List<Ping>> pingData = db.query(PingQueries.fetchPingDataOfServer(serverUUID));
-        Map<UUID, List<Session>> sessions = db.query(SessionQueries.fetchSessionsOfServer(serverUUID));
+        Map<UUID, List<FinishedSession>> sessions = db.query(SessionQueries.fetchSessionsOfServer(serverUUID));
 
         Map<UUID, UserInfo> userInformation = db.query(UserInfoQueries.fetchUserInformationOfServer(serverUUID));
 
@@ -91,8 +91,10 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
             container.putRawData(PlayerKeys.PER_SERVER, perServerInfo.get(uuid));
 
             container.putCachingSupplier(PlayerKeys.SESSIONS, () -> {
-                        List<Session> playerSessions = sessions.getOrDefault(uuid, new ArrayList<>());
-                        container.getValue(PlayerKeys.ACTIVE_SESSION).ifPresent(playerSessions::add);
+                        List<FinishedSession> playerSessions = sessions.getOrDefault(uuid, new ArrayList<>());
+                        container.getValue(PlayerKeys.ACTIVE_SESSION)
+                                .map(ActiveSession::toFinishedSessionFromStillActive)
+                                .ifPresent(playerSessions::add);
                         return playerSessions;
                     }
             );
@@ -102,7 +104,7 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
                 WorldTimes worldTimes = new PerServerMutator(container.getUnsafe(PlayerKeys.PER_SERVER)).flatMapWorldTimes();
                 container.getValue(PlayerKeys.ACTIVE_SESSION)
                         .ifPresent(session -> worldTimes.add(
-                                session.getValue(SessionKeys.WORLD_TIMES).orElse(new WorldTimes()))
+                                session.getExtraData(WorldTimes.class).orElseGet(WorldTimes::new))
                         );
                 return worldTimes;
             });
@@ -131,7 +133,7 @@ public class ServerPlayerContainersQuery implements Query<List<PlayerContainer>>
      */
     private Map<UUID, PerServerContainer> getPerServerData(
             Map<UUID, UserInfo> userInformation,
-            Map<UUID, List<Session>> sessions,
+            Map<UUID, List<FinishedSession>> sessions,
             Map<UUID, List<Ping>> ping
     ) {
         Map<UUID, PerServerContainer> perServerContainers = new HashMap<>();

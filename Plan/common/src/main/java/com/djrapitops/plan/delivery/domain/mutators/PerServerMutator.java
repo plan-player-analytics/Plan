@@ -20,8 +20,9 @@ import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class PerServerMutator {
         return new PerServerMutator(container.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer()));
     }
 
-    public List<Session> flatMapSessions() {
+    public List<FinishedSession> flatMapSessions() {
         return data.values().stream()
                 .filter(container -> container.supports(PerServerKeys.SESSIONS))
                 .map(container -> container.getValue(PerServerKeys.SESSIONS).orElse(Collections.emptyList()))
@@ -64,20 +65,20 @@ public class PerServerMutator {
         return total;
     }
 
-    public Map<UUID, WorldTimes> worldTimesPerServer() {
-        Map<UUID, WorldTimes> timesMap = new HashMap<>();
-        for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
+    public Map<ServerUUID, WorldTimes> worldTimesPerServer() {
+        Map<ServerUUID, WorldTimes> timesMap = new HashMap<>();
+        for (Map.Entry<ServerUUID, DataContainer> entry : data.entrySet()) {
             DataContainer container = entry.getValue();
             timesMap.put(entry.getKey(), container.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes()));
         }
         return timesMap;
     }
 
-    public Optional<UUID> favoriteServer() {
+    public Optional<ServerUUID> favoriteServer() {
         long max = 0;
-        UUID maxServer = null;
+        ServerUUID maxServer = null;
 
-        for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
+        for (Map.Entry<ServerUUID, DataContainer> entry : data.entrySet()) {
             long total = SessionsMutator.forContainer(entry.getValue()).toPlaytime();
             if (total > max) {
                 max = total;
@@ -88,9 +89,9 @@ public class PerServerMutator {
         return Optional.ofNullable(maxServer);
     }
 
-    public Map<UUID, List<Session>> sessionsPerServer() {
-        Map<UUID, List<Session>> sessionMap = new HashMap<>();
-        for (Map.Entry<UUID, DataContainer> entry : data.entrySet()) {
+    public Map<ServerUUID, List<FinishedSession>> sessionsPerServer() {
+        Map<ServerUUID, List<FinishedSession>> sessionMap = new HashMap<>();
+        for (Map.Entry<ServerUUID, DataContainer> entry : data.entrySet()) {
             sessionMap.put(entry.getKey(), entry.getValue().getValue(PerServerKeys.SESSIONS).orElse(new ArrayList<>()));
         }
         return sessionMap;

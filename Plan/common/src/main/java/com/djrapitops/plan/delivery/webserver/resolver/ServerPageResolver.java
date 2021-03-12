@@ -25,13 +25,13 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Resolves /network, /server and /server/${name/uuid} URLs.
@@ -79,7 +79,7 @@ public class ServerPageResolver implements Resolver {
         return Optional.of(responseFactory.redirectResponse(directTo));
     }
 
-    private Optional<Response> getServerPage(UUID serverUUID, Request request) {
+    private Optional<Response> getServerPage(ServerUUID serverUUID, Request request) {
         boolean toNetworkPage = serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID);
         if (toNetworkPage) {
             if (request.getPath().getPart(0).map("network"::equals).orElse(false)) {
@@ -92,7 +92,7 @@ public class ServerPageResolver implements Resolver {
         return Optional.of(responseFactory.serverPageResponse(serverUUID));
     }
 
-    private Optional<UUID> getServerUUID(URIPath path) {
+    private Optional<ServerUUID> getServerUUID(URIPath path) {
         if (serverInfo.getServer().isProxy()
                 && path.getPart(0).map("network"::equals).orElse(false)
                 && !path.getPart(1).isPresent() // No slash at the end.

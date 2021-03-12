@@ -18,7 +18,9 @@ package com.djrapitops.plan.query;
 
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBType;
@@ -34,6 +36,7 @@ import com.djrapitops.plan.storage.database.queries.schema.SQLiteSchemaQueries;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CommonQueriesImplementation implements CommonQueries {
 
@@ -47,22 +50,28 @@ public class CommonQueriesImplementation implements CommonQueries {
 
     @Override
     public long fetchPlaytime(UUID playerUUID, UUID serverUUID, long after, long before) {
-        return db.query(SessionQueries.playtimeOfPlayer(after, before, playerUUID)).getOrDefault(serverUUID, 0L);
+        return db.query(SessionQueries.playtimeOfPlayer(after, before, playerUUID))
+                .getOrDefault(ServerUUID.from(serverUUID), 0L);
     }
 
     @Override
     public long fetchCurrentSessionPlaytime(UUID playerUUID) {
-        return SessionCache.getCachedSession(playerUUID).map(Session::getLength).orElse(0L);
+        return SessionCache.getCachedSession(playerUUID)
+                .map(ActiveSession::toFinishedSessionFromStillActive)
+                .map(FinishedSession::getLength)
+                .orElse(0L);
     }
 
     @Override
     public long fetchLastSeen(UUID playerUUID, UUID serverUUID) {
-        return db.query(SessionQueries.lastSeen(playerUUID, serverUUID));
+        return db.query(SessionQueries.lastSeen(playerUUID, ServerUUID.from(serverUUID)));
     }
 
     @Override
     public Set<UUID> fetchServerUUIDs() {
-        return db.query(ServerQueries.fetchServerNames()).keySet();
+        return db.query(ServerQueries.fetchServerNames()).keySet().stream()
+                .map(ServerUUID::asUUID)
+                .collect(Collectors.toSet());
     }
 
     @Override

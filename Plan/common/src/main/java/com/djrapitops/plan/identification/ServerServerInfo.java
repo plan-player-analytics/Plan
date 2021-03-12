@@ -29,7 +29,6 @@ import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Manages the Server UUID for Bukkit servers.
@@ -88,7 +87,7 @@ public class ServerServerInfo extends ServerInfo {
         return registerNew(generateNewUUID());
     }
 
-    private Server registerNew(UUID serverUUID) {
+    private Server registerNew(ServerUUID serverUUID) {
         Server server = createServerObject(serverUUID);
         fromDatabase.save(server);
 
@@ -98,7 +97,7 @@ public class ServerServerInfo extends ServerInfo {
         return stored;
     }
 
-    private Server createServerObject(UUID serverUUID) {
+    private Server createServerObject(ServerUUID serverUUID) {
         String webAddress = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
         String name = config.get(PluginSettings.SERVER_NAME);
         return new Server(serverUUID, name, webAddress);

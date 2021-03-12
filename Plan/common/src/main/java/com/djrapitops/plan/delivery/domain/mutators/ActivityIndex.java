@@ -18,7 +18,7 @@ package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.formatting.Formatter;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 
@@ -74,7 +74,7 @@ public class ActivityIndex {
         value = calculate(container);
     }
 
-    public ActivityIndex(List<Session> sessions, long date, long playtimeMsThreshold) {
+    public ActivityIndex(List<FinishedSession> sessions, long date, long playtimeMsThreshold) {
         this.playtimeMsThreshold = playtimeMsThreshold;
 
         this.date = date;

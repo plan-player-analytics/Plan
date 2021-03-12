@@ -21,9 +21,11 @@ import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.BaseUser;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -94,7 +96,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
         saveTwoWorlds();
 
-        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
 
         execute(DataStoreQueries.storeSession(session));
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", RandomData.randomTime(), serverUUID()), (uuid, name) -> false /* Not cached */));
@@ -125,9 +127,8 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         saveTwoWorlds();
 
         long sessionStart = System.currentTimeMillis();
-        Session session = new Session(playerUUID, serverUUID(), sessionStart, worlds[0], "SURVIVAL");
-        session.endSession(sessionStart + 22345L);
-        execute(DataStoreQueries.storeSession(session));
+        ActiveSession session = new ActiveSession(playerUUID, serverUUID(), sessionStart, worlds[0], "SURVIVAL");
+        execute(DataStoreQueries.storeSession(session.toFinishedSession(sessionStart + 22345L)));
 
         TestPluginLogger logger = new TestPluginLogger();
         new DBCleanTask(
@@ -149,7 +150,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         saveUserOne();
         saveUserTwo();
         saveTwoWorlds();
-        Session session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         execute(DataStoreQueries.storeSession(session));
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */));
         saveGeoInfo(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime()));
@@ -158,7 +159,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         PlayerContainer playerContainer = db().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         // Active sessions are added after fetching
-        playerContainer.putRawData(PlayerKeys.ACTIVE_SESSION, RandomData.randomSession(serverUUID(), worlds, playerUUID));
+        playerContainer.putRawData(PlayerKeys.ACTIVE_SESSION, RandomData.randomUnfinishedSession(serverUUID(), worlds, playerUUID));
 
         List<String> unsupported = new ArrayList<>();
         List<Key> keys = FieldFetcher.getPublicStaticFields(PlayerKeys.class, Key.class);
@@ -203,10 +204,10 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void playerCountForServersIsCorrect() {
-        Map<UUID, Integer> expected = Collections.singletonMap(serverUUID(), 1);
+        Map<ServerUUID, Integer> expected = Collections.singletonMap(serverUUID(), 1);
         saveUserOne();
 
-        Map<UUID, Integer> result = db().query(ServerAggregateQueries.serverUserCounts());
+        Map<ServerUUID, Integer> result = db().query(ServerAggregateQueries.serverUserCounts());
         assertEquals(expected, result);
     }
 

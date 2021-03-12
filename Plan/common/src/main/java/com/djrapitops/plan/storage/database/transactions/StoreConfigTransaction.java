@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.ConfigWriter;
 import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
@@ -26,7 +27,6 @@ import org.apache.commons.text.TextStringBuilder;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -37,11 +37,11 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class StoreConfigTransaction extends Transaction {
 
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final long lastModified;
     private final String configSettings;
 
-    public StoreConfigTransaction(UUID serverUUID, Config config, long lastModified) {
+    public StoreConfigTransaction(ServerUUID serverUUID, Config config, long lastModified) {
         this.serverUUID = serverUUID;
         this.configSettings = extractConfigSettingLines(config);
         this.lastModified = lastModified;

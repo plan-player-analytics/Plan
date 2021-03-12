@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
@@ -28,7 +29,6 @@ import utilities.OptionalAssert;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -55,7 +55,7 @@ public interface ServerQueriesTest extends DatabaseTestPreparer {
         Optional<Server> bungeeInfo = db().query(ServerQueries.fetchProxyServerInformation());
         assertFalse(bungeeInfo.isPresent());
 
-        UUID bungeeUUID = UUID.randomUUID();
+        ServerUUID bungeeUUID = ServerUUID.randomUUID();
         Server bungeeCord = new Server(bungeeUUID, "BungeeCord", "Random:1234");
         bungeeCord.setProxy(true);
         db().executeTransaction(new StoreServerInformationTransaction(bungeeCord));
@@ -76,7 +76,7 @@ public interface ServerQueriesTest extends DatabaseTestPreparer {
     default void proxyIsDetected() {
         bungeeInformationIsStored();
 
-        Map<UUID, Server> serverInformation = db().query(ServerQueries.fetchPlanServerInformation());
+        Map<ServerUUID, Server> serverInformation = db().query(ServerQueries.fetchPlanServerInformation());
 
         assertEquals(1, serverInformation.values().stream().filter(Server::isNotProxy).count());
         assertEquals(1, serverInformation.values().stream().filter(Server::isProxy).count());

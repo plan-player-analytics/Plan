@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.storage.database.sql.tables;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -46,7 +46,7 @@ public class ExtensionPluginTable {
             WHERE + PLUGIN_NAME + "=?" +
             AND + SERVER_UUID + "=? LIMIT 1)";
 
-    public static void set2PluginValuesToStatement(PreparedStatement statement, int parameterIndex, String pluginName, UUID serverUUID) throws SQLException {
+    public static void set2PluginValuesToStatement(PreparedStatement statement, int parameterIndex, String pluginName, ServerUUID serverUUID) throws SQLException {
         statement.setString(parameterIndex, pluginName);
         statement.setString(parameterIndex + 1, serverUUID.toString());
     }

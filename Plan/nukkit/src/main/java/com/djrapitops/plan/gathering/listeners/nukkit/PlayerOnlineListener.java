@@ -25,17 +25,19 @@ import cn.nukkit.event.player.PlayerKickEvent;
 import cn.nukkit.event.player.PlayerLoginEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import com.djrapitops.plan.delivery.domain.Nickname;
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.delivery.domain.PlayerName;
+import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.GMTimes;
-import com.djrapitops.plan.gathering.domain.Session;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
@@ -145,7 +147,7 @@ public class PlayerOnlineListener implements Listener {
         Player player = event.getPlayer();
 
         UUID playerUUID = player.getUniqueId();
-        UUID serverUUID = serverInfo.getServerUUID();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
         NukkitAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
@@ -172,9 +174,9 @@ public class PlayerOnlineListener implements Listener {
         long registerDate = TimeUnit.SECONDS.toMillis(player.getFirstPlayed());
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> registerDate,
                 playerName, serverUUID, hostname));
-        Session session = new Session(playerUUID, serverUUID, time, world, gm);
-        session.putRawData(SessionKeys.NAME, playerName);
-        session.putRawData(SessionKeys.SERVER_NAME, serverInfo.getServer().getIdentifiableName());
+        ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
+        session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
+        session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
         sessionCache.cacheSession(playerUUID, session)
                 .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 

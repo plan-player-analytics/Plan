@@ -28,6 +28,7 @@ import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -86,12 +87,12 @@ public class PlayerJSONCreator {
     public Map<String, Object> createJSONAsMap(UUID playerUUID) {
         Database db = dbSystem.getDatabase();
 
-        Map<UUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
+        Map<ServerUUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
 
         PlayerContainer player = db.query(new PlayerContainerQuery(playerUUID));
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
-        Map<UUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
+        Map<ServerUUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
         List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount, locale.getString(GenericLang.UNKNOWN)).asMaps();
         List<PlayerKill> kills = player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList());
         List<PlayerKill> deaths = player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList());
@@ -157,7 +158,7 @@ public class PlayerJSONCreator {
         return onlineActivity;
     }
 
-    private Map<String, Object> createInfoJSONMap(PlayerContainer player, Map<UUID, String> serverNames) {
+    private Map<String, Object> createInfoJSONMap(PlayerContainer player, Map<ServerUUID, String> serverNames) {
         SessionsMutator sessions = SessionsMutator.forContainer(player);
         ActivityIndex activityIndex = player.getActivityIndex(System.currentTimeMillis(), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD));
         PerServerMutator perServer = PerServerMutator.forContainer(player);
@@ -280,7 +281,7 @@ public class PlayerJSONCreator {
 
         public static List<Nickname> fromDataNicknames(
                 List<com.djrapitops.plan.delivery.domain.Nickname> nicknames,
-                Map<UUID, String> serverNames,
+                Map<ServerUUID, String> serverNames,
                 Formatter<Long> dateFormatter
         ) {
             nicknames.sort(new DateHolderRecentComparator());

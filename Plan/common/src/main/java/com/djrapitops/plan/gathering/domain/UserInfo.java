@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
+import com.djrapitops.plan.identification.ServerUUID;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -30,13 +32,13 @@ import java.util.UUID;
 public class UserInfo {
 
     private final UUID playerUUID;
-    private final UUID serverUUID;
+    private final ServerUUID serverUUID;
     private final long registered;
     private final boolean banned;
     private final boolean opped;
     private final String hostname;
 
-    public UserInfo(UUID playerUUID, UUID serverUUID, long registered, boolean opped, String hostname, boolean banned) {
+    public UserInfo(UUID playerUUID, ServerUUID serverUUID, long registered, boolean opped, String hostname, boolean banned) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
         this.registered = registered;
@@ -49,7 +51,7 @@ public class UserInfo {
         return playerUUID;
     }
 
-    public UUID getServerUUID() {
+    public ServerUUID getServerUUID() {
         return serverUUID;
     }
 

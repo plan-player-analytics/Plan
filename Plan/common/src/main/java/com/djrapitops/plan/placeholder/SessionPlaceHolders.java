@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -33,7 +34,6 @@ import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.Serializable;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -65,6 +65,12 @@ public class SessionPlaceHolders implements Placeholders {
         this.formatters = formatters;
     }
 
+    private static String getPlaytime(Database database, long after, long before, ServerUUID serverUUID, Formatter<Long> timeAmount) {
+        Long playtime = database.query(SessionQueries.playtime(after, before, serverUUID));
+        Long sessionCount = database.query(SessionQueries.sessionCount(after, before, serverUUID));
+        return timeAmount.apply(sessionCount != 0 ? playtime / sessionCount : playtime);
+    }
+
     @Override
     public void register(
             PlanPlaceholders placeholders
@@ -74,7 +80,7 @@ public class SessionPlaceHolders implements Placeholders {
         Formatter<DateHolder> year = formatters.year();
         Formatter<Double> decimals = formatters.decimals();
         Database database = dbSystem.getDatabase();
-        UUID serverUUID = serverInfo.getServerUUID();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
 
         placeholders.registerStatic("sessions_play_time_total",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(0L, now(), serverUUID))));
@@ -187,11 +193,5 @@ public class SessionPlaceHolders implements Placeholders {
                 () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now() - TimeUnit.DAYS.toMillis(2L))).map(DateObj::getValue).orElse(0));
         placeholders.registerStatic("sessions_recent_peak_date",
                 () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now() - TimeUnit.DAYS.toMillis(2L))).map(year).orElse("-"));
-    }
-
-    private static String getPlaytime(Database database, long after, long before, UUID serverUUID, Formatter<Long> timeAmount) {
-        Long playtime = database.query(SessionQueries.playtime(after, before, serverUUID));
-        Long sessionCount = database.query(SessionQueries.sessionCount(after, before, serverUUID));
-        return timeAmount.apply(sessionCount != 0 ? playtime / sessionCount : playtime);
     }
 }

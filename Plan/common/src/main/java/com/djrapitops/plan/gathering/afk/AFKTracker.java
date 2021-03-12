@@ -74,7 +74,7 @@ public class AFKTracker {
             long timeAFK = time - lastMoved - removeAfkCommandEffect;
 
             SessionCache.getCachedSession(uuid)
-                    .ifPresent(session -> session.addAFKTime(timeAFK));
+                    .ifPresent(session -> session.addAfkTime(timeAFK));
         } finally {
             usedAFKCommand.remove(uuid);
         }

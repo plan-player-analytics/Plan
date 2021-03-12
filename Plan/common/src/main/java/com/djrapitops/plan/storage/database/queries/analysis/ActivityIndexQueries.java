@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.analysis;
 
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
@@ -25,7 +26,10 @@ import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -68,7 +72,7 @@ public class ActivityIndexQueries {
         // Static method class
     }
 
-    public static Query<Integer> fetchRegularPlayerCount(long date, UUID serverUUID, long playtimeThreshold) {
+    public static Query<Integer> fetchRegularPlayerCount(long date, ServerUUID serverUUID, long playtimeThreshold) {
         return fetchActivityGroupCount(date, serverUUID, playtimeThreshold, ActivityIndex.REGULAR, 5.1);
     }
 
@@ -94,7 +98,7 @@ public class ActivityIndexQueries {
                 GROUP_BY + "q1." + SessionsTable.USER_UUID;
     }
 
-    public static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, UUID serverUUID, long date) throws SQLException {
+    public static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, ServerUUID serverUUID, long date) throws SQLException {
         statement.setDouble(index, Math.PI);
         statement.setLong(index + 1, playtimeThreshold);
 
@@ -109,7 +113,7 @@ public class ActivityIndexQueries {
         statement.setLong(index + 10, date - TimeUnit.DAYS.toMillis(14L));
     }
 
-    public static Query<Integer> fetchActivityGroupCount(long date, UUID serverUUID, long playtimeThreshold, double above, double below) {
+    public static Query<Integer> fetchActivityGroupCount(long date, ServerUUID serverUUID, long playtimeThreshold, double above, double below) {
         String selectActivityIndex = selectActivityIndexSQL();
 
         String selectIndexes = SELECT + "COALESCE(activity_index, 0) as activity_index" +
@@ -140,7 +144,7 @@ public class ActivityIndexQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, UUID serverUUID, long threshold) {
+    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, ServerUUID serverUUID, long threshold) {
         String selectActivityIndex = selectActivityIndexSQL();
 
         String selectIndexes = SELECT + "activity_index" +
@@ -170,7 +174,7 @@ public class ActivityIndexQueries {
         };
     }
 
-    public static Query<Integer> countNewPlayersTurnedRegular(long after, long before, UUID serverUUID, Long threshold) {
+    public static Query<Integer> countNewPlayersTurnedRegular(long after, long before, ServerUUID serverUUID, Long threshold) {
         String selectActivityIndex = selectActivityIndexSQL();
 
         String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
@@ -207,7 +211,7 @@ public class ActivityIndexQueries {
      * @param threshold  Playtime threshold
      * @return Query how many players went from regular to inactive in a span of time.
      */
-    public static Query<Integer> countRegularPlayersTurnedInactive(long start, long end, UUID serverUUID, Long threshold) {
+    public static Query<Integer> countRegularPlayersTurnedInactive(long start, long end, ServerUUID serverUUID, Long threshold) {
         String selectActivityIndex = selectActivityIndexSQL();
 
         String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
@@ -238,7 +242,7 @@ public class ActivityIndexQueries {
         };
     }
 
-    public static Query<Long> averagePlaytimePerRegularPlayer(long after, long before, UUID serverUUID, Long threshold) {
+    public static Query<Long> averagePlaytimePerRegularPlayer(long after, long before, ServerUUID serverUUID, Long threshold) {
         return database -> {
             // INNER JOIN limits the users to only those that are regular
             String selectPlaytimePerPlayer = SELECT +
@@ -273,7 +277,7 @@ public class ActivityIndexQueries {
         };
     }
 
-    public static Query<Long> averageSessionLengthPerRegularPlayer(long after, long before, UUID serverUUID, Long threshold) {
+    public static Query<Long> averageSessionLengthPerRegularPlayer(long after, long before, ServerUUID serverUUID, Long threshold) {
         return database -> {
             // INNER JOIN limits the users to only those that are regular
             String selectSessionLengthPerPlayer = SELECT +
@@ -307,7 +311,7 @@ public class ActivityIndexQueries {
         };
     }
 
-    public static Query<Long> averageAFKPerRegularPlayer(long after, long before, UUID serverUUID, Long threshold) {
+    public static Query<Long> averageAFKPerRegularPlayer(long after, long before, ServerUUID serverUUID, Long threshold) {
         return database -> {
             // INNER JOIN limits the users to only those that are regular
             String selectPlaytimePerPlayer = SELECT +
@@ -342,7 +346,7 @@ public class ActivityIndexQueries {
         };
     }
 
-    public static Query<Collection<ActivityIndex>> activityIndexForNewPlayers(long after, long before, UUID serverUUID, Long threshold) {
+    public static Query<Collection<ActivityIndex>> activityIndexForNewPlayers(long after, long before, ServerUUID serverUUID, Long threshold) {
         String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
@@ -373,7 +377,7 @@ public class ActivityIndexQueries {
         };
     }
 
-    public static Query<ActivityIndex> averageActivityIndexForRetainedPlayers(long after, long before, UUID serverUUID, Long threshold) {
+    public static Query<ActivityIndex> averageActivityIndexForRetainedPlayers(long after, long before, ServerUUID serverUUID, Long threshold) {
         String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
@@ -413,7 +417,7 @@ public class ActivityIndexQueries {
         };
     }
 
-    public static Query<ActivityIndex> averageActivityIndexForNonRetainedPlayers(long after, long before, UUID serverUUID, Long threshold) {
+    public static Query<ActivityIndex> averageActivityIndexForNonRetainedPlayers(long after, long before, ServerUUID serverUUID, Long threshold) {
         String selectNewUUIDs = SELECT + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +

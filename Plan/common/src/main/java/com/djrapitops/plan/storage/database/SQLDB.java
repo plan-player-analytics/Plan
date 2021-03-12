@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.exceptions.database.FatalDBException;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -40,7 +41,10 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -52,7 +56,7 @@ import java.util.function.Supplier;
  */
 public abstract class SQLDB extends AbstractDatabase {
 
-    private final Supplier<UUID> serverUUIDSupplier;
+    private final Supplier<ServerUUID> serverUUIDSupplier;
 
     protected final Locale locale;
     protected final PlanConfig config;
@@ -64,7 +68,7 @@ public abstract class SQLDB extends AbstractDatabase {
     private ExecutorService transactionExecutor;
 
     protected SQLDB(
-            Supplier<UUID> serverUUIDSupplier,
+            Supplier<ServerUUID> serverUUIDSupplier,
             Locale locale,
             PlanConfig config,
             RunnableFactory runnableFactory,
@@ -300,7 +304,7 @@ public abstract class SQLDB extends AbstractDatabase {
         return Objects.hash(getType().getName());
     }
 
-    public Supplier<UUID> getServerUUIDSupplier() {
+    public Supplier<ServerUUID> getServerUUIDSupplier() {
         return serverUUIDSupplier;
     }
 

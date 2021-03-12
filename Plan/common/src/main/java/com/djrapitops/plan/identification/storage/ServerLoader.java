@@ -17,9 +17,9 @@
 package com.djrapitops.plan.identification.storage;
 
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Interface for operating on server information.
@@ -35,7 +35,7 @@ public interface ServerLoader {
      * @return Optional of the saved information or empty if it has not been stored.
      * @throws com.djrapitops.plan.exceptions.EnableException When the loading fails
      */
-    Optional<Server> load(UUID serverUUID);
+    Optional<Server> load(ServerUUID serverUUID);
 
     /**
      * Save the server information.

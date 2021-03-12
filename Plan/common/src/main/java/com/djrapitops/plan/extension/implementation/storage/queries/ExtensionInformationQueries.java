@@ -20,6 +20,7 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -30,7 +31,10 @@ import com.djrapitops.plan.utilities.java.Lists;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -45,7 +49,7 @@ public class ExtensionInformationQueries {
         /* Static method class */
     }
 
-    public static Query<List<ExtensionInformation>> extensionsOfServer(UUID serverUUID) {
+    public static Query<List<ExtensionInformation>> extensionsOfServer(ServerUUID serverUUID) {
         String sql = SELECT +
                 ExtensionPluginTable.TABLE_NAME + '.' + ExtensionPluginTable.ID + " as id," +
                 ExtensionPluginTable.TABLE_NAME + '.' + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
@@ -86,7 +90,7 @@ public class ExtensionInformationQueries {
         return new ExtensionInformation(id, pluginName, icon);
     }
 
-    public static Query<Map<UUID, List<ExtensionInformation>>> allExtensions() {
+    public static Query<Map<ServerUUID, List<ExtensionInformation>>> allExtensions() {
         String sql = SELECT +
                 ExtensionPluginTable.TABLE_NAME + '.' + ExtensionPluginTable.ID + " as id," +
                 ExtensionPluginTable.TABLE_NAME + '.' + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
@@ -98,12 +102,12 @@ public class ExtensionInformationQueries {
                 INNER_JOIN + ExtensionIconTable.TABLE_NAME + " on " +
                 ExtensionPluginTable.ICON_ID + "=" + ExtensionIconTable.TABLE_NAME + '.' + ExtensionIconTable.ID;
 
-        return new QueryAllStatement<Map<UUID, List<ExtensionInformation>>>(sql, 100) {
+        return new QueryAllStatement<Map<ServerUUID, List<ExtensionInformation>>>(sql, 100) {
             @Override
-            public Map<UUID, List<ExtensionInformation>> processResults(ResultSet set) throws SQLException {
-                Map<UUID, List<ExtensionInformation>> byServerUUID = new HashMap<>();
+            public Map<ServerUUID, List<ExtensionInformation>> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, List<ExtensionInformation>> byServerUUID = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(ExtensionPluginTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(ExtensionPluginTable.SERVER_UUID));
                     List<ExtensionInformation> information = byServerUUID.computeIfAbsent(serverUUID, Lists::create);
                     information.add(extractExtensionInformationFromQuery(set));
                 }

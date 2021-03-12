@@ -46,8 +46,8 @@ public class PlayerKeys {
     public static final Key<List<GeoInfo>> GEO_INFO = new Key<>(new Type<List<GeoInfo>>() {}, "geo_info");
     public static final Key<List<Ping>> PING = CommonKeys.PING;
 
-    public static final Key<Session> ACTIVE_SESSION = new Key<>(Session.class, "active_session");
-    public static final Key<List<Session>> SESSIONS = CommonKeys.SESSIONS;
+    public static final Key<ActiveSession> ACTIVE_SESSION = new Key<>(ActiveSession.class, "active_session");
+    public static final Key<List<FinishedSession>> SESSIONS = CommonKeys.SESSIONS;
     public static final Key<WorldTimes> WORLD_TIMES = CommonKeys.WORLD_TIMES;
 
     public static final Key<List<PlayerKill>> PLAYER_KILLS = CommonKeys.PLAYER_KILLS;

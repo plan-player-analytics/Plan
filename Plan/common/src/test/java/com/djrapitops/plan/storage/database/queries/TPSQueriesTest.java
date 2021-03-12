@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
@@ -29,7 +30,6 @@ import utilities.RandomData;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,7 +53,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
     default void removeEverythingRemovesTPS() {
         tpsIsStored();
         db().executeTransaction(new RemoveEverythingTransaction());
-        assertTrue(db().query(TPSQueries.fetchTPSDataOfAllServersBut(0, System.currentTimeMillis(), UUID.randomUUID())).isEmpty());
+        assertTrue(db().query(TPSQueries.fetchTPSDataOfAllServersBut(0, System.currentTimeMillis(), ServerUUID.randomUUID())).isEmpty());
     }
 
     @Test

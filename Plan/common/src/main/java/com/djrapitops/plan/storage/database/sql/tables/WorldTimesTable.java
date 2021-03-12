@@ -16,9 +16,10 @@
  */
 package com.djrapitops.plan.storage.database.sql.tables;
 
-import com.djrapitops.plan.delivery.domain.keys.SessionKeys;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GMTimes;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
@@ -30,6 +31,7 @@ import com.djrapitops.plan.storage.database.transactions.patches.WorldsServerIDP
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -91,19 +93,21 @@ public class WorldTimesTable {
                 .toString();
     }
 
-    public static void addSessionWorldTimesToBatch(PreparedStatement statement, Session session, String[] gms) throws SQLException {
-        UUID uuid = session.getUnsafe(SessionKeys.UUID);
-        UUID serverUUID = session.getUnsafe(SessionKeys.SERVER_UUID);
-        Map<String, GMTimes> worldTimes = session.getUnsafe(SessionKeys.WORLD_TIMES).getWorldTimes();
-        for (Map.Entry<String, GMTimes> worldTimesEntry : worldTimes.entrySet()) {
+    public static void addSessionWorldTimesToBatch(PreparedStatement statement, FinishedSession session, String[] gms) throws SQLException {
+        UUID uuid = session.getPlayerUUID();
+        ServerUUID serverUUID = session.getServerUUID();
+        Optional<WorldTimes> worldTimes = session.getExtraData().get(WorldTimes.class);
+        if (!worldTimes.isPresent()) return;
+
+        for (Map.Entry<String, GMTimes> worldTimesEntry : worldTimes.get().getWorldTimes().entrySet()) {
             String worldName = worldTimesEntry.getKey();
             GMTimes gmTimes = worldTimesEntry.getValue();
 
             // Session ID select statement
             statement.setString(1, uuid.toString());
             statement.setString(2, serverUUID.toString());
-            statement.setLong(3, session.getUnsafe(SessionKeys.START));
-            statement.setLong(4, session.getUnsafe(SessionKeys.END));
+            statement.setLong(3, session.getStart());
+            statement.setLong(4, session.getEnd());
 
             // World ID select statement
             statement.setString(5, worldName);

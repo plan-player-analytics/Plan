@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering.importing.data;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
+import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.*;
 
@@ -64,7 +65,7 @@ public class UserImportData {
         this.hostname = hostname;
     }
 
-    public static UserImportDataBuilder builder(UUID serverUUID) {
+    public static UserImportDataBuilder builder(ServerUUID serverUUID) {
         return new UserImportDataBuilder(serverUUID);
     }
 
@@ -173,7 +174,7 @@ public class UserImportData {
     }
 
     public static final class UserImportDataBuilder {
-        private final UUID serverUUID;
+        private final ServerUUID serverUUID;
 
         private final List<Nickname> nicknames = new ArrayList<>();
         private final List<String> ips = new ArrayList<>();
@@ -189,7 +190,7 @@ public class UserImportData {
         private int deaths;
         private String hostname;
 
-        private UserImportDataBuilder(UUID serverUUID) {
+        private UserImportDataBuilder(ServerUUID serverUUID) {
             this.serverUUID = serverUUID;
         }
 

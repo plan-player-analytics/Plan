@@ -17,7 +17,7 @@
 package com.djrapitops.plan.processing.processors.player;
 
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.Session;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.processing.CriticalRunnable;
 
 import java.util.Optional;
@@ -46,12 +46,12 @@ public class MobKillProcessor implements CriticalRunnable {
 
     @Override
     public void run() {
-        Optional<Session> cachedSession = SessionCache.getCachedSession(uuid);
+        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(uuid);
         if (!cachedSession.isPresent()) {
             return;
         }
-        Session session = cachedSession.get();
+        ActiveSession session = cachedSession.get();
 
-        session.mobKilled();
+        session.addMobKill();
     }
 }

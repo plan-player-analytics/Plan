@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
@@ -24,7 +25,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -57,10 +57,10 @@ public class ServerAggregateQueries {
     /**
      * Count how many users are on a server in the network.
      *
-     * @param serverUUID ServerUUID of the Plan server.
+     * @param serverUUID Server UUID of the Plan server.
      * @return Count of users registered to that server after Plan installation.
      */
-    public static Query<Integer> serverUserCount(UUID serverUUID) {
+    public static Query<Integer> serverUserCount(ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_UUID + "=?";
         return new QueryStatement<Integer>(sql) {
@@ -84,15 +84,15 @@ public class ServerAggregateQueries {
      *
      * @return Map: Server UUID - Count of users registered to that server
      */
-    public static Query<Map<UUID, Integer>> serverUserCounts() {
+    public static Query<Map<ServerUUID, Integer>> serverUserCounts() {
         String sql = SELECT + "COUNT(1) as c, " + UserInfoTable.SERVER_UUID + FROM + UserInfoTable.TABLE_NAME +
                 GROUP_BY + UserInfoTable.SERVER_UUID;
-        return new QueryAllStatement<Map<UUID, Integer>>(sql, 100) {
+        return new QueryAllStatement<Map<ServerUUID, Integer>>(sql, 100) {
             @Override
-            public Map<UUID, Integer> processResults(ResultSet set) throws SQLException {
-                Map<UUID, Integer> ofServer = new HashMap<>();
+            public Map<ServerUUID, Integer> processResults(ResultSet set) throws SQLException {
+                Map<ServerUUID, Integer> ofServer = new HashMap<>();
                 while (set.next()) {
-                    UUID serverUUID = UUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
                     int count = set.getInt("c");
                     ofServer.put(serverUUID, count);
                 }
