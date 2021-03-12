@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension;
 
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+
 /**
  * Interface to implement data extensions with.
  * <p>
@@ -88,6 +90,10 @@ public interface DataExtension {
                 CallEvents.PLAYER_LEAVE,
                 CallEvents.SERVER_EXTENSION_REGISTER
         };
+    }
+
+    default ExtensionDataBuilder newExtensionDataBuilder() {
+        return ExtensionService.getInstance().newExtensionDataBuilder(this);
     }
 
 }

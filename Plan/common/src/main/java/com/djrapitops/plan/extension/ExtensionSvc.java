@@ -17,9 +17,11 @@
 package com.djrapitops.plan.extension;
 
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
+import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -123,6 +125,11 @@ public class ExtensionSvc implements ExtensionService {
         ExtensionWrapper extractor = new ExtensionWrapper(extension);
         String pluginName = extractor.getPluginName();
         extensionGatherers.remove(pluginName);
+    }
+
+    @Override
+    public ExtensionDataBuilder newExtensionDataBuilder(DataExtension extension) {
+        return new ExtDataBuilder();
     }
 
     private boolean shouldNotAllowRegistration(String pluginName) {

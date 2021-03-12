@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension;
 
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
 
 import java.util.Optional;
@@ -59,6 +60,8 @@ public interface ExtensionService {
      * @throws IllegalArgumentException If an implementation violation is found.
      */
     Optional<Caller> register(DataExtension extension);
+
+    ExtensionDataBuilder newExtensionDataBuilder(DataExtension extension);
 
     /**
      * Unregister your {@link DataExtension} implementation.
