@@ -155,7 +155,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insertWorldName(java.util.UUID,java.lang.String)">insertWorldName</a></span>&#8203;(java.util.UUID&nbsp;serverUUID,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#insertWorldName(com.djrapitops.plan.identification.ServerUUID,java.lang.String)">insertWorldName</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
                java.lang.String&nbsp;worldName)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -170,9 +170,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerUserInfo(java.util.UUID,long,java.util.UUID,java.lang.String)">registerUserInfo</a></span>&#8203;(java.util.UUID&nbsp;playerUUID,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerUserInfo(java.util.UUID,long,com.djrapitops.plan.identification.ServerUUID,java.lang.String)">registerUserInfo</a></span>&#8203;(java.util.UUID&nbsp;playerUUID,
                 long&nbsp;registered,
-                java.util.UUID&nbsp;serverUUID,
+                <a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
                 java.lang.String&nbsp;hostname)</code></th>
 <td class="colLast">
 <div class="block">Store UserInfo about a player on a server in the database.</div>
@@ -188,8 +188,8 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storePing(java.util.UUID,java.util.UUID,com.djrapitops.plan.gathering.domain.Ping)">storePing</a></span>&#8203;(java.util.UUID&nbsp;playerUUID,
-         java.util.UUID&nbsp;serverUUID,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storePing(java.util.UUID,com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.Ping)">storePing</a></span>&#8203;(java.util.UUID&nbsp;playerUUID,
+         <a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
          <a href="../../../gathering/domain/Ping.html" title="class in com.djrapitops.plan.gathering.domain">Ping</a>&nbsp;ping)</code></th>
 <td class="colLast">
 <div class="block">Store Ping data of a player on a server.</div>
@@ -205,14 +205,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeSession(com.djrapitops.plan.gathering.domain.Session)">storeSession</a></span>&#8203;(<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&nbsp;session)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeSession(com.djrapitops.plan.gathering.domain.FinishedSession)">storeSession</a></span>&#8203;(<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&nbsp;session)</code></th>
 <td class="colLast">
 <div class="block">Store a finished session in the database.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeTPS(java.util.UUID,com.djrapitops.plan.gathering.domain.TPS)">storeTPS</a></span>&#8203;(java.util.UUID&nbsp;serverUUID,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeTPS(com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.TPS)">storeTPS</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
         <a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&nbsp;tps)</code></th>
 <td class="colLast">
 <div class="block">Store TPS data of a server.</div>
@@ -256,31 +256,29 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="storeSession(com.djrapitops.plan.gathering.domain.Session)">
+<a id="storeSession(com.djrapitops.plan.gathering.domain.FinishedSession)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>storeSession</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeSession&#8203;(<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&nbsp;session)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeSession&#8203;(<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&nbsp;session)</pre>
 <div class="block">Store a finished session in the database.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>session</code> - Session, of which <a href="../../../gathering/domain/Session.html#endSession(long)"><code>Session.endSession(long)</code></a> has been called.</dd>
+<dd><code>session</code> - a finished session</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Executable, use inside a <a href="../transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions"><code>Transaction</code></a></dd>
-<dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code> - If <a href="../../../gathering/domain/Session.html#endSession(long)"><code>Session.endSession(long)</code></a> has not yet been called.</dd>
 </dl>
 </li>
 </ul>
-<a id="insertWorldName(java.util.UUID,java.lang.String)">
+<a id="insertWorldName(com.djrapitops.plan.identification.ServerUUID,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>insertWorldName</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;insertWorldName&#8203;(java.util.UUID&nbsp;serverUUID,
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;insertWorldName&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
                                          java.lang.String&nbsp;worldName)</pre>
 </li>
 </ul>
@@ -340,7 +338,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="registerUserInfo(java.util.UUID,long,java.util.UUID,java.lang.String)">
+<a id="registerUserInfo(java.util.UUID,long,com.djrapitops.plan.identification.ServerUUID,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -348,7 +346,7 @@ extends java.lang.Object</pre>
 <h4>registerUserInfo</h4>
 <pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;registerUserInfo&#8203;(java.util.UUID&nbsp;playerUUID,
                                           long&nbsp;registered,
-                                          java.util.UUID&nbsp;serverUUID,
+                                          <a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
                                           java.lang.String&nbsp;hostname)</pre>
 <div class="block">Store UserInfo about a player on a server in the database.</div>
 <dl>
@@ -371,14 +369,14 @@ extends java.lang.Object</pre>
                                                 long&nbsp;registered)</pre>
 </li>
 </ul>
-<a id="storePing(java.util.UUID,java.util.UUID,com.djrapitops.plan.gathering.domain.Ping)">
+<a id="storePing(java.util.UUID,com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.Ping)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>storePing</h4>
 <pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storePing&#8203;(java.util.UUID&nbsp;playerUUID,
-                                   java.util.UUID&nbsp;serverUUID,
+                                   <a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
                                    <a href="../../../gathering/domain/Ping.html" title="class in com.djrapitops.plan.gathering.domain">Ping</a>&nbsp;ping)</pre>
 <div class="block">Store Ping data of a player on a server.</div>
 <dl>
@@ -391,13 +389,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="storeTPS(java.util.UUID,com.djrapitops.plan.gathering.domain.TPS)">
+<a id="storeTPS(com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.TPS)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>storeTPS</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeTPS&#8203;(java.util.UUID&nbsp;serverUUID,
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeTPS&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
                                   <a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&nbsp;tps)</pre>
 <div class="block">Store TPS data of a server.</div>
 <dl>

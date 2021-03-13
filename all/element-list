@@ -65,6 +65,7 @@ com.djrapitops.plan.gathering.afk
 com.djrapitops.plan.gathering.cache
 com.djrapitops.plan.gathering.domain
 com.djrapitops.plan.gathering.domain.builders
+com.djrapitops.plan.gathering.domain.event
 com.djrapitops.plan.gathering.geolocation
 com.djrapitops.plan.gathering.importing
 com.djrapitops.plan.gathering.importing.data

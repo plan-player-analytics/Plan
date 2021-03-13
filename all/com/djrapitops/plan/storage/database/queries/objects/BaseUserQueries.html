@@ -169,7 +169,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Collection&lt;<a href="../../../../gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchServerBaseUsers(java.util.UUID)">fetchServerBaseUsers</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchServerBaseUsers(com.djrapitops.plan.identification.ServerUUID)">fetchServerBaseUsers</a></span>&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">
 <div class="block">Query database for common user information for players that have played on a specific server.</div>
 </td>
@@ -243,13 +243,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="fetchServerBaseUsers(java.util.UUID)">
+<a id="fetchServerBaseUsers(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>fetchServerBaseUsers</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Collection&lt;<a href="../../../../gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a>&gt;&gt;&nbsp;fetchServerBaseUsers&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Collection&lt;<a href="../../../../gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a>&gt;&gt;&nbsp;fetchServerBaseUsers&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 <div class="block">Query database for common user information for players that have played on a specific server.
  <p>
  Only one <a href="../../../../gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain"><code>BaseUser</code></a> per player exists unlike <a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain"><code>UserInfo</code></a> which is available per server.

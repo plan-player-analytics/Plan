@@ -154,7 +154,7 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&gt;</code></td>
+<td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchAllUserInformation()">fetchAllUserInformation</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Query database for user information.</div>
@@ -162,14 +162,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.lang.Long&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchRegisterDates(long,long,java.util.UUID)">fetchRegisterDates</a></span>&#8203;(long&nbsp;after,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchRegisterDates(long,long,com.djrapitops.plan.identification.ServerUUID)">fetchRegisterDates</a></span>&#8203;(long&nbsp;after,
                   long&nbsp;before,
-                  java.util.UUID&nbsp;serverUUID)</code></th>
+                  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchUserInformationOfServer(java.util.UUID)">fetchUserInformationOfServer</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchUserInformationOfServer(com.djrapitops.plan.identification.ServerUUID)">fetchUserInformationOfServer</a></span>&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">
 <div class="block">Query database for all User information of a specific server.</div>
 </td>
@@ -242,7 +242,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>fetchAllUserInformation</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&gt;&nbsp;fetchAllUserInformation()</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&gt;&nbsp;fetchAllUserInformation()</pre>
 <div class="block">Query database for user information.
  <p>
  The user information does not contain player names.</div>
@@ -268,13 +268,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="fetchUserInformationOfServer(java.util.UUID)">
+<a id="fetchUserInformationOfServer(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>fetchUserInformationOfServer</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&nbsp;fetchUserInformationOfServer&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&nbsp;fetchUserInformationOfServer&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 <div class="block">Query database for all User information of a specific server.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -284,7 +284,7 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="fetchRegisterDates(long,long,java.util.UUID)">
+<a id="fetchRegisterDates(long,long,com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -292,7 +292,7 @@ extends java.lang.Object</pre>
 <h4>fetchRegisterDates</h4>
 <pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.lang.Long&gt;&gt;&nbsp;fetchRegisterDates&#8203;(long&nbsp;after,
                                                                                            long&nbsp;before,
-                                                                                           java.util.UUID&nbsp;serverUUID)</pre>
+                                                                                           <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
 <a id="hostnameTotals()">

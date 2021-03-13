@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -181,43 +181,48 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addActiveSessions(java.util.List)">addActiveSessions</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#networkPlayersTableJSON()">networkPlayersTableJSON</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#networkSessionsAsJSONMap()">networkSessionsAsJSONMap</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pingPerGeolocation()">pingPerGeolocation</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pingPerGeolocation(java.util.UUID)">pingPerGeolocation</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverPlayerKillsAsJSONMap(java.util.UUID)">serverPlayerKillsAsJSONMap</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#pingPerGeolocation(com.djrapitops.plan.identification.ServerUUID)">pingPerGeolocation</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverPlayersTableJSON(java.util.UUID)">serverPlayersTableJSON</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<td class="colFirst"><code>java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverPlayerKillsAsJSONMap(com.djrapitops.plan.identification.ServerUUID)">serverPlayerKillsAsJSONMap</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serversAsJSONMaps()">serversAsJSONMaps</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverPlayersTableJSON(com.djrapitops.plan.identification.ServerUUID)">serverPlayersTableJSON</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serversAsJSONMaps()">serversAsJSONMaps</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverSessionsAsJSONMap(java.util.UUID)">serverSessionsAsJSONMap</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverSessionsAsJSONMap(com.djrapitops.plan.identification.ServerUUID)">serverSessionsAsJSONMap</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -269,13 +274,13 @@ public&nbsp;JSONFactory&#8203;(<a href="../../../settings/config/PlanConfig.html
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="serverPlayersTableJSON(java.util.UUID)">
+<a id="serverPlayersTableJSON(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>serverPlayersTableJSON</h4>
-<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;serverPlayersTableJSON&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;serverPlayersTableJSON&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
 <a id="networkPlayersTableJSON()">
@@ -287,13 +292,13 @@ public&nbsp;JSONFactory&#8203;(<a href="../../../settings/config/PlanConfig.html
 <pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;networkPlayersTableJSON()</pre>
 </li>
 </ul>
-<a id="serverSessionsAsJSONMap(java.util.UUID)">
+<a id="serverSessionsAsJSONMap(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>serverSessionsAsJSONMap</h4>
-<pre class="methodSignature">public&nbsp;java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;&nbsp;serverSessionsAsJSONMap&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;&nbsp;serverSessionsAsJSONMap&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
 <a id="networkSessionsAsJSONMap()">
@@ -305,13 +310,22 @@ public&nbsp;JSONFactory&#8203;(<a href="../../../settings/config/PlanConfig.html
 <pre class="methodSignature">public&nbsp;java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;&nbsp;networkSessionsAsJSONMap()</pre>
 </li>
 </ul>
-<a id="serverPlayerKillsAsJSONMap(java.util.UUID)">
+<a id="addActiveSessions(java.util.List)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>addActiveSessions</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;addActiveSessions&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</pre>
+</li>
+</ul>
+<a id="serverPlayerKillsAsJSONMap(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>serverPlayerKillsAsJSONMap</h4>
-<pre class="methodSignature">public&nbsp;java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;&nbsp;serverPlayerKillsAsJSONMap&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&gt;&nbsp;serverPlayerKillsAsJSONMap&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
 <a id="serversAsJSONMaps()">
@@ -323,13 +337,13 @@ public&nbsp;JSONFactory&#8203;(<a href="../../../settings/config/PlanConfig.html
 <pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;serversAsJSONMaps()</pre>
 </li>
 </ul>
-<a id="pingPerGeolocation(java.util.UUID)">
+<a id="pingPerGeolocation(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>pingPerGeolocation</h4>
-<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;pingPerGeolocation&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public&nbsp;java.util.Map&lt;java.lang.String,&#8203;java.lang.Object&gt;&nbsp;pingPerGeolocation&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
 <a id="pingPerGeolocation()">

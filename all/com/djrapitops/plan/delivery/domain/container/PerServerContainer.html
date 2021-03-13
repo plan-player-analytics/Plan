@@ -125,7 +125,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li>java.util.AbstractMap&lt;K,&#8203;V&gt;</li>
 <li>
 <ul class="inheritance">
-<li>java.util.HashMap&lt;java.util.UUID,&#8203;<a href="DataContainer.html" title="interface in com.djrapitops.plan.delivery.domain.container">DataContainer</a>&gt;</li>
+<li>java.util.HashMap&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;<a href="DataContainer.html" title="interface in com.djrapitops.plan.delivery.domain.container">DataContainer</a>&gt;</li>
 <li>
 <ul class="inheritance">
 <li>com.djrapitops.plan.delivery.domain.container.PerServerContainer</li>
@@ -141,12 +141,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <dl>
 <dt>All Implemented Interfaces:</dt>
-<dd><code>java.io.Serializable</code>, <code>java.lang.Cloneable</code>, <code>java.util.Map&lt;java.util.UUID,&#8203;<a href="DataContainer.html" title="interface in com.djrapitops.plan.delivery.domain.container">DataContainer</a>&gt;</code></dd>
+<dd><code>java.io.Serializable</code>, <code>java.lang.Cloneable</code>, <code>java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;<a href="DataContainer.html" title="interface in com.djrapitops.plan.delivery.domain.container">DataContainer</a>&gt;</code></dd>
 </dl>
 <hr>
 <pre>public class <span class="typeNameLabel">PerServerContainer</span>
-extends java.util.HashMap&lt;java.util.UUID,&#8203;<a href="DataContainer.html" title="interface in com.djrapitops.plan.delivery.domain.container">DataContainer</a>&gt;</pre>
-<div class="block">Container for data about a player linked to a single server.</div>
+extends java.util.HashMap&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;<a href="DataContainer.html" title="interface in com.djrapitops.plan.delivery.domain.container">DataContainer</a>&gt;</pre>
+<div class="block">Container for data about a player linked.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../keys/PerServerKeys.html" title="class in com.djrapitops.plan.delivery.domain.keys"><code>For Key objects.</code></a>, 
@@ -229,12 +229,12 @@ extends java.util.HashMap&lt;java.util.UUID,&#8203;<a href="DataContainer.html" 
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putSessions(java.util.Collection)">putSessions</a></span>&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putSessions(java.util.Collection)">putSessions</a></span>&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putToContainerOfServer(java.util.UUID,com.djrapitops.plan.delivery.domain.keys.Key,T)">putToContainerOfServer</a></span>&#8203;(java.util.UUID&nbsp;serverUUID,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#putToContainerOfServer(com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.delivery.domain.keys.Key,T)">putToContainerOfServer</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
                       <a href="../keys/Key.html" title="class in com.djrapitops.plan.delivery.domain.keys">Key</a>&lt;T&gt;&nbsp;key,
                       T&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -313,15 +313,15 @@ extends java.util.HashMap&lt;java.util.UUID,&#8203;<a href="DataContainer.html" 
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="putToContainerOfServer(java.util.UUID,com.djrapitops.plan.delivery.domain.keys.Key,java.lang.Object)">
+<a id="putToContainerOfServer(com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.delivery.domain.keys.Key,java.lang.Object)">
 <!--   -->
-</a><a id="putToContainerOfServer(java.util.UUID,com.djrapitops.plan.delivery.domain.keys.Key,T)">
+</a><a id="putToContainerOfServer(com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.delivery.domain.keys.Key,T)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>putToContainerOfServer</h4>
-<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;putToContainerOfServer&#8203;(java.util.UUID&nbsp;serverUUID,
+<pre class="methodSignature">public&nbsp;&lt;T&gt;&nbsp;void&nbsp;putToContainerOfServer&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
                                        <a href="../keys/Key.html" title="class in com.djrapitops.plan.delivery.domain.keys">Key</a>&lt;T&gt;&nbsp;key,
                                        T&nbsp;value)</pre>
 </li>
@@ -359,7 +359,7 @@ extends java.util.HashMap&lt;java.util.UUID,&#8203;<a href="DataContainer.html" 
 <ul class="blockList">
 <li class="blockList">
 <h4>putSessions</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;putSessions&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</pre>
+<pre class="methodSignature">public&nbsp;void&nbsp;putSessions&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</pre>
 </li>
 </ul>
 <a id="putPing(java.util.List)">

@@ -169,7 +169,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../../gathering/domain/GeoInfo.html" title="class in com.djrapitops.plan.gathering.domain">GeoInfo</a>&gt;&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchServerGeoInformation(java.util.UUID)">fetchServerGeoInformation</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchServerGeoInformation(com.djrapitops.plan.identification.ServerUUID)">fetchServerGeoInformation</a></span>&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -184,7 +184,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Integer&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverGeolocationCounts(java.util.UUID)">serverGeolocationCounts</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverGeolocationCounts(com.djrapitops.plan.identification.ServerUUID)">serverGeolocationCounts</a></span>&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -241,13 +241,13 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="fetchServerGeoInformation(java.util.UUID)">
+<a id="fetchServerGeoInformation(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>fetchServerGeoInformation</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../../gathering/domain/GeoInfo.html" title="class in com.djrapitops.plan.gathering.domain">GeoInfo</a>&gt;&gt;&gt;&nbsp;fetchServerGeoInformation&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../../gathering/domain/GeoInfo.html" title="class in com.djrapitops.plan.gathering.domain">GeoInfo</a>&gt;&gt;&gt;&nbsp;fetchServerGeoInformation&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
 <a id="networkGeolocationCounts()">
@@ -268,13 +268,13 @@ extends java.lang.Object</pre>
 <pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Integer&gt;&gt;&nbsp;networkGeolocationCounts&#8203;(java.util.Collection&lt;java.util.UUID&gt;&nbsp;playerUUIDs)</pre>
 </li>
 </ul>
-<a id="serverGeolocationCounts(java.util.UUID)">
+<a id="serverGeolocationCounts(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>serverGeolocationCounts</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Integer&gt;&gt;&nbsp;serverGeolocationCounts&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Integer&gt;&gt;&nbsp;serverGeolocationCounts&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
 </li>

@@ -155,7 +155,7 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.List)">SessionsMutator</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</code></th>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.List)">SessionsMutator</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -177,7 +177,7 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;</code></td>
+<td class="colFirst"><code>java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#all()">all</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -188,12 +188,12 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filterBy(java.util.function.Predicate)">filterBy</a></span>&#8203;(java.util.function.Predicate&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;predicate)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filterBy(java.util.function.Predicate)">filterBy</a></span>&#8203;(java.util.function.Predicate&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;predicate)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code><a href="SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filterPlayedOnServer(java.util.UUID)">filterPlayedOnServer</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#filterPlayedOnServer(com.djrapitops.plan.identification.ServerUUID)">filterPlayedOnServer</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
@@ -219,18 +219,18 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>static java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByPlayers(java.util.List)">sortByPlayers</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</code></th>
+<td class="colFirst"><code>static java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByPlayers(java.util.List)">sortByPlayers</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>static java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByServers(java.util.List)">sortByServers</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</code></th>
+<td class="colFirst"><code>static java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByServers(java.util.List)">sortByServers</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>static java.util.Map&lt;java.util.UUID,&#8203;java.util.TreeMap&lt;java.lang.Long,&#8203;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByServersToMaps(java.util.List)">sortByServersToMaps</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</code></th>
+<td class="colFirst"><code>static java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.TreeMap&lt;java.lang.Long,&#8203;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#sortByServersToMaps(java.util.List)">sortByServersToMaps</a></span>&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i11" class="rowColor">
@@ -254,7 +254,7 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i15" class="rowColor">
-<td class="colFirst"><code><a href="DateHoldersMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">DateHoldersMutator</a>&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;</code></td>
+<td class="colFirst"><code><a href="DateHoldersMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">DateHoldersMutator</a>&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toDateHoldersMutator()">toDateHoldersMutator</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -362,7 +362,7 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>SessionsMutator</h4>
-<pre>public&nbsp;SessionsMutator&#8203;(java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</pre>
+<pre>public&nbsp;SessionsMutator&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</pre>
 </li>
 </ul>
 </li>
@@ -384,13 +384,13 @@ extends java.lang.Object</pre>
 <pre class="methodSignature">public static&nbsp;<a href="SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a>&nbsp;forContainer&#8203;(<a href="../container/DataContainer.html" title="interface in com.djrapitops.plan.delivery.domain.container">DataContainer</a>&nbsp;container)</pre>
 </li>
 </ul>
-<a id="all()">
+<a id="sortByPlayers(java.util.List)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>all</h4>
-<pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;all()</pre>
+<h4>sortByPlayers</h4>
+<pre class="methodSignature">public static&nbsp;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&gt;&nbsp;sortByPlayers&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</pre>
 </li>
 </ul>
 <a id="sort(java.util.Comparator)">
@@ -402,13 +402,13 @@ extends java.lang.Object</pre>
 <pre class="methodSignature">public&nbsp;<a href="SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a>&nbsp;sort&#8203;(java.util.Comparator&lt;<a href="../DateHolder.html" title="interface in com.djrapitops.plan.delivery.domain">DateHolder</a>&gt;&nbsp;sessionComparator)</pre>
 </li>
 </ul>
-<a id="sortByPlayers(java.util.List)">
+<a id="sortByServers(java.util.List)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>sortByPlayers</h4>
-<pre class="methodSignature">public static&nbsp;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&gt;&nbsp;sortByPlayers&#8203;(java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</pre>
+<h4>sortByServers</h4>
+<pre class="methodSignature">public static&nbsp;java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&gt;&nbsp;sortByServers&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</pre>
 </li>
 </ul>
 <a id="filterSessionsBetween(long,long)">
@@ -421,13 +421,31 @@ extends java.lang.Object</pre>
                                              long&nbsp;before)</pre>
 </li>
 </ul>
-<a id="filterPlayedOnServer(java.util.UUID)">
+<a id="sortByServersToMaps(java.util.List)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>sortByServersToMaps</h4>
+<pre class="methodSignature">public static&nbsp;java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.TreeMap&lt;java.lang.Long,&#8203;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&gt;&nbsp;sortByServersToMaps&#8203;(java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</pre>
+</li>
+</ul>
+<a id="all()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>all</h4>
+<pre class="methodSignature">public&nbsp;java.util.List&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;all()</pre>
+</li>
+</ul>
+<a id="filterPlayedOnServer(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>filterPlayedOnServer</h4>
-<pre class="methodSignature">public&nbsp;<a href="SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a>&nbsp;filterPlayedOnServer&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public&nbsp;<a href="SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a>&nbsp;filterPlayedOnServer&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
 <a id="toDateHoldersMutator()">
@@ -436,7 +454,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>toDateHoldersMutator</h4>
-<pre class="methodSignature">public&nbsp;<a href="DateHoldersMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">DateHoldersMutator</a>&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;toDateHoldersMutator()</pre>
+<pre class="methodSignature">public&nbsp;<a href="DateHoldersMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">DateHoldersMutator</a>&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;toDateHoldersMutator()</pre>
 </li>
 </ul>
 <a id="toTotalWorldTimes()">
@@ -529,24 +547,6 @@ extends java.lang.Object</pre>
 <pre class="methodSignature">public&nbsp;long&nbsp;toAverageSessionLength()</pre>
 </li>
 </ul>
-<a id="sortByServers(java.util.List)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>sortByServers</h4>
-<pre class="methodSignature">public static&nbsp;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&gt;&nbsp;sortByServers&#8203;(java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</pre>
-</li>
-</ul>
-<a id="toUniquePlayers()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>toUniquePlayers</h4>
-<pre class="methodSignature">public&nbsp;int&nbsp;toUniquePlayers()</pre>
-</li>
-</ul>
 <a id="count()">
 <!--   -->
 </a>
@@ -575,13 +575,22 @@ extends java.lang.Object</pre>
                              long&nbsp;before)</pre>
 </li>
 </ul>
+<a id="toUniquePlayers()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>toUniquePlayers</h4>
+<pre class="methodSignature">public&nbsp;int&nbsp;toUniquePlayers()</pre>
+</li>
+</ul>
 <a id="filterBy(java.util.function.Predicate)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>filterBy</h4>
-<pre class="methodSignature">public&nbsp;<a href="SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a>&nbsp;filterBy&#8203;(java.util.function.Predicate&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;predicate)</pre>
+<pre class="methodSignature">public&nbsp;<a href="SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a>&nbsp;filterBy&#8203;(java.util.function.Predicate&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;predicate)</pre>
 </li>
 </ul>
 <a id="toMedianSessionLength()">
@@ -591,15 +600,6 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>toMedianSessionLength</h4>
 <pre class="methodSignature">public&nbsp;long&nbsp;toMedianSessionLength()</pre>
-</li>
-</ul>
-<a id="sortByServersToMaps(java.util.List)">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>sortByServersToMaps</h4>
-<pre class="methodSignature">public static&nbsp;java.util.Map&lt;java.util.UUID,&#8203;java.util.TreeMap&lt;java.lang.Long,&#8203;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&gt;&nbsp;sortByServersToMaps&#8203;(java.util.List&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</pre>
 </li>
 </ul>
 <a id="toPlayerDeathCount()">

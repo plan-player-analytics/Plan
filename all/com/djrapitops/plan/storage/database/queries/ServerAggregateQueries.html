@@ -162,13 +162,13 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverUserCount(java.util.UUID)">serverUserCount</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverUserCount(com.djrapitops.plan.identification.ServerUUID)">serverUserCount</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">
 <div class="block">Count how many users are on a server in the network.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code>static <a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.lang.Integer&gt;&gt;</code></td>
+<td class="colFirst"><code>static <a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.lang.Integer&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverUserCounts()">serverUserCounts</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Count how many users are on each server in the network.</div>
@@ -212,17 +212,17 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a id="serverUserCount(java.util.UUID)">
+<a id="serverUserCount(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>serverUserCount</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;&nbsp;serverUserCount&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.lang.Integer&gt;&nbsp;serverUserCount&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 <div class="block">Count how many users are on a server in the network.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>serverUUID</code> - ServerUUID of the Plan server.</dd>
+<dd><code>serverUUID</code> - Server UUID of the Plan server.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Count of users registered to that server after Plan installation.</dd>
 </dl>
@@ -234,7 +234,7 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>serverUserCounts</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.lang.Integer&gt;&gt;&nbsp;serverUserCounts()</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.lang.Integer&gt;&gt;&nbsp;serverUserCounts()</pre>
 <div class="block">Count how many users are on each server in the network.
  <p>
  Please note that counts can overlap as one user can join multiple servers.

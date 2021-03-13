@@ -154,14 +154,14 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>static <a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;&gt;</code></td>
+<td class="colFirst"><code>static <a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchAllTPSData()">fetchAllTPSData</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Query database for TPS data.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.Collection&lt;java.lang.String&gt;&gt;&gt;</code></td>
+<td class="colFirst"><code>static <a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.Collection&lt;java.lang.String&gt;&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchAllWorldNames()">fetchAllWorldNames</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Query database for world names.</div>
@@ -197,7 +197,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>fetchAllTPSData</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;&gt;&nbsp;fetchAllTPSData()</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;&gt;&nbsp;fetchAllTPSData()</pre>
 <div class="block">Query database for TPS data.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -211,7 +211,7 @@ extends java.lang.Object</pre>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>fetchAllWorldNames</h4>
-<pre class="methodSignature">public static&nbsp;<a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.util.Collection&lt;java.lang.String&gt;&gt;&gt;&nbsp;fetchAllWorldNames()</pre>
+<pre class="methodSignature">public static&nbsp;<a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.Collection&lt;java.lang.String&gt;&gt;&gt;&nbsp;fetchAllWorldNames()</pre>
 <div class="block">Query database for world names.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>

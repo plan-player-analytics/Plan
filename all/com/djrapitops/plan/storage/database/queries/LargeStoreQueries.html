@@ -169,7 +169,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllNicknameData(java.util.Map)">storeAllNicknameData</a></span>&#8203;(java.util.Map&lt;java.util.UUID,&#8203;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../delivery/domain/Nickname.html" title="class in com.djrapitops.plan.delivery.domain">Nickname</a>&gt;&gt;&gt;&nbsp;ofServersAndUsers)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllNicknameData(java.util.Map)">storeAllNicknameData</a></span>&#8203;(java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../delivery/domain/Nickname.html" title="class in com.djrapitops.plan.delivery.domain">Nickname</a>&gt;&gt;&gt;&nbsp;ofServersAndUsers)</code></th>
 <td class="colLast">
 <div class="block">Execute a big batch of nickname insert statements.</div>
 </td>
@@ -193,31 +193,31 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllSessionsWithKillAndWorldData(java.util.Collection)">storeAllSessionsWithKillAndWorldData</a></span>&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllSessionsWithKillAndWorldData(java.util.Collection)">storeAllSessionsWithKillAndWorldData</a></span>&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllSessionsWithoutKillOrWorldData(java.util.Collection)">storeAllSessionsWithoutKillOrWorldData</a></span>&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllSessionsWithoutKillOrWorldData(java.util.Collection)">storeAllSessionsWithoutKillOrWorldData</a></span>&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllTPSData(java.util.Map)">storeAllTPSData</a></span>&#8203;(java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;&nbsp;ofServers)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllTPSData(java.util.Map)">storeAllTPSData</a></span>&#8203;(java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;&nbsp;ofServers)</code></th>
 <td class="colLast">
 <div class="block">Execute a big batch of TPS insert statements.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllWorldNames(java.util.Map)">storeAllWorldNames</a></span>&#8203;(java.util.Map&lt;java.util.UUID,&#8203;java.util.Collection&lt;java.lang.String&gt;&gt;&nbsp;ofServers)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeAllWorldNames(java.util.Map)">storeAllWorldNames</a></span>&#8203;(java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.Collection&lt;java.lang.String&gt;&gt;&nbsp;ofServers)</code></th>
 <td class="colLast">
 <div class="block">Execute a big batch of world name insert statements.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storePerServerUserInformation(java.util.Map)">storePerServerUserInformation</a></span>&#8203;(java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&nbsp;ofServers)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storePerServerUserInformation(java.util.Map)">storePerServerUserInformation</a></span>&#8203;(java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&nbsp;ofServers)</code></th>
 <td class="colLast">
 <div class="block">Execute a big batch of Per server UserInfo insert statements.</div>
 </td>
@@ -268,7 +268,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>storeAllNicknameData</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllNicknameData&#8203;(java.util.Map&lt;java.util.UUID,&#8203;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../delivery/domain/Nickname.html" title="class in com.djrapitops.plan.delivery.domain">Nickname</a>&gt;&gt;&gt;&nbsp;ofServersAndUsers)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllNicknameData&#8203;(java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../delivery/domain/Nickname.html" title="class in com.djrapitops.plan.delivery.domain">Nickname</a>&gt;&gt;&gt;&nbsp;ofServersAndUsers)</pre>
 <div class="block">Execute a big batch of nickname insert statements.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -309,7 +309,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>storeAllTPSData</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllTPSData&#8203;(java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;&nbsp;ofServers)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllTPSData&#8203;(java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;&nbsp;ofServers)</pre>
 <div class="block">Execute a big batch of TPS insert statements.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -325,7 +325,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>storePerServerUserInformation</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storePerServerUserInformation&#8203;(java.util.Map&lt;java.util.UUID,&#8203;java.util.List&lt;<a href="../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&nbsp;ofServers)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storePerServerUserInformation&#8203;(java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&nbsp;ofServers)</pre>
 <div class="block">Execute a big batch of Per server UserInfo insert statements.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -341,7 +341,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>storeAllWorldNames</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllWorldNames&#8203;(java.util.Map&lt;java.util.UUID,&#8203;java.util.Collection&lt;java.lang.String&gt;&gt;&nbsp;ofServers)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllWorldNames&#8203;(java.util.Map&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.Collection&lt;java.lang.String&gt;&gt;&nbsp;ofServers)</pre>
 <div class="block">Execute a big batch of world name insert statements.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -373,7 +373,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>storeAllSessionsWithoutKillOrWorldData</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllSessionsWithoutKillOrWorldData&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllSessionsWithoutKillOrWorldData&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</pre>
 </li>
 </ul>
 <a id="storeAllSessionsWithKillAndWorldData(java.util.Collection)">
@@ -382,7 +382,7 @@ extends java.lang.Object</pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>storeAllSessionsWithKillAndWorldData</h4>
-<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllSessionsWithKillAndWorldData&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/Session.html" title="class in com.djrapitops.plan.gathering.domain">Session</a>&gt;&nbsp;sessions)</pre>
+<pre class="methodSignature">public static&nbsp;<a href="../transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;storeAllSessionsWithKillAndWorldData&#8203;(java.util.Collection&lt;<a href="../../../gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;&nbsp;sessions)</pre>
 </li>
 </ul>
 <a id="storeAllPingData(java.util.Map)">

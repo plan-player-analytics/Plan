@@ -181,7 +181,7 @@ implements <a href="ServerLoader.html" title="interface in com.djrapitops.plan.i
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="../Server.html" title="class in com.djrapitops.plan.identification">Server</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#load(java.util.UUID)">load</a></span>&#8203;(java.util.UUID&nbsp;serverUUID)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#load(com.djrapitops.plan.identification.ServerUUID)">load</a></span>&#8203;(<a href="../ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">
 <div class="block">Load the server information.</div>
 </td>
@@ -237,18 +237,18 @@ public&nbsp;ServerDBLoader&#8203;(<a href="../../storage/database/DBSystem.html"
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="load(java.util.UUID)">
+<a id="load(com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>load</h4>
-<pre class="methodSignature">public&nbsp;java.util.Optional&lt;<a href="../Server.html" title="class in com.djrapitops.plan.identification">Server</a>&gt;&nbsp;load&#8203;(java.util.UUID&nbsp;serverUUID)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="ServerLoader.html#load(java.util.UUID)">ServerLoader</a></code></span></div>
+<pre class="methodSignature">public&nbsp;java.util.Optional&lt;<a href="../Server.html" title="class in com.djrapitops.plan.identification">Server</a>&gt;&nbsp;load&#8203;(<a href="../ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="ServerLoader.html#load(com.djrapitops.plan.identification.ServerUUID)">ServerLoader</a></code></span></div>
 <div class="block">Load the server information.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="ServerLoader.html#load(java.util.UUID)">load</a></code>&nbsp;in interface&nbsp;<code><a href="ServerLoader.html" title="interface in com.djrapitops.plan.identification.storage">ServerLoader</a></code></dd>
+<dd><code><a href="ServerLoader.html#load(com.djrapitops.plan.identification.ServerUUID)">load</a></code>&nbsp;in interface&nbsp;<code><a href="ServerLoader.html" title="interface in com.djrapitops.plan.identification.storage">ServerLoader</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>serverUUID</code> - UUID of the server, null if not known</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
