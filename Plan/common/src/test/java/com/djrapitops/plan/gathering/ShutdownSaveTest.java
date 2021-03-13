@@ -141,16 +141,6 @@ class ShutdownSaveTest {
         database.close();
     }
 
-    @Test
-    void sessionsAreSavedOnJVMShutdown() {
-        ShutdownHook shutdownHook = new ShutdownHook(underTest);
-        shutdownHook.run();
-
-        database.init();
-        assertFalse(database.query(SessionQueries.fetchAllSessions()).isEmpty());
-        database.close();
-    }
-
     private void placeSessionToCache() {
         ServerUUID serverUUID = TestConstants.SERVER_UUID;
         UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
