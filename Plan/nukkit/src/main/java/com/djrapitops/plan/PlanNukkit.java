@@ -38,6 +38,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -101,16 +105,30 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
         return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
     }
 
-    /**
-     * Disables the plugin.
-     */
     @Override
     public void onDisable() {
-        if (serverShutdownSave != null) serverShutdownSave.performSave();
+        storeSessionsOnShutdown();
         cancelAllTasks();
         if (system != null) system.disable();
 
-        logger.info(locale != null ? locale.getString(PluginLang.DISABLED) : PluginLang.DISABLED.getDefault());
+        logger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED));
+    }
+
+    private void storeSessionsOnShutdown() {
+        if (serverShutdownSave != null) {
+            Optional<Future<?>> complete = serverShutdownSave.performSave();
+            if (complete.isPresent()) {
+                try {
+                    complete.get().get(4, TimeUnit.SECONDS); // wait for completion for 4s
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    logger.error("Failed to save sessions to database on shutdown: " + e.getCause().getMessage());
+                } catch (TimeoutException e) {
+                    logger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED_UNSAVED_SESSIONS_TIMEOUT));
+                }
+            }
+        }
     }
 
     public void cancelAllTasks() {

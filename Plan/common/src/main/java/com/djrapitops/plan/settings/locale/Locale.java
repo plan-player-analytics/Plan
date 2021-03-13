@@ -40,6 +40,10 @@ public class Locale extends HashMap<Lang, Message> {
         return forLangCode(LangCode.fromString(code), files);
     }
 
+    public static String getStringNullSafe(Locale locale, Lang lang) {
+        return locale != null ? locale.getString(lang) : lang.getDefault();
+    }
+
     private LangCode langCode;
 
     public Locale() {

@@ -18,6 +18,8 @@ package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -153,5 +155,52 @@ public class FinishedSession implements DateHolder {
         public int get() {
             return id;
         }
+    }
+
+    /**
+     * Deserialize csv format of the session.
+     *
+     * @param serialized Serialized version of the session
+     * @return Proper session if the csv had 9 columns or more
+     * @throws com.google.gson.JsonSyntaxException if serialized format has a json syntax error
+     */
+    public static Optional<FinishedSession> deserializeCSV(String serialized) {
+        String[] asArray = StringUtils.split(serialized, ';');
+        if (asArray.length < 9) return Optional.empty();
+        // Note for the future: Use length to determine version of serialized class
+
+        Gson gson = new Gson();
+
+        UUID playerUUID = UUID.fromString(asArray[0]);
+        ServerUUID serverUUID = ServerUUID.fromString(asArray[1]);
+        long start = Long.parseLong(asArray[2]);
+        long end = Long.parseLong(asArray[3]);
+        long afkTime = Long.parseLong(asArray[4]);
+
+        DataMap extraData = new DataMap();
+        extraData.put(WorldTimes.class, gson.fromJson(asArray[5], WorldTimes.class));
+        extraData.put(PlayerKills.class, gson.fromJson(asArray[6], PlayerKills.class));
+        extraData.put(MobKillCounter.class, gson.fromJson(asArray[7], MobKillCounter.class));
+        extraData.put(DeathCounter.class, gson.fromJson(asArray[8], DeathCounter.class));
+        return Optional.of(new FinishedSession(playerUUID, serverUUID, start, end, afkTime, extraData));
+    }
+
+    /**
+     * Serialize into csv format.
+     *
+     * @return Serialized format
+     */
+    public String serializeCSV() {
+        Gson gson = new Gson();
+
+        return String.valueOf(playerUUID) + ';' +
+                serverUUID + ';' +
+                start + ';' +
+                end + ';' +
+                afkTime + ';' +
+                gson.toJson(getExtraData(WorldTimes.class).orElseGet(WorldTimes::new)) + ';' +
+                gson.toJson(getExtraData(PlayerKills.class).orElseGet(PlayerKills::new)) + ';' +
+                gson.toJson(getExtraData(MobKillCounter.class).orElseGet(MobKillCounter::new)) + ';' +
+                gson.toJson(getExtraData(DeathCounter.class).orElseGet(DeathCounter::new));
     }
 }

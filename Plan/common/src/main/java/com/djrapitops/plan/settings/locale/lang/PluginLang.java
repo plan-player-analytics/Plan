@@ -28,6 +28,7 @@ public enum PluginLang implements Lang {
     API_ADD_RESOURCE_JS("API - js+", "PageExtension: ${0} added javascript(s) to ${1}, ${2}"),
     API_ADD_RESOURCE_CSS("API - css+", "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"),
 
+    ENABLE_NOTIFY_STORING_PRESERVED_SESSIONS("Enable - Storing preserved sessions", "Storing sessions that were preserved before previous shutdown."),
     ENABLE_NOTIFY_EMPTY_IP("Enable - Notify Empty IP", "IP in server.properties is empty & Alternative_IP is not in use. Incorrect links might be given!"),
     ENABLE_NOTIFY_BAD_IP("Enable - Notify Bad IP", "0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!"),
     ENABLE_NOTIFY_WEB_SERVER_DISABLED("Enable - Notify Webserver disabled", "WebServer was not initialized. (WebServer.DisableWebServer: true)"),
@@ -56,6 +57,7 @@ public enum PluginLang implements Lang {
     DISABLED_PROCESSING("Disable - Processing", "Processing critical unprocessed tasks. (${0})"),
     DISABLED_PROCESSING_COMPLETE("Disable - Processing Complete", "Processing complete."),
     DISABLED_UNSAVED_SESSIONS("Disable - Unsaved Session Save", "Saving unfinished sessions.."),
+    DISABLED_UNSAVED_SESSIONS_TIMEOUT("Disable - Unsaved Session Save Timeout", "Timeout hit, storing the unfinished sessions on next enable instead."),
 
     VERSION_NEWEST("Version - Latest", "You're using the latest version."),
     VERSION_AVAILABLE("Version - New", "New Release (${0}) is available ${1}"),

@@ -23,18 +23,18 @@ import java.util.Optional;
 
 public class DataMap {
 
-    private final Map<Class<?>, Object> data;
+    private final Map<String, Object> data;
 
     public DataMap() {
         this.data = new HashMap<>();
     }
 
     public <T> void put(Class<T> type, T value) {
-        data.put(type, value);
+        data.put(type.getName(), value);
     }
 
     public <T> Optional<T> get(Class<T> ofType) {
-        return Optional.ofNullable(ofType.cast(data.get(ofType)));
+        return Optional.ofNullable(ofType.cast(data.get(ofType.getName())));
     }
 
 
