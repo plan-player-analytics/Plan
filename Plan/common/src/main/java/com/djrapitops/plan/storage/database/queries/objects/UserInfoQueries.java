@@ -199,11 +199,35 @@ public class UserInfoQueries {
                 "COUNT(hostname) as total," +
                 UserInfoTable.HOSTNAME +
                 FROM + UserInfoTable.TABLE_NAME +
-                GROUP_BY + UserInfoTable.HOSTNAME;
+                GROUP_BY + UserInfoTable.HOSTNAME +
+                ORDER_BY + UserInfoTable.HOSTNAME + " DESC";
+
+        return new QueryAllStatement<Map<String, Integer>>(sql, 100) {
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> hostnames = new HashMap<>();
+                while (set.next()) {
+                    hostnames.put(set.getString(UserInfoTable.HOSTNAME), set.getInt("total"));
+                }
+                return hostnames;
+            }
+        };
+    }
+
+    public static Query<Map<String, Integer>> hostnameTotals(ServerUUID serverUUID) {
+        String sql = SELECT +
+                "COUNT(hostname) as total," +
+                UserInfoTable.HOSTNAME +
+                FROM + UserInfoTable.TABLE_NAME +
+                GROUP_BY + UserInfoTable.HOSTNAME +
+                WHERE + UserInfoTable.SERVER_UUID + "=?" +
+                ORDER_BY + UserInfoTable.HOSTNAME + " DESC";
 
         return new QueryStatement<Map<String, Integer>>(sql, 100) {
             @Override
-            public void prepare(PreparedStatement statement) {}
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
 
             @Override
             public Map<String, Integer> processResults(ResultSet set) throws SQLException {

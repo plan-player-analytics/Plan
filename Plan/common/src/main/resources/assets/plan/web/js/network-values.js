@@ -419,7 +419,7 @@ function loadGeolocationGraph(json, error) {
 
 function loadHostnamePie(json, error) {
     if (json) {
-        hostnamePieSeries = {
+        const hostnamePieSeries = {
             name: 'Used IP Addresses',
             colorByPoint: true,
             colors: json.hostname_pie_colors,

@@ -154,6 +154,8 @@ public class GraphsJSONResolver implements Resolver {
                 return graphJSON.serverCalendarJSON(serverUUID);
             case GRAPH_WORLD_PIE:
                 return graphJSON.serverWorldPieJSONAsMap(serverUUID);
+            case GRAPH_HOSTNAME_PIE:
+                return graphJSON.playerHostnamePieJSONAsMap(serverUUID);
             case GRAPH_ACTIVITY:
                 return graphJSON.activityGraphsJSONAsMap(serverUUID);
             case GRAPH_WORLD_MAP:

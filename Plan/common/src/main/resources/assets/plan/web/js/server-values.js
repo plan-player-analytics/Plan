@@ -586,3 +586,17 @@ function loadPunchCard(json, error) {
         document.getElementById('punchCard').innerText = `Failed to load graph data: ${error}`;
     }
 }
+
+function loadHostnamePie(json, error) {
+    if (json) {
+        const hostnamePieSeries = {
+            name: 'Used IP Addresses',
+            colorByPoint: true,
+            colors: json.hostname_pie_colors,
+            data: json.hostname_pie_slices
+        };
+        hostnamePie('hostnamePie', hostnamePieSeries);
+    } else if (error) {
+        document.getElementById('hostnamePie').innerText = `Failed to load graph data: ${error}`;
+    }
+}

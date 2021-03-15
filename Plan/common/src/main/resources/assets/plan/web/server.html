@@ -759,6 +759,17 @@
                                 </div>
                                 <div class="chart-area" id="activityPie"></div>
                             </div>
+
+                            <!-- Hostname Analytics -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold col-black">
+                                        <i class="fa fa-fw fa-users col-amber"></i>
+                                        Used hostnames
+                                    </h6>
+                                </div>
+                                <div class="chart-area" id="hostnamePie"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -1387,6 +1398,7 @@
         refreshingJsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", loadPingGraph, 'performance');
         refreshingJsonRequest("../v1/graph?type=worldPie&server=${serverUUID}", loadWorldPie, 'sessions-overview');
         refreshingJsonRequest("../v1/graph?type=activity&server=${serverUUID}", loadActivityGraph, 'playerbase-overview');
+        refreshingJsonRequest("./v1/graph?type=hostnamePie", loadHostnamePie, 'playerbase-overview');
         refreshingJsonRequest("../v1/graph?type=geolocation&server=${serverUUID}", loadGeolocationGraph, 'geolocations');
         refreshingJsonRequest("../v1/graph?type=uniqueAndNew&server=${serverUUID}", loadUniqueAndNewGraph, 'online-activity-overview');
         refreshingJsonRequest("../v1/graph?type=hourlyUniqueAndNew&server=${serverUUID}", loadHourlyUniqueAndNewGraph, 'online-activity-overview');
