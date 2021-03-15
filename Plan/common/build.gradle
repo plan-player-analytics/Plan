@@ -3,10 +3,8 @@ dependencies {
     compile project(":api")
     compileOnly project(":extensions")
     compile project(path: ":extensions", configuration: 'shadow')
-    compile "org.apache.httpcomponents:httpclient:$httpClientVersion"
     compile "org.apache.commons:commons-text:$commonsTextVersion"
     compile "org.apache.commons:commons-compress:$commonsCompressVersion"
-    compile "com.googlecode.htmlcompressor:htmlcompressor:$htmlCompressorVersion"
     compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     compile "com.h2database:h2:$h2Version"
     compile "mysql:mysql-connector-java:$mysqlVersion"
@@ -45,8 +43,9 @@ shadowJar {
     exclude "**/*.psd"
 
     exclude "**/module-info.class"
-    exclude 'META-INF/versions/' // Causes Sponge to crash
-
+    exclude 'META-INF/versions/'   // Causes Sponge to crash
+    exclude 'org/apache/http/**/*' // Unnecessary http client depended on by geolite2 implementation
+    exclude 'mozilla/**/*'
 
     relocate 'com.maxmind', 'plan.com.maxmind'
     relocate 'com.fasterxml', 'plan.com.fasterxml'
