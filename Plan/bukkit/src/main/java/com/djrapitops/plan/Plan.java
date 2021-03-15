@@ -34,13 +34,13 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -55,12 +55,23 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
+
+    @Override
+    public void onLoad() {
+        abstractionLayer = new BukkitPlatformLayer(this);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
+        try {
+            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
+        }
+    }
 
     @Override
     public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new BukkitPlatformLayer(this);
-        logger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
         PlanBukkitComponent component = DaggerPlanBukkitComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
@@ -86,7 +97,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
             onDisable();
         } catch (Exception e) {
             String version = abstractionLayer.getPluginInformation().getVersion();
-            Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+            getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();

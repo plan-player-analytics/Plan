@@ -34,6 +34,7 @@ import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,12 +60,23 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
     private final Map<String, Subcommand> commands = new HashMap<>();
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
+
+    @Override
+    public void onLoad() {
+        abstractionLayer = new NukkitPlatformLayer(this);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
+        try {
+            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
+        }
+    }
 
     @Override
     public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new NukkitPlatformLayer(this);
-        logger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
         PlanNukkitComponent component = DaggerPlanNukkitComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)

@@ -29,6 +29,7 @@ import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,12 +46,23 @@ public class PlanBungee extends Plugin implements PlanPlugin {
 
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
+
+    @Override
+    public void onLoad() {
+        abstractionLayer = new BungeePlatformLayer(this);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
+        try {
+            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
+        }
+    }
 
     @Override
     public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new BungeePlatformLayer(this);
-        logger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
         PlanBungeeComponent component = DaggerPlanBungeeComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)

@@ -36,6 +36,7 @@ import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Dependency;
@@ -43,6 +44,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Task;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,6 +80,7 @@ public class PlanSponge implements PlanPlugin {
     private ServerShutdownSave serverShutdownSave;
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
 
     @com.google.inject.Inject
     public PlanSponge(
@@ -95,6 +98,11 @@ public class PlanSponge implements PlanPlugin {
     private final Map<String, CommandMapping> commands = new HashMap<>();
 
     @Listener
+    public void onServerLoad(GamePreInitializationEvent event) {
+        onLoad();
+    }
+
+    @Listener
     public void onServerStart(GameStartedServerEvent event) {
         onEnable();
     }
@@ -104,10 +112,18 @@ public class PlanSponge implements PlanPlugin {
         onDisable();
     }
 
-    public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new SpongePlatformLayer(this, dataFolder, slf4jLogger);
+    private void onLoad() {
+        abstractionLayer = new SpongePlatformLayer(this, dataFolder, slf4jLogger);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
+        try {
+            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+        } catch (IOException e) {
+            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
+        }
+    }
+
+    public void onEnable() {
         PlanSpongeComponent component = DaggerPlanSpongeComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
