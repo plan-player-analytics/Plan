@@ -6,9 +6,9 @@ dependencies {
     compile "org.apache.commons:commons-text:$commonsTextVersion"
     compile "org.apache.commons:commons-compress:$commonsCompressVersion"
     compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    compile "com.h2database:h2:$h2Version"
-    compile "mysql:mysql-connector-java:$mysqlVersion"
-    compile "org.xerial:sqlite-jdbc:$sqliteVersion"
+    implementation "com.h2database:h2:$h2Version"
+    implementation "mysql:mysql-connector-java:$mysqlVersion"
+    implementation "org.xerial:sqlite-jdbc:$sqliteVersion"
     compile "com.zaxxer:HikariCP:$hikariVersion"
     compile "org.slf4j:slf4j-nop:$slf4jVersion"
     compile "org.slf4j:slf4j-api:$slf4jVersion"
@@ -43,18 +43,17 @@ shadowJar {
     exclude "**/*.psd"
 
     exclude "**/module-info.class"
-    exclude 'META-INF/versions/'   // Causes Sponge to crash
+    exclude 'META-INF/versions/' // Causes Sponge to crash
     exclude 'org/apache/http/**/*' // Unnecessary http client depended on by geolite2 implementation
     exclude 'mozilla/**/*'
 
     relocate 'com.maxmind', 'plan.com.maxmind'
     relocate 'com.fasterxml', 'plan.com.fasterxml'
     relocate 'com.zaxxer', 'plan.com.zaxxer'
-    relocate 'com.googlecode.htmlcompressor', 'plan.com.google.htmlcompressor'
     relocate 'com.google.protobuf', 'plan.com.google.protobuf'
     relocate 'com.google.gson', 'plan.com.google.gson'
     relocate 'com.google.errorprone', 'plan.com.google.errorprone'
-    relocate 'org.h2', 'plan.org.h2'
+//    relocate 'org.h2', 'plan.org.h2'
     relocate 'org.bstats', 'plan.org.bstats'
     relocate 'org.slf4j', 'plan.org.slf4j'
 

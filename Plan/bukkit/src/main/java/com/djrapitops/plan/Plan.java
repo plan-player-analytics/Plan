@@ -34,6 +34,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -55,46 +56,59 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
+
+    @Override
+    public void onLoad() {
+        abstractionLayer = new BukkitPlatformLayer(this);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
+        try {
+            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new BukkitPlatformLayer(this);
-        logger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
-        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder()
-                .plan(this)
-                .abstractionLayer(abstractionLayer)
-                .server(getServer())
-                .build();
-        try {
-            system = component.system();
-            serverShutdownSave = component.serverShutdownSave();
-            locale = system.getLocaleSystem().getLocale();
-            system.enable();
+        abstractionLayer.getDependencyLoader().executeWithDependencyClassloaderContext(() -> {
+            PlanBukkitComponent component = DaggerPlanBukkitComponent.builder()
+                    .plan(this)
+                    .abstractionLayer(abstractionLayer)
+                    .server(getServer())
+                    .build();
+            try {
+                system = component.system();
+                serverShutdownSave = component.serverShutdownSave();
+                locale = system.getLocaleSystem().getLocale();
+                system.enable();
 
-            registerMetrics();
-            registerPlaceholderAPIExtension(component.placeholders());
+                registerMetrics();
+                registerPlaceholderAPIExtension(component.placeholders());
 
-            logger.info(locale.getString(PluginLang.ENABLED));
-        } catch (AbstractMethodError e) {
-            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
-        } catch (EnableException e) {
-            logger.error("----------------------------------------");
-            logger.error("Error: " + e.getMessage());
-            logger.error("----------------------------------------");
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            onDisable();
-        } catch (Exception e) {
-            String version = abstractionLayer.getPluginInformation().getVersion();
-            Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-            onDisable();
-        }
-        registerCommand(component.planCommand().build());
-        if (system != null) {
-            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
-        }
+                logger.info(locale.getString(PluginLang.ENABLED));
+            } catch (AbstractMethodError e) {
+                logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            } catch (EnableException e) {
+                logger.error("----------------------------------------");
+                logger.error("Error: " + e.getMessage());
+                logger.error("----------------------------------------");
+                logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+                onDisable();
+            } catch (Exception e) {
+                String version = abstractionLayer.getPluginInformation().getVersion();
+                Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+                logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+                logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+                onDisable();
+            }
+            registerCommand(component.planCommand().build());
+            if (system != null) {
+                system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+            }
+        });
     }
 
     private void registerPlaceholderAPIExtension(BukkitPlaceholderRegistrar placeholders) {

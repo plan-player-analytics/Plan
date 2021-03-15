@@ -18,10 +18,11 @@ shadowJar {
 
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
+        exclude 'org/apache/httpcomponents/**'
     }
     relocate 'dagger', 'plan.dagger'
-    relocate 'com.mysql.jdbc', 'plan.com.mysql.jdbc'
-    relocate 'org.sqlite', 'plan.org.sqlite'
+//    relocate 'com.mysql.jdbc', 'plan.com.mysql.jdbc'
+//    relocate 'org.sqlite', 'plan.org.sqlite'
     relocate 'com.mysql.cj', 'plan.com.mysql.cj'
     relocate 'javax.inject', 'plan.javax.inject'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'

@@ -37,6 +37,7 @@ import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.logging.Level;
@@ -93,39 +94,51 @@ public class PlanVelocity implements PlanPlugin {
         PlatformAbstractionLayer abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
-        PlanVelocityComponent component = DaggerPlanVelocityComponent.builder().plan(this).build();
+
         try {
-            system = component.system();
-            locale = system.getLocaleSystem().getLocale();
-            system.enable();
-
-            int pluginId = 10326;
-            new BStatsVelocity(
-                    system.getDatabaseSystem().getDatabase(),
-                    metricsFactory.make(this, pluginId)
-            ).registerMetrics();
-
-            logger.info(locale.getString(PluginLang.ENABLED));
-        } catch (AbstractMethodError e) {
-            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
-        } catch (EnableException e) {
-            logger.error("----------------------------------------");
-            logger.error("Error: " + e.getMessage());
-            logger.error("----------------------------------------");
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
-            onDisable();
-        } catch (Exception e) {
-            String version = abstractionLayer.getPluginInformation().getVersion();
-            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
-            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-            onDisable();
+            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        registerCommand(component.planCommand().build());
-        if (system != null) {
-            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
-        }
+        abstractionLayer.getDependencyLoader().executeWithDependencyClassloaderContext(() -> {
+            PlanVelocityComponent component = DaggerPlanVelocityComponent.builder()
+                    .plan(this)
+                    .abstractionLayer(abstractionLayer)
+                    .build();
+            try {
+                system = component.system();
+                locale = system.getLocaleSystem().getLocale();
+                system.enable();
+
+                int pluginId = 10326;
+                new BStatsVelocity(
+                        system.getDatabaseSystem().getDatabase(),
+                        metricsFactory.make(this, pluginId)
+                ).registerMetrics();
+
+                logger.info(locale.getString(PluginLang.ENABLED));
+            } catch (AbstractMethodError e) {
+                logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            } catch (EnableException e) {
+                logger.error("----------------------------------------");
+                logger.error("Error: " + e.getMessage());
+                logger.error("----------------------------------------");
+                logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
+                onDisable();
+            } catch (Exception e) {
+                String version = abstractionLayer.getPluginInformation().getVersion();
+                java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+                logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planvelocity reload");
+                logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+                onDisable();
+            }
+
+            registerCommand(component.planCommand().build());
+            if (system != null) {
+                system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+            }
+        });
     }
 
     public void onDisable() {

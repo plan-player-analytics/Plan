@@ -36,6 +36,7 @@ import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.command.CommandMapping;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Dependency;
@@ -43,6 +44,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Task;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,6 +80,7 @@ public class PlanSponge implements PlanPlugin {
     private ServerShutdownSave serverShutdownSave;
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
 
     @com.google.inject.Inject
     public PlanSponge(
@@ -95,6 +98,11 @@ public class PlanSponge implements PlanPlugin {
     private final Map<String, CommandMapping> commands = new HashMap<>();
 
     @Listener
+    public void onServerLoad(GamePreInitializationEvent event) {
+        onLoad();
+    }
+
+    @Listener
     public void onServerStart(GameStartedServerEvent event) {
         onEnable();
     }
@@ -104,45 +112,55 @@ public class PlanSponge implements PlanPlugin {
         onDisable();
     }
 
-    public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new SpongePlatformLayer(this, dataFolder, slf4jLogger);
+    private void onLoad() {
+        abstractionLayer = new SpongePlatformLayer(this, dataFolder, slf4jLogger);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
-        PlanSpongeComponent component = DaggerPlanSpongeComponent.builder()
-                .plan(this)
-                .abstractionLayer(abstractionLayer)
-                .game(Sponge.getGame())
-                .build();
         try {
-            system = component.system();
-            serverShutdownSave = component.serverShutdownSave();
-            locale = system.getLocaleSystem().getLocale();
-            system.enable();
-
-            new BStatsSponge(
-                    metrics, system.getDatabaseSystem().getDatabase()
-            ).registerMetrics();
-
-            logger.info(locale.getString(PluginLang.ENABLED));
-        } catch (AbstractMethodError e) {
-            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
-        } catch (EnableException e) {
-            logger.error("----------------------------------------");
-            logger.error("Error: " + e.getMessage());
-            logger.error("----------------------------------------");
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            onDisable();
-        } catch (Exception e) {
-            String version = abstractionLayer.getPluginInformation().getVersion();
-            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-            onDisable();
+            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        registerCommand(component.planCommand().build());
-        if (system != null) {
-            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
-        }
+    }
+
+    public void onEnable() {
+        abstractionLayer.getDependencyLoader().executeWithDependencyClassloaderContext(() -> {
+            PlanSpongeComponent component = DaggerPlanSpongeComponent.builder()
+                    .plan(this)
+                    .abstractionLayer(abstractionLayer)
+                    .game(Sponge.getGame())
+                    .build();
+            try {
+                system = component.system();
+                serverShutdownSave = component.serverShutdownSave();
+                locale = system.getLocaleSystem().getLocale();
+                system.enable();
+
+                new BStatsSponge(
+                        metrics, system.getDatabaseSystem().getDatabase()
+                ).registerMetrics();
+
+                logger.info(locale.getString(PluginLang.ENABLED));
+            } catch (AbstractMethodError e) {
+                logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            } catch (EnableException e) {
+                logger.error("----------------------------------------");
+                logger.error("Error: " + e.getMessage());
+                logger.error("----------------------------------------");
+                logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+                onDisable();
+            } catch (Exception e) {
+                String version = abstractionLayer.getPluginInformation().getVersion();
+                java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+                logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+                logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+                onDisable();
+            }
+            registerCommand(component.planCommand().build());
+            if (system != null) {
+                system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+            }
+        });
     }
 
     public void onDisable() {

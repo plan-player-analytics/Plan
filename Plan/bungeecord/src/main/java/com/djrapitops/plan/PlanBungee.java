@@ -29,6 +29,7 @@ import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,46 +46,59 @@ public class PlanBungee extends Plugin implements PlanPlugin {
 
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
+
+    @Override
+    public void onLoad() {
+        abstractionLayer = new BungeePlatformLayer(this);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
+        try {
+            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new BungeePlatformLayer(this);
-        logger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
-        PlanBungeeComponent component = DaggerPlanBungeeComponent.builder()
-                .plan(this)
-                .abstractionLayer(abstractionLayer)
-                .build();
-        try {
-            system = component.system();
-            locale = system.getLocaleSystem().getLocale();
-            system.enable();
+        abstractionLayer.getDependencyLoader().executeWithDependencyClassloaderContext(() -> {
+            PlanBungeeComponent component = DaggerPlanBungeeComponent.builder()
+                    .plan(this)
+                    .abstractionLayer(abstractionLayer)
+                    .build();
+            try {
+                system = component.system();
+                locale = system.getLocaleSystem().getLocale();
+                system.enable();
 
-            new BStatsBungee(
-                    this,
-                    system.getDatabaseSystem().getDatabase()
-            ).registerMetrics();
+                new BStatsBungee(
+                        this,
+                        system.getDatabaseSystem().getDatabase()
+                ).registerMetrics();
 
-            logger.info(locale.getString(PluginLang.ENABLED));
-        } catch (AbstractMethodError e) {
-            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
-        } catch (EnableException e) {
-            logger.error("----------------------------------------");
-            logger.error("Error: " + e.getMessage());
-            logger.error("----------------------------------------");
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
-            onDisable();
-        } catch (Exception e) {
-            String version = abstractionLayer.getPluginInformation().getVersion();
-            Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
-            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-            onDisable();
-        }
-        registerCommand(component.planCommand().build());
-        if (system != null) {
-            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
-        }
+                logger.info(locale.getString(PluginLang.ENABLED));
+            } catch (AbstractMethodError e) {
+                logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            } catch (EnableException e) {
+                logger.error("----------------------------------------");
+                logger.error("Error: " + e.getMessage());
+                logger.error("----------------------------------------");
+                logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+                onDisable();
+            } catch (Exception e) {
+                String version = abstractionLayer.getPluginInformation().getVersion();
+                Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+                logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /planbungee reload");
+                logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+                onDisable();
+            }
+            registerCommand(component.planCommand().build());
+            if (system != null) {
+                system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+            }
+        });
     }
 
     @Override
