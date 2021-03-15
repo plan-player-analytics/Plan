@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -222,15 +222,20 @@ implements <a href="PlanPlugin.html" title="interface in com.djrapitops.plan">Pl
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onServerStart(org.spongepowered.api.event.game.state.GameStartedServerEvent)">onServerStart</a></span>&#8203;(org.spongepowered.api.event.game.state.GameStartedServerEvent&nbsp;event)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onServerLoad(org.spongepowered.api.event.game.state.GamePreInitializationEvent)">onServerLoad</a></span>&#8203;(org.spongepowered.api.event.game.state.GamePreInitializationEvent&nbsp;event)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onServerStop(org.spongepowered.api.event.game.state.GameStoppingServerEvent)">onServerStop</a></span>&#8203;(org.spongepowered.api.event.game.state.GameStoppingServerEvent&nbsp;event)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onServerStart(org.spongepowered.api.event.game.state.GameStartedServerEvent)">onServerStart</a></span>&#8203;(org.spongepowered.api.event.game.state.GameStartedServerEvent&nbsp;event)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onServerStop(org.spongepowered.api.event.game.state.GameStoppingServerEvent)">onServerStop</a></span>&#8203;(org.spongepowered.api.event.game.state.GameStoppingServerEvent&nbsp;event)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerCommand(com.djrapitops.plan.commands.use.Subcommand)">registerCommand</a></span>&#8203;(<a href="commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;command)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -288,6 +293,15 @@ public&nbsp;PlanSponge&#8203;(org.slf4j.Logger&nbsp;slf4jLogger,
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="onServerLoad(org.spongepowered.api.event.game.state.GamePreInitializationEvent)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onServerLoad</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;onServerLoad&#8203;(org.spongepowered.api.event.game.state.GamePreInitializationEvent&nbsp;event)</pre>
+</li>
+</ul>
 <a id="onServerStart(org.spongepowered.api.event.game.state.GameStartedServerEvent)">
 <!--   -->
 </a>

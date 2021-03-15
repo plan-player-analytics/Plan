@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":42,"i3":10,"i4":10,"i5":10,"i6":10,"i7":42,"i8":42,"i9":42};
+var data = {"i0":10,"i1":10,"i2":42,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":42,"i9":42,"i10":42};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -225,10 +225,15 @@ implements <a href="PlanPlugin.html" title="interface in com.djrapitops.plan">Pl
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerCommand(com.djrapitops.plan.commands.use.Subcommand)">registerCommand</a></span>&#8203;(<a href="commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;command)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onLoad()">onLoad</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerCommand(com.djrapitops.plan.commands.use.Subcommand)">registerCommand</a></span>&#8203;(<a href="commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;command)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#reloadConfig()">reloadConfig</a></span>()</code></th>
 <td class="colLast">
@@ -237,7 +242,7 @@ implements <a href="PlanPlugin.html" title="interface in com.djrapitops.plan">Pl
 </div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#saveConfig()">saveConfig</a></span>()</code></th>
 <td class="colLast">
@@ -246,7 +251,7 @@ implements <a href="PlanPlugin.html" title="interface in com.djrapitops.plan">Pl
 </div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#saveDefaultConfig()">saveDefaultConfig</a></span>()</code></th>
 <td class="colLast">
@@ -261,7 +266,7 @@ implements <a href="PlanPlugin.html" title="interface in com.djrapitops.plan">Pl
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;org.bukkit.plugin.java.JavaPlugin</h3>
-<code>getClassLoader, getCommand, getDataFolder, getDefaultWorldGenerator, getDescription, getFile, getLogger, getPlugin, getPluginLoader, getProvidingPlugin, getResource, getServer, getTextResource, isEnabled, isNaggable, onCommand, onLoad, onTabComplete, saveResource, setEnabled, setNaggable, toString</code></li>
+<code>getClassLoader, getCommand, getDataFolder, getDefaultWorldGenerator, getDescription, getFile, getLogger, getPlugin, getPluginLoader, getProvidingPlugin, getResource, getServer, getTextResource, isEnabled, isNaggable, onCommand, onTabComplete, saveResource, setEnabled, setNaggable, toString</code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.org.bukkit.plugin.PluginBase">
@@ -326,6 +331,21 @@ implements <a href="PlanPlugin.html" title="interface in com.djrapitops.plan">Pl
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a id="onLoad()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>onLoad</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;onLoad()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code>onLoad</code>&nbsp;in interface&nbsp;<code>org.bukkit.plugin.Plugin</code></dd>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code>onLoad</code>&nbsp;in class&nbsp;<code>org.bukkit.plugin.java.JavaPlugin</code></dd>
+</dl>
+</li>
+</ul>
 <a id="onEnable()">
 <!--   -->
 </a>
