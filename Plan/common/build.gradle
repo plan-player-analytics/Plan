@@ -53,7 +53,7 @@ shadowJar {
     relocate 'com.google.protobuf', 'plan.com.google.protobuf'
     relocate 'com.google.gson', 'plan.com.google.gson'
     relocate 'com.google.errorprone', 'plan.com.google.errorprone'
-//    relocate 'org.h2', 'plan.org.h2'
+    relocate 'org.h2', 'plan.org.h2'
     relocate 'org.bstats', 'plan.org.bstats'
     relocate 'org.slf4j', 'plan.org.slf4j'
 

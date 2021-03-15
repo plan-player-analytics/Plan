@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan;
 
+import com.djrapitops.plan.utilities.java.Lists;
 import net.playeranalytics.plugin.dependencies.DependencyLoader;
+import net.playeranalytics.plugin.me.lucko.jarrelocator.Relocation;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.io.IOException;
@@ -35,35 +37,42 @@ public class DependencyStartup {
     public void loadDependencies() throws IOException {
         logger.info("Resolving runtime dependencies..");
         dependencyLoader.addDependency(REPOSITORY_MAVEN_CENTRAL,
-                "org.apache.httpcomponents", "httpclient", "4.5.13"
+                "com.h2database", "h2", "1.4.199",
+                Lists.builder(Relocation.class)
+                        .add(new Relocation(
+                                new String(new char[]{'o', 'r', 'g', '.', 'h', '2'}),
+                                "plan.org.h2"
+                        )).build()
         );
         dependencyLoader.addDependency(REPOSITORY_MAVEN_CENTRAL,
-                "com.googlecode.htmlcompressor", "htmlcompressor", "1.5.2"
+                "mysql", "mysql-connector-java", "8.0.23",
+                Lists.builder(Relocation.class)
+                        .add(new Relocation(
+                                new String(new char[]{'c', 'o', 'm', '.', 'm', 'y', 's', 'q', 'l'}),
+                                "plan.com.mysql"
+                        )).build()
         );
         dependencyLoader.addDependency(REPOSITORY_MAVEN_CENTRAL,
-                "com.h2database", "h2", "1.4.199"
-        );
-        dependencyLoader.addDependency(REPOSITORY_MAVEN_CENTRAL,
-                "mysql", "mysql-connector-java", "8.0.23"
-        );
-        dependencyLoader.addDependency(REPOSITORY_MAVEN_CENTRAL,
-                "org.xerial", "sqlite-jdbc", "3.34.0"
+                "org.xerial", "sqlite-jdbc", "3.34.0",
+                Lists.builder(Relocation.class)
+                        .add(new Relocation(
+                                new String(new char[]{'o', 'r', 'g', '.', 's', 'q', 'l', 'i', 't', 'e'}),
+                                "plan.org.sqlite"
+                        )).build()
         );
         logger.info("Loading runtime dependencies..");
         dependencyLoader.load();
 
-        dependencyLoader.executeWithDependencyClassloaderContext(() -> {
-            try {
-                Class.forName("org.sqlite.JDBC");
-            } catch (ClassNotFoundException e) {
-                logger.error("Could not load SQLite driver");
-            }
-            try {
-                Class.forName("org.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                logger.error("Could not load MySQL driver");
-            }
-        });
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            logger.error("Could not load SQLite driver");
+        }
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            logger.error("Could not load MySQL driver");
+        }
     }
 
 }
