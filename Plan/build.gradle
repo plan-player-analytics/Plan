@@ -1,6 +1,6 @@
 // Aggregate Javadocs
 buildscript {
-    repositories { jcenter() }
+    repositories { mavenCentral() }
     dependencies {
         classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:2.2.+'
     }
