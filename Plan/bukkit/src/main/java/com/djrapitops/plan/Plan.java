@@ -41,7 +41,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Main class for Bukkit that manages the plugin.
@@ -67,7 +66,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         try {
             new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
         } catch (IOException e) {
-            e.printStackTrace();
+            getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
         }
     }
 
@@ -98,7 +97,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
             onDisable();
         } catch (Exception e) {
             String version = abstractionLayer.getPluginInformation().getVersion();
-            Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+            getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
             logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();

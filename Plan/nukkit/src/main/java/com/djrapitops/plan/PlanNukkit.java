@@ -71,7 +71,7 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
         try {
             new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
         }
     }
 

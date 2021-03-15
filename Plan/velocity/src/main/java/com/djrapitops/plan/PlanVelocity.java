@@ -98,7 +98,7 @@ public class PlanVelocity implements PlanPlugin {
         try {
             new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
         } catch (IOException e) {
-            e.printStackTrace();
+            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
         }
 
         PlanVelocityComponent component = DaggerPlanVelocityComponent.builder()
