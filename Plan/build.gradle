@@ -66,7 +66,7 @@ subprojects {
     ext.daggerVersion = "2.33"
     ext.daggerCompilerVersion = "2.33"
 
-    ext.palVersion = "4.0.9"
+    ext.palVersion = "4.0.10"
 
     ext.bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
     ext.spigotVersion = "1.13.2-R0.1-SNAPSHOT"

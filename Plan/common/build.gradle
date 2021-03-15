@@ -43,6 +43,7 @@ shadowJar {
     exclude "**/*.psd"
 
     exclude "**/module-info.class"
+    exclude "module-info.class"
     exclude 'META-INF/versions/' // Causes Sponge to crash
     exclude 'org/apache/http/**/*' // Unnecessary http client depended on by geolite2 implementation
     exclude 'mozilla/**/*'

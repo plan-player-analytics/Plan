@@ -22,6 +22,7 @@ import net.playeranalytics.plugin.me.lucko.jarrelocator.Relocation;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class DependencyStartup {
 
@@ -54,11 +55,12 @@ public class DependencyStartup {
         );
         dependencyLoader.addDependency(REPOSITORY_MAVEN_CENTRAL,
                 "org.xerial", "sqlite-jdbc", "3.34.0",
-                Lists.builder(Relocation.class)
-                        .add(new Relocation(
-                                new String(new char[]{'o', 'r', 'g', '.', 's', 'q', 'l', 'i', 't', 'e'}),
-                                "plan.org.sqlite"
-                        )).build()
+                Collections.emptyList()
+//                Lists.builder(Relocation.class)
+//                        .add(new Relocation(
+//                                new String(new char[]{'o', 'r', 'g', '.', 's', 'q', 'l', 'i', 't', 'e'}),
+//                                "plan.org.sqlite"
+//                        )).build()
         );
         logger.info("Loading runtime dependencies..");
         dependencyLoader.load();
