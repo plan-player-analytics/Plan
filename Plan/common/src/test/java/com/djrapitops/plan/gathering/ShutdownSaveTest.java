@@ -48,7 +48,10 @@ import utilities.mocks.TestPlatformAbstractionLayer;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -134,7 +137,8 @@ class ShutdownSaveTest {
     @Test
     void sessionsAreSavedOnServerShutdown() {
         shutdownStatus = true;
-        underTest.performSave();
+        Optional<Future<?>> save = underTest.performSave();
+        assertTrue(save.isPresent());
 
         database.init();
         assertFalse(database.query(SessionQueries.fetchAllSessions()).isEmpty());
@@ -152,7 +156,7 @@ class ShutdownSaveTest {
     }
 
     @Test
-    public void endedSessionsHaveSameEndTime() {
+    void endedSessionsHaveSameEndTime() {
         for (int i = 0; i < 100; i++) {
             UUID playerUUID = UUID.randomUUID();
             ActiveSession session = RandomData.randomUnfinishedSession(
@@ -165,5 +169,22 @@ class ShutdownSaveTest {
         for (FinishedSession session : underTest.finishSessions(activeSessions, endTime)) {
             assertEquals(endTime, session.getEnd(), () -> "One of the sessions had differing end time");
         }
+    }
+
+    @Test
+    void sessionsAreNotSavedWhenNotShuttingDown() {
+        for (int i = 0; i < 100; i++) {
+            UUID playerUUID = UUID.randomUUID();
+            ActiveSession session = RandomData.randomUnfinishedSession(
+                    TestConstants.SERVER_UUID, new String[]{"w1", "w2"}, playerUUID
+            );
+            sessionCache.cacheSession(playerUUID, session);
+        }
+
+        Optional<Future<?>> save = underTest.performSave();
+        assertFalse(save.isPresent());
+
+        List<FinishedSession> sessions = database.query(SessionQueries.fetchAllSessions());
+        assertEquals(0, sessions.size());
     }
 }

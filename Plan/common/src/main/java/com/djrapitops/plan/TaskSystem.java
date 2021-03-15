@@ -21,6 +21,7 @@ import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -52,6 +53,13 @@ public class TaskSystem implements SubSystem {
     @Override
     public void disable() {
         runnableFactory.cancelAllKnownTasks();
+    }
+
+    public <T extends Task> Optional<T> getTask(Class<T> ofType) {
+        for (Task task : tasks) {
+            if (task.getClass().equals(ofType)) return Optional.of(ofType.cast(task));
+        }
+        return Optional.empty();
     }
 
     public static abstract class Task extends PluginRunnable {

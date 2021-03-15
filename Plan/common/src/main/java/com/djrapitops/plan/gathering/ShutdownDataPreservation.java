@@ -118,7 +118,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
         }
     }
 
-    private List<FinishedSession> loadFinishedSessions() {
+    List<FinishedSession> loadFinishedSessions() {
         try (Stream<String> lines = Files.lines(storeLocation)) {
             return lines.map(FinishedSession::deserializeCSV)
                     .filter(Optional::isPresent)
@@ -137,7 +137,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
         storeFinishedSessions(finishedSessions);
     }
 
-    private void storeFinishedSessions(List<FinishedSession> sessions) {
+    void storeFinishedSessions(List<FinishedSession> sessions) {
         if (sessions.isEmpty()) return;
         if (storeLocation.toFile().exists()) {
             sessions.addAll(loadFinishedSessions());
