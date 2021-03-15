@@ -21,7 +21,6 @@ shadowJar {
     }
     relocate 'dagger', 'plan.dagger'
     relocate 'com.mysql', 'plan.com.mysql'
-    relocate 'com.mysql', 'plan.com.mysql'
     // Don't relocate SQLite since the org.sqlite.NativeDB class calls are not relocated properly
     // relocate 'org.sqlite', 'plan.org.sqlite'
     relocate 'javax.inject', 'plan.javax.inject'
