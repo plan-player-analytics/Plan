@@ -18,7 +18,6 @@ shadowJar {
 
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
-        exclude 'org/apache/httpcomponents/**'
     }
     relocate 'dagger', 'plan.dagger'
     relocate 'com.mysql', 'plan.com.mysql'
