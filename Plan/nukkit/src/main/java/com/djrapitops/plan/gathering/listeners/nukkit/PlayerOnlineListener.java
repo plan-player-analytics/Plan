@@ -49,8 +49,10 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
+import java.net.InetAddress;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
@@ -154,12 +156,12 @@ public class PlayerOnlineListener implements Listener {
 
         String world = player.getLevel().getName();
         String gm = GMTimes.magicNumberToGMName(player.getGamemode());
-        String hostname = player.getAddress();
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
-        String address = player.getAddress();
+        InetAddress address = player.getSocketAddress().getAddress();
+        Supplier<String> getHostName = address::getHostName;
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();
@@ -173,7 +175,7 @@ public class PlayerOnlineListener implements Listener {
 
         long registerDate = TimeUnit.SECONDS.toMillis(player.getFirstPlayed());
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> registerDate,
-                playerName, serverUUID, hostname));
+                playerName, serverUUID, getHostName));
         ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
         session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
         session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));

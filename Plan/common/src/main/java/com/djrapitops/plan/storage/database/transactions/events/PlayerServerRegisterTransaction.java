@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.LongSupplier;
+import java.util.function.Supplier;
 
 /**
  * Transaction for registering player's BaseUser and UserInfo to the database.
@@ -32,10 +33,10 @@ import java.util.function.LongSupplier;
 public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
 
     private final ServerUUID serverUUID;
-    private final String hostname;
+    private final Supplier<String> hostname;
 
     public PlayerServerRegisterTransaction(UUID playerUUID, LongSupplier registered,
-                                           String playerName, ServerUUID serverUUID, String hostname) {
+                                           String playerName, ServerUUID serverUUID, Supplier<String> hostname) {
         super(playerUUID, registered, playerName);
         this.serverUUID = serverUUID;
         this.hostname = hostname;
@@ -46,7 +47,7 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
         super.performOperations();
         long registerDate = registered.getAsLong();
         if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)))) {
-            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID, hostname));
+            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID, hostname.get()));
         }
 
         // Updates register date to smallest possible value.

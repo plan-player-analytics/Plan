@@ -54,6 +54,7 @@ import javax.inject.Inject;
 import java.net.InetAddress;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Listener for Player Join/Leave on Sponge.
@@ -159,12 +160,12 @@ public class PlayerOnlineListener {
         String world = player.getWorld().getName();
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
         String gm = gameMode.map(mode -> mode.getName().toUpperCase()).orElse("ADVENTURE");
-        String hostname = player.getConnection().getVirtualHost().getHostString();
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
         InetAddress address = player.getConnection().getAddress().getAddress();
+        Supplier<String> getHostName = () -> player.getConnection().getVirtualHost().getHostString();
 
         String playerName = player.getName();
         String displayName = player.getDisplayNameData().displayName().get().toPlain();
@@ -177,7 +178,7 @@ public class PlayerOnlineListener {
         }
 
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time,
-                playerName, serverUUID, hostname));
+                playerName, serverUUID, getHostName));
         ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
         session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
         session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));

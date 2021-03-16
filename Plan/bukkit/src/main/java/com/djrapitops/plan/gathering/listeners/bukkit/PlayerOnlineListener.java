@@ -50,6 +50,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import javax.inject.Inject;
 import java.net.InetAddress;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Event Listener for PlayerJoin, PlayerQuit and PlayerKickEvents.
@@ -156,12 +157,12 @@ public class PlayerOnlineListener implements Listener {
 
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
-        String hostname = player.getAddress().getHostName();
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
         InetAddress address = player.getAddress().getAddress();
+        Supplier<String> getHostName = address::getHostName;
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();
@@ -174,7 +175,7 @@ public class PlayerOnlineListener implements Listener {
         }
 
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID,
-                player::getFirstPlayed, playerName, serverUUID, hostname));
+                player::getFirstPlayed, playerName, serverUUID, getHostName));
 
         ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
         session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
