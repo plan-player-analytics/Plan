@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="Player Analytics, login page" name="description">
+    <meta content="AuroraLS3" name="author">
+    <meta content="noindex, nofollow" name="robots">
+
+    <title>Plan | Login</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link crossorigin="anonymous" href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800,900"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-plan bg-gradient">
+
+<script>
+    function login() {
+        errorElement.classList.add('hidden');
+        const user = $('#inputUser').val();
+        if (!user || user.length < 1) {
+            return displayError('You need to specify a Username');
+        }
+        if (user.length > 50) {
+            return displayError('Username can be up to 50 characters, yours is ' + user.length);
+        }
+        const password = $('#inputPassword').val();
+        if (!password || password.length < 1) {
+            return displayError('You need to specify a Password');
+        }
+        jsonRequest(`./auth/login?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
+            if (error) {
+                if (error.includes("HTTP 403")) {
+                    location.reload();
+                }
+                $('#inputPassword').val("");
+                return displayError('Login failed: ' + error);
+            }
+            if (json && json.success) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const cameFrom = urlParams.get('from');
+                if (cameFrom && !cameFrom.startsWith("http")) {
+                    window.location.href = cameFrom + (window.location.hash ? window.location.hash : '');
+                } else {
+                    window.location.href = './';
+                }
+            } else {
+                return displayError('Login failed: ' + json.error);
+            }
+        });
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') login();
+    });
+</script>
+
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+        <img alt="logo" class="w-15 mt-5" src="img/Flaticon_circle.png">
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-7 col-md-9">
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="p-5">
+                                <div class="hidden alert alert-danger" id="fail-msg">
+                                    Failed
+                                </div>
+                                <form class="user">
+                                    <div class="form-group">
+                                        <input autocomplete="username" class="form-control form-control-user"
+                                               id="inputUser"
+                                               placeholder="Username" type="text">
+                                    </div>
+                                    <div class="form-group">
+                                        <input autocomplete="current-password" class="form-control form-control-user"
+                                               id="inputPassword" placeholder="Password"
+                                               type="password">
+                                    </div>
+                                    <button class="btn bg-plan btn-user btn-block" href="#" id="login-button">
+                                        Login
+                                    </button>
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="col-plan small" href="#" id="forgot-button">Forgot Password?</a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="col-plan small" href="./register">Create an Account!</a>
+                                </div>
+                                <div class="text-center">
+                                    <button class="btn col-plan" data-target="#colorChooserModal" data-toggle="modal"
+                                            type="button">
+                                        <i class="fa fa-palette"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <canvas class="col-xl-3 col-lg-3 col-md-5" id="decoration" style="height: 100px"></canvas>
+    </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div aria-hidden="true" aria-labelledby="forgotModalLabel" class="modal fade" id="forgotModal"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-white">
+                <h5 class="modal-title" id="forgotModalLabel"><i class="far fa-fw fa-hand-point-right"></i>
+                    Forgot password? Unregister and register again.
+                </h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body bg-white">
+                <p>Use the following command in game to remove your current user:</p>
+                <p><code>/${command} unregister</code></p>
+                <p>Or using console:</p>
+                <p><code>${command} unregister [username]</code></p>
+                <p>After using the command, <a class="col-plan" href="./register">Create an Account!</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Color Chooser Modal -->
+<div aria-hidden="true" aria-labelledby="colorChooserModalLabel" class="modal fade" id="colorChooserModal"
+     role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-white">
+                <h5 class="modal-title" id="colorChooserModalLabel"><i class="fa fa-palette"></i> Theme Select
+                </h5>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body bg-white">
+                <button class="btn color-chooser" id="choose-plan" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-red" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-pink" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-purple" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-deep-purple" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-indigo" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-blue" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-light-blue" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-cyan" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-teal" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-green" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-light-green" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-lime" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-yellow" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-amber" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-orange" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-deep-orange" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-brown" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-grey" type="button"><i
+                        class="fa fa-palette"></i></button>
+                <button class="btn color-chooser" id="choose-blue-grey" type="button"><i
+                        class="fa fa-palette"></i></button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
+                    Night Mode
+                </button>
+                <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/xmlhttprequests.js"></script>
+<script src="js/color-selector.js"></script>
+
+<script src="js/logonsine.js"></script>
+<script id="mainScript">
+    drawSine("decoration");
+    document.getElementById('login-button').addEventListener('click', event => {
+        event.preventDefault();
+        login();
+    });
+
+    const errorElement = document.getElementById("fail-msg");
+
+    function displayError(message) {
+        errorElement.innerText = message;
+        errorElement.classList.remove('hidden');
+    }
+
+    document.getElementById('forgot-button').addEventListener('click', () => $('#forgotModal').modal());
+</script>
+</body>
+
+</html>
