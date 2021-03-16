@@ -49,6 +49,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import javax.inject.Inject;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -162,7 +164,7 @@ public class PlayerOnlineListener implements Listener {
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
         InetAddress address = player.getAddress().getAddress();
-        Supplier<String> getHostName = address::getHostName;
+        Supplier<String> getHostName = () -> Optional.ofNullable(player.getVirtualHost()).map(InetSocketAddress::getHostName).orElse("Unknown");
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();

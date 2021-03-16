@@ -296,4 +296,17 @@ public class DataStoreQueries {
             }
         };
     }
+
+    public static Executable updateHostname(UUID playerUUID, String hostname) {
+        String sql = "UPDATE " + UserInfoTable.TABLE_NAME + " SET " +
+                UserInfoTable.HOSTNAME + "=?" +
+                WHERE + UserInfoTable.USER_UUID + "=?";
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, hostname);
+                statement.setString(2, playerUUID.toString());
+            }
+        };
+    }
 }

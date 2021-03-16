@@ -46,8 +46,10 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
     protected void performOperations() {
         super.performOperations();
         long registerDate = registered.getAsLong();
+        String hostname = this.hostname.get();
+
         if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)))) {
-            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID, hostname.get()));
+            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID, hostname));
         }
 
         // Updates register date to smallest possible value.
@@ -55,5 +57,7 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
         if (foundRegisterDate.isPresent() && foundRegisterDate.get() > registerDate) {
             execute(DataStoreQueries.updateMainRegisterDate(playerUUID, registerDate));
         }
+
+        execute(DataStoreQueries.updateHostname(playerUUID, hostname));
     }
 }
