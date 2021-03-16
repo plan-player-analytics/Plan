@@ -198,8 +198,9 @@ public class LinkCommands {
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_NETWORK))
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
-        dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation())
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.NOTIFY_NO_NETWORK)));
+        if (!dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation()).isPresent()) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.NOTIFY_NO_NETWORK));
+        }
     }
 
     /**

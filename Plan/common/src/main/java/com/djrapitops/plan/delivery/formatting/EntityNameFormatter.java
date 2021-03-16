@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.formatting;
 
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -28,7 +29,7 @@ public class EntityNameFormatter implements Formatter<String> {
     @Override
     public String apply(String name) {
         return StringUtils.capitalize(
-                StringUtils.removeAll(name, "[^a-zA-Z0-9_\\\\s]*").toLowerCase()
+                RegExUtils.removeAll(name, "[^a-zA-Z0-9_\\\\s]*").toLowerCase()
         );
     }
 }

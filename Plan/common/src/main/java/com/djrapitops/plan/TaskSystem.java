@@ -62,7 +62,7 @@ public class TaskSystem implements SubSystem {
         return Optional.empty();
     }
 
-    public static abstract class Task extends PluginRunnable {
+    public abstract static class Task extends PluginRunnable {
         public abstract void register(RunnableFactory runnableFactory);
     }
 

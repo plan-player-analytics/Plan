@@ -48,7 +48,7 @@ import java.util.UUID;
 public class SpongeAFKListener {
 
     // Static so that /reload does not cause afk tracking to fail.
-    static AFKTracker AFK_TRACKER;
+    static AFKTracker afkTracker;
 
     private final Map<UUID, Boolean> ignorePermissionInfo;
     private final ErrorLogger errorLogger;
@@ -62,8 +62,8 @@ public class SpongeAFKListener {
     }
 
     private static void assignAFKTracker(PlanConfig config) {
-        if (AFK_TRACKER == null) {
-            AFK_TRACKER = new AFKTracker(config);
+        if (afkTracker == null) {
+            afkTracker = new AFKTracker(config);
         }
     }
 
@@ -91,14 +91,14 @@ public class SpongeAFKListener {
 
         boolean ignored = ignorePermissionInfo.computeIfAbsent(uuid, keyUUID -> player.hasPermission(Permissions.IGNORE_AFK.getPermission()));
         if (ignored) {
-            AFK_TRACKER.hasIgnorePermission(uuid);
+            afkTracker.hasIgnorePermission(uuid);
             ignorePermissionInfo.put(uuid, true);
             return;
         } else {
             ignorePermissionInfo.put(uuid, false);
         }
 
-        AFK_TRACKER.performedAction(uuid, time);
+        afkTracker.performedAction(uuid, time);
     }
 
     @Listener(order = Order.POST)
@@ -107,7 +107,7 @@ public class SpongeAFKListener {
 
         boolean isAfkCommand = event.getCommand().toLowerCase().startsWith("afk");
         if (isAfkCommand) {
-            AFK_TRACKER.usedAfkCommand(player.getUniqueId(), System.currentTimeMillis());
+            afkTracker.usedAfkCommand(player.getUniqueId(), System.currentTimeMillis());
         }
     }
 

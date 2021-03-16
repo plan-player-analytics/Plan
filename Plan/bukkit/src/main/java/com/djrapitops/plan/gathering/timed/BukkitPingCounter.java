@@ -67,10 +67,10 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
 
-    private static boolean PING_METHOD_AVAILABLE;
+    private static boolean pingMethodAvailable;
 
-    private static MethodHandle PING_FIELD;
-    private static MethodHandle GET_HANDLE_METHOD;
+    private static MethodHandle pingField;
+    private static MethodHandle getHandleMethod;
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
@@ -99,11 +99,11 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
 
 
     private static void loadPingMethodDetails() {
-        PING_METHOD_AVAILABLE = isPingMethodAvailable();
+        pingMethodAvailable = isPingMethodAvailable();
 
         MethodHandle localHandle = null;
         MethodHandle localPing = null;
-        if (!PING_METHOD_AVAILABLE) {
+        if (!pingMethodAvailable) {
             try {
                 Class<?> craftPlayerClass = Reflection.getCraftBukkitClass("entity.CraftPlayer");
                 Class<?> entityPlayer = Reflection.getMinecraftClass("EntityPlayer");
@@ -127,8 +127,8 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
             }
         }
 
-        GET_HANDLE_METHOD = localHandle;
-        PING_FIELD = localPing;
+        getHandleMethod = localHandle;
+        pingField = localPing;
     }
 
     private static boolean isPingMethodAvailable() {
@@ -190,7 +190,7 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
     }
 
     private int getPing(Player player) {
-        if (PING_METHOD_AVAILABLE) {
+        if (pingMethodAvailable) {
             // This method is from Paper
             return player.spigot().getPing();
         }
@@ -200,8 +200,8 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
 
     private int getReflectionPing(Player player) {
         try {
-            Object entityPlayer = GET_HANDLE_METHOD.invoke(player);
-            return (int) PING_FIELD.invoke(entityPlayer);
+            Object entityPlayer = getHandleMethod.invoke(player);
+            return (int) pingField.invoke(entityPlayer);
         } catch (Exception ex) {
             return -1;
         } catch (Throwable throwable) {

@@ -53,18 +53,18 @@ public class Plan extends JavaPlugin implements PlanPlugin {
     private Locale locale;
     private ServerShutdownSave serverShutdownSave;
 
-    private PluginLogger logger;
+    private PluginLogger pluginLogger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
 
     @Override
     public void onLoad() {
         abstractionLayer = new BukkitPlatformLayer(this);
-        logger = abstractionLayer.getPluginLogger();
+        pluginLogger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
 
         try {
-            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
+            new DependencyStartup(pluginLogger, abstractionLayer.getDependencyLoader()).loadDependencies();
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
         }
@@ -86,20 +86,20 @@ public class Plan extends JavaPlugin implements PlanPlugin {
             registerMetrics();
             registerPlaceholderAPIExtension(component.placeholders());
 
-            logger.info(locale.getString(PluginLang.ENABLED));
+            pluginLogger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
-            logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
+            pluginLogger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
-            logger.error("----------------------------------------");
-            logger.error("Error: " + e.getMessage());
-            logger.error("----------------------------------------");
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            pluginLogger.error("----------------------------------------");
+            pluginLogger.error("Error: " + e.getMessage());
+            pluginLogger.error("----------------------------------------");
+            pluginLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             onDisable();
         } catch (Exception e) {
             String version = abstractionLayer.getPluginInformation().getVersion();
             getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-            logger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
-            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+            pluginLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            pluginLogger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
         registerCommand(component.planCommand().build());
@@ -114,7 +114,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
                         try {
                             placeholders.register();
                         } catch (Exception | NoClassDefFoundError | NoSuchMethodError failed) {
-                            logger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
+                            pluginLogger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
                         }
                     }
             ).runTask();
@@ -131,7 +131,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     @Override
     public ColorScheme getColorScheme() {
-        return PlanColorScheme.create(system.getConfigSystem().getConfig(), logger);
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), pluginLogger);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         cancelAllTasks();
         if (system != null) system.disable();
 
-        logger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED));
+        pluginLogger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED));
     }
 
     private void storeSessionsOnShutdown() {
@@ -152,9 +152,9 @@ public class Plan extends JavaPlugin implements PlanPlugin {
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 } catch (ExecutionException e) {
-                    logger.error("Failed to save sessions to database on shutdown: " + e.getCause().getMessage());
+                    pluginLogger.error("Failed to save sessions to database on shutdown: " + e.getCause().getMessage());
                 } catch (TimeoutException e) {
-                    logger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED_UNSAVED_SESSIONS_TIMEOUT));
+                    pluginLogger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED_UNSAVED_SESSIONS_TIMEOUT));
                 }
             }
         }
@@ -168,13 +168,13 @@ public class Plan extends JavaPlugin implements PlanPlugin {
     @Override
     public void registerCommand(Subcommand command) {
         if (command == null) {
-            logger.warn("Attempted to register a null command!");
+            pluginLogger.warn("Attempted to register a null command!");
             return;
         }
         for (String name : command.getAliases()) {
             PluginCommand registering = getCommand(name);
             if (registering == null) {
-                logger.warn("Attempted to register '" + name + "'-command, but it is not in plugin.yml!");
+                pluginLogger.warn("Attempted to register '" + name + "'-command, but it is not in plugin.yml!");
                 continue;
             }
             registering.setExecutor(new BukkitCommand(runnableFactory, system.getErrorLogger(), command));

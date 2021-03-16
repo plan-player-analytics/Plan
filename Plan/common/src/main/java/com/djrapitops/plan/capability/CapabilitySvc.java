@@ -37,7 +37,7 @@ public class CapabilitySvc implements CapabilityService {
      * @param isEnabled Did the plugin enable properly.
      */
     public static void notifyAboutEnable(boolean isEnabled) {
-        for (Consumer<Boolean> enableListener : CapabilityService.ListHolder.ENABLE_LISTENERS.get()) {
+        for (Consumer<Boolean> enableListener : CapabilityService.ListHolder.enableListeners.get()) {
             enableListener.accept(isEnabled);
         }
     }

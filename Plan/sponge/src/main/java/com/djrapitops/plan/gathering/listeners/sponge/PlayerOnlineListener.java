@@ -121,7 +121,7 @@ public class PlayerOnlineListener {
     public void onKick(KickPlayerEvent event) {
         try {
             UUID playerUUID = event.getTargetEntity().getUniqueId();
-            if (status.areKicksNotCounted() || SpongeAFKListener.AFK_TRACKER.isAfk(playerUUID)) {
+            if (status.areKicksNotCounted() || SpongeAFKListener.afkTracker.isAfk(playerUUID)) {
                 return;
             }
             dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(playerUUID));
@@ -155,7 +155,7 @@ public class PlayerOnlineListener {
         ServerUUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
-        SpongeAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
+        SpongeAFKListener.afkTracker.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
         Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
@@ -219,7 +219,7 @@ public class PlayerOnlineListener {
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
 
-        SpongeAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
+        SpongeAFKListener.afkTracker.loggedOut(playerUUID, time);
 
         nicknameCache.removeDisplayName(playerUUID);
 

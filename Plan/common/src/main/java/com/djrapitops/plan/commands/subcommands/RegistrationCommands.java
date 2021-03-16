@@ -119,9 +119,11 @@ public class RegistrationCommands {
                 .filter(arg -> sender.hasPermission(Permissions.REGISTER_OTHER)) // argument only allowed with register other permission
                 .orElseGet(() -> getPermissionLevel(sender));
 
-        if (sender.getUUID().isPresent() && sender.getPlayerName().isPresent()) {
-            String playerName = sender.getPlayerName().get();
-            UUID linkedToUUID = sender.getUUID().get();
+        Optional<UUID> senderUUID = sender.getUUID();
+        Optional<String> senderName = sender.getPlayerName();
+        if (senderUUID.isPresent() && senderName.isPresent()) {
+            String playerName = senderName.get();
+            UUID linkedToUUID = senderUUID.get();
             String username = arguments.get(1).orElse(playerName);
             registerUser(new User(username, playerName, linkedToUUID, passwordHash, permissionLevel, Collections.emptyList()), sender, permissionLevel);
         } else {

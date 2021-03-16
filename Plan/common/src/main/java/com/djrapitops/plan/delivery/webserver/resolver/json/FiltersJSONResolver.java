@@ -137,6 +137,21 @@ public class FiltersJSONResolver implements Resolver {
         }
 
         @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            FilterJSON that = (FilterJSON) o;
+            return Objects.equals(kind, that.kind) && Objects.equals(options, that.options) && Arrays.equals(expectedParameters, that.expectedParameters);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(kind, options);
+            result = 31 * result + Arrays.hashCode(expectedParameters);
+            return result;
+        }
+
+        @Override
         public int compareTo(FilterJSON o) {
             return String.CASE_INSENSITIVE_ORDER.compare(this.kind, o.kind);
         }

@@ -127,7 +127,7 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
-            if (BukkitAFKListener.AFK_TRACKER.isAfk(uuid)) {
+            if (BukkitAFKListener.afkTracker.isAfk(uuid)) {
                 return;
             }
 
@@ -153,7 +153,7 @@ public class PlayerOnlineListener implements Listener {
         ServerUUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
-        BukkitAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
+        BukkitAFKListener.afkTracker.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
         String gm = player.getGameMode().name();
@@ -217,7 +217,7 @@ public class PlayerOnlineListener implements Listener {
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
 
-        BukkitAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
+        BukkitAFKListener.afkTracker.loggedOut(playerUUID, time);
 
         nicknameCache.removeDisplayName(playerUUID);
 

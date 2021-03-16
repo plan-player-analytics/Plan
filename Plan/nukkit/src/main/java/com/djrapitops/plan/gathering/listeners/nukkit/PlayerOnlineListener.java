@@ -126,7 +126,7 @@ public class PlayerOnlineListener implements Listener {
                 return;
             }
             UUID uuid = event.getPlayer().getUniqueId();
-            if (NukkitAFKListener.AFK_TRACKER.isAfk(uuid)) {
+            if (NukkitAFKListener.afkTracker.isAfk(uuid)) {
                 return;
             }
 
@@ -152,7 +152,7 @@ public class PlayerOnlineListener implements Listener {
         ServerUUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
-        NukkitAFKListener.AFK_TRACKER.performedAction(playerUUID, time);
+        NukkitAFKListener.afkTracker.performedAction(playerUUID, time);
 
         String world = player.getLevel().getName();
         String gm = GMTimes.magicNumberToGMName(player.getGamemode());
@@ -217,7 +217,7 @@ public class PlayerOnlineListener implements Listener {
         UUID playerUUID = player.getUniqueId();
         if (playerUUID == null) return; // Can be null when player is not signed in to xbox live
 
-        NukkitAFKListener.AFK_TRACKER.loggedOut(playerUUID, time);
+        NukkitAFKListener.afkTracker.loggedOut(playerUUID, time);
 
         nicknameCache.removeDisplayName(playerUUID);
 

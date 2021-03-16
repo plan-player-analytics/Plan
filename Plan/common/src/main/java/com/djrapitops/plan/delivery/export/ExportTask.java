@@ -44,13 +44,13 @@ public class ExportTask extends PluginRunnable {
         try {
             exportAction.accept(exporter);
         } catch (ExportException e) {
-            errorLogger.warn(e, ErrorContext.builder().related("Export task run").build());
+            errorLogger.warn(e, ErrorContext.builder().related(getClass()).build());
         } catch (DBOpException dbException) {
             handleDBException(dbException);
         } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
             errorLogger.error(e, ErrorContext.builder()
                     .whatToDo("Export Task Disabled due to error - reload Plan to re-enable.")
-                    .related("Export task run").build());
+                    .related(getClass()).build());
             cancel();
         }
     }
@@ -59,11 +59,11 @@ public class ExportTask extends PluginRunnable {
         if (dbException.getMessage().contains("closed")) {
             errorLogger.error(dbException, ErrorContext.builder()
                     .whatToDo("Export Task Disabled due to error - database is closing, so this error can be ignored.).")
-                    .related("Export task run").build());
+                    .related(getClass()).build());
         } else {
             errorLogger.error(dbException, ErrorContext.builder()
                     .whatToDo("Export Task Disabled due to error - reload Plan to re-enable.")
-                    .related("Export task run").build());
+                    .related(getClass()).build());
         }
         cancel();
     }

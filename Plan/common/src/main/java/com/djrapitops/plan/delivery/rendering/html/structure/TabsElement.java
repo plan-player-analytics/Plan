@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.html.structure;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.RegExUtils;
 
 /**
  * Represents a structural HTML element that has Tabs on the top.
@@ -81,7 +81,7 @@ public class TabsElement {
         }
 
         public String getId() {
-            return "tab_" + StringUtils.removeAll(navText, "[^a-zA-Z0-9]*").toLowerCase();
+            return "tab_" + RegExUtils.removeAll(navText, "[^a-zA-Z0-9]*").toLowerCase();
         }
     }
 }

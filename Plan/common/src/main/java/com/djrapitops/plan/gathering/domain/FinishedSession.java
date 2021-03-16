@@ -146,14 +146,14 @@ public class FinishedSession implements DateHolder {
     }
 
     public static class Id {
-        private final int id;
+        private final int value;
 
-        public Id(int id) {
-            this.id = id;
+        public Id(int value) {
+            this.value = value;
         }
 
         public int get() {
-            return id;
+            return value;
         }
     }
 

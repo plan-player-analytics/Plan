@@ -41,16 +41,16 @@ import java.util.UUID;
 public interface PlanAPI {
 
     static PlanAPI getInstance() {
-        return Optional.ofNullable(PlanAPIHolder.API)
+        return Optional.ofNullable(PlanAPIHolder.api)
                 .orElseThrow(() -> new IllegalStateException("PlanAPI has not been initialised yet."));
     }
 
     @Singleton
     class PlanAPIHolder {
-        static PlanAPI API;
+        static PlanAPI api;
 
         static void set(PlanAPI api) {
-            PlanAPIHolder.API = api;
+            PlanAPIHolder.api = api;
         }
 
         @Inject

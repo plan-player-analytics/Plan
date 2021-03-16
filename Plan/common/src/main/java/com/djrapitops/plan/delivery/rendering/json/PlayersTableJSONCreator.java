@@ -160,28 +160,29 @@ public class PlayersTableJSONCreator {
 
     private void addExtensionData(Map<String, Object> dataJson, ExtensionTabData tabData) {
         for (ExtensionDescriptive descriptive : extensionDescriptives) {
-            String key = descriptive.getName();
-
-            // If it's a double, append a double
-            Optional<ExtensionDoubleData> doubleValue = tabData.getDouble(key);
-
-            if (doubleValue.isPresent()) {
-                putDataEntry(dataJson, doubleValue.get().getRawValue(), doubleValue.get().getFormattedValue(decimalFormatter), key);
-                continue;
-            }
-
-            Optional<ExtensionNumberData> numberValue = tabData.getNumber(key);
-            if (numberValue.isPresent()) {
-                ExtensionNumberData numberData = numberValue.get();
-                FormatType formatType = numberData.getFormatType();
-                putDataEntry(dataJson, numberData.getRawValue(), numberData.getFormattedValue(numberFormatters.get(formatType)), key);
-                continue;
-            }
-
-            // If it's a String add a String, otherwise the player has no value for this extension provider.
-            String stringValue = tabData.getString(key).map(ExtensionStringData::getFormattedValue).orElse("-");
-            putDataEntry(dataJson, stringValue, stringValue, key);
+            addValue(dataJson, tabData, descriptive.getName());
         }
+    }
+
+    private void addValue(Map<String, Object> dataJson, ExtensionTabData tabData, String key) {
+        // If it's a double, put a double
+        Optional<ExtensionDoubleData> doubleValue = tabData.getDouble(key);
+        if (doubleValue.isPresent()) {
+            putDataEntry(dataJson, doubleValue.get().getRawValue(), doubleValue.get().getFormattedValue(decimalFormatter), key);
+            return;
+        }
+
+        Optional<ExtensionNumberData> numberValue = tabData.getNumber(key);
+        if (numberValue.isPresent()) {
+            ExtensionNumberData numberData = numberValue.get();
+            FormatType formatType = numberData.getFormatType();
+            putDataEntry(dataJson, numberData.getRawValue(), numberData.getFormattedValue(numberFormatters.get(formatType)), key);
+            return;
+        }
+
+        // If it's a String add a String, otherwise the player has no value for this extension provider.
+        String stringValue = tabData.getString(key).map(ExtensionStringData::getFormattedValue).orElse("-");
+        putDataEntry(dataJson, stringValue, stringValue, key);
     }
 
     private List<Map<String, Object>> createColumnHeaders() {
