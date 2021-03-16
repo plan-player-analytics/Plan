@@ -47,16 +47,16 @@ class URIPathTest {
         assertEquals(expected, result);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "URIPath {0} gets part {1}: {2}")
     @CsvSource({
-            "/", "0", "",
+            "/", "0", " ",
             "/example/target", "0", "example",
             "/example/target", "1", "target",
-            "/example/target/", "2", "",
+            "/example/target/", "2", " ",
     })
     void partGettingWorksProperly(String targetURI, int partNumber, String expectedPart) {
         URIPath target = new URIPath(targetURI);
-        Optional<String> expected = Optional.ofNullable(expectedPart);
+        Optional<String> expected = Optional.ofNullable(expectedPart.trim());
         Optional<String> result = target.getPart(partNumber);
         assertEquals(expected, result);
     }
@@ -101,18 +101,18 @@ class URIPathTest {
         assertEquals(expected, result);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "URIPath {0} removes parts before part {1}: {2}")
     @CsvSource({
             "/example/target", "1", "/target",
             "/example/target/", "2", "/",
-            "/example/target", "2", "",
+            "/example/target", "2", " ",
             "/example/target", "0", "/example/target",
             "/example/target/", "1", "/target/",
-            "", "1", ""
+            " ", "1", " "
     })
     void partsAreRemoved(String test, int removeThisMany, String expected) {
-        String result = URIPath.removePartsBefore(test, removeThisMany);
-        assertEquals(expected, result);
+        String result = URIPath.removePartsBefore(test.trim(), removeThisMany);
+        assertEquals(expected.trim(), result);
     }
 
 }
