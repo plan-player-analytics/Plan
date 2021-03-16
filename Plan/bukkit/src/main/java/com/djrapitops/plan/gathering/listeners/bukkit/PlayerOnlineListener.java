@@ -52,6 +52,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 /**
@@ -72,6 +73,8 @@ public class PlayerOnlineListener implements Listener {
     private final SessionCache sessionCache;
     private final ErrorLogger errorLogger;
     private final Status status;
+
+    private final AtomicBoolean virtualHostMethodAvailable = new AtomicBoolean(true);
 
     @Inject
     public PlayerOnlineListener(
@@ -164,7 +167,7 @@ public class PlayerOnlineListener implements Listener {
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
         InetAddress address = player.getAddress().getAddress();
-        Supplier<String> getHostName = () -> Optional.ofNullable(player.getVirtualHost()).map(InetSocketAddress::getHostName).orElse("Unknown");
+        Supplier<String> getHostName = () -> getHostname(player);
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();
@@ -194,6 +197,17 @@ public class PlayerOnlineListener implements Listener {
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
         }
+    }
+
+    private String getHostname(Player player) {
+        if (virtualHostMethodAvailable.get()) {
+            try {
+                return Optional.ofNullable(player.getVirtualHost()).map(InetSocketAddress::getHostName).orElse("Unknown");
+            } catch (NoSuchMethodError e) {
+                virtualHostMethodAvailable.set(false);
+            }
+        }
+        return player.getAddress().getHostName();
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
