@@ -20,7 +20,7 @@ jobs:
         uses: olegtarasov/get-tag@v2.1
       - name: Copy assets 🔧 
         run: |
-          mkdir workingdir
+          mkdir -p workingdir/Plan/src/main/resources/assets/plan
           cp -r Plan/common/src/main/resources/assets/plan workingdir/Plan/src/main/resources/assets/plan
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.0.0
