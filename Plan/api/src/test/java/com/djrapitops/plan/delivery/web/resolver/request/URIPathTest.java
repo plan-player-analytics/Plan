@@ -47,7 +47,7 @@ class URIPathTest {
         assertEquals(expected, result);
     }
 
-    @ParameterizedTest(name = "URIPath {0} gets part {1}: {2}")
+    @ParameterizedTest
     @CsvSource({
             "/", "0", " ",
             "/example/target", "0", "example",
@@ -101,7 +101,7 @@ class URIPathTest {
         assertEquals(expected, result);
     }
 
-    @ParameterizedTest(name = "URIPath {0} removes parts before part {1}: {2}")
+    @ParameterizedTest
     @CsvSource({
             "/example/target", "1", "/target",
             "/example/target/", "2", "/",
