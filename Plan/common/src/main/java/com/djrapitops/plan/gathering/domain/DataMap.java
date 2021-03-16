@@ -29,6 +29,10 @@ public class DataMap {
         this.data = new HashMap<>();
     }
 
+    private DataMap(Map<String, Object> data) {
+        this.data = new HashMap<>(data);
+    }
+
     public <T> void put(Class<T> type, T value) {
         data.put(type.getName(), value);
     }
@@ -56,5 +60,9 @@ public class DataMap {
         return "DataMap{" +
                 "data=" + data +
                 '}';
+    }
+
+    public DataMap copy() {
+        return new DataMap(data);
     }
 }

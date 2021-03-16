@@ -56,7 +56,7 @@ public class ActiveSession {
     }
 
     public FinishedSession toFinishedSession(long end) {
-        return new FinishedSession(playerUUID, serverUUID, start, end, afkTime, extraData);
+        return new FinishedSession(playerUUID, serverUUID, start, end, afkTime, extraData.copy());
     }
 
     public UUID getPlayerUUID() {
