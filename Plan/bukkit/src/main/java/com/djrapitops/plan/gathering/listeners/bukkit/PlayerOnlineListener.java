@@ -73,6 +73,7 @@ public class PlayerOnlineListener implements Listener {
     private final SessionCache sessionCache;
     private final ErrorLogger errorLogger;
     private final Status status;
+    private String userHostname;
 
     private final AtomicBoolean virtualHostMethodAvailable = new AtomicBoolean(true);
 
@@ -108,6 +109,9 @@ public class PlayerOnlineListener implements Listener {
         try {
             PlayerLoginEvent.Result result = event.getResult();
             UUID playerUUID = event.getPlayer().getUniqueId();
+            String hostname = event.getHostname();
+            this.userHostname = hostname.substring(0, hostname.indexOf(":"));
+
             boolean operator = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
@@ -207,7 +211,7 @@ public class PlayerOnlineListener implements Listener {
                 virtualHostMethodAvailable.set(false);
             }
         }
-        return player.getAddress().getHostName();
+        return this.userHostname;
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
