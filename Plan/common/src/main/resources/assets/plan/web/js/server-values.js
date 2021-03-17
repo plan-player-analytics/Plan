@@ -587,16 +587,16 @@ function loadPunchCard(json, error) {
     }
 }
 
-function loadHostnamePie(json, error) {
+function loadJoinAddressPie(json, error) {
     if (json) {
-        const hostnamePieSeries = {
+        const joinAddressPieSeries = {
             name: 'Used IP Addresses',
             colorByPoint: true,
-            colors: json.hostname_pie_colors,
-            data: json.hostname_pie_slices
+            colors: json.colors,
+            data: json.slices
         };
-        hostnamePie('hostnamePie', hostnamePieSeries);
+        joinAddressPie('joinAddressPie', joinAddressPieSeries);
     } else if (error) {
-        document.getElementById('hostnamePie').innerText = `Failed to load graph data: ${error}`;
+        document.getElementById('joinAddressPie').innerText = `Failed to load graph data: ${error}`;
     }
 }

@@ -42,10 +42,33 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     @Test
     default void userInfoTableStoresCorrectUserInformation() {
         assertFalse(db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).isPresent());
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.PLAYER_HOSTNAME.get(), false));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
+
+        assertEquals(expected, userInfo);
+    }
+
+    @Test
+    default void joinAddressCanBeNull() {
+        assertFalse(db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).isPresent());
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> null));
+
+        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, null, false));
+
+        assertEquals(expected, userInfo);
+    }
+
+    @Test
+    default void joinAddressIsUpdatedUponSecondLogin() {
+        assertFalse(db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).isPresent());
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> null));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+
+        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
 
         assertEquals(expected, userInfo);
     }
@@ -53,12 +76,12 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     @Test
     default void userInfoTableUpdatesBanStatus() {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
-                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         db().executeTransaction(new BanStatusTransaction(playerUUID, () -> true));
 
         List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.PLAYER_HOSTNAME.get(), true));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), true));
 
         assertEquals(expected, userInfo);
     }
@@ -66,12 +89,12 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     @Test
     default void userInfoTableUpdatesOperatorStatus() {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
-                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         db().executeTransaction(new OperatorStatusTransaction(playerUUID, true));
 
         List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, true, TestConstants.PLAYER_HOSTNAME.get(), false));
+        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, true, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
 
         assertEquals(expected, userInfo);
     }
@@ -79,7 +102,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     @Test
     default void playerNameIsUpdatedWhenPlayerLogsIn() {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
-                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         OptionalAssert.equals(playerUUID, db().query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)));
 
@@ -153,7 +176,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
-                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
     }
@@ -180,11 +203,11 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
             @Override
             protected void performOperations() {
                 execute(DataStoreQueries.registerUserInfo(playerUUID, 0L,
-                        serverUUID(), TestConstants.PLAYER_HOSTNAME.get()));
+                        serverUUID(), TestConstants.GET_PLAYER_HOSTNAME.get()));
                 execute(DataStoreQueries.registerUserInfo(playerUUID, 0L,
-                        serverUUID(), TestConstants.PLAYER_HOSTNAME.get()));
+                        serverUUID(), TestConstants.GET_PLAYER_HOSTNAME.get()));
                 execute(DataStoreQueries.registerUserInfo(player2UUID, 0L,
-                        serverUUID(), TestConstants.PLAYER_HOSTNAME.get()));
+                        serverUUID(), TestConstants.GET_PLAYER_HOSTNAME.get()));
             }
         }).get();
 
@@ -192,13 +215,13 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
         List<UserInfo> found = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         assertEquals(
-                Collections.singletonList(new UserInfo(playerUUID, serverUUID(), 0, false, TestConstants.PLAYER_HOSTNAME.get(), false)),
+                Collections.singletonList(new UserInfo(playerUUID, serverUUID(), 0, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false)),
                 found
         );
 
         List<UserInfo> found2 = db().query(UserInfoQueries.fetchUserInformationOfUser(player2UUID));
         assertEquals(
-                Collections.singletonList(new UserInfo(player2UUID, serverUUID(), 0, false, TestConstants.PLAYER_HOSTNAME.get(), false)),
+                Collections.singletonList(new UserInfo(player2UUID, serverUUID(), 0, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false)),
                 found2
         );
     }
@@ -237,5 +260,23 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     @Test
     default void noMinimumRegisterDateIsFetchedWithNoData() {
         assertFalse(db().query(BaseUserQueries.minimumRegisterDate()).isPresent());
+    }
+
+    @Test
+    default void joinAddressQueryHasNoNullValues() {
+        joinAddressCanBeNull();
+
+        Map<String, Integer> expected = Collections.singletonMap("Unknown", 1);
+        Map<String, Integer> result = db().query(UserInfoQueries.joinAddresses());
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void serverJoinAddressQueryHasNoNullValues() {
+        joinAddressCanBeNull();
+
+        Map<String, Integer> expected = Collections.singletonMap("Unknown", 1);
+        Map<String, Integer> result = db().query(UserInfoQueries.joinAddresses(serverUUID()));
+        assertEquals(expected, result);
     }
 }

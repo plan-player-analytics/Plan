@@ -45,11 +45,11 @@ public class UserImportData {
     private int mobKills;
     private int deaths;
 
-    private String hostname;
+    private String joinAddress;
 
     private UserImportData(String name, UUID uuid, List<Nickname> nicknames, long registered, boolean op,
                            boolean banned, int timesKicked, List<String> ips, Map<String, GMTimes> worldTimes, List<PlayerKill> kills,
-                           int mobKills, int deaths, String hostname) {
+                           int mobKills, int deaths, String joinAddress) {
         this.name = name;
         this.uuid = uuid;
         this.nicknames = nicknames;
@@ -62,7 +62,7 @@ public class UserImportData {
         this.kills = kills;
         this.mobKills = mobKills;
         this.deaths = deaths;
-        this.hostname = hostname;
+        this.joinAddress = joinAddress;
     }
 
     public static UserImportDataBuilder builder(ServerUUID serverUUID) {
@@ -117,12 +117,12 @@ public class UserImportData {
         this.banned = banned;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    public String getJoinAddress() {
+        return joinAddress;
     }
 
-    public String getHostname() {
-        return hostname;
+    public void setJoinAddress(String joinAddress) {
+        this.joinAddress = joinAddress;
     }
 
     public int getTimesKicked() {
@@ -173,6 +173,32 @@ public class UserImportData {
         this.deaths = deaths;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UserImportData)) return false;
+        UserImportData that = (UserImportData) o;
+        return registered == that.registered &&
+                op == that.op &&
+                banned == that.banned &&
+                timesKicked == that.timesKicked &&
+                mobKills == that.mobKills &&
+                deaths == that.deaths &&
+                joinAddress.equals(that.joinAddress) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(uuid, that.uuid) &&
+                Objects.equals(nicknames, that.nicknames) &&
+                Objects.equals(ips, that.ips) &&
+                Objects.equals(worldTimes, that.worldTimes) &&
+                Objects.equals(kills, that.kills);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, uuid, nicknames, registered, op, banned, timesKicked, ips,
+                worldTimes, kills, mobKills, deaths, joinAddress);
+    }
+
     public static final class UserImportDataBuilder {
         private final ServerUUID serverUUID;
 
@@ -188,7 +214,7 @@ public class UserImportData {
         private int timesKicked;
         private int mobKills;
         private int deaths;
-        private String hostname;
+        private String joinAddress;
 
         private UserImportDataBuilder(ServerUUID serverUUID) {
             this.serverUUID = serverUUID;
@@ -300,33 +326,7 @@ public class UserImportData {
 
         public UserImportData build() {
             return new UserImportData(name, uuid, nicknames, registered, op, banned, timesKicked, ips,
-                    worldTimes, kills, mobKills, deaths, hostname);
+                    worldTimes, kills, mobKills, deaths, joinAddress);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserImportData)) return false;
-        UserImportData that = (UserImportData) o;
-        return registered == that.registered &&
-                op == that.op &&
-                banned == that.banned &&
-                timesKicked == that.timesKicked &&
-                mobKills == that.mobKills &&
-                deaths == that.deaths &&
-                hostname.equals(that.hostname) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(uuid, that.uuid) &&
-                Objects.equals(nicknames, that.nicknames) &&
-                Objects.equals(ips, that.ips) &&
-                Objects.equals(worldTimes, that.worldTimes) &&
-                Objects.equals(kills, that.kills);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, uuid, nicknames, registered, op, banned, timesKicked, ips,
-                worldTimes, kills, mobKills, deaths, hostname);
     }
 }

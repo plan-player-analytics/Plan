@@ -37,6 +37,8 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -66,6 +68,7 @@ import java.util.concurrent.TimeUnit;
 public class GraphJSONCreator {
 
     private final PlanConfig config;
+    private final Locale locale;
     private final Theme theme;
     private final DBSystem dbSystem;
     private final Graphs graphs;
@@ -73,11 +76,13 @@ public class GraphJSONCreator {
     @Inject
     public GraphJSONCreator(
             PlanConfig config,
+            Locale locale,
             Theme theme,
             DBSystem dbSystem,
             Graphs graphs
     ) {
         this.config = config;
+        this.locale = locale;
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.graphs = graphs;
@@ -412,21 +417,33 @@ public class GraphJSONCreator {
 
     public Map<String, Object> playerHostnamePieJSONAsMap() {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Integer> hostnameResults = dbSystem.getDatabase().query(UserInfoQueries.hostnameTotals());
+        Map<String, Integer> joinAddresses = dbSystem.getDatabase().query(UserInfoQueries.joinAddresses());
+
+        translateUnknown(joinAddresses);
 
         return Maps.builder(String.class, Object.class)
-                .put("hostname_pie_colors", pieColors)
-                .put("hostname_pie_slices", graphs.pie().HostnamePie(hostnameResults).getSlices())
+                .put("colors", pieColors)
+                .put("slices", graphs.pie().joinAddressPie(joinAddresses).getSlices())
                 .build();
     }
 
     public Map<String, Object> playerHostnamePieJSONAsMap(ServerUUID serverUUID) {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Integer> hostnameResults = dbSystem.getDatabase().query(UserInfoQueries.hostnameTotals(serverUUID));
+        Map<String, Integer> joinAddresses = dbSystem.getDatabase().query(UserInfoQueries.joinAddresses(serverUUID));
+
+        translateUnknown(joinAddresses);
 
         return Maps.builder(String.class, Object.class)
-                .put("hostname_pie_colors", pieColors)
-                .put("hostname_pie_slices", graphs.pie().HostnamePie(hostnameResults).getSlices())
+                .put("colors", pieColors)
+                .put("slices", graphs.pie().joinAddressPie(joinAddresses).getSlices())
                 .build();
+    }
+
+    public void translateUnknown(Map<String, Integer> joinAddresses) {
+        Integer unknown = joinAddresses.get("Unknown");
+        if (unknown != null) {
+            joinAddresses.remove("Unknown");
+            joinAddresses.put(locale.getString(GenericLang.UNKNOWN), unknown);
+        }
     }
 }

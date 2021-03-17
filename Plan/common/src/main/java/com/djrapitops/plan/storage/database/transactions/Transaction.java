@@ -62,11 +62,6 @@ public abstract class Transaction {
         this.db = db;
         this.dbType = db.getType();
 
-        if (!shouldBeExecuted()) {
-            success = true;
-            return;
-        }
-
         attempts++; // Keeps track how many attempts have been made to avoid infinite recursion.
 
         if (db.isUnderHeavyLoad()) {
@@ -79,9 +74,12 @@ public abstract class Transaction {
         }
 
         try {
-            initializeTransaction(db);
-            performOperations();
-            if (connection != null) connection.commit();
+            initializeConnection(db);
+            if (shouldBeExecuted()) {
+                initializeTransaction(db);
+                performOperations();
+                if (connection != null) connection.commit();
+            }
             success = true;
         } catch (SQLException statementFail) {
             manageFailure(statementFail); // Throws a DBOpException.
@@ -160,12 +158,19 @@ public abstract class Transaction {
      */
     protected abstract void performOperations();
 
-    private void initializeTransaction(SQLDB db) {
+    private void initializeConnection(SQLDB db) {
         try {
             this.connection = db.getConnection();
-            createSavePoint();
         } catch (SQLException e) {
             throw new DBOpException(getClass().getSimpleName() + " initialization failed: " + e.getMessage(), e);
+        }
+    }
+
+    private void initializeTransaction(SQLDB db) {
+        try {
+            createSavePoint();
+        } catch (SQLException e) {
+            throw new DBOpException(getClass().getSimpleName() + " save point initialization failed: " + e.getMessage(), e);
         }
     }
 

@@ -42,14 +42,14 @@ public class UserInfoTable {
     public static final String REGISTERED = "registered";
     public static final String OP = "opped";
     public static final String BANNED = "banned";
-    public static final String HOSTNAME = "hostname";
+    public static final String JOIN_ADDRESS = "join_address";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
             USER_UUID + ',' +
             REGISTERED + ',' +
             SERVER_UUID + ',' +
             BANNED + ',' +
-            HOSTNAME + ',' +
+            JOIN_ADDRESS + ',' +
             OP +
             ") VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -62,7 +62,7 @@ public class UserInfoTable {
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(HOSTNAME, Sql.varchar(255)).notNull().defaultValue("'Unknown'")
+                .column(JOIN_ADDRESS, Sql.varchar(255))
                 .column(REGISTERED, Sql.LONG).notNull()
                 .column(OP, Sql.BOOL).notNull().defaultValue(false)
                 .column(BANNED, Sql.BOOL).notNull().defaultValue(false)

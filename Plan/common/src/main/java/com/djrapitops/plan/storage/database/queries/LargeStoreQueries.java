@@ -214,7 +214,7 @@ public class LargeStoreQueries {
                         statement.setLong(2, user.getRegistered());
                         statement.setString(3, serverUUID.toString());
                         statement.setBoolean(4, user.isBanned());
-                        statement.setString(5, user.getHostname());
+                        statement.setString(5, user.getJoinAddress());
                         statement.setBoolean(6, user.isOperator());
                         statement.addBatch();
                     }

@@ -131,7 +131,7 @@ public class GraphsJSONResolver implements Resolver {
                 return DataID.GRAPH_PUNCHCARD;
             case "serverPie":
                 return DataID.GRAPH_SERVER_PIE;
-            case "hostnamePie":
+            case "joinAddressPie":
                 return DataID.GRAPH_HOSTNAME_PIE;
             default:
                 throw new BadRequestException("unknown 'type' parameter.");

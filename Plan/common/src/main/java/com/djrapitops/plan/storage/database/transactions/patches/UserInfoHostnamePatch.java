@@ -28,12 +28,12 @@ public class UserInfoHostnamePatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(UserInfoTable.TABLE_NAME, UserInfoTable.HOSTNAME);
+        return hasColumn(UserInfoTable.TABLE_NAME, UserInfoTable.JOIN_ADDRESS);
     }
 
     @Override
     protected void applyPatch() {
-        addColumn(UserInfoTable.TABLE_NAME, UserInfoTable.HOSTNAME + ' '
-                + Sql.varchar(255) + " NOT NULL DEFAULT 'Unknown'");
+        addColumn(UserInfoTable.TABLE_NAME, UserInfoTable.JOIN_ADDRESS + ' '
+                + Sql.varchar(255));
     }
 }

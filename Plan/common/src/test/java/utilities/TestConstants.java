@@ -45,7 +45,7 @@ public class TestConstants {
     public static final String PLAYER_TWO_NAME = "Test_Player_two";
     public static final String PLAYER_THREE_NAME = RandomData.randomString(16);
 
-    public static final Supplier<String> PLAYER_HOSTNAME = () -> "play.example.com";
+    public static final Supplier<String> GET_PLAYER_HOSTNAME = () -> "play.example.com";
 
     public static final String WORLD_ONE_NAME = "World One";
     public static final String[] WORLDS = new String[]{WORLD_ONE_NAME};

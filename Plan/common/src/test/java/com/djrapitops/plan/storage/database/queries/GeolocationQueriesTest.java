@@ -41,7 +41,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
     @Test
     default void geoInformationIsStored() {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
-                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         List<GeoInfo> expected = RandomData.randomGeoInfo();
         for (GeoInfo geoInfo : expected) {
@@ -104,7 +104,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
         Database db = db();
         for (UUID uuid : uuids) {
             db.executeTransaction(new PlayerServerRegisterTransaction(uuid, () -> 0L, "", serverUUID(),
-                    TestConstants.PLAYER_HOSTNAME));
+                    TestConstants.GET_PLAYER_HOSTNAME));
         }
 
         save(firstUuid, new GeoInfo("Norway", 0));

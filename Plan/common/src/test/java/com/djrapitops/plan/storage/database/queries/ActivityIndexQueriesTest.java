@@ -51,9 +51,9 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
     default void storeSessions(Predicate<FinishedSession> save) {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
-                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
-                TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.PLAYER_HOSTNAME));
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         for (String world : worlds) {
             db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), world));
         }

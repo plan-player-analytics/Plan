@@ -111,6 +111,7 @@ public enum HtmlLang implements Lang {
     // Playerbase overview tab
     TITLE_PLAYERBASE_DEVELOPMENT("Playerbase development"),
     TITLE_CURRENT_PLAYERBASE("Current Playerbase"),
+    TITLE_JOIN_ADDRESSES("Join Addresses"),
     COMPARING_60_DAYS("Comparing 30d ago to Now"),
     TITLE_30_DAYS_AGO("30 days ago"),
     TITLE_NOW("Now"),

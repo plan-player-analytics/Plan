@@ -56,7 +56,7 @@ public class UserInfoQueries {
                 UserInfoTable.OP + ',' +
                 UserInfoTable.USER_UUID + ',' +
                 UserInfoTable.SERVER_UUID + ',' +
-                UserInfoTable.HOSTNAME +
+                UserInfoTable.JOIN_ADDRESS +
                 FROM + UserInfoTable.TABLE_NAME;
 
         return new QueryAllStatement<Map<ServerUUID, List<UserInfo>>>(sql, 50000) {
@@ -72,9 +72,9 @@ public class UserInfoQueries {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
-                    String hostname = set.getString(UserInfoTable.HOSTNAME);
+                    String joinAddress = set.getString(UserInfoTable.JOIN_ADDRESS);
 
-                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, hostname, banned));
+                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, joinAddress, banned));
                 }
                 return serverMap;
             }
@@ -93,7 +93,7 @@ public class UserInfoQueries {
                 UserInfoTable.BANNED + ',' +
                 UserInfoTable.OP + ',' +
                 UserInfoTable.SERVER_UUID + ',' +
-                UserInfoTable.HOSTNAME +
+                UserInfoTable.JOIN_ADDRESS +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID + "=?";
 
@@ -111,9 +111,9 @@ public class UserInfoQueries {
                     boolean op = set.getBoolean(UserInfoTable.OP);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
-                    String hostname = set.getString(UserInfoTable.HOSTNAME);
+                    String joinAddress = set.getString(UserInfoTable.JOIN_ADDRESS);
 
-                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, hostname, banned));
+                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, joinAddress, banned));
                 }
                 return userInformation;
             }
@@ -130,7 +130,7 @@ public class UserInfoQueries {
         String sql = SELECT +
                 UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
-                UserInfoTable.HOSTNAME + ',' +
+                UserInfoTable.JOIN_ADDRESS + ',' +
                 UserInfoTable.OP + ',' +
                 UserInfoTable.USER_UUID + ',' +
                 UserInfoTable.SERVER_UUID +
@@ -154,9 +154,9 @@ public class UserInfoQueries {
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
 
-                    String hostname = set.getString(UserInfoTable.HOSTNAME);
+                    String joinAddress = set.getString(UserInfoTable.JOIN_ADDRESS);
 
-                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, hostname, banned));
+                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, joinAddress, banned));
                 }
                 return userInformation;
             }
@@ -194,48 +194,54 @@ public class UserInfoQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> hostnameTotals() {
+    public static Query<Map<String, Integer>> joinAddresses() {
         String sql = SELECT +
-                "COUNT(hostname) as total," +
-                UserInfoTable.HOSTNAME +
+                "COUNT(1) as total," +
+                "COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?) as address" +
                 FROM + UserInfoTable.TABLE_NAME +
-                GROUP_BY + UserInfoTable.HOSTNAME +
-                ORDER_BY + UserInfoTable.HOSTNAME + " DESC";
-
-        return new QueryAllStatement<Map<String, Integer>>(sql, 100) {
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> hostnames = new HashMap<>();
-                while (set.next()) {
-                    hostnames.put(set.getString(UserInfoTable.HOSTNAME), set.getInt("total"));
-                }
-                return hostnames;
-            }
-        };
-    }
-
-    public static Query<Map<String, Integer>> hostnameTotals(ServerUUID serverUUID) {
-        String sql = SELECT +
-                "COUNT(hostname) as total," +
-                UserInfoTable.HOSTNAME +
-                FROM + UserInfoTable.TABLE_NAME +
-                GROUP_BY + UserInfoTable.HOSTNAME +
-                WHERE + UserInfoTable.SERVER_UUID + "=?" +
-                ORDER_BY + UserInfoTable.HOSTNAME + " DESC";
+                GROUP_BY + "address" +
+                ORDER_BY + "address DESC";
 
         return new QueryStatement<Map<String, Integer>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
+                statement.setString(1, "Unknown");
             }
 
             @Override
             public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> hostnames = new HashMap<>();
+                Map<String, Integer> joinAddresses = new HashMap<>();
                 while (set.next()) {
-                    hostnames.put(set.getString(UserInfoTable.HOSTNAME), set.getInt("total"));
+                    joinAddresses.put(set.getString("address"), set.getInt("total"));
                 }
-                return hostnames;
+                return joinAddresses;
+            }
+        };
+    }
+
+    public static Query<Map<String, Integer>> joinAddresses(ServerUUID serverUUID) {
+        String sql = SELECT +
+                "COUNT(1) as total," +
+                "COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?) as address" +
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.SERVER_UUID + "=?" +
+                GROUP_BY + "address" +
+                ORDER_BY + "address DESC";
+
+        return new QueryStatement<Map<String, Integer>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, "Unknown");
+                statement.setString(2, serverUUID.toString());
+            }
+
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> joinAddresses = new HashMap<>();
+                while (set.next()) {
+                    joinAddresses.put(set.getString("address"), set.getInt("total"));
+                }
+                return joinAddresses;
             }
         };
     }

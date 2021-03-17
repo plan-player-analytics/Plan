@@ -50,6 +50,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -75,6 +77,7 @@ public class PlayerOnlineListener implements Listener {
     private final Status status;
 
     private final AtomicBoolean virtualHostMethodAvailable = new AtomicBoolean(true);
+    private final Map<UUID, String> joinAddresses;
 
     @Inject
     public PlayerOnlineListener(
@@ -101,6 +104,8 @@ public class PlayerOnlineListener implements Listener {
         this.sessionCache = sessionCache;
         this.status = status;
         this.errorLogger = errorLogger;
+
+        joinAddresses = new HashMap<>();
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -110,6 +115,10 @@ public class PlayerOnlineListener implements Listener {
             UUID playerUUID = event.getPlayer().getUniqueId();
             boolean operator = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
+            String joinAddress = event.getHostname();
+            if (!joinAddress.isEmpty()) {
+                joinAddresses.put(playerUUID, joinAddress.substring(0, joinAddress.indexOf(":")));
+            }
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
             dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
         } catch (Exception e) {
@@ -207,7 +216,7 @@ public class PlayerOnlineListener implements Listener {
                 virtualHostMethodAvailable.set(false);
             }
         }
-        return player.getAddress().getHostName();
+        return joinAddresses.get(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -235,6 +244,7 @@ public class PlayerOnlineListener implements Listener {
 
         BukkitAFKListener.afkTracker.loggedOut(playerUUID, time);
 
+        joinAddresses.remove(playerUUID);
         nicknameCache.removeDisplayName(playerUUID);
 
         dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, player::isBanned));

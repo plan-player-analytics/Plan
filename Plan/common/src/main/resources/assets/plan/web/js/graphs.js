@@ -418,7 +418,7 @@ function serverPie(id, serverSeries) {
     }));
 }
 
-function hostnamePie(id, hostnameTotals) {
+function joinAddressPie(id, joinAddresses) {
     graphs.push(Highcharts.chart(id, {
         chart: {
             plotBackgroundColor: null,
@@ -442,7 +442,7 @@ function hostnamePie(id, hostnameTotals) {
                 return '<b>' + this.point.name + ':</b> ' + this.y + ' (' + this.percentage.toFixed(2) + '%)';
             }
         },
-        series: [hostnameTotals]
+        series: [joinAddresses]
     }));
 }
 

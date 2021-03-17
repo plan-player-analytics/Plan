@@ -33,23 +33,23 @@ import java.util.function.Supplier;
 public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
 
     private final ServerUUID serverUUID;
-    private final Supplier<String> hostname;
+    private final Supplier<String> getJoinAddress;
 
     public PlayerServerRegisterTransaction(UUID playerUUID, LongSupplier registered,
-                                           String playerName, ServerUUID serverUUID, Supplier<String> hostname) {
+                                           String playerName, ServerUUID serverUUID, Supplier<String> getJoinAddress) {
         super(playerUUID, registered, playerName);
         this.serverUUID = serverUUID;
-        this.hostname = hostname;
+        this.getJoinAddress = getJoinAddress;
     }
 
     @Override
     protected void performOperations() {
         super.performOperations();
         long registerDate = registered.getAsLong();
-        String hostname = this.hostname.get();
+        String joinAddress = this.getJoinAddress.get();
 
         if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)))) {
-            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID, hostname));
+            execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID, joinAddress));
         }
 
         // Updates register date to smallest possible value.
@@ -58,6 +58,6 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
             execute(DataStoreQueries.updateMainRegisterDate(playerUUID, registerDate));
         }
 
-        execute(DataStoreQueries.updateHostname(playerUUID, hostname));
+        execute(DataStoreQueries.updateJoinAddress(playerUUID, joinAddress));
     }
 }

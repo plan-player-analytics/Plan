@@ -147,7 +147,7 @@ public class ServerPageExporter extends FileExporter {
                 "graph?type=geolocation&server=" + serverUUID,
                 "graph?type=uniqueAndNew&server=" + serverUUID,
                 "graph?type=hourlyUniqueAndNew&server=" + serverUUID,
-                "graph?type=hostnamePie&server=" + serverUUID,
+                "graph?type=joinAddressPie&server=" + serverUUID,
                 "graph?type=serverCalendar&server=" + serverUUID,
                 "graph?type=punchCard&server=" + serverUUID,
                 "players?server=" + serverUUID,

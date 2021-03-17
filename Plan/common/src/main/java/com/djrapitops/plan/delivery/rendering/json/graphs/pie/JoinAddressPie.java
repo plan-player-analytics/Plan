@@ -20,18 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HostnamePie extends Pie {
+public class JoinAddressPie extends Pie {
 
-    HostnamePie(Map<String, Integer> hostnames) {
-        super(turnToSlices(hostnames));
+    JoinAddressPie(Map<String, Integer> joinAddresses) {
+        super(turnToSlices(joinAddresses));
     }
 
-    private static List<PieSlice> turnToSlices(Map<String, Integer> hostnames) {
+    private static List<PieSlice> turnToSlices(Map<String, Integer> joinAddresses) {
         List<PieSlice> slices = new ArrayList<>();
-        for (Map.Entry<String, Integer> server : hostnames.entrySet()) {
-            String hostname = server.getKey();
-            Integer total = server.getValue();
-            slices.add(new PieSlice(hostname, total));
+        for (Map.Entry<String, Integer> address : joinAddresses.entrySet()) {
+            String joinAddress = address.getKey();
+            Integer total = address.getValue();
+            slices.add(new PieSlice(joinAddress, total));
         }
         return slices;
     }

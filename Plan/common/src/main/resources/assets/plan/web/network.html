@@ -615,11 +615,11 @@
                                 <div class="card shadow mb-4">
                                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                         <h6 class="m-0 font-weight-bold col-black">
-                                            <i class="fa fa-fw fa-users col-amber"></i>
-                                            Used hostnames
+                                            <i class="fa fa-fw fa-location-arrow col-amber"></i>
+                                            Join Addresses
                                         </h6>
                                     </div>
-                                    <div class="chart-area" id="hostnamePie"></div>
+                                    <div class="chart-area" id="joinAddressPie"></div>
                                 </div>
                             </div>
                         </div>
@@ -917,7 +917,7 @@
         refreshingJsonRequest("./v1/graph?type=uniqueAndNew", loadUniqueAndNewGraph, 'network-overview');
         refreshingJsonRequest("./v1/graph?type=hourlyUniqueAndNew", loadHourlyUniqueAndNewGraph, 'network-overview');
         refreshingJsonRequest("./v1/graph?type=serverPie", loadServerPie, 'sessions-overview');
-        refreshingJsonRequest("./v1/graph?type=hostnamePie", loadHostnamePie, 'playerbase-overview');
+        refreshingJsonRequest("./v1/graph?type=joinAddressPie", loadJoinAddressPie, 'playerbase-overview');
         refreshingJsonRequest("./v1/graph?type=activity", loadActivityGraphs, 'playerbase-overview');
         refreshingJsonRequest("./v1/graph?type=geolocation", loadGeolocationGraph, 'geolocations');
 

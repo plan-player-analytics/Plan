@@ -36,15 +36,15 @@ public class UserInfo {
     private final long registered;
     private final boolean banned;
     private final boolean opped;
-    private final String hostname;
+    private final String joinAddress;
 
-    public UserInfo(UUID playerUUID, ServerUUID serverUUID, long registered, boolean opped, String hostname, boolean banned) {
+    public UserInfo(UUID playerUUID, ServerUUID serverUUID, long registered, boolean opped, String joinAddress, boolean banned) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
         this.registered = registered;
         this.opped = opped;
         this.banned = banned;
-        this.hostname = hostname;
+        this.joinAddress = joinAddress;
     }
 
     public UUID getPlayerUuid() {
@@ -55,8 +55,8 @@ public class UserInfo {
         return serverUUID;
     }
 
-    public String getHostname() {
-        return hostname;
+    public String getJoinAddress() {
+        return joinAddress;
     }
 
     public long getRegistered() {
@@ -74,18 +74,19 @@ public class UserInfo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserInfo)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         UserInfo userInfo = (UserInfo) o;
-        return registered == userInfo.registered &&
-                banned == userInfo.banned &&
-                opped == userInfo.opped &&
-                playerUUID.equals(userInfo.playerUUID) &&
-                serverUUID.equals(userInfo.serverUUID);
+        return registered == userInfo.registered
+                && banned == userInfo.banned
+                && opped == userInfo.opped
+                && Objects.equals(playerUUID, userInfo.playerUUID)
+                && Objects.equals(serverUUID, userInfo.serverUUID)
+                && Objects.equals(joinAddress, userInfo.joinAddress);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(playerUUID, serverUUID, registered, banned, hostname, opped);
+        return Objects.hash(playerUUID, serverUUID, registered, banned, joinAddress, opped);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class UserInfo {
                 ", registered=" + registered +
                 ", banned=" + banned +
                 ", opped=" + opped +
-                ", hostname=" + hostname +
+                ", joinAddress=" + joinAddress +
                 '}';
     }
 }

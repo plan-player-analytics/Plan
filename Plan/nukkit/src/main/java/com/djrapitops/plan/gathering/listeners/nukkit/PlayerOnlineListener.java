@@ -161,7 +161,7 @@ public class PlayerOnlineListener implements Listener {
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
         InetAddress address = player.getSocketAddress().getAddress();
-        Supplier<String> getHostName = () -> player.getSocketAddress().getHostName();
+        Supplier<String> getHostName = () -> null;
 
         String playerName = player.getName();
         String displayName = player.getDisplayName();

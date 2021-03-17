@@ -173,7 +173,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new LinkUsersToPlayersSecurityTablePatch(),
                 new LitebansTableHeaderPatch(),
                 new UserInfoHostnamePatch(),
-                new ServerIsProxyPatch()
+                new ServerIsProxyPatch(),
+                new UserInfoHostnameAllowNullPatch()
         };
     }
 
