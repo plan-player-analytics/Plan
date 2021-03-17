@@ -29,6 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
@@ -297,15 +298,17 @@ public class DataStoreQueries {
         };
     }
 
-    public static Executable updateJoinAddress(UUID playerUUID, String joinAddress) {
+    public static Executable updateJoinAddress(UUID playerUUID, ServerUUID serverUUID, String joinAddress) {
         String sql = "UPDATE " + UserInfoTable.TABLE_NAME + " SET " +
                 UserInfoTable.JOIN_ADDRESS + "=?" +
-                WHERE + UserInfoTable.USER_UUID + "=?";
+                WHERE + UserInfoTable.USER_UUID + "=?" +
+                AND + UserInfoTable.SERVER_UUID + "=?";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, joinAddress);
                 statement.setString(2, playerUUID.toString());
+                statement.setString(3, serverUUID.toString());
             }
         };
     }

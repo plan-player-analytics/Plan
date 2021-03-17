@@ -18,10 +18,12 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.gathering.domain.BaseUser;
 import com.djrapitops.plan.gathering.domain.UserInfo;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
@@ -69,6 +71,23 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
         List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
+
+        assertEquals(expected, userInfo);
+    }
+
+    @Test
+    default void joinAddressUpdateIsUniquePerServer() {
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> null));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "")));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, TestConstants.SERVER_TWO_UUID, () -> "example.join.address"));
+
+        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        List<UserInfo> expected = Arrays.asList(
+                new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false),
+                new UserInfo(playerUUID, TestConstants.SERVER_TWO_UUID, TestConstants.REGISTER_TIME, false, "example.join.address", false)
+        );
 
         assertEquals(expected, userInfo);
     }
@@ -277,6 +296,17 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
         Map<String, Integer> expected = Collections.singletonMap("Unknown", 1);
         Map<String, Integer> result = db().query(UserInfoQueries.joinAddresses(serverUUID()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void joinAddressQueryHasDistinctPlayers() {
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "")));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, TestConstants.SERVER_TWO_UUID, TestConstants.GET_PLAYER_HOSTNAME));
+
+        Map<String, Integer> expected = Collections.singletonMap(TestConstants.GET_PLAYER_HOSTNAME.get(), 1);
+        Map<String, Integer> result = db().query(UserInfoQueries.joinAddresses());
         assertEquals(expected, result);
     }
 }

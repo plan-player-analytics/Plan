@@ -58,6 +58,6 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
             execute(DataStoreQueries.updateMainRegisterDate(playerUUID, registerDate));
         }
 
-        execute(DataStoreQueries.updateJoinAddress(playerUUID, joinAddress));
+        execute(DataStoreQueries.updateJoinAddress(playerUUID, serverUUID, joinAddress));
     }
 }

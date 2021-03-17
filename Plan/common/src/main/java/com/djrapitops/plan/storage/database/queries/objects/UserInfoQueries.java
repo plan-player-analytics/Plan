@@ -198,7 +198,12 @@ public class UserInfoQueries {
         String sql = SELECT +
                 "COUNT(1) as total," +
                 "COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?) as address" +
+                FROM + '(' +
+                SELECT + DISTINCT +
+                UserInfoTable.USER_UUID + ',' +
+                UserInfoTable.JOIN_ADDRESS +
                 FROM + UserInfoTable.TABLE_NAME +
+                ") q1" +
                 GROUP_BY + "address" +
                 ORDER_BY + "address DESC";
 
@@ -210,7 +215,7 @@ public class UserInfoQueries {
 
             @Override
             public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> joinAddresses = new HashMap<>();
+                Map<String, Integer> joinAddresses = new TreeMap<>();
                 while (set.next()) {
                     joinAddresses.put(set.getString("address"), set.getInt("total"));
                 }
@@ -237,7 +242,7 @@ public class UserInfoQueries {
 
             @Override
             public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> joinAddresses = new HashMap<>();
+                Map<String, Integer> joinAddresses = new TreeMap<>();
                 while (set.next()) {
                     joinAddresses.put(set.getString("address"), set.getInt("total"));
                 }
