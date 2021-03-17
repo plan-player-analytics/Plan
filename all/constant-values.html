@@ -1365,6 +1365,60 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </li>
 <li class="blockList">
 <table class="constantsSummary">
+<caption><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/MetadataTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">MetadataTable</a></span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colSecond" scope="col">Constant Field</th>
+<th class="colLast" scope="col">Value</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.MetadataTable.INSERT_STATEMENT">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/MetadataTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></th>
+<td class="colLast"><code>"INSERT INTO plan_database_metadata (id,uuid) VALUES (?, ?)"</code></td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.MetadataTable.KEY">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/MetadataTable.html#KEY">KEY</a></code></th>
+<td class="colLast"><code>"id"</code></td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.MetadataTable.SELECT_VALUE_OF_KEY">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/MetadataTable.html#SELECT_VALUE_OF_KEY">SELECT_VALUE_OF_KEY</a></code></th>
+<td class="colLast"><code>"SELECT uuid FROM plan_database_metadata WHERE id=?"</code></td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.MetadataTable.TABLE_NAME">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/MetadataTable.html#TABLE_NAME">TABLE_NAME</a></code></th>
+<td class="colLast"><code>"plan_database_metadata"</code></td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.MetadataTable.UPDATE_STATEMENT">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/MetadataTable.html#UPDATE_STATEMENT">UPDATE_STATEMENT</a></code></th>
+<td class="colLast"><code>"UPDATE plan_database_metadata SET uuid=? WHERE id=?"</code></td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.MetadataTable.VALUE">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/MetadataTable.html#VALUE">VALUE</a></code></th>
+<td class="colLast"><code>"uuid"</code></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li class="blockList">
+<table class="constantsSummary">
 <caption><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/NicknamesTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">NicknamesTable</a></span><span class="tabEnd">&nbsp;</span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
@@ -1891,25 +1945,25 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colLast"><code>"banned"</code></td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.HOSTNAME">
-<!--   -->
-</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
-<th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#HOSTNAME">HOSTNAME</a></code></th>
-<td class="colLast"><code>"hostname"</code></td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.ID">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#ID">ID</a></code></th>
 <td class="colLast"><code>"id"</code></td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.INSERT_STATEMENT">
 <!--   -->
 </a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></th>
-<td class="colLast"><code>"INSERT INTO plan_user_info (uuid,registered,server_uuid,banned,hostname,opped) VALUES (?, ?, ?, ?, ?, ?)"</code></td>
+<td class="colLast"><code>"INSERT INTO plan_user_info (uuid,registered,server_uuid,banned,join_address,opped) VALUES (?, ?, ?, ?, ?, ?)"</code></td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.JOIN_ADDRESS">
+<!--   -->
+</a><code>public&nbsp;static&nbsp;final&nbsp;java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#JOIN_ADDRESS">JOIN_ADDRESS</a></code></th>
+<td class="colLast"><code>"join_address"</code></td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><a id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.OP">
