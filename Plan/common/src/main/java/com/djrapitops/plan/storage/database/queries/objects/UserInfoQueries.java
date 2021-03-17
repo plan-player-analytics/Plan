@@ -197,7 +197,7 @@ public class UserInfoQueries {
     public static Query<Map<String, Integer>> joinAddresses() {
         String sql = SELECT +
                 "COUNT(1) as total," +
-                "COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?) as address" +
+                "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
                 FROM + '(' +
                 SELECT + DISTINCT +
                 UserInfoTable.USER_UUID + ',' +
@@ -227,7 +227,7 @@ public class UserInfoQueries {
     public static Query<Map<String, Integer>> joinAddresses(ServerUUID serverUUID) {
         String sql = SELECT +
                 "COUNT(1) as total," +
-                "COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?) as address" +
+                "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_UUID + "=?" +
                 GROUP_BY + "address" +
