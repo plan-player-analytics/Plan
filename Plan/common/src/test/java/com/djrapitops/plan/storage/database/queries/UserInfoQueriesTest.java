@@ -285,7 +285,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void joinAddressQueryHasNoNullValues() {
         joinAddressCanBeNull();
 
-        Map<String, Integer> expected = Collections.singletonMap("Unknown", 1);
+        Map<String, Integer> expected = Collections.singletonMap("unknown", 1);
         Map<String, Integer> result = db().query(UserInfoQueries.joinAddresses());
         assertEquals(expected, result);
     }
@@ -294,7 +294,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void serverJoinAddressQueryHasNoNullValues() {
         joinAddressCanBeNull();
 
-        Map<String, Integer> expected = Collections.singletonMap("Unknown", 1);
+        Map<String, Integer> expected = Collections.singletonMap("unknown", 1);
         Map<String, Integer> result = db().query(UserInfoQueries.joinAddresses(serverUUID()));
         assertEquals(expected, result);
     }

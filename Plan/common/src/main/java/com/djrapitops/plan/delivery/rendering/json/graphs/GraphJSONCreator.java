@@ -440,10 +440,10 @@ public class GraphJSONCreator {
     }
 
     public void translateUnknown(Map<String, Integer> joinAddresses) {
-        Integer unknown = joinAddresses.get("Unknown");
+        Integer unknown = joinAddresses.get("unknown");
         if (unknown != null) {
-            joinAddresses.remove("Unknown");
-            joinAddresses.put(locale.getString(GenericLang.UNKNOWN), unknown);
+            joinAddresses.remove("unknown");
+            joinAddresses.put(locale.getString(GenericLang.UNKNOWN).toLowerCase(), unknown);
         }
     }
 }
