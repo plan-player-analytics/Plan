@@ -231,7 +231,7 @@ function loadPlayerbaseOverviewValues(json, error) {
     element.querySelector('#data_regular_to_inactive').innerHTML = data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend);
 }
 
-function loadservers(json, error) {
+function loadServers(json, error) {
     if (error) {
         displayError(document.getElementById('servers-tab'), error);
         return;
@@ -240,6 +240,8 @@ function loadservers(json, error) {
     const servers = json.servers;
 
     if (!servers || !servers.length) {
+        let elements = document.getElementsByClassName('nav-servers');
+        for (let i = 0; i < elements.length; i++) { elements[i].style.display = 'none'; }
         document.getElementById('game-server-warning').classList.remove('hidden');
         document.getElementById('data_server_list').innerHTML =
             `<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p><p>It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.</p></div></div>`
@@ -247,20 +249,28 @@ function loadservers(json, error) {
         return;
     }
 
+    let navServersHtml = '';
     let serversHtml = '';
     for (let i = 0; i < servers.length; i++) {
-        serversHtml += createnetworkserverBox(i, servers[i]);
+        navServersHtml += addServerToNav(servers[i]);
+        serversHtml += createNetworkServerBox(i, servers[i]);
     }
+
+    document.getElementById("navSrvContainer").innerHTML = navServersHtml;
     document.getElementById("data_server_list").innerHTML = serversHtml;
 
     for (let i = 0; i < servers.length; i++) {
         document.getElementById(`server_quick_view_${i}`)
-            .addEventListener('click', onViewserver(i, servers));
+            .addEventListener('click', onViewServer(i, servers));
     }
-    onViewserver(0, servers)(); // Open first server.
+    onViewServer(0, servers)(); // Open first server.
 }
 
-function createnetworkserverBox(i, server) {
+function addServerToNav(server) {
+    return `<a class="collapse-item nav-button" href="server/${server.name}"><i class="fas fa-fw fa-server col-light-green"></i> ${server.name}</a>`;
+}
+
+function createNetworkServerBox(i, server) {
     return `<div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold col-black">
@@ -282,7 +292,7 @@ function createnetworkserverBox(i, server) {
             </div>`;
 }
 
-function onViewserver(i, servers) {
+function onViewServer(i, servers) {
     return function () {
         setTimeout(function () {
             const server = servers[i];

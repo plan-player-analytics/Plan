@@ -73,6 +73,9 @@
                     <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
                             class="far fa-fw fa-calendar-alt"></i>
                         Sessions</a>
+                    <hr class="nav-servers sidebar-divider my-2">
+                    <div class="nav-servers" id="navSrvContainer">
+                    </div>
                 </div>
             </div>
         </li>
@@ -904,7 +907,7 @@
 
         setLoadingText('Calculating values..');
         refreshingJsonRequest("./v1/network/overview", loadNetworkOverviewValues, 'network-overview');
-        refreshingJsonRequest("./v1/network/servers", loadservers, 'servers');
+        refreshingJsonRequest("./v1/network/servers", loadServers, 'servers');
         refreshingJsonRequest("./v1/network/sessionsOverview", loadSessionValues, 'sessions-overview');
         refreshingJsonRequest("./v1/network/playerbaseOverview", loadPlayerbaseOverviewValues, 'playerbase-overview');
         refreshingJsonRequest("./v1/sessions", loadSessionAccordion, 'sessions-overview');
