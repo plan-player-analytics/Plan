@@ -274,8 +274,10 @@ function runQuery() {
     if (timestamp) {
         document.querySelector('#content .tab').innerHTML =
             `<div class="page-loader">
+            <div class="loader-container">
             <span class="loader"></span>
             <p class="loader-text">Loading..</p>
+            </div>
         </div>`;
     } else {
         const icon = document.createElement('template');
