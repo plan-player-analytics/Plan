@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.delivery.DeliveryUtilities;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.settings.ConfigSystem;
@@ -75,6 +76,8 @@ public interface DatabaseTestComponent extends DBPreparer.Dependencies {
     DeliveryUtilities deliveryUtilities();
 
     PlanFiles files();
+
+    ExtensionSvc extensionService();
 
     @Component.Builder
     interface Builder {

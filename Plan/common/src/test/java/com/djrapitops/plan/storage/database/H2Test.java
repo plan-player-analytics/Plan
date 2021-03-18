@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
+import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -52,7 +53,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class H2Test implements DatabaseTest,
         DatabaseBackupTest,
-        //ExtensionsDatabaseTest, TODO Test hangs forever for some reason, investigate later.
+        ExtensionsDatabaseTest,
         ActivityIndexQueriesTest,
         GeolocationQueriesTest,
         NicknameQueriesTest,
@@ -140,6 +141,11 @@ public class H2Test implements DatabaseTest,
     @Override
     public DeliveryUtilities deliveryUtilities() {
         return component.deliveryUtilities();
+    }
+
+    @Override
+    public ExtensionService extensionService() {
+        return component.extensionService();
     }
 
     @Override

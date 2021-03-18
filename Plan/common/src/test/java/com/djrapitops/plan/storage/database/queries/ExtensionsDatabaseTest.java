@@ -59,7 +59,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @BeforeEach
     default void unregisterExtensions() {
-        ExtensionService extensionService = system().getExtensionService();
+        ExtensionService extensionService = extensionService();
         extensionService.unregister(new PlayerExtension());
         extensionService.unregister(new ServerExtension());
         extensionService.unregister(new ConditionalExtension());
@@ -82,7 +82,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionPlayerValuesAreStored() {
-        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -130,7 +130,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerValuesAreStored() {
-        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
 
         extensionService.register(new ServerExtension());
         extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER);
@@ -152,7 +152,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerAggregateQueriesWork() {
-        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -183,7 +183,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void unsatisfiedPlayerConditionalResultsAreCleaned() {
-        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
 
         extensionService.register(new ConditionalExtension());
 
@@ -237,7 +237,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void unsatisfiedServerConditionalResultsAreCleaned() {
-        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
 
         ConditionalExtension.condition = true;
         extensionService.register(new ConditionalExtension());
@@ -288,7 +288,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerTableValuesAreInserted() {
-        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updateServerValues(CallEvents.MANUAL);
@@ -320,7 +320,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionPlayerTableValuesAreInserted() {
-        ExtensionSvc extensionService = (ExtensionSvc) system().getExtensionService();
+        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
