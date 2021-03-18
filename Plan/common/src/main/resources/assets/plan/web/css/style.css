@@ -7,22 +7,25 @@
     text-align: center;
 }
 
+.loader-container {
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
 .loader {
     display: inline-block;
     width: 2rem;
     height: 2rem;
-    position: absolute;
     border: 4px solid #368F17;
     border-radius: 5px;
-    top: 50%;
     background-color: #368F17;
     animation: loader 2s infinite ease;
 }
 
 .loader-text {
-    position: relative;
-    top: 55%;
-    left: 1rem;
+    margin-top: 0.5rem;
 }
 
 @keyframes loader {
