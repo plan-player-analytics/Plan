@@ -72,6 +72,7 @@ public class Contributors {
             new Contributor("QuakyCZ", LANG),
             new Contributor("MrFriggo", LANG),
             new Contributor("vacoup", CODE),
+            new Contributor("Kopo942", CODE),
     };
 
     private Contributors() {
