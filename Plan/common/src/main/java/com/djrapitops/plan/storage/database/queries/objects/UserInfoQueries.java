@@ -87,7 +87,7 @@ public class UserInfoQueries {
      * @param playerUUID UUID of the player.
      * @return List of UserInfo objects, one for each server where the player has played.
      */
-    public static Query<List<UserInfo>> fetchUserInformationOfUser(UUID playerUUID) {
+    public static Query<Set<UserInfo>> fetchUserInformationOfUser(UUID playerUUID) {
         String sql = SELECT +
                 UserInfoTable.TABLE_NAME + '.' + UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
@@ -97,15 +97,15 @@ public class UserInfoQueries {
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID + "=?";
 
-        return new QueryStatement<List<UserInfo>>(sql) {
+        return new QueryStatement<Set<UserInfo>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
             }
 
             @Override
-            public List<UserInfo> processResults(ResultSet set) throws SQLException {
-                List<UserInfo> userInformation = new ArrayList<>();
+            public Set<UserInfo> processResults(ResultSet set) throws SQLException {
+                Set<UserInfo> userInformation = new HashSet<>();
                 while (set.next()) {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean op = set.getBoolean(UserInfoTable.OP);

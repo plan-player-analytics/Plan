@@ -46,8 +46,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         assertFalse(db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).isPresent());
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
-        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
+        Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
 
         assertEquals(expected, userInfo);
     }
@@ -57,8 +57,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         assertFalse(db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).isPresent());
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> null));
 
-        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, null, false));
+        Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, null, false));
 
         assertEquals(expected, userInfo);
     }
@@ -69,8 +69,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> null));
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
-        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
+        Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
 
         assertEquals(expected, userInfo);
     }
@@ -83,11 +83,11 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "")));
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, TestConstants.SERVER_TWO_UUID, () -> "example.join.address"));
 
-        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Arrays.asList(
+        Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> expected = new HashSet<>(Arrays.asList(
                 new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false),
                 new UserInfo(playerUUID, TestConstants.SERVER_TWO_UUID, TestConstants.REGISTER_TIME, false, "example.join.address", false)
-        );
+        ));
 
         assertEquals(expected, userInfo);
     }
@@ -99,8 +99,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
         db().executeTransaction(new BanStatusTransaction(playerUUID, () -> true));
 
-        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), true));
+        Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), true));
 
         assertEquals(expected, userInfo);
     }
@@ -112,8 +112,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
         db().executeTransaction(new OperatorStatusTransaction(playerUUID, true));
 
-        List<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
-        List<UserInfo> expected = Collections.singletonList(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, true, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
+        Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, true, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
 
         assertEquals(expected, userInfo);
     }
@@ -232,15 +232,15 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
         db().executeTransaction(new RemoveDuplicateUserInfoTransaction());
 
-        List<UserInfo> found = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> found = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         assertEquals(
-                Collections.singletonList(new UserInfo(playerUUID, serverUUID(), 0, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false)),
+                Collections.singleton(new UserInfo(playerUUID, serverUUID(), 0, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false)),
                 found
         );
 
-        List<UserInfo> found2 = db().query(UserInfoQueries.fetchUserInformationOfUser(player2UUID));
+        Set<UserInfo> found2 = db().query(UserInfoQueries.fetchUserInformationOfUser(player2UUID));
         assertEquals(
-                Collections.singletonList(new UserInfo(player2UUID, serverUUID(), 0, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false)),
+                Collections.singleton(new UserInfo(player2UUID, serverUUID(), 0, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false)),
                 found2
         );
     }

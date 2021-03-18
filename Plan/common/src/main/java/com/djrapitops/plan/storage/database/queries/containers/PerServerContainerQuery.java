@@ -33,6 +33,7 @@ import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -94,7 +95,7 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
     }
 
     private void userInformation(SQLDB db, PerServerContainer container) {
-        List<UserInfo> userInformation = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> userInformation = db.query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         container.putUserInfo(userInformation);
     }
 
