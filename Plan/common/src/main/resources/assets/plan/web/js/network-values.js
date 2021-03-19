@@ -231,7 +231,7 @@ function loadPlayerbaseOverviewValues(json, error) {
     element.querySelector('#data_regular_to_inactive').innerHTML = data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend);
 }
 
-function loadServers(json, error) {
+function loadservers(json, error) {
     if (error) {
         displayError(document.getElementById('servers-tab'), error);
         return;
@@ -252,8 +252,8 @@ function loadServers(json, error) {
     let navServersHtml = '';
     let serversHtml = '';
     for (let i = 0; i < servers.length; i++) {
-        navServersHtml += addServerToNav(servers[i]);
-        serversHtml += createNetworkServerBox(i, servers[i]);
+        navServersHtml += addserverToNav(servers[i]);
+        serversHtml += createnetworkserverBox(i, servers[i]);
     }
 
     document.getElementById("navSrvContainer").innerHTML = navServersHtml;
@@ -261,16 +261,16 @@ function loadServers(json, error) {
 
     for (let i = 0; i < servers.length; i++) {
         document.getElementById(`server_quick_view_${i}`)
-            .addEventListener('click', onViewServer(i, servers));
+            .addEventListener('click', onViewserver(i, servers));
     }
-    onViewServer(0, servers)(); // Open first server.
+    onViewserver(0, servers)(); // Open first server.
 }
 
-function addServerToNav(server) {
+function addserverToNav(server) {
     return `<a class="collapse-item nav-button" href="server/${server.name}"><i class="fas fa-fw fa-server col-light-green"></i> ${server.name}</a>`;
 }
 
-function createNetworkServerBox(i, server) {
+function createnetworkserverBox(i, server) {
     return `<div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold col-black">
@@ -292,7 +292,7 @@ function createNetworkServerBox(i, server) {
             </div>`;
 }
 
-function onViewServer(i, servers) {
+function onViewserver(i, servers) {
     return function () {
         setTimeout(function () {
             const server = servers[i];
