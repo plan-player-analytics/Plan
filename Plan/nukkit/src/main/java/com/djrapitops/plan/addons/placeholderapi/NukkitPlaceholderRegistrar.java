@@ -17,7 +17,9 @@
 package com.djrapitops.plan.addons.placeholderapi;
 
 import cn.nukkit.Player;
+import com.creeperface.nukkit.placeholderapi.api.Placeholder;
 import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
+import com.creeperface.nukkit.placeholderapi.api.PlaceholderParameters.Parameter;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
@@ -29,7 +31,9 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.Serializable;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Placeholder expansion used to provide data from Plan on Nukkit.
@@ -56,27 +60,36 @@ public class NukkitPlaceholderRegistrar {
 
     public void register() {
         PlaceholderAPI api = PlaceholderAPI.getInstance();
-        placeholders.getPlaceholders().forEach((name, loader) ->
-                api.visitorSensitivePlaceholder(name, (player, params) -> {
-                            try {
-                                return loader.apply(getPlayer(player), params.get());
-                            } catch (Exception e) {
-                                errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
-                                return null;
-                            }
-                        }
-                ));
+        placeholders.getPlaceholders().forEach((name, loader) -> api.builder(name, Serializable.class)
+                .visitorLoader(entry -> {
+                    try {
+                        return loader.apply(
+                                getPlayer(entry.getPlayer()),
+                                entry.getParameters().getAll().stream()
+                                        .map(Parameter::getValue)
+                                        .collect(Collectors.toList())
+                        );
+                    } catch (Exception e) {
+                        errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
+                        return null;
+                    }
+                }).build()
+        );
 
-        placeholders.getStaticPlaceholders().forEach((name, loader) ->
-                api.staticPlaceholder(name, params -> {
-                            try {
-                                return loader.apply(params.get());
-                            } catch (Exception e) {
-                                errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
-                                return null;
-                            }
-                        }
-                ));
+        placeholders.getStaticPlaceholders().forEach((name, loader) -> api.builder(name, Serializable.class)
+                .loader(entry -> {
+                    try {
+                        return loader.apply(
+                                entry.getParameters().getAll().stream()
+                                        .map(Parameter::getValue)
+                                        .collect(Collectors.toList())
+                        );
+                    } catch (Exception e) {
+                        errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
+                        return null;
+                    }
+                }).build()
+        );
     }
 
     private PlayerContainer getPlayer(Player player) {
