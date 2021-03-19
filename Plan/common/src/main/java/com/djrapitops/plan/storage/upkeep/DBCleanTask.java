@@ -136,14 +136,14 @@ public class DBCleanTask extends TaskSystem.Task {
             Integer id = serverInfo.getServer().getId().orElse(1);
 
             double distributor = id * 1.0 / biggestId; // 0 < distributor <= 1
-            long distributingOverTime = config.get(TimeSettings.CLEAN_DATABASE_PERIOD);
+            long distributingOverTimeMs = config.get(TimeSettings.CLEAN_DATABASE_PERIOD);
 
-            // -40 seconds to start first at 20 seconds if only one server is present.
-            long startAfter = (long) (distributor * distributingOverTime) - 40L;
+            // -40 seconds to start first at 20 seconds if only one server is present and period is 1 minute.
+            long startAfterMs = (long) (distributor * distributingOverTimeMs) - TimeUnit.SECONDS.toMillis(40L);
 
-            long delay = TimeAmount.toTicks(startAfter, TimeUnit.MILLISECONDS);
-            long period = TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS);
-            runnableFactory.create(taskToRegister).runTaskTimerAsynchronously(delay, period);
+            long delayTicks = TimeAmount.toTicks(startAfterMs, TimeUnit.MILLISECONDS);
+            long periodTicks = TimeAmount.toTicks(config.get(TimeSettings.CLEAN_DATABASE_PERIOD), TimeUnit.MILLISECONDS);
+            runnableFactory.create(taskToRegister).runTaskTimerAsynchronously(delayTicks, periodTicks);
         }).runTaskAsynchronously();
     }
 
