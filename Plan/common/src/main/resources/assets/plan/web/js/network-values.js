@@ -240,6 +240,8 @@ function loadservers(json, error) {
     const servers = json.servers;
 
     if (!servers || !servers.length) {
+        let elements = document.getElementsByClassName('nav-servers');
+        for (let i = 0; i < elements.length; i++) { elements[i].style.display = 'none'; }
         document.getElementById('game-server-warning').classList.remove('hidden');
         document.getElementById('data_server_list').innerHTML =
             `<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p><p>It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.</p></div></div>`
@@ -247,10 +249,14 @@ function loadservers(json, error) {
         return;
     }
 
+    let navServersHtml = '';
     let serversHtml = '';
     for (let i = 0; i < servers.length; i++) {
+        navServersHtml += addserverToNav(servers[i]);
         serversHtml += createnetworkserverBox(i, servers[i]);
     }
+
+    document.getElementById("navSrvContainer").innerHTML = navServersHtml;
     document.getElementById("data_server_list").innerHTML = serversHtml;
 
     for (let i = 0; i < servers.length; i++) {
@@ -258,6 +264,10 @@ function loadservers(json, error) {
             .addEventListener('click', onViewserver(i, servers));
     }
     onViewserver(0, servers)(); // Open first server.
+}
+
+function addserverToNav(server) {
+    return `<a class="collapse-item nav-button" href="server/${server.name}"><i class="fas fa-fw fa-server col-light-green"></i> ${server.name}</a>`;
 }
 
 function createnetworkserverBox(i, server) {
