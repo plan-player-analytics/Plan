@@ -5,9 +5,7 @@ dependencies {
 
     compile "net.playeranalytics:platform-abstraction-layer-nukkit:$palVersion"
     compileOnly "cn.nukkit:nukkit:$nukkitVersion"
-//    compileOnly group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.4.31'
     compileOnly "com.creeperface.nukkit.placeholderapi:PlaceholderAPI:$nkPlaceholderapiVersion"
-//    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     testCompile "cn.nukkit:nukkit:$nukkitVersion"
 
     testCompile project(path: ":common", configuration: 'testArtifacts')
