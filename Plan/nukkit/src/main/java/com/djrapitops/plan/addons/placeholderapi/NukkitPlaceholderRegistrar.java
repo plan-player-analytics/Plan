@@ -17,8 +17,8 @@
 package com.djrapitops.plan.addons.placeholderapi;
 
 import cn.nukkit.Player;
-import com.creeperface.nukkit.placeholderapi.api.Placeholder;
 import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
+import com.creeperface.nukkit.placeholderapi.api.PlaceholderParameters;
 import com.creeperface.nukkit.placeholderapi.api.PlaceholderParameters.Parameter;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
@@ -32,6 +32,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -61,13 +62,11 @@ public class NukkitPlaceholderRegistrar {
     public void register() {
         PlaceholderAPI api = PlaceholderAPI.getInstance();
         placeholders.getPlaceholders().forEach((name, loader) -> api.builder(name, Serializable.class)
-                .visitorLoader(entry -> {
+                .visitorLoader(options -> {
                     try {
                         return loader.apply(
-                                getPlayer(entry.getPlayer()),
-                                entry.getParameters().getAll().stream()
-                                        .map(Parameter::getValue)
-                                        .collect(Collectors.toList())
+                                getPlayer(options.getPlayer()),
+                                getPlaceholderParameterValues(options.getParameters())
                         );
                     } catch (Exception e) {
                         errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
@@ -77,12 +76,10 @@ public class NukkitPlaceholderRegistrar {
         );
 
         placeholders.getStaticPlaceholders().forEach((name, loader) -> api.builder(name, Serializable.class)
-                .loader(entry -> {
+                .loader(options -> {
                     try {
                         return loader.apply(
-                                entry.getParameters().getAll().stream()
-                                        .map(Parameter::getValue)
-                                        .collect(Collectors.toList())
+                                getPlaceholderParameterValues(options.getParameters())
                         );
                     } catch (Exception e) {
                         errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
@@ -90,6 +87,12 @@ public class NukkitPlaceholderRegistrar {
                     }
                 }).build()
         );
+    }
+
+    private List<String> getPlaceholderParameterValues(PlaceholderParameters parameters) {
+        return parameters.getAll().stream()
+                .map(Parameter::getValue)
+                .collect(Collectors.toList());
     }
 
     private PlayerContainer getPlayer(Player player) {
