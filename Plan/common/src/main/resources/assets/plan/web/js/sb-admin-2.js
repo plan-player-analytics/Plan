@@ -61,16 +61,23 @@ $('#accordionSidebar .nav-item a').click(event => {
 });
 
 // Persistent Bootstrap tabs
-$('.nav-tabs a.nav-link').click(event => {
-    const uriHash = (window.location.hash).split("&");
-    if (!uriHash) return;
-    const currentTab = uriHash[0];
-    const originalTargetId = event.currentTarget.href.split('#')[1];
-    if (history.replaceState) {
-        event.preventDefault();
-        history.replaceState(undefined, undefined, currentTab + '&' + originalTargetId);
-        openPage();
-    } else window.location.hash = currentTab + '&' + originalTargetId;
+document.querySelectorAll(".nav-tabs a.nav-link").forEach(item => {
+    item.addEventListener("click", event => {
+        let uriHash;
+        if (window.location.hash) {
+            uriHash = (window.location.hash).split("&");
+        } else {
+            window.location.hash = document.querySelector(".sidebar a.nav-link").href.split("#")[1]
+            uriHash = [window.location.hash];
+        }
+        const targetTab = event.currentTarget.href.split('#')[1];
+        if (history.replaceState) {
+            event.preventDefault();
+            history.replaceState(undefined, undefined, uriHash[0] + '&' + targetTab);
+            openPage();
+        } else
+            window.location.hash = uriHash[0] + '&' + targetTab;
+    });
 });
 
 let oldWidth = null;
