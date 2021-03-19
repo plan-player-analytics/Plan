@@ -115,6 +115,14 @@ public class DBCleanTask extends TaskSystem.Task {
                     logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
                 }
                 Long deleteExtensionDataAfter = config.get(TimeSettings.DELETE_EXTENSION_DATA_AFTER);
+                Long databaseCleanPeriod = config.get(TimeSettings.CLEAN_DATABASE_PERIOD);
+                if (databaseCleanPeriod > deleteExtensionDataAfter) {
+                    logger.warn("Data of Disabled Extensions can not be cleaned due to " + TimeSettings.CLEAN_DATABASE_PERIOD.getPath() + " being larger than " + TimeSettings.DELETE_EXTENSION_DATA_AFTER.getPath());
+                }
+
+                // Avoid cleaning extension data that has not been updated after uptime longer than the deletion threshold.
+                // This is needed since the last updated number is updated at reload and it would lead to all data
+                // for plugins being deleted all the time.
                 if (System.currentTimeMillis() - lastReload <= deleteExtensionDataAfter) {
                     database.executeTransaction(new RemoveOldExtensionsTransaction(deleteExtensionDataAfter, serverInfo.getServerUUID()));
                 }
