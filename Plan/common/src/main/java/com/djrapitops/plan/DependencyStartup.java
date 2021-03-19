@@ -64,17 +64,6 @@ public class DependencyStartup {
         );
         logger.info("Loading runtime dependencies..");
         dependencyLoader.load();
-
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            logger.error("Could not load SQLite driver");
-        }
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            logger.error("Could not load MySQL driver");
-        }
     }
 
 }

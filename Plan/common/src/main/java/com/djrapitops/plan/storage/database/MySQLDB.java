@@ -35,7 +35,10 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -123,6 +126,23 @@ public class MySQLDB extends SQLDB {
             this.dataSource = new HikariDataSource(hikariConfig);
         } catch (HikariPool.PoolInitializationException e) {
             throw new DBInitException("Failed to set-up HikariCP Datasource: " + e.getMessage(), e);
+        } finally {
+            unloadMySQLDriver();
+        }
+    }
+
+    private void unloadMySQLDriver() {
+        // Avoid issues with other plugins by removing the mysql driver from driver manager
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            if ("com.mysql.cj.jdbc.Driver".equals(driver.getClass().getName())) {
+                try {
+                    DriverManager.deregisterDriver(driver);
+                } catch (SQLException e) {
+                    // ignore
+                }
+            }
         }
     }
 
