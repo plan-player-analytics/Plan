@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,18 +61,18 @@ public enum ElementOrder {
         }
 
         String[] split = serializedOrder.split(",");
+        ElementOrder[] deserialized = new ElementOrder[split.length];
 
-        List<ElementOrder> order = new ArrayList<>();
-        for (String elementName : split) {
+        for (int i = 0; i < split.length; i++) {
             try {
-                ElementOrder element = valueOf(elementName);
-                order.add(element);
+                ElementOrder element = valueOf(split[i]);
+                deserialized[i] = element;
             } catch (IllegalArgumentException ignore) {
                 /* Has been deleted */
             }
         }
 
-        return order.toArray(new ElementOrder[0]);
+        return deserialized;
     }
 
     public static List<ElementOrder> valuesAsList() {
