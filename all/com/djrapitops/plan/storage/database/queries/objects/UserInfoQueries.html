@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9,"i13":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -154,67 +154,82 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>static java.util.Set&lt;java.util.UUID&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#extractUUIDs(java.sql.ResultSet)">extractUUIDs</a></span>&#8203;(java.sql.ResultSet&nbsp;set)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,&#8203;java.util.List&lt;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchAllUserInformation()">fetchAllUserInformation</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Query database for user information.</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;java.lang.Long&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchRegisterDates(long,long,com.djrapitops.plan.identification.ServerUUID)">fetchRegisterDates</a></span>&#8203;(long&nbsp;after,
                   long&nbsp;before,
                   <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.util.UUID,&#8203;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchUserInformationOfServer(com.djrapitops.plan.identification.ServerUUID)">fetchUserInformationOfServer</a></span>&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">
 <div class="block">Query database for all User information of a specific server.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;<a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a>&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchUserInformationOfUser(java.util.UUID)">fetchUserInformationOfUser</a></span>&#8203;(java.util.UUID&nbsp;playerUUID)</code></th>
 <td class="colLast">
 <div class="block">Query database for User information of a specific player.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getUUIDsForBooleanGroup(java.lang.String,boolean)">getUUIDsForBooleanGroup</a></span>&#8203;(java.lang.String&nbsp;column,
                        boolean&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Integer&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#joinAddresses()">joinAddresses</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Integer&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#joinAddresses(com.djrapitops.plan.identification.ServerUUID)">joinAddresses</a></span>&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
-<td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidsOfBanned()">uuidsOfBanned</a></span>()</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidsOfNonOperators()">uuidsOfNonOperators</a></span>()</code></th>
+<td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.List&lt;java.lang.String&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uniqueJoinAddresses()">uniqueJoinAddresses</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidsOfNotBanned()">uuidsOfNotBanned</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidsOfBanned()">uuidsOfBanned</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidsOfNonOperators()">uuidsOfNonOperators</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidsOfNotBanned()">uuidsOfNotBanned</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidsOfOperators()">uuidsOfOperators</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#uuidsOfPlayersWithJoinAddresses(java.util.List)">uuidsOfPlayersWithJoinAddresses</a></span>&#8203;(java.util.List&lt;java.lang.String&gt;&nbsp;joinAddresses)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -318,6 +333,15 @@ extends java.lang.Object</pre>
 <pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Map&lt;java.lang.String,&#8203;java.lang.Integer&gt;&gt;&nbsp;joinAddresses&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
 </li>
 </ul>
+<a id="uniqueJoinAddresses()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>uniqueJoinAddresses</h4>
+<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.List&lt;java.lang.String&gt;&gt;&nbsp;uniqueJoinAddresses()</pre>
+</li>
+</ul>
 <a id="uuidsOfOperators()">
 <!--   -->
 </a>
@@ -335,6 +359,20 @@ extends java.lang.Object</pre>
 <h4>getUUIDsForBooleanGroup</h4>
 <pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;&nbsp;getUUIDsForBooleanGroup&#8203;(java.lang.String&nbsp;column,
                                                                            boolean&nbsp;value)</pre>
+</li>
+</ul>
+<a id="extractUUIDs(java.sql.ResultSet)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>extractUUIDs</h4>
+<pre class="methodSignature">public static&nbsp;java.util.Set&lt;java.util.UUID&gt;&nbsp;extractUUIDs&#8203;(java.sql.ResultSet&nbsp;set)
+                                                  throws java.sql.SQLException</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.sql.SQLException</code></dd>
+</dl>
 </li>
 </ul>
 <a id="uuidsOfNonOperators()">
@@ -358,10 +396,19 @@ extends java.lang.Object</pre>
 <a id="uuidsOfNotBanned()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>uuidsOfNotBanned</h4>
 <pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;&nbsp;uuidsOfNotBanned()</pre>
+</li>
+</ul>
+<a id="uuidsOfPlayersWithJoinAddresses(java.util.List)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>uuidsOfPlayersWithJoinAddresses</h4>
+<pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;java.util.Set&lt;java.util.UUID&gt;&gt;&nbsp;uuidsOfPlayersWithJoinAddresses&#8203;(java.util.List&lt;java.lang.String&gt;&nbsp;joinAddresses)</pre>
 </li>
 </ul>
 </li>
