@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -183,24 +183,30 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onLogoutCommand(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)">onLogoutCommand</a></span>&#8203;(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+               <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onRegister(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)">onRegister</a></span>&#8203;(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
           <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onUnregister(java.lang.String,com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)">onUnregister</a></span>&#8203;(java.lang.String&nbsp;mainCommand,
             <a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
             <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerUsingCode(com.djrapitops.plan.commands.use.CMDSender,java.lang.String)">registerUsingCode</a></span>&#8203;(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
                  java.lang.String&nbsp;code)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerUsingLegacy(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)">registerUsingLegacy</a></span>&#8203;(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
                    <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></th>
@@ -290,12 +296,22 @@ public&nbsp;RegistrationCommands&#8203;(<a href="../../settings/locale/Locale.ht
 <a id="onUnregister(java.lang.String,com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>onUnregister</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;onUnregister&#8203;(java.lang.String&nbsp;mainCommand,
                          <a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
                          <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</pre>
+</li>
+</ul>
+<a id="onLogoutCommand(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>onLogoutCommand</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;onLogoutCommand&#8203;(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+                            <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</pre>
 </li>
 </ul>
 </li>
