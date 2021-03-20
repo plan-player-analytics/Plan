@@ -309,4 +309,26 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         Map<String, Integer> result = db().query(UserInfoQueries.joinAddresses());
         assertEquals(expected, result);
     }
+
+    @Test
+    default void joinAddressFilterUUIDsAreFetched() {
+        joinAddressIsUpdatedUponSecondLogin();
+
+        Set<UUID> expected = Collections.singleton(playerUUID);
+        Set<UUID> result = db().query(UserInfoQueries.uuidsOfPlayersWithJoinAddresses(
+                Collections.singletonList(TestConstants.GET_PLAYER_HOSTNAME.get().toLowerCase()))
+        );
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void joinAddressFilterUUIDsAreFetchedWhenUnknown() {
+        joinAddressCanBeNull();
+
+        Set<UUID> expected = Collections.singleton(playerUUID);
+        Set<UUID> result = db().query(UserInfoQueries.uuidsOfPlayersWithJoinAddresses(
+                Collections.singletonList("unknown"))
+        );
+        assertEquals(expected, result);
+    }
 }

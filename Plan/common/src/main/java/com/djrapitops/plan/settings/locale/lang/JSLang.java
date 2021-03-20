@@ -41,6 +41,7 @@ public enum JSLang implements Lang {
     LABEL_WEEK_DAYS("'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'"),
 
     QUERY_ARE_ACTIVITY_GROUP("are in Activity Groups"),
+    QUERY_JOINED_WITH_ADDRESS("joined with address"),
     QUERY_ARE_PLUGIN_GROUP("are in ${plugin}'s ${group} Groups"),
     QUERY_OF_PLAYERS("of Players who "),
     QUERY_AND("and "),

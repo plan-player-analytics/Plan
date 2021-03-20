@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.utilities.java.Lists;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -251,6 +252,25 @@ public class UserInfoQueries {
         };
     }
 
+    public static Query<List<String>> uniqueJoinAddresses() {
+        String sql = SELECT + DISTINCT + "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
+                FROM + UserInfoTable.TABLE_NAME +
+                ORDER_BY + UserInfoTable.JOIN_ADDRESS + " DESC";
+        return new QueryStatement<List<String>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, "unknown");
+            }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> joinAddresses = new ArrayList<>();
+                while (set.next()) joinAddresses.add(set.getString("address"));
+                return joinAddresses;
+            }
+        };
+    }
+
     public static Query<Set<UUID>> uuidsOfOperators() {
         return getUUIDsForBooleanGroup(UserInfoTable.OP, true);
     }
@@ -266,13 +286,17 @@ public class UserInfoQueries {
 
             @Override
             public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> uuids = new HashSet<>();
-                while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(UserInfoTable.USER_UUID)));
-                }
-                return uuids;
+                return extractUUIDs(set);
             }
         };
+    }
+
+    public static Set<UUID> extractUUIDs(ResultSet set) throws SQLException {
+        Set<UUID> uuids = new HashSet<>();
+        while (set.next()) {
+            uuids.add(UUID.fromString(set.getString(UserInfoTable.USER_UUID)));
+        }
+        return uuids;
     }
 
     public static Query<Set<UUID>> uuidsOfNonOperators() {
@@ -285,5 +309,33 @@ public class UserInfoQueries {
 
     public static Query<Set<UUID>> uuidsOfNotBanned() {
         return getUUIDsForBooleanGroup(UserInfoTable.BANNED, false);
+    }
+
+    public static Query<Set<UUID>> uuidsOfPlayersWithJoinAddresses(List<String> joinAddresses) {
+        String selectLowercaseJoinAddresses = SELECT +
+                UserInfoTable.USER_UUID + ',' +
+                "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
+                FROM + UserInfoTable.TABLE_NAME;
+        String sql = SELECT + DISTINCT + UserInfoTable.USER_UUID +
+                FROM + '(' + selectLowercaseJoinAddresses + ") q1" +
+                WHERE + "address IN (" +
+                new TextStringBuilder().appendWithSeparators(joinAddresses.stream().map(item -> '?').iterator(), ",") +
+                ')'; // Don't append addresses directly, SQL incjection hazard
+
+        return new QueryStatement<Set<UUID>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, "unknown");
+                for (int i = 1; i <= joinAddresses.size(); i++) {
+                    String address = joinAddresses.get(i - 1);
+                    statement.setString(i + 1, address);
+                }
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                return extractUUIDs(set);
+            }
+        };
     }
 }

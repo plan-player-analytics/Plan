@@ -190,7 +190,8 @@ public class Locale extends HashMap<Lang, Message> {
                 HtmlLang.LABEL_AVG_AFK_TIME,
                 HtmlLang.LABEL_AVG_PLAYTIME,
                 HtmlLang.SIDE_GEOLOCATIONS,
-                HtmlLang.LABEL_PER_PLAYER
+                HtmlLang.LABEL_PER_PLAYER,
+                HtmlLang.TITLE_JOIN_ADDRESSES
 
         }) {
             getNonDefault(extra).ifPresent(replacement ->

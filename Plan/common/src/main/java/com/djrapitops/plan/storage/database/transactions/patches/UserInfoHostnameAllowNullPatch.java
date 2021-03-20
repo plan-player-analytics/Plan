@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 
@@ -66,7 +67,7 @@ public class UserInfoHostnameAllowNullPatch extends Patch {
         ) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, null);
+                statement.setNull(1, Types.VARCHAR);
             }
         });
 

@@ -45,4 +45,8 @@ public interface FiltersModule {
     @IntoSet
     Filter filter5(ActivityIndexFilter filter);
 
+    @Binds
+    @IntoSet
+    Filter filter6(JoinAddressFilter filter);
+
 }
