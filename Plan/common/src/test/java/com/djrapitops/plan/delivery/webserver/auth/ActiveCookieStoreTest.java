@@ -23,6 +23,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -53,6 +54,11 @@ class ActiveCookieStoreTest {
         user = new User(TestConstants.PLAYER_ONE_NAME, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
     }
 
+    @AfterEach
+    void clearCookies() {
+        underTest.disable();
+    }
+
     @Test
     void cookiesAreStored() {
         String cookie = underTest.generateNewCookie(user);
@@ -72,8 +78,8 @@ class ActiveCookieStoreTest {
     @Test
     void usersCookiesAreRemoved() {
         String cookie = underTest.generateNewCookie(user);
-        ActiveCookieStore.removeUserCookie(user.getUsername());
 
+        ActiveCookieStore.removeUserCookie(user.getUsername());
         assertFalse(underTest.checkCookie(cookie).isPresent());
     }
 

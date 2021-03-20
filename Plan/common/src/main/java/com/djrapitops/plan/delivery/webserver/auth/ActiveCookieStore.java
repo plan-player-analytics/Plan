@@ -41,6 +41,7 @@ public class ActiveCookieStore implements SubSystem {
     private static final Map<String, User> USERS_BY_COOKIE = new ConcurrentHashMap<>();
     public static long cookieExpiresAfter = TimeUnit.HOURS.toMillis(2L);
     private static ActiveCookieStore activeCookieStore;
+
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final RunnableFactory runnableFactory;
@@ -70,6 +71,7 @@ public class ActiveCookieStore implements SubSystem {
     }
 
     public static void removeUserCookie(String username) {
+        System.out.println(USERS_BY_COOKIE);
         USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(username))
                 .findAny()
                 .map(Map.Entry::getKey)
