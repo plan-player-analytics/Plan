@@ -27,10 +27,10 @@ import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUse
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
+import utilities.mocks.objects.TestRunnableFactory;
 
 import java.util.Collections;
 import java.util.Map;
@@ -78,7 +78,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), Mockito.mock(RunnableFactory.class), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
 
         String cookie = cookieStore.generateNewCookie(user);
 
@@ -92,7 +92,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), Mockito.mock(RunnableFactory.class), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
 
         String cookie = cookieStore.generateNewCookie(user);
 
@@ -106,7 +106,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), Mockito.mock(RunnableFactory.class), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
 
         String cookie = cookieStore.generateNewCookie(user);
 
