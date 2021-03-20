@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.web.ResourceService;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,19 +32,23 @@ import javax.inject.Singleton;
 public class WebServerSystem implements SubSystem {
 
     private final Addresses addresses;
+    private final ActiveCookieStore activeCookieStore;
     private final WebServer webServer;
 
     @Inject
     public WebServerSystem(
             Addresses addresses,
+            ActiveCookieStore activeCookieStore,
             WebServer webServer
     ) {
         this.addresses = addresses;
+        this.activeCookieStore = activeCookieStore;
         this.webServer = webServer;
     }
 
     @Override
     public void enable() {
+        activeCookieStore.enable();
         webServer.enable();
         if (!webServer.isAuthRequired()) {
             ResourceService.getInstance().addStylesToResource("Plan", "error.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
@@ -63,6 +68,7 @@ public class WebServerSystem implements SubSystem {
     @Override
     public void disable() {
         webServer.disable();
+        activeCookieStore.disable();
     }
 
     public WebServer getWebServer() {

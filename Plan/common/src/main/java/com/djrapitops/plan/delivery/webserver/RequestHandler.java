@@ -22,10 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
-import com.djrapitops.plan.delivery.webserver.auth.BasicAuthentication;
-import com.djrapitops.plan.delivery.webserver.auth.CookieAuthentication;
-import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.auth.*;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
@@ -64,6 +61,7 @@ public class RequestHandler implements HttpHandler {
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
+    private final ActiveCookieStore activeCookieStore;
     private final PassBruteForceGuard bruteForceGuard;
     private List<String> ipWhitelist = null;
 
@@ -77,6 +75,7 @@ public class RequestHandler implements HttpHandler {
             Addresses addresses,
             ResponseResolver responseResolver,
             ResponseFactory responseFactory,
+            ActiveCookieStore activeCookieStore,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
@@ -86,6 +85,7 @@ public class RequestHandler implements HttpHandler {
         this.addresses = addresses;
         this.responseResolver = responseResolver;
         this.responseFactory = responseFactory;
+        this.activeCookieStore = activeCookieStore;
         this.logger = logger;
         this.errorLogger = errorLogger;
 
@@ -141,8 +141,9 @@ public class RequestHandler implements HttpHandler {
                 response = responseFactory.badRequest(failReason.getReason(), "/auth/login");
             } else {
                 String from = exchange.getRequestURI().toASCIIString();
+                String directTo = StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from;
                 response = Response.builder()
-                        .redirectTo(StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from)
+                        .redirectTo(directTo)
                         .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1; SameSite=Lax; Secure;")
                         .build();
             }
@@ -200,7 +201,7 @@ public class RequestHandler implements HttpHandler {
 
     private Map<String, String> getRequestHeaders(HttpExchange exchange) {
         Map<String, String> headers = new HashMap<>();
-        for (Map.Entry<String, List<String>> e : exchange.getResponseHeaders().entrySet()) {
+        for (Map.Entry<String, List<String>> e : exchange.getRequestHeaders().entrySet()) {
             List<String> value = e.getValue();
             headers.put(e.getKey(), new TextStringBuilder().appendWithSeparators(value, ";").build());
         }
@@ -219,7 +220,7 @@ public class RequestHandler implements HttpHandler {
                 String name = split[0];
                 String value = split[1];
                 if ("auth".equals(name)) {
-                    return Optional.of(new CookieAuthentication(value));
+                    return Optional.of(new CookieAuthentication(activeCookieStore, value));
                 }
             }
         }

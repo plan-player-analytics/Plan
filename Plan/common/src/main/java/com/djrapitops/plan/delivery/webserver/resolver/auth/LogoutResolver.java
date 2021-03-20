@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.auth;
 
-import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -31,8 +30,14 @@ import java.util.Optional;
 @Singleton
 public class LogoutResolver implements NoAuthResolver {
 
+    private final ActiveCookieStore activeCookieStore;
+
     @Inject
-    public LogoutResolver() {}
+    public LogoutResolver(
+            ActiveCookieStore activeCookieStore
+    ) {
+        this.activeCookieStore = activeCookieStore;
+    }
 
     @Override
     public Optional<Response> resolve(Request request) {
@@ -45,27 +50,20 @@ public class LogoutResolver implements NoAuthResolver {
             String value = split[1];
             if ("auth".equals(name)) {
                 foundCookie = value;
-                ActiveCookieStore.removeCookie(value);
+                activeCookieStore.removeCookie(value);
             }
         }
 
         if (foundCookie == null) {
-            throw new WebUserAuthException(FailReason.NO_USER_PRESENT);
+            throw new WebUserAuthException(FailReason.EXPIRED_COOKIE);
         }
-        return Optional.of(getResponse(foundCookie));
+        return Optional.of(getResponse());
     }
 
-    public Response getResponse(String cookie) {
+    public Response getResponse() {
         return Response.builder()
-                .setStatus(200)
-                .setHeader("Set-Cookie", "auth=" + cookie + "; Max-Age=1; SameSite=Lax; Secure;")
-                .setMimeType(MimeType.HTML)
-                .setContent(
-                        "<p>Logging out..</p><script>const urlParams = new URLSearchParams(window.location.search);" +
-                                "const cause = urlParams.get('cause');" +
-                                "setTimeout(() => window.location.href = cause ? '../login?cause=' + cause : '../login', 1000);" +
-                                "</script>"
-                )
+                .redirectTo("/login")
+                .setHeader("Set-Cookie", "auth=expired; Max-Age=1; SameSite=Lax; Secure;")
                 .build();
     }
 }

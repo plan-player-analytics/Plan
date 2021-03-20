@@ -65,7 +65,7 @@ public class RootPageResolver implements NoAuthResolver {
         }
 
         WebUser user = request.getUser()
-                .orElseThrow(() -> new WebUserAuthException(FailReason.NO_USER_PRESENT));
+                .orElseThrow(() -> new WebUserAuthException(FailReason.EXPIRED_COOKIE));
 
         if (user.hasPermission("page.server")) {
             return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));

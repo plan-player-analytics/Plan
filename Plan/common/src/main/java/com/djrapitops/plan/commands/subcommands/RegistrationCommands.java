@@ -20,6 +20,7 @@ import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
 import com.djrapitops.plan.exceptions.database.DBOpException;
@@ -51,6 +52,7 @@ public class RegistrationCommands {
     private final Locale locale;
     private final ColorScheme colors;
     private final DBSystem dbSystem;
+    private final ActiveCookieStore activeCookieStore;
     private final LinkCommands linkCommands;
     private final Confirmation confirmation;
     private final PluginLogger logger;
@@ -61,6 +63,7 @@ public class RegistrationCommands {
             Locale locale,
             ColorScheme colors,
             DBSystem dbSystem,
+            ActiveCookieStore activeCookieStore,
             LinkCommands linkCommands,
             Confirmation confirmation,
             PluginLogger logger,
@@ -70,6 +73,7 @@ public class RegistrationCommands {
         this.colors = colors;
 
         this.dbSystem = dbSystem;
+        this.activeCookieStore = activeCookieStore;
         this.linkCommands = linkCommands;
         this.confirmation = confirmation;
         this.logger = logger;
@@ -218,6 +222,7 @@ public class RegistrationCommands {
                     sender.send(colors.getMainColor() + locale.getString(CommandLang.UNREGISTER, presentUser.getUsername()));
                     database.executeTransaction(new RemoveWebUserTransaction(username))
                             .get(); // Wait for completion
+                    ActiveCookieStore.removeUserCookie(username);
                     sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();

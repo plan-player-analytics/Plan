@@ -44,6 +44,7 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(WorldTimesTable.createTableSQL(dbType));
         execute(SecurityTable.createTableSQL(dbType));
         execute(SettingsTable.createTableSQL(dbType));
+        execute(CookieTable.createTableSQL(dbType));
 
         // DataExtension tables
         execute(ExtensionIconTable.createTableSQL(dbType));

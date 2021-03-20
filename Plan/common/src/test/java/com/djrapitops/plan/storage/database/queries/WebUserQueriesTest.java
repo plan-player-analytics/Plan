@@ -18,29 +18,37 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
+import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import utilities.TestConstants;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
+    String WEB_USERNAME = TestConstants.PLAYER_ONE_NAME;
+
     @Test
     default void userIsRegistered() {
-        String username = TestConstants.PLAYER_ONE_NAME;
-        User expected = new User(username, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
+        User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
         db().executeTransaction(new RegisterWebUserTransaction(expected));
         forcePersistenceCheck();
 
-        Optional<User> found = db().query(WebUserQueries.fetchUser(username));
+        Optional<User> found = db().query(WebUserQueries.fetchUser(WEB_USERNAME));
         assertTrue(found.isPresent());
         assertEquals(expected, found.get());
     }
@@ -54,8 +62,8 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     @Test
     default void webUserIsRemoved() {
         userIsRegistered();
-        db().executeTransaction(new RemoveWebUserTransaction(TestConstants.PLAYER_ONE_NAME));
-        assertFalse(db().query(WebUserQueries.fetchUser(TestConstants.PLAYER_ONE_NAME)).isPresent());
+        db().executeTransaction(new RemoveWebUserTransaction(WEB_USERNAME));
+        assertFalse(db().query(WebUserQueries.fetchUser(WEB_USERNAME)).isPresent());
     }
 
     @Test
@@ -63,5 +71,53 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         db().executeTransaction(new RemoveEverythingTransaction());
         assertTrue(db().query(WebUserQueries.fetchAllUsers()).isEmpty());
+    }
+
+    @Test
+    default void activeCookieStoreSavesCookies() {
+        userIsRegistered();
+        User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
+
+        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), Mockito.mock(RunnableFactory.class), Mockito.mock(Processing.class));
+
+        String cookie = cookieStore.generateNewCookie(user);
+
+        Map<String, User> result = db().query(WebUserQueries.fetchActiveCookies());
+        Map<String, User> expected = Collections.singletonMap(cookie, user);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void activeCookieStoreDeletesCookies() {
+        userIsRegistered();
+        User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
+
+        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), Mockito.mock(RunnableFactory.class), Mockito.mock(Processing.class));
+
+        String cookie = cookieStore.generateNewCookie(user);
+
+        cookieStore.removeCookie(cookie);
+
+        Map<String, User> result = db().query(WebUserQueries.fetchActiveCookies());
+        Map<String, User> expected = Collections.emptyMap();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void webUserRemovalDeletesCookies() {
+        userIsRegistered();
+        User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
+
+        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), Mockito.mock(RunnableFactory.class), Mockito.mock(Processing.class));
+
+        String cookie = cookieStore.generateNewCookie(user);
+
+        db().executeTransaction(new RemoveWebUserTransaction(WEB_USERNAME));
+
+        assertFalse(cookieStore.checkCookie(cookie).isPresent());
+
+        Map<String, User> result = db().query(WebUserQueries.fetchActiveCookies());
+        Map<String, User> expected = Collections.emptyMap();
+        assertEquals(expected, result);
     }
 }

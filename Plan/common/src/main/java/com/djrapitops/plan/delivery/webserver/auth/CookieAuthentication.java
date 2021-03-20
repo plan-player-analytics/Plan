@@ -20,14 +20,16 @@ import com.djrapitops.plan.delivery.domain.auth.User;
 
 public class CookieAuthentication implements Authentication {
 
+    private final ActiveCookieStore activeCookieStore;
     private final String cookie;
 
-    public CookieAuthentication(String cookie) {
+    public CookieAuthentication(ActiveCookieStore activeCookieStore, String cookie) {
+        this.activeCookieStore = activeCookieStore;
         this.cookie = cookie;
     }
 
     @Override
     public User getUser() {
-        return ActiveCookieStore.checkCookie(cookie).orElse(null);
+        return activeCookieStore.checkCookie(cookie).orElse(null);
     }
 }

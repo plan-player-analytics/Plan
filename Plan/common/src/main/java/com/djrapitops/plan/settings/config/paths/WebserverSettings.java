@@ -19,6 +19,7 @@ package com.djrapitops.plan.settings.config.paths;
 import com.djrapitops.plan.settings.config.paths.key.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * {@link Setting} values that are in "Webserver" section.
@@ -47,6 +48,7 @@ public class WebserverSettings {
     public static final Setting<Long> INVALIDATE_QUERY_RESULTS = new TimeSetting("Webserver.Cache.Invalidate_query_results_on_disk_after");
     public static final Setting<Long> INVALIDATE_DISK_CACHE = new TimeSetting("Webserver.Cache.Invalidate_disk_cache_after");
     public static final Setting<Long> INVALIDATE_MEMORY_CACHE = new TimeSetting("Webserver.Cache.Invalidate_memory_cache_after");
+    public static final Setting<Long> COOKIES_EXPIRE_AFTER = new TimeSetting("Webserver.Security.Cookies_expire_after", TimeUnit.HOURS.toMillis(2L));
 
     private WebserverSettings() {
         /* static variable class */

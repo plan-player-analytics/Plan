@@ -16,44 +16,110 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
+import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
+import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.storage.database.transactions.events.CookieChangeTransaction;
+import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.TimeAmount;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-public class ActiveCookieStore {
+@Singleton
+public class ActiveCookieStore implements SubSystem {
 
-    private static final Cache<String, User> USERS_BY_COOKIE = Caffeine.newBuilder()
-            .expireAfterWrite(2, TimeUnit.HOURS)
-            .build();
+    private static final Map<String, User> USERS_BY_COOKIE = new ConcurrentHashMap<>();
+    public static long cookieExpiresAfter = TimeUnit.HOURS.toMillis(2L);
+    private static ActiveCookieStore activeCookieStore;
+    private final PlanConfig config;
+    private final DBSystem dbSystem;
+    private final RunnableFactory runnableFactory;
+    private final Processing processing;
 
-    private ActiveCookieStore() {
-        // Hide static cache constructor
+    @Inject
+    public ActiveCookieStore(
+            PlanConfig config,
+            DBSystem dbSystem,
+            RunnableFactory runnableFactory,
+            Processing processing
+    ) {
+        ActiveCookieStore.activeCookieStore = this;
+
+        this.config = config;
+        this.dbSystem = dbSystem;
+        this.processing = processing;
+        this.runnableFactory = runnableFactory;
     }
 
-    public static Optional<User> checkCookie(String cookie) {
-        return Optional.ofNullable(USERS_BY_COOKIE.getIfPresent(cookie));
+    private static void removeCookieStatic(String cookie) {
+        activeCookieStore.removeCookie(cookie);
     }
 
-    public static String generateNewCookie(User user) {
+    public static void removeUserCookie(String username) {
+        USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(username))
+                .findAny()
+                .map(Map.Entry::getKey)
+                .ifPresent(ActiveCookieStore::removeCookieStatic);
+    }
+
+    @Override
+    public void enable() {
+        cookieExpiresAfter = config.get(WebserverSettings.COOKIES_EXPIRE_AFTER);
+        processing.submitNonCritical(this::loadActiveCookies);
+    }
+
+    private void loadActiveCookies() {
+        USERS_BY_COOKIE.clear();
+        USERS_BY_COOKIE.putAll(dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies()));
+        for (Map.Entry<String, Long> entry : dbSystem.getDatabase().query(WebUserQueries.getCookieExpiryTimes()).entrySet()) {
+            long timeToExpiry = Math.max(entry.getValue() - System.currentTimeMillis(), 0L);
+            runnableFactory.create(() -> removeCookie(entry.getKey()))
+                    .runTaskLaterAsynchronously(TimeAmount.toTicks(timeToExpiry, TimeUnit.MILLISECONDS));
+        }
+    }
+
+    @Override
+    public void disable() {
+        USERS_BY_COOKIE.clear();
+    }
+
+    public Optional<User> checkCookie(String cookie) {
+        return Optional.ofNullable(USERS_BY_COOKIE.get(cookie));
+    }
+
+    public String generateNewCookie(User user) {
         String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis());
         USERS_BY_COOKIE.put(cookie, user);
+        saveNewCookie(user, cookie, System.currentTimeMillis());
         return cookie;
     }
 
-    public static void removeCookie(String cookie) {
-        USERS_BY_COOKIE.invalidate(cookie);
+    private void saveNewCookie(User user, String cookie, long now) {
+        dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.storeCookie(
+                user.getUsername(), cookie, now + cookieExpiresAfter
+        ));
     }
 
-    public static void removeCookie(User user) {
-        USERS_BY_COOKIE.asMap().entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(user.getUsername()))
-                .findAny()
-                .map(Map.Entry::getKey)
-                .ifPresent(ActiveCookieStore::removeCookie);
+    public void removeCookie(String cookie) {
+        Optional<User> foundUser = checkCookie(cookie);
+        if (foundUser.isPresent()) {
+            USERS_BY_COOKIE.remove(cookie);
+            deleteCookie(foundUser.get().getUsername());
+        }
+    }
+
+    private void deleteCookie(String username) {
+        dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeCookie(username));
     }
 }

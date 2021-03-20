@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
@@ -28,10 +29,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -170,6 +168,52 @@ public class WebUserQueries {
                     users.add(new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionLevel, permissions));
                 }
                 return users;
+            }
+        };
+    }
+
+    public static Query<Map<String, User>> fetchActiveCookies() {
+        String sql = SELECT + '*' + FROM + CookieTable.TABLE_NAME +
+                INNER_JOIN + SecurityTable.TABLE_NAME + " on " + CookieTable.TABLE_NAME + '.' + CookieTable.WEB_USERNAME + '=' + SecurityTable.TABLE_NAME + '.' + SecurityTable.USERNAME +
+                LEFT_JOIN + UsersTable.TABLE_NAME + " on " + SecurityTable.LINKED_TO + "=" + UsersTable.USER_UUID +
+                WHERE + CookieTable.EXPIRES + ">?";
+
+        return new QueryStatement<Map<String, User>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, System.currentTimeMillis());
+            }
+
+            @Override
+            public Map<String, User> processResults(ResultSet set) throws SQLException {
+                Map<String, User> usersByCookie = new HashMap<>();
+                while (set.next()) {
+                    String cookie = set.getString(CookieTable.COOKIE);
+                    User user = extractUser(set);
+                    usersByCookie.put(cookie, user);
+                }
+                return usersByCookie;
+            }
+        };
+    }
+
+    private static User extractUser(ResultSet set) throws SQLException {
+        String username = set.getString(SecurityTable.USERNAME);
+        String linkedTo = set.getString(UsersTable.USER_NAME);
+        UUID linkedToUUID = linkedTo != null ? UUID.fromString(set.getString(SecurityTable.LINKED_TO)) : null;
+        String passwordHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
+        int permissionLevel = set.getInt(SecurityTable.PERMISSION_LEVEL);
+        List<String> permissions = WebUser.getPermissionsForLevel(permissionLevel);
+        return new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionLevel, permissions);
+    }
+
+    public static Query<Map<String, Long>> getCookieExpiryTimes() {
+        return new QueryAllStatement<Map<String, Long>>(SELECT + CookieTable.COOKIE + ',' + CookieTable.EXPIRES + FROM + CookieTable.TABLE_NAME) {
+            @Override
+            public Map<String, Long> processResults(ResultSet set) throws SQLException {
+                HashMap<String, Long> expiryTimes = new HashMap<>();
+                while (set.next()) expiryTimes.put(set.getString(CookieTable.COOKIE), set.getLong(CookieTable.EXPIRES));
+                return expiryTimes;
             }
         };
     }

@@ -34,8 +34,16 @@ public class TimeSetting extends Setting<Long> {
         super(path, Long.class, Setting::timeValidator);
     }
 
+    public TimeSetting(String path, Long defaultValue) {
+        super(path, Setting::timeValidator, defaultValue);
+    }
+
     public TimeSetting(String path, Predicate<Long> validator) {
         super(path, Long.class, validator.and(Setting::timeValidator));
+    }
+
+    public TimeSetting(String path, Predicate<Long> validator, Long defaultValue) {
+        super(path, validator.and(Setting::timeValidator), defaultValue);
     }
 
     @Override
