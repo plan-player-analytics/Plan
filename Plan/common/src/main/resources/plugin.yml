@@ -60,6 +60,8 @@ permissions:
     default: true
   plan.unregister.other:
     default: op
+  plan.logout.other:
+    default: op
   plan.info:
     default: op
   plan.reload:

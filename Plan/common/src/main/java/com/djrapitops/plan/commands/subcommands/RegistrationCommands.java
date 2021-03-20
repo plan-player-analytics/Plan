@@ -234,4 +234,20 @@ public class RegistrationCommands {
             }
         });
     }
+
+
+    public void onLogoutCommand(CMDSender sender, Arguments arguments) {
+        Optional<String> username = arguments.get(0);
+        if (!username.isPresent()) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, locale.getString(HelpLang.ARG_USERNAME) + "/*"));
+        }
+
+        String loggingOut = username.get();
+
+        if ("*".equals(loggingOut)) {
+            activeCookieStore.removeAll();
+        } else {
+            ActiveCookieStore.removeUserCookie(loggingOut);
+        }
+    }
 }

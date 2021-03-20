@@ -98,9 +98,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         cookieStore.removeCookie(cookie);
 
-        Map<String, User> result = db().query(WebUserQueries.fetchActiveCookies());
-        Map<String, User> expected = Collections.emptyMap();
-        assertEquals(expected, result);
+        assertTrue(db().query(WebUserQueries.fetchActiveCookies()).isEmpty());
     }
 
     @Test
@@ -116,8 +114,13 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         assertFalse(cookieStore.checkCookie(cookie).isPresent());
 
-        Map<String, User> result = db().query(WebUserQueries.fetchActiveCookies());
-        Map<String, User> expected = Collections.emptyMap();
-        assertEquals(expected, result);
+        assertTrue(db().query(WebUserQueries.fetchActiveCookies()).isEmpty());
+    }
+
+    @Test
+    default void removeEverythingRemovesCookies() {
+        activeCookieStoreSavesCookies();
+        db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(WebUserQueries.fetchActiveCookies()).isEmpty());
     }
 }

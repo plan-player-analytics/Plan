@@ -25,14 +25,13 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.events.CookieChangeTransaction;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import net.playeranalytics.plugin.scheduling.Task;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +46,8 @@ public class ActiveCookieStore implements SubSystem {
     private final RunnableFactory runnableFactory;
     private final Processing processing;
 
+    private final Collection<Task> expiryTasks;
+
     @Inject
     public ActiveCookieStore(
             PlanConfig config,
@@ -60,6 +61,8 @@ public class ActiveCookieStore implements SubSystem {
         this.dbSystem = dbSystem;
         this.processing = processing;
         this.runnableFactory = runnableFactory;
+
+        expiryTasks = new ArrayList<>();
     }
 
     private static void removeCookieStatic(String cookie) {
@@ -84,14 +87,22 @@ public class ActiveCookieStore implements SubSystem {
         USERS_BY_COOKIE.putAll(dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies()));
         for (Map.Entry<String, Long> entry : dbSystem.getDatabase().query(WebUserQueries.getCookieExpiryTimes()).entrySet()) {
             long timeToExpiry = Math.max(entry.getValue() - System.currentTimeMillis(), 0L);
-            runnableFactory.create(() -> removeCookie(entry.getKey()))
-                    .runTaskLaterAsynchronously(TimeAmount.toTicks(timeToExpiry, TimeUnit.MILLISECONDS));
+            expiryTasks.add(runnableFactory.create(() -> removeCookie(entry.getKey()))
+                    .runTaskLaterAsynchronously(TimeAmount.toTicks(timeToExpiry, TimeUnit.MILLISECONDS)));
         }
     }
 
     @Override
     public void disable() {
         USERS_BY_COOKIE.clear();
+        expiryTasks.forEach(task -> {
+            try {
+                task.cancel();
+            } catch (Exception e) {
+                // Ignore, task has already been cancelled
+            }
+        });
+        expiryTasks.clear();
     }
 
     public Optional<User> checkCookie(String cookie) {
@@ -102,6 +113,8 @@ public class ActiveCookieStore implements SubSystem {
         String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis());
         USERS_BY_COOKIE.put(cookie, user);
         saveNewCookie(user, cookie, System.currentTimeMillis());
+        expiryTasks.add(runnableFactory.create(() -> removeCookie(cookie))
+                .runTaskLaterAsynchronously(TimeAmount.toTicks(cookieExpiresAfter, TimeUnit.MILLISECONDS)));
         return cookie;
     }
 
@@ -121,5 +134,10 @@ public class ActiveCookieStore implements SubSystem {
 
     private void deleteCookie(String username) {
         dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeCookie(username));
+    }
+
+    public void removeAll() {
+        disable();
+        dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeAll());
     }
 }

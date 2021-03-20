@@ -43,9 +43,20 @@ public class CookieChangeTransaction extends Transaction {
         return new CookieChangeTransaction(username, null, null);
     }
 
+    public static CookieChangeTransaction removeAll() {
+        return new CookieChangeTransaction(null, null, null);
+    }
+
     @Override
     protected void performOperations() {
-        if (cookie == null) {
+        if (username == null) {
+            execute(new ExecStatement(CookieTable.DELETE_ALL_STATEMENT) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    // No parameters
+                }
+            });
+        } else if (cookie == null) {
             execute(new ExecStatement(CookieTable.DELETE_BY_USER_STATEMENT) {
                 @Override
                 public void prepare(PreparedStatement statement) throws SQLException {

@@ -31,6 +31,7 @@ public enum DeepHelpLang implements Lang {
     INGAME("In Depth Help - /plan ingame", "Displays some information about the player in game."),
     REGISTER("In Depth Help - /plan register", "Use without arguments to get link to register page. Use --code [code] after registration to get a user."),
     UNREGISTER("In Depth Help - /plan unregister", "Use without arguments to unregister player linked user, or with username argument to unregister another user."),
+    LOGOUT("In Depth Help - /plan logout", "Give username argument to log out another user from the panel, give * as argument to log out everyone."),
     INFO("In Depth Help - /plan info", "Display the current status of the plugin."),
     RELOAD("In Depth Help - /plan reload", "Disable and enable the plugin to reload any changes in config."),
     DISABLE("In Depth Help - /plan disable", "Disable the plugin or part of it until next reload/restart."),

@@ -46,6 +46,8 @@ public class CookieTable {
     public static final String DELETE_OLDER_STATEMENT = "DELETE FROM " + TABLE_NAME +
             WHERE + EXPIRES + "<=?";
 
+    public static final String DELETE_ALL_STATEMENT = "DELETE FROM " + TABLE_NAME;
+
 
     private CookieTable() {
         /* Static information class */

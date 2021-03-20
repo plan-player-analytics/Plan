@@ -34,6 +34,7 @@ public enum Permissions {
     REGISTER_OTHER("plan.register.other"),
     UNREGISTER_SELF("plan.unregister.self"),
     UNREGISTER_OTHER("plan.unregister.other"),
+    LOGOUT_OTHER("plan.logout.other"),
     INFO("plan.info"),
     RELOAD("plan.reload"),
     DISABLE("plan.disable"),

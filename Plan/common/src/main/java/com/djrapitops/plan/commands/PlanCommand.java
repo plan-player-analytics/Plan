@@ -105,6 +105,7 @@ public class PlanCommand {
 
                 .subcommand(registerCommand())
                 .subcommand(unregisterCommand())
+                .subcommand(logoutCommand())
                 .subcommand(webUsersCommand())
 
                 .subcommand(acceptCommand())
@@ -235,6 +236,17 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.UNREGISTER))
                 .inDepthDescription(locale.getString(DeepHelpLang.UNREGISTER))
                 .onCommand((sender, arguments) -> registrationCommands.onUnregister(commandName, sender, arguments))
+                .onTabComplete(this::webUserNames)
+                .build();
+    }
+
+    private Subcommand logoutCommand() {
+        return Subcommand.builder()
+                .requirePermission(Permissions.LOGOUT_OTHER)
+                .requiredArgument(locale.getString(HelpLang.ARG_USERNAME), locale.getString(HelpLang.DESC_ARG_USERNAME))
+                .description(locale.getString(HelpLang.LOGOUT))
+                .inDepthDescription(locale.getString(DeepHelpLang.LOGOUT))
+                .onCommand(registrationCommands::onLogoutCommand)
                 .onTabComplete(this::webUserNames)
                 .build();
     }
