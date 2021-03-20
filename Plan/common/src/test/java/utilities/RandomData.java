@@ -193,4 +193,8 @@ public class RandomData {
     public static DateObj<Integer> randomIntDateObject() {
         return new DateObj<>(randomTime(), randomInt(0, 500));
     }
+
+    public static double randomDouble() {
+        return ThreadLocalRandom.current().nextDouble();
+    }
 }
