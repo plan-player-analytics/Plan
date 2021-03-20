@@ -242,6 +242,7 @@ public class PlanCommand {
 
     private Subcommand logoutCommand() {
         return Subcommand.builder()
+                .aliases("logout")
                 .requirePermission(Permissions.LOGOUT_OTHER)
                 .requiredArgument(locale.getString(HelpLang.ARG_USERNAME), locale.getString(HelpLang.DESC_ARG_USERNAME))
                 .description(locale.getString(HelpLang.LOGOUT))

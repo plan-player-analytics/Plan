@@ -69,4 +69,9 @@ public class PluginMockComponent {
         initComponent();
         return component.pluginErrorLogger();
     }
+
+    public PlanPluginComponent getComponent() throws Exception {
+        initComponent();
+        return component;
+    }
 }
