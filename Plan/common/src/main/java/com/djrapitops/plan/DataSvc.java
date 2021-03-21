@@ -181,9 +181,9 @@ public class DataSvc implements DataService {
     }
 
     private static class Mapper<A, B> {
-        Class<A> typeA;
-        Class<B> typeB;
-        Function<A, B> func;
+        final Class<A> typeA;
+        final Class<B> typeB;
+        final Function<A, B> func;
 
         public Mapper(Class<A> typeA, Class<B> typeB, Function<A, B> func) {
             this.typeA = typeA;

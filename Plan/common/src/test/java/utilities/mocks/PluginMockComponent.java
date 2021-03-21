@@ -19,6 +19,7 @@ package utilities.mocks;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
+import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import utilities.dagger.DaggerPlanPluginComponent;
 import utilities.dagger.PlanPluginComponent;
 
@@ -35,6 +36,7 @@ public class PluginMockComponent {
 
     private PlanPlugin planMock;
     private PlanPluginComponent component;
+    private TestPlatformAbstractionLayer abstractionLayer;
 
     public PluginMockComponent(Path tempDir) {
         this.tempDir = tempDir;
@@ -57,10 +59,11 @@ public class PluginMockComponent {
     private void initComponent() throws Exception {
         if (component == null) {
             PlanPlugin planMock = getPlanMock();
+            abstractionLayer = new TestPlatformAbstractionLayer(planMock);
             component = DaggerPlanPluginComponent.builder()
                     .bindTemporaryDirectory(tempDir)
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(planMock))
+                    .abstractionLayer(abstractionLayer)
                     .build();
         }
     }
@@ -73,5 +76,10 @@ public class PluginMockComponent {
     public PlanPluginComponent getComponent() throws Exception {
         initComponent();
         return component;
+    }
+
+    public PlatformAbstractionLayer getAbstractionLayer() throws Exception {
+        initComponent();
+        return abstractionLayer;
     }
 }

@@ -52,7 +52,7 @@ public class CookieChangeTransaction extends Transaction {
         if (username == null) {
             execute(new ExecStatement(CookieTable.DELETE_ALL_STATEMENT) {
                 @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
+                public void prepare(PreparedStatement statement) {
                     // No parameters
                 }
             });

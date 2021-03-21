@@ -103,8 +103,8 @@ public class Contributors {
     }
 
     private static class Contributor implements Comparable<Contributor> {
-        String name;
-        For[] contributed;
+        final String name;
+        final For[] contributed;
 
         Contributor(String name, For... contributed) {
             this.name = name;

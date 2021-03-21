@@ -38,6 +38,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -119,6 +120,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
     }
 
     List<FinishedSession> loadFinishedSessions() {
+        if (!Files.exists(storeLocation)) return Collections.emptyList();
         try (Stream<String> lines = Files.lines(storeLocation)) {
             return lines.map(FinishedSession::deserializeCSV)
                     .filter(Optional::isPresent)
