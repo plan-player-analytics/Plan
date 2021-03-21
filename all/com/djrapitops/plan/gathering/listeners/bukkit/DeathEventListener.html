@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10};
+var data = {"i0":10,"i1":10,"i2":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -181,6 +181,16 @@ implements org.bukkit.event.Listener</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;org.bukkit.entity.Player&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findKiller(org.bukkit.entity.Entity)">findKiller</a></span>&#8203;(org.bukkit.entity.Entity&nbsp;dead)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#findWeapon(org.bukkit.entity.Entity)">findWeapon</a></span>&#8203;(org.bukkit.entity.Entity&nbsp;dead)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onDeath(org.bukkit.event.entity.EntityDeathEvent)">onDeath</a></span>&#8203;(org.bukkit.event.entity.EntityDeathEvent&nbsp;event)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -233,10 +243,28 @@ public&nbsp;DeathEventListener&#8203;(<a href="../../../processing/Processing.ht
 <a id="onDeath(org.bukkit.event.entity.EntityDeathEvent)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>onDeath</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;onDeath&#8203;(org.bukkit.event.entity.EntityDeathEvent&nbsp;event)</pre>
+</li>
+</ul>
+<a id="findKiller(org.bukkit.entity.Entity)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>findKiller</h4>
+<pre class="methodSignature">public&nbsp;java.util.Optional&lt;org.bukkit.entity.Player&gt;&nbsp;findKiller&#8203;(org.bukkit.entity.Entity&nbsp;dead)</pre>
+</li>
+</ul>
+<a id="findWeapon(org.bukkit.entity.Entity)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>findWeapon</h4>
+<pre class="methodSignature">public&nbsp;java.lang.String&nbsp;findWeapon&#8203;(org.bukkit.entity.Entity&nbsp;dead)</pre>
 </li>
 </ul>
 </li>
