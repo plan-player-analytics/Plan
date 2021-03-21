@@ -24,6 +24,10 @@
     animation: loader 2s infinite ease;
 }
 
+.card span.loader {
+    margin-top: 4rem;
+}
+
 .loader-text {
     margin-top: 0.5rem;
 }
