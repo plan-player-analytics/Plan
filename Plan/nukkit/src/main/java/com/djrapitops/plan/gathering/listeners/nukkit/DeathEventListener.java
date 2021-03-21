@@ -18,6 +18,7 @@ package com.djrapitops.plan.gathering.listeners.nukkit;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.item.EntityEndCrystal;
 import cn.nukkit.entity.passive.EntityTameable;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.event.EventHandler;
@@ -39,7 +40,7 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
-import java.util.UUID;
+import java.util.Optional;
 
 /**
  * Event Listener for detecting player and mob deaths.
@@ -67,16 +68,15 @@ public class DeathEventListener implements Listener {
         SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(ActiveSession::addDeath);
 
         try {
-            EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
-            if (!(entityDamageEvent instanceof EntityDamageByEntityEvent)) {
+            Optional<Player> foundKiller = findKiller(dead);
+            if (!foundKiller.isPresent()) {
                 return;
             }
+            Player killer = foundKiller.get();
 
-            EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) entityDamageEvent;
-            Entity killerEntity = entityDamageByEntityEvent.getDamager();
-
-            UUID uuid = dead.getUniqueId();
-            handleKill(time, uuid, killerEntity);
+            processing.submitCritical(new PlayerKillProcessor(
+                    killer.getUniqueId(), time, dead.getUniqueId(), findWeapon(dead)
+            ));
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
@@ -84,80 +84,72 @@ public class DeathEventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onMobDeath(EntityDeathEvent event) {
-        long time = System.currentTimeMillis();
         Entity dead = event.getEntity();
 
         try {
-            EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
-            if (!(entityDamageEvent instanceof EntityDamageByEntityEvent)) {
+            Optional<Player> foundKiller = findKiller(dead);
+            if (!foundKiller.isPresent()) {
                 return;
             }
+            Player killer = foundKiller.get();
 
-            EntityDamageByEntityEvent entityDamageByEntityEvent = (EntityDamageByEntityEvent) entityDamageEvent;
-            Entity killerEntity = entityDamageByEntityEvent.getDamager();
-
-            handleKill(time, /* Not a player */ null, killerEntity);
+            processing.submitCritical(new MobKillProcessor(killer.getUniqueId()));
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
     }
 
-    private void handleKill(long time, UUID victimUUID, Entity killerEntity) {
-        Runnable processor = null;
-        if (killerEntity instanceof Player) {
-            processor = handlePlayerKill(time, victimUUID, (Player) killerEntity);
-        } else if (killerEntity instanceof EntityTameable) {
-            processor = handlePetKill(time, victimUUID, (EntityTameable) killerEntity);
-        } else if (killerEntity instanceof EntityProjectile) {
-            processor = handleProjectileKill(time, victimUUID, (EntityProjectile) killerEntity);
+    public Optional<Player> findKiller(Entity dead) {
+        EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
+        if (!(entityDamageEvent instanceof EntityDamageByEntityEvent)) {
+            // Not damaged by entity, can't be a player
+            return Optional.empty();
         }
-        if (processor != null) {
-            processing.submit(processor);
-        }
+
+        Entity killer = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
+        if (killer instanceof Player) return Optional.of((Player) killer);
+        if (killer instanceof EntityTameable) return getOwner((EntityTameable) killer);
+        if (killer instanceof EntityProjectile) return getShooter((EntityProjectile) killer);
+        if (killer instanceof EntityEndCrystal) return findKiller(killer); // Recursive call
+
+        return Optional.empty();
     }
 
-    private Runnable handlePlayerKill(long time, UUID victimUUID, Player killer) {
+    public String findWeapon(Entity dead) {
+        EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
+        Entity killer = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
+        if (killer instanceof Player) return getItemInHand((Player) killer);
+        if (killer instanceof EntityTameable) return getPetType((EntityTameable) killer);
+
+        // EntityProjectile, EntityEndCrystal and all other causes that are not known yet
+        return new EntityNameFormatter().apply(killer.getName());
+    }
+
+    private String getPetType(EntityTameable tameable) {
+        return tameable.getName();
+    }
+
+    private String getItemInHand(Player killer) {
         Item itemInHand = killer.getInventory().getItemInHand();
-
-        String weaponName = new ItemNameFormatter().apply(itemInHand.getName());
-
-        return victimUUID != null
-                ? new PlayerKillProcessor(killer.getUniqueId(), time, victimUUID, weaponName)
-                : new MobKillProcessor(killer.getUniqueId());
+        return new ItemNameFormatter().apply(itemInHand.getName());
     }
 
-    private Runnable handlePetKill(long time, UUID victimUUID, EntityTameable tameable) {
+    private Optional<Player> getShooter(EntityProjectile projectile) {
+        Entity source = projectile.shootingEntity;
+        if (source instanceof Player) {
+            return Optional.of((Player) source);
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<Player> getOwner(EntityTameable tameable) {
         if (!tameable.isTamed()) {
-            return null;
+            return Optional.empty();
         }
 
         Player owner = tameable.getOwner();
-
-        String name;
-        try {
-            name = tameable.getName();
-        } catch (NoSuchMethodError oldVersionNoTypesError) {
-            // getType introduced in 1.9
-            name = tameable.getClass().getSimpleName();
-        }
-
-        return victimUUID != null
-                ? new PlayerKillProcessor(owner.getUniqueId(), time, victimUUID, new EntityNameFormatter().apply(name))
-                : new MobKillProcessor(owner.getUniqueId());
-    }
-
-    private Runnable handleProjectileKill(long time, UUID victimUUID, EntityProjectile projectile) {
-        Entity source = projectile.shootingEntity;
-        if (!(source instanceof Player)) {
-            return null;
-        }
-
-        Player player = (Player) source;
-        String projectileName = new EntityNameFormatter().apply(projectile.getName());
-
-        return victimUUID != null
-                ? new PlayerKillProcessor(player.getUniqueId(), time, victimUUID, projectileName)
-                : new MobKillProcessor(player.getUniqueId());
+        return Optional.of(owner);
     }
 }
 
