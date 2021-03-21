@@ -54,15 +54,19 @@ public class SystemUsage {
         double averageUsage;
 
         OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-        if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
-            com.sun.management.OperatingSystemMXBean nativeOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
-            averageUsage = nativeOsBean.getSystemCpuLoad();
-        } else {
-            int availableProcessors = osBean.getAvailableProcessors();
-            averageUsage = osBean.getSystemLoadAverage() / availableProcessors;
-        }
-        if (averageUsage < 0) {
-            averageUsage = -1; // If unavailable, getSystemLoadAverage() returns -1
+        try {
+            if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
+                com.sun.management.OperatingSystemMXBean nativeOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
+                averageUsage = nativeOsBean.getSystemCpuLoad();
+            } else {
+                int availableProcessors = osBean.getAvailableProcessors();
+                averageUsage = osBean.getSystemLoadAverage() / availableProcessors;
+            }
+            if (averageUsage < 0) {
+                averageUsage = -1; // If unavailable, getSystemLoadAverage() returns -1
+            }
+        } catch (UnsatisfiedLinkError e) {
+            averageUsage = -1; // Using some docker or something
         }
         return averageUsage * 100.0;
     }
