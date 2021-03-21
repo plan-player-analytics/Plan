@@ -25,8 +25,10 @@ import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
+import org.spongepowered.api.entity.EnderCrystal;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.animal.Wolf;
@@ -41,6 +43,7 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -74,76 +77,74 @@ public class SpongeDeathListener {
         }
 
         try {
-            Optional<EntityDamageSource> optDamageSource = event.getCause().first(EntityDamageSource.class);
-            if (optDamageSource.isPresent()) {
-                EntityDamageSource damageSource = optDamageSource.get();
-                Entity killerEntity = damageSource.getSource();
-                handleKill(time, dead, killerEntity);
+            List<EntityDamageSource> causes = event.getCause().allOf(EntityDamageSource.class);
+            Optional<Player> foundKiller = findKiller(causes, 0);
+            if (!foundKiller.isPresent()) {
+                return;
             }
+            Player killer = foundKiller.get();
+
+            Runnable processor = dead instanceof Player
+                    ? new PlayerKillProcessor(killer.getUniqueId(), time, dead.getUniqueId(), findWeapon(event))
+                    : new MobKillProcessor(killer.getUniqueId());
+            processing.submitCritical(processor);
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
     }
 
-    private void handleKill(long time, Living dead, Entity killerEntity) {
-        Runnable processor = null;
-        UUID victimUUID = getUUID(dead);
-        if (killerEntity instanceof Player) {
-            processor = handlePlayerKill(time, victimUUID, (Player) killerEntity);
-        } else if (killerEntity instanceof Wolf) {
-            processor = handleWolfKill(time, victimUUID, (Wolf) killerEntity);
-        } else if (killerEntity instanceof Projectile) {
-            processor = handleProjectileKill(time, victimUUID, (Projectile) killerEntity);
+    public Optional<Player> findKiller(List<EntityDamageSource> causes, int depth) {
+        if (causes.isEmpty() || causes.size() < depth) {
+            return Optional.empty();
         }
-        if (processor != null) {
-            processing.submit(processor);
-        }
+
+        EntityDamageSource damageSource = causes.get(depth);
+        Entity killerEntity = damageSource.getSource();
+
+        if (killerEntity instanceof Player) return Optional.of((Player) killerEntity);
+        if (killerEntity instanceof Wolf) return getOwner((Wolf) killerEntity);
+        if (killerEntity instanceof Projectile) return getShooter((Projectile) killerEntity);
+        if (killerEntity instanceof EnderCrystal) return findKiller(causes, depth + 1);
+        return Optional.empty();
     }
 
-    private Runnable handlePlayerKill(long time, UUID victimUUID, Player killer) {
+    public String findWeapon(DestructEntityEvent.Death death) {
+        Optional<EntityDamageSource> damagedBy = death.getCause().first(EntityDamageSource.class);
+        if (damagedBy.isPresent()) {
+            EntityDamageSource damageSource = damagedBy.get();
+            Entity killerEntity = damageSource.getSource();
 
+            if (killerEntity instanceof Player) return getItemInHand((Player) killerEntity);
+            if (killerEntity instanceof Wolf) return "Wolf";
+
+            return new EntityNameFormatter().apply(killerEntity.getType().getName());
+        }
+        return "Unknown";
+    }
+
+    private String getItemInHand(Player killer) {
         Optional<ItemStack> inMainHand = killer.getItemInHand(HandTypes.MAIN_HAND);
-        ItemStack inHand = inMainHand.orElse(killer.getItemInHand(HandTypes.OFF_HAND).orElse(ItemStack.empty()));
+        ItemStack inHand = inMainHand.orElse(
+                killer.getItemInHand(HandTypes.OFF_HAND)
+                        .orElse(ItemStack.empty()));
         ItemType type = inHand.isEmpty() ? ItemTypes.AIR : inHand.getType();
-
-        return victimUUID != null
-                ? new PlayerKillProcessor(killer.getUniqueId(), time, victimUUID, new ItemNameFormatter().apply(type.getName()))
-                : new MobKillProcessor(killer.getUniqueId());
+        return new ItemNameFormatter().apply(type.getName());
     }
 
-    private UUID getUUID(Living dead) {
-        if (dead instanceof Player) {
-            return dead.getUniqueId();
-        }
-        return null;
-    }
-
-    private Runnable handleWolfKill(long time, UUID victimUUID, Wolf wolf) {
-        Optional<Optional<UUID>> owner = wolf.get(Keys.TAMED_OWNER);
-
-        // Has been tamed
-        // Has tame owner
-        return owner.flatMap(ownerUUID -> ownerUUID.map(uuid ->
-                // Player or mob
-                victimUUID != null
-                        ? new PlayerKillProcessor(uuid, time, victimUUID, "Wolf")
-                        : new MobKillProcessor(uuid)
-        )).orElse(null);
-
-    }
-
-    private Runnable handleProjectileKill(long time, UUID victimUUID, Projectile projectile) {
+    private Optional<Player> getShooter(Projectile projectile) {
         ProjectileSource source = projectile.getShooter();
-        if (!(source instanceof Player)) {
-            return null;
+        if (source instanceof Player) {
+            return Optional.of((Player) source);
         }
 
-        Player player = (Player) source;
-        String projectileName = new EntityNameFormatter().apply(projectile.getType().getName());
-
-        return victimUUID != null
-                ? new PlayerKillProcessor(player.getUniqueId(), time, victimUUID, projectileName)
-                : new MobKillProcessor(player.getUniqueId());
+        return Optional.empty();
     }
 
+    private Optional<Player> getOwner(Wolf wolf) {
+        Optional<Optional<UUID>> isTameable = wolf.get(Keys.TAMED_OWNER);
+        if (!isTameable.isPresent()) return Optional.empty();
+        Optional<UUID> owner = isTameable.get();
+
+        return owner.flatMap(Sponge.getGame().getServer()::getPlayer);
+    }
 }
