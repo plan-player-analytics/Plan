@@ -34,6 +34,8 @@ import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.utilities.java.Lists;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -50,6 +52,7 @@ public class FiltersJSONResolver implements Resolver {
     private final QueryFilters filters;
     private final Graphs graphs;
     private final Formatters formatters;
+    private final ErrorLogger errorLogger;
 
     @Inject
     public FiltersJSONResolver(
@@ -57,13 +60,15 @@ public class FiltersJSONResolver implements Resolver {
             DBSystem dbSystem,
             QueryFilters filters,
             Graphs graphs,
-            Formatters formatters
+            Formatters formatters,
+            ErrorLogger errorLogger
     ) {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.filters = filters;
         this.graphs = graphs;
         this.formatters = formatters;
+        this.errorLogger = errorLogger;
     }
 
     @Override
@@ -106,7 +111,7 @@ public class FiltersJSONResolver implements Resolver {
     /**
      * JSON serialization class.
      */
-    static class FilterResponseJSON {
+    class FilterResponseJSON {
         final List<FilterJSON> filters;
         final ViewJSON view;
         final List<Double[]> viewPoints;
@@ -115,7 +120,14 @@ public class FiltersJSONResolver implements Resolver {
             this.viewPoints = viewPoints;
             this.filters = new ArrayList<>();
             for (Map.Entry<String, Filter> entry : filtersByKind.entrySet()) {
-                filters.add(new FilterJSON(entry.getKey(), entry.getValue()));
+                try {
+                    filters.add(new FilterJSON(entry.getKey(), entry.getValue()));
+                } catch (Exception e) {
+                    errorLogger.error(e, ErrorContext.builder()
+                            .whatToDo("Report this, filter '" + entry.getKey() + "' has implementation error.")
+                            .related(entry.getValue())
+                            .build());
+                }
             }
             Collections.sort(filters);
             this.view = view;
