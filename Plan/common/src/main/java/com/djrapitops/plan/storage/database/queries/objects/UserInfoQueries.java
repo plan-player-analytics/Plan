@@ -206,7 +206,7 @@ public class UserInfoQueries {
                 FROM + UserInfoTable.TABLE_NAME +
                 ") q1" +
                 GROUP_BY + "address" +
-                ORDER_BY + "address DESC";
+                ORDER_BY + "address ASC";
 
         return new QueryStatement<Map<String, Integer>>(sql, 100) {
             @Override
@@ -232,7 +232,7 @@ public class UserInfoQueries {
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_UUID + "=?" +
                 GROUP_BY + "address" +
-                ORDER_BY + "address DESC";
+                ORDER_BY + "address ASC";
 
         return new QueryStatement<Map<String, Integer>>(sql, 100) {
             @Override
@@ -255,7 +255,7 @@ public class UserInfoQueries {
     public static Query<List<String>> uniqueJoinAddresses() {
         String sql = SELECT + DISTINCT + "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
                 FROM + UserInfoTable.TABLE_NAME +
-                ORDER_BY + UserInfoTable.JOIN_ADDRESS + " DESC";
+                ORDER_BY + "address ASC";
         return new QueryStatement<List<String>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

@@ -311,6 +311,31 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    default void joinAddressFilterOptionsAreFetched() {
+        joinAddressIsUpdatedUponSecondLogin();
+
+        List<String> expected = Collections.singletonList(TestConstants.GET_PLAYER_HOSTNAME.get().toLowerCase());
+        List<String> result = db().query(UserInfoQueries.uniqueJoinAddresses());
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void joinAddressFilterOptionsAreFetchedWhenThereAreMultiple() {
+        joinAddressIsUpdatedUponSecondLogin();
+
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> TestConstants.GET_PLAYER_HOSTNAME.get() + "_b"));
+        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, TestConstants.SERVER_TWO_UUID, () -> TestConstants.GET_PLAYER_HOSTNAME.get() + "_a"));
+
+        List<String> expected = Arrays.asList(
+                TestConstants.GET_PLAYER_HOSTNAME.get().toLowerCase() + "_a",
+                TestConstants.GET_PLAYER_HOSTNAME.get().toLowerCase() + "_b"
+        );
+        List<String> result = db().query(UserInfoQueries.uniqueJoinAddresses());
+
+        assertEquals(expected, result);
+    }
+
+    @Test
     default void joinAddressFilterUUIDsAreFetched() {
         joinAddressIsUpdatedUponSecondLogin();
 
