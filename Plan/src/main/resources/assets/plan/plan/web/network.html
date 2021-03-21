@@ -30,8 +30,10 @@
     const gmPieColors = [${gmPieColors}];
 </script>
 <div class="page-loader">
-    <span class="loader"></span>
-    <p class="loader-text">Please wait..</p>
+    <div class="loader-container">
+        <span class="loader"></span>
+        <p class="loader-text">Please wait..</p>
+    </div>
 </div>
 
 <!-- Page Wrapper -->
@@ -71,6 +73,9 @@
                     <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
                             class="far fa-fw fa-calendar-alt"></i>
                         Sessions</a>
+                    <hr class="nav-servers dropdown-divider mx-3 my-2">
+                    <div class="nav-servers" id="navSrvContainer">
+                    </div>
                 </div>
             </div>
         </li>
@@ -487,7 +492,7 @@
                                             class="fas fa-fw fa-chart-line col-amber"></i>
                                         Playerbase development</h6>
                                 </div>
-                                <div class="chart-area" id="activityStackGraph"></div>
+                                <div class="chart-area" id="activityStackGraph"><span class="loader"></span></div>
                             </div>
                         </div>
 
@@ -499,7 +504,7 @@
                                             class="fa fa-fw fa-users col-amber"></i>
                                         Current Playerbase</h6>
                                 </div>
-                                <div class="chart-area" id="activityPie"></div>
+                                <div class="chart-area" id="activityPie"><span class="loader"></span></div>
                             </div>
                         </div>
                     </div>
@@ -619,7 +624,7 @@
                                             Join Addresses
                                         </h6>
                                     </div>
-                                    <div class="chart-area" id="joinAddressPie"></div>
+                                    <div class="chart-area" id="joinAddressPie"><span class="loader"></span></div>
                                 </div>
                             </div>
                         </div>

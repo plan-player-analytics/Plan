@@ -7,22 +7,29 @@
     text-align: center;
 }
 
+.loader-container {
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
 .loader {
     display: inline-block;
     width: 2rem;
     height: 2rem;
-    position: absolute;
     border: 4px solid #368F17;
     border-radius: 5px;
-    top: 50%;
     background-color: #368F17;
     animation: loader 2s infinite ease;
 }
 
+.card span.loader {
+    margin-top: 4rem;
+}
+
 .loader-text {
-    position: relative;
-    top: 55%;
-    left: 1rem;
+    margin-top: 0.5rem;
 }
 
 @keyframes loader {
@@ -753,6 +760,31 @@ div.scrollbar {
 
 .col-white .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
+}
+
+div#navSrvContainer {
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    max-height: 180px;
+}
+
+div#navSrvContainer>a {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+div#navSrvContainer::-webkit-scrollbar {
+    width: 12px;
+}
+
+div#navSrvContainer::-webkit-scrollbar-thumb {
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    -webkit-border-radius: 7px;
+    background-color: rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
 }
 
 .bg-gradient {

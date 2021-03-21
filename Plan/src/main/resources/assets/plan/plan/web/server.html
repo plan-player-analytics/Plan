@@ -28,8 +28,10 @@
     var gmPieColors = [${gmPieColors}];
 </script>
 <div class="page-loader">
-    <span class="loader"></span>
-    <p class="loader-text">Please wait..</p>
+    <div class="loader-container">
+        <span class="loader"></span>
+        <p class="loader-text">Please wait..</p>
+    </div>
 </div>
 
 <!-- Page Wrapper -->
@@ -745,7 +747,7 @@
                                             class="fas fa-fw fa-chart-line col-amber"></i>
                                         Playerbase development</h6>
                                 </div>
-                                <div class="chart-area" id="activityStackGraph"></div>
+                                <div class="chart-area" id="activityStackGraph"><span class="loader"></span></div>
                             </div>
                         </div>
 
@@ -757,7 +759,7 @@
                                             class="fa fa-fw fa-users col-amber"></i>
                                         Current Playerbase</h6>
                                 </div>
-                                <div class="chart-area" id="activityPie"></div>
+                                <div class="chart-area" id="activityPie"><span class="loader"></span></div>
                             </div>
                         </div>
                     </div>
@@ -874,7 +876,7 @@
                                         Join Addresses
                                     </h6>
                                 </div>
-                                <div class="chart-area" id="joinAddressPie"></div>
+                                <div class="chart-area" id="joinAddressPie"><span class="loader"></span></div>
                             </div>
                         </div>
                     </div>

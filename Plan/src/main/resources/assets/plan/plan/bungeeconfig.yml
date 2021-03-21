@@ -72,6 +72,9 @@ Webserver:
       Whitelist:
         - "192.168.0.0"
         - "0:0:0:0:0:0:0:1"
+    # Does not affect existing cookies
+    Cookies_expire_after: 2
+      Unit: HOURS
   Disable_Webserver: false
   External_Webserver_address: "https://www.example.address"
 # -----------------------------------------------------

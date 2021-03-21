@@ -78,6 +78,14 @@ class OperatorsFilter extends MultipleChoiceFilter {
     }
 }
 
+class JoinAddressFilter extends MultipleChoiceFilter {
+    constructor(
+        id, options
+    ) {
+        super(id, "joinAddresses", `joined with address`, options);
+    }
+}
+
 class PluginGroupsFilter extends MultipleChoiceFilter {
     constructor(
         id, kind, options
@@ -187,6 +195,8 @@ function createFilter(filter, id) {
             return new BannedFilter(id, filter.options);
         case "operators":
             return new OperatorsFilter(id, filter.options);
+        case "joinAddresses":
+            return new JoinAddressFilter(id, filter.options);
         case "playedBetween":
             return new PlayedBetweenFilter(id, filter.options);
         case "registeredBetween":
@@ -209,6 +219,8 @@ function getReadableFilterName(filter) {
             return "Ban status";
         case "operators":
             return "Operator status";
+        case "joinAddresses":
+            return "Join Addresses";
         case "playedBetween":
             return "Played between";
         case "registeredBetween":
