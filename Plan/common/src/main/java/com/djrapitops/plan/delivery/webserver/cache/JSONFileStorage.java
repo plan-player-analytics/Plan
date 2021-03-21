@@ -124,7 +124,7 @@ public class JSONFileStorage implements JSONStorage {
         if (stored == null) return Optional.empty();
         for (File file : stored) {
             String fileName = file.getName();
-            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {
+            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier + '-')) {
                 return Optional.ofNullable(readStoredJSON(file));
             }
         }
@@ -173,7 +173,7 @@ public class JSONFileStorage implements JSONStorage {
         for (File file : stored) {
             try {
                 String fileName = file.getName();
-                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {
+                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier + '-')) {
                     Matcher timestampMatch = timestampRegex.matcher(fileName);
                     if (timestampMatch.find() && timestampComparator.test(timestampMatch, timestamp)) {
                         return Optional.ofNullable(readStoredJSON(file));
@@ -203,7 +203,7 @@ public class JSONFileStorage implements JSONStorage {
     private boolean shouldDeleteFile(String identifier, long timestamp, File file) {
         try {
             String fileName = file.getName();
-            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier)) {
+            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier + '-')) {
                 Matcher timestampMatch = timestampRegex.matcher(fileName);
                 if (timestampMatch.find() && Long.parseLong(timestampMatch.group(1)) < timestamp) {
                     return true;
@@ -237,7 +237,7 @@ public class JSONFileStorage implements JSONStorage {
                 boolean isOlder = timestampMatch.find() && Long.parseLong(timestampMatch.group(1)) < timestamp;
                 if (isOlder) {
                     for (String ignoredIdentifier : ignoredIdentifiers) {
-                        if (fileName.startsWith(ignoredIdentifier)) return false;
+                        if (fileName.startsWith(ignoredIdentifier + "-")) return false;
                     }
                     return true;
                 }

@@ -163,4 +163,11 @@ class JSONStorageTest {
         JSONStorage.StoredJSON stored = UNDER_TEST.storeJson("Identifier", Collections.singletonList("data"), timestamp);
         assertFalse(UNDER_TEST.fetchJsonMadeBefore("Identifier", timestamp - TimeUnit.DAYS.toMillis(1L)).isPresent());
     }
+
+    @Test
+    void doesNotFetchWrongThing() {
+        long timestamp = System.currentTimeMillis();
+        JSONStorage.StoredJSON stored = UNDER_TEST.storeJson(DataID.SESSIONS_OVERVIEW.name(), Collections.singletonList("data"), timestamp);
+        assertFalse(UNDER_TEST.fetchJsonMadeBefore(DataID.SESSIONS.name(), timestamp + TimeUnit.DAYS.toMillis(1L)).isPresent());
+    }
 }
