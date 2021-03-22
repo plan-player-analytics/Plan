@@ -46,7 +46,7 @@ public class PlayerJSONResolver implements Resolver {
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
         if (user.hasPermission("page.player.other")) return true;
-        if ((user.hasPermission("page.player.self"))) {
+        if (user.hasPermission("page.player.self")) {
             try {
                 UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
                 UUID playerUUID = identifiers.getPlayerUUID(request);
