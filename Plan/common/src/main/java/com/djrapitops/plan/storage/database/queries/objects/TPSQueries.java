@@ -28,6 +28,7 @@ import com.djrapitops.plan.utilities.java.Lists;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -186,7 +187,11 @@ public class TPSQueries {
         return new QueryStatement<Map<ServerUUID, List<TPS>>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, leaveOut.toString());
+                if (leaveOut != null) {
+                    statement.setString(1, leaveOut.toString());
+                } else {
+                    statement.setNull(1, Types.VARCHAR);
+                }
                 statement.setBoolean(2, true);
                 statement.setLong(3, before);
                 statement.setLong(4, after);

@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.rendering.json.PlayerJSONCreator;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.identification.Identifiers;
@@ -44,10 +45,17 @@ public class PlayerJSONResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        UUID playerUUID = identifiers.getPlayerUUID(request);
-        UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
-        boolean isOwnPage = playerUUID.equals(webUserUUID);
-        return user.hasPermission("page.player.other") || (user.hasPermission("page.player.self") && isOwnPage);
+        if (user.hasPermission("page.player.other")) return true;
+        if ((user.hasPermission("page.player.self"))) {
+            try {
+                UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
+                UUID playerUUID = identifiers.getPlayerUUID(request);
+                return playerUUID.equals(webUserUUID);
+            } catch (BadRequestException userDoesntExist) {
+                return false; // Don't give away who has played on the server to someone with level 2 access
+            }
+        }
+        return false;
     }
 
     @Override
