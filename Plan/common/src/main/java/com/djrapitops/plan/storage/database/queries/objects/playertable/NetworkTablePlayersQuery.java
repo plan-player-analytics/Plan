@@ -88,14 +88,14 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 "u." + UsersTable.USER_NAME + ',' +
                 "u." + UsersTable.REGISTERED + ',' +
                 "ban." + UserInfoTable.USER_UUID + " as banned," +
-                "geoloc." + GeoInfoTable.GEOLOCATION + ',' +
+                "geo." + GeoInfoTable.GEOLOCATION + ',' +
                 "ses.last_seen," +
                 "ses.count," +
                 "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + selectLatestGeolocations + ") geoloc on geoloc." + GeoInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
                 LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
                 LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.USER_UUID + "=act." + UserInfoTable.USER_UUID +
                 ORDER_BY + "ses.last_seen DESC LIMIT ?";

@@ -55,13 +55,13 @@ public interface ResourceService {
      * @param pluginName Name of your plugin (for config purposes)
      * @param fileName   Name of the .html file being modified
      * @param position   Where to place the script tag on the page.
-     * @param jsSrcs     Source URLs.
+     * @param jsSources  Source URLs.
      * @throws IllegalArgumentException If pluginName is empty or null
      * @throws IllegalArgumentException If fileName is null, empty or does not end with .html
      * @throws IllegalArgumentException If position null
-     * @throws IllegalArgumentException If jsSrcs is empty or null
+     * @throws IllegalArgumentException If jsSources is empty or null
      */
-    void addScriptsToResource(String pluginName, String fileName, Position position, String... jsSrcs);
+    void addScriptsToResource(String pluginName, String fileName, Position position, String... jsSources);
 
     /**
      * Add css to load in an existing html resource.
@@ -71,13 +71,13 @@ public interface ResourceService {
      * @param pluginName Name of your plugin (for config purposes)
      * @param fileName   Name of the .html file being modified
      * @param position   Where to place the link tag on the page.
-     * @param cssSrcs    Source URLs.
+     * @param cssSources Source URLs.
      * @throws IllegalArgumentException If pluginName is empty or null
      * @throws IllegalArgumentException If fileName is null, empty or does not end with .html
      * @throws IllegalArgumentException If position null
-     * @throws IllegalArgumentException If cssSrcs is empty or null
+     * @throws IllegalArgumentException If cssSources is empty or null
      */
-    void addStylesToResource(String pluginName, String fileName, Position position, String... cssSrcs);
+    void addStylesToResource(String pluginName, String fileName, Position position, String... cssSources);
 
     enum Position {
         /**
@@ -103,7 +103,7 @@ public interface ResourceService {
     }
 
     class Holder {
-        static volatile AtomicReference<ResourceService> service = new AtomicReference<>();
+        static final AtomicReference<ResourceService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */

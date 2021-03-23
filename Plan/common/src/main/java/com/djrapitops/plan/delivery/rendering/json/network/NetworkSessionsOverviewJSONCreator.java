@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
+import com.djrapitops.plan.utilities.analysis.Percentage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -68,7 +69,7 @@ public class NetworkSessionsOverviewJSONCreator implements NetworkTabJSONCreator
         Long afkTime = db.query(SessionQueries.afkTime(monthAgo, now));
         insights.put("total_playtime", timeAmount.apply(playtime));
         insights.put("afk_time", timeAmount.apply(afkTime));
-        insights.put("afk_time_perc", playtime != 0 ? percentage.apply(1.0 * afkTime / playtime) : "-");
+        insights.put("afk_time_perc", percentage.apply(Percentage.calculate(afkTime, playtime, -1)));
 
         return insights;
     }

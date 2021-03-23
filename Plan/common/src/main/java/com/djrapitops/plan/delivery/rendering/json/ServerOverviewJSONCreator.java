@@ -38,6 +38,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import com.djrapitops.plan.utilities.analysis.Percentage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -108,11 +109,11 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
 
         int new7d = db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID));
         int retained7d = db.query(PlayerCountQueries.retainedPlayerCount(weekAgo, now, serverUUID));
-        double retentionPerc7d = new7d != 0 ? (double) retained7d / new7d : -1;
+        double retentionPercentage7d = Percentage.calculate(retained7d, new7d, -1);
 
         sevenDays.put("new_players", new7d);
         sevenDays.put("new_players_retention", retained7d);
-        sevenDays.put("new_players_retention_perc", percentage.apply(retentionPerc7d));
+        sevenDays.put("new_players_retention_perc", percentage.apply(retentionPercentage7d));
         TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(weekAgo, now, serverUUID)));
         double averageTPS = tpsMutator.averageTPS();
         sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(GenericLang.UNAVAILABLE).toString());

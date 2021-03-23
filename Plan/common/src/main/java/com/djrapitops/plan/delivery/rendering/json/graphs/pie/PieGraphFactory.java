@@ -64,8 +64,8 @@ public class PieGraphFactory {
         return new ServerPreferencePie(serverNames, serverWorldTimes, locale.get(GenericLang.UNKNOWN).toString());
     }
 
-    public Pie serverPreferencePie(Map<String, Long> serverPlaytimes) {
-        return new ServerPreferencePie(serverPlaytimes);
+    public Pie serverPreferencePie(Map<String, Long> playtimeByServerName) {
+        return new ServerPreferencePie(playtimeByServerName);
     }
 
     public Pie joinAddressPie(Map<String, Integer> joinAddresses) {
@@ -77,7 +77,7 @@ public class PieGraphFactory {
         Map<String, Long> playtimePerAlias = worldAliasSettings.getPlaytimePerAlias(worldTimes);
         Map<String, GMTimes> gmTimesPerAlias = worldAliasSettings.getGMTimesPerAlias(worldTimes);
         String[] colors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        boolean orderByPercentage = config.isTrue(DisplaySettings.ORDER_WORLD_PIE_BY_PERC);
+        boolean orderByPercentage = config.isTrue(DisplaySettings.ORDER_WORLD_PIE_BY_PERCENTAGE);
         return new WorldPie(playtimePerAlias, gmTimesPerAlias, colors, orderByPercentage);
     }
 }

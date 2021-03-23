@@ -29,7 +29,7 @@ import java.util.UUID;
 
 public class BungeeCMDSender implements CMDSender {
 
-    CommandSender sender;
+    final CommandSender sender;
 
     public BungeeCMDSender(CommandSender sender) {
         this.sender = sender;

@@ -22,7 +22,7 @@ import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
+import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
 import com.djrapitops.plan.extension.implementation.results.ExtensionStringData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.storage.database.SQLDB;
@@ -108,10 +108,10 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionD
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
             ExtensionTabData.Builder extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
-            ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
+            ExtensionDescription extensionDescription = extractDescription(set);
 
             String groupName = set.getString(ExtensionGroupsTable.GROUP_NAME);
-            extensionTab.putGroupData(new ExtensionStringData(extensionDescriptive, false, groupName));
+            extensionTab.putGroupData(ExtensionStringData.regularString(extensionDescription, groupName));
         }
         return tabData;
     }
@@ -133,7 +133,7 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionD
         );
     }
 
-    private ExtensionDescriptive extractDescriptive(ResultSet set) throws SQLException {
+    private ExtensionDescription extractDescription(ResultSet set) throws SQLException {
         String name = set.getString("provider_name");
         String text = set.getString(ExtensionProviderTable.TEXT);
 
@@ -142,7 +142,7 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionD
         Color color = Color.getByName(set.getString("provider_icon_color")).orElse(Color.NONE);
         Icon icon = new Icon(family, iconName, color);
 
-        return new ExtensionDescriptive(name, text, null, icon, 0);
+        return new ExtensionDescription(name, text, null, icon, 0);
     }
 
     private Icon extractTabIcon(ResultSet set) throws SQLException {

@@ -29,7 +29,6 @@ import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
-import com.djrapitops.plan.PlanNukkit;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -61,7 +60,6 @@ public class NukkitPingCounter extends TaskSystem.Task implements Listener {
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final Listeners listeners;
-    private final PlanNukkit plugin;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -70,14 +68,12 @@ public class NukkitPingCounter extends TaskSystem.Task implements Listener {
     @Inject
     public NukkitPingCounter(
             Listeners listeners,
-            PlanNukkit plugin,
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             RunnableFactory runnableFactory
     ) {
         this.listeners = listeners;
-        this.plugin = plugin;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;

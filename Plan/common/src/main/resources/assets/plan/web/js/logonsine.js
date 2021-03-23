@@ -1,7 +1,9 @@
+// https://gist.github.com/gkhays/e264009c0832c73d5345847e673a64ab
 function drawSine(canvasId) {
-    // https://gist.github.com/gkhays/e264009c0832c73d5345847e673a64ab
+    let step;
+
     function drawPoint(ctx, x, y) {
-        var radius = 2;
+        const radius = 2;
         ctx.beginPath();
 
         // Hold x constant at 4 so the point only moves up and down.
@@ -13,27 +15,26 @@ function drawSine(canvasId) {
         ctx.stroke();
     }
 
-    function plotSine(ctx, xOffset, yOffset) {
-        var width = ctx.canvas.width;
-        var height = ctx.canvas.height;
+    function plotSine(ctx, xOffset) {
+        const width = ctx.canvas.width;
+        const height = ctx.canvas.height;
 
         ctx.beginPath();
         ctx.lineWidth = 2;
         ctx.strokeStyle = "#fff";
 
-        // console.log("Drawing point...");
+        // Drawing point
 
-        var x = -2;
-        var y = 0;
-        var amplitude = 50;
-        var frequency = 50;
-        // ctx.moveTo(x, y);
+        let x = -2;
+        let y = 0;
+        const amplitude = 50;
+        const frequency = 50;
+
         ctx.moveTo(x, 50);
         while (x <= width) {
             y = height / 2 + amplitude * Math.sin((x + xOffset) / frequency) * Math.cos((x + xOffset) / (frequency * 0.54515978463));
             ctx.lineTo(x, y);
             x += 5;
-            // console.log("x="+x+" y="+y);
         }
         ctx.stroke();
         ctx.save();
@@ -44,13 +45,13 @@ function drawSine(canvasId) {
     }
 
     function draw() {
-        var canvas = document.getElementById(canvasId);
-        var context = canvas.getContext("2d");
+        const canvas = document.getElementById(canvasId);
+        const context = canvas.getContext("2d");
 
         context.clearRect(0, 0, 1000, 150);
         context.save();
 
-        plotSine(context, step, 100);
+        plotSine(context, step);
         context.restore();
 
         step += 0.5;
@@ -58,14 +59,15 @@ function drawSine(canvasId) {
     }
 
     function fix_dpi() {
-        var canvas = document.getElementById(canvasId);
-        let dpi = window.devicePixelRatio;//get canvas
-        let ctx = canvas.getContext('2d');
-        let style_width = +getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);//scale the canvascanvas.setAttribute('height', style_height * dpi);
-        canvas.setAttribute('width', style_width * dpi);
+        const canvas = document.getElementById(canvasId);
+        let dpi = window.devicePixelRatio;
+        canvas.getContext('2d');
+        const style_width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
+        // Scale the canvas
+        canvas.setAttribute('width', `${style_width * dpi}`);
     }
 
     fix_dpi();
-    var step = -1;
+    step = -1;
     window.requestAnimationFrame(draw);
 }

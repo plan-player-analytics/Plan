@@ -153,54 +153,53 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
             UUID playerUUID = UUID.fromString(set.getString("uuid"));
             ExtensionTabData.Builder data = dataByPlayer.getOrDefault(playerUUID, new ExtensionTabData.Builder(null));
 
-            ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
-            extractAndPutDataTo(data, extensionDescriptive, set);
+            ExtensionDescription extensionDescription = extractDescription(set);
+            extractAndPutDataTo(data, extensionDescription, set);
 
             dataByPlayer.put(playerUUID, data);
         }
         return dataByPlayer.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().build()));
     }
 
-    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescription description, ResultSet set) throws SQLException {
         String groupValue = set.getString("group_value");
         if (groupValue != null) {
-            extensionTab.putGroupData(new ExtensionStringData(descriptive, false, groupValue));
+            extensionTab.putGroupData(ExtensionStringData.regularString(description, groupValue));
             return;
         }
 
         boolean booleanValue = set.getBoolean(ExtensionServerValueTable.BOOLEAN_VALUE);
         if (!set.wasNull()) {
-            extensionTab.putBooleanData(new ExtensionBooleanData(descriptive, booleanValue));
+            extensionTab.putBooleanData(new ExtensionBooleanData(description, booleanValue));
             return;
         }
 
         double doubleValue = set.getDouble(ExtensionPlayerValueTable.DOUBLE_VALUE);
         if (!set.wasNull()) {
-            extensionTab.putDoubleData(new ExtensionDoubleData(descriptive, doubleValue));
+            extensionTab.putDoubleData(new ExtensionDoubleData(description, doubleValue));
             return;
         }
 
         double percentageValue = set.getDouble(ExtensionServerValueTable.PERCENTAGE_VALUE);
         if (!set.wasNull()) {
-            extensionTab.putPercentageData(new ExtensionDoubleData(descriptive, percentageValue));
+            extensionTab.putPercentageData(new ExtensionDoubleData(description, percentageValue));
             return;
         }
 
         long numberValue = set.getLong(ExtensionPlayerValueTable.LONG_VALUE);
         if (!set.wasNull()) {
             FormatType formatType = FormatType.getByName(set.getString(ExtensionProviderTable.FORMAT_TYPE)).orElse(FormatType.NONE);
-            extensionTab.putNumberData(new ExtensionNumberData(descriptive, formatType, numberValue));
+            extensionTab.putNumberData(new ExtensionNumberData(description, formatType, numberValue));
             return;
         }
 
         String stringValue = set.getString(ExtensionPlayerValueTable.STRING_VALUE);
         if (stringValue != null) {
-            boolean isPlayerName = false;
-            extensionTab.putStringData(new ExtensionStringData(descriptive, isPlayerName, stringValue));
+            extensionTab.putStringData(ExtensionStringData.regularString(description, stringValue));
         }
     }
 
-    private ExtensionDescriptive extractDescriptive(ResultSet set) throws SQLException {
+    private ExtensionDescription extractDescription(ResultSet set) throws SQLException {
         String name = set.getString("provider_name");
         String text = set.getString(ExtensionProviderTable.TEXT);
 
@@ -208,6 +207,6 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
         Family family = Family.getByName(set.getString("provider_icon_family")).orElse(Family.SOLID);
         Icon icon = new Icon(family, iconName, Color.NONE);
 
-        return new ExtensionDescriptive(name, text, null, icon, 0);
+        return new ExtensionDescription(name, text, null, icon, 0);
     }
 }

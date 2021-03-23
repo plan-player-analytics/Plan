@@ -146,6 +146,7 @@ function createConnectionsTableBody(connections) {
     return table;
 }
 
+// Lowercase due to locale translation: Server
 function loadserverAccordion(json, error) {
     tab = $("#server-overview");
     if (error) {
@@ -194,6 +195,7 @@ function onOpenserver(i, servers) {
     }
 }
 
+// Lowercase due to locale translation: Server
 function createserverAccordionTitle(i, server) {
     return '<tr id="server_h_' + i + '" aria-controls="server_t_' + i + '" aria-expanded="false" class="clickable collapsed bg-light-green-outline" data-target="#server_t_' + i + '" data-toggle="collapse"><td>'
         + server.server_name +
@@ -205,6 +207,7 @@ function createserverAccordionTitle(i, server) {
         + '<td>' + server.last_seen + '</td></tr>'
 }
 
+// Lowercase due to locale translation: Server
 function createserverAccordionBody(i, server) {
 
     return `<tr class="collapse" data-parent="#tableSAccordion" id="server_t_` + i + `">` +

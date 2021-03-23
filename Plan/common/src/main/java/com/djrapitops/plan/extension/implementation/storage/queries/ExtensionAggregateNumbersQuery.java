@@ -23,7 +23,7 @@ import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
+import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
 import com.djrapitops.plan.extension.implementation.results.ExtensionNumberData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -131,8 +131,8 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
             ExtensionTabData.Builder extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
-            ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
-            extractAndPutDataTo(extensionTab, extensionDescriptive, set);
+            ExtensionDescription extensionDescription = extractDescription(set);
+            extractAndPutDataTo(extensionTab, extensionDescription, set);
         }
         return tabData;
     }
@@ -154,17 +154,17 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
         );
     }
 
-    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescription description, ResultSet set) throws SQLException {
         FormatType formatType = FormatType.getByName(set.getString(ExtensionProviderTable.FORMAT_TYPE)).orElse(FormatType.NONE);
-        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescriptive(descriptive, "_avg", "Average "), formatType, (long) set.getDouble("average")));
-        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescriptive(descriptive, "_total", "Total "), formatType, (long) set.getDouble("total")));
+        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescription(description, "_avg", "Average "), formatType, (long) set.getDouble("average")));
+        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescription(description, "_total", "Total "), formatType, (long) set.getDouble("total")));
     }
 
-    private ExtensionDescriptive modifiedDescriptive(ExtensionDescriptive descriptive, String appendToName, String appendToText) {
-        return new ExtensionDescriptive(descriptive.getName() + appendToName, appendToText + descriptive.getText(), descriptive.getDescription().orElse(null), descriptive.getIcon(), descriptive.getPriority());
+    private ExtensionDescription modifiedDescription(ExtensionDescription description, String appendToName, String appendToText) {
+        return new ExtensionDescription(description.getName() + appendToName, appendToText + description.getText(), description.getDescription().orElse(null), description.getIcon(), description.getPriority());
     }
 
-    private ExtensionDescriptive extractDescriptive(ResultSet set) throws SQLException {
+    private ExtensionDescription extractDescription(ResultSet set) throws SQLException {
         String name = set.getString("provider_name");
         String text = set.getString(ExtensionProviderTable.TEXT);
         String description = set.getString(ExtensionProviderTable.DESCRIPTION);
@@ -175,7 +175,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
         Color color = Color.getByName(set.getString("provider_icon_color")).orElse(Color.NONE);
         Icon icon = new Icon(family, iconName, color);
 
-        return new ExtensionDescriptive(name, text, description, icon, priority);
+        return new ExtensionDescription(name, text, description, icon, priority);
     }
 
     private Icon extractTabIcon(ResultSet set) throws SQLException {

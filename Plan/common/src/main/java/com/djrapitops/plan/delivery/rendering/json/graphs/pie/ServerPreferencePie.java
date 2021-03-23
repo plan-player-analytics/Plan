@@ -49,12 +49,12 @@ public class ServerPreferencePie extends Pie {
         return slices;
     }
 
-    private static List<PieSlice> turnToSlices(Map<String, Long> serverPlaytimes) {
+    private static List<PieSlice> turnToSlices(Map<String, Long> playtimeByServerName) {
         List<PieSlice> slices = new ArrayList<>();
 
-        for (Map.Entry<String, Long> server : serverPlaytimes.entrySet()) {
-            String serverName = server.getKey();
-            long playtime = server.getValue();
+        for (Map.Entry<String, Long> playtimeOfServer : playtimeByServerName.entrySet()) {
+            String serverName = playtimeOfServer.getKey();
+            long playtime = playtimeOfServer.getValue();
             slices.add(new PieSlice(serverName, playtime));
         }
 

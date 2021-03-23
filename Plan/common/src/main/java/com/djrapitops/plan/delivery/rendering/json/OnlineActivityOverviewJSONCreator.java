@@ -34,6 +34,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
+import com.djrapitops.plan.utilities.analysis.Percentage;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -132,21 +133,21 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
 
         int retained30d = db.query(PlayerCountQueries.retainedPlayerCount(monthAgo, now, serverUUID));
         int retained7d = db.query(PlayerCountQueries.retainedPlayerCount(weekAgo, now, serverUUID));
-        double retentionPerc30d = new30d != 0 ? (double) retained30d / new30d : -1;
-        double retentionPerc7d = new7d != 0 ? (double) retained7d / new7d : -1;
+        double retentionPercentage30d = Percentage.calculate(retained30d, new30d, -1);
+        double retentionPercentage7d = Percentage.calculate(retained7d, new7d, -1);
         numbers.put("new_players_retention_30d", retained30d);
-        numbers.put("new_players_retention_30d_perc", percentageFormatter.apply(retentionPerc30d));
+        numbers.put("new_players_retention_30d_perc", percentageFormatter.apply(retentionPercentage30d));
         numbers.put("new_players_retention_7d", retained7d);
-        numbers.put("new_players_retention_7d_perc", percentageFormatter.apply(retentionPerc7d));
+        numbers.put("new_players_retention_7d_perc", percentageFormatter.apply(retentionPercentage7d));
 
         int prediction1d = RetentionData.countRetentionPrediction(
                 db.query(ActivityIndexQueries.activityIndexForNewPlayers(dayAgo, now, serverUUID, playThreshold)),
                 db.query(ActivityIndexQueries.averageActivityIndexForRetainedPlayers(monthAgo, now, serverUUID, playThreshold)),
                 db.query(ActivityIndexQueries.averageActivityIndexForNonRetainedPlayers(monthAgo, now, serverUUID, playThreshold))
         );
-        double retentionPerc1d = new1d != 0 ? (double) prediction1d / new1d : -1;
+        double retentionPercentage1d = Percentage.calculate(prediction1d, new1d, -1);
         numbers.put("new_players_retention_24h", prediction1d);
-        numbers.put("new_players_retention_24h_perc", percentageFormatter.apply(retentionPerc1d));
+        numbers.put("new_players_retention_24h_perc", percentageFormatter.apply(retentionPercentage1d));
 
         Long playtimeMonth = db.query(SessionQueries.playtime(monthAgo, now, serverUUID));
         Long playtimeWeek = db.query(SessionQueries.playtime(weekAgo, now, serverUUID));

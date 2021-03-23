@@ -72,11 +72,11 @@ class BooleanProviderValueGatherer {
         // Method parameters abstracted away so that same method can be used for all parameter types
         // Same with Method result store transaction creation
         Function<MethodWrapper<Boolean>, Callable<Boolean>> methodCaller = method -> () -> method.callMethod(extension, Parameters.player(serverUUID, playerUUID, playerName));
-        BiFunction<MethodWrapper<Boolean>, Boolean, Transaction> storeTrancationCreator = (method, result) -> new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
+        BiFunction<MethodWrapper<Boolean>, Boolean, Transaction> storeTransactionCreator = (method, result) -> new StorePlayerBooleanResultTransaction(pluginName, serverUUID, method.getMethodName(), playerUUID, result);
 
         do {
             // Loop through all unsatisfied providers to see if more conditions are satisfied
-            satisfied = attemptToSatisfyMoreConditionsAndStoreResults(methodCaller, storeTrancationCreator, conditions, unsatisfiedProviders);
+            satisfied = attemptToSatisfyMoreConditionsAndStoreResults(methodCaller, storeTransactionCreator, conditions, unsatisfiedProviders);
             // Remove now satisfied Providers so that they are not called again
             unsatisfiedProviders.removeAll(satisfied);
             // If no new conditions could be satisfied, stop looping.

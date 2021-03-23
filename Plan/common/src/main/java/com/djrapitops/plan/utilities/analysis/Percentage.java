@@ -14,28 +14,15 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.results;
+package com.djrapitops.plan.utilities.analysis;
 
-/**
- * Represents boolean data returned by a BooleanProvider method.
- *
- * @author AuroraLS3
- */
-public class ExtensionBooleanData implements DescribedExtensionData {
+public class Percentage {
 
-    private final ExtensionDescription description;
-    private final boolean value;
-
-    public ExtensionBooleanData(ExtensionDescription description, boolean value) {
-        this.description = description;
-        this.value = value;
+    public static double calculate(double amount, long total) {
+        return calculate(amount, total, 0);
     }
 
-    public ExtensionDescription getDescription() {
-        return description;
-    }
-
-    public String getFormattedValue() {
-        return value ? "Yes" : "No";
+    public static double calculate(double amount, long total, double whenZeroTotal) {
+        return total != 0 ? amount / total : whenZeroTotal;
     }
 }

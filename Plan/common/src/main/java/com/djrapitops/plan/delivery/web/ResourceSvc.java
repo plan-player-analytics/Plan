@@ -181,11 +181,11 @@ public class ResourceSvc implements ResourceService {
     }
 
     @Override
-    public void addScriptsToResource(String pluginName, String fileName, Position position, String... jsSrcs) {
-        checkParams(pluginName, fileName, position, jsSrcs);
+    public void addScriptsToResource(String pluginName, String fileName, Position position, String... jsSources) {
+        checkParams(pluginName, fileName, position, jsSources);
 
         String snippet = new TextStringBuilder("<script src=\"")
-                .appendWithSeparators(jsSrcs, "\"></script><script src=\"")
+                .appendWithSeparators(jsSources, "\"></script><script src=\"")
                 .append("\"></script>").build();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
         if (!"Plan".equals(pluginName)) {
@@ -193,7 +193,7 @@ public class ResourceSvc implements ResourceService {
         }
     }
 
-    public void checkParams(String pluginName, String fileName, Position position, String[] jsSrcs) {
+    public void checkParams(String pluginName, String fileName, Position position, String[] jsSources) {
         if (pluginName == null || pluginName.isEmpty()) {
             throw new IllegalArgumentException("'pluginName' can't be '" + pluginName + "'!");
         }
@@ -206,17 +206,17 @@ public class ResourceSvc implements ResourceService {
         if (position == null) {
             throw new IllegalArgumentException("'position' can't be null!");
         }
-        if (jsSrcs == null || jsSrcs.length == 0) {
+        if (jsSources == null || jsSources.length == 0) {
             throw new IllegalArgumentException("Can't add snippets to resource without snippets!");
         }
     }
 
     @Override
-    public void addStylesToResource(String pluginName, String fileName, Position position, String... cssSrcs) {
-        checkParams(pluginName, fileName, position, cssSrcs);
+    public void addStylesToResource(String pluginName, String fileName, Position position, String... cssSources) {
+        checkParams(pluginName, fileName, position, cssSources);
 
         String snippet = new TextStringBuilder("<link href=\"")
-                .appendWithSeparators(cssSrcs, "\" rel=\"stylesheet\"></link><link href=\"")
+                .appendWithSeparators(cssSources, "\" rel=\"stylesheet\"></link><link href=\"")
                 .append("\" rel=\"stylesheet\">").build();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
         if (!"Plan".equals(pluginName)) {

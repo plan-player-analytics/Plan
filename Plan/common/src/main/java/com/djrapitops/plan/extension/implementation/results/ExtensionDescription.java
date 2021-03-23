@@ -27,7 +27,7 @@ import java.util.Optional;
  *
  * @author AuroraLS3
  */
-public class ExtensionDescriptive implements Comparable<ExtensionDescriptive> {
+public class ExtensionDescription implements Comparable<ExtensionDescription> {
 
     private final String name;
     private final String text;
@@ -35,7 +35,7 @@ public class ExtensionDescriptive implements Comparable<ExtensionDescriptive> {
     private final Icon icon;
     private final int priority;
 
-    public ExtensionDescriptive(String name, String text, String description, Icon icon, int priority) {
+    public ExtensionDescription(String name, String text, String description, Icon icon, int priority) {
         this.name = name;
         this.text = text;
         this.description = description;
@@ -64,15 +64,15 @@ public class ExtensionDescriptive implements Comparable<ExtensionDescriptive> {
     }
 
     @Override
-    public int compareTo(ExtensionDescriptive other) {
+    public int compareTo(ExtensionDescription other) {
         return Integer.compare(other.priority, this.priority); // Higher is first
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ExtensionDescriptive)) return false;
-        ExtensionDescriptive that = (ExtensionDescriptive) o;
+        if (!(o instanceof ExtensionDescription)) return false;
+        ExtensionDescription that = (ExtensionDescription) o;
         return priority == that.priority &&
                 name.equals(that.name) &&
                 text.equals(that.text) &&
@@ -87,7 +87,7 @@ public class ExtensionDescriptive implements Comparable<ExtensionDescriptive> {
 
     @Override
     public String toString() {
-        return "ExtensionDescriptive{" +
+        return "ExtensionDescription{" +
                 "name='" + name + '\'' +
                 ", text='" + text + '\'' +
                 ", description='" + description + '\'' +

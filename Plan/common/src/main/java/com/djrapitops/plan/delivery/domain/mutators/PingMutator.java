@@ -94,7 +94,7 @@ public class PingMutator {
                 long start = session.getDate();
                 long end = session.getEnd();
                 if (end < start) continue;
-                // Calculate average ping for each session with a Ping submap
+                // Calculate average ping for each session with a section of the Ping map
                 SortedMap<Long, Ping> duringSession = pingOfServer.subMap(start, end);
                 for (Ping ping : duringSession.values()) {
                     pingCount += ping.getAverage();
@@ -116,7 +116,7 @@ public class PingMutator {
     public int max() {
         int max = -1;
         for (Ping ping : pings) {
-            Integer value = ping.getMax();
+            int value = ping.getMax();
             if (value <= 0 || 4000 < value) {
                 continue;
             }
@@ -131,7 +131,7 @@ public class PingMutator {
     public int min() {
         int min = -1;
         for (Ping ping : pings) {
-            Integer value = ping.getMin();
+            int value = ping.getMin();
             if (value <= 0 || 4000 < value) {
                 continue;
             }

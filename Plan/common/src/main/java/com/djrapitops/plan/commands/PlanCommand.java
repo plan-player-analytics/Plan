@@ -53,6 +53,8 @@ public class PlanCommand {
     private final ImportSystem importSystem;
     private final ErrorLogger errorLogger;
 
+    private final String DB_ARG_OPTIONS = "MySQL/SQlite/H2";
+
     @Inject
     public PlanCommand(
             @Named("mainCommandName") String commandName,
@@ -340,7 +342,7 @@ public class PlanCommand {
         return Subcommand.builder()
                 .aliases("backup")
                 .requirePermission(Permissions.DATA_BACKUP)
-                .optionalArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_BACKUP))
+                .optionalArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_BACKUP))
                 .description(locale.getString(HelpLang.DB_BACKUP))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_BACKUP))
                 .onCommand(databaseCommands::onBackup)
@@ -354,7 +356,7 @@ public class PlanCommand {
                 .aliases("restore")
                 .requirePermission(Permissions.DATA_RESTORE)
                 .requiredArgument(locale.getString(HelpLang.ARG_BACKUP_FILE), locale.getString(HelpLang.DESC_ARG_BACKUP_FILE))
-                .optionalArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_RESTORE))
+                .optionalArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_RESTORE))
                 .description(locale.getString(HelpLang.DB_RESTORE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_RESTORE))
                 .onCommand((sender, arguments) -> databaseCommands.onRestore(commandName, sender, arguments))
@@ -378,8 +380,8 @@ public class PlanCommand {
         return Subcommand.builder()
                 .aliases("move")
                 .requirePermission(Permissions.DATA_MOVE)
-                .requiredArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_MOVE_FROM))
-                .requiredArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_MOVE_TO))
+                .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_MOVE_FROM))
+                .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_MOVE_TO))
                 .description(locale.getString(HelpLang.DB_MOVE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_MOVE))
                 .onCommand((sender, arguments) -> databaseCommands.onMove(commandName, sender, arguments))
@@ -391,7 +393,7 @@ public class PlanCommand {
         return Subcommand.builder()
                 .aliases("hotswap")
                 .requirePermission(Permissions.DATA_HOTSWAP)
-                .requiredArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_HOTSWAP))
+                .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_HOTSWAP))
                 .description(locale.getString(HelpLang.DB_HOTSWAP))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_HOTSWAP))
                 .onCommand(databaseCommands::onHotswap)
@@ -404,7 +406,7 @@ public class PlanCommand {
         return Subcommand.builder()
                 .aliases("clear")
                 .requirePermission(Permissions.DATA_CLEAR)
-                .requiredArgument("MySQL/SQlite/H2", locale.getString(HelpLang.DESC_ARG_DB_REMOVE))
+                .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_REMOVE))
                 .description(locale.getString(HelpLang.DB_CLEAR))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_CLEAR))
                 .onCommand((sender, arguments) -> databaseCommands.onClear(commandName, sender, arguments))

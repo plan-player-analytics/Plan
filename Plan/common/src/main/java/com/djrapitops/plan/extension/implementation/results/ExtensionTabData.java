@@ -38,7 +38,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     private final Map<String, ExtensionStringData> stringData;
 
     private final List<ExtensionTableData> tableData;
-    private final List<ExtensionDescriptive> descriptives;
+    private final List<ExtensionDescription> descriptions;
 
     private List<String> order;
 
@@ -54,7 +54,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         stringData = new HashMap<>();
 
         tableData = new ArrayList<>();
-        descriptives = new ArrayList<>();
+        descriptions = new ArrayList<>();
     }
 
     public TabInformation getTabInformation() {
@@ -90,14 +90,14 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     }
 
     /**
-     * Get all Descriptives for this tabs data.
+     * Get all descriptions for data in this tab.
      * <p>
      * Only available after the Tab has been built.
      *
-     * @return List of {@link ExtensionDescriptive}s.
+     * @return List of {@link ExtensionDescription}s.
      */
-    public List<ExtensionDescriptive> getDescriptives() {
-        return descriptives;
+    public List<ExtensionDescription> getDescriptions() {
+        return descriptions;
     }
 
     @Override
@@ -132,16 +132,25 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     }
 
     private void createOrderingList() {
-        descriptives.addAll(Lists.map(booleanData.values(), DescribedExtensionData::getDescriptive));
-        descriptives.addAll(Lists.map(doubleData.values(), DescribedExtensionData::getDescriptive));
-        descriptives.addAll(Lists.map(percentageData.values(), DescribedExtensionData::getDescriptive));
-        descriptives.addAll(Lists.map(numberData.values(), DescribedExtensionData::getDescriptive));
-        descriptives.addAll(Lists.map(stringData.values(), DescribedExtensionData::getDescriptive));
+        descriptions.addAll(Lists.map(booleanData.values(), DescribedExtensionData::getDescription));
+        descriptions.addAll(Lists.map(doubleData.values(), DescribedExtensionData::getDescription));
+        descriptions.addAll(Lists.map(percentageData.values(), DescribedExtensionData::getDescription));
+        descriptions.addAll(Lists.map(numberData.values(), DescribedExtensionData::getDescription));
+        descriptions.addAll(Lists.map(stringData.values(), DescribedExtensionData::getDescription));
 
-        order = descriptives.stream().sorted()
-                .map(ExtensionDescriptive::getName)
+        order = descriptions.stream().sorted()
+                .map(ExtensionDescription::getName)
                 .distinct()// Method names are usually different, but in case someone had same method name with different parameters.
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String toString() {
+        return "ExtensionTabData{" +
+                "tabInformation=" + tabInformation +
+                ", tableData=" + tableData +
+                ", descriptions=" + descriptions +
+                '}';
     }
 
     public static class Builder {
@@ -153,32 +162,32 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         }
 
         public Builder putBooleanData(ExtensionBooleanData extensionBooleanData) {
-            data.booleanData.put(extensionBooleanData.getDescriptive().getName(), extensionBooleanData);
+            data.booleanData.put(extensionBooleanData.getDescription().getName(), extensionBooleanData);
             return this;
         }
 
         public Builder putDoubleData(ExtensionDoubleData extensionDoubleData) {
-            data.doubleData.put(extensionDoubleData.getDescriptive().getName(), extensionDoubleData);
+            data.doubleData.put(extensionDoubleData.getDescription().getName(), extensionDoubleData);
             return this;
         }
 
         public Builder putPercentageData(ExtensionDoubleData extensionDoubleData) {
-            data.percentageData.put(extensionDoubleData.getDescriptive().getName(), extensionDoubleData);
+            data.percentageData.put(extensionDoubleData.getDescription().getName(), extensionDoubleData);
             return this;
         }
 
         public Builder putNumberData(ExtensionNumberData extensionNumberData) {
-            data.numberData.put(extensionNumberData.getDescriptive().getName(), extensionNumberData);
+            data.numberData.put(extensionNumberData.getDescription().getName(), extensionNumberData);
             return this;
         }
 
         public Builder putStringData(ExtensionStringData extensionStringData) {
-            data.stringData.put(extensionStringData.getDescriptive().getName(), extensionStringData);
+            data.stringData.put(extensionStringData.getDescription().getName(), extensionStringData);
             return this;
         }
 
         public Builder putGroupData(ExtensionStringData extensionStringData) {
-            String name = extensionStringData.getDescriptive().getName();
+            String name = extensionStringData.getDescription().getName();
             ExtensionStringData previous = data.stringData.get(name);
             data.stringData.put(name, previous != null ? previous.concatenate(extensionStringData) : extensionStringData);
             return this;
@@ -194,14 +203,5 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
             Collections.sort(data.tableData);
             return data;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ExtensionTabData{" +
-                "tabInformation=" + tabInformation +
-                ", tableData=" + tableData +
-                ", descriptives=" + descriptives +
-                '}';
     }
 }

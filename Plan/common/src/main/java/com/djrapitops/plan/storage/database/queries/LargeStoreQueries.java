@@ -131,7 +131,7 @@ public class LargeStoreQueries {
     }
 
     /**
-     * Execute a big batch of server infromation insert statements.
+     * Execute a big batch of server information insert statements.
      *
      * @param servers Collection of Plan Servers.
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}

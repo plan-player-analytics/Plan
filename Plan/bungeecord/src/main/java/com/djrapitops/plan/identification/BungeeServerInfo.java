@@ -88,7 +88,7 @@ public class BungeeServerInfo extends ServerInfo {
         String ip = serverProperties.getIp();
         if ("0.0.0.0".equals(ip)) {
             logger.error("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.");
-            logger.info("Player Analytics partially enabled (Use /planbungee to reload config)");
+            logger.info("Player Analytics partially enabled (Use /planproxy reload to reload config)");
             throw new EnableException("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.");
         }
     }

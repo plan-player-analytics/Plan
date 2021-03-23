@@ -193,24 +193,24 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
     private String buildValuesHtml(ExtensionTabData tabData) {
         StringBuilder builder = new StringBuilder();
         for (String key : tabData.getValueOrder()) {
-            tabData.getBoolean(key).ifPresent(data -> append(builder, data.getDescriptive(), data.getFormattedValue()));
-            tabData.getDouble(key).ifPresent(data -> append(builder, data.getDescriptive(), data.getFormattedValue(decimalFormatter)));
-            tabData.getPercentage(key).ifPresent(data -> append(builder, data.getDescriptive(), data.getFormattedValue(percentageFormatter)));
-            tabData.getNumber(key).ifPresent(data -> append(builder, data.getDescriptive(), data.getFormattedValue(numberFormatters.get(data.getFormatType()))));
-            tabData.getString(key).ifPresent(data -> append(builder, data.getDescriptive(), data.getFormattedValue()));
+            tabData.getBoolean(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue()));
+            tabData.getDouble(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue(decimalFormatter)));
+            tabData.getPercentage(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue(percentageFormatter)));
+            tabData.getNumber(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue(numberFormatters.get(data.getFormatType()))));
+            tabData.getString(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue()));
         }
         return builder.toString();
     }
 
-    private void append(StringBuilder builder, ExtensionDescriptive descriptive, String formattedValue) {
-        Optional<String> description = descriptive.getDescription();
-        if (description.isPresent()) {
-            builder.append("<p title=\"").append(description.get()).append("\">");
+    private void append(StringBuilder builder, ExtensionDescription description, String formattedValue) {
+        Optional<String> textDescription = description.getDescription();
+        if (textDescription.isPresent()) {
+            builder.append("<p title=\"").append(textDescription.get()).append("\">");
         } else {
             builder.append("<p>");
         }
-        builder.append(Icon.fromExtensionIcon(descriptive.getIcon()))
-                .append(' ').append(descriptive.getText()).append("<span class=\"float-right\"><b>").append(formattedValue).append("</b></span></p>");
+        builder.append(Icon.fromExtensionIcon(description.getIcon()))
+                .append(' ').append(description.getText()).append("<span class=\"float-right\"><b>").append(formattedValue).append("</b></span></p>");
     }
 
     private String wrapInContainer(ExtensionInformation information, String tabsElement) {

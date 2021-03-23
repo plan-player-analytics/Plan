@@ -22,7 +22,7 @@ import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
-import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
+import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDoubleData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -127,8 +127,8 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
             ExtensionTabData.Builder extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
-            ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
-            extractAndPutDataTo(extensionTab, extensionDescriptive, set);
+            ExtensionDescription extensionDescription = extractDescription(set);
+            extractAndPutDataTo(extensionTab, extensionDescription, set);
         }
         return tabData;
     }
@@ -150,9 +150,9 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
         );
     }
 
-    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescription description, ResultSet set) throws SQLException {
         double percentageValue = percentage(set.getInt("positive"), set.getInt("total"));
-        extensionTab.putPercentageData(new ExtensionDoubleData(descriptive, percentageValue));
+        extensionTab.putPercentageData(new ExtensionDoubleData(description, percentageValue));
     }
 
     private double percentage(double first, double second) {
@@ -162,7 +162,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
         return first / second;
     }
 
-    private ExtensionDescriptive extractDescriptive(ResultSet set) throws SQLException {
+    private ExtensionDescription extractDescription(ResultSet set) throws SQLException {
         String name = set.getString("provider_name") + "_aggregate";
         String text = set.getString(ExtensionProviderTable.TEXT) + " / Players";
         String description = set.getString(ExtensionProviderTable.DESCRIPTION);
@@ -173,7 +173,7 @@ public class ExtensionAggregateBooleansQuery implements Query<Map<Integer, Exten
         Color color = Color.getByName(set.getString("provider_icon_color")).orElse(Color.NONE);
         Icon icon = new Icon(family, iconName, color);
 
-        return new ExtensionDescriptive(name, text, description, icon, priority);
+        return new ExtensionDescription(name, text, description, icon, priority);
     }
 
     private Icon extractTabIcon(ResultSet set) throws SQLException {

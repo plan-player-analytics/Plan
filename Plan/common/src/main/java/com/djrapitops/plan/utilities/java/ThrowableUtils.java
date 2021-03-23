@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 /**
- * Utilities for manipulating different Throwables.
+ * Utilities for manipulating different Throwable stack traces.
  *
  * @author AuroraLS3
  */

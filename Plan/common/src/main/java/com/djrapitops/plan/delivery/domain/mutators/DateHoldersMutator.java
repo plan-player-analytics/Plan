@@ -37,10 +37,10 @@ public class DateHoldersMutator<T extends DateHolder> {
             return map;
         }
 
-        long sectionLenght = TimeUnit.MINUTES.toMillis(1L);
+        long sectionLength = TimeUnit.MINUTES.toMillis(1L);
         for (T holder : dateHolders) {
             long date = holder.getDate();
-            long startOfSection = date - (date % sectionLenght);
+            long startOfSection = date - (date % sectionLength);
 
             List<T> list = map.computeIfAbsent(startOfSection, Lists::create);
             list.add(holder);

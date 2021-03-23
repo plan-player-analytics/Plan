@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
+import com.djrapitops.plan.utilities.analysis.Percentage;
 import org.apache.commons.text.WordUtils;
 
 import javax.inject.Inject;
@@ -75,19 +76,19 @@ public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<Str
         long uptime = TimeUnit.DAYS.toMillis(30L) - tpsMutator.serverDownTime();
         long occupied = tpsMutator.serverOccupiedTime();
         insights.put("server_occupied", timeAmount.apply(occupied));
-        insights.put("server_occupied_perc", uptime != 0 ? percentage.apply(1.0 * occupied / uptime) : "-");
+        insights.put("server_occupied_perc", percentage.apply(Percentage.calculate(occupied, uptime, -1)));
 
         Long playtime = db.query(SessionQueries.playtime(monthAgo, now, serverUUID));
         Long afkTime = db.query(SessionQueries.afkTime(monthAgo, now, serverUUID));
         insights.put("total_playtime", timeAmount.apply(playtime));
         insights.put("afk_time", timeAmount.apply(afkTime));
-        insights.put("afk_time_perc", playtime != 0 ? percentage.apply(1.0 * afkTime / playtime) : "-");
+        insights.put("afk_time_perc", percentage.apply(Percentage.calculate(afkTime, playtime, -1)));
 
         GMTimes gmTimes = db.query(WorldTimesQueries.fetchGMTimes(monthAgo, now, serverUUID));
         Optional<String> mostUsedGameMode = gmTimes.getMostUsedGameMode();
         Long longestGMTime = mostUsedGameMode.map(gmTimes::getTime).orElse(-1L);
         insights.put("most_active_gamemode", mostUsedGameMode.map(WordUtils::capitalizeFully).orElse("Not Known"));
-        insights.put("most_active_gamemode_perc", playtime != 0 ? percentage.apply(1.0 * longestGMTime / playtime) : "-");
+        insights.put("most_active_gamemode_perc", percentage.apply(Percentage.calculate(longestGMTime, playtime, -1)));
 
         return insights;
     }

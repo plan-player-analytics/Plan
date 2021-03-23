@@ -26,18 +26,18 @@ import com.djrapitops.plan.extension.FormatType;
  */
 public class ExtensionNumberData implements DescribedExtensionData {
 
-    private final ExtensionDescriptive descriptive;
+    private final ExtensionDescription description;
     private final FormatType formatType;
     private final long value;
 
-    public ExtensionNumberData(ExtensionDescriptive descriptive, FormatType formatType, long value) {
-        this.descriptive = descriptive;
+    public ExtensionNumberData(ExtensionDescription description, FormatType formatType, long value) {
+        this.description = description;
         this.formatType = formatType;
         this.value = value;
     }
 
-    public ExtensionDescriptive getDescriptive() {
-        return descriptive;
+    public ExtensionDescription getDescription() {
+        return description;
     }
 
     public FormatType getFormatType() {

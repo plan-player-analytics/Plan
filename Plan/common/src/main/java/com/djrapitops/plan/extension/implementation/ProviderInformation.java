@@ -20,7 +20,7 @@ import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive;
+import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
@@ -31,7 +31,7 @@ import java.util.Optional;
  *
  * @author AuroraLS3
  */
-public class ProviderInformation extends ExtensionDescriptive {
+public class ProviderInformation extends ExtensionDescription {
 
     private final String pluginName;
     private final boolean showInPlayersTable;

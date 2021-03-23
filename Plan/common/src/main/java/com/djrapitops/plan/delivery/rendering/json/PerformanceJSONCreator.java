@@ -107,9 +107,9 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("tps_30d", format(tpsDataMonth.averageTPS()));
         numbers.put("tps_7d", format(tpsDataWeek.averageTPS()));
         numbers.put("tps_24h", format(tpsDataDay.averageTPS()));
-        numbers.put("cpu_30d", formatPerc(tpsDataMonth.averageCPU()));
-        numbers.put("cpu_7d", formatPerc(tpsDataWeek.averageCPU()));
-        numbers.put("cpu_24h", formatPerc(tpsDataDay.averageCPU()));
+        numbers.put("cpu_30d", formatPercentage(tpsDataMonth.averageCPU()));
+        numbers.put("cpu_7d", formatPercentage(tpsDataWeek.averageCPU()));
+        numbers.put("cpu_24h", formatPercentage(tpsDataDay.averageCPU()));
         numbers.put("ram_30d", formatBytes(tpsDataMonth.averageRAM()));
         numbers.put("ram_7d", formatBytes(tpsDataWeek.averageRAM()));
         numbers.put("ram_24h", formatBytes(tpsDataDay.averageRAM()));
@@ -138,7 +138,7 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         return value != -1 ? byteSize.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
     }
 
-    private String formatPerc(double value) {
+    private String formatPercentage(double value) {
         return value != -1 ? percentage.apply(value / 100.0) : locale.get(GenericLang.UNAVAILABLE).toString();
     }
 

@@ -113,7 +113,7 @@ public interface QueryService {
     /**
      * Get the UUID of this server.
      *
-     * @return Optinal of the server UUID, empty if server did not start properly.
+     * @return Optional of the server UUID, empty if server did not start properly.
      */
     Optional<UUID> getServerUUID();
 
@@ -150,7 +150,7 @@ public interface QueryService {
     }
 
     class Holder {
-        static volatile AtomicReference<QueryService> service = new AtomicReference<>();
+        static final AtomicReference<QueryService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */

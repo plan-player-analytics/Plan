@@ -6,7 +6,7 @@ What the endpoints return is not detailed to save time, as this document is writ
 
 Parameters are given in the URL: `address/v1/<endpoint>?parameter=value&another=value`
 
-If invalid parameters are given the server will return 400 Bad Request.  
+If invalid parameters are given, the server will return 400 Bad Request.  
 The body of the response is the error message
 
 ## Endpoints

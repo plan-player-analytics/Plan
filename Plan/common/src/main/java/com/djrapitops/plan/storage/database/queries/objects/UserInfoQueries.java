@@ -320,7 +320,7 @@ public class UserInfoQueries {
                 FROM + '(' + selectLowercaseJoinAddresses + ") q1" +
                 WHERE + "address IN (" +
                 new TextStringBuilder().appendWithSeparators(joinAddresses.stream().map(item -> '?').iterator(), ",") +
-                ')'; // Don't append addresses directly, SQL incjection hazard
+                ')'; // Don't append addresses directly, SQL injection hazard
 
         return new QueryStatement<Set<UUID>>(sql) {
             @Override

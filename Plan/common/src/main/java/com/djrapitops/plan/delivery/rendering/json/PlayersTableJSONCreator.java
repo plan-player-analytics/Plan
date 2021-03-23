@@ -44,7 +44,7 @@ import java.util.*;
 public class PlayersTableJSONCreator {
 
     private final List<TablePlayer> players;
-    private final List<ExtensionDescriptive> extensionDescriptives;
+    private final List<ExtensionDescription> extensionDescriptions;
     private final Map<UUID, ExtensionTabData> extensionData;
     private final Locale locale;
 
@@ -67,9 +67,9 @@ public class PlayersTableJSONCreator {
         this.extensionData = extensionData;
         this.locale = locale;
 
-        extensionDescriptives = new ArrayList<>();
-        addExtensionDescriptives(extensionData);
-        extensionDescriptives.sort((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()));
+        extensionDescriptions = new ArrayList<>();
+        addExtensionDescriptions(extensionData);
+        extensionDescriptions.sort((one, two) -> String.CASE_INSENSITIVE_ORDER.compare(one.getName(), two.getName()));
 
         // Settings
         this.openPlayerPageInNewTab = openPlayerPageInNewTab;
@@ -83,13 +83,13 @@ public class PlayersTableJSONCreator {
         this.decimalFormatter = formatters.decimals();
     }
 
-    private void addExtensionDescriptives(Map<UUID, ExtensionTabData> extensionData) {
-        Set<String> foundDescriptives = new HashSet<>();
+    private void addExtensionDescriptions(Map<UUID, ExtensionTabData> extensionData) {
+        Set<String> foundDescriptions = new HashSet<>();
         for (ExtensionTabData tabData : extensionData.values()) {
-            for (ExtensionDescriptive descriptive : tabData.getDescriptives()) {
-                if (!foundDescriptives.contains(descriptive.getName())) {
-                    extensionDescriptives.add(descriptive);
-                    foundDescriptives.add(descriptive.getName());
+            for (ExtensionDescription description : tabData.getDescriptions()) {
+                if (!foundDescriptions.contains(description.getName())) {
+                    extensionDescriptions.add(description);
+                    foundDescriptions.add(description.getName());
                 }
             }
         }
@@ -159,8 +159,8 @@ public class PlayersTableJSONCreator {
     }
 
     private void addExtensionData(Map<String, Object> dataJson, ExtensionTabData tabData) {
-        for (ExtensionDescriptive descriptive : extensionDescriptives) {
-            addValue(dataJson, tabData, descriptive.getName());
+        for (ExtensionDescription description : extensionDescriptions) {
+            addValue(dataJson, tabData, description.getName());
         }
     }
 
@@ -219,7 +219,7 @@ public class PlayersTableJSONCreator {
     }
 
     private void addExtensionHeaders(List<Map<String, Object>> columnHeaders) {
-        for (ExtensionDescriptive provider : extensionDescriptives) {
+        for (ExtensionDescription provider : extensionDescriptions) {
             String headerText = Icon.fromExtensionIcon(provider.getIcon().setColor(Color.NONE)).toHtml().replace('"', '\'') + ' ' + provider.getText();
             columnHeaders.add(makeFColumnHeader(headerText, provider.getName()));
         }

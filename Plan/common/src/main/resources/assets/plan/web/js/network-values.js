@@ -231,6 +231,7 @@ function loadPlayerbaseOverviewValues(json, error) {
     element.querySelector('#data_regular_to_inactive').innerHTML = data.regular_to_inactive + smallTrend(data.regular_to_inactive_trend);
 }
 
+// Lowercase due to locale translation: Server
 function loadservers(json, error) {
     if (error) {
         displayError(document.getElementById('servers-tab'), error);
@@ -266,10 +267,12 @@ function loadservers(json, error) {
     onViewserver(0, servers)(); // Open first server.
 }
 
+// Lowercase due to locale translation: Server
 function addserverToNav(server) {
     return `<a class="collapse-item nav-button" href="server/${server.name}"><i class="fas fa-fw fa-server col-light-green"></i> ${server.name}</a>`;
 }
 
+// Lowercase due to locale translation: Network
 function createnetworkserverBox(i, server) {
     return `<div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -292,6 +295,7 @@ function createnetworkserverBox(i, server) {
             </div>`;
 }
 
+// Lowercase due to locale translation: Server
 function onViewserver(i, servers) {
     return function () {
         setTimeout(function () {

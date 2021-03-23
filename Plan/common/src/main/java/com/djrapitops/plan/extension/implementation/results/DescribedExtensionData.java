@@ -24,10 +24,10 @@ package com.djrapitops.plan.extension.implementation.results;
 public interface DescribedExtensionData {
 
     /**
-     * Get Descriptive information about the data point.
+     * Get describing information about the data point.
      *
-     * @return a {@link ExtensionDescriptive}.
+     * @return a {@link ExtensionDescription}.
      */
-    ExtensionDescriptive getDescriptive();
+    ExtensionDescription getDescription();
 
 }

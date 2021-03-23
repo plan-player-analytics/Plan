@@ -27,8 +27,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
 
 /**
  * An utility class that simplifies reflection in Bukkit plugins.
@@ -112,52 +110,6 @@ public final class Reflection {
     }
 
     /**
-     * Search for the first publicly and privately defined method of the given name and parameter count.
-     *
-     * @param clazz      - a class to start with.
-     * @param methodName - the method name, or NULL to skip.
-     * @param params     - the expected parameters.
-     * @return An object that invokes this specific method.
-     * @throws IllegalStateException If we cannot find this method.
-     */
-    public static MethodInvoker getMethod(Class<?> clazz, String methodName, Class<?>... params) {
-        return getTypedMethod(clazz, methodName, null, params);
-    }
-
-    /**
-     * Search for the first publicly and privately defined method of the given name and parameter count.
-     *
-     * @param clazz      - a class to start with.
-     * @param methodName - the method name, or NULL to skip.
-     * @param returnType - the expected return type, or NULL to ignore.
-     * @param params     - the expected parameters.
-     * @return An object that invokes this specific method.
-     * @throws IllegalStateException If we cannot find this method.
-     */
-    public static MethodInvoker getTypedMethod(Class<?> clazz, String methodName, Class<?> returnType, Class<?>... params) {
-        for (final Method method : clazz.getDeclaredMethods()) {
-            if ((methodName == null || method.getName().equals(methodName)) && (returnType == null) || method.getReturnType().equals(returnType) && Arrays.equals(method.getParameterTypes(), params)) {
-                method.setAccessible(true);
-
-                return (target, arguments) -> {
-                    try {
-                        return method.invoke(target, arguments);
-                    } catch (Exception e) {
-                        throw new IllegalStateException("Cannot invoke method " + method, e);
-                    }
-                };
-            }
-        }
-
-        // Search in every superclass
-        if (clazz.getSuperclass() != null) {
-            return getMethod(clazz.getSuperclass(), methodName, params);
-        }
-
-        throw new IllegalStateException(String.format("Unable to find method %s (%s).", methodName, Arrays.asList(params)));
-    }
-
-    /**
      * Retrieve a class in the net.minecraft.server.VERSION.* package.
      *
      * @param name - the name of the class, excluding the package.
@@ -191,22 +143,6 @@ public final class Reflection {
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Cannot find " + canonicalName, e);
         }
-    }
-
-    /**
-     * An interface for invoking a specific method.
-     */
-    @FunctionalInterface
-    public interface MethodInvoker {
-
-        /**
-         * Invoke a method on a specific target object.
-         *
-         * @param target    - the target object, or NULL for a static method.
-         * @param arguments - the arguments to pass to the method.
-         * @return The return value, or NULL if is void.
-         */
-        Object invoke(Object target, Object... arguments);
     }
 
     /**

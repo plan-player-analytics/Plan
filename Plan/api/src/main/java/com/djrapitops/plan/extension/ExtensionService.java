@@ -71,7 +71,7 @@ public interface ExtensionService {
     void unregister(DataExtension extension);
 
     class Holder {
-        static volatile AtomicReference<ExtensionService> service = new AtomicReference<>();
+        static final AtomicReference<ExtensionService> service = new AtomicReference<>();
 
         private Holder() {
             /* Static variable holder */

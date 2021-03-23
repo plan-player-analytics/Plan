@@ -159,8 +159,8 @@ public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<Exte
             String tabName = Optional.ofNullable(set.getString("tab_name")).orElse("");
             ExtensionTabData.Builder extensionTab = tabData.getTab(pluginID, tabName, () -> extractTabInformation(tabName, set));
 
-            ExtensionDescriptive extensionDescriptive = extractDescriptive(set);
-            extractAndPutDataTo(extensionTab, extensionDescriptive, set);
+            ExtensionDescription extensionDescription = extractDescription(set);
+            extractAndPutDataTo(extensionTab, extensionDescription, set);
         }
         return tabData;
     }
@@ -182,40 +182,40 @@ public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<Exte
         );
     }
 
-    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescriptive descriptive, ResultSet set) throws SQLException {
+    private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescription description, ResultSet set) throws SQLException {
         boolean booleanValue = set.getBoolean(ExtensionPlayerValueTable.BOOLEAN_VALUE);
         if (!set.wasNull()) {
-            extensionTab.putBooleanData(new ExtensionBooleanData(descriptive, booleanValue));
+            extensionTab.putBooleanData(new ExtensionBooleanData(description, booleanValue));
             return;
         }
 
         double doubleValue = set.getDouble(ExtensionPlayerValueTable.DOUBLE_VALUE);
         if (!set.wasNull()) {
-            extensionTab.putDoubleData(new ExtensionDoubleData(descriptive, doubleValue));
+            extensionTab.putDoubleData(new ExtensionDoubleData(description, doubleValue));
             return;
         }
 
         double percentageValue = set.getDouble(ExtensionPlayerValueTable.PERCENTAGE_VALUE);
         if (!set.wasNull()) {
-            extensionTab.putPercentageData(new ExtensionDoubleData(descriptive, percentageValue));
+            extensionTab.putPercentageData(new ExtensionDoubleData(description, percentageValue));
             return;
         }
 
         long numberValue = set.getLong(ExtensionPlayerValueTable.LONG_VALUE);
         if (!set.wasNull()) {
             FormatType formatType = FormatType.getByName(set.getString(ExtensionProviderTable.FORMAT_TYPE)).orElse(FormatType.NONE);
-            extensionTab.putNumberData(new ExtensionNumberData(descriptive, formatType, numberValue));
+            extensionTab.putNumberData(new ExtensionNumberData(description, formatType, numberValue));
             return;
         }
 
         String stringValue = set.getString(ExtensionPlayerValueTable.STRING_VALUE);
         if (stringValue != null) {
             boolean isPlayerName = set.getBoolean("is_player_name");
-            extensionTab.putStringData(new ExtensionStringData(descriptive, isPlayerName, stringValue));
+            extensionTab.putStringData(new ExtensionStringData(description, isPlayerName, stringValue));
         }
     }
 
-    private ExtensionDescriptive extractDescriptive(ResultSet set) throws SQLException {
+    private ExtensionDescription extractDescription(ResultSet set) throws SQLException {
         String name = set.getString("provider_name");
         String text = set.getString(ExtensionProviderTable.TEXT);
         String description = set.getString(ExtensionProviderTable.DESCRIPTION);
@@ -226,7 +226,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<Exte
         Color color = Color.getByName(set.getString("provider_icon_color")).orElse(Color.NONE);
         Icon icon = new Icon(family, iconName, color);
 
-        return new ExtensionDescriptive(name, text, description, icon, priority);
+        return new ExtensionDescription(name, text, description, icon, priority);
     }
 
     private Icon extractTabIcon(ResultSet set) throws SQLException {

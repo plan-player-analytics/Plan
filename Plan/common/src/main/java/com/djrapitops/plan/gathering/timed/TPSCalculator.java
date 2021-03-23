@@ -43,13 +43,13 @@ public class TPSCalculator {
     private final long maxBeforeZeroTPS;
     private long lastPulse;
 
-    private final TimerAverage averager;
+    private final TimerAverage average;
 
     public TPSCalculator() {
         maxBeforeZeroTPS = SECOND_NS * 20L; // 20 ticks
         lastPulse = -1;
 
-        averager = new TimerAverage();
+        average = new TimerAverage();
     }
 
     /**
@@ -73,13 +73,13 @@ public class TPSCalculator {
 
         // Add missed ticks, TPS has been low for a while, see the math in the class javadoc.
         while (difference > maxBeforeZeroTPS) {
-            averager.add(time, 0.0);
+            average.add(time, 0.0);
             difference -= maxBeforeZeroTPS;
         }
 
         double tps = maxBeforeZeroTPS * 1.0 / difference;
-        if (averager.add(time, tps)) {
-            return Optional.of(averager.getAverageAndReset(time));
+        if (average.add(time, tps)) {
+            return Optional.of(average.getAverageAndReset(time));
         }
         return Optional.empty();
     }

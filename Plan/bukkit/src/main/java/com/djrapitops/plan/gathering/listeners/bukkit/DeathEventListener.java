@@ -101,6 +101,7 @@ public class DeathEventListener implements Listener {
 
     public String findWeapon(Entity dead) {
         EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
+        if (entityDamageEvent == null) return "Unknown (No damage cause defined)";
         Entity killer = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
         if (killer instanceof Player) return getItemInHand((Player) killer);
         if (killer instanceof Tameable) return getPetType((Tameable) killer);

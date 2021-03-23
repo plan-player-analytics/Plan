@@ -60,7 +60,7 @@ import java.util.NavigableMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Perses Graph related Data JSON.
+ * Creates Graph related Data JSON.
  *
  * @author AuroraLS3
  */

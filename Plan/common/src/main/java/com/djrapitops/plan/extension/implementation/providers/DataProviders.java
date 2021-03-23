@@ -49,13 +49,13 @@ public class DataProviders {
 
     public <T> List<DataProvider<T>> getProvidersByTypes(MethodType methodType, Class<T> returnType) {
         Map<Class<?>, List<DataProvider<?>>> byReturnType = byMethodType.getOrDefault(methodType, Collections.emptyMap());
-        List<DataProvider<?>> uncastProviders = byReturnType.get(returnType);
-        if (uncastProviders == null) {
+        List<DataProvider<?>> wildcardProvidersWithSpecificType = byReturnType.get(returnType);
+        if (wildcardProvidersWithSpecificType == null) {
             return Collections.emptyList();
         }
         // Cast to T
         List<DataProvider<T>> providers = new ArrayList<>();
-        for (DataProvider<?> dataProvider : uncastProviders) {
+        for (DataProvider<?> dataProvider : wildcardProvidersWithSpecificType) {
             providers.add((DataProvider<T>) dataProvider);
         }
         return providers;

@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class Transaction {
 
-    // SQLite version on 1.8.8 does not support savepoints, see createSavePoint() method
+    // SQLite version on 1.8.8 does not support save points, see createSavePoint() method
     private static final AtomicBoolean SUPPORTS_SAVE_POINTS = new AtomicBoolean(true);
     // Limit for Deadlock attempts.
     private static final int ATTEMPT_LIMIT = 5;
@@ -125,8 +125,8 @@ public abstract class Transaction {
 
     private String rollbackTransaction() {
         String rollbackStatusMsg = ", Transaction was rolled back.";
-        boolean hasNoSavepoints = !SUPPORTS_SAVE_POINTS.get();
-        if (hasNoSavepoints) {
+        boolean hasNoSavePoints = !SUPPORTS_SAVE_POINTS.get();
+        if (hasNoSavePoints) {
             rollbackStatusMsg = ", additionally rollbacks are not supported on this server version.";
         } else {
             // Rollbacks are supported.

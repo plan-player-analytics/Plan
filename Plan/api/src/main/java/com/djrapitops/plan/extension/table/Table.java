@@ -110,9 +110,9 @@ public final class Table {
             building = new Table();
         }
 
-        private Factory column(int indx, String columnName, Icon icon) {
-            building.columns[indx] = StringUtils.truncate(columnName, 50);
-            building.icons[indx] = icon != null ? Icon.called(icon.getName()).of(icon.getFamily()).build() : Icon.called("question").build();
+        private Factory column(int index, String columnName, Icon icon) {
+            building.columns[index] = StringUtils.truncate(columnName, 50);
+            building.icons[index] = icon != null ? Icon.called(icon.getName()).of(icon.getFamily()).build() : Icon.called("question").build();
             return this;
         }
 

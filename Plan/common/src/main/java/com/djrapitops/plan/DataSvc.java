@@ -69,14 +69,13 @@ public class DataSvc implements DataService {
     }
 
     @Override
-    public <A> Optional<A> pull(Class<A> type) {
-        Supplier present = this.suppliers.get(type);
-        if (present != null) return Optional.ofNullable((A) present.get());
+    public <T> Optional<T> pull(Class<T> type) {
+        Supplier<T> present = this.suppliers.get(type);
+        if (present != null) return Optional.ofNullable(present.get());
 
         List<Mapper> mappers = this.mappersReverse.get(type);
         for (Mapper mapper : mappers) {
-            Optional found = pull(mapper.typeA)
-                    .map(data -> mapper.func.apply(data));
+            Optional<T> found = pull(mapper.typeA).map(mapper.func);
             if (found.isPresent()) return found;
         }
 
@@ -89,7 +88,7 @@ public class DataSvc implements DataService {
         List<Mapper> mappers = this.mappers.get(from.getClass());
         for (Mapper mapper : mappers) {
             if (mapper.typeB.equals(toType)) {
-                return toType.cast(mapper.func.apply(from));
+                return toType.cast(mapper.func);
             }
         }
         // TODO Figure out type mapping resolution when it needs more than one mapping

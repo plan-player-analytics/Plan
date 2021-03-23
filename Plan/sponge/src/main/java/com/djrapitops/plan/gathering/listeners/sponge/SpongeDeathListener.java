@@ -141,9 +141,9 @@ public class SpongeDeathListener {
     }
 
     private Optional<Player> getOwner(Wolf wolf) {
-        Optional<Optional<UUID>> isTameable = wolf.get(Keys.TAMED_OWNER);
-        if (!isTameable.isPresent()) return Optional.empty();
-        Optional<UUID> owner = isTameable.get();
+        Optional<Optional<UUID>> isTamed = wolf.get(Keys.TAMED_OWNER);
+        if (!isTamed.isPresent()) return Optional.empty();
+        Optional<UUID> owner = isTamed.get();
 
         return owner.flatMap(Sponge.getGame().getServer()::getPlayer);
     }
