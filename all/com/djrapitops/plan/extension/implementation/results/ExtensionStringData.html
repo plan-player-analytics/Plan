@@ -26,8 +26,8 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10};
-var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var data = {"i0":10,"i1":10,"i2":9,"i3":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -158,7 +158,7 @@ implements <a href="DescribedExtensionData.html" title="interface in com.djrapit
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive,boolean,java.lang.String)">ExtensionStringData</a></span>&#8203;(<a href="ExtensionDescriptive.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescriptive</a>&nbsp;descriptive,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.djrapitops.plan.extension.implementation.results.ExtensionDescription,boolean,java.lang.String)">ExtensionStringData</a></span>&#8203;(<a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescription</a>&nbsp;description,
                    boolean&nbsp;playerName,
                    java.lang.String&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -175,22 +175,34 @@ implements <a href="DescribedExtensionData.html" title="interface in com.djrapit
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colSecond" scope="col">Method</th>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code><a href="ExtensionDescriptive.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescriptive</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDescriptive()">getDescriptive</a></span>()</code></th>
+<td class="colFirst"><code><a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescription</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDescription()">getDescription</a></span>()</code></th>
 <td class="colLast">
-<div class="block">Get Descriptive information about the data point.</div>
+<div class="block">Get describing information about the data point.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFormattedValue()">getFormattedValue</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="ExtensionStringData.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionStringData</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#playerName(com.djrapitops.plan.extension.implementation.results.ExtensionDescription,java.lang.String)">playerName</a></span>&#8203;(<a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescription</a>&nbsp;description,
+          java.lang.String&nbsp;value)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static <a href="ExtensionStringData.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionStringData</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#regularString(com.djrapitops.plan.extension.implementation.results.ExtensionDescription,java.lang.String)">regularString</a></span>&#8203;(<a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescription</a>&nbsp;description,
+             java.lang.String&nbsp;value)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -217,13 +229,13 @@ implements <a href="DescribedExtensionData.html" title="interface in com.djrapit
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(com.djrapitops.plan.extension.implementation.results.ExtensionDescriptive,boolean,java.lang.String)">
+<a id="&lt;init&gt;(com.djrapitops.plan.extension.implementation.results.ExtensionDescription,boolean,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ExtensionStringData</h4>
-<pre>public&nbsp;ExtensionStringData&#8203;(<a href="ExtensionDescriptive.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescriptive</a>&nbsp;descriptive,
+<pre>public&nbsp;ExtensionStringData&#8203;(<a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescription</a>&nbsp;description,
                            boolean&nbsp;playerName,
                            java.lang.String&nbsp;value)</pre>
 </li>
@@ -238,20 +250,40 @@ implements <a href="DescribedExtensionData.html" title="interface in com.djrapit
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="getDescriptive()">
+<a id="regularString(com.djrapitops.plan.extension.implementation.results.ExtensionDescription,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getDescriptive</h4>
-<pre class="methodSignature">public&nbsp;<a href="ExtensionDescriptive.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescriptive</a>&nbsp;getDescriptive()</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="DescribedExtensionData.html#getDescriptive()">DescribedExtensionData</a></code></span></div>
-<div class="block">Get Descriptive information about the data point.</div>
+<h4>regularString</h4>
+<pre class="methodSignature">public static&nbsp;<a href="ExtensionStringData.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionStringData</a>&nbsp;regularString&#8203;(<a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescription</a>&nbsp;description,
+                                                java.lang.String&nbsp;value)</pre>
+</li>
+</ul>
+<a id="playerName(com.djrapitops.plan.extension.implementation.results.ExtensionDescription,java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>playerName</h4>
+<pre class="methodSignature">public static&nbsp;<a href="ExtensionStringData.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionStringData</a>&nbsp;playerName&#8203;(<a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescription</a>&nbsp;description,
+                                             java.lang.String&nbsp;value)</pre>
+</li>
+</ul>
+<a id="getDescription()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDescription</h4>
+<pre class="methodSignature">public&nbsp;<a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionDescription</a>&nbsp;getDescription()</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="DescribedExtensionData.html#getDescription()">DescribedExtensionData</a></code></span></div>
+<div class="block">Get describing information about the data point.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="DescribedExtensionData.html#getDescriptive()">getDescriptive</a></code>&nbsp;in interface&nbsp;<code><a href="DescribedExtensionData.html" title="interface in com.djrapitops.plan.extension.implementation.results">DescribedExtensionData</a></code></dd>
+<dd><code><a href="DescribedExtensionData.html#getDescription()">getDescription</a></code>&nbsp;in interface&nbsp;<code><a href="DescribedExtensionData.html" title="interface in com.djrapitops.plan.extension.implementation.results">DescribedExtensionData</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a <a href="ExtensionDescriptive.html" title="class in com.djrapitops.plan.extension.implementation.results"><code>ExtensionDescriptive</code></a>.</dd>
+<dd>a <a href="ExtensionDescription.html" title="class in com.djrapitops.plan.extension.implementation.results"><code>ExtensionDescription</code></a>.</dd>
 </dl>
 </li>
 </ul>

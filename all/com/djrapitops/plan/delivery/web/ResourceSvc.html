@@ -229,7 +229,7 @@ implements <a href="ResourceService.html" title="interface in com.djrapitops.pla
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addScriptsToResource(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String...)">addScriptsToResource</a></span>&#8203;(java.lang.String&nbsp;pluginName,
                     java.lang.String&nbsp;fileName,
                     <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                    java.lang.String...&nbsp;jsSrcs)</code></th>
+                    java.lang.String...&nbsp;jsSources)</code></th>
 <td class="colLast">
 <div class="block">Add javascript to load in an existing html resource.</div>
 </td>
@@ -239,7 +239,7 @@ implements <a href="ResourceService.html" title="interface in com.djrapitops.pla
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addStylesToResource(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String...)">addStylesToResource</a></span>&#8203;(java.lang.String&nbsp;pluginName,
                    java.lang.String&nbsp;fileName,
                    <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                   java.lang.String...&nbsp;cssSrcs)</code></th>
+                   java.lang.String...&nbsp;cssSources)</code></th>
 <td class="colLast">
 <div class="block">Add css to load in an existing html resource.</div>
 </td>
@@ -249,7 +249,7 @@ implements <a href="ResourceService.html" title="interface in com.djrapitops.pla
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#checkParams(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String%5B%5D)">checkParams</a></span>&#8203;(java.lang.String&nbsp;pluginName,
            java.lang.String&nbsp;fileName,
            <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-           java.lang.String[]&nbsp;jsSrcs)</code></th>
+           java.lang.String[]&nbsp;jsSources)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -471,7 +471,7 @@ public&nbsp;ResourceSvc&#8203;(<a href="../../storage/file/PlanFiles.html" title
 <pre class="methodSignature">public&nbsp;void&nbsp;addScriptsToResource&#8203;(java.lang.String&nbsp;pluginName,
                                  java.lang.String&nbsp;fileName,
                                  <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                                 java.lang.String...&nbsp;jsSrcs)</pre>
+                                 java.lang.String...&nbsp;jsSources)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="ResourceService.html#addScriptsToResource(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String...)">ResourceService</a></code></span></div>
 <div class="block">Add javascript to load in an existing html resource.
  <p>
@@ -483,7 +483,7 @@ public&nbsp;ResourceSvc&#8203;(<a href="../../storage/file/PlanFiles.html" title
 <dd><code>pluginName</code> - Name of your plugin (for config purposes)</dd>
 <dd><code>fileName</code> - Name of the .html file being modified</dd>
 <dd><code>position</code> - Where to place the script tag on the page.</dd>
-<dd><code>jsSrcs</code> - Source URLs.</dd>
+<dd><code>jsSources</code> - Source URLs.</dd>
 </dl>
 </li>
 </ul>
@@ -496,7 +496,7 @@ public&nbsp;ResourceSvc&#8203;(<a href="../../storage/file/PlanFiles.html" title
 <pre class="methodSignature">public&nbsp;void&nbsp;checkParams&#8203;(java.lang.String&nbsp;pluginName,
                         java.lang.String&nbsp;fileName,
                         <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                        java.lang.String[]&nbsp;jsSrcs)</pre>
+                        java.lang.String[]&nbsp;jsSources)</pre>
 </li>
 </ul>
 <a id="addStylesToResource(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String...)">
@@ -508,7 +508,7 @@ public&nbsp;ResourceSvc&#8203;(<a href="../../storage/file/PlanFiles.html" title
 <pre class="methodSignature">public&nbsp;void&nbsp;addStylesToResource&#8203;(java.lang.String&nbsp;pluginName,
                                 java.lang.String&nbsp;fileName,
                                 <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                                java.lang.String...&nbsp;cssSrcs)</pre>
+                                java.lang.String...&nbsp;cssSources)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="ResourceService.html#addStylesToResource(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String...)">ResourceService</a></code></span></div>
 <div class="block">Add css to load in an existing html resource.
  <p>
@@ -520,7 +520,7 @@ public&nbsp;ResourceSvc&#8203;(<a href="../../storage/file/PlanFiles.html" title
 <dd><code>pluginName</code> - Name of your plugin (for config purposes)</dd>
 <dd><code>fileName</code> - Name of the .html file being modified</dd>
 <dd><code>position</code> - Where to place the link tag on the page.</dd>
-<dd><code>cssSrcs</code> - Source URLs.</dd>
+<dd><code>cssSources</code> - Source URLs.</dd>
 </dl>
 </li>
 </ul>

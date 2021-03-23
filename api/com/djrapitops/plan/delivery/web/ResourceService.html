@@ -177,7 +177,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addScriptsToResource(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String...)">addScriptsToResource</a></span>&#8203;(java.lang.String&nbsp;pluginName,
                     java.lang.String&nbsp;fileName,
                     <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                    java.lang.String...&nbsp;jsSrcs)</code></th>
+                    java.lang.String...&nbsp;jsSources)</code></th>
 <td class="colLast">
 <div class="block">Add javascript to load in an existing html resource.</div>
 </td>
@@ -187,7 +187,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#addStylesToResource(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String...)">addStylesToResource</a></span>&#8203;(java.lang.String&nbsp;pluginName,
                    java.lang.String&nbsp;fileName,
                    <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                   java.lang.String...&nbsp;cssSrcs)</code></th>
+                   java.lang.String...&nbsp;cssSources)</code></th>
 <td class="colLast">
 <div class="block">Add css to load in an existing html resource.</div>
 </td>
@@ -265,7 +265,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature">void&nbsp;addScriptsToResource&#8203;(java.lang.String&nbsp;pluginName,
                           java.lang.String&nbsp;fileName,
                           <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                          java.lang.String...&nbsp;jsSrcs)</pre>
+                          java.lang.String...&nbsp;jsSources)</pre>
 <div class="block">Add javascript to load in an existing html resource.
  <p>
  Adds <code>&lt;script src="jsSrc"&gt;&lt;/script&gt;</code> or multiple to the resource.</div>
@@ -274,12 +274,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>pluginName</code> - Name of your plugin (for config purposes)</dd>
 <dd><code>fileName</code> - Name of the .html file being modified</dd>
 <dd><code>position</code> - Where to place the script tag on the page.</dd>
-<dd><code>jsSrcs</code> - Source URLs.</dd>
+<dd><code>jsSources</code> - Source URLs.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code> - If pluginName is empty or null</dd>
 <dd><code>java.lang.IllegalArgumentException</code> - If fileName is null, empty or does not end with .html</dd>
 <dd><code>java.lang.IllegalArgumentException</code> - If position null</dd>
-<dd><code>java.lang.IllegalArgumentException</code> - If jsSrcs is empty or null</dd>
+<dd><code>java.lang.IllegalArgumentException</code> - If jsSources is empty or null</dd>
 </dl>
 </li>
 </ul>
@@ -292,7 +292,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature">void&nbsp;addStylesToResource&#8203;(java.lang.String&nbsp;pluginName,
                          java.lang.String&nbsp;fileName,
                          <a href="ResourceService.Position.html" title="enum in com.djrapitops.plan.delivery.web">ResourceService.Position</a>&nbsp;position,
-                         java.lang.String...&nbsp;cssSrcs)</pre>
+                         java.lang.String...&nbsp;cssSources)</pre>
 <div class="block">Add css to load in an existing html resource.
  <p>
  Adds <code>&lt;link href="cssSrc" rel="stylesheet"&gt;&lt;/link&gt;</code> or multiple to the resource.</div>
@@ -301,12 +301,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>pluginName</code> - Name of your plugin (for config purposes)</dd>
 <dd><code>fileName</code> - Name of the .html file being modified</dd>
 <dd><code>position</code> - Where to place the link tag on the page.</dd>
-<dd><code>cssSrcs</code> - Source URLs.</dd>
+<dd><code>cssSources</code> - Source URLs.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code> - If pluginName is empty or null</dd>
 <dd><code>java.lang.IllegalArgumentException</code> - If fileName is null, empty or does not end with .html</dd>
 <dd><code>java.lang.IllegalArgumentException</code> - If position null</dd>
-<dd><code>java.lang.IllegalArgumentException</code> - If cssSrcs is empty or null</dd>
+<dd><code>java.lang.IllegalArgumentException</code> - If cssSources is empty or null</dd>
 </dl>
 </li>
 </ul>
