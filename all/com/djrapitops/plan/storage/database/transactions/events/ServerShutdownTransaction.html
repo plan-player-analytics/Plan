@@ -125,7 +125,12 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li><a href="../Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">com.djrapitops.plan.storage.database.transactions.Transaction</a></li>
 <li>
 <ul class="inheritance">
+<li><a href="../ThrowawayTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions">com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction</a></li>
+<li>
+<ul class="inheritance">
 <li>com.djrapitops.plan.storage.database.transactions.events.ServerShutdownTransaction</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -136,7 +141,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <hr>
 <pre>public class <span class="typeNameLabel">ServerShutdownTransaction</span>
-extends <a href="../Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a></pre>
+extends <a href="../ThrowawayTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions">ThrowawayTransaction</a></pre>
 <div class="block">Transaction to store sessions on server shutdown.</div>
 </li>
 </ul>
@@ -205,11 +210,18 @@ extends <a href="../Transaction.html" title="class in com.djrapitops.plan.storag
 </tr>
 </table>
 <ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;com.djrapitops.plan.storage.database.transactions.<a href="../ThrowawayTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions">ThrowawayTransaction</a></h3>
+<code><a href="../ThrowawayTransaction.html#shouldBeExecuted()">shouldBeExecuted</a></code></li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.com.djrapitops.plan.storage.database.transactions.Transaction">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;com.djrapitops.plan.storage.database.transactions.<a href="../Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a></h3>
-<code><a href="../Transaction.html#dbIsNotUnderHeavyLoad()">dbIsNotUnderHeavyLoad</a>, <a href="../Transaction.html#execute(com.djrapitops.plan.storage.database.transactions.Executable)">execute</a>, <a href="../Transaction.html#execute(java.lang.String)">execute</a>, <a href="../Transaction.html#executeOther(com.djrapitops.plan.storage.database.transactions.Transaction)">executeOther</a>, <a href="../Transaction.html#executeSwallowingExceptions(java.lang.String...)">executeSwallowingExceptions</a>, <a href="../Transaction.html#executeTransaction(com.djrapitops.plan.storage.database.SQLDB)">executeTransaction</a>, <a href="../Transaction.html#getDBState()">getDBState</a>, <a href="../Transaction.html#getServerUUID()">getServerUUID</a>, <a href="../Transaction.html#query(com.djrapitops.plan.storage.database.queries.Query)">query</a>, <a href="../Transaction.html#shouldBeExecuted()">shouldBeExecuted</a>, <a href="../Transaction.html#toString()">toString</a>, <a href="../Transaction.html#wasSuccessful()">wasSuccessful</a></code></li>
+<code><a href="../Transaction.html#dbIsNotUnderHeavyLoad()">dbIsNotUnderHeavyLoad</a>, <a href="../Transaction.html#execute(com.djrapitops.plan.storage.database.transactions.Executable)">execute</a>, <a href="../Transaction.html#execute(java.lang.String)">execute</a>, <a href="../Transaction.html#executeOther(com.djrapitops.plan.storage.database.transactions.Transaction)">executeOther</a>, <a href="../Transaction.html#executeSwallowingExceptions(java.lang.String...)">executeSwallowingExceptions</a>, <a href="../Transaction.html#executeTransaction(com.djrapitops.plan.storage.database.SQLDB)">executeTransaction</a>, <a href="../Transaction.html#getDBState()">getDBState</a>, <a href="../Transaction.html#getServerUUID()">getServerUUID</a>, <a href="../Transaction.html#query(com.djrapitops.plan.storage.database.queries.Query)">query</a>, <a href="../Transaction.html#toString()">toString</a>, <a href="../Transaction.html#wasSuccessful()">wasSuccessful</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
