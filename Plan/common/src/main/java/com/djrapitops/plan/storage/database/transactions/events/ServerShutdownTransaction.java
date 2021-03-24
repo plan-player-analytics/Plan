@@ -19,7 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.util.Collection;
 
@@ -28,7 +28,7 @@ import java.util.Collection;
  *
  * @author AuroraLS3
  */
-public class ServerShutdownTransaction extends Transaction {
+public class ServerShutdownTransaction extends ThrowawayTransaction {
 
     private final Collection<FinishedSession> unsavedSessions;
 
