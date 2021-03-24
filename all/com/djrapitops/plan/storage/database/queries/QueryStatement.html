@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":6,"i4":6,"i5":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":6,"i5":6,"i6":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -202,21 +202,26 @@ implements <a href="Query.html" title="interface in com.djrapitops.plan.storage.
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="QueryStatement.html" title="type parameter in QueryStatement">T</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#executeWithConnection(java.sql.Connection)">executeWithConnection</a></span>&#8203;(java.sql.Connection&nbsp;connection)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getSql()">getSql</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>abstract void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#prepare(java.sql.PreparedStatement)">prepare</a></span>&#8203;(java.sql.PreparedStatement&nbsp;statement)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>abstract <a href="QueryStatement.html" title="type parameter in QueryStatement">T</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#processResults(java.sql.ResultSet)">processResults</a></span>&#8203;(java.sql.ResultSet&nbsp;set)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#toString()">toString</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
@@ -285,6 +290,15 @@ implements <a href="Query.html" title="interface in com.djrapitops.plan.storage.
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="Query.html#executeQuery(com.djrapitops.plan.storage.database.SQLDB)">executeQuery</a></code>&nbsp;in interface&nbsp;<code><a href="Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="QueryStatement.html" title="type parameter in QueryStatement">T</a>&gt;</code></dd>
 </dl>
+</li>
+</ul>
+<a id="executeWithConnection(java.sql.Connection)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>executeWithConnection</h4>
+<pre class="methodSignature">public&nbsp;<a href="QueryStatement.html" title="type parameter in QueryStatement">T</a>&nbsp;executeWithConnection&#8203;(java.sql.Connection&nbsp;connection)</pre>
 </li>
 </ul>
 <a id="executeQuery(java.sql.PreparedStatement)">

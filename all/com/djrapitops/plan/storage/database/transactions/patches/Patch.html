@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":6,"i3":10,"i4":10,"i5":10,"i6":6,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var data = {"i0":10,"i1":10,"i2":6,"i3":10,"i4":10,"i5":10,"i6":6,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -253,24 +253,34 @@ extends <a href="../init/OperationCriticalTransaction.html" title="class in com.
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#isApplied()">isApplied</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#performOperations()">performOperations</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Implement this method for transaction execution.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#renameTable(java.lang.String,java.lang.String)">renameTable</a></span>&#8203;(java.lang.String&nbsp;from,
            java.lang.String&nbsp;to)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#shouldBeExecuted()">shouldBeExecuted</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Override this method for conditional execution.</div>
 </td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#wasApplied()">wasApplied</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </table>
 <ul class="blockList">
@@ -345,6 +355,24 @@ extends <a href="../init/OperationCriticalTransaction.html" title="class in com.
 <li class="blockList">
 <h4>applyPatch</h4>
 <pre class="methodSignature">protected abstract&nbsp;void&nbsp;applyPatch()</pre>
+</li>
+</ul>
+<a id="isApplied()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isApplied</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;isApplied()</pre>
+</li>
+</ul>
+<a id="wasApplied()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>wasApplied</h4>
+<pre class="methodSignature">public&nbsp;boolean&nbsp;wasApplied()</pre>
 </li>
 </ul>
 <a id="shouldBeExecuted()">

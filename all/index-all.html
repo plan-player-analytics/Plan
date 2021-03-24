@@ -3141,9 +3141,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">The task which handles the upkeep of the <code>Connection</code></div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.html#%3Cinit%3E(java.sql.Connection,com.djrapitops.plan.storage.upkeep.DBKeepAliveTask.IReconnect,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">DBKeepAliveTask(Connection, DBKeepAliveTask.IReconnect, PluginLogger, ErrorLogger)</a></span> - Constructor for class com.djrapitops.plan.storage.upkeep.<a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.html" title="class in com.djrapitops.plan.storage.upkeep">DBKeepAliveTask</a></dt>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.html#%3Cinit%3E(java.sql.Connection,com.djrapitops.plan.storage.upkeep.DBKeepAliveTask.Reconnector,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">DBKeepAliveTask(Connection, DBKeepAliveTask.Reconnector, PluginLogger, ErrorLogger)</a></span> - Constructor for class com.djrapitops.plan.storage.upkeep.<a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.html" title="class in com.djrapitops.plan.storage.upkeep">DBKeepAliveTask</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.IReconnect.html" title="interface in com.djrapitops.plan.storage.upkeep"><span class="typeNameLink">DBKeepAliveTask.IReconnect</span></a> - Interface in <a href="com/djrapitops/plan/storage/upkeep/package-summary.html">com.djrapitops.plan.storage.upkeep</a></dt>
+<dt><a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.Reconnector.html" title="interface in com.djrapitops.plan.storage.upkeep"><span class="typeNameLink">DBKeepAliveTask.Reconnector</span></a> - Interface in <a href="com/djrapitops/plan/storage/upkeep/package-summary.html">com.djrapitops.plan.storage.upkeep</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/exceptions/database/DBOpException.html" title="class in com.djrapitops.plan.exceptions.database"><span class="typeNameLink">DBOpException</span></a> - Exception in <a href="com/djrapitops/plan/exceptions/database/package-summary.html">com.djrapitops.plan.exceptions.database</a></dt>
 <dd>
@@ -3451,6 +3451,14 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html#DISABLED_UNSAVED_SESSIONS_TIMEOUT">DISABLED_UNSAVED_SESSIONS_TIMEOUT</a></span> - com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html" title="enum in com.djrapitops.plan.settings.locale.lang">PluginLang</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html#DISABLED_WAITING_SQLITE">DISABLED_WAITING_SQLITE</a></span> - com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html" title="enum in com.djrapitops.plan.settings.locale.lang">PluginLang</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html#DISABLED_WAITING_SQLITE_COMPLETE">DISABLED_WAITING_SQLITE_COMPLETE</a></span> - com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html" title="enum in com.djrapitops.plan.settings.locale.lang">PluginLang</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html#DISABLED_WAITING_TRANSACTIONS">DISABLED_WAITING_TRANSACTIONS</a></span> - com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html" title="enum in com.djrapitops.plan.settings.locale.lang">PluginLang</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html#DISABLED_WAITING_TRANSACTIONS_COMPLETE">DISABLED_WAITING_TRANSACTIONS_COMPLETE</a></span> - com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html" title="enum in com.djrapitops.plan.settings.locale.lang">PluginLang</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html#DISABLED_WEB_SERVER">DISABLED_WEB_SERVER</a></span> - com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html" title="enum in com.djrapitops.plan.settings.locale.lang">PluginLang</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/extension/implementation/providers/gathering/ProviderValueGatherer.html#disableMethodFromUse(com.djrapitops.plan.extension.implementation.providers.MethodWrapper)">disableMethodFromUse(MethodWrapper&lt;?&gt;)</a></span> - Method in class com.djrapitops.plan.extension.implementation.providers.gathering.<a href="com/djrapitops/plan/extension/implementation/providers/gathering/ProviderValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ProviderValueGatherer</a></dt>
@@ -3690,6 +3698,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html#endsWith(java.lang.String)">endsWith(String)</a></span> - Method in class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIPath</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html#ensureNoForeignKeyConstraints(java.lang.String)">ensureNoForeignKeyConstraints(String)</a></span> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Patch</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html#enter()">enter()</a></span> - Method in class com.djrapitops.plan.utilities.<a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html" title="class in com.djrapitops.plan.utilities">SemaphoreAccessCounter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/UnitSemaphoreAccessLock.html#enter()">enter()</a></span> - Method in class com.djrapitops.plan.utilities.<a href="com/djrapitops/plan/utilities/UnitSemaphoreAccessLock.html" title="class in com.djrapitops.plan.utilities">UnitSemaphoreAccessLock</a></dt>
 <dd>&nbsp;</dd>
@@ -3995,10 +4005,16 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/SQLDB.html#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)">executeTransaction(Transaction)</a></span> - Method in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/queries/QueryAPIQuery.html#executeWithConnection(java.sql.Connection)">executeWithConnection(Connection)</a></span> - Method in class com.djrapitops.plan.storage.database.queries.<a href="com/djrapitops/plan/storage/database/queries/QueryAPIQuery.html" title="class in com.djrapitops.plan.storage.database.queries">QueryAPIQuery</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/queries/QueryStatement.html#executeWithConnection(java.sql.Connection)">executeWithConnection(Connection)</a></span> - Method in class com.djrapitops.plan.storage.database.queries.<a href="com/djrapitops/plan/storage/database/queries/QueryStatement.html" title="class in com.djrapitops.plan.storage.database.queries">QueryStatement</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/DBType.html#exists(java.lang.String)">exists(String)</a></span> - Static method in enum com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/DBType.html" title="enum in com.djrapitops.plan.storage.database">DBType</a></dt>
 <dd>
 <div class="block">Checks if the name of a <code>DBType</code> corresponds to <code>name</code>.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html#exit()">exit()</a></span> - Method in class com.djrapitops.plan.utilities.<a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html" title="class in com.djrapitops.plan.utilities">SemaphoreAccessCounter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/UnitSemaphoreAccessLock.html#exit()">exit()</a></span> - Method in class com.djrapitops.plan.utilities.<a href="com/djrapitops/plan/utilities/UnitSemaphoreAccessLock.html" title="class in com.djrapitops.plan.utilities">UnitSemaphoreAccessLock</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/webserver/auth/FailReason.html#EXPIRED_COOKIE">EXPIRED_COOKIE</a></span> - com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/FailReason.html" title="enum in com.djrapitops.plan.delivery.webserver.auth">FailReason</a></dt>
@@ -7990,6 +8006,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/gathering/afk/AFKTracker.html#isAfk(java.util.UUID)">isAfk(UUID)</a></span> - Method in class com.djrapitops.plan.gathering.afk.<a href="com/djrapitops/plan/gathering/afk/AFKTracker.html" title="class in com.djrapitops.plan.gathering.afk">AFKTracker</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html#isApplied()">isApplied()</a></span> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Patch</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/webserver/WebServer.html#isAuthRequired()">isAuthRequired()</a></span> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/WebServer.html" title="class in com.djrapitops.plan.delivery.webserver">WebServer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/domain/mutators/PerServerMutator.html#isBanned()">isBanned()</a></span> - Method in class com.djrapitops.plan.delivery.domain.mutators.<a href="com/djrapitops/plan/delivery/domain/mutators/PerServerMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">PerServerMutator</a></dt>
@@ -11408,7 +11426,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/domain/keys/ServerKeys.html#RECENT_PEAK_PLAYERS">RECENT_PEAK_PLAYERS</a></span> - Static variable in class com.djrapitops.plan.delivery.domain.keys.<a href="com/djrapitops/plan/delivery/domain/keys/ServerKeys.html" title="class in com.djrapitops.plan.delivery.domain.keys">ServerKeys</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.IReconnect.html#reconnect()">reconnect()</a></span> - Method in interface com.djrapitops.plan.storage.upkeep.<a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.IReconnect.html" title="interface in com.djrapitops.plan.storage.upkeep">DBKeepAliveTask.IReconnect</a></dt>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.Reconnector.html#reconnect()">reconnect()</a></span> - Method in interface com.djrapitops.plan.storage.upkeep.<a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.Reconnector.html" title="interface in com.djrapitops.plan.storage.upkeep">DBKeepAliveTask.Reconnector</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/rendering/html/icon/Color.html#RED">RED</a></span> - com.djrapitops.plan.delivery.rendering.html.icon.<a href="com/djrapitops/plan/delivery/rendering/html/icon/Color.html" title="enum in com.djrapitops.plan.delivery.rendering.html.icon">Color</a></dt>
 <dd>&nbsp;</dd>
@@ -12199,6 +12217,10 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/queries/analysis/ActivityIndexQueries.html#selectActivityIndexSQL()">selectActivityIndexSQL()</a></span> - Static method in class com.djrapitops.plan.storage.database.queries.analysis.<a href="com/djrapitops/plan/storage/database/queries/analysis/ActivityIndexQueries.html" title="class in com.djrapitops.plan.storage.database.queries.analysis">ActivityIndexQueries</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/queries/analysis/NetworkActivityIndexQueries.html#selectActivityIndexSQL()">selectActivityIndexSQL()</a></span> - Static method in class com.djrapitops.plan.storage.database.queries.analysis.<a href="com/djrapitops/plan/storage/database/queries/analysis/NetworkActivityIndexQueries.html" title="class in com.djrapitops.plan.storage.database.queries.analysis">NetworkActivityIndexQueries</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html" title="class in com.djrapitops.plan.utilities"><span class="typeNameLink">SemaphoreAccessCounter</span></a> - Class in <a href="com/djrapitops/plan/utilities/package-summary.html">com.djrapitops.plan.utilities</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html#%3Cinit%3E()">SemaphoreAccessCounter()</a></span> - Constructor for class com.djrapitops.plan.utilities.<a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html" title="class in com.djrapitops.plan.utilities">SemaphoreAccessCounter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/chat/DefaultFontInfo.html#SEMI_COLON">SEMI_COLON</a></span> - com.djrapitops.plan.utilities.chat.<a href="com/djrapitops/plan/utilities/chat/DefaultFontInfo.html" title="enum in com.djrapitops.plan.utilities.chat">DefaultFontInfo</a></dt>
 <dd>&nbsp;</dd>
@@ -15361,6 +15383,8 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/chat/DefaultFontInfo.html#W">W</a></span> - com.djrapitops.plan.utilities.chat.<a href="com/djrapitops/plan/utilities/chat/DefaultFontInfo.html" title="enum in com.djrapitops.plan.utilities.chat">DefaultFontInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html#waitUntilNothingAccessing()">waitUntilNothingAccessing()</a></span> - Method in class com.djrapitops.plan.utilities.<a href="com/djrapitops/plan/utilities/SemaphoreAccessCounter.html" title="class in com.djrapitops.plan.utilities">SemaphoreAccessCounter</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/gathering/timed/SystemUsageBuffer.html#warmUp()">warmUp()</a></span> - Method in class com.djrapitops.plan.gathering.timed.<a href="com/djrapitops/plan/gathering/timed/SystemUsageBuffer.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/utilities/logging/ErrorLogger.html#warn(java.lang.Throwable,com.djrapitops.plan.utilities.logging.ErrorContext)">warn(Throwable, ErrorContext)</a></span> - Method in interface com.djrapitops.plan.utilities.logging.<a href="com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a></dt>
@@ -15376,6 +15400,8 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/settings/locale/lang/HtmlLang.html#WARNING_NO_GEOLOCATIONS">WARNING_NO_GEOLOCATIONS</a></span> - com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/HtmlLang.html" title="enum in com.djrapitops.plan.settings.locale.lang">HtmlLang</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/settings/locale/lang/HtmlLang.html#WARNING_NO_SPONGE_CHUNKS">WARNING_NO_SPONGE_CHUNKS</a></span> - com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/HtmlLang.html" title="enum in com.djrapitops.plan.settings.locale.lang">HtmlLang</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html#wasApplied()">wasApplied()</a></span> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Patch</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/storage/database/transactions/Transaction.html#wasSuccessful()">wasSuccessful()</a></span> - Method in class com.djrapitops.plan.storage.database.transactions.<a href="com/djrapitops/plan/storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a></dt>
 <dd>&nbsp;</dd>
