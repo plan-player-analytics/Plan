@@ -118,6 +118,7 @@ Command Help - /plan import                     || Tuo tietoja
 Command Help - /plan info                       || Tietoa ohjelmasta
 Command Help - /plan ingame                     || Katso pelaajan tietoja pelissä
 Command Help - /plan json                       || Näkymä pelaajan raakadatasta.
+Command Help - /plan logout                     || Log out other users from the panel.
 Command Help - /plan network                    || Katso Verkoston sivua
 Command Help - /plan player                     || Katso Pelaajan sivua
 Command Help - /plan players                    || Katso Pelaajat sivua
@@ -138,6 +139,11 @@ Disable                                         || Player Analytics Sammutettu.
 Disable - Processing                            || Suoritetaan kriittisiä suorittamattomia toimintoja. (${0})
 Disable - Processing Complete                   || Suoritus valmis.
 Disable - Unsaved Session Save                  || Tallennetaan päättymättömät istunnot..
+Disable - Unsaved Session Save Timeout          || Timeout hit, storing the unfinished sessions on next enable instead.
+Disable - Waiting SQLite                        || Waiting queries to finish to avoid SQLite crashing JVM..
+Disable - Waiting SQLite Complete               || Closed SQLite connection.
+Disable - Waiting Transactions                  || Waiting for unfinished transactions to avoid data loss..
+Disable - Waiting Transactions Complete         || Transaction queue closed.
 Disable - WebServer                             || Web palvelin on sammutettu.
 Enable                                          || Player Analytics Käynnistetty.
 Enable - Database                               || ${0}-tietokanta yhteys luotu.
@@ -146,6 +152,7 @@ Enable - Notify Empty IP                        || IP server.properties tiedosto
 Enable - Notify Geolocations disabled           || Sijaintien keräys ei ole päällä. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan Vaatii internetin ensimmäisellä käynnistyskerralla GeoLite2 tietokannan lataamiseen.
 Enable - Notify Webserver disabled              || Web Palvelinta ei käynnistetty. (WebServer.DisableWebServer: true)
+Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
 Enable - WebServer                              || Web Palvelin pyörii PORTILLA ${0} (${1})
 Enable FAIL - Database                          || ${0}-Tietokanta yhteys epäonnistui: ${1}
 Enable FAIL - Database Patch                    || Tietokannan muutokset epäonnistuivat, Plan jouduttiin sulkemaan. Ilmoita tästä ongelmasta
@@ -158,6 +165,7 @@ HTML - COMPARING_15_DAYS                        || Verrataan 15 päivää
 HTML - COMPARING_60_DAYS                        || Verrataan 30 päivää sitten nykyhetkeen
 HTML - COMPARING_7_DAYS                         || Verrataan 7 päivää
 HTML - DATABASE_NOT_OPEN                        || Tietokanta ei ole auki, tarkista tietokannan status /plan info komennolla
+HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
 HTML - ERROR                                    || Todennus epäonnistui virheen vuoksi
 HTML - EXPIRED_COOKIE                           || Käyttäjän kirjautumiseväste vanheni
 HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
@@ -284,6 +292,7 @@ HTML - QUERY_AND                                || ja
 HTML - QUERY_ARE                                || `ovat`
 HTML - QUERY_ARE_ACTIVITY_GROUP                 || ovat Aktiivisuus Luokissa
 HTML - QUERY_ARE_PLUGIN_GROUP                   || ovat ${plugin}:n ${group} Luokissa
+HTML - QUERY_JOINED_WITH_ADDRESS                || joined with address
 HTML - QUERY_LOADING_FILTERS                    || Ladataan suodattimia..
 HTML - QUERY_MAKE                               || Tee kysely
 HTML - QUERY_MAKE_ANOTHER                       || Tee toinen kysely
@@ -367,6 +376,7 @@ HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Verkoston paikallaolo
 HTML - TITLE_GRAPH_PUNCHCARD                    || Reikäkortti 30 päivälle
 HTML - TITLE_INSIGHTS                           || Katsauksia 30 päivälle
 HTML - TITLE_IS_AVAILABLE                       || on saatavilla
+HTML - TITLE_JOIN_ADDRESSES                     || Join Addresses
 HTML - TITLE_LAST_24_HOURS                      || Viimeiset 24 tuntia
 HTML - TITLE_LAST_30_DAYS                       || Viimeiset 30 päivää
 HTML - TITLE_LAST_7_DAYS                        || Viimeiset 7 päivää
@@ -425,6 +435,9 @@ HTML - Version Update                           || Päivitys
 HTML - Version Update Available                 || Versio ${0} on Saatavilla!
 HTML - Version Update Dev                       || Tämä versio on DEV julkaisu.
 HTML - Version Update Info                      || Uusi versio on julkaistu ja on ladattavissa.
+HTML - WARNING_NO_GAME_SERVERS                  || Some data requires Plan to be installed on game servers.
+HTML - WARNING_NO_GEOLOCATIONS                  || Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).
+HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunks unavailable on Sponge
 HTML - WITH                                     || <th>Millä
 HTML ERRORS - ACCESS_DENIED_403                 || Pääsy Kielletty
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Varmista että olet rekisteröinyt käyttäjän komennolla <b>/plan register</b><br>- Tarkista että käyttäjänimi ja salaasana ovat oikein<br>- Nimi ja salasana ovat CASE SENSITIVE<br><br>Jos unohdit salasanasi, pyydä valvojia poistamaan käyttäjäsi ja uudelleenrekisteröidy.
@@ -451,6 +464,7 @@ In Depth Help - /plan import                    || Tuo tietoja tietokantaan
 In Depth Help - /plan info                      || Näyttää tietoja ohjelmasta
 In Depth Help - /plan ingame                    || Näyttää tietoja pelaajasta pelin sisällä.
 In Depth Help - /plan json                      || Antaa lataa pelaajasta tiedot json-muodossa.
+In Depth Help - /plan logout                    || Give username argument to log out another user from the panel, give * as argument to log out everyone.
 In Depth Help - /plan network                   || Hanki linkki /network sivulle, toimii vain verkostoissa
 In Depth Help - /plan player                    || Hanki linkki annetun tai nykyisen pelaajan /player sivulle.
 In Depth Help - /plan players                   || Hanki linkki /players sivulle nähdäksesi pelaajalistan

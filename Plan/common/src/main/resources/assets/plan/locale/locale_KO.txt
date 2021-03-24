@@ -118,6 +118,7 @@ Command Help - /plan import                     || 저장된 데이터를 불러
 Command Help - /plan info                       || Plan 플러그인에 대한 정보를 확인합니다.
 Command Help - /plan ingame                     || 게임에서 플레이어 정보를 열람합니다.
 Command Help - /plan json                       || 플레이어 로우 데이터의 json를 열람합니다.
+Command Help - /plan logout                     || Log out other users from the panel.
 Command Help - /plan network                    || 네트워크 정보를 확인합니다.
 Command Help - /plan player                     || 플레이어 정보 확인합니다.
 Command Help - /plan players                    || 플레이어 목록 확인합니다.
@@ -138,6 +139,11 @@ Disable                                         || 플레이어 분석이 비활
 Disable - Processing                            || 처리되지 않은 중요한 작업이 있습니다.. (${0})
 Disable - Processing Complete                   || 처리가 완료되었습니다.
 Disable - Unsaved Session Save                  || 완료되지 않은 세션 저장 ..
+Disable - Unsaved Session Save Timeout          || Timeout hit, storing the unfinished sessions on next enable instead.
+Disable - Waiting SQLite                        || Waiting queries to finish to avoid SQLite crashing JVM..
+Disable - Waiting SQLite Complete               || Closed SQLite connection.
+Disable - Waiting Transactions                  || Waiting for unfinished transactions to avoid data loss..
+Disable - Waiting Transactions Complete         || Transaction queue closed.
 Disable - WebServer                             || 웹 서버가 비활성화되었습니다.
 Enable                                          || 플레이어 분석이 활성화되었습니다.
 Enable - Database                               || ${0}-데이터베이스 연결이 설정되었습니다.
@@ -146,6 +152,7 @@ Enable - Notify Empty IP                        || server.properties의 IP가 �
 Enable - Notify Geolocations disabled           || 위치 정보 수집이 활성화되지 않았습니다. (Data.Geolocations : false)
 Enable - Notify Geolocations Internet Required  || Plan GeoLite2 Geolocation 데이터베이스를 다운로드하려면 처음 실행할 때 인터넷 액세스가 필요합니다.
 Enable - Notify Webserver disabled              || 웹 서버가 초기화되지 않았습니다. (WebServer.DisableWebServer : true)
+Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
 Enable - WebServer                              || 해당 포트에서 실행되는 웹 서버 ${0} (${1})
 Enable FAIL - Database                          || ${0}-데이터베이스 연결 실패: ${1}
 Enable FAIL - Database Patch                    || 데이터베이스 패치에 실패했습니다. 플러그인을 비활성화해야합니다. 이 문제를 신고하십시오
@@ -158,6 +165,7 @@ HTML - COMPARING_15_DAYS                        || 지난 15일 비교
 HTML - COMPARING_60_DAYS                        || 지난 30일 비교
 HTML - COMPARING_7_DAYS                         || 지난 7일 비교
 HTML - DATABASE_NOT_OPEN                        || 데이터베이스가 열려 있지 않습니다. /plan info 로 데이터베이스 상태를 확인하십시오.
+HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
 HTML - ERROR                                    || 오류로 인해 인증에 실패했습니다.
 HTML - EXPIRED_COOKIE                           || 사용자 쿠키가 만료되었습니다.
 HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
@@ -284,6 +292,7 @@ HTML - QUERY_AND                                || and
 HTML - QUERY_ARE                                || `are`
 HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
 HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
+HTML - QUERY_JOINED_WITH_ADDRESS                || joined with address
 HTML - QUERY_LOADING_FILTERS                    || Loading filters..
 HTML - QUERY_MAKE                               || Make a query
 HTML - QUERY_MAKE_ANOTHER                       || Make another query
@@ -367,6 +376,7 @@ HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || 네트워크 온라인 활동
 HTML - TITLE_GRAPH_PUNCHCARD                    || 30일 동안의 펀치 카드
 HTML - TITLE_INSIGHTS                           || 30일 동안의 인사이트
 HTML - TITLE_IS_AVAILABLE                       || 사용할 수 있습니다
+HTML - TITLE_JOIN_ADDRESSES                     || Join Addresses
 HTML - TITLE_LAST_24_HOURS                      || 지난 24시간
 HTML - TITLE_LAST_30_DAYS                       || 지난 30일
 HTML - TITLE_LAST_7_DAYS                        || 지난 7일
@@ -425,6 +435,9 @@ HTML - Version Update                           || Update
 HTML - Version Update Available                 || Version ${0} is Available!
 HTML - Version Update Dev                       || This version is a DEV release.
 HTML - Version Update Info                      || A new version has been released and is now available for download.
+HTML - WARNING_NO_GAME_SERVERS                  || Some data requires Plan to be installed on game servers.
+HTML - WARNING_NO_GEOLOCATIONS                  || Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).
+HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunks unavailable on Sponge
 HTML - WITH                                     || <th>With
 HTML ERRORS - ACCESS_DENIED_403                 || Access Denied 403
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register.
@@ -451,6 +464,7 @@ In Depth Help - /plan import                    || Performs an import to load da
 In Depth Help - /plan info                      || Display the current status of the plugin.
 In Depth Help - /plan ingame                    || Displays some information about the player in game.
 In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
+In Depth Help - /plan logout                    || Give username argument to log out another user from the panel, give * as argument to log out everyone.
 In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
 In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
 In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.

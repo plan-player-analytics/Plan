@@ -118,6 +118,7 @@ Command Help - /plan import                     || データをインポート�
 Command Help - /plan info                       || Planの情報を表示します
 Command Help - /plan ingame                     || プレイヤー情報をゲーム内で表示します
 Command Help - /plan json                       || Jsonで保存されているプレイヤーデータを表示します
+Command Help - /plan logout                     || Log out other users from the panel.
 Command Help - /plan network                    || 「ネットワーク」のページのURLを表示します
 Command Help - /plan player                     || 「プレイヤー」のURLを表示します
 Command Help - /plan players                    || 「プレイヤー」のページのURLを表示します
@@ -138,6 +139,11 @@ Disable                                         || プレイヤー分析が無�
 Disable - Processing                            || 未実行の重要な処理があります (${0})
 Disable - Processing Complete                   || 処理が完了しました
 Disable - Unsaved Session Save                  || 未保存のセッションを保存しています・・
+Disable - Unsaved Session Save Timeout          || Timeout hit, storing the unfinished sessions on next enable instead.
+Disable - Waiting SQLite                        || Waiting queries to finish to avoid SQLite crashing JVM..
+Disable - Waiting SQLite Complete               || Closed SQLite connection.
+Disable - Waiting Transactions                  || Waiting for unfinished transactions to avoid data loss..
+Disable - Waiting Transactions Complete         || Transaction queue closed.
 Disable - WebServer                             || ウェブサーバーが無効になりました
 Enable                                          || プレイヤー分析が有効になりました
 Enable - Database                               || ${0}のデータベースの接続が確立しました
@@ -146,6 +152,7 @@ Enable - Notify Empty IP                        || server.propertiesの設定で
 Enable - Notify Geolocations disabled           || 位置情報サービスが有効ではありません。 (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || 「Plan」は初回起動時、「GeoLite2」の位置情報データベースをダウンロードするためインターネットアクセスが必要です
 Enable - Notify Webserver disabled              || ウェブサーバーの初期化に失敗しました (WebServer.DisableWebServer: true)
+Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
 Enable - WebServer                              || ウェブサーバーは次のポートで実行されています: ${0} (${1})
 Enable FAIL - Database                          || 「${0}」のデータベースの接続に失敗しました: ${1}
 Enable FAIL - Database Patch                    || データベースのパッチ適用に失敗しました、プラグインを無効にする必要があります。バグ報告をお願いします
@@ -158,6 +165,7 @@ HTML - COMPARING_15_DAYS                        || 直近15日との比較
 HTML - COMPARING_60_DAYS                        || 30日前との比較
 HTML - COMPARING_7_DAYS                         || 直近1週間との比較
 HTML - DATABASE_NOT_OPEN                        || データベースを開くことができませんでした。「/plan info」コマンドを実行して状況を確認して下さい
+HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
 HTML - ERROR                                    || エラーが発生したため認証に失敗しました
 HTML - EXPIRED_COOKIE                           || ユーザーのクッキーの有効期限切れです
 HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
@@ -284,6 +292,7 @@ HTML - QUERY_AND                                || and
 HTML - QUERY_ARE                                || `are`
 HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
 HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
+HTML - QUERY_JOINED_WITH_ADDRESS                || joined with address
 HTML - QUERY_LOADING_FILTERS                    || Loading filters..
 HTML - QUERY_MAKE                               || Make a query
 HTML - QUERY_MAKE_ANOTHER                       || Make another query
@@ -367,6 +376,7 @@ HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || ネットワーク内の接�
 HTML - TITLE_GRAPH_PUNCHCARD                    || 1ヶ月のパンチボード
 HTML - TITLE_INSIGHTS                           || 1ヶ月のパンチボード
 HTML - TITLE_IS_AVAILABLE                       || が利用可能です
+HTML - TITLE_JOIN_ADDRESSES                     || Join Addresses
 HTML - TITLE_LAST_24_HOURS                      || 24時間
 HTML - TITLE_LAST_30_DAYS                       || 1ヶ月
 HTML - TITLE_LAST_7_DAYS                        || 一週間
@@ -425,6 +435,9 @@ HTML - Version Update                           || Update
 HTML - Version Update Available                 || Version ${0} is Available!
 HTML - Version Update Dev                       || This version is a DEV release.
 HTML - Version Update Info                      || A new version has been released and is now available for download.
+HTML - WARNING_NO_GAME_SERVERS                  || Some data requires Plan to be installed on game servers.
+HTML - WARNING_NO_GEOLOCATIONS                  || Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).
+HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunks unavailable on Sponge
 HTML - WITH                                     || <th>死亡原因
 HTML ERRORS - ACCESS_DENIED_403                 || アクセスが拒否されました
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - 登録したユーザーを<b>「/plan register 」</b>で確認できます。<br>- 入力したユーザー名とパスワードが正しいことを確認して下さい<br>- ユーザー名とパスワードは大文字と小文字が区別されています<br><br>パスワードを忘れた場合は、管理者に古いユーザーを削除して新しくユーザーを再登録するよう依頼して下さい
@@ -451,6 +464,7 @@ In Depth Help - /plan import                    || データベースにデー�
 In Depth Help - /plan info                      || Planの現在の状態を表示します
 In Depth Help - /plan ingame                    || ゲーム内にいるプレイヤーに関する情報を表示します。
 In Depth Help - /plan json                      || プレイヤーのデータをJsonでダウンロードできるようにします。このJsonには全てのプレイヤーデータが格納されています
+In Depth Help - /plan logout                    || Give username argument to log out another user from the panel, give * as argument to log out everyone.
 In Depth Help - /plan network                   || 「/network」ページへのリンクを取得します、これは「ネットワーク」が有効時のみ実行されます
 In Depth Help - /plan player                    || 特定もしくは、現在のプレイヤーの「/player」ページへのリンクを取得します
 In Depth Help - /plan players                   || プレイヤー一覧の「/player」ページへのリンクを取得します
