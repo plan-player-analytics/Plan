@@ -147,7 +147,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1267:
             case 1366:
                 context.related("Incorrect character encoding in MySQL")
-                        .whatToDo("Convert your MySQL database and tables to use uft8mb4: https://www.a2hosting.com/kb/developer-corner/mysql/convert-mysql-database-utf-8");
+                        .whatToDo("Convert your MySQL database and tables to use utf8mb4: https://www.a2hosting.com/kb/developer-corner/mysql/convert-mysql-database-utf-8");
                 break;
             default:
                 context.related("Unknown SQL Error code");
