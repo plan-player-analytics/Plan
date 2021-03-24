@@ -48,13 +48,19 @@ public abstract class QueryStatement<T> implements Query<T> {
         Connection connection = null;
         try {
             connection = db.getConnection();
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                return executeQuery(preparedStatement);
-            }
+            return executeWithConnection(connection);
         } catch (SQLException e) {
             throw DBOpException.forCause(sql, e);
         } finally {
             db.returnToPool(connection);
+        }
+    }
+
+    public T executeWithConnection(Connection connection) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            return executeQuery(preparedStatement);
+        } catch (SQLException e) {
+            throw DBOpException.forCause(sql, e);
         }
     }
 

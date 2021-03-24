@@ -86,8 +86,11 @@ abstract class DBPatchRegressionTest {
     void assertPatchesHaveBeenApplied(Patch[] patches) {
         List<String> failed = new ArrayList<>();
         for (Patch patch : patches) {
-            if (!patch.hasBeenApplied()) {
+            if (!patch.isApplied()) {
+                System.out.println("! NOT APPLIED: " + patch.getClass().getSimpleName());
                 failed.add(patch.getClass().getSimpleName());
+            } else {
+                System.out.println("  WAS APPLIED: " + patch.getClass().getSimpleName());
             }
         }
         assertTrue(failed.isEmpty(), "Patches " + failed + " were not applied properly.");

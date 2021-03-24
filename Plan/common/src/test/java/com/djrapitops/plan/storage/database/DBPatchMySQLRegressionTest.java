@@ -33,6 +33,7 @@ import utilities.mocks.PluginMockComponent;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -152,6 +153,7 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         KillsOptimizationPatch patch = new KillsOptimizationPatch();
         underTest.executeTransaction(patch);
 
-        assertTrue(patch.hasBeenApplied());
+        assertTrue(patch.isApplied());
+        assertFalse(patch.wasApplied());
     }
 }

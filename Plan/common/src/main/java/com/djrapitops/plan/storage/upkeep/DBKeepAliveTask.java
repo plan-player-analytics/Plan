@@ -33,14 +33,14 @@ import java.sql.Statement;
  * @author Fuzzlemann
  */
 public class DBKeepAliveTask extends PluginRunnable {
-    private final IReconnect iReconnect;
+    private final Reconnector reconnector;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
     private Connection connection;
 
-    public DBKeepAliveTask(Connection connection, IReconnect iReconnect, PluginLogger logger, ErrorLogger errorLogger) {
+    public DBKeepAliveTask(Connection connection, Reconnector reconnector, PluginLogger logger, ErrorLogger errorLogger) {
         this.connection = connection;
-        this.iReconnect = iReconnect;
+        this.reconnector = reconnector;
         this.logger = logger;
         this.errorLogger = errorLogger;
     }
@@ -56,7 +56,7 @@ public class DBKeepAliveTask extends PluginRunnable {
             }
         } catch (SQLException pingException) {
             try {
-                connection = iReconnect.reconnect();
+                connection = reconnector.reconnect();
             } catch (SQLException reconnectionError) {
                 errorLogger.error(reconnectionError, ErrorContext.builder()
                         .whatToDo("Reload Plan and Report this if the issue persists").build());
@@ -68,7 +68,7 @@ public class DBKeepAliveTask extends PluginRunnable {
         }
     }
 
-    public interface IReconnect {
+    public interface Reconnector {
         Connection reconnect() throws SQLException;
     }
 }

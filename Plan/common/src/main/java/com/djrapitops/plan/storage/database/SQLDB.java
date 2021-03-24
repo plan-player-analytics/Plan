@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
@@ -123,6 +124,7 @@ public abstract class SQLDB extends AbstractDatabase {
         }
         transactionExecutor.shutdown();
         try {
+            logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS));
             Long waitMs = config.getOrDefault(TimeSettings.DB_TRANSACTION_FINISH_WAIT_DELAY, TimeUnit.SECONDS.toMillis(20L));
             if (waitMs > TimeUnit.MINUTES.toMillis(5L)) {
                 logger.warn(TimeSettings.DB_TRANSACTION_FINISH_WAIT_DELAY.getPath() + " was set to over 5 minutes, using 5 min instead.");
@@ -138,6 +140,8 @@ public abstract class SQLDB extends AbstractDatabase {
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        } finally {
+            logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS_COMPLETE));
         }
         return Collections.emptyList();
     }

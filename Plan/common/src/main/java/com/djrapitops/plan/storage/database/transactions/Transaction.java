@@ -22,6 +22,8 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
+import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 
@@ -194,7 +196,13 @@ public abstract class Transaction {
     }
 
     protected <T> T query(Query<T> query) {
-        return query.executeQuery(db);
+        if (query instanceof QueryStatement) {
+            return ((QueryStatement<T>) query).executeWithConnection(connection);
+        } else if (query instanceof QueryAPIQuery) {
+            return ((QueryAPIQuery<T>) query).executeWithConnection(connection);
+        } else {
+            return query.executeQuery(db);
+        }
     }
 
     protected boolean execute(Executable executable) {
@@ -226,7 +234,9 @@ public abstract class Transaction {
         transaction.db = db;
         transaction.dbType = dbType;
         transaction.connection = this.connection;
-        transaction.performOperations();
+        if (transaction.shouldBeExecuted()) {
+            transaction.performOperations();
+        }
         transaction.connection = null;
         transaction.dbType = null;
         transaction.db = null;

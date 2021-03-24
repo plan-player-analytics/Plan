@@ -71,7 +71,6 @@ public class ActiveCookieStore implements SubSystem {
     }
 
     public static void removeUserCookie(String username) {
-        System.out.println(USERS_BY_COOKIE);
         USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(username))
                 .findAny()
                 .map(Map.Entry::getKey)

@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.upkeep.DBKeepAliveTask;
 import com.djrapitops.plan.utilities.MiscUtils;
+import com.djrapitops.plan.utilities.SemaphoreAccessCounter;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
@@ -48,6 +49,13 @@ public class SQLiteDB extends SQLDB {
     private final String dbName;
     private Connection connection;
     private Task connectionPingTask;
+
+    /*
+     * In charge of keeping a single thread in control of the connection to avoid
+     * one thread closing the connection while another is executing a statement as
+     * that might lead to a SIGSEGV signal JVM crash.
+     */
+    private final SemaphoreAccessCounter connectionLock = new SemaphoreAccessCounter();
 
     private SQLiteDB(
             File databaseFile,
@@ -132,6 +140,7 @@ public class SQLiteDB extends SQLDB {
         if (connection == null) {
             connection = getNewConnection(databaseFile);
         }
+        connectionLock.enter();
         return connection;
     }
 
@@ -140,14 +149,17 @@ public class SQLiteDB extends SQLDB {
         super.close();
         stopConnectionPingTask();
 
+        logger.info(locale.getString(PluginLang.DISABLED_WAITING_SQLITE));
+        connectionLock.waitUntilNothingAccessing();
         if (connection != null) {
             MiscUtils.close(connection);
         }
+        logger.info(locale.getString(PluginLang.DISABLED_WAITING_SQLITE_COMPLETE));
     }
 
     @Override
     public void returnToPool(Connection connection) {
-        // Connection pool not in use, no action required.
+        connectionLock.exit();
     }
 
     @Override

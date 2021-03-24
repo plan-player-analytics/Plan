@@ -58,6 +58,10 @@ public enum PluginLang implements Lang {
     DISABLED_PROCESSING_COMPLETE("Disable - Processing Complete", "Processing complete."),
     DISABLED_UNSAVED_SESSIONS("Disable - Unsaved Session Save", "Saving unfinished sessions.."),
     DISABLED_UNSAVED_SESSIONS_TIMEOUT("Disable - Unsaved Session Save Timeout", "Timeout hit, storing the unfinished sessions on next enable instead."),
+    DISABLED_WAITING_SQLITE("Disable - Waiting SQLite", "Waiting queries to finish to avoid SQLite crashing JVM.."),
+    DISABLED_WAITING_SQLITE_COMPLETE("Disable - Waiting SQLite Complete", "Closed SQLite connection."),
+    DISABLED_WAITING_TRANSACTIONS("Disable - Waiting Transactions", "Waiting for unfinished transactions to avoid data loss.."),
+    DISABLED_WAITING_TRANSACTIONS_COMPLETE("Disable - Waiting Transactions Complete", "Transaction queue closed."),
 
     VERSION_NEWEST("Version - Latest", "You're using the latest version."),
     VERSION_AVAILABLE("Version - New", "New Release (${0}) is available ${1}"),

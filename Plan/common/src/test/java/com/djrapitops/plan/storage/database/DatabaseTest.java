@@ -292,7 +292,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         // Test expected result
         Optional<BaseUser> updatedBaseUser = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
         assertEquals(0L, updatedBaseUser.isPresent() ? updatedBaseUser.get().getRegistered() : null);
-        assertTrue(testedPatch.hasBeenApplied());
+        assertTrue(testedPatch.isApplied());
     }
 
     @Test

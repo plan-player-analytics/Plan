@@ -34,20 +34,34 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 public abstract class Patch extends OperationCriticalTransaction {
 
     private static final String ALTER_TABLE = "ALTER TABLE ";
+    private boolean appliedPreviously = false;
+    private boolean appliedNow = false;
 
     public abstract boolean hasBeenApplied();
 
     protected abstract void applyPatch();
 
+    public boolean isApplied() {
+        if (!success) throw new IllegalStateException("Asked a Patch if it is applied before it was executed!");
+        return appliedPreviously || appliedNow;
+    }
+
+    public boolean wasApplied() {
+        return appliedNow;
+    }
+
     @Override
     protected boolean shouldBeExecuted() {
-        return !hasBeenApplied();
+        boolean hasBeenApplied = hasBeenApplied();
+        if (hasBeenApplied) appliedPreviously = true;
+        return !hasBeenApplied;
     }
 
     @Override
     protected void performOperations() {
         if (dbType == DBType.MYSQL) disableForeignKeyChecks();
         applyPatch();
+        appliedNow = true;
         if (dbType == DBType.MYSQL) enableForeignKeyChecks();
     }
 
