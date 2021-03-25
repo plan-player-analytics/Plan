@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -227,12 +227,17 @@ implements <a href="JSONStorage.html" title="interface in com.djrapitops.plan.de
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>com.github.benmanes.caffeine.cache.Cache&lt;com.djrapitops.plan.delivery.webserver.cache.JSONMemoryStorageShim.TimestampedIdentifier,&#8203;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a>&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCache()">getCache</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#invalidateOlder(java.lang.String,long)">invalidateOlder</a></span>&#8203;(java.lang.String&nbsp;identifier,
                long&nbsp;timestamp)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#storeJson(java.lang.String,java.lang.String,long)">storeJson</a></span>&#8203;(java.lang.String&nbsp;identifier,
          java.lang.String&nbsp;json,
@@ -320,6 +325,15 @@ implements <a href="JSONStorage.html" title="interface in com.djrapitops.plan.de
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="JSONStorage.html#storeJson(java.lang.String,java.lang.String,long)">storeJson</a></code>&nbsp;in interface&nbsp;<code><a href="JSONStorage.html" title="interface in com.djrapitops.plan.delivery.webserver.cache">JSONStorage</a></code></dd>
 </dl>
+</li>
+</ul>
+<a id="getCache()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getCache</h4>
+<pre class="methodSignature">public&nbsp;com.github.benmanes.caffeine.cache.Cache&lt;com.djrapitops.plan.delivery.webserver.cache.JSONMemoryStorageShim.TimestampedIdentifier,&#8203;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a>&gt;&nbsp;getCache()</pre>
 </li>
 </ul>
 <a id="fetchJSON(java.lang.String)">
