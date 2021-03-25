@@ -11,9 +11,9 @@ The body of the response is the error message
 
 ## Endpoints
 
-### `GET /<playername>/raw` `GET /<player UUID>/raw`
+### `GET /player/<playername>/raw` `GET /player/<player UUID>/raw`
 
-Obtain all data in the database for a player.
+Obtain all data in the database for a player. (Note that this is an exception to the /v1/ endpoints)
 
 ### Tab endpoints
 
