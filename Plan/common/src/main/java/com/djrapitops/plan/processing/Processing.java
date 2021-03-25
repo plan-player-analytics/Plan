@@ -152,28 +152,35 @@ public class Processing implements SubSystem {
     }
 
     private void shutdownNonCriticalExecutor() {
-        nonCriticalExecutor.shutdown();
+        nonCriticalExecutor.shutdownNow();
     }
 
     private void shutdownCriticalExecutor() {
-        List<Runnable> criticalTasks = criticalExecutor.shutdownNow();
-        logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING, criticalTasks.size()));
-        for (Runnable runnable : criticalTasks) {
-            if (runnable == null) continue;
-            try {
-                runnable.run();
-            } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-                errorLogger.warn(e, ErrorContext.builder().build());
+        criticalExecutor.shutdown();
+        try {
+            if (!criticalExecutor.awaitTermination(3, TimeUnit.SECONDS)) {
+                List<Runnable> criticalTasks = criticalExecutor.shutdownNow();
+                logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING, criticalTasks.size()));
+                for (Runnable runnable : criticalTasks) {
+                    if (runnable == null) continue;
+                    try {
+                        runnable.run();
+                    } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+                        errorLogger.warn(e, ErrorContext.builder().build());
+                    }
+                }
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 
     private void ensureShutdown() {
         try {
-            if (!nonCriticalExecutor.isTerminated() && !nonCriticalExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
+            if (!nonCriticalExecutor.isTerminated()) {
                 nonCriticalExecutor.shutdownNow();
             }
-            if (!criticalExecutor.isTerminated()) {
+            if (!criticalExecutor.isTerminated() && !criticalExecutor.awaitTermination(1, TimeUnit.SECONDS)) {
                 criticalExecutor.shutdownNow();
             }
         } catch (InterruptedException e) {
