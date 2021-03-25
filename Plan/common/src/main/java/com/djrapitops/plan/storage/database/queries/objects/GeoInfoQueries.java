@@ -225,4 +225,34 @@ public class GeoInfoQueries {
             }
         };
     }
+
+    public static Query<List<String>> uniqueGeolocations() {
+        String sql = SELECT + GeoInfoTable.GEOLOCATION + FROM + GeoInfoTable.TABLE_NAME +
+                ORDER_BY + GeoInfoTable.GEOLOCATION + " ASC";
+        return new QueryAllStatement<List<String>>(sql) {
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> geolocations = new ArrayList<>();
+                while (set.next()) geolocations.add(set.getString(GeoInfoTable.GEOLOCATION));
+                return geolocations;
+            }
+        };
+    }
+
+    public static Query<Set<UUID>> uuidsOfPlayersWithGeolocations(List<String> selected) {
+        String sql = SELECT + GeoInfoTable.USER_UUID +
+                FROM + GeoInfoTable.TABLE_NAME +
+                WHERE + GeoInfoTable.GEOLOCATION +
+                " IN ('" +
+                new TextStringBuilder().appendWithSeparators(selected, "','") +
+                "')";
+        return new QueryAllStatement<Set<UUID>>(sql) {
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> geolocations = new HashSet<>();
+                while (set.next()) geolocations.add(UUID.fromString(set.getString(GeoInfoTable.USER_UUID)));
+                return geolocations;
+            }
+        };
+    }
 }

@@ -32,6 +32,7 @@ import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -148,5 +149,38 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
         geoInformationIsStored();
         db().executeTransaction(new RemoveEverythingTransaction());
         assertTrue(db().query(GeoInfoQueries.fetchAllGeoInformation()).isEmpty());
+    }
+
+    @Test
+    default void filterOptionGeolocationsAreUnique() {
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+
+        List<GeoInfo> savedData = RandomData.randomGeoInfo();
+        for (GeoInfo geoInfo : savedData) {
+            save(playerUUID, geoInfo);
+        }
+
+        Set<String> expected = savedData.stream().map(GeoInfo::getGeolocation)
+                .collect(Collectors.toSet());
+        Set<String> result = new HashSet<>(db().query(GeoInfoQueries.uniqueGeolocations()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void geolocationFilterResultsGetThePlayer() {
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+
+        List<GeoInfo> savedData = RandomData.randomGeoInfo();
+        for (GeoInfo geoInfo : savedData) {
+            save(playerUUID, geoInfo);
+        }
+
+        Set<UUID> expected = Collections.singleton(playerUUID);
+        Set<UUID> result = db().query(GeoInfoQueries.uuidsOfPlayersWithGeolocations(
+                Collections.singletonList(savedData.get(0).getGeolocation()))
+        );
+        assertEquals(expected, result);
     }
 }

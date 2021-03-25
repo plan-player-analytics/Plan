@@ -769,7 +769,7 @@ div#navSrvContainer {
     max-height: 180px;
 }
 
-div#navSrvContainer>a {
+div#navSrvContainer > a {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -846,7 +846,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     color: #fff;
 }
 
-.bg-lime , body.theme-lime .fc-toolbar-chunk .btn.btn-primary{
+.bg-lime, body.theme-lime .fc-toolbar-chunk .btn.btn-primary {
     background-color: #CDDC39;
     color: #fff;
 }

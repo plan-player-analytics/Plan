@@ -49,4 +49,8 @@ public interface FiltersModule {
     @IntoSet
     Filter filter6(JoinAddressFilter filter);
 
+    @Binds
+    @IntoSet
+    Filter filter7(GeolocationsFilter filter);
+
 }
