@@ -31,9 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 class PlayerKillTest {
 
-    private String weapon = RandomData.randomString(10);
-    private UUID testUUID = UUID.randomUUID();
-    private PlayerKill underTest = new PlayerKill(testUUID, weapon, 100L);
+    private final String weapon = RandomData.randomString(10);
+    private final UUID testUUID = UUID.randomUUID();
+    private final PlayerKill underTest = new PlayerKill(testUUID, testUUID, weapon, 100L);
 
     @Test
     void victimUUIDIsReturned() {
@@ -58,7 +58,7 @@ class PlayerKillTest {
     @Test
     void victimFound() {
         String expectedName = "Test Victim";
-        PlayerKill underTest = new PlayerKill(testUUID, weapon, 100L, expectedName);
+        PlayerKill underTest = new PlayerKill(testUUID, testUUID, weapon, 100L, expectedName);
         assertEquals("Test Victim", underTest.getVictimName().orElse("Unknown"));
     }
 }

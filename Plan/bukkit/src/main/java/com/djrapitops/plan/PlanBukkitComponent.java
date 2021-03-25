@@ -26,6 +26,7 @@ import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
 import com.djrapitops.plan.modules.bukkit.BukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.bukkit.BukkitSuperClassBindingModule;
+import com.djrapitops.plan.modules.bukkit.BukkitTaskModule;
 import dagger.BindsInstance;
 import dagger.Component;
 
@@ -45,7 +46,8 @@ import javax.inject.Singleton;
 
         ServerCommandModule.class,
         BukkitServerPropertiesModule.class,
-        BukkitSuperClassBindingModule.class
+        BukkitSuperClassBindingModule.class,
+        BukkitTaskModule.class
 })
 public interface PlanBukkitComponent {
 

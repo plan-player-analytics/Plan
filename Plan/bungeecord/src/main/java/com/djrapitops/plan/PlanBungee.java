@@ -74,6 +74,7 @@ public class PlanBungee extends BungeePlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
+        cancelAllTasks();
         if (system != null) system.disable();
 
         logger.info(locale.getString(PluginLang.DISABLED));

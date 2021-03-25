@@ -120,14 +120,17 @@ public class Plan extends BukkitPlugin implements PlanPlugin {
      */
     @Override
     public void onDisable() {
-        if (serverShutdownSave != null) {
-            serverShutdownSave.performSave();
-        }
-        if (system != null) {
-            system.disable();
-        }
+        if (serverShutdownSave != null) serverShutdownSave.performSave();
+        cancelAllTasks();
+        if (system != null) system.disable();
 
         logger.info(locale != null ? locale.getString(PluginLang.DISABLED) : PluginLang.DISABLED.getDefault());
+    }
+
+    @Override
+    public void cancelAllTasks() {
+        runnableFactory.cancelAllKnownTasks();
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     @Override

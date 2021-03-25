@@ -16,17 +16,20 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.SystemUsage;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.L;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Task for performing system resource usage checks asynchronously
@@ -64,7 +67,7 @@ public class SystemUsageBuffer {
     }
 
     @Singleton
-    public static class RamAndCpuTask extends AbsRunnable {
+    public static class RamAndCpuTask extends TaskSystem.Task {
         private final SystemUsageBuffer buffer;
         private final PluginLogger logger;
 
@@ -84,10 +87,17 @@ public class SystemUsageBuffer {
                 cancel();
             }
         }
+
+        @Override
+        public void register(RunnableFactory runnableFactory) {
+            long delay = TimeAmount.toTicks(1, TimeUnit.MINUTES) - TimeAmount.toTicks(500, TimeUnit.MILLISECONDS);
+            long period = TimeAmount.toTicks(1, TimeUnit.SECONDS);
+            runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
+        }
     }
 
     @Singleton
-    public static class DiskTask extends AbsRunnable {
+    public static class DiskTask extends TaskSystem.Task {
         private final PlanConfig config;
         private final SystemUsageBuffer buffer;
         private final PluginLogger logger;
@@ -120,6 +130,13 @@ public class SystemUsageBuffer {
                 logger.error("Free Disk sampling task had to be stopped due to error: " + e.toString());
                 cancel();
             }
+        }
+
+        @Override
+        public void register(RunnableFactory runnableFactory) {
+            long delay = TimeAmount.toTicks(50, TimeUnit.SECONDS);
+            long period = TimeAmount.toTicks(1, TimeUnit.SECONDS);
+            runnableFactory.create(null, this).runTaskTimerAsynchronously(delay, period);
         }
     }
 

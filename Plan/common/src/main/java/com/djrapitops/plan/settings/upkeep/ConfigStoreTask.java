@@ -16,16 +16,20 @@
  */
 package com.djrapitops.plan.settings.upkeep;
 
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plugin.api.TimeAmount;
 import com.djrapitops.plugin.logging.console.PluginLogger;
-import com.djrapitops.plugin.task.AbsRunnable;
+import com.djrapitops.plugin.task.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Task that stores a server config in the database on boot.
@@ -33,7 +37,7 @@ import javax.inject.Singleton;
  * @author Rsl1122
  */
 @Singleton
-public class ConfigStoreTask extends AbsRunnable {
+public class ConfigStoreTask extends TaskSystem.Task {
 
     private final PlanFiles files;
     private final PlanConfig config;
@@ -62,5 +66,11 @@ public class ConfigStoreTask extends AbsRunnable {
         dbSystem.getDatabase().executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), config, lastModified));
         logger.debug("Config Store Task - Config in db now up to date.");
         cancel();
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        long delay = TimeAmount.toTicks(config.get(TimeSettings.CONFIG_UPDATE_INTERVAL), TimeUnit.MILLISECONDS) + 40;
+        runnableFactory.create(null, this).runTaskLaterAsynchronously(delay);
     }
 }

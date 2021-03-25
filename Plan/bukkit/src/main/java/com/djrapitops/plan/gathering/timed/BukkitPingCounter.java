@@ -23,9 +23,12 @@
  */
 package com.djrapitops.plan.gathering.timed;
 
+import com.djrapitops.plan.Plan;
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
@@ -60,7 +63,7 @@ import java.util.logging.Logger;
  * @author games647
  */
 @Singleton
-public class BukkitPingCounter extends AbsRunnable implements Listener {
+public class BukkitPingCounter extends TaskSystem.Task implements Listener {
 
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
@@ -70,13 +73,23 @@ public class BukkitPingCounter extends AbsRunnable implements Listener {
     private static MethodHandle PING_FIELD;
     private static MethodHandle GET_HANDLE_METHOD;
 
+    private final Map<UUID, List<DateObj<Integer>>> playerHistory;
+
+    private final Plan plugin;
+    private final PlanConfig config;
+    private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
+    private final RunnableFactory runnableFactory;
+
     @Inject
     public BukkitPingCounter(
+            Plan plugin,
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             RunnableFactory runnableFactory
     ) {
+        this.plugin = plugin;
         BukkitPingCounter.loadPingMethodDetails();
         this.config = config;
         this.dbSystem = dbSystem;
@@ -85,12 +98,6 @@ public class BukkitPingCounter extends AbsRunnable implements Listener {
         playerHistory = new HashMap<>();
     }
 
-    private final Map<UUID, List<DateObj<Integer>>> playerHistory;
-
-    private final PlanConfig config;
-    private final DBSystem dbSystem;
-    private final ServerInfo serverInfo;
-    private final RunnableFactory runnableFactory;
 
     private static void loadPingMethodDetails() {
         PING_METHOD_AVAILABLE = isPingMethodAvailable();
@@ -132,6 +139,17 @@ public class BukkitPingCounter extends AbsRunnable implements Listener {
             return true;
         } catch (ClassNotFoundException | NoSuchMethodException noSuchMethodEx) {
             return false;
+        }
+    }
+
+    @Override
+    public void register(RunnableFactory runnableFactory) {
+        Long startDelay = config.get(TimeSettings.PING_SERVER_ENABLE_DELAY);
+        if (startDelay < TimeUnit.HOURS.toMillis(1L) && config.isTrue(DataGatheringSettings.PING)) {
+            plugin.registerListener(this);
+            long delay = TimeAmount.toTicks(startDelay, TimeUnit.MILLISECONDS);
+            long period = 40L;
+            runnableFactory.create(null, this).runTaskTimer(delay, period);
         }
     }
 
