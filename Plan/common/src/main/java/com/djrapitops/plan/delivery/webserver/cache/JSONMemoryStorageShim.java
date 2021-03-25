@@ -49,35 +49,40 @@ public class JSONMemoryStorageShim implements JSONStorage {
     @Override
     public StoredJSON storeJson(String identifier, String json, long timestamp) {
         StoredJSON storedJSON = underlyingStorage.storeJson(identifier, json, timestamp);
-        cache.put(new TimestampedIdentifier(identifier, timestamp), storedJSON);
+        getCache().put(new TimestampedIdentifier(identifier, timestamp), storedJSON);
         return storedJSON;
+    }
+
+    public Cache<TimestampedIdentifier, StoredJSON> getCache() {
+        if (cache == null) enable();
+        return cache;
     }
 
     @Override
     public Optional<StoredJSON> fetchJSON(String identifier) {
-        for (Map.Entry<TimestampedIdentifier, StoredJSON> entry : cache.asMap().entrySet()) {
+        for (Map.Entry<TimestampedIdentifier, StoredJSON> entry : getCache().asMap().entrySet()) {
             if (entry.getKey().identifier.equalsIgnoreCase(identifier)) {
                 return Optional.of(entry.getValue());
             }
         }
         Optional<StoredJSON> found = underlyingStorage.fetchJSON(identifier);
-        found.ifPresent(storedJSON -> cache.put(new TimestampedIdentifier(identifier, storedJSON.timestamp), storedJSON));
+        found.ifPresent(storedJSON -> getCache().put(new TimestampedIdentifier(identifier, storedJSON.timestamp), storedJSON));
         return found;
     }
 
     @Override
     public Optional<StoredJSON> fetchExactJson(String identifier, long timestamp) {
-        StoredJSON cached = cache.getIfPresent(new TimestampedIdentifier(identifier, timestamp));
+        StoredJSON cached = getCache().getIfPresent(new TimestampedIdentifier(identifier, timestamp));
         if (cached != null) return Optional.of(cached);
 
         Optional<StoredJSON> found = underlyingStorage.fetchExactJson(identifier, timestamp);
-        found.ifPresent(storedJSON -> cache.put(new TimestampedIdentifier(identifier, timestamp), storedJSON));
+        found.ifPresent(storedJSON -> getCache().put(new TimestampedIdentifier(identifier, timestamp), storedJSON));
         return found;
     }
 
     @Override
     public Optional<StoredJSON> fetchJsonMadeBefore(String identifier, long timestamp) {
-        for (Map.Entry<TimestampedIdentifier, StoredJSON> entry : cache.asMap().entrySet()) {
+        for (Map.Entry<TimestampedIdentifier, StoredJSON> entry : getCache().asMap().entrySet()) {
             TimestampedIdentifier key = entry.getKey();
             if (key.timestamp < timestamp && key.identifier.equalsIgnoreCase(identifier)) {
                 return Optional.of(entry.getValue());
@@ -85,32 +90,32 @@ public class JSONMemoryStorageShim implements JSONStorage {
         }
 
         Optional<StoredJSON> found = underlyingStorage.fetchJsonMadeBefore(identifier, timestamp);
-        found.ifPresent(storedJSON -> cache.put(new TimestampedIdentifier(identifier, storedJSON.timestamp), storedJSON));
+        found.ifPresent(storedJSON -> getCache().put(new TimestampedIdentifier(identifier, storedJSON.timestamp), storedJSON));
         return found;
     }
 
     @Override
     public Optional<StoredJSON> fetchJsonMadeAfter(String identifier, long timestamp) {
-        for (Map.Entry<TimestampedIdentifier, StoredJSON> entry : cache.asMap().entrySet()) {
+        for (Map.Entry<TimestampedIdentifier, StoredJSON> entry : getCache().asMap().entrySet()) {
             TimestampedIdentifier key = entry.getKey();
             if (key.timestamp > timestamp && key.identifier.equalsIgnoreCase(identifier)) {
                 return Optional.of(entry.getValue());
             }
         }
         Optional<StoredJSON> found = underlyingStorage.fetchJsonMadeAfter(identifier, timestamp);
-        found.ifPresent(storedJSON -> cache.put(new TimestampedIdentifier(identifier, storedJSON.timestamp), storedJSON));
+        found.ifPresent(storedJSON -> getCache().put(new TimestampedIdentifier(identifier, storedJSON.timestamp), storedJSON));
         return found;
     }
 
     @Override
     public void invalidateOlder(String identifier, long timestamp) {
         Set<TimestampedIdentifier> toInvalidate = new HashSet<>();
-        for (TimestampedIdentifier key : cache.asMap().keySet()) {
+        for (TimestampedIdentifier key : getCache().asMap().keySet()) {
             if (key.timestamp < timestamp && key.identifier.equalsIgnoreCase(identifier)) {
                 toInvalidate.add(key);
             }
         }
-        toInvalidate.forEach(cache::invalidate);
+        toInvalidate.forEach(getCache()::invalidate);
 
         underlyingStorage.invalidateOlder(identifier, timestamp);
     }

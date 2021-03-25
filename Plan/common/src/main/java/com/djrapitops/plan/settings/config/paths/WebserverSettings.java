@@ -47,7 +47,7 @@ public class WebserverSettings {
     public static final Setting<Long> REDUCED_REFRESH_BARRIER = new TimeSetting("Webserver.Cache.Reduced_refresh_barrier");
     public static final Setting<Long> INVALIDATE_QUERY_RESULTS = new TimeSetting("Webserver.Cache.Invalidate_query_results_on_disk_after");
     public static final Setting<Long> INVALIDATE_DISK_CACHE = new TimeSetting("Webserver.Cache.Invalidate_disk_cache_after");
-    public static final Setting<Long> INVALIDATE_MEMORY_CACHE = new TimeSetting("Webserver.Cache.Invalidate_memory_cache_after");
+    public static final Setting<Long> INVALIDATE_MEMORY_CACHE = new TimeSetting("Webserver.Cache.Invalidate_memory_cache_after", TimeUnit.MINUTES.toMillis(5L));
     public static final Setting<Long> COOKIES_EXPIRE_AFTER = new TimeSetting("Webserver.Security.Cookies_expire_after", TimeUnit.HOURS.toMillis(2L));
 
     private WebserverSettings() {
