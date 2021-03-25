@@ -1,10 +1,10 @@
-API - css+                                      || Rozšíření: ${0} přidán stylesheet(s) k ${1}, ${2}
-API - js+                                       || Rozšíření: ${0} přidán javascript(s) k ${1}, ${2}
+API - css+                                      || Rozšíření: ${0} přidán stylesheet k ${1}, ${2}
+API - js+                                       || Rozšíření: ${0} přidán javascript k ${1}, ${2}
 Cmd - Click Me                                  || Klikni na mě
 Cmd - Link                                      ||   §2Odkaz: §f
 Cmd - Link Network                              || Stránka sítě: 
 Cmd - Link Player                               || Stránka hráče: 
-Cmd - Link Player JSON                          || Hráč json: 
+Cmd - Link Player JSON                          || JSON hráče: 
 Cmd - Link Players                              || Stránka hráčů: 
 Cmd - Link Register                             || Stránka registrace: 
 Cmd - Link Server                               || Stránka serveru: 
