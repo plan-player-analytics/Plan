@@ -27,7 +27,7 @@ public enum LangCode {
     EN("English", "AuroraLS3"),
     ES("Spanish", "Catalina & itaquito & Elguerrero"),
     CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f) & qsefthuopq & shaokeyibb & Fur_xia"),
-    CS("Czech", "Shadowhackercz & QuakyCZ & MrFriggo"),
+    CS("Czech", "Shadowhackercz & QuakyCZ & MrFriggo & WolverStones"),
     DE("Deutsch", "Eyremba & fuzzlemann & Morsmorse & hallo1142"),
     FI("Finnish", "AuroraLS3"),
     FR("French", "CyanTech & Aurelien & Nogapra"),

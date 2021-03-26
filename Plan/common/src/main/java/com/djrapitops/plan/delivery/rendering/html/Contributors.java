@@ -73,6 +73,7 @@ public class Contributors {
             new Contributor("MrFriggo", LANG),
             new Contributor("vacoup", CODE),
             new Contributor("Kopo942", CODE),
+            new Contributor("WolverStones", LANG),
     };
 
     private Contributors() {
