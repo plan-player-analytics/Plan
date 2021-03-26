@@ -50,12 +50,14 @@ public class ActiveSession {
     }
 
     public FinishedSession toFinishedSessionFromStillActive() {
+        updateState();
         FinishedSession finishedSession = toFinishedSession(System.currentTimeMillis());
         finishedSession.getExtraData().put(ActiveSession.class, this);
         return finishedSession;
     }
 
     public FinishedSession toFinishedSession(long end) {
+        updateState(end);
         return new FinishedSession(playerUUID, serverUUID, start, end, afkTime, extraData.copy());
     }
 
@@ -98,7 +100,11 @@ public class ActiveSession {
     }
 
     public void updateState() {
-        extraData.get(WorldTimes.class).ifPresent(times -> times.updateState(System.currentTimeMillis()));
+        updateState(System.currentTimeMillis());
+    }
+
+    public void updateState(long time) {
+        extraData.get(WorldTimes.class).ifPresent(times -> times.updateState(time));
     }
 
     public void changeState(String world, String gameMode, long time) {
