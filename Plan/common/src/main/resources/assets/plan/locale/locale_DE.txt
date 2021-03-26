@@ -2,26 +2,26 @@ API - css+                                      || PageExtension: ${0} added sty
 API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
 Cmd - Click Me                                  || Klicke hier
 Cmd - Link                                      || Link
-Cmd - Link Network                              || Network page: 
-Cmd - Link Player                               || Player page: 
-Cmd - Link Player JSON                          || Player json: 
-Cmd - Link Players                              || Players page: 
-Cmd - Link Register                             || Register page: 
-Cmd - Link Server                               || Server page: 
-CMD Arg - backup-file                           || Name of the backup file (case sensitive)
-CMD Arg - code                                  || Code used to finalize registration.
-CMD Arg - db type backup                        || Type of the database to backup. Current database is used if not specified.
-CMD Arg - db type clear                         || Type of the database to remove all data from.
-CMD Arg - db type hotswap                       || Type of the database to start using.
-CMD Arg - db type move from                     || Type of the database to move data from.
-CMD Arg - db type move to                       || Type of the database to move data to. Can not be same as previous.
-CMD Arg - db type restore                       || Type of the database to restore to. Current database is used if not specified.
-CMD Arg - feature                               || Name of the feature to disable: ${0}
-CMD Arg - player identifier                     || Name or UUID of a player
-CMD Arg - player identifier remove              || Identifier for a player that will be removed from current database.
-CMD Arg - server identifier                     || Name, ID or UUID of a server
-CMD Arg - subcommand                            || Use the command without subcommand to see help.
-CMD Arg - username                              || Username of another user. If not specified player linked user is used.
+Cmd - Link Network                              || Netzwerk-Seite: 
+Cmd - Link Player                               || Spieler-Seite: 
+Cmd - Link Player JSON                          || Spieler JSON: 
+Cmd - Link Players                              || Spieler-Seite: 
+Cmd - Link Register                             || RRegisterseite: 
+Cmd - Link Server                               || Server Seite: 
+CMD Arg - backup-file                           || Name der Backup Datei (Groß- und Kleinschreibung beachten!)
+CMD Arg - code                                  || Code, um die Registrierung abzuschließen.
+CMD Arg - db type backup                        || Datenbanktyp, von welchem ein Backup erstellt werden soll. Wenn keiner angegeben wird, wird die aktuell festgelegte Datenbank verwendet.
+CMD Arg - db type clear                         || Datenbanktyp, von welchem alle Daten gelöscht werden sollen.
+CMD Arg - db type hotswap                       || Datenbanktyp, welcher verwendet werden soll.
+CMD Arg - db type move from                     || Datenbanktyp, von welchem Daten verschoben werden sollen.
+CMD Arg - db type move to                       || Datenbanktyp, zu welchem Daten verschoben werden sollen. Kann nicht der selbe wie vorher sein.
+CMD Arg - db type restore                       || Datenbanktyp, welcher wiederhergestellt werden soll. Wenn keiner angegeben wird, wird die aktuell festgelegte Datenbank verwendet.
+CMD Arg - feature                               || Name des zu deaktivierenden Features: ${0}
+CMD Arg - player identifier                     || Name oder UUID eines Spieler
+CMD Arg - player identifier remove              || Anhabe eines Spielers, welcher aus der aktuellen Datenbank entfernt werden soll
+CMD Arg - server identifier                     || Name, ID oder UUID eines Servers
+CMD Arg - subcommand                            || Nutze den Befehl ohne Unterbefehl, um die Hilfe anzuzeigen
+CMD Arg - username                              || Nutzername eines anderen Nutzers. Wenn nicht angegeben, wird der mit dem Spieler verknüpfte Benutzer verwendet.
 CMD Arg Name - backup-file                      || backup-file
 CMD Arg Name - code                             || ${code}
 CMD Arg Name - export kind                      || export kind
@@ -31,27 +31,27 @@ CMD Arg Name - name or uuid                     || name/uuid
 CMD Arg Name - server                           || server
 CMD Arg Name - subcommand                       || subcommand
 CMD Arg Name - username                         || username
-Cmd Confirm - accept                            || Accept
-Cmd Confirm - cancelled, no data change         || Cancelled. No data was changed.
-Cmd Confirm - cancelled, unregister             || Cancelled. '${0}' was not unregistered
-Cmd Confirm - clearing db                       || You are about to remove all Plan-data in ${0}
-Cmd Confirm - confirmation                      || Confirm: 
-Cmd Confirm - deny                              || Cancel
-Cmd Confirm - Expired                           || Confirmation expired, use the command again
+Cmd Confirm - accept                            || Annehmen
+Cmd Confirm - cancelled, no data change         || Abgebrochen. Es wurden keine Daten verändert.
+Cmd Confirm - cancelled, unregister             || Abgebrochen. '${0}' wurde nicht unregistriert
+Cmd Confirm - clearing db                       || Du bist dabei sämtliche Plan-Daten in ${0} zu entfernen.
+Cmd Confirm - confirmation                      || Bestätigen: 
+Cmd Confirm - deny                              || Abbrechen
+Cmd Confirm - Expired                           || Bestätigungsanfrage abgelaufen, nutze den Befehl erneut
 Cmd Confirm - Fail on accept                    || The accepted action errored upon execution: ${0}
 Cmd Confirm - Fail on deny                      || The denied action errored upon execution: ${0}
-Cmd Confirm - overwriting db                    || You are about to overwrite data in Plan ${0} with data in ${1}
-Cmd Confirm - remove player db                  || You are about to remove data of ${0} from ${1}
+Cmd Confirm - overwriting db                    || Du bist dabei Daten in Plan ${0} mit Daten in ${1} zu überschreiben
+Cmd Confirm - remove player db                  || Du bist dabei Daten von ${0} aus ${1} zu entfernen
 Cmd Confirm - unregister                        || You are about to unregister '${0}' linked to ${1}
 Cmd db - creating backup                        || Creating a backup file '${0}.db' with contents of ${1}
-Cmd db - removal                                || Removing Plan-data from ${0}..
-Cmd db - removal player                         || Removing data of ${0} from ${1}..
-Cmd db - server uninstalled                     || §aIf the server is still installed, it will automatically set itself as installed in the database.
-Cmd db - write                                  || Writing to ${0}..
+Cmd db - removal                                || Entferne Plan-Daten von ${0}..
+Cmd db - removal player                         || Entferne Daten von ${0} aus ${1}..
+Cmd db - server uninstalled                     || §aWenn der Server noch installiert ist, setzt er sich automatisch als installiert in die Datenbank.
+Cmd db - write                                  || Schreibe in ${0}..
 Cmd Disable - Disabled                          || §aPlan ist nun deaktiviert. Nutze reload um das Plugin neu zu starten.
 Cmd FAIL - Accepts only these arguments         || Accepts following as ${0}: ${1}
 Cmd FAIL - Database not open                    || §cDatenbank ist ${0} - Bitte versuche es später erneut.
-Cmd FAIL - Empty search string                  || The search string can not be empty
+Cmd FAIL - Empty search string                  || TDer Suchstring kann nicht leer sein
 Cmd FAIL - Invalid Username                     || §cDieser Benutzer besitzt keine UUID.
 Cmd FAIL - No Feature                           || §eWelches Feature soll deaktiviert werden? (momentan unterstützt: ${0})
 Cmd FAIL - No Permission                        || §cDafür fehlt dir die Berechtigung.
@@ -62,12 +62,12 @@ Cmd FAIL - Require only one Argument            || §cNur ein Argument erforderl
 Cmd FAIL - Requires Arguments                   || §cArgumente erforderlich (${0}) ${1}
 Cmd FAIL - see config                           || see '${0}' in config.yml
 Cmd FAIL - Unknown Username                     || §cDieser Benutzer war noch nie auf dem Server.
-Cmd FAIL - Users not linked                     || User is not linked to your account and you don't have permission to remove other user's accounts.
+Cmd FAIL - Users not linked                     || Dieser Benutzer ist nicht mit deinem Konto verknüpft und du hast nicht die Berechtigung, die Konten anderer Benutzer zu entfernen.
 Cmd FAIL - WebUser does not exists              || §cDieser Benutzer existiert nicht!
 Cmd FAIL - WebUser exists                       || §cDieser Benutzer existiert schon!
-Cmd Footer - Help                               || §7Hover over command or arguments or use '/${0} ?' to learn more about them.
+Cmd Footer - Help                               || §7Fahre über Vefehle oder Argumente oder nutze '/${0} ?' um mehr über diese zu lernen.
 Cmd Header - Analysis                           || > §2Analyse-Ergebnis:
-Cmd Header - Help                               || > §2/${0} Help
+Cmd Header - Help                               || > §2/${0} Hilfe
 Cmd Header - Info                               || > §2Benutzeranalyse:
 Cmd Header - Inspect                            || > §2Benutzer: §f${0}
 Cmd Header - Network                            || > §2Netzwerkseite
@@ -83,9 +83,9 @@ Cmd Info - Reload Complete                      || §aReload erfolgreich.
 Cmd Info - Reload Failed                        || §cBeim Reload ist etwas schief gelaufen. Es wird empfohlen, den Server neuzustarten.
 Cmd Info - Update                               ||   §2Update verfügbar: §f${0}
 Cmd Info - Version                              ||   §2Version: §f${0}
-Cmd network - No network                        || Server is not connected to a network. The link redirects to server page.
-Cmd Notify - No Address                         || §eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings.
-Cmd Notify - No WebUser                         || Möglicherweise hast du keinen Account. Erstelle einen mit /plan register <password>
+Cmd network - No network                        || Server ist nicht in einem Netzwerk. Der Link leitet auf die Server Seite um.
+Cmd Notify - No Address                         || §eEs war keine Adresse verfügbar - Verwendung von localhost als Fallback. Richte 'Alternative_IP' in den Einstellungen ein.
+Cmd Notify - No WebUser                         || Möglicherweise hast du keinen Account. Erstelle einen mit /plan register <Passwort>
 Cmd Notify - WebUser register                   || Neuer Account hinzugefügt: '${0}' Rechte-Level: ${1}
 Cmd Qinspect - Active Playtime                  ||   §2Active Playtime: §f${0}
 Cmd Qinspect - Activity Index                   ||   §2Aktivitätsindex: §f${0} | ${1}
@@ -101,24 +101,24 @@ Cmd Qinspect - Registered                       ||   §2Registrierung: §f${0}
 Cmd Qinspect - Times Kicked                     ||   §2Kicks: §f${0}
 Cmd SUCCESS - Feature disabled                  || §a'${0}' wurde bis zum nächsten Reload des Plugins deaktiviert.
 Cmd SUCCESS - WebUser register                  || §aNeuer Account (${0}) erfolgreich hinzugefügt!
-Cmd unregister - unregistering                  || Unregistering '${0}'..
+Cmd unregister - unregistering                  || Löschen der Registrierung von '${0}'..
 Cmd WARN - Database not open                    || §eDatenbank ist ${0} - Dies könnte länger als erwartet dauern..
 Cmd Web - Permission Levels                     || >\§70: Zugriff auf alle Seiten\§71: Zugriff auf '/players' Und alle Spielerseiten\§72: Zugriff auf alle Spielerseiten mit dem gleichen Username wie der Web-Account\§73+: Keine Berechtigung
-Command Help - /plan db                         || Manage Plan database
-Command Help - /plan db backup                  || Backup data of a database to a file
-Command Help - /plan db clear                   || Remove ALL Plan data from a database
+Command Help - /plan db                         || Verwalte die Plan Datenbank
+Command Help - /plan db backup                  || Erstelle ein Backup der Datenbank in eine Datei
+Command Help - /plan db clear                   || Lösche ALLE Daten von Plan
 Command Help - /plan db hotswap                 || Ändere die Datenbank schnell
 Command Help - /plan db move                    || Bewege die Daten zwischen den Datenbanken
-Command Help - /plan db remove                  || Remove player's data from Current database
-Command Help - /plan db restore                 || Restore data from a file to a database
+Command Help - /plan db remove                  || Lösche Daten eines Spielers aus der aktuellen Datenbank
+Command Help - /plan db restore                 || Stelle Daten aus einer Datei in die Datenbank wiederher
 Command Help - /plan db uninstalled             || Set a server as uninstalled in the database.
-Command Help - /plan disable                    || Disable the plugin or part of it
-Command Help - /plan export                     || Export html or json files manually
-Command Help - /plan import                     || Import data
-Command Help - /plan info                       || Information about the plugin
+Command Help - /plan disable                    || Deaktiviere das Plugin oder einen Teil
+Command Help - /plan export                     || Exportiere JSON oder HTMl Dateien manuell
+Command Help - /plan import                     || Importiere Daten
+Command Help - /plan info                       || Informationen über das Plugin
 Command Help - /plan ingame                     || Zeigt die Spielerinfo im Spiel
-Command Help - /plan json                       || View json of Player's raw data.
-Command Help - /plan logout                     || Log out other users from the panel.
+Command Help - /plan json                       || JSON der Rohdaten eines Spielers anzeigen.
+Command Help - /plan logout                     || Melde andere Nutzer aus dem Panel ab.
 Command Help - /plan network                    || Netzwerk-Seite
 Command Help - /plan player                     || Zeigt eine Spielerseite an
 Command Help - /plan players                    || Spieler-Seite
@@ -127,8 +127,8 @@ Command Help - /plan reload                     || Plan neuladen
 Command Help - /plan search                     || Nach einem Spieler suchen
 Command Help - /plan server                     || Server-Übersicht
 Command Help - /plan servers                    || Liste die Server in der Datenbank auf
-Command Help - /plan unregister                 || Unregister a user of Plan website
-Command Help - /plan users                      || List all web users
+Command Help - /plan unregister                 || Registrierung eines Benutzers der Plan-Website aufheben
+Command Help - /plan users                      || Zeige alle Web-Benutzer
 Database - Apply Patch                          || Wende Patch an: ${0}..
 Database - Patches Applied                      || Alle Datenbankpatches wurden erfolgreich angewendet.
 Database - Patches Applied Already              || Alle Datenbankpatches wurden bereits angewendet.
@@ -165,14 +165,14 @@ HTML - COMPARING_15_DAYS                        || Vergleiche 15 Tage
 HTML - COMPARING_60_DAYS                        || Vergleiche 30 Tage bis Jetzt
 HTML - COMPARING_7_DAYS                         || Vergleiche 7 Tage
 HTML - DATABASE_NOT_OPEN                        || Datenbank ist nicht offen, überprüfe den DB Status mit /plan info
-HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
-HTML - ERROR                                    || Authentifikation fehlgeschlagen
-HTML - EXPIRED_COOKIE                           || User cookie has expired
-HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
-HTML - FILTER_ALL_PLAYERS                       || All players
-HTML - FILTER_BANNED                            || Ban status
-HTML - FILTER_GROUP                             || Group: 
-HTML - FILTER_OPS                               || Operator status
+HTML - DESCRIBE_RETENTION_PREDICTION            || Dieser Wert ist eine Vorhersage, die auf früheren Spielern basiert.
+HTML - ERROR                                    || Authentifizierung fehlgeschlagen
+HTML - EXPIRED_COOKIE                           || Benutzer-Cookie ist abgelaufen
+HTML - FILTER_ACTIVITY_INDEX_NOW                || Aktuelle Aktivitätsgruppe
+HTML - FILTER_ALL_PLAYERS                       || Alle Spieler
+HTML - FILTER_BANNED                            || Bann-Status
+HTML - FILTER_GROUP                             || Gruppe: 
+HTML - FILTER_OPS                               || Operator Status
 HTML - INDEX_ACTIVE                             || Aktiv
 HTML - INDEX_INACTIVE                           || Inaktiv
 HTML - INDEX_IRREGULAR                          || Unregelmäßig
@@ -182,27 +182,27 @@ HTML - KILLED                                   || Getötet
 HTML - LABEL_1ST_WEAPON                         || Tödlichste PvP Waffe
 HTML - LABEL_2ND_WEAPON                         || 2. PvP Waffe
 HTML - LABEL_3RD_WEAPON                         || 3. PvP Waffe
-HTML - LABEL_ACTIVE_PLAYTIME                    || Active Playtime
+HTML - LABEL_ACTIVE_PLAYTIME                    || Aktive Spielzeit
 HTML - LABEL_ACTIVITY_INDEX                     || Aktivitätsindex
 HTML - LABEL_AFK                                || AFK
 HTML - LABEL_AFK_TIME                           || AFK Zeit
 HTML - LABEL_AVG                                || Durchschnitt
-HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
-HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
-HTML - LABEL_AVG_CHUNKS                         || Average Chunks
-HTML - LABEL_AVG_ENTITIES                       || Average Entities
+HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Durchschnittliche aktive Spielzeit
+HTML - LABEL_AVG_AFK_TIME                       || Durchschnittliche AFK Zeit
+HTML - LABEL_AVG_CHUNKS                         || Durchschnittliche Chunks
+HTML - LABEL_AVG_ENTITIES                       || Durchschnittliche Entitäten
 HTML - LABEL_AVG_KDR                            || Durschnittliche KDR
 HTML - LABEL_AVG_MOB_KDR                        || Durschnittliche Mob KDR
 HTML - LABEL_AVG_PLAYTIME                       || Durschnittliche Spielzeit
 HTML - LABEL_AVG_SESSION_LENGTH                 || Durschnittliche Sitzungslänge
-HTML - LABEL_AVG_SESSIONS                       || Average Sessions
+HTML - LABEL_AVG_SESSIONS                       || Durchschnittliche Sessions
 HTML - LABEL_AVG_TPS                            || Durschnittliche TPS
 HTML - LABEL_BANNED                             || Gebannt
 HTML - LABEL_BEST_PEAK                          || Rekord
 HTML - LABEL_DAY_OF_WEEK                        || Tag der Woche
 HTML - LABEL_DEATHS                             || Tode
 HTML - LABEL_DOWNTIME                           || Downtime
-HTML - LABEL_DURING_LOW_TPS                     || During Low TPS Spikes:
+HTML - LABEL_DURING_LOW_TPS                     || Während niedriger TPS-Spitzen:
 HTML - LABEL_ENTITIES                           || Entitäten
 HTML - LABEL_FAVORITE_SERVER                    || Lieblingsserver
 HTML - LABEL_FIRST_SESSION_LENGTH               || Erste Sitzungslänge
@@ -227,9 +227,9 @@ HTML - LABEL_NEW                                || Neu
 HTML - LABEL_NEW_PLAYERS                        || Neue Spieler
 HTML - LABEL_NICKNAME                           || Nickname
 HTML - LABEL_NO_SESSION_KILLS                   || Keiner
-HTML - LABEL_ONLINE_FIRST_JOIN                  || Players online on first join
+HTML - LABEL_ONLINE_FIRST_JOIN                  || Spieler beim ersten Beitritt online
 HTML - LABEL_OPERATOR                           || Operator
-HTML - LABEL_PER_PLAYER                         || / Player
+HTML - LABEL_PER_PLAYER                         || / Spieler
 HTML - LABEL_PER_REGULAR_PLAYER                 || / Regulärer Spieler
 HTML - LABEL_PLAYER_DEATHS                      || Tode durch Spieler
 HTML - LABEL_PLAYER_KILLS                       || Getötete Spieler
@@ -264,7 +264,7 @@ HTML - LINK_WIKI                                || Plan Wiki, Tutorials & Docume
 HTML - LOCAL_MACHINE                            || Lokale Maschine
 HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
 HTML - LOGIN_FAILED                             || Login failed: 
-HTML - LOGIN_FORGOT_PASSWORD                    || Forgot Password?
+HTML - LOGIN_FORGOT_PASSWORD                    || Passwort vergessen?
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Forgot password? Unregister and register again.
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Use the following command in game to remove your current user:
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Or using console:
@@ -276,7 +276,7 @@ HTML - LOGIN_USERNAME                           || "Username"
 HTML - NAV_PLUGINS                              || Plugins
 HTML - NEW_CALENDAR                             || Neu:
 HTML - NO_KILLS                                 || Keine Kills
-HTML - NO_USER_PRESENT                          || User cookie not present
+HTML - NO_USER_PRESENT                          || Benutzer-Cookie nicht vorhanden
 HTML - NON_OPERATORS (Filters)                  || Non operators
 HTML - NOT_BANNED (Filters)                     || Not banned
 HTML - OFFLINE                                  ||  Offline
