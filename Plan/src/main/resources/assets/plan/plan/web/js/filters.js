@@ -86,6 +86,15 @@ class JoinAddressFilter extends MultipleChoiceFilter {
     }
 }
 
+// Lowercase due to locale translation: Geolocations
+class geolocationsFilter extends MultipleChoiceFilter {
+    constructor(
+        id, options
+    ) {
+        super(id, "geolocations", `have joined from country`, options);
+    }
+}
+
 class PluginGroupsFilter extends MultipleChoiceFilter {
     constructor(
         id, kind, options
@@ -197,6 +206,8 @@ function createFilter(filter, id) {
             return new OperatorsFilter(id, filter.options);
         case "joinAddresses":
             return new JoinAddressFilter(id, filter.options);
+        case "geolocations":
+            return new geolocationsFilter(id, filter.options);
         case "playedBetween":
             return new PlayedBetweenFilter(id, filter.options);
         case "registeredBetween":
@@ -221,6 +232,8 @@ function getReadableFilterName(filter) {
             return "Operator status";
         case "joinAddresses":
             return "Join Addresses";
+        case "geolocations":
+            return "Geolocations";
         case "playedBetween":
             return "Played between";
         case "registeredBetween":

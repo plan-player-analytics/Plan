@@ -1,10 +1,10 @@
-API - css+                                      || Rozšíření: ${0} přidán stylesheet(s) k ${1}, ${2}
-API - js+                                       || Rozšíření: ${0} přidán javascript(s) k ${1}, ${2}
+API - css+                                      || Rozšíření: ${0} přidán stylesheet k ${1}, ${2}
+API - js+                                       || Rozšíření: ${0} přidán javascript k ${1}, ${2}
 Cmd - Click Me                                  || Klikni na mě
 Cmd - Link                                      || Odkaz
 Cmd - Link Network                              || Stránka sítě: 
 Cmd - Link Player                               || Stránka hráče: 
-Cmd - Link Player JSON                          || Hráč json: 
+Cmd - Link Player JSON                          || JSON hráč:
 Cmd - Link Players                              || Stránka hráčů: 
 Cmd - Link Register                             || Stránka registrace: 
 Cmd - Link Server                               || Stránka serveru: 
@@ -118,6 +118,7 @@ Command Help - /plan import                     || Import dat
 Command Help - /plan info                       || Zjistit verzi Plan
 Command Help - /plan ingame                     || Ukázat Hráčské info ve hře
 Command Help - /plan json                       || Ukázat json Hráčských čistých dat.
+Command Help - /plan logout                     || Log out other users from the panel.
 Command Help - /plan network                    || Ukázat stránku sítě
 Command Help - /plan player                     || Ukázat stránku hráče
 Command Help - /plan players                    || Ukázat stránku hráčů
@@ -138,6 +139,11 @@ Disable                                         || Player Analytics vypnuty.
 Disable - Processing                            || Zpracovávání kritických nezpracovaných úkonů. (${0})
 Disable - Processing Complete                   || Zpracování dokončeno.
 Disable - Unsaved Session Save                  || Ukládání nedokončené relace.
+Disable - Unsaved Session Save Timeout          || Timeout hit, storing the unfinished sessions on next enable instead.
+Disable - Waiting SQLite                        || Waiting queries to finish to avoid SQLite crashing JVM..
+Disable - Waiting SQLite Complete               || Closed SQLite connection.
+Disable - Waiting Transactions                  || Waiting for unfinished transactions to avoid data loss..
+Disable - Waiting Transactions Complete         || Transaction queue closed.
 Disable - WebServer                             || Webserver je již vypnutý.
 Enable                                          || Player Analytics zapnuty.
 Enable - Database                               || ${0}-připojení k databázi navázáno.
@@ -146,6 +152,7 @@ Enable - Notify Empty IP                        || IP v server.properties je pr�
 Enable - Notify Geolocations disabled           || Sbírání geolokace není aktivní. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan potřebuje internetové připojení pro první start ke stažení GeoLite2 Geolocation databáze.
 Enable - Notify Webserver disabled              || WebServer nebyl inicializován. (WebServer.DisableWebServer: true)
+Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
 Enable - WebServer                              || Webserver běží na PORTU ${0} (${1})
 Enable FAIL - Database                          || ${0}-Připojení k databázi selhalo: ${1}
 Enable FAIL - Database Patch                    || Patch databáze selhal, plugin musí být vypnut. Prosíme nahlašte tento problém
@@ -158,6 +165,7 @@ HTML - COMPARING_15_DAYS                        || Srovnání posledních 15 dn�
 HTML - COMPARING_60_DAYS                        || Srovnání posledních 60 dní
 HTML - COMPARING_7_DAYS                         || Srovnání posledních 7 dní
 HTML - DATABASE_NOT_OPEN                        || Databáze není otevřená, ověřte status databáze s /plan info
+HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
 HTML - ERROR                                    || Autentifikace neuspěšná kvůli chybě
 HTML - EXPIRED_COOKIE                           || Uživatelské cookie expirovalo
 HTML - FILTER_ACTIVITY_INDEX_NOW                || Aktuální skupina aktivit
@@ -284,6 +292,7 @@ HTML - QUERY_AND                                || a
 HTML - QUERY_ARE                                || ` jsou`
 HTML - QUERY_ARE_ACTIVITY_GROUP                 || jsou ve skupinách aktivit
 HTML - QUERY_ARE_PLUGIN_GROUP                   || jsou v ${plugin}'s ${group} Skupiny
+HTML - QUERY_JOINED_WITH_ADDRESS                || joined with address
 HTML - QUERY_LOADING_FILTERS                    || Načítání filtrů..
 HTML - QUERY_MAKE                               || Vytvořit dotaz
 HTML - QUERY_MAKE_ANOTHER                       || Vytvořit další dotaz
@@ -367,6 +376,7 @@ HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Online aktivita na proxy
 HTML - TITLE_GRAPH_PUNCHCARD                    || Štítek pro 30 dní
 HTML - TITLE_INSIGHTS                           || Postřehy za 30 dní
 HTML - TITLE_IS_AVAILABLE                       || je dostupný
+HTML - TITLE_JOIN_ADDRESSES                     || Join Addresses
 HTML - TITLE_LAST_24_HOURS                      || Posledních 24 hodin
 HTML - TITLE_LAST_30_DAYS                       || Posledních 30 dní
 HTML - TITLE_LAST_7_DAYS                        || Posledních 7 dní
@@ -425,6 +435,9 @@ HTML - Version Update                           || Aktualizovat
 HTML - Version Update Available                 || Nová verze ${0} je dostupná!
 HTML - Version Update Dev                       || Toto je vývojářská verze.
 HTML - Version Update Info                      || Nová verze je dostupná ke stažení.
+HTML - WARNING_NO_GAME_SERVERS                  || Some data requires Plan to be installed on game servers.
+HTML - WARNING_NO_GEOLOCATIONS                  || Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).
+HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunks unavailable on Sponge
 HTML - WITH                                     || <th>S
 HTML ERRORS - ACCESS_DENIED_403                 || Přístup zamítnut
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ujistěte se, že jste zaregistrovaní s uživatelem s <b>/plan register</b><br>- Zkontrolujte zda je jméno a heslo správné<br>- Jméno a heslo jsou citlivá na velká/malá písmena<br><br>Pokud jste zapomněli heslo, zeptejte se člena týmu ke smazání vašeho starého uživatele či nové registraci.
@@ -451,6 +464,7 @@ In Depth Help - /plan import                    || Vykoná import k načtení da
 In Depth Help - /plan info                      || Zobrazí aktuální status pluginu.
 In Depth Help - /plan ingame                    || Ukáže některé informace o hráči ve hře.
 In Depth Help - /plan json                      || Dovolí stáhnout hráčská data v json formátu. Všechna.
+In Depth Help - /plan logout                    || Give username argument to log out another user from the panel, give * as argument to log out everyone.
 In Depth Help - /plan network                   || Získání odkazu k /network page, pouze na sítích.
 In Depth Help - /plan player                    || Získání odkazu k /player page specifického hráče, či aktuálního.
 In Depth Help - /plan players                   || Získání odkazu k /players page k zobrazení seznamu hráčů.

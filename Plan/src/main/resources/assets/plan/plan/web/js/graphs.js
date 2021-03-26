@@ -150,6 +150,7 @@ function dayByDay(id, series) {
 }
 
 function onlineActivityCalendar(id, event_data, firstDay) {
+    document.querySelector(id + " .loader").remove();
     window.calendars.online_activity = new FullCalendar.Calendar(document.querySelector(id), {
         timeZone: "UTC",
         themeSystem: 'bootstrap',
@@ -419,31 +420,43 @@ function serverPie(id, serverSeries) {
 }
 
 function joinAddressPie(id, joinAddresses) {
-    graphs.push(Highcharts.chart(id, {
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {text: ''},
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: false
-                },
-                showInLegend: true
-            }
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.point.name + ':</b> ' + this.y + ' (' + this.percentage.toFixed(2) + '%)';
-            }
-        },
-        series: [joinAddresses]
-    }));
+    if (joinAddresses.data.length < 2) {
+        document.getElementById(id).innerHTML = '<div class="card-body"><p></p></div>'
+        document.getElementById(id).classList.remove('chart-area');
+
+        // XSS danger appending join addresses directly, using innerText is safe.
+        for (let slice of joinAddresses.data) {
+            document.querySelector(`#${id} p`).innerText = `${slice.name}: ${slice.y}`;
+        }
+    } else {
+        document.getElementById(id).innerHTML = '';
+        document.getElementById(id).classList.add('chart-area');
+        graphs.push(Highcharts.chart(id, {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {text: ''},
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.point.name + ':</b> ' + this.y + ' (' + this.percentage.toFixed(2) + '%)';
+                }
+            },
+            series: [joinAddresses]
+        }));
+    }
 }
 
 function formatTimeAmount(ms) {
@@ -473,6 +486,7 @@ function formatTimeAmount(ms) {
 }
 
 function sessionCalendar(id, event_data, firstDay) {
+    document.querySelector(id + " .loader").remove();
     window.calendars.sessions = new FullCalendar.Calendar(document.querySelector(id), {
         timeZone: "UTC",
         themeSystem: 'bootstrap',

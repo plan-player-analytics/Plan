@@ -281,7 +281,7 @@ function runQuery() {
         </div>`;
     } else {
         const icon = document.createElement('template');
-        icon.innerHTML = '<span class="loader"></span>'
+        icon.innerHTML = '<i class="fa fa-cog fa-spin"></i>'
         queryButton.querySelector('.fa').replaceWith(icon.content);
     }
 
@@ -300,7 +300,7 @@ function runQuery() {
                 queryButton.classList.remove('disabled');
                 const icon = document.createElement('template');
                 icon.innerHTML = '<i class="fa fa-search"></i>'
-                queryButton.querySelector('.loader').replaceWith(icon.content);
+                queryButton.querySelector('.fa').replaceWith(icon.content);
                 query.splice(0, query.length);
             } else {
                 // Cached query expired

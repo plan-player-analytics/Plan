@@ -62,9 +62,9 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
  */
 function jsonRequest(address, callback) {
     setTimeout(function () {
-        var xhttp = new XMLHttpRequest();
-        xhttp.withCredentials = true;
-        xhttp.onreadystatechange = function () {
+        const xhr = new XMLHttpRequest();
+        xhr.withCredentials = true;
+        xhr.onreadystatechange = function () {
             if (this.readyState === 4) {
                 try {
                     if (this.status === 200 || (this.status === 0 && this.responseText)) {
@@ -85,11 +85,11 @@ function jsonRequest(address, callback) {
                 }
             }
         };
-        xhttp.timeout = 45000;
-        xhttp.ontimeout = function () {
+        xhr.timeout = 45000;
+        xhr.ontimeout = function () {
             callback(null, "Timed out after 45 seconds. (" + address + ")")
         };
-        xhttp.open("GET", address, true);
-        xhttp.send();
+        xhr.open("GET", address, true);
+        xhr.send();
     }, 0);
 }

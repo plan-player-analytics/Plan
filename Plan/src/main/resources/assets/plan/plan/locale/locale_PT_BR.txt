@@ -118,6 +118,7 @@ Command Help - /plan import                     || Import data
 Command Help - /plan info                       || Information about the plugin
 Command Help - /plan ingame                     || Visualziar informações do Jogador in-game
 Command Help - /plan json                       || View json of Player's raw data.
+Command Help - /plan logout                     || Log out other users from the panel.
 Command Help - /plan network                    || Visualizar a página da Network
 Command Help - /plan player                     || Visualizar a página do jogador
 Command Help - /plan players                    || Visualizar a página de Jogadores
@@ -138,6 +139,11 @@ Disable                                         || Análise de Jogadores Desativ
 Disable - Processing                            || Processando tarefas críticas não processadas anteriormente. (${0})
 Disable - Processing Complete                   || Processamento completo.
 Disable - Unsaved Session Save                  || Saving unfinished sessions..
+Disable - Unsaved Session Save Timeout          || Timeout hit, storing the unfinished sessions on next enable instead.
+Disable - Waiting SQLite                        || Waiting queries to finish to avoid SQLite crashing JVM..
+Disable - Waiting SQLite Complete               || Closed SQLite connection.
+Disable - Waiting Transactions                  || Waiting for unfinished transactions to avoid data loss..
+Disable - Waiting Transactions Complete         || Transaction queue closed.
 Disable - WebServer                             || O servidor web foi desativado.
 Enable                                          || Análise de Jogadores Ativado.
 Enable - Database                               || ${0}-conexão com o banco de dados estabilizada.
@@ -146,6 +152,7 @@ Enable - Notify Empty IP                        || O IP no server.properties est
 Enable - Notify Geolocations disabled           || A coleta de geolocalização está desativada. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || O Plan requer acesso à internet na primeira execução para baixar o banco de dados de geolocalização do GeoLite2.
 Enable - Notify Webserver disabled              || O servidor web não foi inicializado. (WebServer.DisableWebServer: true)
+Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
 Enable - WebServer                              || O servidor web está rodando na PORTA ${0} (${1})
 Enable FAIL - Database                          || ${0}-Falha na Conexão do Banco de Dados: ${1}
 Enable FAIL - Database Patch                    || O patch do banco de dados falhou, o plugin teve que ser desativado. Reporte esse problema no GitHub ou Discord para suporte.
@@ -158,6 +165,7 @@ HTML - COMPARING_15_DAYS                        || Comparing 15 days
 HTML - COMPARING_60_DAYS                        || Comparing 30d ago to Now
 HTML - COMPARING_7_DAYS                         || Comparing 7 days
 HTML - DATABASE_NOT_OPEN                        || Database is not open, check db status with /plan info
+HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
 HTML - ERROR                                    || Falha ao autenticar
 HTML - EXPIRED_COOKIE                           || User cookie has expired
 HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
@@ -284,6 +292,7 @@ HTML - QUERY_AND                                || and
 HTML - QUERY_ARE                                || `are`
 HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
 HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
+HTML - QUERY_JOINED_WITH_ADDRESS                || joined with address
 HTML - QUERY_LOADING_FILTERS                    || Loading filters..
 HTML - QUERY_MAKE                               || Make a query
 HTML - QUERY_MAKE_ANOTHER                       || Make another query
@@ -367,6 +376,7 @@ HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Network Online Activity
 HTML - TITLE_GRAPH_PUNCHCARD                    || Cartão Perfurado for 30 days
 HTML - TITLE_INSIGHTS                           || Insights for 30 days
 HTML - TITLE_IS_AVAILABLE                       || is Available
+HTML - TITLE_JOIN_ADDRESSES                     || Join Addresses
 HTML - TITLE_LAST_24_HOURS                      || Últimas 24 horas
 HTML - TITLE_LAST_30_DAYS                       || Últimos 30 dias
 HTML - TITLE_LAST_7_DAYS                        || Últimos 7 dias
@@ -425,6 +435,9 @@ HTML - Version Update                           || Update
 HTML - Version Update Available                 || Version ${0} is Available!
 HTML - Version Update Dev                       || This version is a DEV release.
 HTML - Version Update Info                      || A new version has been released and is now available for download.
+HTML - WARNING_NO_GAME_SERVERS                  || Some data requires Plan to be installed on game servers.
+HTML - WARNING_NO_GEOLOCATIONS                  || Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).
+HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunks unavailable on Sponge
 HTML - WITH                                     || <th>Com
 HTML ERRORS - ACCESS_DENIED_403                 || Acesso Negado
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Certifique-se de ter registrado um usuário com <b>/plan register</b><br>- Verifique se o nome de usuário e a senha estão corretos<br>- O nome de usuário e senha fazem distinção entre maiúsculas e minúsculas, verifique se escreveu corretamente<br><br>Se você esqueceu sua senha, peça para um staff que exclua seu antigo usuário e registre um novo.
@@ -451,6 +464,7 @@ In Depth Help - /plan import                    || Performs an import to load da
 In Depth Help - /plan info                      || Display the current status of the plugin.
 In Depth Help - /plan ingame                    || Mostra algumas informações sobre o jogador in-game.
 In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
+In Depth Help - /plan logout                    || Give username argument to log out another user from the panel, give * as argument to log out everyone.
 In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
 In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
 In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.

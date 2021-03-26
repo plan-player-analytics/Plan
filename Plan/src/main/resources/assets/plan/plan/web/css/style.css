@@ -769,7 +769,7 @@ div#navSrvContainer {
     max-height: 180px;
 }
 
-div#navSrvContainer>a {
+div#navSrvContainer > a {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -846,7 +846,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     color: #fff;
 }
 
-.bg-lime , body.theme-lime .fc-toolbar-chunk .btn.btn-primary{
+.bg-lime, body.theme-lime .fc-toolbar-chunk .btn.btn-primary {
     background-color: #CDDC39;
     color: #fff;
 }
@@ -912,171 +912,129 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 }
 
 .bg-red-outline {
-    outline-color: #F44336;
     border-color: #F44336;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #F44336 solid 1px;
 }
 
 .bg-pink-outline {
-    outline-color: #E91E63;
     border-color: #E91E63;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #E91E63 solid 1px;
 }
 
 .bg-purple-outline {
-    outline-color: #9C27B0;
     border-color: #9C27B0;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #9C27B0 solid 1px;
 }
 
 .bg-deep-purple-outline {
-    outline-color: #673AB7;
     border-color: #673AB7;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #673AB7 solid 1px;
 }
 
 .bg-indigo-outline {
-    outline-color: #3F51B5;
     border-color: #3F51B5;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #3F51B5 solid 1px;
 }
 
 .bg-blue-outline {
-    outline-color: #2196F3;
     border-color: #2196F3;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #2196F3 solid 1px;
 }
 
 .bg-light-blue-outline {
-    outline-color: #03A9F4;
     border-color: #03A9F4;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #03A9F4 solid 1px;
 }
 
 .bg-cyan-outline {
-    outline-color: #00BCD4;
     border-color: #00BCD4;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #00BCD4 solid 1px;
 }
 
 .bg-teal-outline {
-    outline-color: #009688;
     border-color: #009688;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #009688 solid 1px;
 }
 
 .bg-green-outline {
-    outline-color: #4CAF50;
     border-color: #4CAF50;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #4CAF50 solid 1px;
 }
 
 .bg-light-green-outline {
-    outline-color: #8BC34A;
     border-color: #8BC34A;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #8BC34A solid 1px;
 }
 
 .bg-lime-outline {
-    outline-color: #CDDC39;
     border-color: #CDDC39;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #CDDC39 solid 1px;
 }
 
 .bg-yellow-outline {
-    outline-color: #ffe821;
     border-color: #ffe821;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #ffe821 solid 1px;
 }
 
 .bg-amber-outline {
-    outline-color: #FFC107;
     border-color: #FFC107;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #FFC107 solid 1px;
 }
 
 .bg-orange-outline {
-    outline-color: #FF9800;
     border-color: #FF9800;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #FF9800 solid 1px;
 }
 
 .bg-deep-orange-outline {
-    outline-color: #FF5722;
     border-color: #FF5722;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #FF5722 solid 1px;
 }
 
 .bg-brown-outline {
-    outline-color: #795548;
     border-color: #795548;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #795548 solid 1px;
 }
 
 .bg-grey-outline {
-    outline-color: #9E9E9E;
     border-color: #9E9E9E;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #9E9E9E solid 1px;
 }
 
 .bg-blue-grey-outline {
-    outline-color: #607D8B;
     border-color: #607D8B;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #607D8B solid 1px;
 }
 
 .bg-black-outline {
-    outline-color: #555555;
     border-color: #555555;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #555555 solid 1px;
 }
 
 .bg-plan-outline {
-    outline-color: #368F17;
     border-color: #368F17;
     border-style: solid;
-    outline-style: solid;
-    outline-width: 1px;
+    outline: #368F17 solid 1px;
 }
 
 .col-red {
