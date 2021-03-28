@@ -16,15 +16,18 @@
  */
 package com.djrapitops.plan.extension.implementation.builder;
 
+import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 public class ExtValueBuilder implements ValueBuilder {
 
     // TODO add Conditional stuff so that annotation implementation can use builders
+    private final String pluginName;
     private final String text;
     private String description;
     private int priority = 0;
@@ -35,8 +38,9 @@ public class ExtValueBuilder implements ValueBuilder {
     private boolean formatAsPlayerName = false;
     private FormatType formatType = FormatType.NONE;
 
-    public ExtValueBuilder(String text) {
+    public ExtValueBuilder(String text, DataExtension extension) {
         this.text = text;
+        pluginName = extension.getClass().getAnnotation(PluginInfo.class).name();
     }
 
     @Override
@@ -81,43 +85,73 @@ public class ExtValueBuilder implements ValueBuilder {
         return this;
     }
 
-    private ExtensionDescriptive getDescriptive() { // TODO use ProviderInformation instead
-        return new ExtensionDescriptive(
-                text.toLowerCase().replaceAll("\\s", ""),
-                text,
-                description,
-                icon,
-                priority
-        );
+    private ProviderInformation getProviderInformation() {
+        return getProviderInformation(false, null);
+    }
+
+    private ProviderInformation getBooleanProviderInformation(String providedCondition) {
+        return getProviderInformation(false, providedCondition);
+    }
+
+    private ProviderInformation getPercentageProviderInformation() {
+        return getProviderInformation(true, null);
+    }
+
+    private ProviderInformation getProviderInformation(boolean percentage, String providedCondition) {
+        ProviderInformation.Builder builder = ProviderInformation.builder(pluginName)
+                .setName(text.toLowerCase().replaceAll("\\s", ""))
+                .setText(text)
+                .setDescription(description)
+                .setPriority(priority)
+                .setIcon(icon)
+                .setShowInPlayersTable(showInPlayerTable)
+                .setTab(tabName)
+                .setPlayerName(formatAsPlayerName)
+                .setFormatType(formatType);
+
+        if (percentage) {
+            builder = builder.setAsPercentage();
+        }
+
+        if (providedCondition != null) {
+            builder = builder.setProvidedCondition(providedCondition);
+        }
+
+        return builder.build();
     }
 
     @Override
     public DataValue<Boolean> buildBoolean(boolean value) {
-        return new ExtensionBooleanData(getDescriptive(), value);
+        return new BooleanDataValue(value, getProviderInformation());
+    }
+
+    @Override
+    public DataValue<Boolean> buildBooleanProvidingCondition(boolean value, String providedCondition) {
+        return new BooleanDataValue(value, getBooleanProviderInformation(providedCondition));
     }
 
     @Override
     public DataValue<String> buildString(String value) {
-        return new ExtensionStringData(getDescriptive(), formatAsPlayerName, value);
+        return new StringDataValue(value, getProviderInformation());
     }
 
     @Override
     public DataValue<Long> buildNumber(long value) {
-        return new ExtensionNumberData(getDescriptive(), formatType, value);
+        return new NumberDataValue(value, getProviderInformation());
     }
 
     @Override
     public DataValue<Double> buildDouble(double value) {
-        return new ExtensionDoubleData(getDescriptive(), value);
+        return new DoubleDataValue(value, getProviderInformation());
     }
 
     @Override
-    public DataValue<Double> buildPercentage(double percentage) {
-        return new ExtensionDoubleData(getDescriptive(), percentage);
+    public DataValue<Double> buildPercentage(double value) {
+        return new DoubleDataValue(value, getPercentageProviderInformation());
     }
 
     @Override
-    public DataValue<String[]> buildGroup(String[] groups) { // TODO
-        return null;
+    public DataValue<String[]> buildGroup(String[] groups) {
+        return new GroupsDataValue(groups, getProviderInformation());
     }
 }

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.builder;
 
+import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
@@ -31,15 +32,17 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
 
     private final List<ClassValuePair> values;
     private final List<TabNameTablePair> tables;
+    private final DataExtension extension;
 
-    public ExtDataBuilder() {
+    public ExtDataBuilder(DataExtension extension) {
+        this.extension = extension;
         values = new ArrayList<>();
         tables = new ArrayList<>();
     }
 
     @Override
     public ValueBuilder valueBuilder(String text) {
-        return new ExtValueBuilder(text);
+        return new ExtValueBuilder(text, extension);
     }
 
     @Override
@@ -60,6 +63,7 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
 
     @Override
     public ExtensionDataBuilder addTable(Table table, String tab) {
+        // TODO ProviderInformation instead.
         tables.add(new TabNameTablePair(tab, table));
         return this;
     }
@@ -74,15 +78,17 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
 
     public static final class ClassValuePair {
         private final Class<?> type;
-        private final Object value;
+        private final DataValue<?> value;
 
-        public ClassValuePair(Class<?> type, Object value) {
+        public <T> ClassValuePair(Class<T> type, DataValue<T> value) {
             this.type = type;
             this.value = value;
         }
 
-        public <T> Optional<T> getValue(Class<T> ofType) {
-            if (type.equals(ofType)) return Optional.ofNullable(ofType.cast(value));
+        public <T> Optional<DataValue<T>> getValue(Class<T> ofType) {
+            if (type.equals(ofType)) {
+                return Optional.ofNullable((DataValue<T>) value);
+            }
             return Optional.empty();
         }
     }

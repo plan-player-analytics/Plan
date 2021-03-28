@@ -129,7 +129,7 @@ public class ExtensionSvc implements ExtensionService {
 
     @Override
     public ExtensionDataBuilder newExtensionDataBuilder(DataExtension extension) {
-        return new ExtDataBuilder();
+        return new ExtDataBuilder(extension);
     }
 
     private boolean shouldNotAllowRegistration(String pluginName) {

@@ -55,6 +55,8 @@ public interface ValueBuilder {
 
     DataValue<Boolean> buildBoolean(boolean value);
 
+    DataValue<Boolean> buildBooleanProvidingCondition(boolean value, String providedCondition);
+
     DataValue<String> buildString(String value);
 
     DataValue<Long> buildNumber(long value);
