@@ -35,7 +35,7 @@ public enum LangCode {
     JA("Japanese", "yukieji"),
     KO("Korean", "Guinness_Akihiko"),
     RU("Russian", "Saph1s"),
-    TR("Turkish", "TDJisvan"),
+    TR("Turkish", "TDJisvan & BruilsiozPro"),
     PT_BR("Portuguese (Brazil)", "jvmuller");
 
     private final String name;

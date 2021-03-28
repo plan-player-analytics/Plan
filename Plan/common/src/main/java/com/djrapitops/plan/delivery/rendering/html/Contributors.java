@@ -74,6 +74,7 @@ public class Contributors {
             new Contributor("vacoup", CODE),
             new Contributor("Kopo942", CODE),
             new Contributor("WolverStones", LANG),
+            new Contributor("BruilsiozPro", LANG),
     };
 
     private Contributors() {
