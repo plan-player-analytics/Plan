@@ -150,7 +150,6 @@ function dayByDay(id, series) {
 }
 
 function onlineActivityCalendar(id, event_data, firstDay) {
-    document.querySelector(id + " .loader").remove();
     window.calendars.online_activity = new FullCalendar.Calendar(document.querySelector(id), {
         timeZone: "UTC",
         themeSystem: 'bootstrap',
