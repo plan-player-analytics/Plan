@@ -487,7 +487,7 @@ Manage - Fail Same Database                     || > §cNe peut pas opérer sur 
 Manage - Fail Same server                       || Impossible de marquer ce serveur comme désinstallé (vous y êtes).
 Manage - Fail, Confirmation                     || > §cAjoutez l'argument '-a' afin de confirmer l'exécution : ${0}
 Manage - List Importers                         || Importateurs :
-Manage - Progress                               || ${0} / ${1} processed..
+Manage - Progress                               || ${0} / ${1} traité(s)..
 Manage - Remind HotSwap                         || §eN'oubliez pas de passer à la nouvelle base de données (/plan db hotswap ${0}) & de recharger Plan.
 Manage - Start                                  || > §2Traitement des données...
 Manage - Success                                || > §aSuccès !
