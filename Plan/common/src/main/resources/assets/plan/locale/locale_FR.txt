@@ -1,27 +1,27 @@
-API - css+                                      || Extension de Page: ${0} a ajouté une ou plusieurs feuilles de style à ${1}, ${2}
-API - js+                                       || Extension de Page: ${0} a ajouté un ou plusieurs javascript à ${1}, ${2}
+API - css+                                      || Extension de Page : ${0} a ajouté une ou plusieurs feuilles de style à ${1}, ${2}
+API - js+                                       || Extension de Page : ${0} a ajouté un ou plusieurs JavaScript à ${1}, ${2}
 Cmd - Click Me                                  || Cliquez ici
 Cmd - Link                                      || Lien
 Cmd - Link Network                              || Page du Réseau : 
-Cmd - Link Player                               || Page du Joueur: 
-Cmd - Link Player JSON                          || json du Joueur : 
+Cmd - Link Player                               || Page du Joueur : 
+Cmd - Link Player JSON                          || JSON du Joueur : 
 Cmd - Link Players                              || Page des Joueurs : 
 Cmd - Link Register                             || Page d'enregistrement : 
 Cmd - Link Server                               || Page du Serveur : 
 CMD Arg - backup-file                           || Nom du fichier de sauvegarde (sensibles aux minuscules/majuscules)
 CMD Arg - code                                  || Code utilisé pour finaliser l'enregistrement.
-CMD Arg - db type backup                        || Type de la base de données pour sauvegarder. Si non specifié, la base de données actuelle est utilisée.
+CMD Arg - db type backup                        || Type de la base de données pour sauvegarder. Si non spécifié, la base de données actuelle est utilisée.
 CMD Arg - db type clear                         || Type de la base de données pour supprimer toutes les données.
 CMD Arg - db type hotswap                       || Type de la base de données pour commencer l'utilisation.
 CMD Arg - db type move from                     || Type de la base de données pour fournir les données.
 CMD Arg - db type move to                       || Type de la base de données pour recevoir les données. Doit être différente de la précédente.
-CMD Arg - db type restore                       || Type de la base de données pour restaurer. Si non specifié, la base de données actuelle est utilisée.
+CMD Arg - db type restore                       || Type de la base de données pour restaurer. Si non spécifié, la base de données actuelle est utilisée.
 CMD Arg - feature                               || Nom de la fonctionnalité à désactiver : ${0}
 CMD Arg - player identifier                     || Nom ou UUID d'un joueur
 CMD Arg - player identifier remove              || Identifiant d'un joueur qui sera supprimé de la base de données actuelle.
 CMD Arg - server identifier                     || Nom, ID ou UUID d'un serveur
 CMD Arg - subcommand                            || Utilisez cette commande sans sous-commande pour afficher l'aide.
-CMD Arg - username                              || Nom d'utilisateur d'un autre utilisateur. Si non specifié, l'utilisateur lié au joueur est utilisé.
+CMD Arg - username                              || Nom d'utilisateur d'un autre utilisateur. Si non spécifié, l'utilisateur lié au joueur est utilisé.
 CMD Arg Name - backup-file                      || fichier-de-sauvegarde
 CMD Arg Name - code                             || ${code}
 CMD Arg Name - export kind                      || type d'exportation
@@ -38,8 +38,8 @@ Cmd Confirm - clearing db                       || Vous êtes sur le point de su
 Cmd Confirm - confirmation                      || Confirmer : 
 Cmd Confirm - deny                              || Annuler
 Cmd Confirm - Expired                           || La confirmation a expiré, utilisez à nouveau la commande
-Cmd Confirm - Fail on accept                    || L'action acceptée a échoué lors de l'exécution: ${0}
-Cmd Confirm - Fail on deny                      || L'action rufusée a échoué lors de l'exécution: ${0}
+Cmd Confirm - Fail on accept                    || L'action acceptée a échoué lors de l'exécution : ${0}
+Cmd Confirm - Fail on deny                      || L'action refusée a échoué lors de l'exécution : ${0}
 Cmd Confirm - overwriting db                    || Vous êtes sur le point d'écraser des données dans de Plan ${0} avec les données de ${1}
 Cmd Confirm - remove player db                  || Vous êtes sur le point de supprimer les données de ${0} depuis ${1}
 Cmd Confirm - unregister                        || Vous êtes sur le point de désenregistrer '${0}' lié à ${1}
@@ -49,7 +49,7 @@ Cmd db - removal player                         || Suppression des données de $
 Cmd db - server uninstalled                     || §aSi le serveur est toujours installé, il se définira automatiquement comme dans la base de données.
 Cmd db - write                                  || Écriture à ${0}..
 Cmd Disable - Disabled                          || §aLes systèmes de Plan sont maintenant désactivés. Vous pouvez toujours exécuter la commande 'reload' pour les redémarrer.
-Cmd FAIL - Accepts only these arguments         || Accepte les éléments suivants comme ${0}: ${1}
+Cmd FAIL - Accepts only these arguments         || Accepte les éléments suivants comme ${0} : ${1}
 Cmd FAIL - Database not open                    || §cLa base de données est : ${0} - Merci de réessayer plus tard.
 Cmd FAIL - Empty search string                  || La chaîne de recherche ne peut pas être vide
 Cmd FAIL - Invalid Username                     || §cCet utilisateur ne possède pas d'UUID.
@@ -72,12 +72,12 @@ Cmd Header - Info                               || > §2Analyse du joueur
 Cmd Header - Inspect                            || > §2Joueur : §f${0}
 Cmd Header - Network                            || > §2Page du réseau
 Cmd Header - Players                            || > §2Joueurs
-Cmd Header - Search                             || > §2${0} Résultats pour §f${1}§2:
-Cmd Header - server list                        || id::name::uuid
+Cmd Header - Search                             || > §2${0} Résultats pour §f${1}§2 :
+Cmd Header - server list                        || id::nom d'utilisateur::uuid
 Cmd Header - Servers                            || > §2Serveurs
-Cmd Header - web user list                      || username::linked to::permission level
+Cmd Header - web user list                      || nom d'utilisateur::lié à::permission niveau
 Cmd Header - Web Users                          || > §2${0} Utilisateurs Web
-Cmd Info - Bungee Connection                    ||   §2Connecté à Bungee : §f${0}
+Cmd Info - Bungee Connection                    ||   §2Connecté  : §f${0}
 Cmd Info - Database                             ||   §2Base de données actuelle : §f${0}
 Cmd Info - Reload Complete                      || §aRechargement terminé.
 Cmd Info - Reload Failed                        || §cUne erreur s'est produite lors du rechargement du plugin, un redémarrage total est recommandé.
@@ -87,7 +87,7 @@ Cmd network - No network                        || Le serveur n'est pas connect�
 Cmd Notify - No Address                         || §eAucune adresse étant disponible - utilisation localhost comme solution de repli. Veuillez configurer le paramètre 'Alternative_IP's.
 Cmd Notify - No WebUser                         || Vous n'avez peut-être pas d'utilisateur Web, essayez d'exécuter '/plan register <mot de passe>' afin d'y remédier.
 Cmd Notify - WebUser register                   || Nouvel utilisateur enregistré : '${0}' Niveau de permission : ${1}.
-Cmd Qinspect - Active Playtime                  ||   §2Temps Actif: §f${0}
+Cmd Qinspect - Active Playtime                  ||   §2Temps Actif : §f${0}
 Cmd Qinspect - Activity Index                   ||   §2Indice d'Activité : §f${0} | ${1}
 Cmd Qinspect - AFK Playtime                     ||   §2Temps AFK : §f${0}
 Cmd Qinspect - Deaths                           ||   §2Morts : §f${0}
@@ -103,7 +103,7 @@ Cmd SUCCESS - Feature disabled                  || §aFonctionnalité '${0}' tem
 Cmd SUCCESS - WebUser register                  || §aAjout d'un nouvel utilisateur (${0}) avec succès !
 Cmd unregister - unregistering                  || Désenregistrement de '${0}'..
 Cmd WARN - Database not open                    || §eLa base de données est : ${0} - Cela pourrait prendre plus de temps que prévu...
-Cmd Web - Permission Levels                     || >\§70: Accéder à toutes les pages.\§71: Accéder au '/players' et à toutes les pages des joueurs.\§72: Accéder à la page du joueur avec le même nom d'utilisateur que l'utilisateur Web.\§73+: Pas de permission.
+Cmd Web - Permission Levels                     || >\§70 : Accéder à toutes les pages.\§71 : Accéder au '/players' et à toutes les pages des joueurs.\§72 : Accéder à la page du joueur avec le même nom d'utilisateur que l'utilisateur Web.\§73+ : Pas de permission.
 Command Help - /plan db                         || Gérer la base de données de Plan
 Command Help - /plan db backup                  || Sauvegarder la base données vers un fichier
 Command Help - /plan db clear                   || Supprimer TOUTES les données de Plan dans une base de données
@@ -111,13 +111,13 @@ Command Help - /plan db hotswap                 || Changer rapidement de base de
 Command Help - /plan db move                    || Déplacer des données entre bases de données
 Command Help - /plan db remove                  || Supprimer les données d'un joueur dans la base de données
 Command Help - /plan db restore                 || Restaurer les données depuis un fichier ou une base de données
-Command Help - /plan db uninstalled             || Définir un serveur comme déinstallé au sein de la base de données
+Command Help - /plan db uninstalled             || Définir un serveur comme désinstallé au sein de la base de données
 Command Help - /plan disable                    || Désactiver le plugin ou une partie de lui
-Command Help - /plan export                     || Exporter les fichiers html ou json manuellement
+Command Help - /plan export                     || Exporter les fichiers HTML ou JSON manuellement
 Command Help - /plan import                     || Importer des données
 Command Help - /plan info                       || Informations concernant le plugin
 Command Help - /plan ingame                     || Visualiser les informations d'un Joueur (en jeu)
-Command Help - /plan json                       || Visualiser le json des données brutes d'un joueur
+Command Help - /plan json                       || Visualiser le JSON des données brutes d'un joueur
 Command Help - /plan logout                     || Déconnecter les autres utilisateurs du panel
 Command Help - /plan network                    || Visualiser la page du réseau
 Command Help - /plan player                     || Visualiser la page d'un joueur
@@ -128,7 +128,7 @@ Command Help - /plan search                     || Rechercher un joueur
 Command Help - /plan server                     || Visualiser la page du serveur
 Command Help - /plan servers                    || Obtenir la liste des serveurs dans la base de données
 Command Help - /plan unregister                 || Désenregistrer un utilisateur du site de Plan
-Command Help - /plan users                      || Lister les utilisatateurs du site Web
+Command Help - /plan users                      || Lister les utilisateurs du site Web
 Database - Apply Patch                          || Application de correctifs : ${0}...
 Database - Patches Applied                      || Tous les correctifs pour la base de données ont été appliqués avec succès.
 Database - Patches Applied Already              || Tous les correctifs pour la base de données ont déjà été appliqués.
@@ -159,11 +159,11 @@ Enable FAIL - Database Patch                    || L'application de correctifs p
 Enable FAIL - GeoDB Write                       || Une erreur s'est produite lors de l'enregistrement de la base de données 'GeoLite2 Geolocation' téléchargée précédemment.
 Enable FAIL - WebServer (Proxy)                 || Le serveur Web n'a pas été initialisé !
 Enable FAIL - Wrong Database Type               || ${0} n'est pas une base de données prise en charge.
-HTML - AND_BUG_REPORTERS                        || & Rapporteurs de Bugs!
+HTML - AND_BUG_REPORTERS                        || & Rapporteurs de Bugs !
 HTML - BANNED (Filters)                         || Banni(e)
-HTML - COMPARING_15_DAYS                        || Comparaison des 15 derniers jours
-HTML - COMPARING_60_DAYS                        || Comparaison des 60 derniers jours
-HTML - COMPARING_7_DAYS                         || Comparaison des 7 derniers jours
+HTML - COMPARING_15_DAYS                        || Comparaison des 15 derniers Jours
+HTML - COMPARING_60_DAYS                        || Comparaison des 60 derniers Jours
+HTML - COMPARING_7_DAYS                         || Comparaison des 7 derniers Jours
 HTML - DATABASE_NOT_OPEN                        || La base de données n'est pas ouverte, vérifiez son état avec la commande /plan info
 HTML - DESCRIBE_RETENTION_PREDICTION            || Cette valeur est une prédiction basée sur les joueurs précédents.
 HTML - ERROR                                    || Authentification échouée en raison d'une erreur
@@ -180,8 +180,8 @@ HTML - INDEX_REGULAR                            || Régulier
 HTML - INDEX_VERY_ACTIVE                        || Très Actif
 HTML - KILLED                                   || Tué(e)
 HTML - LABEL_1ST_WEAPON                         || 1ère Arme de Combat (la plus mortelle)
-HTML - LABEL_2ND_WEAPON                         || 2ème Arme de Combat
-HTML - LABEL_3RD_WEAPON                         || 3ème Arme de Combat
+HTML - LABEL_2ND_WEAPON                         || 2ᵉ Arme de Combat
+HTML - LABEL_3RD_WEAPON                         || 3ᵉ Arme de Combat
 HTML - LABEL_ACTIVE_PLAYTIME                    || Temps Actif
 HTML - LABEL_ACTIVITY_INDEX                     || Indice d'Activité
 HTML - LABEL_AFK                                || AFK
@@ -263,10 +263,10 @@ HTML - LINK_SERVER_ANALYSIS                     || Analyse du Serveur
 HTML - LINK_WIKI                                || Wiki, Documentation & Tutoriaux de Plan
 HTML - LOCAL_MACHINE                            || Machine Locale
 HTML - LOGIN_CREATE_ACCOUNT                     || Créer un compte !
-HTML - LOGIN_FAILED                             || Connexion echouée : 
+HTML - LOGIN_FAILED                             || Connexion échouée : 
 HTML - LOGIN_FORGOT_PASSWORD                    || Mot de Passe oublié ?
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Mot de Passe oublié ? Désenregistrez puis réenregistrez-vous.
-HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Utilisez la commande suivante en jeu pour supprimer votre utilisateur actuel:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Utilisez la commande suivante en jeu pour supprimer votre utilisateur actuel :
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Ou en utilisant la console :
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || Après avoir utilisé la commande, 
 HTML - LOGIN_LOGIN                              || Connexion
@@ -309,11 +309,11 @@ HTML - QUERY_TIME_TO                            || >à</label>
 HTML - QUERY_VIEW                               ||   Vue :
 HTML - QUERY_ZERO_RESULTS                       || La Requête n'a produit aucun résultat
 HTML - REGISTER                                 || Enregistrer
-HTML - REGISTER_CHECK_FAILED                    || La vérification de l'état de l'enregistrement a échoué: 
+HTML - REGISTER_CHECK_FAILED                    || La vérification de l'état de l'enregistrement a échoué : 
 HTML - REGISTER_COMPLETE                        || Enregistrement complet
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || Vous pouvez maintenant terminer l'enregistrement de l'utilisateur.
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Le Code expire dans 15 minutes
-HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Utilisez la commande suivante en jeu pour terminer l'enregistrement:
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Utilisez la commande suivante en jeu pour terminer l'enregistrement :
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Ou en utilisant la console :
 HTML - REGISTER_CREATE_USER                     || Créer un nouvel utilisateur
 HTML - REGISTER_FAILED                          || Enregistrement échoué : 
@@ -321,8 +321,8 @@ HTML - REGISTER_HAVE_ACCOUNT                    || Vous avez déjà un compte ? 
 HTML - REGISTER_PASSWORD_TIP                    || Le Mot de Passe devrait comporter plus de 8 caractères, mais il n'y a aucune limite.
 HTML - REGISTER_SPECIFY_PASSWORD                || Veuillez spécifier un Mot de Passe
 HTML - REGISTER_SPECIFY_USERNAME                || Veuillez spécifier un Nom d'Utilisateur
-HTML - REGISTER_USERNAME_LENGTH                 || Le Npm d'Utilisateur peut comporter jusqu'à 50 caractères, le vôtre est
-HTML - REGISTER_USERNAME_TIP                    || Le Npm d'Utilisateur peut comporter jusqu'à 50 caractères.
+HTML - REGISTER_USERNAME_LENGTH                 || Le Nom d'Utilisateur peut comporter jusqu'à 50 caractères, le vôtre est
+HTML - REGISTER_USERNAME_TIP                    || Le Nom d'Utilisateur peut comporter jusqu'à 50 caractères.
 HTML - SESSION                                  || Session
 HTML - SIDE_GEOLOCATIONS                        || Géolocalisation
 HTML - SIDE_INFORMATION                         || INFORMATIONS
@@ -354,7 +354,7 @@ HTML - TEXT_NO_LOW_TPS                          || Pas de pics de TPS bas
 HTML - TEXT_NO_SERVER                           || Aucun serveur pour afficher l'activité en ligne.
 HTML - TEXT_NO_SERVERS                          || Il n'y a pas de serveur dans la base de données.
 HTML - TEXT_PLUGIN_INFORMATION                  || Informations concernant le plugin
-HTML - TEXT_PREDICTED_RETENTION                 || Cette valleur est une prédiction basé sur les anciennes données du joueur.
+HTML - TEXT_PREDICTED_RETENTION                 || Cette valeur est une prédiction basée sur les anciennes données du joueur.
 HTML - TEXT_SERVER_INSTRUCTIONS                 || Il semblerait que Plan ne soit installé sur aucun des serveurs de jeu ou qu'il ne soit pas connecté à la même base de données. Voir <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> pour un tutoriel sur la mise en place d'un Réseau.
 HTML - TEXT_VERSION                             || Une nouvelle version a été publiée et est maintenant disponible en téléchargement.
 HTML - TITLE_30_DAYS                            || 30 jours
@@ -394,7 +394,7 @@ HTML - TITLE_PING                               || Latence
 HTML - TITLE_PLAYER                             || Joueur
 HTML - TITLE_PLAYER_OVERVIEW                    || Aperçu des Joueurs
 HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Évolution de la base de Joueurs
-HTML - TITLE_PVP_DEATHS                         || Décets récents en PvP
+HTML - TITLE_PVP_DEATHS                         || Décès récents en PvP
 HTML - TITLE_PVP_KILLS                          || Kills récents en PvP
 HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE en Chiffres
 HTML - TITLE_RECENT_KILLS                       || Kills récents
@@ -404,13 +404,13 @@ HTML - TITLE_SERVER                             || Serveur
 HTML - TITLE_SERVER_AS_NUMBERS                  || Serveur en Chiffres
 HTML - TITLE_SERVER_OVERVIEW                    || Aperçu du Serveur
 HTML - TITLE_SERVER_PLAYTIME                    || Temps de Jeu du Serveur
-HTML - TITLE_SERVER_PLAYTIME_30                 || Temps de Jeu du Serveur sur 30 jours
+HTML - TITLE_SERVER_PLAYTIME_30                 || Temps de Jeu du Serveur sur 30 Jours
 HTML - TITLE_SESSION_START                      || Début de la Session
 HTML - TITLE_THEME_SELECT                       || Sélection du Thème
 HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Carte Perforée
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Tendances
-HTML - TITLE_TRENDS                             || Tendances sur 30 jours
+HTML - TITLE_TRENDS                             || Tendances sur 30 Jours
 HTML - TITLE_VERSION                            || Version
 HTML - TITLE_WEEK_COMPARISON                    || Comparaison Hebdomadaire
 HTML - TITLE_WORLD                              || Charge du Monde
@@ -448,13 +448,13 @@ HTML ERRORS - NOT_FOUND_404                     || Non trouvé.
 HTML ERRORS - NOT_PLAYED_404                    || Cet utilisateur ne s'est jamais connecté sur ce serveur.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Cette page n'existe pas.
 HTML ERRORS - UNAUTHORIZED_401                  || Non autorisé.
-HTML ERRORS - UNKNOWN_PAGE_404                  || Assurez-vous que vous accédez à un lien donné par une commande. Exemples :</p><p>/player/Nom_Du_Joueur<br>/server/Nom_Du_Serveur</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Assurez-vous que vous accédez à un lien donné par une commande. Exemples :</p><p>/player/Nom_du_Joueur<br>/server/Nom_du_Serveur</p>
 HTML ERRORS - UUID_404                          || L'UUID de cet utilisateur n'a pas été trouvé dans la base de données.
 In Depth Help - /plan db                        || Utilise différentes sous-commandes de base de données pour modifier les données d'une manière ou d'une autre.
 In Depth Help - /plan db backup                 || Utilise SQLite pour sauvegarder la base de données cible dans un fichier.
 In Depth Help - /plan db clear                  || Efface toutes les tables de Plan, supprimant par la même occasion toutes les données en traitement de Plan.
 In Depth Help - /plan db hotswap                || Recharge le plugin avec l'autre base de données et modifie la configuration en conséquence.
-In Depth Help - /plan db move                   || Ecrase le contenu de l'autre base de données avec le contenu d'une autre.
+In Depth Help - /plan db move                   || Écrase le contenu de l'autre base de données avec le contenu d'une autre.
 In Depth Help - /plan db remove                 || Supprime toutes les données liées à un joueur de la base de données actuelle.
 In Depth Help - /plan db restore                || Utilise le fichier de sauvegarde SQLite et écrase le contenu de la base de données cible.
 In Depth Help - /plan db uninstalled            || Marque un serveur dans la base de données Plan comme étant désinstallé afin qu'il n'apparaisse pas dans les requêtes de serveur.
@@ -463,7 +463,7 @@ In Depth Help - /plan export                    || Effectue une exportation vers
 In Depth Help - /plan import                    || Effectue une importation pour charger des données dans la base de données.
 In Depth Help - /plan info                      || Affiche l'état actuel du plugin.
 In Depth Help - /plan ingame                    || Affiche des informations sur un joueur en jeu.
-In Depth Help - /plan json                      || Permet de télécharger les données d'un joueur au format json. Toutes les données.
+In Depth Help - /plan json                      || Permet de télécharger les données d'un joueur au format JSON. Toutes les données.
 In Depth Help - /plan logout                    || Donnez un nom d'utilisateur à déconnecter du panel, donnez * comme argument pour déconnecter tout le monde.
 In Depth Help - /plan network                   || Obtient un lien vers la page /network, uniquement sur les réseaux.
 In Depth Help - /plan player                    || Obtient un lien vers la page /player d'un joueur spécifique, ou du joueur actuel.
@@ -485,7 +485,7 @@ Manage - Fail No Importer                       || §eL'importateur '${0}' n'exi
 Manage - Fail No Server                         || Aucun serveur trouvé avec les paramètres suivants.
 Manage - Fail Same Database                     || > §cNe peut pas opérer sur et depuis la même base de données !
 Manage - Fail Same server                       || Impossible de marquer ce serveur comme désinstallé (vous y êtes).
-Manage - Fail, Confirmation                     || > §cAjoutez l'argmenter '-a' afin de confirmer l'éxécution : ${0}
+Manage - Fail, Confirmation                     || > §cAjoutez l'argument '-a' afin de confirmer l'exécution : ${0}
 Manage - List Importers                         || Importateurs :
 Manage - Progress                               || ${0} / ${1} processed..
 Manage - Remind HotSwap                         || §eN'oubliez pas de passer à la nouvelle base de données (/plan db hotswap ${0}) & de recharger Plan.
@@ -502,15 +502,15 @@ Version - New                                   || Une nouvelle version (${0}) e
 Version - New (old)                             || Une nouvelle version est disponible depuis ${0}
 Version FAIL - Read info (old)                  || Impossible de vérifier le dernier numéro de la version
 Version FAIL - Read versions.txt                || Les informations de la version n'ont pas pu être chargées depuis Github/versions.txt
-Web User Listing                                ||   §2${0} §7: §f${1}
+Web User Listing                                ||   §2${0} §7 : §f${1}
 WebServer - Notify HTTP                         || Serveur Web : Aucun certificat -> Utilisation du serveur HTTP pour la visualisation.
 WebServer - Notify HTTP User Auth               || Serveur Web : Authentification utilisateur désactivée ! (Non sécurisée avec HTTP)
 WebServer - Notify HTTPS User Auth              || Serveur Web : Authentification d'utilisateur désactivée ! (dans la configuration)
-Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
-Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
+Webserver - Notify IP Whitelist                 || Serveur Web : La liste blanche d'adresses IP n'est pas activée.
+Webserver - Notify IP Whitelist Block           || Serveur Web : ${0} n'a pas pu accéder à '${1}'. (pas sur la liste blanche)
 WebServer - Notify no Cert file                 || Serveur Web : Fichier KeyStore du certificat introuvable : ${0}
 WebServer - Notify Using Proxy                  || Serveur Web : le Proxy-mode HTTPS est activé, assurez-vous que votre proxy inversé est routé en utilisant HTTPS et Plan Alternative_IP.Address.
-WebServer FAIL - EOF                            || WebServer: EOF when reading Certificate file. (Check that the file is not empty)
+WebServer FAIL - EOF                            || Serveur Web : EOF lors de la lecture du Certificat. (Assurez-vous que le fuchier n'est pas vide)
 WebServer FAIL - Port Bind                      || Le Serveur Web n'a pas été initialisé avec succès. Le port (${0}) est-il actuellement utilisé ?
 WebServer FAIL - SSL Context                    || Serveur Web : Échec d'initialisation du contexte SSL.
 WebServer FAIL - Store Load                     || Serveur Web : Échec du chargement du certificat SSL.
