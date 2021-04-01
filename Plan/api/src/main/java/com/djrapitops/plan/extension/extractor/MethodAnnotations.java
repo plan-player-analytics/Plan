@@ -28,6 +28,7 @@ import java.util.Optional;
  *
  * @author AuroraLS3
  */
+@Deprecated
 public class MethodAnnotations {
 
     private final Map<Class<?>, Map<Method, Annotation>> byAnnotationType;

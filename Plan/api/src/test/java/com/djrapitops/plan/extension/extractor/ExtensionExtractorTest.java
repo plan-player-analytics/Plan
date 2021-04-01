@@ -207,6 +207,20 @@ class ExtensionExtractorTest {
     }
 
     @Test
+    void dataBuilderProviderMustProvideDataBuilder() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @DataBuilderProvider
+            public Group method(UUID playerUUID) {
+                return null;
+            }
+        }
+
+        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
+        assertEquals("Extension.method has invalid return type. was: com.djrapitops.plan.extension.Group, expected: com.djrapitops.plan.extension.builder.ExtensionDataBuilder", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+    }
+
+    @Test
     void booleanProviderCanNotSupplyItsOwnConditional() {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {
@@ -233,21 +247,6 @@ class ExtensionExtractorTest {
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
         assertEquals("Extension.method did not have any associated Provider for Conditional.", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
-    }
-
-    @Test
-    void conditionalNeedsToBeProvided() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @Conditional("hasJoined")
-            @BooleanProvider(text = "Banned", conditionName = "isBanned")
-            public boolean method(UUID playerUUID) {
-                return false;
-            }
-        }
-
-        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
-        assertEquals("Warnings: [Extension: 'hasJoined' Condition was not provided by any BooleanProvider.]", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
     }
 
     @Test

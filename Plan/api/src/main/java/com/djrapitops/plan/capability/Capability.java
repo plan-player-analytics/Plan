@@ -57,6 +57,10 @@ enum Capability {
      */
     DATA_EXTENSION_SHOW_IN_PLAYER_TABLE,
     /**
+     * DataExtension API addition, {@link com.djrapitops.plan.extension.builder.ExtensionDataBuilder}.
+     */
+    DATA_EXTENSION_BUILDER_API,
+    /**
      * {@link com.djrapitops.plan.query.QueryService} and {@link com.djrapitops.plan.query.CommonQueries}
      */
     QUERY_API,
