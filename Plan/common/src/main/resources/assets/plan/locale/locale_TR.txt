@@ -109,16 +109,16 @@ Command Help - /plan db backup                  || Bir veritabanının verilerin
 Command Help - /plan db clear                   || Veritabanından TÜM Plan verilerini kaldırın
 Command Help - /plan db hotswap                 || Veritabının hızlıca değiştirir
 Command Help - /plan db move                    || Veriyi Veritabanları arasında taşır
-Command Help - /plan db remove                  || Remove player's data from Current database
-Command Help - /plan db restore                 || Restore data from a file to a database
+Command Help - /plan db remove                  || Oyuncunun verilerini Mevcut veritabanından kaldır
+Command Help - /plan db restore                 || Bir dosyadaki verileri bir veritabanına geri yükleyin
 Command Help - /plan db uninstalled             || Set a server as uninstalled in the database.
-Command Help - /plan disable                    || Disable the plugin or part of it
-Command Help - /plan export                     || Export html or json files manually
-Command Help - /plan import                     || Import data
-Command Help - /plan info                       || Information about the plugin
+Command Help - /plan disable                    || Eklentiyi veya bir kısmını devre dışı bırakın
+Command Help - /plan export                     || Html veya json dosyalarını manuel olarak dışa aktarın
+Command Help - /plan import                     || Verileri içe aktar
+Command Help - /plan info                       || Eklenti hakkında bilgiler
 Command Help - /plan ingame                     || Oyuncu bilgilerini oyun içi gösterir
 Command Help - /plan json                       || View json of Player's raw data.
-Command Help - /plan logout                     || Log out other users from the panel.
+Command Help - /plan logout                     || Paneldeki diğer kullanıcıların oturumunu kapatın
 Command Help - /plan network                    || Network sayfasını görüntüler
 Command Help - /plan player                     || Oyunucunun sayfasını gösterir
 Command Help - /plan players                    || Oyuncu sayfasını görüntüler
@@ -147,7 +147,7 @@ Disable - Waiting Transactions Complete         || Transaction queue closed.
 Disable - WebServer                             || Websunucusu kapatıldı.
 Enable                                          || Oyuncu analizi aktif edildi.
 Enable - Database                               || ${0}- Veritabanı bağlantısı kurulmuş.
-Enable - Notify Bad IP                          || 0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!
+Enable - Notify Bad IP                          || 0.0.0.0 geçerli bir adres değil, Alternatif_IP ayarlarını yapın. Yanlış bağlantılar verilebilir!
 Enable - Notify Empty IP                        || server.properties IP adresi kısmı boş & AlternatifIP kullanılmıyor. Bu yüzden yanlış linkler verilecektir!
 Enable - Notify Geolocations disabled           || Coğrafi konum toplama etkin değil. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan GeoLite2 Geolocation veritabanını indirmek için ilk çalıştırmada internet erişimi gerektir.
@@ -246,7 +246,7 @@ HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
 HTML - LABEL_SESSION_ENDED                      ||  Oturum Sona Erdi
 HTML - LABEL_SESSION_MEDIAN                     || Session Median
 HTML - LABEL_TIMES_KICKED                       || Kere Atılmış
-HTML - LABEL_TOTAL_PLAYERS                      || Total Players
+HTML - LABEL_TOTAL_PLAYERS                      || Toplam Oyuncu
 HTML - LABEL_TOTAL_PLAYTIME                     || Total Playtime
 HTML - LABEL_UNIQUE_PLAYERS                     || Sunucuya İlk Defa Girenler
 HTML - LABEL_WEEK_DAYS                          || 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'
@@ -293,14 +293,14 @@ HTML - QUERY_ARE                                || `are`
 HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
 HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
 HTML - QUERY_JOINED_WITH_ADDRESS                || joined with address
-HTML - QUERY_LOADING_FILTERS                    || Loading filters..
+HTML - QUERY_LOADING_FILTERS                    || Filtreler yükleniyor..
 HTML - QUERY_MAKE                               || Make a query
 HTML - QUERY_MAKE_ANOTHER                       || Make another query
 HTML - QUERY_OF_PLAYERS                         || of Players who 
 HTML - QUERY_PERFORM_QUERY                      || Perform Query!
 HTML - QUERY_PLAYED_BETWEEN                     || Played between
-HTML - QUERY_REGISTERED_BETWEEN                 || Registered between
-HTML - QUERY_RESULTS                            || Query Results
+HTML - QUERY_REGISTERED_BETWEEN                 || Arasında kayıtlı
+HTML - QUERY_RESULTS                            || Sorgu Sonuçları
 HTML - QUERY_RESULTS_MATCH                      || matched ${resultCount} players
 HTML - QUERY_SESSIONS_WITHIN_VIEW               || Sessions within view
 HTML - QUERY_SHOW_VIEW                          || Show a view
@@ -308,19 +308,19 @@ HTML - QUERY_TIME_FROM                          || >from</label>
 HTML - QUERY_TIME_TO                            || >to</label>
 HTML - QUERY_VIEW                               ||   View:
 HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
-HTML - REGISTER                                 || Register
+HTML - REGISTER                                 || Kayıt ol
 HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
-HTML - REGISTER_COMPLETE                        || Complete Registration
-HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
+HTML - REGISTER_COMPLETE                        || Kaydı Tamamla
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || Artık kullanıcıyı kaydetmeyi bitirebilirsiniz.
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Code expires in 15 minutes
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Use the following command in game to finish registration:
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Or using console:
-HTML - REGISTER_CREATE_USER                     || Create a new user
-HTML - REGISTER_FAILED                          || Registration failed: 
+HTML - REGISTER_CREATE_USER                     || Yeni bir kullanıcı oluşturun
+HTML - REGISTER_FAILED                          || Kayıt başarısız:
 HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
-HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
-HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
-HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
+HTML - REGISTER_PASSWORD_TIP                    || Parola 8 karakterden fazla olmalıdır, ancak herhangi bir sınırlama yoktur.
+HTML - REGISTER_SPECIFY_PASSWORD                || Bir Parola belirlemeniz gerekiyor
+HTML - REGISTER_SPECIFY_USERNAME                || Kullanıcı adı belirlemeniz gerekiyor
 HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
 HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 characters.
 HTML - SESSION                                  || Oturum
@@ -341,19 +341,19 @@ HTML - SIDE_SESSIONS                            || Oturumlar
 HTML - SIDE_TO_MAIN_PAGE                        || to main page
 HTML - TEXT_CLICK_TO_EXPAND                     || Click to expand
 HTML - TEXT_CONTRIBUTORS_CODE                   || code contributor
-HTML - TEXT_CONTRIBUTORS_LOCALE                 || translator
+HTML - TEXT_CONTRIBUTORS_LOCALE                 || çevirmen
 HTML - TEXT_CONTRIBUTORS_MONEY                  || Extra special thanks to those who have monetarily supported the development.
 HTML - TEXT_CONTRIBUTORS_THANKS                 || In addition following <span class="col-plan">awesome people</span> have contributed:
 HTML - TEXT_DEV_VERSION                         || This version is a DEV release.
 HTML - TEXT_DEVELOPED_BY                        || is developed by
-HTML - TEXT_FIRST_SESSION                       || First session
-HTML - TEXT_LICENSED_UNDER                      || Player Analytics is developed and licensed under
+HTML - TEXT_FIRST_SESSION                       || İlk seans
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics, altında geliştirilir ve lisanslanır
 HTML - TEXT_METRICS                             || bStats Metrics
-HTML - TEXT_NO_EXTENSION_DATA                   || No Extension Data
-HTML - TEXT_NO_LOW_TPS                          || No low tps spikes
+HTML - TEXT_NO_EXTENSION_DATA                   || Uzantı Verisi Yok
+HTML - TEXT_NO_LOW_TPS                          || Düşük tps artışları yok
 HTML - TEXT_NO_SERVER                           || No server to display online activity for
 HTML - TEXT_NO_SERVERS                          || No servers found in the database
-HTML - TEXT_PLUGIN_INFORMATION                  || Information about the plugin
+HTML - TEXT_PLUGIN_INFORMATION                  || Eklenti hakkında bilgiler
 HTML - TEXT_PREDICTED_RETENTION                 || This value is a prediction based on previous players
 HTML - TEXT_SERVER_INSTRUCTIONS                 || It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.
 HTML - TEXT_VERSION                             || A new version has been released and is now available for download.
