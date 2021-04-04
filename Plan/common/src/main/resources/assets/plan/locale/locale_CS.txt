@@ -436,7 +436,7 @@ HTML - Version Update Available                 || Nová verze ${0} je dostupná
 HTML - Version Update Dev                       || Toto je vývojářská verze.
 HTML - Version Update Info                      || Nová verze je dostupná ke stažení.
 HTML - WARNING_NO_GAME_SERVERS                  || Některá data vyžadují, aby byla na herní servery nainstalována aplikace Plan.
-HTML - WARNING_NO_GEOLOCATIONS                  || V konfiguraci je třeba povolit shromažďování geolokací (Přijměte GeoLite2 EULA) .
+HTML - WARNING_NO_GEOLOCATIONS                  || V konfiguraci je třeba povolit shromažďování geolokací (Přijměte GeoLite2 EULA).
 HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunky nejsou na Sponge dostupné
 HTML - WITH                                     || <th>S
 HTML ERRORS - ACCESS_DENIED_403                 || Přístup zamítnut
