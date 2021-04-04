@@ -199,6 +199,7 @@ public class ServerPageExporter extends FileExporter {
         // Style
         exportResources(toDirectory,
                 "../img/Flaticon_circle.png",
+                "../css/bootstrap.min.css",
                 "../css/sb-admin-2.css",
                 "../css/style.css",
                 "../vendor/bootstrap/js/bootstrap.bundle.min.js",
