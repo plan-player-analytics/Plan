@@ -97,7 +97,7 @@ public class ExtensionWrapper {
         Map<String, Integer> order = getTabOrder().map(this::orderToMap).orElse(new HashMap<>());
 
         // Extracts PluginTabs
-        return extractor.getMethodAnnotations().getAnnotations(Tab.class).stream()
+        return extractor.getTabAnnotations().stream()
                 .map(Tab::value)
                 .distinct()
                 .map(tabName -> {
@@ -131,6 +131,7 @@ public class ExtensionWrapper {
         return providers;
     }
 
+    @Deprecated
     private void extractProviders() {
         PluginInfo pluginInfo = extractor.getPluginInfo();
 

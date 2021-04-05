@@ -47,6 +47,8 @@ public final class ExtensionExtractor {
     private List<InvalidateMethod> invalidMethods;
     private MethodAnnotations methodAnnotations;
     private Map<ExtensionMethod.ParameterType, ExtensionMethods> methods;
+    private Collection<Method> conditionalMethods;
+    private Collection<Tab> tabAnnotations;
 
     private static final String WAS_OVER_50_CHARACTERS = "' was over 50 characters.";
 
@@ -108,6 +110,9 @@ public final class ExtensionExtractor {
         methods.put(ExtensionMethod.ParameterType.PLAYER_UUID, new ExtensionMethods());
         methods.put(ExtensionMethod.ParameterType.GROUP, new ExtensionMethods());
 
+        conditionalMethods = new ArrayList<>();
+        tabAnnotations = new ArrayList<>();
+
         for (ExtensionMethod method : getExtensionMethods()) {
             if (method.isInaccessible()) {
                 continue;
@@ -154,8 +159,8 @@ public final class ExtensionExtractor {
                 methodAnnotations.put(method.getMethod(), DataBuilderProvider.class, annotation);
             });
 
-            MethodAnnotations.get(method.getMethod(), Conditional.class).ifPresent(annotation -> methodAnnotations.put(method.getMethod(), Conditional.class, annotation));
-            MethodAnnotations.get(method.getMethod(), Tab.class).ifPresent(annotation -> methodAnnotations.put(method.getMethod(), Tab.class, annotation));
+            method.getAnnotation(Conditional.class).ifPresent(annotation -> conditionalMethods.add(method.getMethod()));
+            method.getAnnotation(Tab.class).ifPresent(tabAnnotations::add);
         }
 
         if (methodAnnotations.isEmpty()) {
@@ -306,16 +311,29 @@ public final class ExtensionExtractor {
 
     private void validateConditionals() {
         // Make sure that all methods annotated with Conditional have a Provider annotation
-        Collection<Method> conditionalMethods = methodAnnotations.getMethodAnnotations(Conditional.class).keySet();
         for (Method conditionalMethod : conditionalMethods) {
-            if (!MethodAnnotations.hasAnyOf(conditionalMethod,
+            if (!hasAnyOf(conditionalMethod,
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
                     PercentageProvider.class, StringProvider.class, TableProvider.class,
                     GroupProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }
+            if (hasAnyOf(conditionalMethod, DataBuilderProvider.class)) {
+                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but DataBuilderProvider does not support it!");
+            }
         }
+    }
+
+    private boolean hasAnyOf(Method method, Class<?>... annotationClasses) {
+        for (Annotation annotation : method.getAnnotations()) {
+            for (Class<?> annotationClass : annotationClasses) {
+                if (annotationClass.isAssignableFrom(annotation.getClass())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private <T extends Annotation> Optional<T> getClassAnnotation(Class<T> ofClass) {
@@ -346,8 +364,7 @@ public final class ExtensionExtractor {
             }
         });
 
-        Map<Method, Tab> tabs = this.methodAnnotations.getMethodAnnotations(Tab.class);
-        Set<String> tabNames = tabs.values().stream().map(Tab::value).collect(Collectors.toSet());
+        Set<String> tabNames = tabAnnotations.stream().map(Tab::value).collect(Collectors.toSet());
 
         // Check for unused TabInfo annotations
         for (TabInfo tabInfo : tabInformation) {
@@ -363,10 +380,9 @@ public final class ExtensionExtractor {
         }
 
         // Check Tab name lengths
-        for (Map.Entry<Method, Tab> tab : tabs.entrySet()) {
-            String tabName = tab.getValue().value();
+        for (String tabName : tabNames) {
             if (tabName.length() > 50) {
-                warnings.add(extensionName + "." + tab.getKey().getName() + " Tab '" + tabName + "' name was over 50 characters.");
+                warnings.add(extensionName + " Tab '" + tabName + "' name was over 50 characters.");
             }
         }
     }
@@ -398,6 +414,11 @@ public final class ExtensionExtractor {
 
     public Optional<TabOrder> getTabOrder() {
         return getClassAnnotation(TabOrder.class);
+    }
+
+    public Collection<Tab> getTabAnnotations() {
+        if (tabAnnotations == null) extractMethodAnnotations();
+        return tabAnnotations;
     }
 
     public List<TabInfo> getTabInformation() {
