@@ -19,19 +19,33 @@ package com.djrapitops.plan.extension.implementation.builder;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
+import java.util.function.Supplier;
+
 public class DoubleDataValue implements DataValue<Double> {
 
     private final Double value;
+    private final Supplier<Double> supplier;
     private final ProviderInformation information;
 
     public DoubleDataValue(Double value, ProviderInformation information) {
+        this(value, null, information);
+    }
+
+    public DoubleDataValue(Supplier<Double> supplier, ProviderInformation information) {
+        this(null, supplier, information);
+    }
+
+    private DoubleDataValue(Double value, Supplier<Double> supplier, ProviderInformation information) {
         this.value = value;
+        this.supplier = supplier;
         this.information = information;
     }
 
     @Override
     public Double getValue() {
-        return value;
+        if (value != null) return value;
+        if (supplier != null) return supplier.get();
+        return null;
     }
 
     public ProviderInformation getInformation() {

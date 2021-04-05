@@ -110,4 +110,17 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
             return table;
         }
     }
+
+    @Override
+    public void addAll(ExtensionDataBuilder builder) {
+        if (!(builder instanceof ExtDataBuilder)) return;
+        // From same DataExtension
+        if (!extension.getClass().equals(((ExtDataBuilder) builder).extension.getClass())) {
+            throw new IllegalArgumentException("Can not combine data from two different extensions! (" +
+                    extension.getClass().getName() + ',' + ((ExtDataBuilder) builder).extension.getClass().getName() + ")");
+        }
+
+        this.tables.addAll(((ExtDataBuilder) builder).tables);
+        this.values.addAll(((ExtDataBuilder) builder).values);
+    }
 }

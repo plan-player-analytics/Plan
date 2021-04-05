@@ -100,17 +100,17 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     @Override
-    public Optional<Caller> register(DataExtension extension) {
-        ExtensionWrapper extractor = new ExtensionWrapper(extension);
-        String pluginName = extractor.getPluginName();
+    public Optional<Caller> register(DataExtension dataExtension) {
+        ExtensionWrapper extension = new ExtensionWrapper(dataExtension);
+        String pluginName = extension.getPluginName();
 
         if (shouldNotAllowRegistration(pluginName)) return Optional.empty();
 
-        for (String warning : extractor.getWarnings()) {
+        for (String warning : extension.getWarnings()) {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
         }
 
-        ProviderValueGatherer gatherer = new ProviderValueGatherer(extractor, dbSystem, serverInfo);
+        ProviderValueGatherer gatherer = new ProviderValueGatherer(extension, dbSystem, serverInfo);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
@@ -121,9 +121,9 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     @Override
-    public void unregister(DataExtension extension) {
-        ExtensionWrapper extractor = new ExtensionWrapper(extension);
-        String pluginName = extractor.getPluginName();
+    public void unregister(DataExtension dataExtension) {
+        ExtensionWrapper extension = new ExtensionWrapper(dataExtension);
+        String pluginName = extension.getPluginName();
         extensionGatherers.remove(pluginName);
     }
 

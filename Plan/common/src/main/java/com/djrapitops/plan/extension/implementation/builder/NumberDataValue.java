@@ -19,19 +19,33 @@ package com.djrapitops.plan.extension.implementation.builder;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
+import java.util.function.Supplier;
+
 public class NumberDataValue implements DataValue<Long> {
 
     private final Long value;
+    private final Supplier<Long> supplier;
     private final ProviderInformation information;
 
     public NumberDataValue(Long value, ProviderInformation information) {
+        this(value, null, information);
+    }
+
+    public NumberDataValue(Supplier<Long> supplier, ProviderInformation information) {
+        this(null, supplier, information);
+    }
+
+    private NumberDataValue(Long value, Supplier<Long> supplier, ProviderInformation information) {
         this.value = value;
+        this.supplier = supplier;
         this.information = information;
     }
 
     @Override
     public Long getValue() {
-        return value;
+        if (value != null) return value;
+        if (supplier != null) return supplier.get();
+        return null;
     }
 
     public ProviderInformation getInformation() {

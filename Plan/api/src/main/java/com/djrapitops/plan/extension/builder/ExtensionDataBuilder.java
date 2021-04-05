@@ -24,8 +24,24 @@ public interface ExtensionDataBuilder {
 
     ValueBuilder valueBuilder(String text);
 
+    /**
+     * Add a value to the builder.
+     *
+     * @param ofType    Class for type of the data, matches what Provider annotations want.
+     * @param dataValue Use {@link ValueBuilder} to get one.
+     * @param <T>       Type of the data.
+     * @return This builder.
+     */
     <T> ExtensionDataBuilder addValue(Class<T> ofType, DataValue<T> dataValue);
 
+    /**
+     * Compared to the other addValue method, this method allows you to use {@link com.djrapitops.plan.extension.NotReadyException} when building your data.
+     *
+     * @param ofType    Class for type of the data, matches what Provider annotations want.
+     * @param dataValue Use {@link ValueBuilder} to get one.
+     * @param <T>       Type of the data.
+     * @return This builder.
+     */
     <T> ExtensionDataBuilder addValue(Class<T> ofType, Supplier<DataValue<T>> dataValue);
 
     default ExtensionDataBuilder addTable(Table table) {
@@ -34,4 +50,5 @@ public interface ExtensionDataBuilder {
 
     ExtensionDataBuilder addTable(Table table, String tab);
 
+    void addAll(ExtensionDataBuilder builder);
 }

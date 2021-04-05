@@ -17,15 +17,26 @@
 package com.djrapitops.plan.extension.builder;
 
 import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.extension.annotation.BooleanProvider;
+import com.djrapitops.plan.extension.annotation.Conditional;
+import com.djrapitops.plan.extension.annotation.StringProvider;
+import com.djrapitops.plan.extension.annotation.Tab;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
+
+import java.util.function.Supplier;
 
 public interface ValueBuilder {
 
     ValueBuilder description(String description);
 
     ValueBuilder priority(int priority);
+
+    default ValueBuilder showInPlayerTable(boolean show) {
+        if (show) return showInPlayerTable();
+        return this;
+    }
 
     ValueBuilder showInPlayerTable();
 
@@ -36,6 +47,11 @@ public interface ValueBuilder {
     ValueBuilder icon(Icon icon);
 
     ValueBuilder showOnTab(String tabName);
+
+    default ValueBuilder showOnTab(Tab annotation) {
+        if (annotation != null) return showOnTab(annotation.value());
+        return this;
+    }
 
     default ValueBuilder formatAsDateWithYear() {
         return format(FormatType.DATE_YEAR);
@@ -53,6 +69,15 @@ public interface ValueBuilder {
 
     ValueBuilder showAsPlayerPageLink();
 
+    ValueBuilder hideFromUsers(BooleanProvider annotation);
+
+    ValueBuilder conditional(Conditional conditional);
+
+    default ValueBuilder showAsPlayerPageLink(StringProvider annotation) {
+        if (annotation.playerName()) return showAsPlayerPageLink();
+        return this;
+    }
+
     DataValue<Boolean> buildBoolean(boolean value);
 
     DataValue<Boolean> buildBooleanProvidingCondition(boolean value, String providedCondition);
@@ -67,4 +92,17 @@ public interface ValueBuilder {
 
     DataValue<String[]> buildGroup(String[] groups);
 
+    DataValue<Boolean> buildBoolean(Supplier<Boolean> value);
+
+    DataValue<Boolean> buildBooleanProvidingCondition(Supplier<Boolean> value, String providedCondition);
+
+    DataValue<String> buildString(Supplier<String> value);
+
+    DataValue<Long> buildNumber(Supplier<Long> value);
+
+    DataValue<Double> buildDouble(Supplier<Double> value);
+
+    DataValue<Double> buildPercentage(Supplier<Double> percentage);
+
+    DataValue<String[]> buildGroup(Supplier<String[]> groups);
 }

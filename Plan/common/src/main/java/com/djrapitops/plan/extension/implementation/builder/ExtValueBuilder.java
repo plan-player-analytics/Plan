@@ -18,11 +18,15 @@ package com.djrapitops.plan.extension.implementation.builder;
 
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.extension.annotation.BooleanProvider;
+import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+
+import java.util.function.Supplier;
 
 public class ExtValueBuilder implements ValueBuilder {
 
@@ -35,8 +39,10 @@ public class ExtValueBuilder implements ValueBuilder {
     private Icon icon;
     private String tabName;
 
+    private boolean hidden = false;
     private boolean formatAsPlayerName = false;
     private FormatType formatType = FormatType.NONE;
+    private Conditional conditional;
 
     public ExtValueBuilder(String text, DataExtension extension) {
         this.text = text;
@@ -85,6 +91,18 @@ public class ExtValueBuilder implements ValueBuilder {
         return this;
     }
 
+    @Override
+    public ValueBuilder hideFromUsers(BooleanProvider annotation) {
+        this.hidden = annotation.hidden();
+        return this;
+    }
+
+    @Override
+    public ValueBuilder conditional(Conditional conditional) {
+        this.conditional = conditional;
+        return this;
+    }
+
     private ProviderInformation getProviderInformation() {
         return getProviderInformation(false, null);
     }
@@ -107,13 +125,15 @@ public class ExtValueBuilder implements ValueBuilder {
                 .setShowInPlayersTable(showInPlayerTable)
                 .setTab(tabName)
                 .setPlayerName(formatAsPlayerName)
-                .setFormatType(formatType);
+                .setFormatType(formatType)
+                .setHidden(hidden)
+                .setCondition(conditional);
 
         if (percentage) {
             builder = builder.setAsPercentage();
         }
 
-        if (providedCondition != null) {
+        if (providedCondition != null && !providedCondition.isEmpty()) {
             builder = builder.setProvidedCondition(providedCondition);
         }
 
@@ -152,6 +172,41 @@ public class ExtValueBuilder implements ValueBuilder {
 
     @Override
     public DataValue<String[]> buildGroup(String[] groups) {
+        return new GroupsDataValue(groups, getProviderInformation());
+    }
+
+    @Override
+    public DataValue<Boolean> buildBoolean(Supplier<Boolean> value) {
+        return new BooleanDataValue(value, getProviderInformation());
+    }
+
+    @Override
+    public DataValue<Boolean> buildBooleanProvidingCondition(Supplier<Boolean> value, String providedCondition) {
+        return new BooleanDataValue(value, getBooleanProviderInformation(providedCondition));
+    }
+
+    @Override
+    public DataValue<String> buildString(Supplier<String> value) {
+        return new StringDataValue(value, getProviderInformation());
+    }
+
+    @Override
+    public DataValue<Long> buildNumber(Supplier<Long> value) {
+        return new NumberDataValue(value, getProviderInformation());
+    }
+
+    @Override
+    public DataValue<Double> buildDouble(Supplier<Double> value) {
+        return new DoubleDataValue(value, getProviderInformation());
+    }
+
+    @Override
+    public DataValue<Double> buildPercentage(Supplier<Double> percentage) {
+        return new DoubleDataValue(percentage, getPercentageProviderInformation());
+    }
+
+    @Override
+    public DataValue<String[]> buildGroup(Supplier<String[]> groups) {
         return new GroupsDataValue(groups, getProviderInformation());
     }
 }

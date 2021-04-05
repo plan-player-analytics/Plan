@@ -27,6 +27,7 @@ import java.util.*;
  *
  * @author AuroraLS3
  */
+@Deprecated
 public class DataProviders {
 
     private final Map<MethodType, Map<Class<?>, List<DataProvider<?>>>> byMethodType;

@@ -82,7 +82,7 @@ public final class ExtensionExtractor {
         List<ExtensionMethod> methods = new ArrayList<>();
         for (Method method : extension.getClass().getMethods()) {
             try {
-                methods.add(new ExtensionMethod(method));
+                methods.add(new ExtensionMethod(extension, method));
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(extensionName + '.' + e.getMessage());
             }

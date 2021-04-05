@@ -17,6 +17,11 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.extractor.ExtensionMethod;
+import com.djrapitops.plan.extension.extractor.ExtensionMethods;
+import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
@@ -53,12 +58,19 @@ public class ProviderValueGatherer {
     private final DataProviders dataProviders;
     private final BooleanProviderValueGatherer booleanGatherer;
     private final TableProviderValueGatherer tableGatherer;
+    @Deprecated
     private final Gatherer<Long> serverNumberGatherer;
+    @Deprecated
     private final Gatherer<Long> playerNumberGatherer;
+    @Deprecated
     private final Gatherer<Double> serverDoubleGatherer;
+    @Deprecated
     private final Gatherer<Double> playerDoubleGatherer;
+    @Deprecated
     private final Gatherer<String> serverStringGatherer;
+    @Deprecated
     private final Gatherer<String> playerStringGatherer;
+    @Deprecated
     private final Gatherer<String[]> playerGroupGatherer;
 
     public ProviderValueGatherer(
@@ -145,22 +157,117 @@ public class ProviderValueGatherer {
     }
 
     public void updateValues(UUID playerUUID, String playerName) {
+        Parameters parameters = Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
+        ExtensionDataBuilder dataBuilder = extensionWrapper.getExtension().newExtensionDataBuilder();
+
+        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_STRING), parameters);
+        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_UUID), parameters);
+
+        // TODO process & store data from dataBuilder
+
         Conditions conditions = booleanGatherer.gatherBooleanDataOfPlayer(playerUUID, playerName);
-        Parameters params = Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
-        playerNumberGatherer.gather(conditions, params);
-        playerDoubleGatherer.gather(conditions, params);
-        playerStringGatherer.gather(conditions, params);
+        playerNumberGatherer.gather(conditions, parameters);
+        playerDoubleGatherer.gather(conditions, parameters);
+        playerStringGatherer.gather(conditions, parameters);
         tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
-        playerGroupGatherer.gather(conditions, params);
+        playerGroupGatherer.gather(conditions, parameters);
+    }
+
+    private void addValuesToBuilder(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
+        for (ExtensionMethod provider : methods.getBooleanProviders()) {
+            BooleanProvider annotation = provider.getExistingAnnotation(BooleanProvider.class);
+            dataBuilder.addValue(Boolean.class, dataBuilder.valueBuilder(annotation.text())
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .hideFromUsers(annotation)
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildBooleanProvidingCondition(() -> callMethod(provider, parameters, Boolean.class), annotation.conditionName()));
+        }
+        // TODO Conditional!
+        for (ExtensionMethod provider : methods.getDoubleProviders()) {
+            DoubleProvider annotation = provider.getExistingAnnotation(DoubleProvider.class);
+            dataBuilder.addValue(Double.class, dataBuilder.valueBuilder(annotation.text())
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildDouble(() -> callMethod(provider, parameters, Double.class)));
+        }
+        for (ExtensionMethod provider : methods.getPercentageProviders()) {
+            PercentageProvider annotation = provider.getExistingAnnotation(PercentageProvider.class);
+            dataBuilder.addValue(Double.class, dataBuilder.valueBuilder(annotation.text())
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildPercentage(() -> callMethod(provider, parameters, Double.class)));
+        }
+        for (ExtensionMethod provider : methods.getNumberProviders()) {
+            NumberProvider annotation = provider.getExistingAnnotation(NumberProvider.class);
+            dataBuilder.addValue(Long.class, dataBuilder.valueBuilder(annotation.text())
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .format(annotation.format())
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildNumber(() -> callMethod(provider, parameters, Long.class)));
+        }
+        for (ExtensionMethod provider : methods.getStringProviders()) {
+            StringProvider annotation = provider.getExistingAnnotation(StringProvider.class);
+            dataBuilder.addValue(String.class, dataBuilder.valueBuilder(annotation.text())
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .showAsPlayerPageLink(annotation)
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildString(() -> callMethod(provider, parameters, String.class)));
+        }
+        for (ExtensionMethod provider : methods.getGroupProviders()) {
+            GroupProvider annotation = provider.getExistingAnnotation(GroupProvider.class);
+            dataBuilder.addValue(String[].class, dataBuilder.valueBuilder(annotation.text())
+                    .icon(annotation.iconName(), annotation.iconFamily(), Color.NONE)
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildGroup(() -> callMethod(provider, parameters, String[].class)));
+        }
+        for (ExtensionMethod provider : methods.getTableProviders()) {
+            TableProvider annotation = provider.getExistingAnnotation(TableProvider.class);
+//          TODO  dataBuilder.addTable()
+        }
+        for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
+            ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
+            dataBuilder.addAll(providedBuilder);
+        }
+    }
+
+    private <T> T callMethod(ExtensionMethod provider, Parameters params, Class<T> returnType) {
+        return new MethodWrapper<>(provider.getMethod(), returnType)
+                .callMethod(extensionWrapper.getExtension(), params);
     }
 
     public void updateValues() {
-        Conditions conditions = booleanGatherer.gatherBooleanDataOfServer();
-        Parameters params = Parameters.server(serverInfo.getServerUUID());
+        Parameters parameters = Parameters.server(serverInfo.getServerUUID());
+        ExtensionDataBuilder dataBuilder = extensionWrapper.getExtension().newExtensionDataBuilder();
 
-        serverNumberGatherer.gather(conditions, params);
-        serverDoubleGatherer.gather(conditions, params);
-        serverStringGatherer.gather(conditions, params);
+        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.SERVER_NONE), parameters);
+
+        // TODO process & store data from dataBuilder
+
+        Conditions conditions = booleanGatherer.gatherBooleanDataOfServer();
+        serverNumberGatherer.gather(conditions, parameters);
+        serverDoubleGatherer.gather(conditions, parameters);
+        serverStringGatherer.gather(conditions, parameters);
         tableGatherer.gatherTableDataOfServer(conditions);
     }
 
@@ -168,10 +275,12 @@ public class ProviderValueGatherer {
         Transaction create(DataProvider<T> provider, Parameters parameters, T result);
     }
 
+    @Deprecated
     class Gatherer<T> {
         private final Class<T> type;
         private final ResultTransactionConstructor<T> resultTransactionConstructor;
 
+        @Deprecated
         public Gatherer(
                 Class<T> type,
                 ResultTransactionConstructor<T> resultTransactionConstructor
@@ -180,6 +289,7 @@ public class ProviderValueGatherer {
             this.resultTransactionConstructor = resultTransactionConstructor;
         }
 
+        @Deprecated
         public void gather(Conditions conditions, Parameters parameters) {
             for (DataProvider<T> provider : dataProviders.getProvidersByTypes(parameters.getMethodType(), type)) {
                 gather(conditions, provider, parameters);

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.extractor;
 
+import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 
 import java.lang.annotation.Annotation;
@@ -25,11 +26,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class ExtensionMethod {
-
-    private final Class<?> returnType;
+    private final DataExtension extension;
     private final Method method;
 
-    public ExtensionMethod(Method method) {
+    private final Class<?> returnType;
+
+    public ExtensionMethod(DataExtension extension, Method method) {
+        this.extension = extension;
         this.method = method;
         returnType = method.getReturnType();
     }
@@ -44,6 +47,14 @@ public class ExtensionMethod {
 
     public <T extends Annotation> Optional<T> getAnnotation(Class<T> ofType) {
         return Optional.ofNullable(method.getAnnotation(ofType));
+    }
+
+    public <T extends Annotation> T getExistingAnnotation(Class<T> ofType) {
+        return getAnnotation(ofType).orElseThrow(() -> new IllegalArgumentException(method.getName() + " did not have " + ofType.getName() + " annotation"));
+    }
+
+    public <T extends Annotation> T getAnnotationOrNull(Class<T> ofType) {
+        return getAnnotation(ofType).orElse(null);
     }
 
     public ParameterType getParameterType() {

@@ -20,6 +20,8 @@ import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
+import com.djrapitops.plan.extension.extractor.ExtensionMethod;
+import com.djrapitops.plan.extension.extractor.ExtensionMethods;
 import com.djrapitops.plan.extension.extractor.MethodAnnotations;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -28,10 +30,7 @@ import com.djrapitops.plan.utilities.java.Lists;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -50,6 +49,11 @@ public class ExtensionWrapper {
     private final DataProviders providers;
     private final DataExtension extension;
 
+    private final PluginInfo pluginInfo;
+    private final List<TabInfo> tabInformation;
+    private final Optional<TabOrder> tabOrder;
+    private final Map<ExtensionMethod.ParameterType, ExtensionMethods> methods;
+
     /**
      * Create an ExtensionWrapper.
      *
@@ -60,8 +64,12 @@ public class ExtensionWrapper {
         this.extension = extension;
         extractor = new ExtensionExtractor(this.extension);
 
-        extractor.extractAnnotationInformation();
+        pluginInfo = extractor.getPluginInfo();
+        tabInformation = extractor.getTabInformation();
+        tabOrder = extractor.getTabOrder();
+        methods = extractor.getMethods();
 
+        extractor.extractAnnotationInformation();
         providers = new DataProviders();
         extractProviders();
     }
@@ -75,11 +83,10 @@ public class ExtensionWrapper {
     }
 
     public String getPluginName() {
-        return extractor.getPluginInfo().name();
+        return pluginInfo.name();
     }
 
     public Icon getPluginIcon() {
-        PluginInfo pluginInfo = extractor.getPluginInfo();
         return new Icon(pluginInfo.iconFamily(), pluginInfo.iconName(), pluginInfo.color());
     }
 
@@ -172,5 +179,21 @@ public class ExtensionWrapper {
                 DataProviders dataProviders,
                 Method method, T annotation, Conditional condition, String tab, String pluginName
         );
+    }
+
+    public ExtensionExtractor getExtractor() {
+        return extractor;
+    }
+
+    public PluginInfo getPluginInfo() {
+        return pluginInfo;
+    }
+
+    public List<TabInfo> getTabInformation() {
+        return tabInformation;
+    }
+
+    public Map<ExtensionMethod.ParameterType, ExtensionMethods> getMethods() {
+        return methods;
     }
 }
