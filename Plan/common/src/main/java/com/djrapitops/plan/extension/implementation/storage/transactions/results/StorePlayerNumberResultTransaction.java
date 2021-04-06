@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -47,8 +48,12 @@ public class StorePlayerNumberResultTransaction extends ThrowawayTransaction {
     private final long value;
 
     public StorePlayerNumberResultTransaction(DataProvider<Long> provider, Parameters parameters, long value) {
-        this.pluginName = provider.getProviderInformation().getPluginName();
-        this.providerName = provider.getProviderInformation().getName();
+        this(provider.getProviderInformation(), parameters, value);
+    }
+
+    public StorePlayerNumberResultTransaction(ProviderInformation information, Parameters parameters, long value) {
+        this.pluginName = information.getPluginName();
+        this.providerName = information.getName();
         this.serverUUID = parameters.getServerUUID();
         this.playerUUID = parameters.getPlayerUUID();
         this.value = value;

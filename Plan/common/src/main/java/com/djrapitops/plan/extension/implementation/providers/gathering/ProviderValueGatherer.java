@@ -143,23 +143,6 @@ public class ProviderValueGatherer {
         database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extensionWrapper.getInvalidatedMethods()));
     }
 
-    public void updateValues(UUID playerUUID, String playerName) {
-        Parameters parameters = Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
-        ExtensionDataBuilder dataBuilder = extensionWrapper.getExtension().newExtensionDataBuilder();
-
-        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_STRING), parameters);
-        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_UUID), parameters);
-
-        // TODO process & store data from dataBuilder
-
-        Conditions conditions = booleanGatherer.gatherBooleanDataOfPlayer(playerUUID, playerName);
-        playerNumberGatherer.gather(conditions, parameters);
-        playerDoubleGatherer.gather(conditions, parameters);
-        playerStringGatherer.gather(conditions, parameters);
-        tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
-        playerGroupGatherer.gather(conditions, parameters);
-    }
-
     private void addValuesToBuilder(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
         for (ExtensionMethod provider : methods.getBooleanProviders()) {
             BooleanProvider annotation = provider.getExistingAnnotation(BooleanProvider.class);
@@ -227,6 +210,7 @@ public class ProviderValueGatherer {
         for (ExtensionMethod provider : methods.getGroupProviders()) {
             GroupProvider annotation = provider.getExistingAnnotation(GroupProvider.class);
             dataBuilder.addValue(String[].class, dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
                     .icon(annotation.iconName(), annotation.iconFamily(), Color.NONE)
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
@@ -247,6 +231,19 @@ public class ProviderValueGatherer {
                 .callMethod(extensionWrapper.getExtension(), params);
     }
 
+    public void updateValues(UUID playerUUID, String playerName) {
+        Parameters parameters = Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
+        ExtensionDataBuilder dataBuilder = extensionWrapper.getExtension().newExtensionDataBuilder();
+
+        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_STRING), parameters);
+        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_UUID), parameters);
+
+        Conditions conditions = gatherPlayer(parameters, (ExtDataBuilder) dataBuilder);
+
+        // TODO table gathering
+        tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
+    }
+
     public void updateValues() {
         Parameters parameters = Parameters.server(serverInfo.getServerUUID());
         ExtensionDataBuilder dataBuilder = extensionWrapper.getExtension().newExtensionDataBuilder();
@@ -257,6 +254,24 @@ public class ProviderValueGatherer {
 
         // TODO table gathering
         tableGatherer.gatherTableDataOfServer(conditions);
+    }
+
+
+    private Conditions gatherPlayer(Parameters parameters, ExtDataBuilder dataBuilder) {
+        Conditions conditions = new Conditions();
+        for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
+            pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
+                    .ifPresent(data -> storePlayerBoolean(parameters, conditions, data));
+            pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
+                    .ifPresent(data -> storePlayerNumber(parameters, conditions, data));
+            pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
+                    .ifPresent(data -> storePlayerDouble(parameters, conditions, data));
+            pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
+                    .ifPresent(data -> storePlayerString(parameters, conditions, data));
+            pair.getValue(String[].class).flatMap(data -> data.getMetadata(GroupsDataValue.class))
+                    .ifPresent(data -> storePlayerGroups(parameters, conditions, data));
+        }
+        return conditions;
     }
 
     private Conditions gather(Parameters parameters, ExtDataBuilder dataBuilder) {
@@ -337,6 +352,86 @@ public class ProviderValueGatherer {
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
         db.executeTransaction(new StoreProviderTransaction(information, parameters));
         db.executeTransaction(new StoreServerStringResultTransaction(information, parameters, value));
+    }
+
+    private void storePlayerBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Boolean value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+        if (value) {
+            conditions.conditionFulfilled(information.getProvidedCondition());
+        } else {
+            conditions.conditionFulfilled("not_" + information.getProvidedCondition());
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StorePlayerBooleanResultTransaction(information, parameters, value));
+    }
+
+    private void storePlayerNumber(Parameters parameters, Conditions conditions, NumberDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Long value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StorePlayerNumberResultTransaction(information, parameters, value));
+    }
+
+    private void storePlayerDouble(Parameters parameters, Conditions conditions, DoubleDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Double value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StorePlayerDoubleResultTransaction(information, parameters, value));
+    }
+
+    private void storePlayerString(Parameters parameters, Conditions conditions, StringDataValue data) {
+        ProviderInformation information = data.getInformation();
+        String value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StorePlayerStringResultTransaction(information, parameters, value));
+    }
+
+    private void storePlayerGroups(Parameters parameters, Conditions conditions, GroupsDataValue data) {
+        ProviderInformation information = data.getInformation();
+        String[] value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StorePlayerGroupsResultTransaction(information, parameters, value));
     }
 
     interface ResultTransactionConstructor<T> {
