@@ -23,7 +23,6 @@ import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.implementation.providers.gathering.Conditions;
-import com.djrapitops.plan.extension.table.Table;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,13 +33,11 @@ import java.util.function.Supplier;
 public class ExtDataBuilder implements ExtensionDataBuilder {
 
     private final List<ClassValuePair> values;
-    private final List<TabNameTablePair> tables;
     private final DataExtension extension;
 
     public ExtDataBuilder(DataExtension extension) {
         this.extension = extension;
         values = new ArrayList<>();
-        tables = new ArrayList<>();
     }
 
     @Override
@@ -70,14 +67,22 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
         return values;
     }
 
-    public List<TabNameTablePair> getTables() {
-        return tables;
-    }
-
     public String getExtensionName() {
         return Optional.ofNullable(extension.getClass().getAnnotation(PluginInfo.class))
                 .map(PluginInfo::name)
                 .orElseThrow(() -> new IllegalArgumentException(extension.getClass().getName() + " does not have @PluginInfo annotation!"));
+    }
+
+    @Override
+    public void addAll(ExtensionDataBuilder builder) {
+        if (!(builder instanceof ExtDataBuilder)) return;
+        // From same DataExtension
+        if (!extension.getClass().equals(((ExtDataBuilder) builder).extension.getClass())) {
+            throw new IllegalArgumentException("Can not combine data from two different extensions! (" +
+                    extension.getClass().getName() + ',' + ((ExtDataBuilder) builder).extension.getClass().getName() + ")");
+        }
+
+        this.values.addAll(((ExtDataBuilder) builder).values);
     }
 
     public static final class ClassValuePair implements Comparable<ClassValuePair> {
@@ -117,36 +122,5 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
             }
             return 0;
         }
-    }
-
-    public static final class TabNameTablePair {
-        private final String tabName;
-        private final Table table;
-
-        public TabNameTablePair(String tabName, Table table) {
-            this.tabName = tabName;
-            this.table = table;
-        }
-
-        public Optional<String> getTabName() {
-            return Optional.ofNullable(tabName);
-        }
-
-        public Table getTable() {
-            return table;
-        }
-    }
-
-    @Override
-    public void addAll(ExtensionDataBuilder builder) {
-        if (!(builder instanceof ExtDataBuilder)) return;
-        // From same DataExtension
-        if (!extension.getClass().equals(((ExtDataBuilder) builder).extension.getClass())) {
-            throw new IllegalArgumentException("Can not combine data from two different extensions! (" +
-                    extension.getClass().getName() + ',' + ((ExtDataBuilder) builder).extension.getClass().getName() + ")");
-        }
-
-        this.tables.addAll(((ExtDataBuilder) builder).tables);
-        this.values.addAll(((ExtDataBuilder) builder).values);
     }
 }

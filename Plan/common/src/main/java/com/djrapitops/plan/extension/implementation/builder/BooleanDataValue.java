@@ -16,45 +16,16 @@
  */
 package com.djrapitops.plan.extension.implementation.builder;
 
-import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 import java.util.function.Supplier;
 
-public class BooleanDataValue implements DataValue<Boolean> {
-
-    private final Boolean value;
-    private final Supplier<Boolean> supplier;
-    private final ProviderInformation information;
-
+public class BooleanDataValue extends BuiltDataValue<Boolean> {
     public BooleanDataValue(Boolean value, ProviderInformation information) {
-        this(value, null, information);
+        super(value, information);
     }
 
     public BooleanDataValue(Supplier<Boolean> supplier, ProviderInformation information) {
-        this(null, supplier, information);
-    }
-
-    private BooleanDataValue(Boolean value, Supplier<Boolean> supplier, ProviderInformation information) {
-        this.value = value;
-        this.supplier = supplier;
-        this.information = information;
-    }
-
-    @Override
-    public Boolean getValue() {
-        if (value != null) return value;
-        if (supplier != null) return supplier.get();
-        return null;
-    }
-
-    public ProviderInformation getInformation() {
-        return information;
-    }
-
-    @Override
-    public <M> M getInformation(Class<M> ofType) {
-        if (ProviderInformation.class.equals(ofType)) return ofType.cast(getInformation());
-        return null;
+        super(supplier, information);
     }
 }

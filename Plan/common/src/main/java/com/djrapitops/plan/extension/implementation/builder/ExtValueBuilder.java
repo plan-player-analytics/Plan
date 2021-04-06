@@ -33,7 +33,6 @@ import java.util.function.Supplier;
 
 public class ExtValueBuilder implements ValueBuilder {
 
-    // TODO add Conditional stuff so that annotation implementation can use builders
     private final String pluginName;
     private final String text;
     private String providerName;

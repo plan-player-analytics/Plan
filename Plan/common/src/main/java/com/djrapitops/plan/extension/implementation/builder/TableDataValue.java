@@ -16,46 +16,17 @@
  */
 package com.djrapitops.plan.extension.implementation.builder;
 
-import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.util.function.Supplier;
 
-public class TableDataValue implements DataValue<Table> {
-
-    private final Table value;
-    private final Supplier<Table> supplier;
-    private final ProviderInformation information;
-
+public class TableDataValue extends BuiltDataValue<Table> {
     public TableDataValue(Table value, ProviderInformation information) {
-        this(value, null, information);
+        super(value, information);
     }
 
     public TableDataValue(Supplier<Table> supplier, ProviderInformation information) {
-        this(null, supplier, information);
-    }
-
-    private TableDataValue(Table value, Supplier<Table> supplier, ProviderInformation information) {
-        this.value = value;
-        this.supplier = supplier;
-        this.information = information;
-    }
-
-    @Override
-    public Table getValue() {
-        if (value != null) return value;
-        if (supplier != null) return supplier.get();
-        return null;
-    }
-
-    public ProviderInformation getInformation() {
-        return information;
-    }
-
-    @Override
-    public <M> M getInformation(Class<M> ofType) {
-        if (ProviderInformation.class.equals(ofType)) return ofType.cast(getInformation());
-        return null;
+        super(supplier, information);
     }
 }

@@ -23,7 +23,6 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
  *
  * @author AuroraLS3
  */
-// TODO differentiate between percentage and double data
 public class ExtensionDoubleData implements DescribedExtensionData {
 
     private final ExtensionDescription description;

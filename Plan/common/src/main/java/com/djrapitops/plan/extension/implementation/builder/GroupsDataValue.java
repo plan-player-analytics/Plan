@@ -16,45 +16,16 @@
  */
 package com.djrapitops.plan.extension.implementation.builder;
 
-import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 import java.util.function.Supplier;
 
-public class GroupsDataValue implements DataValue<String[]> {
-
-    private final String[] value;
-    private final Supplier<String[]> supplier;
-    private final ProviderInformation information;
-
+public class GroupsDataValue extends BuiltDataValue<String[]> {
     public GroupsDataValue(String[] value, ProviderInformation information) {
-        this(value, null, information);
+        super(value, information);
     }
 
     public GroupsDataValue(Supplier<String[]> supplier, ProviderInformation information) {
-        this(null, supplier, information);
-    }
-
-    private GroupsDataValue(String[] value, Supplier<String[]> supplier, ProviderInformation information) {
-        this.value = value;
-        this.supplier = supplier;
-        this.information = information;
-    }
-
-    @Override
-    public String[] getValue() {
-        if (value != null) return value;
-        if (supplier != null) return supplier.get();
-        return null;
-    }
-
-    public ProviderInformation getInformation() {
-        return information;
-    }
-
-    @Override
-    public <M> M getInformation(Class<M> ofType) {
-        if (ProviderInformation.class.equals(ofType)) return ofType.cast(getInformation());
-        return null;
+        super(supplier, information);
     }
 }
