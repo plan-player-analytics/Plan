@@ -45,7 +45,13 @@ public class ProviderInformation extends ExtensionDescription {
     private final boolean percentage;       // affects where doubles are stored
 
     private ProviderInformation(ProviderInformation.Builder builder) {
-        super(builder.name, builder.text, builder.description, builder.icon, builder.priority);
+        super(
+                builder.name,
+                builder.text,
+                builder.description,
+                builder.icon != null ? builder.icon : Icon.called("cube").build(),
+                builder.priority
+        );
         pluginName = builder.pluginName;
         showInPlayersTable = builder.showInPlayersTable;
         tab = builder.tab;
@@ -136,7 +142,7 @@ public class ProviderInformation extends ExtensionDescription {
         private String text;
         private String description;
         private Icon icon;
-        private int priority;
+        private int priority = 0;
         private boolean showInPlayersTable = false;
         private String tab;                   // can be null
         private Conditional condition;        // can be null
