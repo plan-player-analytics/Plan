@@ -19,7 +19,6 @@ package com.djrapitops.plan.storage.database.queries;
 import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.icon.Color;
@@ -59,7 +58,8 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @BeforeEach
     default void unregisterExtensions() {
-        ExtensionService extensionService = extensionService();
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register();
         extensionService.unregister(new PlayerExtension());
         extensionService.unregister(new ServerExtension());
         extensionService.unregister(new ConditionalExtension());
@@ -82,7 +82,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionPlayerValuesAreStored() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -130,7 +130,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerValuesAreStored() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new ServerExtension());
         extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER);
@@ -152,7 +152,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerAggregateQueriesWork() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -183,7 +183,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void unsatisfiedPlayerConditionalResultsAreCleaned() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new ConditionalExtension());
 
@@ -237,7 +237,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void unsatisfiedServerConditionalResultsAreCleaned() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         ConditionalExtension.condition = true;
         extensionService.register(new ConditionalExtension());
@@ -288,7 +288,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerTableValuesAreInserted() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updateServerValues(CallEvents.MANUAL);
@@ -320,7 +320,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionPlayerTableValuesAreInserted() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);

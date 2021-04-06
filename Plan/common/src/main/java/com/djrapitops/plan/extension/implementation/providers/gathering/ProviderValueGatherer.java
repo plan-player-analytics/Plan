@@ -26,6 +26,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.TabInformation;
+import com.djrapitops.plan.extension.implementation.builder.*;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
@@ -41,6 +42,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -59,15 +61,9 @@ public class ProviderValueGatherer {
     private final BooleanProviderValueGatherer booleanGatherer;
     private final TableProviderValueGatherer tableGatherer;
     @Deprecated
-    private final Gatherer<Long> serverNumberGatherer;
-    @Deprecated
     private final Gatherer<Long> playerNumberGatherer;
     @Deprecated
-    private final Gatherer<Double> serverDoubleGatherer;
-    @Deprecated
     private final Gatherer<Double> playerDoubleGatherer;
-    @Deprecated
-    private final Gatherer<String> serverStringGatherer;
     @Deprecated
     private final Gatherer<String> playerStringGatherer;
     @Deprecated
@@ -94,15 +90,6 @@ public class ProviderValueGatherer {
                 pluginName, serverUUID, database, extension
         );
 
-        serverNumberGatherer = new Gatherer<>(
-                Long.class, StoreServerNumberResultTransaction::new
-        );
-        serverDoubleGatherer = new Gatherer<>(
-                Double.class, StoreServerDoubleResultTransaction::new
-        );
-        serverStringGatherer = new Gatherer<>(
-                String.class, StoreServerStringResultTransaction::new
-        );
         playerNumberGatherer = new Gatherer<>(
                 Long.class, StorePlayerNumberResultTransaction::new
         );
@@ -177,6 +164,7 @@ public class ProviderValueGatherer {
         for (ExtensionMethod provider : methods.getBooleanProviders()) {
             BooleanProvider annotation = provider.getExistingAnnotation(BooleanProvider.class);
             dataBuilder.addValue(Boolean.class, dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
                     .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
                     .description(annotation.description())
                     .priority(annotation.priority())
@@ -186,10 +174,10 @@ public class ProviderValueGatherer {
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
                     .buildBooleanProvidingCondition(() -> callMethod(provider, parameters, Boolean.class), annotation.conditionName()));
         }
-        // TODO Conditional!
         for (ExtensionMethod provider : methods.getDoubleProviders()) {
             DoubleProvider annotation = provider.getExistingAnnotation(DoubleProvider.class);
             dataBuilder.addValue(Double.class, dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
                     .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
                     .description(annotation.description())
                     .priority(annotation.priority())
@@ -201,6 +189,7 @@ public class ProviderValueGatherer {
         for (ExtensionMethod provider : methods.getPercentageProviders()) {
             PercentageProvider annotation = provider.getExistingAnnotation(PercentageProvider.class);
             dataBuilder.addValue(Double.class, dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
                     .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
                     .description(annotation.description())
                     .priority(annotation.priority())
@@ -212,6 +201,7 @@ public class ProviderValueGatherer {
         for (ExtensionMethod provider : methods.getNumberProviders()) {
             NumberProvider annotation = provider.getExistingAnnotation(NumberProvider.class);
             dataBuilder.addValue(Long.class, dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
                     .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
                     .description(annotation.description())
                     .priority(annotation.priority())
@@ -224,6 +214,7 @@ public class ProviderValueGatherer {
         for (ExtensionMethod provider : methods.getStringProviders()) {
             StringProvider annotation = provider.getExistingAnnotation(StringProvider.class);
             dataBuilder.addValue(String.class, dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
                     .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
                     .description(annotation.description())
                     .priority(annotation.priority())
@@ -262,13 +253,90 @@ public class ProviderValueGatherer {
 
         addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.SERVER_NONE), parameters);
 
-        // TODO process & store data from dataBuilder
+        Conditions conditions = gather(parameters, (ExtDataBuilder) dataBuilder);
 
-        Conditions conditions = booleanGatherer.gatherBooleanDataOfServer();
-        serverNumberGatherer.gather(conditions, parameters);
-        serverDoubleGatherer.gather(conditions, parameters);
-        serverStringGatherer.gather(conditions, parameters);
+        // TODO table gathering
         tableGatherer.gatherTableDataOfServer(conditions);
+    }
+
+    private Conditions gather(Parameters parameters, ExtDataBuilder dataBuilder) {
+        Conditions conditions = new Conditions();
+        for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
+            pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
+                    .ifPresent(data -> storeBoolean(parameters, conditions, data));
+            pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
+                    .ifPresent(data -> storeNumber(parameters, conditions, data));
+            pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
+                    .ifPresent(data -> storeDouble(parameters, conditions, data));
+            pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
+                    .ifPresent(data -> storeString(parameters, conditions, data));
+        }
+        return conditions;
+    }
+
+    private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Boolean value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+        if (value) {
+            conditions.conditionFulfilled(information.getProvidedCondition());
+        } else {
+            conditions.conditionFulfilled("not_" + information.getProvidedCondition());
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StoreServerBooleanResultTransaction(information, parameters, value));
+    }
+
+    private void storeNumber(Parameters parameters, Conditions conditions, NumberDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Long value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StoreServerNumberResultTransaction(information, parameters, value));
+    }
+
+    private void storeDouble(Parameters parameters, Conditions conditions, DoubleDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Double value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StoreServerDoubleResultTransaction(information, parameters, value));
+    }
+
+    private void storeString(Parameters parameters, Conditions conditions, StringDataValue data) {
+        ProviderInformation information = data.getInformation();
+        String value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StoreServerStringResultTransaction(information, parameters, value));
     }
 
     interface ResultTransactionConstructor<T> {

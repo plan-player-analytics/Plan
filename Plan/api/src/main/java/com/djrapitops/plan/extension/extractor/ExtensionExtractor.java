@@ -159,8 +159,14 @@ public final class ExtensionExtractor {
                 methodAnnotations.put(method.getMethod(), DataBuilderProvider.class, annotation);
             });
 
-            method.getAnnotation(Conditional.class).ifPresent(annotation -> conditionalMethods.add(method.getMethod()));
-            method.getAnnotation(Tab.class).ifPresent(tabAnnotations::add);
+            method.getAnnotation(Conditional.class).ifPresent(annotation -> {
+                conditionalMethods.add(method.getMethod());
+                methodAnnotations.put(method.getMethod(), Conditional.class, annotation);
+            });
+            method.getAnnotation(Tab.class).ifPresent(annotation -> {
+                tabAnnotations.add(annotation);
+                methodAnnotations.put(method.getMethod(), Tab.class, annotation);
+            });
         }
 
         if (methodAnnotations.isEmpty()) {
@@ -364,7 +370,7 @@ public final class ExtensionExtractor {
             }
         });
 
-        Set<String> tabNames = tabAnnotations.stream().map(Tab::value).collect(Collectors.toSet());
+        Set<String> tabNames = getTabAnnotations().stream().map(Tab::value).collect(Collectors.toSet());
 
         // Check for unused TabInfo annotations
         for (TabInfo tabInfo : tabInformation) {

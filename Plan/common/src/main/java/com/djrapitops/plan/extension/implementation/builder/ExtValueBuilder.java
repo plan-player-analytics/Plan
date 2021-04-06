@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
+import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
@@ -33,6 +34,7 @@ public class ExtValueBuilder implements ValueBuilder {
     // TODO add Conditional stuff so that annotation implementation can use builders
     private final String pluginName;
     private final String text;
+    private String providerName;
     private String description;
     private int priority = 0;
     private boolean showInPlayerTable = false;
@@ -47,6 +49,12 @@ public class ExtValueBuilder implements ValueBuilder {
     public ExtValueBuilder(String text, DataExtension extension) {
         this.text = text;
         pluginName = extension.getClass().getAnnotation(PluginInfo.class).name();
+    }
+
+    @Override
+    public ValueBuilder methodName(ExtensionMethod method) {
+        this.providerName = method.getMethod().getName();
+        return this;
     }
 
     @Override
@@ -117,7 +125,8 @@ public class ExtValueBuilder implements ValueBuilder {
 
     private ProviderInformation getProviderInformation(boolean percentage, String providedCondition) {
         ProviderInformation.Builder builder = ProviderInformation.builder(pluginName)
-                .setName(text.toLowerCase().replaceAll("\\s", ""))
+                .setName(providerName != null ? providerName
+                        : text.toLowerCase().replaceAll("\\s", ""))
                 .setText(text)
                 .setDescription(description)
                 .setPriority(priority)

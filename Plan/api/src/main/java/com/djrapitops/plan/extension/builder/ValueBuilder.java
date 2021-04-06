@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.annotation.BooleanProvider;
 import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.StringProvider;
 import com.djrapitops.plan.extension.annotation.Tab;
+import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -28,6 +29,8 @@ import com.djrapitops.plan.extension.icon.Icon;
 import java.util.function.Supplier;
 
 public interface ValueBuilder {
+
+    ValueBuilder methodName(ExtensionMethod method);
 
     ValueBuilder description(String description);
 

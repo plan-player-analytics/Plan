@@ -23,7 +23,6 @@ import com.djrapitops.plan.delivery.web.ResolverSvc;
 import com.djrapitops.plan.delivery.web.ResourceSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
-import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.CacheSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
@@ -275,7 +274,7 @@ public class PlanSystem implements SubSystem {
         return enabled;
     }
 
-    public ExtensionService getExtensionService() {
+    public ExtensionSvc getExtensionService() {
         return extensionService;
     }
 

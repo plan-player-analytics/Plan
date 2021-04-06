@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
-import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -141,7 +141,7 @@ public class SQLiteTest implements DatabaseTest,
     }
 
     @Override
-    public ExtensionService extensionService() {
+    public ExtensionSvc extensionService() {
         return component.extensionService();
     }
 
