@@ -17,7 +17,6 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
-import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
@@ -51,10 +50,6 @@ public class StorePlayerDoubleResultTransaction extends ThrowawayTransaction {
 
     private final double value;
     private final boolean percentage;
-
-    public StorePlayerDoubleResultTransaction(DataProvider<Double> provider, Parameters parameters, double value) {
-        this(provider.getProviderInformation(), parameters, value);
-    }
 
     public StorePlayerDoubleResultTransaction(ProviderInformation information, Parameters parameters, double value) {
         this.pluginName = information.getPluginName();

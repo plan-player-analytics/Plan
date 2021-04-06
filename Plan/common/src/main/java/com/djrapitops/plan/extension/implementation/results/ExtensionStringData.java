@@ -17,14 +17,13 @@
 package com.djrapitops.plan.extension.implementation.results;
 
 import com.djrapitops.plan.delivery.rendering.html.Html;
-import com.djrapitops.plan.extension.builder.DataValue;
 
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.
  *
  * @author AuroraLS3
  */
-public class ExtensionStringData implements DescribedExtensionData, DataValue<String> {
+public class ExtensionStringData implements DescribedExtensionData {
 
     private final ExtensionDescription description;
     private final boolean playerName;
@@ -34,11 +33,6 @@ public class ExtensionStringData implements DescribedExtensionData, DataValue<St
         this.description = description;
         this.playerName = playerName;
         this.value = value;
-    }
-
-    @Override
-    public String getValue() {
-        return value;
     }
 
     public static ExtensionStringData regularString(ExtensionDescription description, String value) {

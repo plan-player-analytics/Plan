@@ -51,4 +51,10 @@ public class DoubleDataValue implements DataValue<Double> {
     public ProviderInformation getInformation() {
         return information;
     }
+
+    @Override
+    public <M> M getInformation(Class<M> ofType) {
+        if (ProviderInformation.class.equals(ofType)) return ofType.cast(getInformation());
+        return null;
+    }
 }

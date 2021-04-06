@@ -27,7 +27,6 @@ import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.builder.*;
-import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
@@ -40,7 +39,6 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -58,16 +56,7 @@ public class ProviderValueGatherer {
     private final ServerInfo serverInfo;
 
     private final DataProviders dataProviders;
-    private final BooleanProviderValueGatherer booleanGatherer;
     private final TableProviderValueGatherer tableGatherer;
-    @Deprecated
-    private final Gatherer<Long> playerNumberGatherer;
-    @Deprecated
-    private final Gatherer<Double> playerDoubleGatherer;
-    @Deprecated
-    private final Gatherer<String> playerStringGatherer;
-    @Deprecated
-    private final Gatherer<String[]> playerGroupGatherer;
 
     public ProviderValueGatherer(
             ExtensionWrapper extension,
@@ -83,24 +72,8 @@ public class ProviderValueGatherer {
         ServerUUID serverUUID = serverInfo.getServerUUID();
         Database database = dbSystem.getDatabase();
         dataProviders = extension.getProviders();
-        booleanGatherer = new BooleanProviderValueGatherer(
-                pluginName, serverUUID, database, extension
-        );
         tableGatherer = new TableProviderValueGatherer(
                 pluginName, serverUUID, database, extension
-        );
-
-        playerNumberGatherer = new Gatherer<>(
-                Long.class, StorePlayerNumberResultTransaction::new
-        );
-        playerDoubleGatherer = new Gatherer<>(
-                Double.class, StorePlayerDoubleResultTransaction::new
-        );
-        playerStringGatherer = new Gatherer<>(
-                String.class, StorePlayerStringResultTransaction::new
-        );
-        playerGroupGatherer = new Gatherer<>(
-                String[].class, StorePlayerGroupsResultTransaction::new
         );
     }
 
@@ -227,8 +200,12 @@ public class ProviderValueGatherer {
     }
 
     private <T> T callMethod(ExtensionMethod provider, Parameters params, Class<T> returnType) {
-        return new MethodWrapper<>(provider.getMethod(), returnType)
-                .callMethod(extensionWrapper.getExtension(), params);
+        try {
+            return new MethodWrapper<>(provider.getMethod(), returnType)
+                    .callMethod(extensionWrapper.getExtension(), params);
+        } catch (IllegalArgumentException e) {
+            return null; // TODO handle exceptions
+        }
     }
 
     public void updateValues(UUID playerUUID, String playerName) {
@@ -432,48 +409,5 @@ public class ProviderValueGatherer {
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
         db.executeTransaction(new StoreProviderTransaction(information, parameters));
         db.executeTransaction(new StorePlayerGroupsResultTransaction(information, parameters, value));
-    }
-
-    interface ResultTransactionConstructor<T> {
-        Transaction create(DataProvider<T> provider, Parameters parameters, T result);
-    }
-
-    @Deprecated
-    class Gatherer<T> {
-        private final Class<T> type;
-        private final ResultTransactionConstructor<T> resultTransactionConstructor;
-
-        @Deprecated
-        public Gatherer(
-                Class<T> type,
-                ResultTransactionConstructor<T> resultTransactionConstructor
-        ) {
-            this.type = type;
-            this.resultTransactionConstructor = resultTransactionConstructor;
-        }
-
-        @Deprecated
-        public void gather(Conditions conditions, Parameters parameters) {
-            for (DataProvider<T> provider : dataProviders.getProvidersByTypes(parameters.getMethodType(), type)) {
-                gather(conditions, provider, parameters);
-            }
-        }
-
-        private void gather(Conditions conditions, DataProvider<T> provider, Parameters parameters) {
-            ProviderInformation information = provider.getProviderInformation();
-            if (information.getCondition().map(conditions::isNotFulfilled).orElse(false)) {
-                return; // Condition not fulfilled
-            }
-
-            T result = provider.getMethod().callMethod(extensionWrapper.getExtension(), parameters);
-            if (result == null) {
-                return; // Error during method call
-            }
-
-            Database db = dbSystem.getDatabase();
-            db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-            db.executeTransaction(new StoreProviderTransaction(provider, parameters.getServerUUID()));
-            db.executeTransaction(resultTransactionConstructor.create(provider, parameters, result));
-        }
     }
 }

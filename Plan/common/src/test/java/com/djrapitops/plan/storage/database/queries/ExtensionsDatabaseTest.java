@@ -20,7 +20,9 @@ import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
@@ -64,6 +66,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionService.unregister(new ServerExtension());
         extensionService.unregister(new ConditionalExtension());
         extensionService.unregister(new TableExtension());
+        extensionService.unregister(new ThrowingExtension());
     }
 
     @Test
@@ -352,6 +355,15 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(expected.toHtml(), table.getHtmlTable().toHtml());
     }
 
+    @Test
+    default void extensionExceptionsAreCaught() {
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new ThrowingExtension());
+
+        extensionService.updateServerValues(CallEvents.MANUAL);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+    }
+
     @PluginInfo(name = "ConditionalExtension")
     class ConditionalExtension implements DataExtension {
 
@@ -489,6 +501,55 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
                     .columnFive("five", Icon.called("").build()) // Can handle null column in between and ignore the next column
                     .addRow("value", 3, 0.5, 400L)               // Can handle too many row values
                     .build();
+        }
+    }
+
+    @PluginInfo(name = "ThrowingExtension")
+    class ThrowingExtension implements DataExtension {
+        @BooleanProvider(text = "a boolean")
+        public boolean booleanMethod() {
+            throw new IllegalArgumentException("Failed to catch");
+        }
+
+        @BooleanProvider(text = "a boolean")
+        public boolean booleanPlayerMethod(UUID playerUUID) {
+            throw new NotReadyException();
+        }
+
+        @StringProvider(text = "a string")
+        public String stringMethod() {
+            throw new NoSuchMethodError();
+        }
+
+        @NumberProvider(text = "a string")
+        public long numberMethod() {
+            throw new UnsupportedOperationException();
+        }
+
+        @GroupProvider(text = "group")
+        public String[] groupMethod(UUID playerUUID) {
+            throw new NoClassDefFoundError();
+        }
+
+        @DataBuilderProvider
+        public ExtensionDataBuilder builder() {
+            return newExtensionDataBuilder()
+                    .addValue(String.class, () -> {
+                        throw new NotReadyException();
+                    });
+        }
+
+        @DataBuilderProvider
+        public ExtensionDataBuilder builder2() {
+            return newExtensionDataBuilder()
+                    .addValue(String.class, () -> {
+                        throw new NoClassDefFoundError();
+                    });
+        }
+
+        @DataBuilderProvider
+        public ExtensionDataBuilder builder3() {
+            throw new NoSuchMethodError();
         }
     }
 }

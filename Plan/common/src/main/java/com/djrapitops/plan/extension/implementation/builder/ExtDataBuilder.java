@@ -58,9 +58,10 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
     public <T> ExtensionDataBuilder addValue(Class<T> ofType, Supplier<DataValue<T>> dataValue) {
         try {
             values.add(new ClassValuePair(ofType, dataValue.get()));
-        } catch (NotReadyException ignored) {
+        } catch (NotReadyException | UnsupportedOperationException ignored) {
             // This exception is ignored by default to allow throwing errors inside the lambda to keep code clean.
         }
+        // TODO handle other exceptions
         return this;
     }
 

@@ -22,6 +22,8 @@ public interface DataValue<T> {
 
     T getValue();
 
+    <M> M getInformation(Class<M> ofType);
+
     default <I extends DataValue<T>> Optional<I> getMetadata(Class<I> metadataType) {
         if (getClass().equals(metadataType)) return Optional.of(metadataType.cast(this));
         return Optional.empty();
