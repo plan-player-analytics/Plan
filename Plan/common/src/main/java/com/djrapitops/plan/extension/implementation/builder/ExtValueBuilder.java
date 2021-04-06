@@ -24,8 +24,10 @@ import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
+import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.table.Table;
 
 import java.util.function.Supplier;
 
@@ -149,6 +151,17 @@ public class ExtValueBuilder implements ValueBuilder {
         return builder.build();
     }
 
+    private ProviderInformation getTableProviderInformation(Color tableColor) {
+        return ProviderInformation.builder(pluginName)
+                .setName(providerName != null ? providerName
+                        : text.toLowerCase().replaceAll("\\s", ""))
+                .setPriority(0)
+                .setCondition(conditional)
+                .setTab(tabName)
+                .setTableColor(tableColor)
+                .build();
+    }
+
     @Override
     public DataValue<Boolean> buildBoolean(boolean value) {
         return new BooleanDataValue(value, getProviderInformation());
@@ -217,5 +230,15 @@ public class ExtValueBuilder implements ValueBuilder {
     @Override
     public DataValue<String[]> buildGroup(Supplier<String[]> groups) {
         return new GroupsDataValue(groups, getProviderInformation());
+    }
+
+    @Override
+    public DataValue<Table> buildTable(Table table, Color tableColor) {
+        return new TableDataValue(table, getTableProviderInformation(tableColor));
+    }
+
+    @Override
+    public DataValue<Table> buildTable(Supplier<Table> table, Color tableColor) {
+        return new TableDataValue(table, getTableProviderInformation(tableColor));
     }
 }

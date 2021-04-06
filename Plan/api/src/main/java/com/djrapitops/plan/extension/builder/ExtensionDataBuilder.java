@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.builder;
 
+import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.util.function.Supplier;
@@ -44,11 +45,16 @@ public interface ExtensionDataBuilder {
      */
     <T> ExtensionDataBuilder addValue(Class<T> ofType, Supplier<DataValue<T>> dataValue);
 
-    default ExtensionDataBuilder addTable(Table table) {
-        return addTable(table, null);
+    default ExtensionDataBuilder addTable(String name, Table table, Color color) {
+        if (name == null) throw new IllegalArgumentException("'name' can not be null!");
+        return addTable(name, table, color, null);
     }
 
-    ExtensionDataBuilder addTable(Table table, String tab);
+    default ExtensionDataBuilder addTable(String name, Table table, Color color, String tab) {
+        return addValue(Table.class, valueBuilder(name)
+                .showOnTab(tab)
+                .buildTable(table, color));
+    }
 
     void addAll(ExtensionDataBuilder builder);
 }

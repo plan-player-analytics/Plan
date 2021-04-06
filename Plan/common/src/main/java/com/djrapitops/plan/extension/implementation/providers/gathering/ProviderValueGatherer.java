@@ -34,7 +34,9 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreTableProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.*;
+import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -56,7 +58,6 @@ public class ProviderValueGatherer {
     private final ServerInfo serverInfo;
 
     private final DataProviders dataProviders;
-    private final TableProviderValueGatherer tableGatherer;
 
     public ProviderValueGatherer(
             ExtensionWrapper extension,
@@ -68,13 +69,7 @@ public class ProviderValueGatherer {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
 
-        String pluginName = extension.getPluginName();
-        ServerUUID serverUUID = serverInfo.getServerUUID();
-        Database database = dbSystem.getDatabase();
         dataProviders = extension.getProviders();
-        tableGatherer = new TableProviderValueGatherer(
-                pluginName, serverUUID, database, extension
-        );
     }
 
     public void disableMethodFromUse(MethodWrapper<?> method) {
@@ -191,7 +186,10 @@ public class ProviderValueGatherer {
         }
         for (ExtensionMethod provider : methods.getTableProviders()) {
             TableProvider annotation = provider.getExistingAnnotation(TableProvider.class);
-//          TODO  dataBuilder.addTable()
+            dataBuilder.addValue(Table.class, dataBuilder.valueBuilder(provider.getMethodName())
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildTable(() -> callMethod(provider, parameters, Table.class), annotation.tableColor()));
         }
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
@@ -215,10 +213,7 @@ public class ProviderValueGatherer {
         addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_STRING), parameters);
         addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_UUID), parameters);
 
-        Conditions conditions = gatherPlayer(parameters, (ExtDataBuilder) dataBuilder);
-
-        // TODO table gathering
-        tableGatherer.gatherTableDataOfPlayer(playerUUID, playerName, conditions);
+        gatherPlayer(parameters, (ExtDataBuilder) dataBuilder);
     }
 
     public void updateValues() {
@@ -227,14 +222,11 @@ public class ProviderValueGatherer {
 
         addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.SERVER_NONE), parameters);
 
-        Conditions conditions = gather(parameters, (ExtDataBuilder) dataBuilder);
-
-        // TODO table gathering
-        tableGatherer.gatherTableDataOfServer(conditions);
+        gather(parameters, (ExtDataBuilder) dataBuilder);
     }
 
 
-    private Conditions gatherPlayer(Parameters parameters, ExtDataBuilder dataBuilder) {
+    private void gatherPlayer(Parameters parameters, ExtDataBuilder dataBuilder) {
         Conditions conditions = new Conditions();
         for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
             pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
@@ -247,11 +239,12 @@ public class ProviderValueGatherer {
                     .ifPresent(data -> storePlayerString(parameters, conditions, data));
             pair.getValue(String[].class).flatMap(data -> data.getMetadata(GroupsDataValue.class))
                     .ifPresent(data -> storePlayerGroups(parameters, conditions, data));
+            pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
+                    .ifPresent(data -> storePlayerTable(parameters, conditions, data));
         }
-        return conditions;
     }
 
-    private Conditions gather(Parameters parameters, ExtDataBuilder dataBuilder) {
+    private void gather(Parameters parameters, ExtDataBuilder dataBuilder) {
         Conditions conditions = new Conditions();
         for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
             pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
@@ -262,8 +255,9 @@ public class ProviderValueGatherer {
                     .ifPresent(data -> storeDouble(parameters, conditions, data));
             pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
                     .ifPresent(data -> storeString(parameters, conditions, data));
+            pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
+                    .ifPresent(data -> storeTable(parameters, conditions, data));
         }
-        return conditions;
     }
 
     private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
@@ -329,6 +323,24 @@ public class ProviderValueGatherer {
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
         db.executeTransaction(new StoreProviderTransaction(information, parameters));
         db.executeTransaction(new StoreServerStringResultTransaction(information, parameters, value));
+    }
+
+    private void storeTable(Parameters parameters, Conditions conditions, TableDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Table value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        for (Icon icon : value.getIcons()) {
+            if (icon != null) db.executeTransaction(new StoreIconTransaction(icon));
+        }
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreTableProviderTransaction(information, parameters, value));
+        db.executeTransaction(new StoreServerTableResultTransaction(information, parameters, value));
     }
 
     private void storePlayerBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
@@ -409,5 +421,23 @@ public class ProviderValueGatherer {
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
         db.executeTransaction(new StoreProviderTransaction(information, parameters));
         db.executeTransaction(new StorePlayerGroupsResultTransaction(information, parameters, value));
+    }
+
+    private void storePlayerTable(Parameters parameters, Conditions conditions, TableDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Table value = data.getValue();
+        if (value == null) return;
+        Optional<String> condition = information.getCondition();
+        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
+            return;
+        }
+
+        Database db = dbSystem.getDatabase();
+        for (Icon icon : value.getIcons()) {
+            if (icon != null) db.executeTransaction(new StoreIconTransaction(icon));
+        }
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreTableProviderTransaction(information, parameters, value));
+        db.executeTransaction(new StorePlayerTableResultTransaction(information, parameters, value));
     }
 }

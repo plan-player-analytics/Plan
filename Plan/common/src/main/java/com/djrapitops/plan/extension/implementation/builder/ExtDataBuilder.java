@@ -65,13 +65,6 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
         return this;
     }
 
-    @Override
-    public ExtensionDataBuilder addTable(Table table, String tab) {
-        // TODO ProviderInformation instead.
-        tables.add(new TabNameTablePair(tab, table));
-        return this;
-    }
-
     public List<ClassValuePair> getValues() {
         Collections.sort(values);
         return values;

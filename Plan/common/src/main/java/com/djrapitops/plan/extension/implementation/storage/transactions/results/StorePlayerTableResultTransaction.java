@@ -17,6 +17,8 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -58,6 +60,10 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
         this.providerName = providerName;
         this.playerUUID = playerUUID;
         this.table = table;
+    }
+
+    public StorePlayerTableResultTransaction(ProviderInformation information, Parameters parameters, Table value) {
+        this(information.getPluginName(), parameters.getServerUUID(), information.getName(), parameters.getPlayerUUID(), value);
     }
 
     @Override

@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.table.Table;
 
 import java.util.function.Supplier;
 
@@ -95,6 +96,8 @@ public interface ValueBuilder {
 
     DataValue<String[]> buildGroup(String[] groups);
 
+    DataValue<Table> buildTable(Table table, Color tableColor);
+
     DataValue<Boolean> buildBoolean(Supplier<Boolean> value);
 
     DataValue<Boolean> buildBooleanProvidingCondition(Supplier<Boolean> value, String providedCondition);
@@ -108,4 +111,6 @@ public interface ValueBuilder {
     DataValue<Double> buildPercentage(Supplier<Double> percentage);
 
     DataValue<String[]> buildGroup(Supplier<String[]> groups);
+
+    DataValue<Table> buildTable(Supplier<Table> table, Color tableColor);
 }

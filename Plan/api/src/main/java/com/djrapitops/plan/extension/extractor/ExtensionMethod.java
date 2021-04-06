@@ -69,6 +69,10 @@ public class ExtensionMethod {
         return method;
     }
 
+    public String getMethodName() {
+        return getMethod().getName();
+    }
+
     public enum ParameterType {
         SERVER_NONE(null),
         PLAYER_STRING(String.class),
