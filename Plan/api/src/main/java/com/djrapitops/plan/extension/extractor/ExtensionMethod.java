@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.Group;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -107,4 +108,25 @@ public class ExtensionMethod {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExtensionMethod that = (ExtensionMethod) o;
+        return Objects.equals(extension.getPluginName(), that.extension.getPluginName()) && Objects.equals(method, that.method) && Objects.equals(returnType, that.returnType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(extension.getPluginName(), method, returnType);
+    }
+
+    @Override
+    public String toString() {
+        return "ExtensionMethod{" +
+                "extension=" + extension +
+                ", method=" + method +
+                ", returnType=" + returnType +
+                '}';
+    }
 }

@@ -31,7 +31,6 @@ import com.djrapitops.plan.utilities.java.Lists;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -91,21 +90,20 @@ public class ExtensionWrapper {
     }
 
     public Collection<TabInformation> getPluginTabs() {
-        Map<String, TabInfo> tabInformation = extractor.getTabInformation()
-                .stream().collect(Collectors.toMap(TabInfo::tab, Function.identity(), (one, two) -> one));
-
         Map<String, Integer> order = getTabOrder().map(this::orderToMap).orElse(new HashMap<>());
 
-        // Extracts PluginTabs
-        return extractor.getTabAnnotations().stream()
+        Set<String> usedTabs = extractor.getTabAnnotations().stream()
                 .map(Tab::value)
-                .distinct()
-                .map(tabName -> {
-                    Optional<TabInfo> tabInfo = Optional.ofNullable(tabInformation.get(tabName));
+                .collect(Collectors.toSet());
+        return extractor.getTabInformation()
+                .stream()
+                .filter(info -> usedTabs.contains(info.tab()))
+                .map(tabInfo -> {
+                    String tabName = tabInfo.tab();
                     return new TabInformation(
                             tabName,
-                            tabInfo.map(info -> new Icon(info.iconFamily(), info.iconName(), Color.NONE)).orElse(null),
-                            tabInfo.map(TabInfo::elementOrder).orElse(null),
+                            new Icon(tabInfo.iconFamily(), tabInfo.iconName(), Color.NONE),
+                            tabInfo.elementOrder(),
                             order.getOrDefault(tabName, 100)
                     );
                 }).collect(Collectors.toList());

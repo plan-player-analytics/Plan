@@ -370,6 +370,14 @@ public final class ExtensionExtractor {
             }
         });
 
+        getClassAnnotation(TabOrder.class).map(TabOrder::value)
+                .ifPresent(order -> {
+                    List<String> orderAsList = Arrays.asList(order);
+                    // Order by the 2nd list. https://stackoverflow.com/a/18130019
+                    // O(n^2 log n), not very bad here because there aren't going to be more than 10 tabs maybe ever.
+                    tabInformation.sort(Comparator.comparingInt(item -> orderAsList.indexOf(item.tab())));
+                });
+
         Set<String> tabNames = getTabAnnotations().stream().map(Tab::value).collect(Collectors.toSet());
 
         // Check for unused TabInfo annotations

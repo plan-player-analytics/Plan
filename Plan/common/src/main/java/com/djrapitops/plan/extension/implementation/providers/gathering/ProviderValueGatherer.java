@@ -27,7 +27,6 @@ import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.builder.*;
-import com.djrapitops.plan.extension.implementation.providers.DataProviders;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
@@ -41,8 +40,12 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import net.playeranalytics.plugin.server.PluginLogger;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -53,28 +56,29 @@ import java.util.UUID;
 public class ProviderValueGatherer {
 
     private final CallEvents[] callEvents;
-    private final ExtensionWrapper extensionWrapper;
+    private final ExtensionWrapper extension;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final PluginLogger logger;
+    private final ErrorLogger errorLogger;
 
-    private final DataProviders dataProviders;
+    private final Set<ExtensionMethod> brokenMethods;
 
     public ProviderValueGatherer(
             ExtensionWrapper extension,
             DBSystem dbSystem,
-            ServerInfo serverInfo
+            ServerInfo serverInfo,
+            PluginLogger logger,
+            ErrorLogger errorLogger
     ) {
         this.callEvents = extension.getCallEvents();
-        this.extensionWrapper = extension;
+        this.extension = extension;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.logger = logger;
+        this.errorLogger = errorLogger;
 
-        dataProviders = extension.getProviders();
-    }
-
-    public void disableMethodFromUse(MethodWrapper<?> method) {
-        method.disable();
-        dataProviders.removeProviderWithMethod(method);
+        this.brokenMethods = new HashSet<>();
     }
 
     public boolean shouldSkipEvent(CallEvents event) {
@@ -90,12 +94,12 @@ public class ProviderValueGatherer {
     }
 
     public String getPluginName() {
-        return extensionWrapper.getPluginName();
+        return extension.getPluginName();
     }
 
     public void storeExtensionInformation() {
-        String pluginName = extensionWrapper.getPluginName();
-        Icon pluginIcon = extensionWrapper.getPluginIcon();
+        String pluginName = extension.getPluginName();
+        Icon pluginIcon = extension.getPluginIcon();
 
         long time = System.currentTimeMillis();
         ServerUUID serverUUID = serverInfo.getServerUUID();
@@ -103,16 +107,17 @@ public class ProviderValueGatherer {
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new StoreIconTransaction(pluginIcon));
         database.executeTransaction(new StorePluginTransaction(pluginName, time, serverUUID, pluginIcon));
-        for (TabInformation tab : extensionWrapper.getPluginTabs()) {
+        for (TabInformation tab : extension.getPluginTabs()) {
             database.executeTransaction(new StoreIconTransaction(tab.getTabIcon()));
             database.executeTransaction(new StoreTabInformationTransaction(pluginName, serverUUID, tab));
         }
 
-        database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extensionWrapper.getInvalidatedMethods()));
+        database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extension.getInvalidatedMethods()));
     }
 
     private void addValuesToBuilder(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
         for (ExtensionMethod provider : methods.getBooleanProviders()) {
+            if (brokenMethods.contains(provider)) continue;
             BooleanProvider annotation = provider.getExistingAnnotation(BooleanProvider.class);
             dataBuilder.addValue(Boolean.class, dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
@@ -126,6 +131,7 @@ public class ProviderValueGatherer {
                     .buildBooleanProvidingCondition(() -> callMethod(provider, parameters, Boolean.class), annotation.conditionName()));
         }
         for (ExtensionMethod provider : methods.getDoubleProviders()) {
+            if (brokenMethods.contains(provider)) continue;
             DoubleProvider annotation = provider.getExistingAnnotation(DoubleProvider.class);
             dataBuilder.addValue(Double.class, dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
@@ -138,6 +144,7 @@ public class ProviderValueGatherer {
                     .buildDouble(() -> callMethod(provider, parameters, Double.class)));
         }
         for (ExtensionMethod provider : methods.getPercentageProviders()) {
+            if (brokenMethods.contains(provider)) continue;
             PercentageProvider annotation = provider.getExistingAnnotation(PercentageProvider.class);
             dataBuilder.addValue(Double.class, dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
@@ -150,6 +157,7 @@ public class ProviderValueGatherer {
                     .buildPercentage(() -> callMethod(provider, parameters, Double.class)));
         }
         for (ExtensionMethod provider : methods.getNumberProviders()) {
+            if (brokenMethods.contains(provider)) continue;
             NumberProvider annotation = provider.getExistingAnnotation(NumberProvider.class);
             dataBuilder.addValue(Long.class, dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
@@ -163,6 +171,7 @@ public class ProviderValueGatherer {
                     .buildNumber(() -> callMethod(provider, parameters, Long.class)));
         }
         for (ExtensionMethod provider : methods.getStringProviders()) {
+            if (brokenMethods.contains(provider)) continue;
             StringProvider annotation = provider.getExistingAnnotation(StringProvider.class);
             dataBuilder.addValue(String.class, dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
@@ -176,6 +185,7 @@ public class ProviderValueGatherer {
                     .buildString(() -> callMethod(provider, parameters, String.class)));
         }
         for (ExtensionMethod provider : methods.getGroupProviders()) {
+            if (brokenMethods.contains(provider)) continue;
             GroupProvider annotation = provider.getExistingAnnotation(GroupProvider.class);
             dataBuilder.addValue(String[].class, dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
@@ -185,6 +195,7 @@ public class ProviderValueGatherer {
                     .buildGroup(() -> callMethod(provider, parameters, String[].class)));
         }
         for (ExtensionMethod provider : methods.getTableProviders()) {
+            if (brokenMethods.contains(provider)) continue;
             TableProvider annotation = provider.getExistingAnnotation(TableProvider.class);
             dataBuilder.addValue(Table.class, dataBuilder.valueBuilder(provider.getMethodName())
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
@@ -192,6 +203,7 @@ public class ProviderValueGatherer {
                     .buildTable(() -> callMethod(provider, parameters, Table.class), annotation.tableColor()));
         }
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
+            if (brokenMethods.contains(provider)) continue;
             ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
             dataBuilder.addAll(providedBuilder);
         }
@@ -200,27 +212,29 @@ public class ProviderValueGatherer {
     private <T> T callMethod(ExtensionMethod provider, Parameters params, Class<T> returnType) {
         try {
             return new MethodWrapper<>(provider.getMethod(), returnType)
-                    .callMethod(extensionWrapper.getExtension(), params);
+                    .callMethod(extension.getExtension(), params);
         } catch (IllegalArgumentException e) {
-            return null; // TODO handle exceptions
+            brokenMethods.add(provider);
+            // TODO log exceptions
+            return null;
         }
     }
 
     public void updateValues(UUID playerUUID, String playerName) {
         Parameters parameters = Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
-        ExtensionDataBuilder dataBuilder = extensionWrapper.getExtension().newExtensionDataBuilder();
+        ExtensionDataBuilder dataBuilder = extension.getExtension().newExtensionDataBuilder();
 
-        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_STRING), parameters);
-        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.PLAYER_UUID), parameters);
+        addValuesToBuilder(dataBuilder, extension.getMethods().get(ExtensionMethod.ParameterType.PLAYER_STRING), parameters);
+        addValuesToBuilder(dataBuilder, extension.getMethods().get(ExtensionMethod.ParameterType.PLAYER_UUID), parameters);
 
         gatherPlayer(parameters, (ExtDataBuilder) dataBuilder);
     }
 
     public void updateValues() {
         Parameters parameters = Parameters.server(serverInfo.getServerUUID());
-        ExtensionDataBuilder dataBuilder = extensionWrapper.getExtension().newExtensionDataBuilder();
+        ExtensionDataBuilder dataBuilder = extension.getExtension().newExtensionDataBuilder();
 
-        addValuesToBuilder(dataBuilder, extensionWrapper.getMethods().get(ExtensionMethod.ParameterType.SERVER_NONE), parameters);
+        addValuesToBuilder(dataBuilder, extension.getMethods().get(ExtensionMethod.ParameterType.SERVER_NONE), parameters);
 
         gather(parameters, (ExtDataBuilder) dataBuilder);
     }

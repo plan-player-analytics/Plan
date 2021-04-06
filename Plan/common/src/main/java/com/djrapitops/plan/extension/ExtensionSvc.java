@@ -110,7 +110,7 @@ public class ExtensionSvc implements ExtensionService {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
         }
 
-        ProviderValueGatherer gatherer = new ProviderValueGatherer(extension, dbSystem, serverInfo);
+        ProviderValueGatherer gatherer = new ProviderValueGatherer(extension, dbSystem, serverInfo, logger, errorLogger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
@@ -121,10 +121,8 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     @Override
-    public void unregister(DataExtension dataExtension) {
-        ExtensionWrapper extension = new ExtensionWrapper(dataExtension);
-        String pluginName = extension.getPluginName();
-        extensionGatherers.remove(pluginName);
+    public void unregister(DataExtension extension) {
+        extensionGatherers.remove(extension.getPluginName());
     }
 
     @Override
@@ -163,9 +161,9 @@ public class ExtensionSvc implements ExtensionService {
 
         try {
             gatherer.updateValues(playerUUID, playerName);
-        } catch (DataExtensionMethodCallException methodCallFailed) {
-            logFailure(playerName, methodCallFailed);
-            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
+//        } catch (DataExtensionMethodCallException methodCallFailed) {
+//            logFailure(playerName, methodCallFailed);
+//            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
             ErrorContext.Builder context = ErrorContext.builder()
                     .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
@@ -197,9 +195,9 @@ public class ExtensionSvc implements ExtensionService {
 
         try {
             gatherer.updateValues();
-        } catch (DataExtensionMethodCallException methodCallFailed) {
-            logFailure("server", methodCallFailed);
-            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
+//        } catch (DataExtensionMethodCallException methodCallFailed) {
+//            logFailure("server", methodCallFailed);
+//            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
             ErrorContext.Builder context = ErrorContext.builder()
                     .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")

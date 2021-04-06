@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension;
 
+import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 
 /**
@@ -94,6 +95,14 @@ public interface DataExtension {
 
     default ExtensionDataBuilder newExtensionDataBuilder() {
         return ExtensionService.getInstance().newExtensionDataBuilder(this);
+    }
+
+    default String getPluginName() {
+        PluginInfo annotation = getClass().getAnnotation(PluginInfo.class);
+        if (annotation == null) {
+            throw new IllegalArgumentException(getClass().getName() + " did not have @PluginInfo annotation!");
+        }
+        return annotation.name();
     }
 
 }
