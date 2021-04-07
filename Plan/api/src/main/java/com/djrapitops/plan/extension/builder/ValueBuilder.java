@@ -29,88 +29,290 @@ import com.djrapitops.plan.extension.table.Table;
 
 import java.util.function.Supplier;
 
+/**
+ * Used for building {@link DataValue}s for {@link ExtensionDataBuilder#addValue(Class, DataValue)}.
+ * <p>
+ * Requires Capability DATA_EXTENSION_BUILDER_API
+ * <p>
+ * Obtain an instance with {@link ExtensionDataBuilder#valueBuilder(String)}.
+ */
 public interface ValueBuilder {
 
-    ValueBuilder methodName(ExtensionMethod method);
-
+    /**
+     * Description about the value that is shown on hover.
+     *
+     * @param description Describe what the value is about, maximum 150 characters.
+     * @return This builder.
+     */
     ValueBuilder description(String description);
 
+    /**
+     * Display-priority of the value, highest value is placed top most.
+     * <p>
+     * Two values with same priority may appear in a random order.
+     *
+     * @param priority Priority between 0 and {@code Integer.MAX_VALUE}.
+     * @return This builder.
+     */
     ValueBuilder priority(int priority);
 
-    default ValueBuilder showInPlayerTable(boolean show) {
-        if (show) return showInPlayerTable();
-        return this;
-    }
-
+    /**
+     * Show this value in the players table.
+     *
+     * @return This builder.
+     */
     ValueBuilder showInPlayerTable();
 
+    /**
+     * Icon displayed next to the value.
+     * <p>
+     * See https://fontawesome.com/icons (select 'free')) for icons
+     *
+     * @param iconName   Name of the icon
+     * @param iconFamily Family of the icon
+     * @param iconColor  Color of the icon
+     * @return This builder.
+     */
     default ValueBuilder icon(String iconName, Family iconFamily, Color iconColor) {
         return icon(Icon.called(iconName).of(iconFamily).of(iconColor).build());
     }
 
+    /**
+     * Icon displayed next to the value.
+     * <p>
+     * See https://fontawesome.com/icons (select 'free')) for icons
+     *
+     * @param icon Icon built using the methods in {@link Icon}.
+     * @return This builder.
+     */
     ValueBuilder icon(Icon icon);
 
+    /**
+     * Show the value on a specific tab.
+     * <p>
+     * Remember to define {@link com.djrapitops.plan.extension.annotation.TabInfo} annotation.
+     *
+     * @param tabName Name of the tab.
+     * @return This builder.
+     */
     ValueBuilder showOnTab(String tabName);
 
-    default ValueBuilder showOnTab(Tab annotation) {
-        if (annotation != null) return showOnTab(annotation.value());
-        return this;
-    }
-
+    /**
+     * {@link ValueBuilder#buildNumber(long)} specific method, format the value as a epoch ms timestamp.
+     *
+     * @return This builder.
+     */
     default ValueBuilder formatAsDateWithYear() {
         return format(FormatType.DATE_YEAR);
     }
 
+    /**
+     * {@link ValueBuilder#buildNumber(long)} specific method, format the value as a epoch ms timestamp.
+     *
+     * @return This builder.
+     */
     default ValueBuilder formatAsDateWithSeconds() {
         return format(FormatType.DATE_SECOND);
     }
 
+    /**
+     * {@link ValueBuilder#buildNumber(long)} specific method, format the value as milliseconds of time.
+     *
+     * @return This builder.
+     */
     default ValueBuilder formatAsTimeAmount() {
         return format(FormatType.TIME_MILLISECONDS);
     }
 
+    /**
+     * {@link ValueBuilder#buildNumber(long)} specific method, format the value with {@link FormatType}
+     *
+     * @return This builder.
+     */
     ValueBuilder format(FormatType formatType);
 
+    /**
+     * {@link ValueBuilder#buildString(String)} specific method, link the value to a player page.
+     *
+     * @return This builder.
+     */
     ValueBuilder showAsPlayerPageLink();
 
+    /**
+     * Build a Boolean. Displayed as "Yes/No" on the page.
+     *
+     * @param value true/false
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Boolean> buildBoolean(boolean value);
+
+    /**
+     * Build a Boolean that provides a value for {@link Conditional}. Displayed as "Yes/No" on the page.
+     *
+     * @param value true/false
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Boolean> buildBooleanProvidingCondition(boolean value, String providedCondition);
+
+    /**
+     * Build a String.
+     *
+     * @param value any string. Limited to 50 characters.
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<String> buildString(String value);
+
+    /**
+     * Build a Number.
+     *
+     * @param value a non-floating point number.
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Long> buildNumber(long value);
+
+    /**
+     * Build a Floating point number.
+     *
+     * @param value a floating point number.
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Double> buildDouble(double value);
+
+    /**
+     * Build a Percentage.
+     *
+     * @param percentage value between 0.0 and 1.0
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Double> buildPercentage(double percentage);
+
+    /**
+     * Build a list of groups.
+     *
+     * @param groups names of groups a player is in.
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<String[]> buildGroup(String[] groups);
+
+    /**
+     * Build a table.
+     *
+     * @param table      Table built using {@link Table#builder()}
+     * @param tableColor Color of the table
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Table> buildTable(Table table, Color tableColor);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @see ValueBuilder#buildBoolean(boolean).
+     */
+    DataValue<Boolean> buildBoolean(Supplier<Boolean> value);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @see ValueBuilder#buildBooleanProvidingCondition(boolean, String).
+     */
+    DataValue<Boolean> buildBooleanProvidingCondition(Supplier<Boolean> value, String providedCondition);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @see ValueBuilder#buildString(String)
+     */
+    DataValue<String> buildString(Supplier<String> value);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @see ValueBuilder#buildNumber(long)
+     */
+    DataValue<Long> buildNumber(Supplier<Long> value);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @see ValueBuilder#buildDouble(double)
+     */
+    DataValue<Double> buildDouble(Supplier<Double> value);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @see ValueBuilder#buildPercentage(double)
+     */
+    DataValue<Double> buildPercentage(Supplier<Double> percentage);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @see ValueBuilder#buildGroup(String[])
+     */
+    DataValue<String[]> buildGroup(Supplier<String[]> groups);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @see ValueBuilder#buildTable(Table, Color)
+     */
+    DataValue<Table> buildTable(Supplier<Table> table, Color tableColor);
+
+    /**
+     * Implementation detail - for abstracting annotations with the builder API.
+     *
+     * @param annotation BooleanProvider annotation.
+     * @return This builder.
+     */
     ValueBuilder hideFromUsers(BooleanProvider annotation);
 
+    /**
+     * Implementation detail - for abstracting annotations with the builder API.
+     *
+     * @param conditional Conditional annotation.
+     * @return This builder.
+     */
     ValueBuilder conditional(Conditional conditional);
 
+    /**
+     * Implementation detail - for abstracting annotations with the builder API.
+     *
+     * @param annotation StringProvider annotation.
+     * @return This builder.
+     */
     default ValueBuilder showAsPlayerPageLink(StringProvider annotation) {
         if (annotation.playerName()) return showAsPlayerPageLink();
         return this;
     }
 
-    DataValue<Boolean> buildBoolean(boolean value);
+    /**
+     * Implementation detail - for abstracting annotations with the builder API.
+     *
+     * @param method Method this value is from.
+     * @return This builder.
+     */
+    ValueBuilder methodName(ExtensionMethod method);
 
-    DataValue<Boolean> buildBooleanProvidingCondition(boolean value, String providedCondition);
+    /**
+     * Implementation detail - for abstracting annotations with the builder API.
+     *
+     * @param show true/false
+     * @return This builder.
+     */
+    default ValueBuilder showInPlayerTable(boolean show) {
+        if (show) return showInPlayerTable();
+        return this;
+    }
 
-    DataValue<String> buildString(String value);
-
-    DataValue<Long> buildNumber(long value);
-
-    DataValue<Double> buildDouble(double value);
-
-    DataValue<Double> buildPercentage(double percentage);
-
-    DataValue<String[]> buildGroup(String[] groups);
-
-    DataValue<Table> buildTable(Table table, Color tableColor);
-
-    DataValue<Boolean> buildBoolean(Supplier<Boolean> value);
-
-    DataValue<Boolean> buildBooleanProvidingCondition(Supplier<Boolean> value, String providedCondition);
-
-    DataValue<String> buildString(Supplier<String> value);
-
-    DataValue<Long> buildNumber(Supplier<Long> value);
-
-    DataValue<Double> buildDouble(Supplier<Double> value);
-
-    DataValue<Double> buildPercentage(Supplier<Double> percentage);
-
-    DataValue<String[]> buildGroup(Supplier<String[]> groups);
-
-    DataValue<Table> buildTable(Supplier<Table> table, Color tableColor);
+    /**
+     * Implementation detail - for abstracting annotations with the builder API.
+     *
+     * @param annotation Tab annotation.
+     * @return This builder.
+     */
+    default ValueBuilder showOnTab(Tab annotation) {
+        if (annotation != null) return showOnTab(annotation.value());
+        return this;
+    }
 }

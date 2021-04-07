@@ -18,6 +18,14 @@ package com.djrapitops.plan.extension.builder;
 
 import java.util.Optional;
 
+/**
+ * Represents a value given to {@link ExtensionDataBuilder}.
+ * <p>
+ * Please do not implement this class, it is an implementation detail.
+ * Obtain instances with {@link ValueBuilder}.
+ *
+ * @param <T> Type of the value.
+ */
 public interface DataValue<T> {
 
     T getValue();

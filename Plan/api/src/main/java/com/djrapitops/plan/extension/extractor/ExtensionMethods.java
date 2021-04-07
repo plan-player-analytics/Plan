@@ -19,6 +19,9 @@ package com.djrapitops.plan.extension.extractor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation detail, abstracts away method type reflection to a more usable API.
+ */
 public class ExtensionMethods {
 
     private final List<ExtensionMethod> booleanProviders;

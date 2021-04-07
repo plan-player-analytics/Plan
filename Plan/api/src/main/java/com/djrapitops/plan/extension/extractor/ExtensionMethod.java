@@ -26,6 +26,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Implementation detail, abstracts away some method reflection to a more usable API.
+ */
 public class ExtensionMethod {
     private final DataExtension extension;
     private final Method method;

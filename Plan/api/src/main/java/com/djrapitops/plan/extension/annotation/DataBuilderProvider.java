@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension.annotation;
 
+import com.djrapitops.plan.extension.DataExtension;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -25,6 +27,8 @@ import java.lang.annotation.Target;
  * Method annotation to provide a {@link com.djrapitops.plan.extension.builder.ExtensionDataBuilder}.
  * <p>
  * Usage: {@code @DataBuilderProvider ExtensionDataBuilder method(UUID playerUUID)}
+ * <p>
+ * ExtensionDataBuilder can be obtained with {@link DataExtension#newExtensionDataBuilder()}.
  *
  * @author AuroraLS3
  */
