@@ -41,7 +41,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.*;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.TableDataProvider}.
+ * Transaction to store method result of a Table.
  *
  * @author AuroraLS3
  */

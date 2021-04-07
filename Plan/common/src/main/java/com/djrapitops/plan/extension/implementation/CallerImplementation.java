@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.implementation;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.ExtensionSvc;
-import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
+import com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer;
 import com.djrapitops.plan.processing.Processing;
 
 import java.util.UUID;
@@ -31,12 +31,12 @@ import java.util.UUID;
  */
 public class CallerImplementation implements Caller {
 
-    private final ProviderValueGatherer gatherer;
+    private final DataValueGatherer gatherer;
     private final ExtensionSvc extensionService;
     private final Processing processing;
 
     public CallerImplementation(
-            ProviderValueGatherer gatherer,
+            DataValueGatherer gatherer,
             ExtensionSvc extensionService,
             Processing processing
     ) {

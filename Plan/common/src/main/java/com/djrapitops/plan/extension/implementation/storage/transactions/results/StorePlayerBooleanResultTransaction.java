@@ -33,7 +33,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable.*;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider}.
+ * Transaction to store method result of a boolean.
  *
  * @author AuroraLS3
  */

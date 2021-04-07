@@ -43,7 +43,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -55,29 +54,26 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
-public class ProviderValueGatherer {
+public class DataValueGatherer {
 
     private final CallEvents[] callEvents;
     private final ExtensionWrapper extension;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
     private final Set<ExtensionMethod> brokenMethods;
 
-    public ProviderValueGatherer(
+    public DataValueGatherer(
             ExtensionWrapper extension,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            PluginLogger logger,
             ErrorLogger errorLogger
     ) {
         this.callEvents = extension.getCallEvents();
         this.extension = extension;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.logger = logger;
         this.errorLogger = errorLogger;
 
         this.brokenMethods = new HashSet<>();

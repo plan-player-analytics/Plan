@@ -37,7 +37,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable.*;
 
 /**
- * Transaction to store information about a {@link com.djrapitops.plan.extension.implementation.providers.TableDataProvider}.
+ * Transaction to store information about a Table.
  *
  * @author AuroraLS3
  */

@@ -21,7 +21,7 @@ import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
-import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
+import com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
@@ -55,7 +55,7 @@ public class ExtensionSvc implements ExtensionService {
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
-    private final Map<String, ProviderValueGatherer> extensionGatherers;
+    private final Map<String, DataValueGatherer> extensionGatherers;
 
     @Inject
     public ExtensionSvc(
@@ -108,7 +108,7 @@ public class ExtensionSvc implements ExtensionService {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
         }
 
-        ProviderValueGatherer gatherer = new ProviderValueGatherer(extension, dbSystem, serverInfo, logger, errorLogger);
+        DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, serverInfo, errorLogger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
@@ -148,12 +148,12 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     public void updatePlayerValues(UUID playerUUID, String playerName, CallEvents event) {
-        for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
+        for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         }
     }
 
-    public void updatePlayerValues(ProviderValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
+    public void updatePlayerValues(DataValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
         if (gatherer.shouldSkipEvent(event)) return;
         if (playerUUID == null && playerName == null) return;
 
@@ -161,12 +161,12 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     public void updateServerValues(CallEvents event) {
-        for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
+        for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updateServerValues(gatherer, event);
         }
     }
 
-    public void updateServerValues(ProviderValueGatherer gatherer, CallEvents event) {
+    public void updateServerValues(DataValueGatherer gatherer, CallEvents event) {
         if (gatherer.shouldSkipEvent(event)) return;
 
         gatherer.updateValues();
