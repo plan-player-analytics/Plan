@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.extractor.ExtensionMethods;
@@ -308,14 +309,18 @@ public class DataValueGatherer {
         errorLogger.warn(unexpectedError, context.build());
     }
 
-    private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Boolean value = data.getValue();
-        if (value == null) return;
+    private <T> T getValue(Conditions conditions, DataValue<T> data, ProviderInformation information) {
         Optional<String> condition = information.getCondition();
         if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
+            return null;
         }
+        return data.getValue(); // can be null, can throw
+    }
+
+    private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
+        ProviderInformation information = data.getInformation();
+        Boolean value = getValue(conditions, data, information);
+        if (value == null) return;
         if (value) {
             conditions.conditionFulfilled(information.getProvidedCondition());
         } else {
@@ -330,12 +335,8 @@ public class DataValueGatherer {
 
     private void storeNumber(Parameters parameters, Conditions conditions, NumberDataValue data) {
         ProviderInformation information = data.getInformation();
-        Long value = data.getValue();
+        Long value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
@@ -343,14 +344,11 @@ public class DataValueGatherer {
         db.executeTransaction(new StoreServerNumberResultTransaction(information, parameters, value));
     }
 
+
     private void storeDouble(Parameters parameters, Conditions conditions, DoubleDataValue data) {
         ProviderInformation information = data.getInformation();
-        Double value = data.getValue();
+        Double value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
@@ -360,12 +358,8 @@ public class DataValueGatherer {
 
     private void storeString(Parameters parameters, Conditions conditions, StringDataValue data) {
         ProviderInformation information = data.getInformation();
-        String value = data.getValue();
+        String value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
@@ -375,30 +369,21 @@ public class DataValueGatherer {
 
     private void storeTable(Parameters parameters, Conditions conditions, TableDataValue data) {
         ProviderInformation information = data.getInformation();
-        Table value = data.getValue();
+        Table value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         for (Icon icon : value.getIcons()) {
             if (icon != null) db.executeTransaction(new StoreIconTransaction(icon));
         }
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
         db.executeTransaction(new StoreTableProviderTransaction(information, parameters, value));
         db.executeTransaction(new StoreServerTableResultTransaction(information, parameters, value));
     }
 
     private void storePlayerBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
         ProviderInformation information = data.getInformation();
-        Boolean value = data.getValue();
+        Boolean value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
         if (value) {
             conditions.conditionFulfilled(information.getProvidedCondition());
         } else {
@@ -413,12 +398,8 @@ public class DataValueGatherer {
 
     private void storePlayerNumber(Parameters parameters, Conditions conditions, NumberDataValue data) {
         ProviderInformation information = data.getInformation();
-        Long value = data.getValue();
+        Long value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
@@ -428,12 +409,8 @@ public class DataValueGatherer {
 
     private void storePlayerDouble(Parameters parameters, Conditions conditions, DoubleDataValue data) {
         ProviderInformation information = data.getInformation();
-        Double value = data.getValue();
+        Double value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
@@ -443,12 +420,8 @@ public class DataValueGatherer {
 
     private void storePlayerString(Parameters parameters, Conditions conditions, StringDataValue data) {
         ProviderInformation information = data.getInformation();
-        String value = data.getValue();
+        String value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
@@ -458,12 +431,8 @@ public class DataValueGatherer {
 
     private void storePlayerGroups(Parameters parameters, Conditions conditions, GroupsDataValue data) {
         ProviderInformation information = data.getInformation();
-        String[] value = data.getValue();
+        String[] value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         db.executeTransaction(new StoreIconTransaction(information.getIcon()));
@@ -473,18 +442,13 @@ public class DataValueGatherer {
 
     private void storePlayerTable(Parameters parameters, Conditions conditions, TableDataValue data) {
         ProviderInformation information = data.getInformation();
-        Table value = data.getValue();
+        Table value = getValue(conditions, data, information);
         if (value == null) return;
-        Optional<String> condition = information.getCondition();
-        if (condition.isPresent() && conditions.isNotFulfilled(condition.get())) {
-            return;
-        }
 
         Database db = dbSystem.getDatabase();
         for (Icon icon : value.getIcons()) {
             if (icon != null) db.executeTransaction(new StoreIconTransaction(icon));
         }
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
         db.executeTransaction(new StoreTableProviderTransaction(information, parameters, value));
         db.executeTransaction(new StorePlayerTableResultTransaction(information, parameters, value));
     }
