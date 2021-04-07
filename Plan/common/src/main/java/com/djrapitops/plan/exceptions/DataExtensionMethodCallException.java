@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.exceptions;
 
-import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
-
 import java.util.Optional;
 
 /**
@@ -28,21 +26,19 @@ import java.util.Optional;
 public class DataExtensionMethodCallException extends IllegalStateException {
 
     private final String pluginName;
-    // Non serializable field due to Method not being serializable.
-    private final transient MethodWrapper<?> method;
+    private final String methodName;
 
-    public DataExtensionMethodCallException(Throwable cause, String pluginName, MethodWrapper<?> method) {
-        super(cause);
+    public DataExtensionMethodCallException(String message, Throwable cause, String pluginName, String methodName) {
+        super(message, cause);
         this.pluginName = pluginName;
-        this.method = method;
+        this.methodName = methodName;
     }
 
     public String getPluginName() {
         return pluginName;
     }
 
-    public Optional<MethodWrapper<?>> getMethod() {
-        // method is transient and might be lost if flushed to disk.
-        return Optional.ofNullable(method);
+    public Optional<String> getMethodName() {
+        return Optional.ofNullable(methodName);
     }
 }

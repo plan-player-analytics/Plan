@@ -16,13 +16,11 @@
  */
 package com.djrapitops.plan.extension;
 
-import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
-import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -159,29 +157,7 @@ public class ExtensionSvc implements ExtensionService {
         if (gatherer.shouldSkipEvent(event)) return;
         if (playerUUID == null && playerName == null) return;
 
-        try {
-            gatherer.updateValues(playerUUID, playerName);
-//        } catch (DataExtensionMethodCallException methodCallFailed) {
-//            logFailure(playerName, methodCallFailed);
-//            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            ErrorContext.Builder context = ErrorContext.builder()
-                    .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
-                    .related(gatherer.getPluginName())
-                    .related(event)
-                    .related("Player: " + playerName + " " + playerUUID);
-            errorLogger.warn(unexpectedError, context.build());
-        }
-    }
-
-    private void logFailure(String playerName, DataExtensionMethodCallException methodCallFailed) {
-        Throwable cause = methodCallFailed.getCause();
-        ErrorContext.Builder context = ErrorContext.builder()
-                .whatToDo("Report and/or disable " + methodCallFailed.getPluginName() + " extension in the Plan config.")
-                .related(methodCallFailed.getPluginName())
-                .related("Method:" + methodCallFailed.getMethod().map(MethodWrapper::getMethodName).orElse("-"))
-                .related("Player: " + playerName);
-        errorLogger.warn(cause, context.build());
+        gatherer.updateValues(playerUUID, playerName);
     }
 
     public void updateServerValues(CallEvents event) {
@@ -193,18 +169,6 @@ public class ExtensionSvc implements ExtensionService {
     public void updateServerValues(ProviderValueGatherer gatherer, CallEvents event) {
         if (gatherer.shouldSkipEvent(event)) return;
 
-        try {
-            gatherer.updateValues();
-//        } catch (DataExtensionMethodCallException methodCallFailed) {
-//            logFailure("server", methodCallFailed);
-//            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            ErrorContext.Builder context = ErrorContext.builder()
-                    .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
-                    .related(gatherer.getPluginName())
-                    .related(event)
-                    .related("Gathering for server");
-            errorLogger.warn(unexpectedError, context.build());
-        }
+        gatherer.updateValues();
     }
 }

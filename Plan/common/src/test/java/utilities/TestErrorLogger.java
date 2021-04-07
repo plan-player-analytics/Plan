@@ -19,29 +19,51 @@ package utilities;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TestErrorLogger implements ErrorLogger {
 
+    private static final List<Throwable> caught = new ArrayList<>();
+    private static boolean throwErrors = true;
+
+    public static void throwErrors(boolean throwErrors) {
+        caught.clear();
+        TestErrorLogger.throwErrors = throwErrors;
+    }
+
+    public static List<Throwable> getCaught() {
+        return caught;
+    }
+
     @Override
     public void critical(Throwable throwable, ErrorContext context) {
         System.out.println("[CRITICAL] Exception occurred during test, context: " + context);
         Logger.getGlobal().log(Level.SEVERE, "The exception: " + throwable.getMessage(), throwable);
-        throw new AssertionError(throwable);
+        throwOrStore(throwable);
     }
 
     @Override
     public void error(Throwable throwable, ErrorContext context) {
         System.out.println("[ERROR] Exception occurred during test, context: " + context);
         Logger.getGlobal().log(Level.SEVERE, "The exception: " + throwable.getMessage(), throwable);
-        throw new AssertionError(throwable);
+        throwOrStore(throwable);
     }
 
     @Override
     public void warn(Throwable throwable, ErrorContext context) {
         System.out.println("[WARN] Exception occurred during test, context: " + context);
         Logger.getGlobal().log(Level.SEVERE, "The exception: " + throwable.getMessage(), throwable);
-        throw new AssertionError(throwable);
+        throwOrStore(throwable);
+    }
+
+    public void throwOrStore(Throwable throwable) {
+        if (throwErrors) {
+            throw new AssertionError(throwable);
+        } else {
+            caught.add(throwable);
+        }
     }
 }

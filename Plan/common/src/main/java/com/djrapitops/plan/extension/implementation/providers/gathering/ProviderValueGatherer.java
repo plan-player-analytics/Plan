@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
+import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
@@ -40,6 +41,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 
@@ -204,8 +206,14 @@ public class ProviderValueGatherer {
         }
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
-            dataBuilder.addAll(providedBuilder);
+            try {
+                ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
+                dataBuilder.addAll(providedBuilder);
+            } catch (DataExtensionMethodCallException methodError) {
+                logFailure(methodError);
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
+                logFailure(unexpectedError);
+            }
         }
     }
 
@@ -213,10 +221,9 @@ public class ProviderValueGatherer {
         try {
             return new MethodWrapper<>(provider.getMethod(), returnType)
                     .callMethod(extension.getExtension(), params);
-        } catch (IllegalArgumentException e) {
+        } catch (DataExtensionMethodCallException e) {
             brokenMethods.add(provider);
-            // TODO log exceptions
-            return null;
+            throw e;
         }
     }
 
@@ -243,35 +250,62 @@ public class ProviderValueGatherer {
     private void gatherPlayer(Parameters parameters, ExtDataBuilder dataBuilder) {
         Conditions conditions = new Conditions();
         for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
-            pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
-                    .ifPresent(data -> storePlayerBoolean(parameters, conditions, data));
-            pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
-                    .ifPresent(data -> storePlayerNumber(parameters, conditions, data));
-            pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
-                    .ifPresent(data -> storePlayerDouble(parameters, conditions, data));
-            pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
-                    .ifPresent(data -> storePlayerString(parameters, conditions, data));
-            pair.getValue(String[].class).flatMap(data -> data.getMetadata(GroupsDataValue.class))
-                    .ifPresent(data -> storePlayerGroups(parameters, conditions, data));
-            pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
-                    .ifPresent(data -> storePlayerTable(parameters, conditions, data));
+            try {
+                pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
+                        .ifPresent(data -> storePlayerBoolean(parameters, conditions, data));
+                pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
+                        .ifPresent(data -> storePlayerNumber(parameters, conditions, data));
+                pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
+                        .ifPresent(data -> storePlayerDouble(parameters, conditions, data));
+                pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
+                        .ifPresent(data -> storePlayerString(parameters, conditions, data));
+                pair.getValue(String[].class).flatMap(data -> data.getMetadata(GroupsDataValue.class))
+                        .ifPresent(data -> storePlayerGroups(parameters, conditions, data));
+                pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
+                        .ifPresent(data -> storePlayerTable(parameters, conditions, data));
+            } catch (DataExtensionMethodCallException methodError) {
+                logFailure(methodError);
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
+                logFailure(unexpectedError);
+            }
         }
     }
 
     private void gather(Parameters parameters, ExtDataBuilder dataBuilder) {
         Conditions conditions = new Conditions();
         for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
-            pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
-                    .ifPresent(data -> storeBoolean(parameters, conditions, data));
-            pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
-                    .ifPresent(data -> storeNumber(parameters, conditions, data));
-            pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
-                    .ifPresent(data -> storeDouble(parameters, conditions, data));
-            pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
-                    .ifPresent(data -> storeString(parameters, conditions, data));
-            pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
-                    .ifPresent(data -> storeTable(parameters, conditions, data));
+            try {
+                pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
+                        .ifPresent(data -> storeBoolean(parameters, conditions, data));
+                pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
+                        .ifPresent(data -> storeNumber(parameters, conditions, data));
+                pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
+                        .ifPresent(data -> storeDouble(parameters, conditions, data));
+                pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
+                        .ifPresent(data -> storeString(parameters, conditions, data));
+                pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
+                        .ifPresent(data -> storeTable(parameters, conditions, data));
+            } catch (DataExtensionMethodCallException methodError) {
+                logFailure(methodError);
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
+                logFailure(unexpectedError);
+            }
         }
+    }
+
+    private void logFailure(DataExtensionMethodCallException methodCallFailed) {
+        ErrorContext.Builder context = ErrorContext.builder()
+                .whatToDo("Report and/or disable " + methodCallFailed.getPluginName() + " extension in the Plan config.")
+                .related(methodCallFailed.getPluginName())
+                .related("Method:" + methodCallFailed.getMethodName().orElse("-"));
+        errorLogger.warn(methodCallFailed, context.build());
+    }
+
+    private void logFailure(Throwable unexpectedError) {
+        ErrorContext.Builder context = ErrorContext.builder()
+                .whatToDo("Report and/or disable " + extension.getPluginName() + " extension in the Plan config.")
+                .related(extension.getPluginName());
+        errorLogger.warn(unexpectedError, context.build());
     }
 
     private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {

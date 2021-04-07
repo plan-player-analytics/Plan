@@ -43,6 +43,7 @@ import org.junit.jupiter.api.Test;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestErrorLogger;
 
 import java.util.List;
 import java.util.Map;
@@ -357,11 +358,18 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionExceptionsAreCaught() {
-        ExtensionSvc extensionService = extensionService();
-        extensionService.register(new ThrowingExtension());
+        TestErrorLogger.throwErrors(false);
+        try {
+            ExtensionSvc extensionService = extensionService();
+            extensionService.register(new ThrowingExtension());
 
-        extensionService.updateServerValues(CallEvents.MANUAL);
-        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+            extensionService.updateServerValues(CallEvents.MANUAL);
+            extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+            // 5 of the exceptions need to be logged, there are 8 exceptions total 3 of which are ignored.
+            assertEquals(5, TestErrorLogger.getCaught().size(), () -> "Not all exceptions got logged, logged exceptions: " + TestErrorLogger.getCaught().toString());
+        } finally {
+            TestErrorLogger.throwErrors(true);
+        }
     }
 
     @PluginInfo(name = "ConditionalExtension")

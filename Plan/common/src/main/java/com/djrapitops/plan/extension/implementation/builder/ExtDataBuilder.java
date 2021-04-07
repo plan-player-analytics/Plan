@@ -58,7 +58,7 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
         } catch (NotReadyException | UnsupportedOperationException ignored) {
             // This exception is ignored by default to allow throwing errors inside the lambda to keep code clean.
         }
-        // TODO handle other exceptions
+        // Other exceptions handled by ProviderValueGatherer during method call.
         return this;
     }
 
@@ -121,6 +121,14 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
                 }
             }
             return 0;
+        }
+
+        @Override
+        public String toString() {
+            return "ClassValuePair{" +
+                    "type=" + type +
+                    ", value=" + value +
+                    '}';
         }
     }
 }
