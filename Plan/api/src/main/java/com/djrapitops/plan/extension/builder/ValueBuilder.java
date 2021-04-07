@@ -205,57 +205,57 @@ public interface ValueBuilder {
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
-     *
-     * @see ValueBuilder#buildBoolean(boolean).
+     * <p>
+     * {@link ValueBuilder#buildBoolean(boolean)}
      */
     DataValue<Boolean> buildBoolean(Supplier<Boolean> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * @see ValueBuilder#buildBooleanProvidingCondition(boolean, String).
+     * {@link ValueBuilder#buildBooleanProvidingCondition(boolean, String)}
      */
     DataValue<Boolean> buildBooleanProvidingCondition(Supplier<Boolean> value, String providedCondition);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * @see ValueBuilder#buildString(String)
+     * {@link ValueBuilder#buildString(String)}
      */
     DataValue<String> buildString(Supplier<String> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * @see ValueBuilder#buildNumber(long)
+     * {@link ValueBuilder#buildNumber(long)}
      */
     DataValue<Long> buildNumber(Supplier<Long> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * @see ValueBuilder#buildDouble(double)
+     * {@link ValueBuilder#buildDouble(double)}
      */
     DataValue<Double> buildDouble(Supplier<Double> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * @see ValueBuilder#buildPercentage(double)
+     * {@link ValueBuilder#buildPercentage(double)}
      */
     DataValue<Double> buildPercentage(Supplier<Double> percentage);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * @see ValueBuilder#buildGroup(String[])
+     * {@link ValueBuilder#buildGroup(String[])}
      */
     DataValue<String[]> buildGroup(Supplier<String[]> groups);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * @see ValueBuilder#buildTable(Table, Color)
+     * {@link ValueBuilder#buildTable(Table, Color)}
      */
     DataValue<Table> buildTable(Supplier<Table> table, Color tableColor);
 

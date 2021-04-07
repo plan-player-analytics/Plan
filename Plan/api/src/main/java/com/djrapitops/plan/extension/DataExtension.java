@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension;
 
 import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.builder.ValueBuilder;
 
 /**
  * Interface to implement data extensions with.
@@ -105,6 +106,17 @@ public interface DataExtension {
      */
     default ExtensionDataBuilder newExtensionDataBuilder() {
         return ExtensionService.getInstance().newExtensionDataBuilder(this);
+    }
+
+    /**
+     * Obtain a new {@link ValueBuilder} to use with {@link ExtensionDataBuilder}.
+     * <p>
+     * Requires Capability DATA_EXTENSION_BUILDER_API
+     *
+     * @return new builder.
+     */
+    default ValueBuilder valueBuilder(String text) {
+        return newExtensionDataBuilder().valueBuilder(text);
     }
 
     /**
