@@ -42,19 +42,20 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
 
     @Override
     public ValueBuilder valueBuilder(String text) {
+        if (text == null || text.isEmpty()) throw new IllegalArgumentException("'text' can't be null or empty");
         return new ExtValueBuilder(text, extension);
     }
 
     @Override
     public <T> ExtensionDataBuilder addValue(Class<T> ofType, DataValue<T> dataValue) {
-        values.add(new ClassValuePair(ofType, dataValue));
+        if (ofType != null && dataValue != null) values.add(new ClassValuePair(ofType, dataValue));
         return this;
     }
 
     @Override
     public <T> ExtensionDataBuilder addValue(Class<T> ofType, Supplier<DataValue<T>> dataValue) {
         try {
-            values.add(new ClassValuePair(ofType, dataValue.get()));
+            if (ofType != null && dataValue != null) values.add(new ClassValuePair(ofType, dataValue.get()));
         } catch (NotReadyException | UnsupportedOperationException ignored) {
             // This exception is ignored by default to allow throwing errors inside the lambda to keep code clean.
         }

@@ -39,11 +39,14 @@ public interface ExtensionDataBuilder {
     /**
      * Creates a new {@link ValueBuilder} in order to use addValue methods.
      * <p>
+     * Using same text for two values can be problematic as the text is used for id in the database.
+     * <p>
      * If you need to use {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} with built values,
      * lowercase 'text' and remove all whitespace. Example {@code valueBuilder("Times Jumped"); @InvalidateMethod("timesjumped")}
      *
      * @param text Text that should be displayed next to the value.
      * @return a new value builder.
+     * @throws IllegalArgumentException If text is null or empty String.
      */
     ValueBuilder valueBuilder(String text);
 
@@ -54,6 +57,7 @@ public interface ExtensionDataBuilder {
      * @param dataValue Use {@link ValueBuilder} to create one.
      * @param <T>       Type of the data.
      * @return This builder.
+     * @throws IllegalArgumentException If either parameter is null
      */
     <T> ExtensionDataBuilder addValue(Class<T> ofType, DataValue<T> dataValue);
 
@@ -64,6 +68,7 @@ public interface ExtensionDataBuilder {
      * @param dataValue Use {@link ValueBuilder} to create one.
      * @param <T>       Type of the data.
      * @return This builder.
+     * @throws IllegalArgumentException If either parameter is null
      */
     <T> ExtensionDataBuilder addValue(Class<T> ofType, Supplier<DataValue<T>> dataValue);
 

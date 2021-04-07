@@ -206,14 +206,18 @@ public class ProviderValueGatherer {
         }
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            try {
-                ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
-                dataBuilder.addAll(providedBuilder);
-            } catch (DataExtensionMethodCallException methodError) {
-                logFailure(methodError);
-            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-                logFailure(unexpectedError);
-            }
+            addDataFromAnotherBuilder(dataBuilder, parameters, provider);
+        }
+    }
+
+    private void addDataFromAnotherBuilder(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        try {
+            ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
+            dataBuilder.addAll(providedBuilder);
+        } catch (DataExtensionMethodCallException methodError) {
+            logFailure(methodError);
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
+            logFailure(unexpectedError);
         }
     }
 
