@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -204,52 +204,59 @@ implements <a href="ExtensionService.html" title="interface in com.djrapitops.pl
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code><a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#newExtensionDataBuilder(com.djrapitops.plan.extension.DataExtension)">newExtensionDataBuilder</a></span>&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></th>
+<td class="colLast">
+<div class="block">Obtain a new <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>, it is recommended to use <a href="DataExtension.html#newExtensionDataBuilder()"><code>DataExtension.newExtensionDataBuilder()</code></a>.</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#register()">register</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="Caller.html" title="interface in com.djrapitops.plan.extension">Caller</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#register(com.djrapitops.plan.extension.DataExtension)">register</a></span>&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#register(com.djrapitops.plan.extension.DataExtension)">register</a></span>&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;dataExtension)</code></th>
 <td class="colLast">
 <div class="block">Register your <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> implementation.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerExtensions()">registerExtensions</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unregister(com.djrapitops.plan.extension.DataExtension)">unregister</a></span>&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></th>
 <td class="colLast">
 <div class="block">Unregister your <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> implementation.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePlayerValues(com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer,java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)">updatePlayerValues</a></span>&#8203;(<a href="implementation/providers/gathering/ProviderValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ProviderValueGatherer</a>&nbsp;gatherer,
-                  java.util.UUID&nbsp;playerUUID,
-                  java.lang.String&nbsp;playerName,
-                  <a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></th>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePlayerValues(java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)">updatePlayerValues</a></span>&#8203;(java.util.UUID&nbsp;playerUUID,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePlayerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)">updatePlayerValues</a></span>&#8203;(<a href="implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a>&nbsp;gatherer,
+                  java.util.UUID&nbsp;playerUUID,
                   java.lang.String&nbsp;playerName,
                   <a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateServerValues(com.djrapitops.plan.extension.CallEvents)">updateServerValues</a></span>&#8203;(<a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updatePlayerValues(java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)">updatePlayerValues</a></span>&#8203;(java.util.UUID&nbsp;playerUUID,
+                  java.lang.String&nbsp;playerName,
+                  <a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateServerValues(com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer,com.djrapitops.plan.extension.CallEvents)">updateServerValues</a></span>&#8203;(<a href="implementation/providers/gathering/ProviderValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ProviderValueGatherer</a>&nbsp;gatherer,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateServerValues(com.djrapitops.plan.extension.CallEvents)">updateServerValues</a></span>&#8203;(<a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#updateServerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,com.djrapitops.plan.extension.CallEvents)">updateServerValues</a></span>&#8203;(<a href="implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a>&nbsp;gatherer,
                   <a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -327,7 +334,7 @@ public&nbsp;ExtensionSvc&#8203;(<a href="../settings/config/PlanConfig.html" tit
 <ul class="blockList">
 <li class="blockList">
 <h4>register</h4>
-<pre class="methodSignature">public&nbsp;java.util.Optional&lt;<a href="Caller.html" title="interface in com.djrapitops.plan.extension">Caller</a>&gt;&nbsp;register&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</pre>
+<pre class="methodSignature">public&nbsp;java.util.Optional&lt;<a href="Caller.html" title="interface in com.djrapitops.plan.extension">Caller</a>&gt;&nbsp;register&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;dataExtension)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="ExtensionService.html#register(com.djrapitops.plan.extension.DataExtension)">ExtensionService</a></code></span></div>
 <div class="block">Register your <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> implementation.
  <p>
@@ -336,7 +343,7 @@ public&nbsp;ExtensionSvc&#8203;(<a href="../settings/config/PlanConfig.html" tit
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="ExtensionService.html#register(com.djrapitops.plan.extension.DataExtension)">register</a></code>&nbsp;in interface&nbsp;<code><a href="ExtensionService.html" title="interface in com.djrapitops.plan.extension">ExtensionService</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>extension</code> - Your DataExtension implementation, see <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> for requirements.</dd>
+<dd><code>dataExtension</code> - Your DataExtension implementation, see <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> for requirements.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Optional <a href="Caller.html" title="interface in com.djrapitops.plan.extension"><code>Caller</code></a> that can be used to call for data update in Plan database manually - If the Optional is not present the user has disabled the extension in Plan config.</dd>
 </dl>
@@ -362,6 +369,27 @@ public&nbsp;ExtensionSvc&#8203;(<a href="../settings/config/PlanConfig.html" tit
 </dl>
 </li>
 </ul>
+<a id="newExtensionDataBuilder(com.djrapitops.plan.extension.DataExtension)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>newExtensionDataBuilder</h4>
+<pre class="methodSignature">public&nbsp;<a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a>&nbsp;newExtensionDataBuilder&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="ExtensionService.html#newExtensionDataBuilder(com.djrapitops.plan.extension.DataExtension)">ExtensionService</a></code></span></div>
+<div class="block">Obtain a new <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>, it is recommended to use <a href="DataExtension.html#newExtensionDataBuilder()"><code>DataExtension.newExtensionDataBuilder()</code></a>.
+ <p>
+ Requires Capability DATA_EXTENSION_BUILDER_API</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="ExtensionService.html#newExtensionDataBuilder(com.djrapitops.plan.extension.DataExtension)">newExtensionDataBuilder</a></code>&nbsp;in interface&nbsp;<code><a href="ExtensionService.html" title="interface in com.djrapitops.plan.extension">ExtensionService</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>extension</code> - Extension for which this builder is.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a new builder.</dd>
+</dl>
+</li>
+</ul>
 <a id="updatePlayerValues(java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)">
 <!--   -->
 </a>
@@ -373,13 +401,13 @@ public&nbsp;ExtensionSvc&#8203;(<a href="../settings/config/PlanConfig.html" tit
                                <a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</pre>
 </li>
 </ul>
-<a id="updatePlayerValues(com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer,java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)">
+<a id="updatePlayerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>updatePlayerValues</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;updatePlayerValues&#8203;(<a href="implementation/providers/gathering/ProviderValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ProviderValueGatherer</a>&nbsp;gatherer,
+<pre class="methodSignature">public&nbsp;void&nbsp;updatePlayerValues&#8203;(<a href="implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a>&nbsp;gatherer,
                                java.util.UUID&nbsp;playerUUID,
                                java.lang.String&nbsp;playerName,
                                <a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</pre>
@@ -394,13 +422,13 @@ public&nbsp;ExtensionSvc&#8203;(<a href="../settings/config/PlanConfig.html" tit
 <pre class="methodSignature">public&nbsp;void&nbsp;updateServerValues&#8203;(<a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</pre>
 </li>
 </ul>
-<a id="updateServerValues(com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer,com.djrapitops.plan.extension.CallEvents)">
+<a id="updateServerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,com.djrapitops.plan.extension.CallEvents)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>updateServerValues</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;updateServerValues&#8203;(<a href="implementation/providers/gathering/ProviderValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ProviderValueGatherer</a>&nbsp;gatherer,
+<pre class="methodSignature">public&nbsp;void&nbsp;updateServerValues&#8203;(<a href="implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a>&nbsp;gatherer,
                                <a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</pre>
 </li>
 </ul>

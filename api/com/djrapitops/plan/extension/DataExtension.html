@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":18};
+var data = {"i0":18,"i1":18,"i2":18,"i3":18};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -136,6 +136,9 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
  <a href="annotation/DoubleProvider.html" title="annotation in com.djrapitops.plan.extension.annotation"><code>DoubleProvider</code></a> for <code>double</code> values.
  <a href="annotation/PercentageProvider.html" title="annotation in com.djrapitops.plan.extension.annotation"><code>PercentageProvider</code></a> for <code>double</code> values that represent a percentage.
  <a href="annotation/StringProvider.html" title="annotation in com.djrapitops.plan.extension.annotation"><code>StringProvider</code></a> for <code>String</code> values.
+ <a href="annotation/TableProvider.html" title="annotation in com.djrapitops.plan.extension.annotation"><code>TableProvider</code></a> for <a href="table/Table.html" title="class in com.djrapitops.plan.extension.table"><code>Table</code></a>s.
+ <a href="annotation/GroupProvider.html" title="annotation in com.djrapitops.plan.extension.annotation"><code>GroupProvider</code></a> for Player specific group names, such as permission groups.
+ <a href="annotation/DataBuilderProvider.html" title="annotation in com.djrapitops.plan.extension.annotation"><code>DataBuilderProvider</code></a> for <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>s.
  <hr>
  <p>
  Methods can have one of the following as method parameters:
@@ -202,6 +205,27 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Determines when DataExtension methods are called automatically by Plan.</div>
 </td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>default java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getPluginName()">getPluginName</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Get the name of the plugin from PluginInfo annotation.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>default <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#newExtensionDataBuilder()">newExtensionDataBuilder</a></span>()</code></th>
+<td class="colLast">
+<div class="block">Obtain a new <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>default <a href="builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#valueBuilder(java.lang.String)">valueBuilder</a></span>&#8203;(java.lang.String&nbsp;text)</code></th>
+<td class="colLast">
+<div class="block">Obtain a new <a href="builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ValueBuilder</code></a> to use with <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.</div>
+</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -222,7 +246,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <a id="callExtensionMethodsOn()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>callExtensionMethodsOn</h4>
 <pre class="methodSignature">default&nbsp;<a href="CallEvents.html" title="enum in com.djrapitops.plan.extension">CallEvents</a>[]&nbsp;callExtensionMethodsOn()</pre>
@@ -237,6 +261,54 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>Event types that will trigger method calls to the DataExtension.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="CallEvents.html" title="enum in com.djrapitops.plan.extension"><code>for details when the methods are called.</code></a></dd>
+</dl>
+</li>
+</ul>
+<a id="newExtensionDataBuilder()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>newExtensionDataBuilder</h4>
+<pre class="methodSignature">default&nbsp;<a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a>&nbsp;newExtensionDataBuilder()</pre>
+<div class="block">Obtain a new <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.
+ <p>
+ Requires Capability DATA_EXTENSION_BUILDER_API</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>new builder.</dd>
+</dl>
+</li>
+</ul>
+<a id="valueBuilder(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>valueBuilder</h4>
+<pre class="methodSignature">default&nbsp;<a href="builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a>&nbsp;valueBuilder&#8203;(java.lang.String&nbsp;text)</pre>
+<div class="block">Obtain a new <a href="builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ValueBuilder</code></a> to use with <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.
+ <p>
+ Requires Capability DATA_EXTENSION_BUILDER_API</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>new builder.</dd>
+</dl>
+</li>
+</ul>
+<a id="getPluginName()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getPluginName</h4>
+<pre class="methodSignature">default&nbsp;java.lang.String&nbsp;getPluginName()</pre>
+<div class="block">Get the name of the plugin from PluginInfo annotation.
+ <p>
+ Requires Capability DATA_EXTENSION_BUILDER_API</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>new builder.</dd>
 </dl>
 </li>
 </ul>

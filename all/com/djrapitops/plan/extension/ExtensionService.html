@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":1,"i1":6,"i2":6};
+var data = {"i0":1,"i1":6,"i2":6,"i3":6};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -188,13 +188,20 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code><a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#newExtensionDataBuilder(com.djrapitops.plan.extension.DataExtension)">newExtensionDataBuilder</a></span>&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></th>
+<td class="colLast">
+<div class="block">Obtain a new <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>, it is recommended to use <a href="DataExtension.html#newExtensionDataBuilder()"><code>DataExtension.newExtensionDataBuilder()</code></a>.</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="Caller.html" title="interface in com.djrapitops.plan.extension">Caller</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#register(com.djrapitops.plan.extension.DataExtension)">register</a></span>&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></th>
 <td class="colLast">
 <div class="block">Register your <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> implementation.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#unregister(com.djrapitops.plan.extension.DataExtension)">unregister</a></span>&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></th>
 <td class="colLast">
@@ -252,6 +259,24 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>Optional <a href="Caller.html" title="interface in com.djrapitops.plan.extension"><code>Caller</code></a> that can be used to call for data update in Plan database manually - If the Optional is not present the user has disabled the extension in Plan config.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.IllegalArgumentException</code> - If an implementation violation is found.</dd>
+</dl>
+</li>
+</ul>
+<a id="newExtensionDataBuilder(com.djrapitops.plan.extension.DataExtension)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>newExtensionDataBuilder</h4>
+<pre class="methodSignature"><a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a>&nbsp;newExtensionDataBuilder&#8203;(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</pre>
+<div class="block">Obtain a new <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>, it is recommended to use <a href="DataExtension.html#newExtensionDataBuilder()"><code>DataExtension.newExtensionDataBuilder()</code></a>.
+ <p>
+ Requires Capability DATA_EXTENSION_BUILDER_API</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>extension</code> - Extension for which this builder is.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a new builder.</dd>
 </dl>
 </li>
 </ul>

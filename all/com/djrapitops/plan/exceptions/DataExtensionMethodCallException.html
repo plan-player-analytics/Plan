@@ -181,9 +181,10 @@ extends java.lang.IllegalStateException</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.Throwable,java.lang.String,com.djrapitops.plan.extension.implementation.providers.MethodWrapper)">DataExtensionMethodCallException</a></span>&#8203;(java.lang.Throwable&nbsp;cause,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.lang.String,java.lang.Throwable,java.lang.String,java.lang.String)">DataExtensionMethodCallException</a></span>&#8203;(java.lang.String&nbsp;message,
+                                java.lang.Throwable&nbsp;cause,
                                 java.lang.String&nbsp;pluginName,
-                                <a href="../extension/implementation/providers/MethodWrapper.html" title="class in com.djrapitops.plan.extension.implementation.providers">MethodWrapper</a>&lt;?&gt;&nbsp;method)</code></th>
+                                java.lang.String&nbsp;methodName)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
@@ -205,8 +206,8 @@ extends java.lang.IllegalStateException</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
-<td class="colFirst"><code>java.util.Optional&lt;<a href="../extension/implementation/providers/MethodWrapper.html" title="class in com.djrapitops.plan.extension.implementation.providers">MethodWrapper</a>&lt;?&gt;&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMethod()">getMethod</a></span>()</code></th>
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getMethodName()">getMethodName</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
@@ -245,15 +246,16 @@ extends java.lang.IllegalStateException</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(java.lang.Throwable,java.lang.String,com.djrapitops.plan.extension.implementation.providers.MethodWrapper)">
+<a id="&lt;init&gt;(java.lang.String,java.lang.Throwable,java.lang.String,java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>DataExtensionMethodCallException</h4>
-<pre>public&nbsp;DataExtensionMethodCallException&#8203;(java.lang.Throwable&nbsp;cause,
+<pre>public&nbsp;DataExtensionMethodCallException&#8203;(java.lang.String&nbsp;message,
+                                        java.lang.Throwable&nbsp;cause,
                                         java.lang.String&nbsp;pluginName,
-                                        <a href="../extension/implementation/providers/MethodWrapper.html" title="class in com.djrapitops.plan.extension.implementation.providers">MethodWrapper</a>&lt;?&gt;&nbsp;method)</pre>
+                                        java.lang.String&nbsp;methodName)</pre>
 </li>
 </ul>
 </li>
@@ -275,13 +277,13 @@ extends java.lang.IllegalStateException</pre>
 <pre class="methodSignature">public&nbsp;java.lang.String&nbsp;getPluginName()</pre>
 </li>
 </ul>
-<a id="getMethod()">
+<a id="getMethodName()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>getMethod</h4>
-<pre class="methodSignature">public&nbsp;java.util.Optional&lt;<a href="../extension/implementation/providers/MethodWrapper.html" title="class in com.djrapitops.plan.extension.implementation.providers">MethodWrapper</a>&lt;?&gt;&gt;&nbsp;getMethod()</pre>
+<h4>getMethodName</h4>
+<pre class="methodSignature">public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getMethodName()</pre>
 </li>
 </ul>
 </li>

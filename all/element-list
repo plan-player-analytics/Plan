@@ -49,9 +49,11 @@ com.djrapitops.plan.exceptions.connection
 com.djrapitops.plan.exceptions.database
 com.djrapitops.plan.extension
 com.djrapitops.plan.extension.annotation
+com.djrapitops.plan.extension.builder
 com.djrapitops.plan.extension.extractor
 com.djrapitops.plan.extension.icon
 com.djrapitops.plan.extension.implementation
+com.djrapitops.plan.extension.implementation.builder
 com.djrapitops.plan.extension.implementation.providers
 com.djrapitops.plan.extension.implementation.providers.gathering
 com.djrapitops.plan.extension.implementation.results
