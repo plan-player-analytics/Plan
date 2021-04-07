@@ -18,7 +18,6 @@ package com.djrapitops.plan.extension.implementation.builder;
 
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.NotReadyException;
-import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
@@ -66,9 +65,7 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
     }
 
     public String getExtensionName() {
-        return Optional.ofNullable(extension.getClass().getAnnotation(PluginInfo.class))
-                .map(PluginInfo::name)
-                .orElseThrow(() -> new IllegalArgumentException(extension.getClass().getName() + " does not have @PluginInfo annotation!"));
+        return extension.getPluginName();
     }
 
     @Override
