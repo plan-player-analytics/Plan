@@ -37,6 +37,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
+import utilities.TestErrorLogger;
 
 import java.nio.file.Path;
 
@@ -82,6 +83,7 @@ public class H2Test implements DatabaseTest,
 
     @BeforeEach
     void setUp() {
+        TestErrorLogger.throwErrors(true);
         db().executeTransaction(new Patch() {
             @Override
             public boolean hasBeenApplied() {

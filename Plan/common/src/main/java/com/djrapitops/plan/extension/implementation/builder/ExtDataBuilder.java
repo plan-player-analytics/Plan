@@ -101,25 +101,30 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
 
         @Override
         public int compareTo(ClassValuePair that) {
-            // TODO write a test that ensures that this ordering places boolean data values first.
-            if (Boolean.class.isAssignableFrom(type) && value instanceof BooleanDataValue
-                    && Boolean.class.isAssignableFrom(that.type) && that.value instanceof BooleanDataValue) {
+            boolean thisIsBoolean = Boolean.class.isAssignableFrom(type) && value instanceof BooleanDataValue;
+            boolean otherIsBoolean = Boolean.class.isAssignableFrom(that.type) && that.value instanceof BooleanDataValue;
+            if (thisIsBoolean && !otherIsBoolean) {
+                return -1; // This is boolean, have it go first
+            } else if (!thisIsBoolean && otherIsBoolean) {
+                return 1; // Other is boolean, have it go first
+            } else if (thisIsBoolean) {
                 // Both are Booleans, so they might provide a condition
 
                 Optional<String> otherCondition = ((BooleanDataValue) that.value).getInformation().getCondition();
                 String providedCondition = ((BooleanDataValue) value).getInformation().getProvidedCondition();
                 // Another provider's required condition is satisfied by this, have this first
                 if (otherCondition.filter(c -> Conditions.matchesCondition(c, providedCondition)).isPresent()) {
-                    return 1;
+                    return -1;
                 }
 
                 // Required condition is satisfied by another provider, have that first
                 Optional<String> condition = ((BooleanDataValue) value).getInformation().getCondition();
                 String otherProvidedCondition = ((BooleanDataValue) that.value).getInformation().getProvidedCondition();
                 if (condition.filter(c -> Conditions.matchesCondition(c, otherProvidedCondition)).isPresent()) {
-                    return -1;
+                    return 1;
                 }
             }
+            // Irrelevant, keep where is
             return 0;
         }
 

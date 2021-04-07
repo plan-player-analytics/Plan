@@ -39,6 +39,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestErrorLogger;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -90,6 +91,7 @@ class MySQLTest implements DatabaseTest,
 
     @BeforeEach
     void setUp() {
+        TestErrorLogger.throwErrors(true);
         db().executeTransaction(new Patch() {
             @Override
             public boolean hasBeenApplied() {
