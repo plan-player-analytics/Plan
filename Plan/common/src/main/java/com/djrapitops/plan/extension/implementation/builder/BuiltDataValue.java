@@ -28,11 +28,11 @@ public abstract class BuiltDataValue<T> implements DataValue<T> {
     private final Supplier<T> supplier;
     private final ProviderInformation information;
 
-    public BuiltDataValue(T value, ProviderInformation information) {
+    protected BuiltDataValue(T value, ProviderInformation information) {
         this(value, null, information);
     }
 
-    public BuiltDataValue(Supplier<T> supplier, ProviderInformation information) {
+    protected BuiltDataValue(Supplier<T> supplier, ProviderInformation information) {
         this(null, supplier, information);
     }
 

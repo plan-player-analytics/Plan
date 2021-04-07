@@ -58,51 +58,55 @@ public final class ExtensionExtractor {
     }
 
     /**
-     * Use this method in an unit test to validate your DataExtension.
-     *
-     * @throws IllegalArgumentException If an implementation error is found.
+     * @deprecated Use {@link DataExtension#getPluginName()} instead.
      */
-    public void validateAnnotations() {
-        extractAnnotationInformation();
-
-        if (!warnings.isEmpty()) {
-            throw new IllegalArgumentException("Warnings: " + warnings.toString());
-        }
-    }
-
-    private static <V extends DataExtension, T extends Annotation> Optional<T> getClassAnnotation(Class<V> from, Class<T> ofClass) {
-        return Optional.ofNullable(from.getAnnotation(ofClass));
-    }
-
     @Deprecated
     public static <T extends DataExtension> String getPluginName(Class<T> extensionClass) {
         return getClassAnnotation(extensionClass, PluginInfo.class).map(PluginInfo::name)
                 .orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
     }
 
+    private static <V extends DataExtension, T extends Annotation> Optional<T> getClassAnnotation(Class<V> from, Class<T> ofClass) {
+        return Optional.ofNullable(from.getAnnotation(ofClass));
+    }
+
+    /**
+     * Use this method in an unit test to validate your DataExtension.
+     *
+     * @throws IllegalArgumentException If an implementation error is found.
+     */
+    public void validateAnnotations() {
+        extractPluginInfo();
+        extractInvalidMethods();
+        extractMethods();
+        extractTabInfo();
+
+        if (!warnings.isEmpty()) {
+            throw new IllegalArgumentException("Warnings: " + warnings.toString());
+        }
+    }
+
     private Collection<ExtensionMethod> getExtensionMethods() {
-        List<ExtensionMethod> methods = new ArrayList<>();
+        List<ExtensionMethod> extensionMethods = new ArrayList<>();
         for (Method method : extension.getClass().getMethods()) {
             try {
-                methods.add(new ExtensionMethod(extension, method));
+                extensionMethods.add(new ExtensionMethod(extension, method));
             } catch (IllegalArgumentException e) {
                 throw new IllegalArgumentException(extensionName + '.' + e.getMessage());
             }
         }
-        return methods;
+        return extensionMethods;
     }
 
+    /**
+     * @deprecated No longer used anywhere, no-op.
+     */
     @Deprecated
     public void extractAnnotationInformation() {
-        extractPluginInfo();
-        extractInvalidMethods();
-
-        extractMethodAnnotations();
-
-        extractTabInfo();
+        // no-op
     }
 
-    private void extractMethodAnnotations() {
+    private void extractMethods() {
         methodAnnotations = new MethodAnnotations();
         methods = new EnumMap<>(ExtensionMethod.ParameterType.class);
         methods.put(ExtensionMethod.ParameterType.SERVER_NONE, new ExtensionMethods());
@@ -173,13 +177,6 @@ public final class ExtensionExtractor {
             throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
         }
 
-        try {
-            methodAnnotations.makeMethodsAccessible();
-        } catch (SecurityException failedToMakeAccessible) {
-            throw new IllegalArgumentException(extensionName + " has non accessible Provider method that could not be made accessible: " +
-                    failedToMakeAccessible.getMessage(), failedToMakeAccessible);
-        }
-
         validateConditionals();
     }
 
@@ -197,7 +194,7 @@ public final class ExtensionExtractor {
 
     private void validateMethodAnnotationPropertyLength(String property, String name, int maxLength, Method method) {
         if (property.length() > maxLength) {
-            warnings.add(extensionName + "." + method.getName() + " '" + name + WAS_OVER_50_CHARACTERS);
+            warnings.add(extensionName + "." + method.getName() + " '" + name + "' was over " + maxLength + " characters.");
         }
     }
 
@@ -321,7 +318,7 @@ public final class ExtensionExtractor {
             if (!hasAnyOf(conditionalMethod,
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
                     PercentageProvider.class, StringProvider.class, TableProvider.class,
-                    GroupProvider.class
+                    GroupProvider.class, DataBuilderProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }
@@ -351,7 +348,7 @@ public final class ExtensionExtractor {
                 .orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
 
         if (pluginInfo.name().length() > 50) {
-            warnings.add(extensionName + " PluginInfo 'name' was over 50 characters.");
+            warnings.add(extensionName + " PluginInfo 'name" + WAS_OVER_50_CHARACTERS);
         }
     }
 
@@ -385,7 +382,7 @@ public final class ExtensionExtractor {
             String tabName = tabInfo.tab();
 
             if (tabName.length() > 50) {
-                warnings.add(extensionName + " TabInfo " + tabName + " name was over 50 characters.");
+                warnings.add(extensionName + " TabInfo " + tabName + " 'name" + WAS_OVER_50_CHARACTERS);
             }
 
             if (!tabNames.contains(tabName)) {
@@ -396,7 +393,7 @@ public final class ExtensionExtractor {
         // Check Tab name lengths
         for (String tabName : tabNames) {
             if (tabName.length() > 50) {
-                warnings.add(extensionName + " Tab '" + tabName + "' name was over 50 characters.");
+                warnings.add(extensionName + " Tab '" + tabName + "' 'name" + WAS_OVER_50_CHARACTERS);
             }
         }
     }
@@ -431,7 +428,7 @@ public final class ExtensionExtractor {
     }
 
     public Collection<Tab> getTabAnnotations() {
-        if (tabAnnotations == null) extractMethodAnnotations();
+        if (tabAnnotations == null) extractMethods();
         return tabAnnotations;
     }
 
@@ -442,12 +439,12 @@ public final class ExtensionExtractor {
 
     @Deprecated
     public MethodAnnotations getMethodAnnotations() {
-        if (methodAnnotations == null) extractMethodAnnotations();
+        if (methodAnnotations == null) extractMethods();
         return methodAnnotations;
     }
 
     public Map<ExtensionMethod.ParameterType, ExtensionMethods> getMethods() {
-        if (methods == null) extractMethodAnnotations();
+        if (methods == null) extractMethods();
         return methods;
     }
 

@@ -117,7 +117,7 @@ public interface DataExtension {
     default String getPluginName() {
         PluginInfo annotation = getClass().getAnnotation(PluginInfo.class);
         if (annotation == null) {
-            throw new IllegalArgumentException(getClass().getName() + " did not have @PluginInfo annotation!");
+            throw new IllegalArgumentException(getClass().getSimpleName() + " did not have @PluginInfo annotation!");
         }
         return annotation.name();
     }

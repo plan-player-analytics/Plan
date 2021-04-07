@@ -21,7 +21,6 @@ import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.NotReadyException;
-import com.djrapitops.plan.extension.extractor.ExtensionExtractor;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -181,7 +180,7 @@ public class ExtensionRegister {
     }
 
     private Optional<Caller> register(DataExtension dataExtension) {
-        String extensionName = ExtensionExtractor.getPluginName(dataExtension.getClass());
+        String extensionName = dataExtension.getPluginName();
         if (disabledExtensions.contains(extensionName)) return Optional.empty();
 
         return extensionService.register(dataExtension);

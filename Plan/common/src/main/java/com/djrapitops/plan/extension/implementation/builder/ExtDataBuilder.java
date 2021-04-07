@@ -24,10 +24,7 @@ import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.implementation.providers.gathering.Conditions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class ExtDataBuilder implements ExtensionDataBuilder {
@@ -104,24 +101,39 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
 
         @Override
         public int compareTo(ClassValuePair that) {
-            if (Boolean.class.isAssignableFrom(type) && value instanceof BooleanDataValue) {
-                if (Boolean.class.isAssignableFrom(that.type) && that.value instanceof BooleanDataValue) {
-                    Optional<String> otherCondition = ((BooleanDataValue) that.value).getInformation().getCondition();
-                    String providedCondition = ((BooleanDataValue) value).getInformation().getProvidedCondition();
-                    // Another provider's required condition is satisfied by this, have this first
-                    if (otherCondition.filter(c -> Conditions.matchesCondition(c, providedCondition)).isPresent()) {
-                        return 1;
-                    }
+            // TODO write a test that ensures that this ordering places boolean data values first.
+            if (Boolean.class.isAssignableFrom(type) && value instanceof BooleanDataValue
+                    && Boolean.class.isAssignableFrom(that.type) && that.value instanceof BooleanDataValue) {
+                // Both are Booleans, so they might provide a condition
 
-                    // Required condition is satisfied by another provider, have that first
-                    Optional<String> condition = ((BooleanDataValue) value).getInformation().getCondition();
-                    String otherProvidedCondition = ((BooleanDataValue) that.value).getInformation().getProvidedCondition();
-                    if (condition.filter(c -> Conditions.matchesCondition(c, otherProvidedCondition)).isPresent()) {
-                        return -1;
-                    }
+                Optional<String> otherCondition = ((BooleanDataValue) that.value).getInformation().getCondition();
+                String providedCondition = ((BooleanDataValue) value).getInformation().getProvidedCondition();
+                // Another provider's required condition is satisfied by this, have this first
+                if (otherCondition.filter(c -> Conditions.matchesCondition(c, providedCondition)).isPresent()) {
+                    return 1;
+                }
+
+                // Required condition is satisfied by another provider, have that first
+                Optional<String> condition = ((BooleanDataValue) value).getInformation().getCondition();
+                String otherProvidedCondition = ((BooleanDataValue) that.value).getInformation().getProvidedCondition();
+                if (condition.filter(c -> Conditions.matchesCondition(c, otherProvidedCondition)).isPresent()) {
+                    return -1;
                 }
             }
             return 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ClassValuePair that = (ClassValuePair) o;
+            return Objects.equals(type, that.type) && Objects.equals(value, that.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(type, value);
         }
 
         @Override

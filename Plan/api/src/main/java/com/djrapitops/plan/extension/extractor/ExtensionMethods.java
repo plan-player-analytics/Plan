@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.extractor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementation detail, abstracts away method type reflection to a more usable API.
@@ -106,5 +107,39 @@ public class ExtensionMethods {
 
     public void addDataBuilderMethod(ExtensionMethod method) {
         dataBuilderProviders.add(method);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExtensionMethods that = (ExtensionMethods) o;
+        return Objects.equals(booleanProviders, that.booleanProviders)
+                && Objects.equals(numberProviders, that.numberProviders)
+                && Objects.equals(doubleProviders, that.doubleProviders)
+                && Objects.equals(percentageProviders, that.percentageProviders)
+                && Objects.equals(stringProviders, that.stringProviders)
+                && Objects.equals(tableProviders, that.tableProviders)
+                && Objects.equals(groupProviders, that.groupProviders)
+                && Objects.equals(dataBuilderProviders, that.dataBuilderProviders);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(booleanProviders, numberProviders, doubleProviders, percentageProviders, stringProviders, tableProviders, groupProviders, dataBuilderProviders);
+    }
+
+    @Override
+    public String toString() {
+        return "ExtensionMethods{" +
+                "booleanProviders=" + booleanProviders +
+                ", numberProviders=" + numberProviders +
+                ", doubleProviders=" + doubleProviders +
+                ", percentageProviders=" + percentageProviders +
+                ", stringProviders=" + stringProviders +
+                ", tableProviders=" + tableProviders +
+                ", groupProviders=" + groupProviders +
+                ", dataBuilderProviders=" + dataBuilderProviders +
+                '}';
     }
 }

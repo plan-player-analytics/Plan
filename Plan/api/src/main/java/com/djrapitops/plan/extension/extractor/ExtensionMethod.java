@@ -83,10 +83,10 @@ public class ExtensionMethod {
         PLAYER_UUID(UUID.class),
         GROUP(Group.class);
 
-        private final Class<?> parameterType;
+        private final Class<?> type;
 
-        ParameterType(Class<?> parameterType) {
-            this.parameterType = parameterType;
+        ParameterType(Class<?> type) {
+            this.type = type;
         }
 
         public static ParameterType getByMethodSignature(Method method) {
@@ -106,8 +106,8 @@ public class ExtensionMethod {
             throw new IllegalArgumentException(method.getName() + " does not have a valid parameter. Needs none, String, UUID or Group, had " + parameter.getSimpleName());
         }
 
-        public Class<?> getParameterType() {
-            return parameterType;
+        public Class<?> getType() {
+            return type;
         }
     }
 

@@ -45,7 +45,6 @@ public class ExtensionWrapper {
 
     private final PluginInfo pluginInfo;
     private final List<TabInfo> tabInformation;
-    private final Optional<TabOrder> tabOrder;
     private final Map<ExtensionMethod.ParameterType, ExtensionMethods> methods;
 
     /**
@@ -60,7 +59,6 @@ public class ExtensionWrapper {
 
         pluginInfo = extractor.getPluginInfo();
         tabInformation = extractor.getTabInformation();
-        tabOrder = extractor.getTabOrder();
         methods = extractor.getMethods();
     }
 
