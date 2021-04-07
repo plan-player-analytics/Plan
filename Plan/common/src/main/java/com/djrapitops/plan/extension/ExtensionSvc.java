@@ -16,12 +16,12 @@
  */
 package com.djrapitops.plan.extension;
 
-import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
-import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
-import com.djrapitops.plan.extension.implementation.providers.gathering.ProviderValueGatherer;
+import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
+import com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
@@ -55,7 +55,7 @@ public class ExtensionSvc implements ExtensionService {
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
-    private final Map<String, ProviderValueGatherer> extensionGatherers;
+    private final Map<String, DataValueGatherer> extensionGatherers;
 
     @Inject
     public ExtensionSvc(
@@ -98,17 +98,17 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     @Override
-    public Optional<Caller> register(DataExtension extension) {
-        ExtensionWrapper extractor = new ExtensionWrapper(extension);
-        String pluginName = extractor.getPluginName();
+    public Optional<Caller> register(DataExtension dataExtension) {
+        ExtensionWrapper extension = new ExtensionWrapper(dataExtension);
+        String pluginName = extension.getPluginName();
 
         if (shouldNotAllowRegistration(pluginName)) return Optional.empty();
 
-        for (String warning : extractor.getWarnings()) {
+        for (String warning : extension.getWarnings()) {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
         }
 
-        ProviderValueGatherer gatherer = new ProviderValueGatherer(extractor, dbSystem, serverInfo);
+        DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, serverInfo, errorLogger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 
@@ -120,9 +120,12 @@ public class ExtensionSvc implements ExtensionService {
 
     @Override
     public void unregister(DataExtension extension) {
-        ExtensionWrapper extractor = new ExtensionWrapper(extension);
-        String pluginName = extractor.getPluginName();
-        extensionGatherers.remove(pluginName);
+        extensionGatherers.remove(extension.getPluginName());
+    }
+
+    @Override
+    public ExtensionDataBuilder newExtensionDataBuilder(DataExtension extension) {
+        return new ExtDataBuilder(extension);
     }
 
     private boolean shouldNotAllowRegistration(String pluginName) {
@@ -145,61 +148,27 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     public void updatePlayerValues(UUID playerUUID, String playerName, CallEvents event) {
-        for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
+        for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         }
     }
 
-    public void updatePlayerValues(ProviderValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
+    public void updatePlayerValues(DataValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
         if (gatherer.shouldSkipEvent(event)) return;
         if (playerUUID == null && playerName == null) return;
 
-        try {
-            gatherer.updateValues(playerUUID, playerName);
-        } catch (DataExtensionMethodCallException methodCallFailed) {
-            logFailure(playerName, methodCallFailed);
-            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            ErrorContext.Builder context = ErrorContext.builder()
-                    .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
-                    .related(gatherer.getPluginName())
-                    .related(event)
-                    .related("Player: " + playerName + " " + playerUUID);
-            errorLogger.warn(unexpectedError, context.build());
-        }
-    }
-
-    private void logFailure(String playerName, DataExtensionMethodCallException methodCallFailed) {
-        Throwable cause = methodCallFailed.getCause();
-        ErrorContext.Builder context = ErrorContext.builder()
-                .whatToDo("Report and/or disable " + methodCallFailed.getPluginName() + " extension in the Plan config.")
-                .related(methodCallFailed.getPluginName())
-                .related("Method:" + methodCallFailed.getMethod().map(MethodWrapper::getMethodName).orElse("-"))
-                .related("Player: " + playerName);
-        errorLogger.warn(cause, context.build());
+        gatherer.updateValues(playerUUID, playerName);
     }
 
     public void updateServerValues(CallEvents event) {
-        for (ProviderValueGatherer gatherer : extensionGatherers.values()) {
+        for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updateServerValues(gatherer, event);
         }
     }
 
-    public void updateServerValues(ProviderValueGatherer gatherer, CallEvents event) {
+    public void updateServerValues(DataValueGatherer gatherer, CallEvents event) {
         if (gatherer.shouldSkipEvent(event)) return;
 
-        try {
-            gatherer.updateValues();
-        } catch (DataExtensionMethodCallException methodCallFailed) {
-            logFailure("server", methodCallFailed);
-            methodCallFailed.getMethod().ifPresent(gatherer::disableMethodFromUse);
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            ErrorContext.Builder context = ErrorContext.builder()
-                    .whatToDo("Report and/or disable " + gatherer.getPluginName() + " extension in the Plan config.")
-                    .related(gatherer.getPluginName())
-                    .related(event)
-                    .related("Gathering for server");
-            errorLogger.warn(unexpectedError, context.build());
-        }
+        gatherer.updateValues();
     }
 }

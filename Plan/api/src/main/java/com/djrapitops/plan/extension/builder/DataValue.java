@@ -14,31 +14,27 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.exceptions;
+package com.djrapitops.plan.extension.builder;
 
 import java.util.Optional;
 
 /**
- * Exception that is thrown when a call to a DataExtension method throws an exception.
+ * Represents a value given to {@link ExtensionDataBuilder}.
+ * <p>
+ * Please do not implement this class, it is an implementation detail.
+ * Obtain instances with {@link ValueBuilder}.
  *
- * @author AuroraLS3
+ * @param <T> Type of the value.
  */
-public class DataExtensionMethodCallException extends IllegalStateException {
+public interface DataValue<T> {
 
-    private final String pluginName;
-    private final String methodName;
+    T getValue();
 
-    public DataExtensionMethodCallException(String message, Throwable cause, String pluginName, String methodName) {
-        super(message, cause);
-        this.pluginName = pluginName;
-        this.methodName = methodName;
+    <M> M getInformation(Class<M> ofType);
+
+    default <I extends DataValue<T>> Optional<I> getMetadata(Class<I> metadataType) {
+        if (getClass().equals(metadataType)) return Optional.of(metadataType.cast(this));
+        return Optional.empty();
     }
 
-    public String getPluginName() {
-        return pluginName;
-    }
-
-    public Optional<String> getMethodName() {
-        return Optional.ofNullable(methodName);
-    }
 }

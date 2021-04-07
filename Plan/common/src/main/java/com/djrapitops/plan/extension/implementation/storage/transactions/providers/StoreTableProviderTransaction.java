@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.provid
 
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
@@ -36,7 +37,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable.*;
 
 /**
- * Transaction to store information about a {@link com.djrapitops.plan.extension.implementation.providers.TableDataProvider}.
+ * Transaction to store information about a Table.
  *
  * @author AuroraLS3
  */
@@ -45,6 +46,10 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
     private final ServerUUID serverUUID;
     private final ProviderInformation information;
     private final Table table;
+
+    public StoreTableProviderTransaction(ProviderInformation information, Parameters parameters, Table table) {
+        this(parameters.getServerUUID(), information, table);
+    }
 
     public StoreTableProviderTransaction(ServerUUID serverUUID, ProviderInformation information, Table table) {
         this.information = information;

@@ -19,9 +19,13 @@ package com.djrapitops.plan.extension.extractor;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.table.Table;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -44,12 +48,27 @@ class ExtensionExtractorTest {
     }
 
     @Test
+    void pluginInfoIsRequired2() {
+        class Extension implements DataExtension {}
+
+        assertEquals("Extension did not have @PluginInfo annotation!", assertThrows(IllegalArgumentException.class, new Extension()::getPluginName).getMessage());
+    }
+
+    @Test
     void providerMethodsAreRequired() {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {}
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
         assertEquals("Extension class had no methods annotated with a Provider annotation", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+    }
+
+    @Test
+    void extensionNameIsAvailable() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {}
+
+        assertEquals("Extension", new Extension().getPluginName());
     }
 
     @Test
@@ -207,6 +226,20 @@ class ExtensionExtractorTest {
     }
 
     @Test
+    void dataBuilderProviderMustProvideDataBuilder() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @DataBuilderProvider
+            public Group method(UUID playerUUID) {
+                return null;
+            }
+        }
+
+        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
+        assertEquals("Extension.method has invalid return type. was: com.djrapitops.plan.extension.Group, expected: com.djrapitops.plan.extension.builder.ExtensionDataBuilder", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+    }
+
+    @Test
     void booleanProviderCanNotSupplyItsOwnConditional() {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {
@@ -233,21 +266,6 @@ class ExtensionExtractorTest {
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
         assertEquals("Extension.method did not have any associated Provider for Conditional.", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
-    }
-
-    @Test
-    void conditionalNeedsToBeProvided() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @Conditional("hasJoined")
-            @BooleanProvider(text = "Banned", conditionName = "isBanned")
-            public boolean method(UUID playerUUID) {
-                return false;
-            }
-        }
-
-        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
-        assertEquals("Warnings: [Extension: 'hasJoined' Condition was not provided by any BooleanProvider.]", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
     }
 
     @Test
@@ -280,4 +298,254 @@ class ExtensionExtractorTest {
         assertEquals("Extension.method has too many parameters, only one of [class java.util.UUID, class java.lang.String, interface com.djrapitops.plan.extension.Group] is required as a parameter.", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
     }
 
+    @Test
+    void methodsAreExtracted1() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("hasJoined")
+            @BooleanProvider(text = "Test", conditionName = "isBanned")
+            public boolean method() {
+                return false;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addBooleanMethod);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void methodsAreExtracted2() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("hasJoined")
+            @NumberProvider(text = "Test")
+            public long method() {
+                return 0;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addNumberMethod);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void methodsAreExtracted3() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("hasJoined")
+            @DoubleProvider(text = "Test")
+            public double method() {
+                return 0;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addDoubleMethod);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void methodsAreExtracted4() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("hasJoined")
+            @PercentageProvider(text = "Test")
+            public double method() {
+                return 0;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addPercentageMethod);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void methodsAreExtracted5() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("hasJoined")
+            @StringProvider(text = "Test")
+            public String method() {
+                return "example";
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addStringMethod);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void methodsAreExtracted6() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @TableProvider
+            public Table method() {
+                return Table.builder().build();
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addTableMethod);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void methodsAreExtracted7() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GroupProvider
+            public String[] method(UUID playerUUID) {
+                return new String[]{"example"};
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = new EnumMap<>(ExtensionMethod.ParameterType.class);
+        for (ExtensionMethod.ParameterType value : ExtensionMethod.ParameterType.values()) {
+            expected.put(value, new ExtensionMethods());
+        }
+        expected.get(ExtensionMethod.ParameterType.PLAYER_UUID).addGroupMethod(new ExtensionMethod(extension, extension.getClass().getMethod("method", UUID.class)));
+
+        assertEquals(expected, result);
+    }
+
+    private Map<ExtensionMethod.ParameterType, ExtensionMethods> buildExpectedExtensionMethodMap(DataExtension extension, BiConsumer<ExtensionMethods, ExtensionMethod> addTo) throws NoSuchMethodException {
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> map = new EnumMap<>(ExtensionMethod.ParameterType.class);
+        for (ExtensionMethod.ParameterType value : ExtensionMethod.ParameterType.values()) {
+            map.put(value, new ExtensionMethods());
+        }
+        addTo.accept(
+                map.get(ExtensionMethod.ParameterType.SERVER_NONE),
+                new ExtensionMethod(extension, extension.getClass().getMethod("method"))
+        );
+        return map;
+    }
+
+    @Test
+    void methodsAreExtracted8() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @DataBuilderProvider
+            public ExtensionDataBuilder method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addDataBuilderMethod);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void tabsAreExtracted() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Tab("Tab name")
+            @DataBuilderProvider
+            public ExtensionDataBuilder method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+
+        Collection<Tab> expected = Collections.singletonList(extension.getClass().getMethod("method").getAnnotation(Tab.class));
+        Collection<Tab> result = underTest.getTabAnnotations();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void conditionalsAreExtracted() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("example")
+            @StringProvider(text = "Test")
+            public String method() {
+                return "example";
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+
+        String expected = Stream.of(extension.getClass().getMethod("method").getAnnotation(Conditional.class))
+                .map(Conditional::value).findFirst().orElseThrow(AssertionError::new);
+        String result = underTest.getMethodAnnotations().getAnnotations(Conditional.class).stream()
+                .map(Conditional::value).findFirst().orElseThrow(AssertionError::new);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void textOver50CharsIsWarnedAbout() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @StringProvider(text = "aaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEfffffFFFF")
+            public String method() {
+                return "example";
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Warnings: [Extension.method 'text' was over 50 characters.]",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void descriptionOver50CharsIsWarnedAbout() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @StringProvider(
+                    text = "a",
+                    description = "aaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEaaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEaaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEfffffFFFFF"
+            )
+            public String method() {
+                return "example";
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Warnings: [Extension.method 'description' was over 150 characters.]",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void dataBuilderProviderCanNotHaveConditional() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("bad")
+            @DataBuilderProvider
+            public ExtensionDataBuilder method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Extension.method had Conditional, but DataBuilderProvider does not support it!",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
 }

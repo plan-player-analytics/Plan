@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
-import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -37,6 +37,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
+import utilities.TestErrorLogger;
 
 import java.nio.file.Path;
 
@@ -82,6 +83,7 @@ public class SQLiteTest implements DatabaseTest,
 
     @BeforeEach
     void setUp() {
+        TestErrorLogger.throwErrors(true);
         db().executeTransaction(new Patch() {
             @Override
             public boolean hasBeenApplied() {
@@ -141,7 +143,7 @@ public class SQLiteTest implements DatabaseTest,
     }
 
     @Override
-    public ExtensionService extensionService() {
+    public ExtensionSvc extensionService() {
         return component.extensionService();
     }
 

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.extension.implementation.providers.DataProvider;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
@@ -34,7 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable.*;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.StringDataProvider}.
+ * Transaction to store method result of a String.
  *
  * @author AuroraLS3
  */
@@ -47,9 +47,9 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
 
     private final String value;
 
-    public StorePlayerStringResultTransaction(DataProvider<String> provider, Parameters parameters, String value) {
-        this.pluginName = provider.getProviderInformation().getPluginName();
-        this.providerName = provider.getProviderInformation().getName();
+    public StorePlayerStringResultTransaction(ProviderInformation information, Parameters parameters, String value) {
+        this.pluginName = information.getPluginName();
+        this.providerName = information.getName();
         this.serverUUID = parameters.getServerUUID();
         this.playerUUID = parameters.getPlayerUUID();
         this.value = StringUtils.truncate(value, 50);

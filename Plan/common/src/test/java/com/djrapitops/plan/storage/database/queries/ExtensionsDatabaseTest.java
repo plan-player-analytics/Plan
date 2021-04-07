@@ -19,9 +19,10 @@ package com.djrapitops.plan.storage.database.queries;
 import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
@@ -42,6 +43,7 @@ import org.junit.jupiter.api.Test;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestErrorLogger;
 
 import java.util.List;
 import java.util.Map;
@@ -59,11 +61,13 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @BeforeEach
     default void unregisterExtensions() {
-        ExtensionService extensionService = extensionService();
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register();
         extensionService.unregister(new PlayerExtension());
         extensionService.unregister(new ServerExtension());
         extensionService.unregister(new ConditionalExtension());
         extensionService.unregister(new TableExtension());
+        extensionService.unregister(new ThrowingExtension());
     }
 
     @Test
@@ -82,7 +86,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionPlayerValuesAreStored() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -130,7 +134,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerValuesAreStored() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new ServerExtension());
         extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER);
@@ -152,7 +156,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerAggregateQueriesWork() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new PlayerExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -183,7 +187,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void unsatisfiedPlayerConditionalResultsAreCleaned() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new ConditionalExtension());
 
@@ -237,7 +241,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void unsatisfiedServerConditionalResultsAreCleaned() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         ConditionalExtension.condition = true;
         extensionService.register(new ConditionalExtension());
@@ -288,7 +292,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionServerTableValuesAreInserted() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updateServerValues(CallEvents.MANUAL);
@@ -320,7 +324,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionPlayerTableValuesAreInserted() {
-        ExtensionSvc extensionService = (ExtensionSvc) extensionService();
+        ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new TableExtension());
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
@@ -351,6 +355,19 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
         assertEquals(expected.toHtml(), table.getHtmlTable().toHtml());
     }
+
+    @Test
+    default void extensionExceptionsAreCaught() {
+        TestErrorLogger.throwErrors(false);
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new ThrowingExtension());
+
+        extensionService.updateServerValues(CallEvents.MANUAL);
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+        // 5 of the exceptions need to be logged, there are 8 exceptions total 3 of which are ignored.
+        assertEquals(5, TestErrorLogger.getCaught().size(), () -> "Not all exceptions got logged, logged exceptions: " + TestErrorLogger.getCaught().toString());
+    }
+
 
     @PluginInfo(name = "ConditionalExtension")
     class ConditionalExtension implements DataExtension {
@@ -489,6 +506,55 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
                     .columnFive("five", Icon.called("").build()) // Can handle null column in between and ignore the next column
                     .addRow("value", 3, 0.5, 400L)               // Can handle too many row values
                     .build();
+        }
+    }
+
+    @PluginInfo(name = "ThrowingExtension")
+    class ThrowingExtension implements DataExtension {
+        @BooleanProvider(text = "a boolean")
+        public boolean booleanMethod() {
+            throw new IllegalArgumentException("Failed to catch");
+        }
+
+        @BooleanProvider(text = "a boolean")
+        public boolean booleanPlayerMethod(UUID playerUUID) {
+            throw new NotReadyException();
+        }
+
+        @StringProvider(text = "a string")
+        public String stringMethod() {
+            throw new NoSuchMethodError();
+        }
+
+        @NumberProvider(text = "a string")
+        public long numberMethod() {
+            throw new UnsupportedOperationException();
+        }
+
+        @GroupProvider(text = "group")
+        public String[] groupMethod(UUID playerUUID) {
+            throw new NoClassDefFoundError();
+        }
+
+        @DataBuilderProvider
+        public ExtensionDataBuilder builder() {
+            return newExtensionDataBuilder()
+                    .addValue(String.class, () -> {
+                        throw new NotReadyException();
+                    });
+        }
+
+        @DataBuilderProvider
+        public ExtensionDataBuilder builder2() {
+            return newExtensionDataBuilder()
+                    .addValue(String.class, () -> {
+                        throw new NoClassDefFoundError();
+                    });
+        }
+
+        @DataBuilderProvider
+        public ExtensionDataBuilder builder3() {
+            throw new NoSuchMethodError();
         }
     }
 }

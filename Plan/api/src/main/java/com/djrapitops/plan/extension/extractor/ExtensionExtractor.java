@@ -19,11 +19,11 @@ package com.djrapitops.plan.extension.extractor;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -43,10 +43,12 @@ public final class ExtensionExtractor {
     private final List<String> warnings = new ArrayList<>();
 
     private PluginInfo pluginInfo;
-    private TabOrder tabOrder;
     private List<TabInfo> tabInformation;
     private List<InvalidateMethod> invalidMethods;
     private MethodAnnotations methodAnnotations;
+    private Map<ExtensionMethod.ParameterType, ExtensionMethods> methods;
+    private Collection<Method> conditionalMethods;
+    private Collection<Tab> tabAnnotations;
 
     private static final String WAS_OVER_50_CHARACTERS = "' was over 50 characters.";
 
@@ -56,78 +58,126 @@ public final class ExtensionExtractor {
     }
 
     /**
-     * Use this method in an unit test to validate your DataExtension.
-     *
-     * @throws IllegalArgumentException If an implementation error is found.
+     * @deprecated Use {@link DataExtension#getPluginName()} instead.
      */
-    public void validateAnnotations() {
-        extractAnnotationInformation();
-
-        if (!warnings.isEmpty()) {
-            throw new IllegalArgumentException("Warnings: " + warnings.toString());
-        }
+    @Deprecated
+    public static <T extends DataExtension> String getPluginName(Class<T> extensionClass) {
+        return getClassAnnotation(extensionClass, PluginInfo.class).map(PluginInfo::name)
+                .orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
     }
 
     private static <V extends DataExtension, T extends Annotation> Optional<T> getClassAnnotation(Class<V> from, Class<T> ofClass) {
         return Optional.ofNullable(from.getAnnotation(ofClass));
     }
 
-    public static <T extends DataExtension> String getPluginName(Class<T> extensionClass) {
-        return getClassAnnotation(extensionClass, PluginInfo.class).map(PluginInfo::name)
-                .orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
-    }
-
-    private Method[] getMethods() {
-        return extension.getClass().getMethods();
-    }
-
-    public void extractAnnotationInformation() {
+    /**
+     * Use this method in an unit test to validate your DataExtension.
+     *
+     * @throws IllegalArgumentException If an implementation error is found.
+     */
+    public void validateAnnotations() {
         extractPluginInfo();
         extractInvalidMethods();
-
-        extractMethodAnnotations();
-        validateMethodAnnotations();
-
-        validateConditionals();
-
+        extractMethods();
         extractTabInfo();
+
+        if (!warnings.isEmpty()) {
+            throw new IllegalArgumentException("Warnings: " + warnings.toString());
+        }
     }
 
-    private void extractMethodAnnotations() {
-        methodAnnotations = new MethodAnnotations();
+    private Collection<ExtensionMethod> getExtensionMethods() {
+        List<ExtensionMethod> extensionMethods = new ArrayList<>();
+        for (Method method : extension.getClass().getMethods()) {
+            try {
+                extensionMethods.add(new ExtensionMethod(extension, method));
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException(extensionName + '.' + e.getMessage());
+            }
+        }
+        return extensionMethods;
+    }
 
-        for (Method method : getMethods()) {
-            int modifiers = method.getModifiers();
-            if (Modifier.isPrivate(modifiers)
-                    || Modifier.isProtected(modifiers)
-                    || Modifier.isStatic(modifiers)
-                    || Modifier.isNative(modifiers)) {
+    /**
+     * @deprecated No longer used anywhere, no-op.
+     */
+    @Deprecated
+    public void extractAnnotationInformation() {
+        // no-op
+    }
+
+    private void extractMethods() {
+        methodAnnotations = new MethodAnnotations();
+        methods = new EnumMap<>(ExtensionMethod.ParameterType.class);
+        methods.put(ExtensionMethod.ParameterType.SERVER_NONE, new ExtensionMethods());
+        methods.put(ExtensionMethod.ParameterType.PLAYER_STRING, new ExtensionMethods());
+        methods.put(ExtensionMethod.ParameterType.PLAYER_UUID, new ExtensionMethods());
+        methods.put(ExtensionMethod.ParameterType.GROUP, new ExtensionMethods());
+
+        conditionalMethods = new ArrayList<>();
+        tabAnnotations = new ArrayList<>();
+
+        for (ExtensionMethod method : getExtensionMethods()) {
+            if (method.isInaccessible()) {
                 continue;
             }
 
-            MethodAnnotations.get(method, BooleanProvider.class).ifPresent(annotation -> methodAnnotations.put(method, BooleanProvider.class, annotation));
-            MethodAnnotations.get(method, NumberProvider.class).ifPresent(annotation -> methodAnnotations.put(method, NumberProvider.class, annotation));
-            MethodAnnotations.get(method, DoubleProvider.class).ifPresent(annotation -> methodAnnotations.put(method, DoubleProvider.class, annotation));
-            MethodAnnotations.get(method, PercentageProvider.class).ifPresent(annotation -> methodAnnotations.put(method, PercentageProvider.class, annotation));
-            MethodAnnotations.get(method, StringProvider.class).ifPresent(annotation -> methodAnnotations.put(method, StringProvider.class, annotation));
+            method.getAnnotation(BooleanProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addBooleanMethod(method);
+                methodAnnotations.put(method.getMethod(), BooleanProvider.class, annotation);
+            });
+            method.getAnnotation(NumberProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addNumberMethod(method);
+                methodAnnotations.put(method.getMethod(), NumberProvider.class, annotation);
+            });
+            method.getAnnotation(DoubleProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addDoubleMethod(method);
+                methodAnnotations.put(method.getMethod(), DoubleProvider.class, annotation);
+            });
+            method.getAnnotation(PercentageProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addPercentageMethod(method);
+                methodAnnotations.put(method.getMethod(), PercentageProvider.class, annotation);
+            });
+            method.getAnnotation(StringProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addStringMethod(method);
+                methodAnnotations.put(method.getMethod(), StringProvider.class, annotation);
+            });
+            method.getAnnotation(TableProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addTableMethod(method);
+                methodAnnotations.put(method.getMethod(), TableProvider.class, annotation);
+            });
+            method.getAnnotation(GroupProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addGroupMethod(method);
+                methodAnnotations.put(method.getMethod(), GroupProvider.class, annotation);
+            });
+            method.getAnnotation(DataBuilderProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addDataBuilderMethod(method);
+                methodAnnotations.put(method.getMethod(), DataBuilderProvider.class, annotation);
+            });
 
-            MethodAnnotations.get(method, Conditional.class).ifPresent(annotation -> methodAnnotations.put(method, Conditional.class, annotation));
-            MethodAnnotations.get(method, Tab.class).ifPresent(annotation -> methodAnnotations.put(method, Tab.class, annotation));
-
-            MethodAnnotations.get(method, TableProvider.class).ifPresent(annotation -> methodAnnotations.put(method, TableProvider.class, annotation));
-            MethodAnnotations.get(method, GroupProvider.class).ifPresent(annotation -> methodAnnotations.put(method, GroupProvider.class, annotation));
+            method.getAnnotation(Conditional.class).ifPresent(annotation -> {
+                conditionalMethods.add(method.getMethod());
+                methodAnnotations.put(method.getMethod(), Conditional.class, annotation);
+            });
+            method.getAnnotation(Tab.class).ifPresent(annotation -> {
+                tabAnnotations.add(annotation);
+                methodAnnotations.put(method.getMethod(), Tab.class, annotation);
+            });
         }
 
         if (methodAnnotations.isEmpty()) {
             throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
         }
 
-        try {
-            methodAnnotations.makeMethodsAccessible();
-        } catch (SecurityException failedToMakeAccessible) {
-            throw new IllegalArgumentException(extensionName + " has non accessible Provider method that could not be made accessible: " +
-                    failedToMakeAccessible.getMessage(), failedToMakeAccessible);
-        }
+        validateConditionals();
     }
 
     private <T> void validateReturnType(Method method, Class<T> expectedType) {
@@ -144,7 +194,7 @@ public final class ExtensionExtractor {
 
     private void validateMethodAnnotationPropertyLength(String property, String name, int maxLength, Method method) {
         if (property.length() > maxLength) {
-            warnings.add(extensionName + "." + method.getName() + " '" + name + WAS_OVER_50_CHARACTERS);
+            warnings.add(extensionName + "." + method.getName() + " '" + name + "' was over " + maxLength + " characters.");
         }
     }
 
@@ -186,133 +236,107 @@ public final class ExtensionExtractor {
         // Has valid parameter & it is acceptable.
     }
 
-    private void validateMethodAnnotations() {
-        validateBooleanProviderAnnotations();
-        validateNumberProviderAnnotations();
-        validateDoubleProviderAnnotations();
-        validatePercentageProviderAnnotations();
-        validateStringProviderAnnotations();
-        validateTableProviderAnnotations();
-        validateGroupProviderAnnotations();
-    }
+    private void validateMethod(ExtensionMethod extensionMethod, BooleanProvider annotation) {
+        Method method = extensionMethod.getMethod();
+        validateReturnType(method, boolean.class);
+        validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+        validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+        validateMethodAnnotationPropertyLength(annotation.conditionName(), "conditionName", 50, method);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
 
-    private void validateBooleanProviderAnnotations() {
-        for (Map.Entry<Method, BooleanProvider> booleanProvider : methodAnnotations.getMethodAnnotations(BooleanProvider.class).entrySet()) {
-            Method method = booleanProvider.getKey();
-            BooleanProvider annotation = booleanProvider.getValue();
+        String condition = extensionMethod.getAnnotation(Conditional.class).map(Conditional::value).orElse(null);
+        if (annotation.conditionName().equals(condition)) {
+            warnings.add(extensionName + "." + method.getName() + " can not be conditional of itself. required condition: " + condition + ", provided condition: " + annotation.conditionName());
+        }
 
-            validateReturnType(method, boolean.class);
-            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
-            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
-            validateMethodAnnotationPropertyLength(annotation.conditionName(), "conditionName", 50, method);
-            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
-
-            String condition = MethodAnnotations.get(method, Conditional.class).map(Conditional::value).orElse(null);
-            if (annotation.conditionName().equals(condition)) {
-                warnings.add(extensionName + "." + method.getName() + " can not be conditional of itself. required condition: " + condition + ", provided condition: " + annotation.conditionName());
-            }
-
-            if (annotation.conditionName().isEmpty() && annotation.hidden()) {
-                throw new IllegalArgumentException(extensionName + "." + method.getName() + " can not be 'hidden' without a 'conditionName'");
-            }
+        if (annotation.conditionName().isEmpty() && annotation.hidden()) {
+            throw new IllegalArgumentException(extensionName + "." + method.getName() + " can not be 'hidden' without a 'conditionName'");
         }
     }
 
-    private void validateNumberProviderAnnotations() {
-        for (Map.Entry<Method, NumberProvider> numberProvider : methodAnnotations.getMethodAnnotations(NumberProvider.class).entrySet()) {
-            Method method = numberProvider.getKey();
-            NumberProvider annotation = numberProvider.getValue();
+    private void validateMethod(ExtensionMethod extensionMethod, NumberProvider annotation) {
+        Method method = extensionMethod.getMethod();
 
-            validateReturnType(method, long.class);
-            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
-            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
-            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
-        }
+        validateReturnType(method, long.class);
+        validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+        validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
-    private void validateDoubleProviderAnnotations() {
-        for (Map.Entry<Method, DoubleProvider> doubleProvider : methodAnnotations.getMethodAnnotations(DoubleProvider.class).entrySet()) {
-            Method method = doubleProvider.getKey();
-            DoubleProvider annotation = doubleProvider.getValue();
+    private void validateMethod(ExtensionMethod extensionMethod, DoubleProvider annotation) {
+        Method method = extensionMethod.getMethod();
 
-            validateReturnType(method, double.class);
-            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
-            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
-            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
-        }
+        validateReturnType(method, double.class);
+        validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+        validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
-    private void validatePercentageProviderAnnotations() {
-        for (Map.Entry<Method, PercentageProvider> percentageProvider : methodAnnotations.getMethodAnnotations(PercentageProvider.class).entrySet()) {
-            Method method = percentageProvider.getKey();
-            PercentageProvider annotation = percentageProvider.getValue();
+    private void validateMethod(ExtensionMethod extensionMethod, PercentageProvider annotation) {
+        Method method = extensionMethod.getMethod();
 
-            validateReturnType(method, double.class);
-            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
-            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
-            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
-        }
+        validateReturnType(method, double.class);
+        validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+        validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
-    private void validateStringProviderAnnotations() {
-        for (Map.Entry<Method, StringProvider> stringProvider : methodAnnotations.getMethodAnnotations(StringProvider.class).entrySet()) {
-            Method method = stringProvider.getKey();
-            StringProvider annotation = stringProvider.getValue();
+    private void validateMethod(ExtensionMethod extensionMethod, StringProvider annotation) {
+        Method method = extensionMethod.getMethod();
 
-            validateReturnType(method, String.class);
-            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
-            validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
-            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
-        }
+        validateReturnType(method, String.class);
+        validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+        validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
-    private void validateTableProviderAnnotations() {
-        for (Method method : methodAnnotations.getMethodAnnotations(TableProvider.class).keySet()) {
-            validateReturnType(method, Table.class);
-            validateMethodArguments(method, false, UUID.class, String.class, Group.class);
-        }
+    private void validateMethod(ExtensionMethod extensionMethod, TableProvider annotation) {
+        Method method = extensionMethod.getMethod();
+
+        validateReturnType(method, Table.class);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
-    private void validateGroupProviderAnnotations() {
-        for (Map.Entry<Method, GroupProvider> groupProvider : methodAnnotations.getMethodAnnotations(GroupProvider.class).entrySet()) {
-            Method method = groupProvider.getKey();
-            GroupProvider annotation = groupProvider.getValue();
+    private void validateMethod(ExtensionMethod extensionMethod, GroupProvider annotation) {
+        Method method = extensionMethod.getMethod();
 
-            validateReturnType(method, String[].class);
-            validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
-            validateMethodArguments(method, true, UUID.class, String.class);
-        }
+        validateReturnType(method, String[].class);
+        validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+        validateMethodArguments(method, true, UUID.class, String.class);
+    }
+
+    private void validateMethod(ExtensionMethod extensionMethod, DataBuilderProvider annotation) {
+        Method method = extensionMethod.getMethod();
+
+        validateReturnType(method, ExtensionDataBuilder.class);
+        validateMethodArguments(method, false, UUID.class, String.class);
     }
 
     private void validateConditionals() {
-        Collection<Conditional> conditionals = methodAnnotations.getAnnotations(Conditional.class);
-        Collection<BooleanProvider> conditionProviders = methodAnnotations.getAnnotations(BooleanProvider.class);
-
-        Set<String> providedConditions = conditionProviders.stream().map(BooleanProvider::conditionName).collect(Collectors.toSet());
-
-        for (Conditional condition : conditionals) {
-            String conditionName = condition.value();
-
-            if (conditionName.length() > 50) {
-                warnings.add(extensionName + ": '" + conditionName + "' conditionName was over 50 characters.");
-            }
-
-            if (!providedConditions.contains(conditionName)) {
-                warnings.add(extensionName + ": '" + conditionName + "' Condition was not provided by any BooleanProvider.");
-            }
-        }
-
         // Make sure that all methods annotated with Conditional have a Provider annotation
-        Collection<Method> conditionalMethods = methodAnnotations.getMethodAnnotations(Conditional.class).keySet();
         for (Method conditionalMethod : conditionalMethods) {
-            if (!MethodAnnotations.hasAnyOf(conditionalMethod,
+            if (!hasAnyOf(conditionalMethod,
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
                     PercentageProvider.class, StringProvider.class, TableProvider.class,
-                    GroupProvider.class
+                    GroupProvider.class, DataBuilderProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }
+            if (hasAnyOf(conditionalMethod, DataBuilderProvider.class)) {
+                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but DataBuilderProvider does not support it!");
+            }
         }
+    }
+
+    private boolean hasAnyOf(Method method, Class<?>... annotationClasses) {
+        for (Annotation annotation : method.getAnnotations()) {
+            for (Class<?> annotationClass : annotationClasses) {
+                if (annotationClass.isAssignableFrom(annotation.getClass())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private <T extends Annotation> Optional<T> getClassAnnotation(Class<T> ofClass) {
@@ -324,7 +348,7 @@ public final class ExtensionExtractor {
                 .orElseThrow(() -> new IllegalArgumentException("Given class had no PluginInfo annotation"));
 
         if (pluginInfo.name().length() > 50) {
-            warnings.add(extensionName + " PluginInfo 'name' was over 50 characters.");
+            warnings.add(extensionName + " PluginInfo 'name" + WAS_OVER_50_CHARACTERS);
         }
     }
 
@@ -343,17 +367,22 @@ public final class ExtensionExtractor {
             }
         });
 
-        tabOrder = getClassAnnotation(TabOrder.class).orElse(null);
+        getClassAnnotation(TabOrder.class).map(TabOrder::value)
+                .ifPresent(order -> {
+                    List<String> orderAsList = Arrays.asList(order);
+                    // Order by the 2nd list. https://stackoverflow.com/a/18130019
+                    // O(n^2 log n), not very bad here because there aren't going to be more than 10 tabs maybe ever.
+                    tabInformation.sort(Comparator.comparingInt(item -> orderAsList.indexOf(item.tab())));
+                });
 
-        Map<Method, Tab> tabs = this.methodAnnotations.getMethodAnnotations(Tab.class);
-        Set<String> tabNames = tabs.values().stream().map(Tab::value).collect(Collectors.toSet());
+        Set<String> tabNames = getTabAnnotations().stream().map(Tab::value).collect(Collectors.toSet());
 
         // Check for unused TabInfo annotations
         for (TabInfo tabInfo : tabInformation) {
             String tabName = tabInfo.tab();
 
             if (tabName.length() > 50) {
-                warnings.add(extensionName + " TabInfo " + tabName + " name was over 50 characters.");
+                warnings.add(extensionName + " TabInfo " + tabName + " 'name" + WAS_OVER_50_CHARACTERS);
             }
 
             if (!tabNames.contains(tabName)) {
@@ -362,10 +391,9 @@ public final class ExtensionExtractor {
         }
 
         // Check Tab name lengths
-        for (Map.Entry<Method, Tab> tab : tabs.entrySet()) {
-            String tabName = tab.getValue().value();
+        for (String tabName : tabNames) {
             if (tabName.length() > 50) {
-                warnings.add(extensionName + "." + tab.getKey().getName() + " Tab '" + tabName + "' name was over 50 characters.");
+                warnings.add(extensionName + " Tab '" + tabName + "' 'name" + WAS_OVER_50_CHARACTERS);
             }
         }
     }
@@ -391,22 +419,37 @@ public final class ExtensionExtractor {
     }
 
     public PluginInfo getPluginInfo() {
+        if (pluginInfo == null) extractPluginInfo();
         return pluginInfo;
     }
 
     public Optional<TabOrder> getTabOrder() {
-        return Optional.ofNullable(tabOrder);
+        return getClassAnnotation(TabOrder.class);
+    }
+
+    public Collection<Tab> getTabAnnotations() {
+        if (tabAnnotations == null) extractMethods();
+        return tabAnnotations;
     }
 
     public List<TabInfo> getTabInformation() {
-        return tabInformation != null ? tabInformation : Collections.emptyList();
+        if (tabInformation == null) extractTabInfo();
+        return tabInformation;
     }
 
+    @Deprecated
     public MethodAnnotations getMethodAnnotations() {
+        if (methodAnnotations == null) extractMethods();
         return methodAnnotations;
     }
 
+    public Map<ExtensionMethod.ParameterType, ExtensionMethods> getMethods() {
+        if (methods == null) extractMethods();
+        return methods;
+    }
+
     public List<InvalidateMethod> getInvalidateMethodAnnotations() {
-        return invalidMethods != null ? invalidMethods : Collections.emptyList();
+        if (invalidMethods == null) extractInvalidMethods();
+        return invalidMethods;
     }
 }

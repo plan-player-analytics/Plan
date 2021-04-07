@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -36,7 +37,14 @@ public class Conditions {
         return !fulfilledConditions.contains(condition);
     }
 
+    public static boolean matchesCondition(String condition1, String condition2) {
+        return Objects.equals(condition1, condition2) || // condition == condition, not_condition == not_condition
+                Objects.equals("not_" + condition1, condition2) || // condition == not_condition
+                Objects.equals(condition1, "not_" + condition2); // not_condition == condition
+    }
+
     public void conditionFulfilled(String condition) {
+        if (condition == null || condition.isEmpty()) return;
         fulfilledConditions.add(condition);
     }
 }

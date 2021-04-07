@@ -14,31 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.exceptions;
+package com.djrapitops.plan.extension.annotation;
 
-import java.util.Optional;
+import com.djrapitops.plan.extension.DataExtension;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Exception that is thrown when a call to a DataExtension method throws an exception.
+ * Method annotation to provide a {@link com.djrapitops.plan.extension.builder.ExtensionDataBuilder}.
+ * <p>
+ * Usage: {@code @DataBuilderProvider ExtensionDataBuilder method(UUID playerUUID)}
+ * <p>
+ * ExtensionDataBuilder can be obtained with {@link DataExtension#newExtensionDataBuilder()}.
  *
  * @author AuroraLS3
  */
-public class DataExtensionMethodCallException extends IllegalStateException {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface DataBuilderProvider {
 
-    private final String pluginName;
-    private final String methodName;
-
-    public DataExtensionMethodCallException(String message, Throwable cause, String pluginName, String methodName) {
-        super(message, cause);
-        this.pluginName = pluginName;
-        this.methodName = methodName;
-    }
-
-    public String getPluginName() {
-        return pluginName;
-    }
-
-    public Optional<String> getMethodName() {
-        return Optional.ofNullable(methodName);
-    }
 }

@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -29,7 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.*;
 
 /**
- * Transaction to store method result of a {@link com.djrapitops.plan.extension.implementation.providers.BooleanDataProvider}.
+ * Transaction to store method result of a boolean.
  *
  * @author AuroraLS3
  */
@@ -46,6 +48,14 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
         this.serverUUID = serverUUID;
         this.providerName = providerName;
         this.value = value;
+    }
+
+    public StoreServerBooleanResultTransaction(ProviderInformation information, Parameters parameters, boolean value) {
+        this(information.getPluginName(),
+                parameters.getServerUUID(),
+                information.getName(),
+                value
+        );
     }
 
     @Override

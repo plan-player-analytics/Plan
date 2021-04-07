@@ -53,5 +53,4 @@ public @interface Conditional {
      * @return {@code false} by default.
      */
     boolean negated() default false;
-
 }

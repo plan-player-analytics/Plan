@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
-import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -59,7 +59,7 @@ public interface DatabaseTestPreparer {
         return system().getDeliveryUtilities();
     }
 
-    default ExtensionService extensionService() {return system().getExtensionService();}
+    default ExtensionSvc extensionService() {return system().getExtensionService();}
 
     default void execute(Executable executable) {
         try {

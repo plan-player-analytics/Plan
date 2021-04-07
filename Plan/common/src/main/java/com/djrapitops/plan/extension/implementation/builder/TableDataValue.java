@@ -14,31 +14,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.exceptions;
+package com.djrapitops.plan.extension.implementation.builder;
 
-import java.util.Optional;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.table.Table;
 
-/**
- * Exception that is thrown when a call to a DataExtension method throws an exception.
- *
- * @author AuroraLS3
- */
-public class DataExtensionMethodCallException extends IllegalStateException {
+import java.util.function.Supplier;
 
-    private final String pluginName;
-    private final String methodName;
-
-    public DataExtensionMethodCallException(String message, Throwable cause, String pluginName, String methodName) {
-        super(message, cause);
-        this.pluginName = pluginName;
-        this.methodName = methodName;
+public class TableDataValue extends BuiltDataValue<Table> {
+    public TableDataValue(Table value, ProviderInformation information) {
+        super(value, information);
     }
 
-    public String getPluginName() {
-        return pluginName;
-    }
-
-    public Optional<String> getMethodName() {
-        return Optional.ofNullable(methodName);
+    public TableDataValue(Supplier<Table> supplier, ProviderInformation information) {
+        super(supplier, information);
     }
 }
