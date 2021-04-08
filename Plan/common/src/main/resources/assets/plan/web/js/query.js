@@ -463,25 +463,25 @@ function displayDataResultScreen(resultCount, view) {
                         </div>
                         <div class="card-body" id="data_players">
                             <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
-                                    class="float-right"><b id="data_total_sessions"></b></span></p>
+                                    class="float-end"><b id="data_total_sessions"></b></span></p>
                             <p><i class="col-teal far fa-fw fa-calendar-check"></i> Average Sessions / Player<span
-                                    class="float-right"><b id="data_average_sessions"></b></span></p>
+                                    class="float-end"><b id="data_average_sessions"></b></span></p>
                             <p><i class="col-teal far fa-fw fa-clock"></i> Average Session Length<span
-                                    class="float-right" id="data_average_session_length"></span></p>
+                                    class="float-end" id="data_average_session_length"></span></p>
                             <hr>
                             <p><i class="col-green far fa-fw fa-clock"></i> Playtime<span
-                                    class="float-right" id="data_total_playtime"></span></p>
+                                    class="float-end" id="data_total_playtime"></span></p>
                             <p><i class="col-green far fa-fw fa-clock"></i> Active Playtime<span
-                                    class="float-right" id="data_total_active_playtime"></span></p>
+                                    class="float-end" id="data_total_active_playtime"></span></p>
                             <p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span
-                                    class="float-right" id="data_total_afk_playtime"></span></p>
+                                    class="float-end" id="data_total_afk_playtime"></span></p>
                             <hr>
                             <p><i class="col-green far fa-fw fa-clock"></i> Average Playtime / Player<span
-                                    class="float-right" id="data_average_playtime"></span></p>
+                                    class="float-end" id="data_average_playtime"></span></p>
                             <p><i class="col-green far fa-fw fa-clock"></i> Average Active Playtime / Player<span
-                                    class="float-right" id="data_average_active_playtime"></span></p>
+                                    class="float-end" id="data_average_active_playtime"></span></p>
                             <p><i class="col-grey far fa-fw fa-clock"></i> Average AFK Time / Player<span
-                                    class="float-right" id="data_average_afk_playtime"></span></p>
+                                    class="float-end" id="data_average_afk_playtime"></span></p>
                         </div>
                     </div>
                 </div>

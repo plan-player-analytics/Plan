@@ -280,8 +280,8 @@ function createnetworkserverBox(i, server) {
                         <i class="fas fa-fw fa-server col-light-green"></i> ${server.name}
                     </h6>
                     <div class="mb-0 col-lg-6">
-                        <p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players<span class="float-right"><b>${server.players}</b></span></p>
-                        <p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online<span class="float-right"><b>${server.online}</b></span></p>
+                        <p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players<span class="float-end"><b>${server.players}</b></span></p>
+                        <p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online<span class="float-end"><b>${server.online}</b></span></p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between">

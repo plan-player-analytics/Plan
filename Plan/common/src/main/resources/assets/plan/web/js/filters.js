@@ -28,7 +28,7 @@ class MultipleChoiceFilter extends Filter {
             `<div id="${this.id}" class="mt-2 input-group input-row">
                 <div class="col-12">
                     <label for="${this.id}">${select}${this.label}:</label>
-                    <button class="filter-remover btn btn-outline-secondary float-right"
+                    <button class="filter-remover btn btn-outline-secondary float-end"
                         onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
                     <select class="form-control" multiple style="margin-bottom: 0.5rem;">`;
 
@@ -160,7 +160,7 @@ class BetweenDateFilter extends Filter {
                                 onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)">
                         </div>
                     </div>
-                    <button class="filter-remover btn btn-outline-secondary float-right"
+                    <button class="filter-remover btn btn-outline-secondary float-end"
                         style="position: absolute;right: 0.8rem;"
                         onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
                 </div>

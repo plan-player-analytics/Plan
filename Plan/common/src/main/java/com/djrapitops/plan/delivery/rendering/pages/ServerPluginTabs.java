@@ -230,7 +230,7 @@ public class ServerPluginTabs {
             builder.append("<p>");
         }
         builder.append(Icon.fromExtensionIcon(description.getIcon()))
-                .append(' ').append(description.getText()).append("<span class=\"float-right\"><b>").append(formattedValue).append("</b></span></p>");
+                .append(' ').append(description.getText()).append("<span class=\"float-end\"><b>").append(formattedValue).append("</b></span></p>");
     }
 
     private String wrapInContainer(ExtensionInformation information, String tabsElement) {
