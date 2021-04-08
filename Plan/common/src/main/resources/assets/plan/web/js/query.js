@@ -417,7 +417,7 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xs-12 col-sm-12 col-lg-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black" title=" ${afterDate} ${afterTime} - ${beforeDate} ${beforeTime}"><i
+                            <h6 class="m-0 fw-bold col-black" title=" ${afterDate} ${afterTime} - ${beforeDate} ${beforeTime}"><i
                                     class="fas fa-fw fa-users col-black"></i>
                                 View: ${afterDate} - ${beforeDate}</h6>
                         </div>
@@ -436,7 +436,7 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xl-8 col-lg-8 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black"><i
+                            <h6 class="m-0 fw-bold col-black"><i
                                     class="fas fa-fw fa-chart-line col-amber"></i>
                                 Activity of matched players</h6>
                         </div>
@@ -446,7 +446,7 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xl-4 col-lg-4 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black"><i
+                            <h6 class="m-0 fw-bold col-black"><i
                                     class="fa fa-fw fa-users col-amber"></i>
                                 Activity on <span id="activity-date"></span></h6>
                         </div>
@@ -459,7 +459,7 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xl-3 col-lg-3 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black"><i class="col-teal far fa-calendar"></i> Sessions within view</h6>
+                            <h6 class="m-0 fw-bold col-black"><i class="col-teal far fa-calendar"></i> Sessions within view</h6>
                         </div>
                         <div class="card-body" id="data_players">
                             <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
@@ -489,7 +489,7 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xl-9 col-lg-9 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black"><i
+                            <h6 class="m-0 fw-bold col-black"><i
                                     class="fas fa-fw fa-globe col-green"></i>
                                 Geolocations</h6>
                         </div>

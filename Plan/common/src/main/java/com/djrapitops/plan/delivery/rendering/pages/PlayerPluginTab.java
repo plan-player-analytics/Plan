@@ -216,7 +216,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
         // TODO move large tables to their own tabs
         return "<div class=\"card shadow mb-4\">" +
                 "<div class=\"card-header py-3\">" +
-                "<h6 class=\"m-0 font-weight-bold col-black\">" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h6>" +
+                "<h6 class=\"m-0 fw-bold col-black\">" + Icon.fromExtensionIcon(information.getIcon()) + ' ' + information.getPluginName() + "</h6>" +
                 "</div>" +
                 tabsElement +
                 "</div>";

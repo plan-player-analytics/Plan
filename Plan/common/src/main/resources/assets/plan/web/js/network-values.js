@@ -276,7 +276,7 @@ function addserverToNav(server) {
 function createnetworkserverBox(i, server) {
     return `<div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold col-black">
+                    <h6 class="m-0 fw-bold col-black">
                         <i class="fas fa-fw fa-server col-light-green"></i> ${server.name}
                     </h6>
                     <div class="mb-0 col-lg-6">
