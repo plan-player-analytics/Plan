@@ -94,7 +94,7 @@
                                             <label class="mt-2 mb-0" for="viewFromDateField">from</label>
                                         </div>
                                         <div class="col-3 px-2">
-                                            <label class="sr-only" for="viewFromDateField">Date: DD/MM/YYYY</label>
+                                            <label class="visually-hidden" for="viewFromDateField">Date: DD/MM/YYYY</label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 <input class="form-control" id="viewFromDateField"
@@ -104,7 +104,7 @@
                                             </div>
                                         </div>
                                         <div class="col-2 px-2">
-                                            <label class="sr-only" for="viewFromTimeField">Time: H H : M M</label>
+                                            <label class="visually-hidden" for="viewFromTimeField">Time: H H : M M</label>
                                             <div class="input-group mb-2">
                                                 <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 <input class="form-control" id="viewFromTimeField"
@@ -172,9 +172,7 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="colorChooserModalLabel"><i class="fa fa-palette"></i> Theme Select
                 </h5>
-                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button aria-label="Close" class="btn-close" data-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <button class="btn color-chooser" id="choose-plan" type="button"><i
@@ -237,9 +235,7 @@
                 <h5 class="modal-title" id="informationModalLabel"><i class="fa fa-fw fa-question-circle"></i>
                     Information about the plugin
                 </h5>
-                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button aria-label="Close" class="btn-close" data-dismiss="modal" type="button"></button>
             </div>
             <div class="modal-body">
                 <p>Player Analytics is developed and licensed under <a
@@ -330,9 +326,7 @@
             const element = document.createElement('div');
             element.classList.add("alert", "alert-danger", "alert-dismissable", "show");
             element.innerHTML = `<span id="error-text"></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>`
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>`
             return element;
         });
         document.getElementById('error-text').innerText = new URLSearchParams(location.search).get("error");

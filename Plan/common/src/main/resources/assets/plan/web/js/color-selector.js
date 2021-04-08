@@ -215,7 +215,7 @@
                 '.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr,form .btn, .btn-outline-secondary{background-color:#44475a!important;border-color:#6272a4!important;}' +
                 '.bg-white.collapse-inner {border:1px solid;}' +
                 '.card-header {background-color:#44475a;border-color:#6272a4;}' +
-                '#content,.col-black,.text-gray-900,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.close,.fc-title,.fc-time,pre,.table-dark,input::placeholder{color:#eee8d5 !important;}' +
+                '#content,.col-black,.text-gray-900,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.fc-title,.fc-time,pre,.table-dark,input::placeholder{color:#eee8d5 !important;}' +
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
@@ -225,6 +225,8 @@
                 '</style>');
             // Turn bright tables to dark
             $('.table').addClass('table-dark');
+            // Turn modal close buttons light
+            document.querySelectorAll('button.btn-close').forEach(element => { element.classList.add('btn-close-white'); })
             // Sidebar is grey when in night mode
             disableColorSetters();
             setColor('night');
@@ -233,6 +235,8 @@
             $('#nightmode').remove();
             // Turn dark tables bright again
             $('.table').removeClass('table-dark');
+            // Turn modal close buttons dark
+            document.querySelectorAll('button.btn-close').forEach(element => { element.classList.remove('btn-close-white'); })
             // Sidebar is colorful
             enableColorSetters();
             setColor(window.localStorage.getItem('themeColor'));

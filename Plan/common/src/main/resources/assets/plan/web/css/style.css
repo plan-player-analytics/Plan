@@ -63,8 +63,7 @@ p.collapsing {
     display: none;
 }
 
-.page-link:not(:disabled):not(.disabled),
-.close:not(:disabled):not(.disabled) {
+.page-link:not(:disabled):not(.disabled) {
     cursor: pointer;
 }
 
