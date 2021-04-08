@@ -119,7 +119,7 @@ class BetweenDateFilter extends Filter {
         const select = filterCount === 0 ? "of Players who " : "and ";
         return (
             `<div id="${id}">
-                <label class="ml-2 mt-0 mb-0">${select}${this.label}:</label>
+                <label class="ms-2 mt-0 mb-0">${select}${this.label}:</label>
                 <div class="mt-2 input-group input-row">
                     <div class="col-3">
                         <div class="input-group mb-2">

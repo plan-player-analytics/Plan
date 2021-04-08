@@ -96,7 +96,7 @@ function createAccordionBody(i, session) {
                             <a href="${session.network_server ? `./player/` : `../player/`}${session.player_uuid}" class="float-end btn bg-blue">
                                 <i class="fa fa-user"></i><span> Player Page</span>
                             </a>
-                            ${session.network_server ? `<a href="./server/${session.server_url_name}" class="float-end btn bg-light-green mr-2">
+                            ${session.network_server ? `<a href="./server/${session.server_url_name}" class="float-end btn bg-light-green me-2">
                                 <i class="fa fa-server"></i><span> Server Analysis</span>
                             </a>` : ``}
                         </div>
