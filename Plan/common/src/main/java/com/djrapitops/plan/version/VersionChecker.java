@@ -124,7 +124,7 @@ public class VersionChecker implements SubSystem {
             String reduceFontSize = v.getVersion().compareTo(new VersionNumber("5.2 build 999")) > 0 ?
                     "font-size: 0.95rem;" : "";
                     return "<button class=\"btn bg-white col-plan\" style=\"" + reduceFontSize +
-                            "\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
+                            "\" data-bs-target=\"#updateModal\" data-bs-toggle=\"modal\" type=\"button\">" +
                             DOWNLOAD_ICON_HTML + locale.getString(PluginLang.VERSION_UPDATE) + ": " + v.getVersion().asString() +
                             "</button>";
                 }
@@ -132,7 +132,7 @@ public class VersionChecker implements SubSystem {
     }
 
     public String getCurrentVersionButton() {
-        return "<button class=\"btn bg-plan\" data-target=\"#updateModal\" data-toggle=\"modal\" type=\"button\">" +
+        return "<button class=\"btn bg-plan\" data-bs-target=\"#updateModal\" data-bs-toggle=\"modal\" type=\"button\">" +
                 getCurrentVersion() +
                 "</button>";
     }
