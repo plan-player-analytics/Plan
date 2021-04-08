@@ -150,16 +150,16 @@
         `.bg-lime {background-color: ${lime};color: #eee8d5;}` +
         `.bg-yellow {background-color: ${yellow};color: #eee8d5;}` +
         `.bg-amber {background-color: ${amber};color: #eee8d5;}` +
-        `.badge-warning {background-color: ${warningColor};color: #eee8d5;}` +
+        `.bg-warning {background-color: ${warningColor};color: #eee8d5;}` +
         `.bg-orange {background-color: ${orange};color: #eee8d5;}` +
         `.bg-deep-orange {background-color: ${deepOrange};color: #eee8d5;}` +
-        `.badge-danger {background-color: ${dangerColor};color: #eee8d5;}` +
+        `.bg-danger {background-color: ${dangerColor};color: #eee8d5;}` +
         `.bg-brown {background-color: ${brown};color: #eee8d5;}` +
         `.bg-grey {background-color: ${grey};color: #eee8d5;}` +
         `.bg-blue-grey {background-color: ${blueGrey};color: #eee8d5;}` +
         `.bg-black {background-color: ${black};color: #eee8d5;}` +
         `.bg-plan,.page-item.active .page-link {background-color: ${planColor};color: #eee8d5;}` +
-        `.badge-success {background-color: ${successColor};color: #eee8d5;}` +
+        `.bg-success {background-color: ${successColor};color: #eee8d5;}` +
         `.bg-night {background-color: #44475a;color: #eee8d5;}` +
         `.bg-red-outline {outline-color: ${red};border-color: ${red};}` +
         `.bg-pink-outline {outline-color: ${pink};border-color: ${pink};}` +

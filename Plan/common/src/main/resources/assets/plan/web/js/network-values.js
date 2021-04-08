@@ -1,8 +1,8 @@
-const trend_up_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-up\"></i> ";
-const trend_up_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-up\"></i> ";
-const trend_down_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-down\"></i> ";
-const trend_down_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-down\"></i> ";
-const trend_same = "<span class=\"badge badge-warning\"><i class=\"fa fa-caret-right\"></i> ";
+const trend_up_good = "<span class=\"badge bg-success\"><i class=\"fa fa-caret-up\"></i> ";
+const trend_up_bad = "<span class=\"badge bg-danger\"><i class=\"fa fa-caret-up\"></i> ";
+const trend_down_bad = "<span class=\"badge bg-danger\"><i class=\"fa fa-caret-down\"></i> ";
+const trend_down_good = "<span class=\"badge bg-success\"><i class=\"fa fa-caret-down\"></i> ";
+const trend_same = "<span class=\"badge bg-warning\"><i class=\"fa fa-caret-right\"></i> ";
 
 const trend_end = "</span>";
 
