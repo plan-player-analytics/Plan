@@ -123,18 +123,18 @@ class BetweenDateFilter extends Filter {
                 <div class="mt-2 input-group input-row">
                     <div class="col-3">
                         <div class="input-group mb-2">
-                            <div class="input-group-prepend"><div class="input-group-text">
+                            <div class="input-group-text">
                                 <i class="far fa-calendar"></i>
-                            </div></div>
+                            </div>
                             <input id="${id}-afterdate" class="form-control" placeholder="${this.afterDate}" type="text"
                                 onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)">
                         </div>
                     </div>
                     <div class="col-2">
                         <div class="input-group mb-2">
-                            <div class="input-group-prepend"><div class="input-group-text">
+                            <div class="input-group-text">
                                 <i class="far fa-clock"></i>
-                            </div></div>
+                            </div>
                             <input id="${id}-aftertime" class="form-control" placeholder="${this.afterTime}" type="text"
                                 onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)">
                         </div>
@@ -144,18 +144,18 @@ class BetweenDateFilter extends Filter {
                     </div>
                     <div class="col-3">
                         <div class="input-group mb-2">
-                            <div class="input-group-prepend"><div class="input-group-text">
+                            <div class="input-group-text">
                                 <i class="far fa-calendar"></i>
-                            </div></div>
+                            </div>
                             <input id="${id}-beforedate" class="form-control" placeholder="${this.beforeDate}" type="text"
                                 onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)">
                         </div>
                     </div>
                     <div class="col-2">
                         <div class="input-group mb-2">
-                            <div class="input-group-prepend"><div class="input-group-text">
+                            <div class="input-group-text">
                                 <i class="far fa-clock"></i>
-                            </div></div>
+                            </div>
                             <input id="${id}-beforetime"  class="form-control" placeholder="${this.beforeTime}" type="text"
                                 onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)">
                         </div>

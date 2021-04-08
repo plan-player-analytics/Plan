@@ -220,7 +220,7 @@
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
                 '.fc-popover-body,.fc-popover-header{background-color: #44475a !important;color: #eee8d5 !important;}' +
-                'select,input,.dataTables_paginate .page-item:not(.active) a,.input-group-prepend > * {background-color:#44475a !important;border-color:#6272a4 !important;color: #eee8d5 !important;}' +
+                'select,input,.dataTables_paginate .page-item:not(.active) a,.input-group-text,.input-group-text > * {background-color:#44475a !important;border-color:#6272a4 !important;color: #eee8d5 !important;}' +
                 nightModeColors +
                 '</style>');
             // Turn bright tables to dark

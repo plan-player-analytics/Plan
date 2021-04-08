@@ -1,3 +1,7 @@
+a {
+    text-decoration: none;
+}
+
 @media (max-width: 1520px) {
     html {
         font-size: 95%;
@@ -889,7 +893,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
 }
 
-.bg-gradient {
+.plan-bg-gradient {
     background: rgba(0, 0, 0, 0) linear-gradient(180deg, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0.2) 100%);
 }
 

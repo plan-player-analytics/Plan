@@ -20,7 +20,7 @@ img {
 }
 
 .table thead th {
-    border-bottom: 2px solid #dddfeb;
+    border-bottom: 2px solid #dddfeb !important;
 }
 
 .table tbody + tbody {
