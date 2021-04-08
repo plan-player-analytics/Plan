@@ -100,7 +100,7 @@
                                 </form>
                                 <hr class="bg-secondary">
                                 <div class="text-center">
-                                    <a class="col-plan small" href="#" id="forgot-button">Forgot Password?</a>
+                                    <a class="col-plan small" href="#" data-bs-toggle="modal" data-bs-target="#forgotModal">Forgot Password?</a>
                                 </div>
                                 <div class="text-center">
                                     <a class="col-plan small" href="./register">Create an Account!</a>
@@ -231,8 +231,6 @@
         errorElement.innerText = message;
         errorElement.classList.remove('hidden');
     }
-
-    document.getElementById('forgot-button').addEventListener('click', () => $('#forgotModal').modal());
 </script>
 </body>
 
