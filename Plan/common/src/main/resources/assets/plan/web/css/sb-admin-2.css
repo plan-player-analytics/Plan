@@ -3075,6 +3075,7 @@ form.user .form-control-user {
     font-size: 0.8rem;
     border-radius: 10rem;
     padding: 1.5rem 1rem;
+    height: calc(1.5em + 0.75rem + 2px);
 }
 
 form.user .btn-user {
