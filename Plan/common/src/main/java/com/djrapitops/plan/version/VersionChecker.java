@@ -142,7 +142,7 @@ public class VersionChecker implements SubSystem {
                 .map(v -> "<div class=\"modal-header\">" +
                         "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
                         DOWNLOAD_ICON_HTML + locale.getString(PluginLang.VERSION_UPDATE_AVAILABLE, v.getVersion().asString()) +
-                        "</h5><button aria-label=\"Close\" class=\"close\" data-bs-dismiss=\"modal\" type=\"button\"><span aria-hidden=\"true\">&times;</span></button>" +
+                        "</h5><button aria-label=\"Close\" class=\"btn-close\" data-bs-dismiss=\"modal\" type=\"button\"></button>" +
                         "</div>" + // Close modal-header
                         "<div class=\"modal-body\">" +
                         "<p>" + locale.getString(PluginLang.VERSION_CURRENT, getCurrentVersion()) + ". " + locale.getString(PluginLang.VERSION_UPDATE_INFO) +
@@ -155,7 +155,7 @@ public class VersionChecker implements SubSystem {
                 .orElse("<div class=\"modal-header\">" +
                         "<h5 class=\"modal-title\" id=\"updateModalLabel\">" +
                         "<i class=\"far fa-fw fa-check-circle\"></i> " + locale.getString(PluginLang.VERSION_CURRENT, getCurrentVersion()) +
-                        "</h5><button aria-label=\"Close\" class=\"close\" data-bs-dismiss=\"modal\" type=\"button\"><span aria-hidden=\"true\">&times;</span></button>" +
+                        "</h5><button aria-label=\"Close\" class=\"btn-close\" data-bs-dismiss=\"modal\" type=\"button\"></button>" +
                         "</div>" + // Close modal-header
                         "<div class=\"modal-body\">" +
                         "<p>" + locale.getString(PluginLang.VERSION_NEWEST) + "</p>" +
