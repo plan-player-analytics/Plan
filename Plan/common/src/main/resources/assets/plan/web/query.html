@@ -89,13 +89,13 @@
                                         Failed
                                     </div>
                                     <label class="mt-2 mb-0" for="viewFromDateField">Show a view</label>
-                                    <div class="mt-2 input-group input-row">
-                                        <div class="col-auto">
-                                            <label class="mt-2 mb-0" for="viewFromDateField">from</label>
+                                    <div class="my-2 row">
+                                        <div class="col-1 col-md-auto my-2">
+                                            <label for="viewFromDateField">from</label>
                                         </div>
-                                        <div class="col-3 px-2">
+                                        <div class="col-5 col-md-3">
                                             <label class="visually-hidden" for="viewFromDateField">Date: DD/MM/YYYY</label>
-                                            <div class="input-group mb-2">
+                                            <div class="input-group">
                                                 <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 <input class="form-control" id="viewFromDateField"
                                                        onkeyup="setViewOption('viewFromDateField', 'afterDate', isValidDate, correctDate)"
@@ -103,9 +103,9 @@
                                                        type="text">
                                             </div>
                                         </div>
-                                        <div class="col-2 px-2">
+                                        <div class="col-6 col-md-2">
                                             <label class="visually-hidden" for="viewFromTimeField">Time: H H : M M</label>
-                                            <div class="input-group mb-2">
+                                            <div class="input-group">
                                                 <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 <input class="form-control" id="viewFromTimeField"
                                                        onkeyup="setViewOption('viewFromTimeField', 'afterTime', isValidTime, correctTime)"
@@ -113,11 +113,11 @@
                                                        type="text">
                                             </div>
                                         </div>
-                                        <div class="col-auto">
-                                            <label class="mt-2 mb-0">to</label>
+                                        <div class="col-1 col-md-auto my-2">
+                                            <label for="viewToDateField">to</label>
                                         </div>
-                                        <div class="col-3 px-2">
-                                            <div class="input-group mb-2">
+                                        <div class="col-5 col-md-3">
+                                            <div class="input-group">
                                                 <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 <input class="form-control" id="viewToDateField"
                                                        onkeyup="setViewOption('viewToDateField', 'beforeDate', isValidDate, correctDate)"
@@ -125,8 +125,8 @@
                                                        type="text">
                                             </div>
                                         </div>
-                                        <div class="col-2 px-2">
-                                            <div class="input-group mb-2">
+                                        <div class="col-6 col-md-2">
+                                            <div class="input-group">
                                                 <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 <input class="form-control" id="viewToTimeField"
                                                        onkeyup="setViewOption('viewToTimeField', 'beforeTime', isValidTime, correctTime)"

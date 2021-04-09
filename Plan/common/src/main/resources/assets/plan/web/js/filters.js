@@ -25,18 +25,25 @@ class MultipleChoiceFilter extends Filter {
     render(filterCount) {
         const select = filterCount === 0 ? "of Players who " : "and ";
         let html =
-            `<div id="${this.id}" class="mt-2 input-group input-row">
+            `<div id="${this.id}" class="mt-2 row">
                 <div class="col-12">
-                    <label for="${this.id}">${select}${this.label}:</label>
-                    <button class="filter-remover btn btn-outline-secondary float-end"
-                        onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                    <label class="form-label" for="${this.id}">${select}${this.label}:</label>
+                </div>
+                <div class="col-11">
                     <select class="form-control" multiple style="margin-bottom: 0.5rem;">`;
 
         for (const option of this.options.options) {
             html += `<option>${option}</option>`;
         }
 
-        html += `</select></div></div>`;
+        html +=
+            `       </select>
+                </div>
+                <div class="col-1 col-md-auto my-auto">
+                    <button class="filter-remover btn btn-outline-secondary float-end"
+                      onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                </div>
+            </div>`;
         return html;
     }
 
@@ -119,10 +126,10 @@ class BetweenDateFilter extends Filter {
         const select = filterCount === 0 ? "of Players who " : "and ";
         return (
             `<div id="${id}">
-                <label class="ms-2 mt-0 mb-0">${select}${this.label}:</label>
-                <div class="mt-2 input-group input-row">
-                    <div class="col-3">
-                        <div class="input-group mb-2">
+                <label>${select}${this.label}:</label>
+                <div class="my-2 row justify-content-start justify-content-md-center">
+                    <div class="col-6 col-md-3">
+                        <div class="input-group">
                             <div class="input-group-text">
                                 <i class="far fa-calendar"></i>
                             </div>
@@ -130,8 +137,8 @@ class BetweenDateFilter extends Filter {
                                 onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)">
                         </div>
                     </div>
-                    <div class="col-2">
-                        <div class="input-group mb-2">
+                    <div class="col-6 col-md-2">
+                        <div class="input-group">
                             <div class="input-group-text">
                                 <i class="far fa-clock"></i>
                             </div>
@@ -139,11 +146,11 @@ class BetweenDateFilter extends Filter {
                                 onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)">
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label>
+                    <div class="col-12 col-md-auto text-center my-1 my-md-2">
+                        <label for="inlineFormCustomSelectPref">&</label>
                     </div>
-                    <div class="col-3">
-                        <div class="input-group mb-2">
+                    <div class="col-6 col-md-3">
+                        <div class="input-group">
                             <div class="input-group-text">
                                 <i class="far fa-calendar"></i>
                             </div>
@@ -151,8 +158,8 @@ class BetweenDateFilter extends Filter {
                                 onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)">
                         </div>
                     </div>
-                    <div class="col-2">
-                        <div class="input-group mb-2">
+                    <div class="col-5 col-md-2">
+                        <div class="input-group">
                             <div class="input-group-text">
                                 <i class="far fa-clock"></i>
                             </div>
@@ -160,9 +167,10 @@ class BetweenDateFilter extends Filter {
                                 onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)">
                         </div>
                     </div>
-                    <button class="filter-remover btn btn-outline-secondary float-end"
-                        style="position: absolute;right: 0.8rem;"
+                    <div class="col-1 col-md-auto">
+                        <button class="filter-remover btn btn-outline-secondary float-end" 
                         onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                    </div>
                 </div>
             </div>`
         );
