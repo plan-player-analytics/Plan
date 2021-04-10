@@ -82,6 +82,7 @@ public class ExtensionRegister {
         registerMany(new MinigameLibExtensionFactory(), MinigameLibExtensionFactory::createExtensions);
         register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
         register(new NuVotifierExtensionFactory(), NuVotifierExtensionFactory::createExtension);
+        register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);
         register(new ProtocolSupportExtensionFactory(), ProtocolSupportExtensionFactory::createExtension);
         register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
