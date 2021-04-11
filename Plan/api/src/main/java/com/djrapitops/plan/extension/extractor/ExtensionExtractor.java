@@ -384,10 +384,6 @@ public final class ExtensionExtractor {
             if (tabName.length() > 50) {
                 warnings.add(extensionName + " TabInfo " + tabName + " 'name" + WAS_OVER_50_CHARACTERS);
             }
-
-            if (!tabNames.contains(tabName)) {
-                warnings.add(extensionName + " has TabInfo for " + tabName + ", but it is not used.");
-            }
         }
 
         // Check Tab name lengths
