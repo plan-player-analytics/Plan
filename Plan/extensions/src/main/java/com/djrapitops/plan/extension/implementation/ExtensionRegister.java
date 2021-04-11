@@ -77,6 +77,7 @@ public class ExtensionRegister {
         register(new JobsExtensionFactory(), JobsExtensionFactory::createExtension);
         register(new LandsExtensionFactory(), LandsExtensionFactory::createExtension);
         register(new LitebansExtensionFactory(), LitebansExtensionFactory::createExtension, LitebansExtensionFactory::registerEvents);
+        register(new LogBlockExtensionFactory(), LogBlockExtensionFactory::createExtension);
         register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension);
         register(new MarriageMasterExtensionFactory(), MarriageMasterExtensionFactory::createExtension);
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension, McMMOExtensionFactory::registerExpansion);
