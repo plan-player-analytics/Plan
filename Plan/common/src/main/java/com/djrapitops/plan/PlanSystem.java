@@ -32,6 +32,7 @@ import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.ListenerSvc;
+import com.djrapitops.plan.settings.SchedulerSvc;
 import com.djrapitops.plan.settings.SettingsSvc;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -78,6 +79,7 @@ public class PlanSystem implements SubSystem {
     private final QuerySvc queryService;
     private final ListenerSvc listenerService;
     private final SettingsSvc settingsService;
+    private final SchedulerSvc schedulerService;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
@@ -103,6 +105,7 @@ public class PlanSystem implements SubSystem {
             QuerySvc queryService,
             ListenerSvc listenerService,
             SettingsSvc settingsService,
+            SchedulerSvc schedulerService,
             PluginLogger logger,
             ErrorLogger errorLogger,
             PlanAPI.PlanAPIHolder apiHolder
@@ -127,6 +130,7 @@ public class PlanSystem implements SubSystem {
         this.queryService = queryService;
         this.listenerService = listenerService;
         this.settingsService = settingsService;
+        this.schedulerService = schedulerService;
         this.logger = logger;
         this.errorLogger = errorLogger;
 
@@ -150,6 +154,7 @@ public class PlanSystem implements SubSystem {
         resourceService.register();
         listenerService.register();
         settingsService.register();
+        schedulerService.register();
         queryService.register();
 
         enableSystems(
