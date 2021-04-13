@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -230,11 +230,23 @@ implements <a href="../../builder/ExtensionDataBuilder.html" title="interface in
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>java.util.Set&lt;java.lang.String&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getInvalidatedValues()">getInvalidatedValues</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.util.List&lt;<a href="ExtDataBuilder.ClassValuePair.html" title="class in com.djrapitops.plan.extension.implementation.builder">ExtDataBuilder.ClassValuePair</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getValues()">getValues</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
+<td class="colFirst"><code><a href="../../builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#invalidateValue(java.lang.String)">invalidateValue</a></span>&#8203;(java.lang.String&nbsp;text)</code></th>
+<td class="colLast">
+<div class="block">Invalidate a value similar to <a href="../../annotation/InvalidateMethod.html" title="annotation in com.djrapitops.plan.extension.annotation"><code>InvalidateMethod</code></a> annotation, but with the text given to <a href="../../builder/ExtensionDataBuilder.html#valueBuilder(java.lang.String)"><code>ExtensionDataBuilder.valueBuilder(String)</code></a>.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#valueBuilder(java.lang.String)">valueBuilder</a></span>&#8203;(java.lang.String&nbsp;text)</code></th>
 <td class="colLast">
@@ -361,6 +373,25 @@ implements <a href="../../builder/ExtensionDataBuilder.html" title="interface in
 </dl>
 </li>
 </ul>
+<a id="invalidateValue(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>invalidateValue</h4>
+<pre class="methodSignature">public&nbsp;<a href="../../builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a>&nbsp;invalidateValue&#8203;(java.lang.String&nbsp;text)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ExtensionDataBuilder.html#invalidateValue(java.lang.String)">ExtensionDataBuilder</a></code></span></div>
+<div class="block">Invalidate a value similar to <a href="../../annotation/InvalidateMethod.html" title="annotation in com.djrapitops.plan.extension.annotation"><code>InvalidateMethod</code></a> annotation, but with the text given to <a href="../../builder/ExtensionDataBuilder.html#valueBuilder(java.lang.String)"><code>ExtensionDataBuilder.valueBuilder(String)</code></a>.</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../builder/ExtensionDataBuilder.html#invalidateValue(java.lang.String)">invalidateValue</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>text</code> - The same text that was given to the value builder.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>This builder.</dd>
+</dl>
+</li>
+</ul>
 <a id="getValues()">
 <!--   -->
 </a>
@@ -382,7 +413,7 @@ implements <a href="../../builder/ExtensionDataBuilder.html" title="interface in
 <a id="addAll(com.djrapitops.plan.extension.builder.ExtensionDataBuilder)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>addAll</h4>
 <pre class="methodSignature">public&nbsp;void&nbsp;addAll&#8203;(<a href="../../builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a>&nbsp;builder)</pre>
@@ -394,6 +425,15 @@ implements <a href="../../builder/ExtensionDataBuilder.html" title="interface in
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>builder</code> - Builder to combine with this one.</dd>
 </dl>
+</li>
+</ul>
+<a id="getInvalidatedValues()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getInvalidatedValues</h4>
+<pre class="methodSignature">public&nbsp;java.util.Set&lt;java.lang.String&gt;&nbsp;getInvalidatedValues()</pre>
 </li>
 </ul>
 </li>
