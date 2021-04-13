@@ -236,6 +236,8 @@ public class DataValueGatherer {
         addValuesToBuilder(dataBuilder, extension.getMethods().get(ExtensionMethod.ParameterType.PLAYER_UUID), parameters);
 
         gatherPlayer(parameters, (ExtDataBuilder) dataBuilder);
+
+        dbSystem.getDatabase().executeTransaction(new RemoveInvalidResultsTransaction(extension.getPluginName(), serverInfo.getServerUUID(), ((ExtDataBuilder) dataBuilder).getInvalidatedValues()));
     }
 
     public void updateValues() {

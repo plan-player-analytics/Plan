@@ -73,6 +73,14 @@ public interface ExtensionDataBuilder {
     <T> ExtensionDataBuilder addValue(Class<T> ofType, Supplier<DataValue<T>> dataValue);
 
     /**
+     * Invalidate a value similar to {@link com.djrapitops.plan.extension.annotation.InvalidateMethod} annotation, but with the text given to {@link ExtensionDataBuilder#valueBuilder(String)}.
+     *
+     * @param text The same text that was given to the value builder.
+     * @return This builder.
+     */
+    ExtensionDataBuilder invalidateValue(String text);
+
+    /**
      * Add a table.
      *
      * @param name  Name of the table, used in the database.

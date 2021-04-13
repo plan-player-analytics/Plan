@@ -52,6 +52,10 @@ public class ExtValueBuilder implements ValueBuilder {
         pluginName = extension.getClass().getAnnotation(PluginInfo.class).name();
     }
 
+    public static String formatTextAsIdentifier(String text) {
+        return text.toLowerCase().replaceAll("\\s", "");
+    }
+
     @Override
     public ValueBuilder methodName(ExtensionMethod method) {
         this.providerName = method.getMethod().getName();
@@ -127,7 +131,7 @@ public class ExtValueBuilder implements ValueBuilder {
     private ProviderInformation getProviderInformation(boolean percentage, String providedCondition) {
         ProviderInformation.Builder builder = ProviderInformation.builder(pluginName)
                 .setName(providerName != null ? providerName
-                        : text.toLowerCase().replaceAll("\\s", ""))
+                        : formatTextAsIdentifier(text))
                 .setText(text)
                 .setDescription(description)
                 .setPriority(priority)
@@ -153,7 +157,7 @@ public class ExtValueBuilder implements ValueBuilder {
     private ProviderInformation getTableProviderInformation(Color tableColor) {
         return ProviderInformation.builder(pluginName)
                 .setName(providerName != null ? providerName
-                        : text.toLowerCase().replaceAll("\\s", ""))
+                        : formatTextAsIdentifier(text))
                 .setPriority(0)
                 .setCondition(conditional)
                 .setTab(tabName)

@@ -28,12 +28,15 @@ import java.util.function.Supplier;
 
 public class ExtDataBuilder implements ExtensionDataBuilder {
 
-    private final List<ClassValuePair> values;
     private final DataExtension extension;
+
+    private final List<ClassValuePair> values;
+    private final Set<String> invalidatedValues;
 
     public ExtDataBuilder(DataExtension extension) {
         this.extension = extension;
         values = new ArrayList<>();
+        invalidatedValues = new HashSet<>();
     }
 
     @Override
@@ -59,6 +62,12 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
         return this;
     }
 
+    @Override
+    public ExtensionDataBuilder invalidateValue(String text) {
+        invalidatedValues.add(ExtValueBuilder.formatTextAsIdentifier(text));
+        return this;
+    }
+
     public List<ClassValuePair> getValues() {
         Collections.sort(values);
         return values;
@@ -78,6 +87,10 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
         }
 
         this.values.addAll(((ExtDataBuilder) builder).values);
+    }
+
+    public Set<String> getInvalidatedValues() {
+        return invalidatedValues;
     }
 
     public static final class ClassValuePair implements Comparable<ClassValuePair> {
