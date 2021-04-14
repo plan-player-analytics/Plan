@@ -87,6 +87,7 @@ public class ExtensionRegister {
         register(new PlaceholderAPIExtensionFactory(), PlaceholderAPIExtensionFactory::createExtension);
         register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);
         register(new ProtocolSupportExtensionFactory(), ProtocolSupportExtensionFactory::createExtension);
+        register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension);
         register(new ReactExtensionFactory(), ReactExtensionFactory::createExtension);
         register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
