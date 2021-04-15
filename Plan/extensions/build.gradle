@@ -8,7 +8,7 @@ dependencies {
     compile 'com.djrapitops:Extension-BentoBox:1.15.5-R1.0'
     compile 'com.djrapitops:Extension-CoreProtect:2.16.0-R0.4'
     compile 'com.djrapitops:Extension-DiscordSRV:1.18.0-R0.3'
-    compile 'com.djrapitops:Extension-DKBans:2.1.2-R0.2'
+    compile 'com.djrapitops:Extension-DKBans:2.1.2-R0.3'
     compile 'com.djrapitops:Extension-DKCoins:3.0.5-R0.1'
     compile 'com.djrapitops:Extension-EssentialsX:2.15.0-R0.6'
     compile 'com.djrapitops:Extension-Factions:2.14.0-R0.1'
