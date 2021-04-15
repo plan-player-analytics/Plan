@@ -58,6 +58,7 @@ public class SessionQueries {
             "u." + UsersTable.USER_NAME + " as name," +
             "u_info." + UserInfoTable.REGISTERED + " as registered," +
             "server." + ServerTable.NAME + " as server_name," +
+            "server." + ServerTable.SERVER_ID + " as server_id," +
             SessionsTable.SESSION_START + ',' +
             SessionsTable.SESSION_END + ',' +
             SessionsTable.MOB_KILLS + ',' +
@@ -218,7 +219,11 @@ public class SessionQueries {
             if (!existingPlayerKills.isPresent()) extraData.put(PlayerKills.class, playerKills);
 
             extraData.put(PlayerName.class, new PlayerName(set.getString("name")));
-            extraData.put(ServerName.class, new ServerName(set.getString("server_name")));
+            extraData.put(ServerName.class, new ServerName(
+                    Server.getIdentifiableName(
+                            set.getString("server_name"),
+                            set.getInt("server_id")
+                    )));
 
             session.setAsFirstSessionIfMatches(set.getLong("registered"));
 
