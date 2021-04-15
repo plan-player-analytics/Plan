@@ -20,6 +20,7 @@ import com.djrapitops.plan.settings.config.paths.key.BooleanSetting;
 import com.djrapitops.plan.settings.config.paths.key.IntegerSetting;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.settings.config.paths.key.StringSetting;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * {@link Setting} values that are in "Server" or "Plugin" section.
@@ -28,7 +29,12 @@ import com.djrapitops.plan.settings.config.paths.key.StringSetting;
  */
 public class PluginSettings {
 
-    public static final Setting<String> SERVER_NAME = new StringSetting("Server.ServerName");
+    public static final Setting<String> SERVER_NAME = new StringSetting("Server.ServerName", PluginSettings::validateServerName, "Plan");
+
+    private static boolean validateServerName(String name) {
+        return name != null && !name.isEmpty() && !StringUtils.containsAny(name, '/', '&', '?');
+    }
+
     public static final Setting<String> LOCALE = new StringSetting("Plugin.Logging.Locale", "default");
     public static final Setting<Boolean> WRITE_NEW_LOCALE = new BooleanSetting("Plugin.Logging.Create_new_locale_file_on_next_enable");
     public static final Setting<Boolean> DEV_MODE = new BooleanSetting("Plugin.Logging.Dev");
