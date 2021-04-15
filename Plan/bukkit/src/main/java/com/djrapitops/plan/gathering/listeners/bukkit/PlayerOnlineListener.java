@@ -49,12 +49,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import javax.inject.Inject;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 /**
@@ -76,7 +73,6 @@ public class PlayerOnlineListener implements Listener {
     private final ErrorLogger errorLogger;
     private final Status status;
 
-    private final AtomicBoolean virtualHostMethodAvailable = new AtomicBoolean(true);
     private final Map<UUID, String> joinAddresses;
 
     @Inject
@@ -209,13 +205,6 @@ public class PlayerOnlineListener implements Listener {
     }
 
     private String getHostname(Player player) {
-        if (virtualHostMethodAvailable.get()) {
-            try {
-                return Optional.ofNullable(player.getVirtualHost()).map(InetSocketAddress::getHostName).orElse("Unknown");
-            } catch (NoSuchMethodError e) {
-                virtualHostMethodAvailable.set(false);
-            }
-        }
         return joinAddresses.get(player.getUniqueId());
     }
 
