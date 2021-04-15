@@ -32,7 +32,6 @@ import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 
 import javax.inject.Inject;
@@ -158,11 +157,8 @@ public class LinkCommands {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND, identifier));
         }
 
-        String playerName = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND_REGISTER, identifier)));
-
         if (sender.hasPermission(Permissions.PLAYER_OTHER) || playerUUID.equals(senderUUID)) {
-            String address = getAddress(sender) + "/player/" + Html.encodeToURL(playerName);
+            String address = getAddress(sender) + "/player/" + playerUUID;
             sender.buildMessage()
                     .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_PLAYER))
                     .apply(builder -> linkTo(builder, sender, address))
@@ -240,11 +236,8 @@ public class LinkCommands {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND, identifier));
         }
 
-        String playerName = dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID))
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND_REGISTER, identifier)));
-
         if (sender.hasPermission(Permissions.JSON_OTHER) || playerUUID.equals(senderUUID)) {
-            String address = getAddress(sender) + "/player/" + Html.encodeToURL(playerName) + "/raw";
+            String address = getAddress(sender) + "/player/" + playerUUID + "/raw";
             sender.buildMessage()
                     .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_JSON))
                     .apply(builder -> linkTo(builder, sender, address))

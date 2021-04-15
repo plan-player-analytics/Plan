@@ -25,7 +25,7 @@ public enum ErrorPageLang implements Lang {
     UUID_404("Player UUID was not found in the database."),
     NO_SERVERS_404("No Servers online to perform the request."),
     NOT_PLAYED_404("Plan has not seen this player."),
-    UNKNOWN_PAGE_404("Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>"),
+    UNKNOWN_PAGE_404("Make sure you're accessing a link given by a command, Examples:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>"),
     UNAUTHORIZED_401("Unauthorized"),
     AUTHENTICATION_FAILED_401("Authentication Failed."),
     AUTH_FAIL_TIPS_401("- Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register."),

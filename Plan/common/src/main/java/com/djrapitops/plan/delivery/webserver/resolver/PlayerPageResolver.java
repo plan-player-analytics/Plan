@@ -55,7 +55,11 @@ public class PlayerPageResolver implements Resolver {
     public boolean canAccess(Request request) {
         URIPath path = request.getPath();
         WebUser user = request.getUser().orElse(new WebUser(""));
-        boolean isOwnPage = path.getPart(1).map(user.getName()::equalsIgnoreCase).orElse(true);
+        boolean isOwnPage = path.getPart(1).map(nameOrUUID -> {
+            if (user.getName().equalsIgnoreCase(nameOrUUID)) return true; // name matches user
+            return uuidUtility.getNameOf(nameOrUUID).map(user.getName()::equalsIgnoreCase) // uuid matches user
+                    .orElse(false); // uuid or name don't match
+        }).orElse(true); // No name or UUID given
         return user.hasPermission("page.player.other") || (user.hasPermission("page.player.self") && isOwnPage);
     }
 
@@ -79,8 +83,8 @@ public class PlayerPageResolver implements Resolver {
         }
 
         if (path.getPart(2).isPresent()) {
-            // Redirect /player/Name/ to /player/Name
-            return responseFactory.redirectResponse("../" + Html.encodeToURL(playerName));
+            // Redirect /player/{uuid/name}/ to /player/{uuid}
+            return responseFactory.redirectResponse("../" + Html.encodeToURL(playerUUID.toString()));
         }
         return responseFactory.playerPageResponse(playerUUID);
     }

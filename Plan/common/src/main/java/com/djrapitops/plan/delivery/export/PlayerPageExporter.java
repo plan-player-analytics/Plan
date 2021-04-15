@@ -91,8 +91,8 @@ public class PlayerPageExporter extends FileExporter {
         exportPaths.put("../server/", toRelativePathFromRoot("server"));
         exportRequiredResources(exportPaths, toDirectory);
 
-        Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerName));
-        exportJSON(exportPaths, playerDirectory, playerUUID, playerName);
+        Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerUUID.toString()));
+        exportJSON(exportPaths, playerDirectory, playerUUID);
         exportHtml(exportPaths, playerDirectory, playerUUID);
         exportPaths.clear();
     }
@@ -108,11 +108,11 @@ public class PlayerPageExporter extends FileExporter {
         }
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, UUID playerUUID, String playerName) throws IOException {
-        exportJSON(exportPaths, toDirectory, "player?player=" + playerUUID, playerName);
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, UUID playerUUID) throws IOException {
+        exportJSON(exportPaths, toDirectory, "player?player=" + playerUUID);
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource, String playerName) throws IOException {
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
         Optional<Response> found = getJSONResponse(resource);
         if (!found.isPresent()) {
             throw new NotFoundException(resource + " was not properly exported: no response");
@@ -201,7 +201,7 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private String toRelativePathFromRoot(String resourceName) {
-        // Player html is exported at /player/<name>/index.html
+        // Player html is exported at /player/<uuid>/index.html
         return "../../" + toNonRelativePath(resourceName);
     }
 

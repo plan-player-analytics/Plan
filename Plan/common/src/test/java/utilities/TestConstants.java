@@ -38,8 +38,10 @@ public class TestConstants {
     public static final String SERVER_UUID_STRING = "e4ec2edd-e0ed-3c58-a87d-8a9021899479";
     public static final ServerUUID SERVER_UUID = ServerUUID.fromString(SERVER_UUID_STRING);
     public static final ServerUUID SERVER_TWO_UUID = ServerUUID.fromString("c4ec2edd-e0ed-3c58-a87d-8a9024791899");
-    public static final UUID PLAYER_ONE_UUID = UUID.fromString("45b0dfdb-f71d-4cf3-8c21-27c9d4c651db");
-    public static final UUID PLAYER_TWO_UUID = UUID.fromString("ec94a954-1fa1-445b-b09b-9b698519af80");
+    public static final String PLAYER_ONE_UUID_STRING = "45b0dfdb-f71d-4cf3-8c21-27c9d4c651db";
+    public static final UUID PLAYER_ONE_UUID = UUID.fromString(PLAYER_ONE_UUID_STRING);
+    public static final String PLAYER_TWO_UUID_STRING = "ec94a954-1fa1-445b-b09b-9b698519af80";
+    public static final UUID PLAYER_TWO_UUID = UUID.fromString(PLAYER_TWO_UUID_STRING);
     public static final UUID PLAYER_THREE_UUID = UUID.randomUUID();
 
     public static final String PLAYER_ONE_NAME = "Test_Player_one";

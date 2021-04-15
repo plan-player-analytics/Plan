@@ -448,7 +448,7 @@ HTML ERRORS - NOT_FOUND_404                     || Bulunamadı
 HTML ERRORS - NOT_PLAYED_404                    || Oyuncu bu sunucuda hiç oynamadı.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Böyle bir sayfa mevcut değil.
 HTML ERRORS - UNAUTHORIZED_401                  || Yetkisiz
-HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>
 HTML ERRORS - UUID_404                          || Oyuncunun UUID si veritabanında bulunamadı.
 In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
 In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.

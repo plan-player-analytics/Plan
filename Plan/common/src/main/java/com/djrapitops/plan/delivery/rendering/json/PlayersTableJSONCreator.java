@@ -122,7 +122,7 @@ public class PlayersTableJSONCreator {
 
     private void addPlayerData(Map<String, Object> dataJson, TablePlayer player) {
         String name = player.getName().orElse(player.getPlayerUUID().toString());
-        String url = "../player/" + Html.encodeToURL(name);
+        String url = "../player/" + Html.encodeToURL(player.getPlayerUUID().toString());
 
         int loginTimes = player.getSessionCount().orElse(0);
         long activePlaytime = player.getActivePlaytime().orElse(-1L);

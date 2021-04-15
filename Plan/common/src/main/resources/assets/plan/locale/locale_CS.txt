@@ -448,7 +448,7 @@ HTML ERRORS - NOT_FOUND_404                     || Nenalezeno
 HTML ERRORS - NOT_PLAYED_404                    || Hráč nebyl nenalezen.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Stránka neexistuje.
 HTML ERRORS - UNAUTHORIZED_401                  || Neautorizováno
-HTML ERRORS - UNKNOWN_PAGE_404                  || Ujistěte se, že přistupujete na odkaz poskytnutý příkazem, Příklad:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Ujistěte se, že přistupujete na odkaz poskytnutý příkazem, Příklad:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>
 HTML ERRORS - UUID_404                          || Hráčské UUID nebylo nalezeno v databázi.
 In Depth Help - /plan db                        || Použít jiné subpříkazy databáze ke změně dat
 In Depth Help - /plan db backup                 || Použití SQLite k zálohování cílové databáze do souboru.

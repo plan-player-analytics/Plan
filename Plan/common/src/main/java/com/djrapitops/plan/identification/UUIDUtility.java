@@ -57,6 +57,19 @@ public class UUIDUtility {
         }
     }
 
+    public Optional<String> getNameOf(String possiblePlayerUUID) {
+        try {
+            return getNameOf(UUID.fromString(possiblePlayerUUID));
+        } catch (IllegalArgumentException notUUID) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<String> getNameOf(UUID playerUUID) {
+        if (playerUUID == null) throw new IllegalArgumentException("Player uuid can not be null!");
+        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerNameOf(playerUUID));
+    }
+
     /**
      * Get UUID of a player.
      *
