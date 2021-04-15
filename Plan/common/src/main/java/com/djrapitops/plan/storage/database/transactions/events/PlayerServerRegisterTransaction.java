@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -46,7 +47,7 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
     protected void performOperations() {
         super.performOperations();
         long registerDate = registered.getAsLong();
-        String joinAddress = this.getJoinAddress.get();
+        String joinAddress = getJoinAddress();
 
         if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID)))) {
             execute(DataStoreQueries.registerUserInfo(playerUUID, registerDate, serverUUID, joinAddress));
@@ -59,5 +60,17 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
         }
 
         execute(DataStoreQueries.updateJoinAddress(playerUUID, serverUUID, joinAddress));
+    }
+
+    private String getJoinAddress() {
+        String joinAddress = this.getJoinAddress.get();
+        // Removes client information given by Forge Mod Loader or Geysir
+        if (joinAddress != null && StringUtils.contains(joinAddress, '\u0000')) {
+            String[] split = StringUtils.split(joinAddress, "\u0000", 2);
+            joinAddress = split.length > 0 ? split[0] : joinAddress;
+        }
+
+        // Truncates the address to fit database.
+        return StringUtils.truncate(joinAddress, 255);
     }
 }
