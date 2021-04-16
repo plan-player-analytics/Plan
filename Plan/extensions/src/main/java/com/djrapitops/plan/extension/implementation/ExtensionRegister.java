@@ -82,6 +82,7 @@ public class ExtensionRegister {
         register(new MarriageMasterExtensionFactory(), MarriageMasterExtensionFactory::createExtension);
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension, McMMOExtensionFactory::registerExpansion);
         registerMany(new MinigameLibExtensionFactory(), MinigameLibExtensionFactory::createExtensions);
+        register(new MyPetExtensionFactory(), MyPetExtensionFactory::createExtension);
         register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
         register(new NuVotifierExtensionFactory(), NuVotifierExtensionFactory::createExtension);
         register(new PlaceholderAPIExtensionFactory(), PlaceholderAPIExtensionFactory::createExtension);
