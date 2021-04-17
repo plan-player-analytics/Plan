@@ -171,6 +171,26 @@ public interface ValueBuilder {
     DataValue<Long> buildNumber(Long value);
 
     /**
+     * Build a Number.
+     *
+     * @param value a non-floating point number.
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    default DataValue<Long> buildNumber(Integer value) {
+        return buildNumber(value != null ? (long) value : null);
+    }
+
+    /**
+     * Build a Number.
+     *
+     * @param value a non-floating point number.
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    default DataValue<Long> buildNumber(Double value) {
+        return buildNumber(value != null ? (long) (double) value : null);
+    }
+
+    /**
      * Build a Floating point number.
      *
      * @param value a floating point number.
@@ -212,14 +232,14 @@ public interface ValueBuilder {
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
-     *
+     * <p>
      * {@link ValueBuilder#buildBooleanProvidingCondition(boolean, String)}
      */
     DataValue<Boolean> buildBooleanProvidingCondition(Supplier<Boolean> value, String providedCondition);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
-     *
+     * <p>
      * {@link ValueBuilder#buildString(String)}
      */
     DataValue<String> buildString(Supplier<String> value);
@@ -233,28 +253,28 @@ public interface ValueBuilder {
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
-     *
+     * <p>
      * {@link ValueBuilder#buildDouble(Double)}
      */
     DataValue<Double> buildDouble(Supplier<Double> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
-     *
+     * <p>
      * {@link ValueBuilder#buildPercentage(Double)}
      */
     DataValue<Double> buildPercentage(Supplier<Double> percentage);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
-     *
+     * <p>
      * {@link ValueBuilder#buildGroup(String[])}
      */
     DataValue<String[]> buildGroup(Supplier<String[]> groups);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
-     *
+     * <p>
      * {@link ValueBuilder#buildTable(Table, Color)}
      */
     DataValue<Table> buildTable(Supplier<Table> table, Color tableColor);
