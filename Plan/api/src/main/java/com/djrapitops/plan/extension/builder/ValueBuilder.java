@@ -98,7 +98,7 @@ public interface ValueBuilder {
     ValueBuilder showOnTab(String tabName);
 
     /**
-     * {@link ValueBuilder#buildNumber(long)} specific method, format the value as a epoch ms timestamp.
+     * {@link ValueBuilder#buildNumber(Long)} specific method, format the value as a epoch ms timestamp.
      *
      * @return This builder.
      */
@@ -107,7 +107,7 @@ public interface ValueBuilder {
     }
 
     /**
-     * {@link ValueBuilder#buildNumber(long)} specific method, format the value as a epoch ms timestamp.
+     * {@link ValueBuilder#buildNumber(Long)} specific method, format the value as a epoch ms timestamp.
      *
      * @return This builder.
      */
@@ -116,7 +116,7 @@ public interface ValueBuilder {
     }
 
     /**
-     * {@link ValueBuilder#buildNumber(long)} specific method, format the value as milliseconds of time.
+     * {@link ValueBuilder#buildNumber(Long)} specific method, format the value as milliseconds of time.
      *
      * @return This builder.
      */
@@ -125,7 +125,7 @@ public interface ValueBuilder {
     }
 
     /**
-     * {@link ValueBuilder#buildNumber(long)} specific method, format the value with {@link FormatType}
+     * {@link ValueBuilder#buildNumber(Long)} specific method, format the value with {@link FormatType}
      *
      * @return This builder.
      */
@@ -168,7 +168,7 @@ public interface ValueBuilder {
      * @param value a non-floating point number.
      * @return a data value to give to {@link ExtensionDataBuilder}.
      */
-    DataValue<Long> buildNumber(long value);
+    DataValue<Long> buildNumber(Long value);
 
     /**
      * Build a Floating point number.
@@ -176,7 +176,7 @@ public interface ValueBuilder {
      * @param value a floating point number.
      * @return a data value to give to {@link ExtensionDataBuilder}.
      */
-    DataValue<Double> buildDouble(double value);
+    DataValue<Double> buildDouble(Double value);
 
     /**
      * Build a Percentage.
@@ -184,7 +184,7 @@ public interface ValueBuilder {
      * @param percentage value between 0.0 and 1.0
      * @return a data value to give to {@link ExtensionDataBuilder}.
      */
-    DataValue<Double> buildPercentage(double percentage);
+    DataValue<Double> buildPercentage(Double percentage);
 
     /**
      * Build a list of groups.
@@ -226,22 +226,22 @@ public interface ValueBuilder {
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
-     *
-     * {@link ValueBuilder#buildNumber(long)}
+     * <p>
+     * {@link ValueBuilder#buildNumber(Long)}
      */
     DataValue<Long> buildNumber(Supplier<Long> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * {@link ValueBuilder#buildDouble(double)}
+     * {@link ValueBuilder#buildDouble(Double)}
      */
     DataValue<Double> buildDouble(Supplier<Double> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      *
-     * {@link ValueBuilder#buildPercentage(double)}
+     * {@link ValueBuilder#buildPercentage(Double)}
      */
     DataValue<Double> buildPercentage(Supplier<Double> percentage);
 

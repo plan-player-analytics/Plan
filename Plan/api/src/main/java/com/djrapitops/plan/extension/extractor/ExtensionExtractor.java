@@ -309,7 +309,7 @@ public final class ExtensionExtractor {
         Method method = extensionMethod.getMethod();
 
         validateReturnType(method, ExtensionDataBuilder.class);
-        validateMethodArguments(method, false, UUID.class, String.class);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
     private void validateConditionals() {

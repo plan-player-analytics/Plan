@@ -181,17 +181,17 @@ public class ExtValueBuilder implements ValueBuilder {
     }
 
     @Override
-    public DataValue<Long> buildNumber(long value) {
+    public DataValue<Long> buildNumber(Long value) {
         return new NumberDataValue(value, getProviderInformation());
     }
 
     @Override
-    public DataValue<Double> buildDouble(double value) {
+    public DataValue<Double> buildDouble(Double value) {
         return new DoubleDataValue(value, getProviderInformation());
     }
 
     @Override
-    public DataValue<Double> buildPercentage(double value) {
+    public DataValue<Double> buildPercentage(Double value) {
         return new DoubleDataValue(value, getPercentageProviderInformation());
     }
 
