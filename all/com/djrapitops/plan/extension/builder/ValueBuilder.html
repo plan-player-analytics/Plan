@@ -184,7 +184,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildDouble(double)">buildDouble</a></span>&#8203;(double&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildDouble(java.lang.Double)">buildDouble</a></span>&#8203;(java.lang.Double&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Build a Floating point number.</div>
 </td>
@@ -212,7 +212,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildNumber(long)">buildNumber</a></span>&#8203;(long&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildNumber(java.lang.Long)">buildNumber</a></span>&#8203;(java.lang.Long&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Build a Number.</div>
 </td>
@@ -226,7 +226,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildPercentage(double)">buildPercentage</a></span>&#8203;(double&nbsp;percentage)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildPercentage(java.lang.Double)">buildPercentage</a></span>&#8203;(java.lang.Double&nbsp;percentage)</code></th>
 <td class="colLast">
 <div class="block">Build a Percentage.</div>
 </td>
@@ -286,28 +286,28 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#format(com.djrapitops.plan.extension.FormatType)">format</a></span>&#8203;(<a href="../FormatType.html" title="enum in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</code></th>
 <td class="colLast">
-<div class="block"><a href="#buildNumber(long)"><code>buildNumber(long)</code></a> specific method, format the value with <a href="../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value with <a href="../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
 </td>
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#formatAsDateWithSeconds()">formatAsDateWithSeconds</a></span>()</code></th>
 <td class="colLast">
-<div class="block"><a href="#buildNumber(long)"><code>buildNumber(long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
 </td>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#formatAsDateWithYear()">formatAsDateWithYear</a></span>()</code></th>
 <td class="colLast">
-<div class="block"><a href="#buildNumber(long)"><code>buildNumber(long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
 </td>
 </tr>
 <tr id="i21" class="rowColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#formatAsTimeAmount()">formatAsTimeAmount</a></span>()</code></th>
 <td class="colLast">
-<div class="block"><a href="#buildNumber(long)"><code>buildNumber(long)</code></a> specific method, format the value as milliseconds of time.</div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as milliseconds of time.</div>
 </td>
 </tr>
 <tr id="i22" class="altColor">
@@ -519,7 +519,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>formatAsDateWithYear</h4>
 <pre class="methodSignature">default&nbsp;<a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a>&nbsp;formatAsDateWithYear()</pre>
-<div class="block"><a href="#buildNumber(long)"><code>buildNumber(long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>This builder.</dd>
@@ -533,7 +533,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>formatAsDateWithSeconds</h4>
 <pre class="methodSignature">default&nbsp;<a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a>&nbsp;formatAsDateWithSeconds()</pre>
-<div class="block"><a href="#buildNumber(long)"><code>buildNumber(long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>This builder.</dd>
@@ -547,7 +547,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>formatAsTimeAmount</h4>
 <pre class="methodSignature">default&nbsp;<a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a>&nbsp;formatAsTimeAmount()</pre>
-<div class="block"><a href="#buildNumber(long)"><code>buildNumber(long)</code></a> specific method, format the value as milliseconds of time.</div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as milliseconds of time.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>This builder.</dd>
@@ -561,7 +561,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>format</h4>
 <pre class="methodSignature"><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a>&nbsp;format&#8203;(<a href="../FormatType.html" title="enum in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</pre>
-<div class="block"><a href="#buildNumber(long)"><code>buildNumber(long)</code></a> specific method, format the value with <a href="../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value with <a href="../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>This builder.</dd>
@@ -631,13 +631,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 </li>
 </ul>
-<a id="buildNumber(long)">
+<a id="buildNumber(java.lang.Long)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildNumber</h4>
-<pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;&nbsp;buildNumber&#8203;(long&nbsp;value)</pre>
+<pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;&nbsp;buildNumber&#8203;(java.lang.Long&nbsp;value)</pre>
 <div class="block">Build a Number.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -647,13 +647,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 </li>
 </ul>
-<a id="buildDouble(double)">
+<a id="buildDouble(java.lang.Double)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildDouble</h4>
-<pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildDouble&#8203;(double&nbsp;value)</pre>
+<pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildDouble&#8203;(java.lang.Double&nbsp;value)</pre>
 <div class="block">Build a Floating point number.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -663,13 +663,13 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 </li>
 </ul>
-<a id="buildPercentage(double)">
+<a id="buildPercentage(java.lang.Double)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildPercentage</h4>
-<pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildPercentage&#8203;(double&nbsp;percentage)</pre>
+<pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildPercentage&#8203;(java.lang.Double&nbsp;percentage)</pre>
 <div class="block">Build a Percentage.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -758,8 +758,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>buildNumber</h4>
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;&nbsp;buildNumber&#8203;(java.util.function.Supplier&lt;java.lang.Long&gt;&nbsp;value)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
-
- <a href="#buildNumber(long)"><code>buildNumber(long)</code></a></div>
+ <p>
+ <a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a></div>
 </li>
 </ul>
 <a id="buildDouble(java.util.function.Supplier)">
@@ -771,7 +771,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildDouble&#8203;(java.util.function.Supplier&lt;java.lang.Double&gt;&nbsp;value)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
 
- <a href="#buildDouble(double)"><code>buildDouble(double)</code></a></div>
+ <a href="#buildDouble(java.lang.Double)"><code>buildDouble(Double)</code></a></div>
 </li>
 </ul>
 <a id="buildPercentage(java.util.function.Supplier)">
@@ -783,7 +783,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildPercentage&#8203;(java.util.function.Supplier&lt;java.lang.Double&gt;&nbsp;percentage)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
 
- <a href="#buildPercentage(double)"><code>buildPercentage(double)</code></a></div>
+ <a href="#buildPercentage(java.lang.Double)"><code>buildPercentage(Double)</code></a></div>
 </li>
 </ul>
 <a id="buildGroup(java.util.function.Supplier)">

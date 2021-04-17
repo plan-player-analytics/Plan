@@ -211,7 +211,7 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildDouble(double)">buildDouble</a></span>&#8203;(double&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildDouble(java.lang.Double)">buildDouble</a></span>&#8203;(java.lang.Double&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Build a Floating point number.</div>
 </td>
@@ -239,7 +239,7 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildNumber(long)">buildNumber</a></span>&#8203;(long&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildNumber(java.lang.Long)">buildNumber</a></span>&#8203;(java.lang.Long&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Build a Number.</div>
 </td>
@@ -253,7 +253,7 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildPercentage(double)">buildPercentage</a></span>&#8203;(double&nbsp;value)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildPercentage(java.lang.Double)">buildPercentage</a></span>&#8203;(java.lang.Double&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Build a Percentage.</div>
 </td>
@@ -313,7 +313,7 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 <td class="colFirst"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#format(com.djrapitops.plan.extension.FormatType)">format</a></span>&#8203;(<a href="../../FormatType.html" title="enum in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</code></th>
 <td class="colLast">
-<div class="block"><a href="../../builder/ValueBuilder.html#buildNumber(long)"><code>ValueBuilder.buildNumber(long)</code></a> specific method, format the value with <a href="../../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
+<div class="block"><a href="../../builder/ValueBuilder.html#buildNumber(java.lang.Long)"><code>ValueBuilder.buildNumber(Long)</code></a> specific method, format the value with <a href="../../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
 </td>
 </tr>
 <tr id="i19" class="rowColor">
@@ -556,7 +556,7 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 <h4>format</h4>
 <pre class="methodSignature">public&nbsp;<a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a>&nbsp;format&#8203;(<a href="../../FormatType.html" title="enum in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#format(com.djrapitops.plan.extension.FormatType)">ValueBuilder</a></code></span></div>
-<div class="block"><a href="../../builder/ValueBuilder.html#buildNumber(long)"><code>ValueBuilder.buildNumber(long)</code></a> specific method, format the value with <a href="../../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
+<div class="block"><a href="../../builder/ValueBuilder.html#buildNumber(java.lang.Long)"><code>ValueBuilder.buildNumber(Long)</code></a> specific method, format the value with <a href="../../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../builder/ValueBuilder.html#format(com.djrapitops.plan.extension.FormatType)">format</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
@@ -678,18 +678,18 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 </dl>
 </li>
 </ul>
-<a id="buildNumber(long)">
+<a id="buildNumber(java.lang.Long)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildNumber</h4>
-<pre class="methodSignature">public&nbsp;<a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;&nbsp;buildNumber&#8203;(long&nbsp;value)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildNumber(long)">ValueBuilder</a></code></span></div>
+<pre class="methodSignature">public&nbsp;<a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;&nbsp;buildNumber&#8203;(java.lang.Long&nbsp;value)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildNumber(java.lang.Long)">ValueBuilder</a></code></span></div>
 <div class="block">Build a Number.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../builder/ValueBuilder.html#buildNumber(long)">buildNumber</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
+<dd><code><a href="../../builder/ValueBuilder.html#buildNumber(java.lang.Long)">buildNumber</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - a non-floating point number.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -697,18 +697,18 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 </dl>
 </li>
 </ul>
-<a id="buildDouble(double)">
+<a id="buildDouble(java.lang.Double)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildDouble</h4>
-<pre class="methodSignature">public&nbsp;<a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildDouble&#8203;(double&nbsp;value)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildDouble(double)">ValueBuilder</a></code></span></div>
+<pre class="methodSignature">public&nbsp;<a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildDouble&#8203;(java.lang.Double&nbsp;value)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildDouble(java.lang.Double)">ValueBuilder</a></code></span></div>
 <div class="block">Build a Floating point number.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../builder/ValueBuilder.html#buildDouble(double)">buildDouble</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
+<dd><code><a href="../../builder/ValueBuilder.html#buildDouble(java.lang.Double)">buildDouble</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - a floating point number.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -716,18 +716,18 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 </dl>
 </li>
 </ul>
-<a id="buildPercentage(double)">
+<a id="buildPercentage(java.lang.Double)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>buildPercentage</h4>
-<pre class="methodSignature">public&nbsp;<a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildPercentage&#8203;(double&nbsp;value)</pre>
-<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildPercentage(double)">ValueBuilder</a></code></span></div>
+<pre class="methodSignature">public&nbsp;<a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildPercentage&#8203;(java.lang.Double&nbsp;value)</pre>
+<div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildPercentage(java.lang.Double)">ValueBuilder</a></code></span></div>
 <div class="block">Build a Percentage.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="../../builder/ValueBuilder.html#buildPercentage(double)">buildPercentage</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
+<dd><code><a href="../../builder/ValueBuilder.html#buildPercentage(java.lang.Double)">buildPercentage</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>value</code> - value between 0.0 and 1.0</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -815,8 +815,8 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 <pre class="methodSignature">public&nbsp;<a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;&nbsp;buildNumber&#8203;(java.util.function.Supplier&lt;java.lang.Long&gt;&nbsp;value)</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildNumber(java.util.function.Supplier)">ValueBuilder</a></code></span></div>
 <div class="block">Lambda version for conditional return or throwing <a href="../../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
-
- <a href="../../builder/ValueBuilder.html#buildNumber(long)"><code>ValueBuilder.buildNumber(long)</code></a></div>
+ <p>
+ <a href="../../builder/ValueBuilder.html#buildNumber(java.lang.Long)"><code>ValueBuilder.buildNumber(Long)</code></a></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../builder/ValueBuilder.html#buildNumber(java.util.function.Supplier)">buildNumber</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
@@ -833,7 +833,7 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildDouble(java.util.function.Supplier)">ValueBuilder</a></code></span></div>
 <div class="block">Lambda version for conditional return or throwing <a href="../../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
 
- <a href="../../builder/ValueBuilder.html#buildDouble(double)"><code>ValueBuilder.buildDouble(double)</code></a></div>
+ <a href="../../builder/ValueBuilder.html#buildDouble(java.lang.Double)"><code>ValueBuilder.buildDouble(Double)</code></a></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../builder/ValueBuilder.html#buildDouble(java.util.function.Supplier)">buildDouble</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
@@ -850,7 +850,7 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildPercentage(java.util.function.Supplier)">ValueBuilder</a></code></span></div>
 <div class="block">Lambda version for conditional return or throwing <a href="../../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
 
- <a href="../../builder/ValueBuilder.html#buildPercentage(double)"><code>ValueBuilder.buildPercentage(double)</code></a></div>
+ <a href="../../builder/ValueBuilder.html#buildPercentage(java.lang.Double)"><code>ValueBuilder.buildPercentage(Double)</code></a></div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../builder/ValueBuilder.html#buildPercentage(java.util.function.Supplier)">buildPercentage</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
