@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.building.Update;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -35,10 +36,12 @@ import java.util.function.BooleanSupplier;
 public class BanStatusTransaction extends Transaction {
 
     private final UUID playerUUID;
+    private final ServerUUID serverUUID;
     private final BooleanSupplier banStatus;
 
-    public BanStatusTransaction(UUID playerUUID, BooleanSupplier banStatus) {
+    public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, BooleanSupplier banStatus) {
         this.playerUUID = playerUUID;
+        this.serverUUID = serverUUID;
         this.banStatus = banStatus;
     }
 
@@ -50,6 +53,7 @@ public class BanStatusTransaction extends Transaction {
     private Executable updateBanStatus() {
         String sql = Update.values(UserInfoTable.TABLE_NAME, UserInfoTable.BANNED)
                 .where(UserInfoTable.USER_UUID + "=?")
+                .and(UserInfoTable.SERVER_UUID + "=?")
                 .toString();
 
         return new ExecStatement(sql) {
@@ -57,6 +61,7 @@ public class BanStatusTransaction extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, banStatus.getAsBoolean());
                 statement.setString(2, playerUUID.toString());
+                statement.setString(3, serverUUID.toString());
             }
         };
     }

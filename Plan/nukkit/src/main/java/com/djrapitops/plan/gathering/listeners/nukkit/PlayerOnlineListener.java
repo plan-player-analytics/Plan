@@ -103,9 +103,13 @@ public class PlayerOnlineListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerLoginEvent event) {
         try {
-            UUID playerUUID = event.getPlayer().getUniqueId();
-            boolean operator = event.getPlayer().isOp();
-            dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
+            Player player = event.getPlayer();
+            UUID playerUUID = player.getUniqueId();
+            ServerUUID serverUUID = serverInfo.getServerUUID();
+            boolean operator = player.isOp();
+
+            dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, player::isBanned));
+            dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, operator));
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event).build());
         }
@@ -215,13 +219,14 @@ public class PlayerOnlineListener implements Listener {
         Player player = event.getPlayer();
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
         if (playerUUID == null) return; // Can be null when player is not signed in to xbox live
 
         NukkitAFKListener.afkTracker.loggedOut(playerUUID, time);
 
         nicknameCache.removeDisplayName(playerUUID);
 
-        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, player::isBanned));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, player::isBanned));
 
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));

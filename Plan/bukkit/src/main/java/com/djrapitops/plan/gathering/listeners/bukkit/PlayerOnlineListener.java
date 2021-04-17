@@ -109,14 +109,15 @@ public class PlayerOnlineListener implements Listener {
         try {
             PlayerLoginEvent.Result result = event.getResult();
             UUID playerUUID = event.getPlayer().getUniqueId();
+            ServerUUID serverUUID = serverInfo.getServerUUID();
             boolean operator = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
             String joinAddress = event.getHostname();
             if (!joinAddress.isEmpty()) {
                 joinAddresses.put(playerUUID, joinAddress.substring(0, joinAddress.lastIndexOf(':')));
             }
-            dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
-            dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, operator));
+            dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> banned));
+            dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, operator));
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, event.getResult()).build());
         }
@@ -230,13 +231,14 @@ public class PlayerOnlineListener implements Listener {
         Player player = event.getPlayer();
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
 
         BukkitAFKListener.afkTracker.loggedOut(playerUUID, time);
 
         joinAddresses.remove(playerUUID);
         nicknameCache.removeDisplayName(playerUUID);
 
-        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, player::isBanned));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, player::isBanned));
 
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));

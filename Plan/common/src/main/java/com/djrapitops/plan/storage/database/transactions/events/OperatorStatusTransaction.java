@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.building.Update;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -34,10 +35,12 @@ import java.util.UUID;
 public class OperatorStatusTransaction extends ThrowawayTransaction {
 
     private final UUID playerUUID;
+    private final ServerUUID serverUUID;
     private final boolean operatorStatus;
 
-    public OperatorStatusTransaction(UUID playerUUID, boolean operatorStatus) {
+    public OperatorStatusTransaction(UUID playerUUID, ServerUUID serverUUID, boolean operatorStatus) {
         this.playerUUID = playerUUID;
+        this.serverUUID = serverUUID;
         this.operatorStatus = operatorStatus;
     }
 
@@ -49,6 +52,7 @@ public class OperatorStatusTransaction extends ThrowawayTransaction {
     private Executable updateOperatorStatus() {
         String sql = Update.values(UserInfoTable.TABLE_NAME, UserInfoTable.OP)
                 .where(UserInfoTable.USER_UUID + "=?")
+                .and(UserInfoTable.SERVER_UUID + "=?")
                 .toString();
 
         return new ExecStatement(sql) {
@@ -56,6 +60,7 @@ public class OperatorStatusTransaction extends ThrowawayTransaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, operatorStatus);
                 statement.setString(2, playerUUID.toString());
+                statement.setString(3, serverUUID.toString());
             }
         };
     }

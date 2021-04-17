@@ -113,8 +113,8 @@ public class PlayerOnlineListener {
     private void actOnLoginEvent(ClientConnectionEvent.Login event) {
         GameProfile profile = event.getProfile();
         UUID playerUUID = profile.getUniqueId();
-        boolean banned = isBanned(profile);
-        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
+        ServerUUID serverUUID = serverInfo.getServerUUID();
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(profile)));
     }
 
     @Listener(order = Order.POST)
@@ -218,13 +218,13 @@ public class PlayerOnlineListener {
         Player player = event.getTargetEntity();
         String playerName = player.getName();
         UUID playerUUID = player.getUniqueId();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
 
         SpongeAFKListener.afkTracker.loggedOut(playerUUID, time);
 
         nicknameCache.removeDisplayName(playerUUID);
 
-        boolean banned = isBanned(player.getProfile());
-        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, () -> banned));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(player.getProfile())));
 
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));

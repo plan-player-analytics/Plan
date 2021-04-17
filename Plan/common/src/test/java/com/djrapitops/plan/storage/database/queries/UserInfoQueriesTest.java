@@ -97,7 +97,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
-        db().executeTransaction(new BanStatusTransaction(playerUUID, () -> true));
+        db().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID(), () -> true));
 
         Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), true));
@@ -110,7 +110,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
-        db().executeTransaction(new OperatorStatusTransaction(playerUUID, true));
+        db().executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID(), true));
 
         Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, true, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
