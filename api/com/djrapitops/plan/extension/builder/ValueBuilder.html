@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":18,"i20":18,"i21":18,"i22":6,"i23":6,"i24":18,"i25":6,"i26":6,"i27":6,"i28":18,"i29":6,"i30":18,"i31":18,"i32":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":18,"i9":18,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6,"i21":18,"i22":18,"i23":18,"i24":6,"i25":6,"i26":18,"i27":6,"i28":6,"i29":6,"i30":18,"i31":6,"i32":18,"i33":18,"i34":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],16:["t5","Default Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -207,48 +207,62 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr id="i8" class="altColor">
+<td class="colFirst"><code>default <a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildNumber(java.lang.Double)">buildNumber</a></span>&#8203;(java.lang.Double&nbsp;value)</code></th>
+<td class="colLast">
+<div class="block">Build a Number.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>default <a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildNumber(java.lang.Integer)">buildNumber</a></span>&#8203;(java.lang.Integer&nbsp;value)</code></th>
+<td class="colLast">
+<div class="block">Build a Number.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildNumber(java.lang.Long)">buildNumber</a></span>&#8203;(java.lang.Long&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Build a Number.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildNumber(java.util.function.Supplier)">buildNumber</a></span>&#8203;(java.util.function.Supplier&lt;java.lang.Long&gt;&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildPercentage(java.lang.Double)">buildPercentage</a></span>&#8203;(java.lang.Double&nbsp;percentage)</code></th>
 <td class="colLast">
 <div class="block">Build a Percentage.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildPercentage(java.util.function.Supplier)">buildPercentage</a></span>&#8203;(java.util.function.Supplier&lt;java.lang.Double&gt;&nbsp;percentage)</code></th>
 <td class="colLast">
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildString(java.lang.String)">buildString</a></span>&#8203;(java.lang.String&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Build a String.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.String&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildString(java.util.function.Supplier)">buildString</a></span>&#8203;(java.util.function.Supplier&lt;java.lang.String&gt;&nbsp;value)</code></th>
 <td class="colLast">
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildTable(com.djrapitops.plan.extension.table.Table,com.djrapitops.plan.extension.icon.Color)">buildTable</a></span>&#8203;(<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&nbsp;table,
           <a href="../icon/Color.html" title="enum in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></th>
@@ -256,7 +270,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Build a table.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#buildTable(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)">buildTable</a></span>&#8203;(java.util.function.Supplier&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;&nbsp;table,
           <a href="../icon/Color.html" title="enum in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></th>
@@ -264,63 +278,63 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#conditional(com.djrapitops.plan.extension.annotation.Conditional)">conditional</a></span>&#8203;(<a href="../annotation/Conditional.html" title="annotation in com.djrapitops.plan.extension.annotation">Conditional</a>&nbsp;conditional)</code></th>
 <td class="colLast">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#description(java.lang.String)">description</a></span>&#8203;(java.lang.String&nbsp;description)</code></th>
 <td class="colLast">
 <div class="block">Description about the value that is shown on hover.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#format(com.djrapitops.plan.extension.FormatType)">format</a></span>&#8203;(<a href="../FormatType.html" title="enum in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</code></th>
 <td class="colLast">
 <div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value with <a href="../FormatType.html" title="enum in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#formatAsDateWithSeconds()">formatAsDateWithSeconds</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#formatAsDateWithYear()">formatAsDateWithYear</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#formatAsTimeAmount()">formatAsTimeAmount</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as milliseconds of time.</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#hideFromUsers(com.djrapitops.plan.extension.annotation.BooleanProvider)">hideFromUsers</a></span>&#8203;(<a href="../annotation/BooleanProvider.html" title="annotation in com.djrapitops.plan.extension.annotation">BooleanProvider</a>&nbsp;annotation)</code></th>
 <td class="colLast">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#icon(com.djrapitops.plan.extension.icon.Icon)">icon</a></span>&#8203;(<a href="../icon/Icon.html" title="class in com.djrapitops.plan.extension.icon">Icon</a>&nbsp;icon)</code></th>
 <td class="colLast">
 <div class="block">Icon displayed next to the value.</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#icon(java.lang.String,com.djrapitops.plan.extension.icon.Family,com.djrapitops.plan.extension.icon.Color)">icon</a></span>&#8203;(java.lang.String&nbsp;iconName,
     <a href="../icon/Family.html" title="enum in com.djrapitops.plan.extension.icon">Family</a>&nbsp;iconFamily,
@@ -329,56 +343,56 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="block">Icon displayed next to the value.</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#methodName(com.djrapitops.plan.extension.extractor.ExtensionMethod)">methodName</a></span>&#8203;(<a href="../extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a>&nbsp;method)</code></th>
 <td class="colLast">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#priority(int)">priority</a></span>&#8203;(int&nbsp;priority)</code></th>
 <td class="colLast">
 <div class="block">Display-priority of the value, highest value is placed top most.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showAsPlayerPageLink()">showAsPlayerPageLink</a></span>()</code></th>
 <td class="colLast">
 <div class="block"><a href="#buildString(java.lang.String)"><code>buildString(String)</code></a> specific method, link the value to a player page.</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showAsPlayerPageLink(com.djrapitops.plan.extension.annotation.StringProvider)">showAsPlayerPageLink</a></span>&#8203;(<a href="../annotation/StringProvider.html" title="annotation in com.djrapitops.plan.extension.annotation">StringProvider</a>&nbsp;annotation)</code></th>
 <td class="colLast">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </td>
 </tr>
-<tr id="i29" class="rowColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showInPlayerTable()">showInPlayerTable</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Show this value in the players table.</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i32" class="altColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showInPlayerTable(boolean)">showInPlayerTable</a></span>&#8203;(boolean&nbsp;show)</code></th>
 <td class="colLast">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </td>
 </tr>
-<tr id="i31" class="rowColor">
+<tr id="i33" class="rowColor">
 <td class="colFirst"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showOnTab(com.djrapitops.plan.extension.annotation.Tab)">showOnTab</a></span>&#8203;(<a href="../annotation/Tab.html" title="annotation in com.djrapitops.plan.extension.annotation">Tab</a>&nbsp;annotation)</code></th>
 <td class="colLast">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </td>
 </tr>
-<tr id="i32" class="altColor">
+<tr id="i34" class="altColor">
 <td class="colFirst"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#showOnTab(java.lang.String)">showOnTab</a></span>&#8203;(java.lang.String&nbsp;tabName)</code></th>
 <td class="colLast">
@@ -643,6 +657,38 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </dl>
 </li>
 </ul>
+<a id="buildNumber(java.lang.Integer)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>buildNumber</h4>
+<pre class="methodSignature">default&nbsp;<a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;&nbsp;buildNumber&#8203;(java.lang.Integer&nbsp;value)</pre>
+<div class="block">Build a Number.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - a non-floating point number.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a data value to give to <a href="ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.</dd>
+</dl>
+</li>
+</ul>
+<a id="buildNumber(java.lang.Double)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>buildNumber</h4>
+<pre class="methodSignature">default&nbsp;<a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Long&gt;&nbsp;buildNumber&#8203;(java.lang.Double&nbsp;value)</pre>
+<div class="block">Build a Number.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>value</code> - a non-floating point number.</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a data value to give to <a href="ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.</dd>
+</dl>
+</li>
+</ul>
 <a id="buildDouble(java.lang.Double)">
 <!--   -->
 </a>
@@ -730,7 +776,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Boolean&gt;&nbsp;buildBooleanProvidingCondition&#8203;(java.util.function.Supplier&lt;java.lang.Boolean&gt;&nbsp;value,
                                                             java.lang.String&nbsp;providedCondition)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
-
+ <p>
  <a href="#buildBooleanProvidingCondition(boolean,java.lang.String)"><code>buildBooleanProvidingCondition(boolean, String)</code></a></div>
 </li>
 </ul>
@@ -742,7 +788,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>buildString</h4>
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.String&gt;&nbsp;buildString&#8203;(java.util.function.Supplier&lt;java.lang.String&gt;&nbsp;value)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
-
+ <p>
  <a href="#buildString(java.lang.String)"><code>buildString(String)</code></a></div>
 </li>
 </ul>
@@ -766,7 +812,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>buildDouble</h4>
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildDouble&#8203;(java.util.function.Supplier&lt;java.lang.Double&gt;&nbsp;value)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
-
+ <p>
  <a href="#buildDouble(java.lang.Double)"><code>buildDouble(Double)</code></a></div>
 </li>
 </ul>
@@ -778,7 +824,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>buildPercentage</h4>
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.Double&gt;&nbsp;buildPercentage&#8203;(java.util.function.Supplier&lt;java.lang.Double&gt;&nbsp;percentage)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
-
+ <p>
  <a href="#buildPercentage(java.lang.Double)"><code>buildPercentage(Double)</code></a></div>
 </li>
 </ul>
@@ -790,7 +836,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <h4>buildGroup</h4>
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;java.lang.String[]&gt;&nbsp;buildGroup&#8203;(java.util.function.Supplier&lt;java.lang.String[]&gt;&nbsp;groups)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
-
+ <p>
  <a href="#buildGroup(java.lang.String%5B%5D)"><code>buildGroup(String[])</code></a></div>
 </li>
 </ul>
@@ -803,7 +849,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <pre class="methodSignature"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;&nbsp;buildTable&#8203;(java.util.function.Supplier&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;&nbsp;table,
                             <a href="../icon/Color.html" title="enum in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</pre>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
-
+ <p>
  <a href="#buildTable(com.djrapitops.plan.extension.table.Table,com.djrapitops.plan.extension.icon.Color)"><code>buildTable(Table, Color)</code></a></div>
 </li>
 </ul>
