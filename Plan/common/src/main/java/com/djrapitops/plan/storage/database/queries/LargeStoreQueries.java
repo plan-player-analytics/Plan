@@ -17,10 +17,12 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
+import com.djrapitops.plan.delivery.domain.World;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -29,10 +31,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Static method class for large storage queries.
@@ -292,9 +292,37 @@ public class LargeStoreQueries {
 
     public static Executable storeAllSessionsWithKillAndWorldData(Collection<FinishedSession> sessions) {
         return connection -> {
+            Set<World> existingWorlds = WorldTimesQueries.fetchWorlds().executeWithConnection(connection);
+            storeAllWorldNames(sessions, existingWorlds).execute(connection);
             storeAllSessionsWithoutKillOrWorldData(sessions).execute(connection);
             storeSessionKillData(sessions).execute(connection);
             return storeSessionWorldTimeData(sessions).execute(connection);
+        };
+    }
+
+    private static Executable storeAllWorldNames(Collection<FinishedSession> sessions, Set<World> existingWorlds) {
+        Set<World> worlds = sessions.stream().flatMap(session -> {
+            ServerUUID serverUUID = session.getServerUUID();
+            return session.getExtraData(WorldTimes.class)
+                    .map(WorldTimes::getWorldTimes)
+                    .map(Map::keySet)
+                    .orElseGet(Collections::emptySet)
+                    .stream()
+                    .map(worldName -> new World(worldName, serverUUID));
+        }).filter(world -> !existingWorlds.contains(world))
+                .collect(Collectors.toSet());
+
+        if (worlds.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(WorldTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (World world : worlds) {
+                    statement.setString(1, world.getWorldName());
+                    statement.setString(2, world.getServerUUID().toString());
+                    statement.addBatch();
+                }
+            }
         };
     }
 

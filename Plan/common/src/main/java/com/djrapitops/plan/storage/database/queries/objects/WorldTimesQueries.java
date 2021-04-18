@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
+import com.djrapitops.plan.delivery.domain.World;
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
@@ -28,9 +30,7 @@ import com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -195,6 +195,23 @@ public class WorldTimesQueries {
             @Override
             public GMTimes processResults(ResultSet set) throws SQLException {
                 return set.next() ? extractGMTimes(set, GMTimes.getGMKeyArray()) : new GMTimes();
+            }
+        };
+    }
+
+    public static QueryStatement<Set<World>> fetchWorlds() {
+        String worldNameSql = SELECT + '*' + FROM + WorldTable.TABLE_NAME;
+        return new QueryAllStatement<Set<World>>(worldNameSql) {
+            @Override
+            public Set<World> processResults(ResultSet set) throws SQLException {
+                Set<World> worlds = new HashSet<>();
+                while (set.next()) {
+                    worlds.add(new World(
+                            set.getString(WorldTable.NAME),
+                            ServerUUID.fromString(set.getString(WorldTable.SERVER_UUID))
+                    ));
+                }
+                return worlds;
             }
         };
     }

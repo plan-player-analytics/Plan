@@ -31,6 +31,8 @@ import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
+import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
@@ -43,6 +45,7 @@ import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
 
+import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -134,6 +137,34 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     @Test
     default void worldTimesAreSavedWithSession() {
         prepareForSessionSave();
+
+        WorldTimes worldTimes = RandomData.randomWorldTimes(worlds);
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID);
+        session.getExtraData().put(WorldTimes.class, worldTimes);
+        List<FinishedSession> sessions = new ArrayList<>();
+        sessions.add(session);
+        db().executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(sessions));
+            }
+        });
+
+        List<FinishedSession> allSessions = db().query(SessionQueries.fetchAllSessions());
+
+        assertEquals(worldTimes, allSessions.get(0).getExtraData(WorldTimes.class).get());
+    }
+
+    @Test
+    default void worldTimesAreSavedWithSessionWithoutWorlds() {
+        prepareForSessionSave();
+        // Remove the worlds from the database so that they need to also be saved.
+        execute(new ExecStatement("DELETE FROM " + WorldTable.TABLE_NAME) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+                // Nothing needed
+            }
+        });
 
         WorldTimes worldTimes = RandomData.randomWorldTimes(worlds);
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID);
