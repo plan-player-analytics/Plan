@@ -149,11 +149,13 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
 
         Map<String, Object> insights = new HashMap<>();
 
+        double averageTPS = lowTPS.averageTPS();
         double avgPlayersOnline = lowTPS.averagePlayersOnline();
         double averageCPU = lowTPS.averageCPU();
         double averageEntities = lowTPS.averageEntities();
         double averageChunks = lowTPS.averageChunks();
         insights.put("low_tps_players", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : locale.get(HtmlLang.TEXT_NO_LOW_TPS).toString());
+        insights.put("low_tps_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "-");
         insights.put("low_tps_cpu", averageCPU != -1 ? decimals.apply(averageCPU) : "-");
         insights.put("low_tps_entities", averageEntities != -1 ? decimals.apply(averageEntities) : "-");
         insights.put("low_tps_chunks", averageChunks != -1 ? decimals.apply(averageChunks) : "-");

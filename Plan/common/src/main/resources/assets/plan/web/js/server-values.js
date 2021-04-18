@@ -348,6 +348,7 @@ function loadPerformanceValues(json, error) {
     element.querySelector('#data_low_tps_entities').innerText = data.low_tps_entities;
     element.querySelector('#data_low_tps_chunks').innerText = data.low_tps_chunks;
     element.querySelector('#data_low_tps_cpu').innerText = data.low_tps_cpu;
+    element.querySelector('#data_low_tps_tps').innerText = data.low_tps_tps;
 }
 
 async function loadOptimizedPerformanceGraph(json, error) {
