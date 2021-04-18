@@ -110,14 +110,12 @@ public class PlayerOnlineListener implements Listener {
             PlayerLoginEvent.Result result = event.getResult();
             UUID playerUUID = event.getPlayer().getUniqueId();
             ServerUUID serverUUID = serverInfo.getServerUUID();
-            boolean operator = event.getPlayer().isOp();
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
             String joinAddress = event.getHostname();
             if (!joinAddress.isEmpty()) {
                 joinAddresses.put(playerUUID, joinAddress.substring(0, joinAddress.lastIndexOf(':')));
             }
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> banned));
-            dbSystem.getDatabase().executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, operator));
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, event.getResult()).build());
         }
@@ -187,6 +185,7 @@ public class PlayerOnlineListener implements Listener {
 
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID,
                 player::getFirstPlayed, playerName, serverUUID, getHostName));
+        database.executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, player.isOp()));
 
         ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
         session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
