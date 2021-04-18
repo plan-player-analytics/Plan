@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9,"i3":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -181,6 +181,11 @@ extends java.lang.Object</pre>
 <div class="block">Sum total playtime per world on a server.</div>
 </td>
 </tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static <a href="../QueryStatement.html" title="class in com.djrapitops.plan.storage.database.queries">QueryStatement</a>&lt;java.util.Set&lt;<a href="../../../../delivery/domain/World.html" title="class in com.djrapitops.plan.delivery.domain">World</a>&gt;&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#fetchWorlds()">fetchWorlds</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -256,12 +261,21 @@ extends java.lang.Object</pre>
 <a id="fetchGMTimes(long,long,com.djrapitops.plan.identification.ServerUUID)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>fetchGMTimes</h4>
 <pre class="methodSignature">public static&nbsp;<a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="../../../../gathering/domain/GMTimes.html" title="class in com.djrapitops.plan.gathering.domain">GMTimes</a>&gt;&nbsp;fetchGMTimes&#8203;(long&nbsp;after,
                                           long&nbsp;before,
                                           <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</pre>
+</li>
+</ul>
+<a id="fetchWorlds()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>fetchWorlds</h4>
+<pre class="methodSignature">public static&nbsp;<a href="../QueryStatement.html" title="class in com.djrapitops.plan.storage.database.queries">QueryStatement</a>&lt;java.util.Set&lt;<a href="../../../../delivery/domain/World.html" title="class in com.djrapitops.plan.delivery.domain">World</a>&gt;&gt;&nbsp;fetchWorlds()</pre>
 </li>
 </ul>
 </li>
