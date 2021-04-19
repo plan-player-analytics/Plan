@@ -32,6 +32,7 @@ dependencies {
     compile 'com.djrapitops:Extension-nuVotifier:2.3.4-R0.3'
     compile 'com.djrapitops:Extension-PlaceholderAPI:2.10.9-R0.1'
     compile 'com.djrapitops:Extension-PlotSquared:5.13.11-R0.1'
+    compile 'com.djrapitops:Extension-ProtectionStones:2.8.2-R0.1'
     compile 'com.djrapitops:Extension-ProtocolSupport:1.16.4-R0.1'
     compile 'com.djrapitops:Extension-Quests:4.0.2-R0.1'
     compile 'com.djrapitops:Extension-React:6.651-R0.1'

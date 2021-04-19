@@ -88,6 +88,7 @@ public class ExtensionRegister {
         register(new NuVotifierExtensionFactory(), NuVotifierExtensionFactory::createExtension);
         register(new PlaceholderAPIExtensionFactory(), PlaceholderAPIExtensionFactory::createExtension);
         register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);
+        register(new ProtectionStonesExtensionFactory(), ProtectionStonesExtensionFactory::createExtension);
         register(new ProtocolSupportExtensionFactory(), ProtocolSupportExtensionFactory::createExtension);
         register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension);
         register(new ReactExtensionFactory(), ReactExtensionFactory::createExtension);
