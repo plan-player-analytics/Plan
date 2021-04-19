@@ -84,30 +84,54 @@ public class SessionPlaceHolders implements Placeholders {
 
         placeholders.registerStatic("sessions_play_time_total",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(0L, now(), serverUUID))));
+        placeholders.registerStatic("sessions_play_time_total_raw",
+                () -> database.query(SessionQueries.playtime(0L, now(), serverUUID)));
         placeholders.registerStatic("sessions_play_time_day",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(dayAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_play_time_day_raw",
+                () -> database.query(SessionQueries.playtime(dayAgo(), now(), serverUUID)));
         placeholders.registerStatic("sessions_play_time_week",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(weekAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_play_time_week_raw",
+                () -> database.query(SessionQueries.playtime(weekAgo(), now(), serverUUID)));
         placeholders.registerStatic("sessions_play_time_month",
                 () -> timeAmount.apply(database.query(SessionQueries.playtime(monthAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_play_time_month_raw",
+                () -> database.query(SessionQueries.playtime(monthAgo(), now(), serverUUID)));
 
         placeholders.registerStatic("sessions_active_time_total",
                 () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(0L, now(), serverUUID))));
+        placeholders.registerStatic("sessions_active_time_total_raw",
+                () -> database.query(SessionQueries.activePlaytime(0L, now(), serverUUID)));
         placeholders.registerStatic("sessions_active_time_day",
                 () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(dayAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_active_time_day_raw",
+                () -> database.query(SessionQueries.activePlaytime(dayAgo(), now(), serverUUID)));
         placeholders.registerStatic("sessions_active_time_week",
                 () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(weekAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_active_time_week_raw",
+                () -> database.query(SessionQueries.activePlaytime(weekAgo(), now(), serverUUID)));
         placeholders.registerStatic("sessions_active_time_month",
                 () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(monthAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_active_time_month_raw",
+                () -> database.query(SessionQueries.activePlaytime(monthAgo(), now(), serverUUID)));
 
         placeholders.registerStatic("sessions_afk_time_total",
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(0L, now(), serverUUID))));
+        placeholders.registerStatic("sessions_afk_time_total_raw",
+                () -> database.query(SessionQueries.afkTime(0L, now(), serverUUID)));
         placeholders.registerStatic("sessions_afk_time_day",
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(dayAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_afk_time_day_raw",
+                () -> database.query(SessionQueries.afkTime(dayAgo(), now(), serverUUID)));
         placeholders.registerStatic("sessions_afk_time_week",
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(weekAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_afk_time_week_raw",
+                () -> database.query(SessionQueries.afkTime(weekAgo(), now(), serverUUID)));
         placeholders.registerStatic("sessions_afk_time_month",
                 () -> timeAmount.apply(database.query(SessionQueries.afkTime(monthAgo(), now(), serverUUID))));
+        placeholders.registerStatic("sessions_afk_time_month_raw",
+                () -> database.query(SessionQueries.afkTime(monthAgo(), now(), serverUUID)));
 
         Supplier<Serializable> uniquePlayers = () -> database.query(PlayerCountQueries.newPlayerCount(0L, now(), serverUUID));
         placeholders.registerStatic("sessions_unique_players_total", uniquePlayers);
