@@ -141,162 +141,168 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </td>
 </tr>
 <tr class="altColor">
+<th class="colFirst" scope="row"><a href="ExtensionTableProviderValuesForPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ExtensionTableProviderValuesForPatch</a></th>
+<td class="colLast">
+<div class="block">Adds values_for field to plan_extension_tables</div>
+</td>
+</tr>
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="ExtensionTableRowValueLengthPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ExtensionTableRowValueLengthPatch</a></th>
 <td class="colLast">
 <div class="block">Increases the length of Strings in extension tables to 250 to avoid cutoffs and exceptions.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="GeoInfoLastUsedPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">GeoInfoLastUsedPatch</a></th>
 <td class="colLast">
 <div class="block">Adds last_used field to the geolocation table.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="GeoInfoOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">GeoInfoOptimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Replaces user_id foreign keys with user_uuid fields in geolocation table.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="KillsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsOptimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Replaces killer_id, victim_id and server_id foreign keys with respective uuid fields in kills table.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="KillsServerIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsServerIDPatch</a></th>
 <td class="colLast">
 <div class="block">Adds server_id field to kills table.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="LinkedToSecurityTablePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LinkedToSecurityTablePatch</a></th>
 <td class="colLast">
 <div class="block">Adds linked_to_uuid field to plan_security table that stores web users.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="LinkUsersToPlayersSecurityTablePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LinkUsersToPlayersSecurityTablePatch</a></th>
 <td class="colLast">
 <div class="block">Populates new linked_to_uuid field with the uuid of a username (same as minecraft name) or 'console'.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="LitebansTableHeaderPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LitebansTableHeaderPatch</a></th>
 <td class="colLast">
 <div class="block">Removes invalid data caused by https://github.com/plan-player-analytics/Plan/issues/1355.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="NicknameLastSeenPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">NicknameLastSeenPatch</a></th>
 <td class="colLast">
 <div class="block">Adds last_seen to nickname table by populating it with the data in actions table, and removes the actions table.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="NicknamesOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">NicknamesOptimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in nickname table.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Patch</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="PingOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">PingOptimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in ping table.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="PlayerTableValuesRowNumberPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">PlayerTableValuesRowNumberPatch</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="RegisterDateMinimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">RegisterDateMinimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Changes register dates on networks to the smallest number found in the database.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="ServerIsProxyPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ServerIsProxyPatch</a></th>
 <td class="colLast">
 <div class="block">Adds a is_proxy field to remove technical debt assuming name field "BungeeCord" being the proxy.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="ServerTableValuesRowNumberPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ServerTableValuesRowNumberPatch</a></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="SessionAFKTimePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionAFKTimePatch</a></th>
 <td class="colLast">
 <div class="block">Adds afk_time field to sessions table.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="SessionsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionsOptimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in sessions table.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="TransferTableRemovalPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">TransferTableRemovalPatch</a></th>
 <td class="colLast">
 <div class="block">Removes plan_transfer table, used for transferring html in the database.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="UserInfoHostnameAllowNullPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoHostnameAllowNullPatch</a></th>
 <td class="colLast">
 <div class="block">Make sure hostname can be null.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="UserInfoHostnamePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoHostnamePatch</a></th>
 <td class="colLast">
 <div class="block">Patch to add 'hostname' to 'plan_user_info'</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="UserInfoOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoOptimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in user info table.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="Version10Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Version10Patch</a></th>
 <td class="colLast">
 <div class="block">Table schema change patch for version 4.0.0 to support BungeeCord servers.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="VersionTableRemovalPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">VersionTableRemovalPatch</a></th>
 <td class="colLast">
 <div class="block">Removes the table schema versioning table.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="WorldsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldsOptimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Replaces server_id foreign keys with server_uuid field in world table.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="WorldsServerIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldsServerIDPatch</a></th>
 <td class="colLast">
 <div class="block">Adds server_id field to worlds table.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <th class="colFirst" scope="row"><a href="WorldTimesOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldTimesOptimizationPatch</a></th>
 <td class="colLast">
 <div class="block">Replaces server_id foreign keys with server_uuid field in world times table.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <th class="colFirst" scope="row"><a href="WorldTimesSeverIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldTimesSeverIDPatch</a></th>
 <td class="colLast">
 <div class="block">Adds server_id field to world times table.</div>
