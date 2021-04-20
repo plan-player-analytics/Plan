@@ -39,6 +39,7 @@ public class ExtensionTableProviderTable {
     public static final String ID = "id";
     public static final String PROVIDER_NAME = "name";
     public static final String COLOR = "color";
+    public static final String VALUES_FOR = "values_for";
     public static final String CONDITION = "condition_name"; // Can be null, related to @Conditional
     public static final String PLUGIN_ID = "plugin_id";
     public static final String TAB_ID = "tab_id"; // Can be null, related to @Tab
@@ -56,6 +57,9 @@ public class ExtensionTableProviderTable {
     public static final String ICON_3_ID = "icon_3_id";
     public static final String ICON_4_ID = "icon_4_id";
     public static final String ICON_5_ID = "icon_5_id";
+
+    public static final int VALUES_FOR_PLAYER = 0;
+    public static final int VALUES_FOR_SERVER = 1;
 
     public static final String STATEMENT_SELECT_TABLE_ID = '(' + SELECT + ID + FROM + TABLE_NAME +
             WHERE + PROVIDER_NAME + "=?" +
@@ -75,6 +79,7 @@ public class ExtensionTableProviderTable {
                 .column(ID, INT).primaryKey()
                 .column(PROVIDER_NAME, Sql.varchar(50)).notNull()
                 .column(COLOR, Sql.varchar(25)).notNull().defaultValue("'" + Color.NONE.name() + "'")
+                .column(VALUES_FOR, INT)
                 .column(CONDITION, Sql.varchar(54)) // 50 + 4 for "not_"
                 .column(COL_1, Sql.varchar(50))
                 .column(COL_2, Sql.varchar(50))

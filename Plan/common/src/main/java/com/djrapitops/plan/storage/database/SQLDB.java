@@ -180,7 +180,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new ServerIsProxyPatch(),
                 new UserInfoHostnameAllowNullPatch(),
                 new ServerTableValuesRowNumberPatch(),
-                new PlayerTableValuesRowNumberPatch()
+                new PlayerTableValuesRowNumberPatch(),
+                new ExtensionTableProviderValuesForPatch()
         };
     }
 

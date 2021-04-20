@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.implementation.MethodType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.table.Table;
@@ -46,15 +47,17 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
     private final ServerUUID serverUUID;
     private final ProviderInformation information;
     private final Table table;
+    private final boolean forPlayer;
 
     public StoreTableProviderTransaction(ProviderInformation information, Parameters parameters, Table table) {
-        this(parameters.getServerUUID(), information, table);
+        this(parameters.getServerUUID(), information, table, parameters.getMethodType() == MethodType.PLAYER);
     }
 
-    public StoreTableProviderTransaction(ServerUUID serverUUID, ProviderInformation information, Table table) {
+    public StoreTableProviderTransaction(ServerUUID serverUUID, ProviderInformation information, Table table, boolean forPlayer) {
         this.information = information;
         this.table = table;
         this.serverUUID = serverUUID;
+        this.forPlayer = forPlayer;
     }
 
     @Override
@@ -88,7 +91,8 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ICON_2_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ICON_3_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ICON_4_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ICON_5_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
+                ICON_5_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                VALUES_FOR + "=?" +
                 WHERE + PROVIDER_NAME + "=?" +
                 AND + PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
 
@@ -108,8 +112,9 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[2]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[3]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[4]);
-                statement.setString(26, information.getName());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 27, information.getPluginName(), serverUUID);
+                statement.setInt(26, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
+                statement.setString(27, information.getName());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 28, information.getPluginName(), serverUUID);
             }
         };
     }
@@ -133,7 +138,8 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ICON_2_ID + ',' +
                 ICON_3_ID + ',' +
                 ICON_4_ID + ',' +
-                ICON_5_ID +
+                ICON_5_ID + ',' +
+                VALUES_FOR +
                 ") VALUES (?,?,?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
                 ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ',' +
@@ -141,7 +147,8 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ')';
+                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                "?)";
 
         return new ExecStatement(sql) {
             @Override
@@ -161,6 +168,7 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[2]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[3]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 26, icons[4]);
+                statement.setInt(29, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
             }
         };
     }

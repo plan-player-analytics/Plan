@@ -153,7 +153,8 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i4 on i4." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_4_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i5 on i5." + ExtensionIconTable.ID + "=p1." + ExtensionTableProviderTable.ICON_5_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i6 on i6." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
-                WHERE + "p2." + ExtensionPluginTable.SERVER_UUID + "=?";
+                WHERE + "p2." + ExtensionPluginTable.SERVER_UUID + "=?" +
+                AND + "p1." + ExtensionTableProviderTable.VALUES_FOR + '=' + ExtensionTableProviderTable.VALUES_FOR_SERVER;
 
         return new QueryStatement<QueriedTables>(selectTables, 100) {
             @Override
