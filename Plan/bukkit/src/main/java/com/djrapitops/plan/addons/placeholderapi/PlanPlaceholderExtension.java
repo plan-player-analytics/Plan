@@ -26,7 +26,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -92,7 +92,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String params) {
+    public String onRequest(OfflinePlayer player, String params) {
         UUID uuid = player != null ? player.getUniqueId() : null;
         if ("Server thread".equalsIgnoreCase(Thread.currentThread().getName())) {
             return getCached(params, uuid);
