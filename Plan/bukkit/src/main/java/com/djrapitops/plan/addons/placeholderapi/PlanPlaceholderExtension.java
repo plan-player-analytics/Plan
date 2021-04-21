@@ -123,7 +123,11 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
         if (!currentlyProcessing.contains(key)) {
             currentlyProcessing.add(key);
             processing.submitNonCritical(() -> {
-                cache.put(key, Objects.requireNonNull(getPlaceholderValue(params, uuid)));
+                String value = getPlaceholderValue(params, uuid);
+
+                if (value != null) {
+                    cache.put(key, value);
+                }
                 currentlyProcessing.remove(key);
             });
         }
