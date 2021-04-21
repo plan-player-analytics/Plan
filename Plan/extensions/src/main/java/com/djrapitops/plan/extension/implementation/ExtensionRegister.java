@@ -59,6 +59,7 @@ public class ExtensionRegister {
         register(new AdvancedAchievementsExtensionFactory(), AdvancedAchievementsExtensionFactory::createExtension);
         register(new AdvancedBanExtensionFactory(), AdvancedBanExtensionFactory::createExtension, AdvancedBanExtensionFactory::registerListener);
         register(new ASkyBlockExtensionFactory(), ASkyBlockExtensionFactory::createExtension);
+        register(new AuthMeExtensionFactory(), AuthMeExtensionFactory::createExtension);
         register(new BanManagerExtensionFactory(), BanManagerExtensionFactory::createExtension);
         registerBentoBoxExtensions();
         register(new BuycraftExtensionFactory(), BuycraftExtensionFactory::createExtension);
