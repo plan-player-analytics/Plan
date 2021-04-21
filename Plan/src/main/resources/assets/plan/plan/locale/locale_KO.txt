@@ -448,7 +448,7 @@ HTML ERRORS - NOT_FOUND_404                     || Not Found 404
 HTML ERRORS - NOT_PLAYED_404                    || Plan has not seen this player. 404
 HTML ERRORS - PAGE_NOT_FOUND_404                || Page does not exist. 404
 HTML ERRORS - UNAUTHORIZED_401                  || Unauthorized 401
-HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>
 HTML ERRORS - UUID_404                          || Player UUID was not found in the database. 404
 In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
 In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.

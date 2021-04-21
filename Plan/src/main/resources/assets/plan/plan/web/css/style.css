@@ -1,3 +1,104 @@
+@media (max-width: 1520px) {
+    html {
+        font-size: 95%;
+    }
+}
+
+.fc-title, .fc-time {
+    color: #eee;
+}
+
+.accordion-striped tbody tr:nth-of-type(4n+1):not(.bg-teal),
+.accordion-striped tbody tr:nth-of-type(4n+2):not(.bg-teal) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-dark.accordion-striped tbody tr:nth-of-type(4n+1):not(.bg-teal),
+.table-dark.accordion-striped tbody tr:nth-of-type(4n+2):not(.bg-teal) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.card-body p + p {
+    margin-top: 1rem;
+}
+
+.card-body p {
+    margin: 0;
+}
+
+.w-15 {
+    width: 15% !important;
+}
+
+.w-22 {
+    width: 22% !important;
+}
+
+.sidebar-close-modal {
+    position: absolute;
+    opacity: 0.7;
+    background-color: #000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.hidden {
+    width: 0 !important;
+    display: none;
+}
+
+.hidden .sidebar .sidebar-brand img {
+    display: none;
+}
+
+p.collapsing {
+    display: none;
+}
+
+.page-link:not(:disabled):not(.disabled),
+.close:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+.nav-link.sidebar-toggler {
+    padding-top: 0 !important;
+}
+
+.sidebar-toggler {
+    padding: 0.6rem;
+    display: inline;
+    cursor: pointer;
+}
+
+.sidebar-close-modal {
+    position: absolute;
+    opacity: 0.7;
+    background-color: #000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.hidden {
+    width: 0 !important;
+    display: none;
+}
+
+.hidden .sidebar .sidebar-brand img {
+    display: none;
+}
+
+@media (min-width: 1400px) {
+    .sidebar-toggler {
+        display: none !important;
+    }
+}
+
 .page-loader {
     position: fixed;
     background: #ddd;

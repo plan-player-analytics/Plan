@@ -448,7 +448,7 @@ HTML ERRORS - NOT_FOUND_404                     || Não Encontrado
 HTML ERRORS - NOT_PLAYED_404                    || Esse jogador não jogou nesse servidor.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Página não existe.
 HTML ERRORS - UNAUTHORIZED_401                  || Acesso não autorizado
-HTML ERRORS - UNKNOWN_PAGE_404                  || Certifique-se de que você está acessando um link fornecido por comando, exemplos:</p><p>/player/NomeDoJogador<br>/server/NomeDoServidor</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Certifique-se de que você está acessando um link fornecido por comando, exemplos:</p><p>/player/{uuid/nome}<br>/server/{uuid/nome/id}</p>
 HTML ERRORS - UUID_404                          || UUID de jogador não encontrado no banco de dados.
 In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
 In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.

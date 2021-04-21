@@ -448,7 +448,7 @@ HTML ERRORS - NOT_FOUND_404                     || ページが見つかりま�
 HTML ERRORS - NOT_PLAYED_404                    || プレイヤーはこのサーバーでプレイしていません
 HTML ERRORS - PAGE_NOT_FOUND_404                || ページは存在しません
 HTML ERRORS - UNAUTHORIZED_401                  || 未認証状態です
-HTML ERRORS - UNKNOWN_PAGE_404                  || リンクが間違っています、コマンド等を使用しURLを確認して下さい。 URL例:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || リンクが間違っています、コマンド等を使用しURLを確認して下さい。 URL例:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>
 HTML ERRORS - UUID_404                          || データベース内にプレヤーのUUIDが存在しません
 In Depth Help - /plan db                        || 異なるデータベースのサブコマンドを使用することで、様々な方法でデータを変更/更新/削除します
 In Depth Help - /plan db backup                 || SQLiteによってデータベースをファイルにバックアップします

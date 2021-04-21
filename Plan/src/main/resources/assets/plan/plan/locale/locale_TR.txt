@@ -2,27 +2,27 @@ API - css+                                      || PageExtension: ${0} added sty
 API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
 Cmd - Click Me                                  || Tıkla bana
 Cmd - Link                                      || Link
-Cmd - Link Network                              || Network page: 
-Cmd - Link Player                               || Player page: 
-Cmd - Link Player JSON                          || Player json: 
-Cmd - Link Players                              || Players page: 
-Cmd - Link Register                             || Register page: 
-Cmd - Link Server                               || Server page: 
-CMD Arg - backup-file                           || Name of the backup file (case sensitive)
-CMD Arg - code                                  || Code used to finalize registration.
-CMD Arg - db type backup                        || Type of the database to backup. Current database is used if not specified.
-CMD Arg - db type clear                         || Type of the database to remove all data from.
-CMD Arg - db type hotswap                       || Type of the database to start using.
-CMD Arg - db type move from                     || Type of the database to move data from.
-CMD Arg - db type move to                       || Type of the database to move data to. Can not be same as previous.
-CMD Arg - db type restore                       || Type of the database to restore to. Current database is used if not specified.
-CMD Arg - feature                               || Name of the feature to disable: ${0}
-CMD Arg - player identifier                     || Name or UUID of a player
+Cmd - Link Network                              || Ağ sayfası: 
+Cmd - Link Player                               || Oyuncu sayfası: 
+Cmd - Link Player JSON                          || Oyuncu json: 
+Cmd - Link Players                              || Oyuncular sayfası: 
+Cmd - Link Register                             || Kayıt sayfası: 
+Cmd - Link Server                               || Sunucu sayfası: 
+CMD Arg - backup-file                           || Yedekleme dosyasının adı (büyük/küçük harfe duyarlıdır.)
+CMD Arg - code                                  || Kaydı tamamlamak için kullanılan kod.
+CMD Arg - db type backup                        || Yedeklenecek veritabanının türü. Belirtilmezse mevcut veritabanı kullanılır.
+CMD Arg - db type clear                         || Tüm verilerin kaldırılacağı veritabanının türü.
+CMD Arg - db type hotswap                       || Kullanılmaya başlanacak veritabanının türü.
+CMD Arg - db type move from                     || Verilerin taşınacağı veritabanının türü.
+CMD Arg - db type move to                       || Verilerin taşınacağı veritabanının türü. Öncekiyle aynı olamaz.
+CMD Arg - db type restore                       || Geri yüklenecek veritabanının türü. Belirtilmezse mevcut veritabanı kullanılır.
+CMD Arg - feature                               || Devre dışı bırakılacak özelliğin adı: ${0}
+CMD Arg - player identifier                     || Bir oyuncunun adı veya UUID'si
 CMD Arg - player identifier remove              || Identifier for a player that will be removed from current database.
 CMD Arg - server identifier                     || Name, ID or UUID of a server
-CMD Arg - subcommand                            || Use the command without subcommand to see help.
+CMD Arg - subcommand                            || Yardımı görmek için komutu alt komut olmadan kullanın.
 CMD Arg - username                              || Username of another user. If not specified player linked user is used.
-CMD Arg Name - backup-file                      || backup-file
+CMD Arg Name - backup-file                      || yedek dosya
 CMD Arg Name - code                             || ${code}
 CMD Arg Name - export kind                      || export kind
 CMD Arg Name - feature                          || feature
@@ -31,14 +31,14 @@ CMD Arg Name - name or uuid                     || name/uuid
 CMD Arg Name - server                           || server
 CMD Arg Name - subcommand                       || subcommand
 CMD Arg Name - username                         || username
-Cmd Confirm - accept                            || Accept
-Cmd Confirm - cancelled, no data change         || Cancelled. No data was changed.
+Cmd Confirm - accept                            || Kabul et
+Cmd Confirm - cancelled, no data change         || İptal edildi. Hiçbir veri değiştirilmedi.
 Cmd Confirm - cancelled, unregister             || Cancelled. '${0}' was not unregistered
 Cmd Confirm - clearing db                       || You are about to remove all Plan-data in ${0}
-Cmd Confirm - confirmation                      || Confirm: 
-Cmd Confirm - deny                              || Cancel
-Cmd Confirm - Expired                           || Confirmation expired, use the command again
-Cmd Confirm - Fail on accept                    || The accepted action errored upon execution: ${0}
+Cmd Confirm - confirmation                      || Onayla: 
+Cmd Confirm - deny                              || İptal et
+Cmd Confirm - Expired                           || Onay süresi doldu, komutu tekrar kullanın
+Cmd Confirm - Fail on accept                    || Kabul edilen işlem yürütme sırasında hata verdi: ${0}
 Cmd Confirm - Fail on deny                      || The denied action errored upon execution: ${0}
 Cmd Confirm - overwriting db                    || You are about to overwrite data in Plan ${0} with data in ${1}
 Cmd Confirm - remove player db                  || You are about to remove data of ${0} from ${1}
@@ -87,9 +87,9 @@ Cmd network - No network                        || Server is not connected to a 
 Cmd Notify - No Address                         || §eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings.
 Cmd Notify - No WebUser                         || Beliki Web kullanıcısı değilsinizdir, Kayıt olmak için /plan register <password>
 Cmd Notify - WebUser register                   || Yeni bir kullanıcı kayıt oldu: '${0}' Yetki seviyesi: ${1}
-Cmd Qinspect - Active Playtime                  ||   §2Active Playtime: §f${0}
+Cmd Qinspect - Active Playtime                  ||   §2Aktif Oyun Süresi: §f${0}
 Cmd Qinspect - Activity Index                   ||   §2Aktivite göstergesi: §f${0} | ${1}
-Cmd Qinspect - AFK Playtime                     ||   §2AFK Time: §f${0}
+Cmd Qinspect - AFK Playtime                     ||   §2AFK Saati: §f${0}
 Cmd Qinspect - Deaths                           ||   §2Ölümler: §f${0}
 Cmd Qinspect - Geolocation                      ||   §2Bölgesinden giriş yapıldı: §f${0}
 Cmd Qinspect - Last Seen                        ||   §2En son görülme: §f${0}
@@ -104,21 +104,21 @@ Cmd SUCCESS - WebUser register                  || §aYeni kullanıcı (${0}) ba
 Cmd unregister - unregistering                  || Unregistering '${0}'..
 Cmd WARN - Database not open                    || §eDatabase is ${0} - This might take longer than expected..
 Cmd Web - Permission Levels                     || >\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions  
-Command Help - /plan db                         || Manage Plan database
-Command Help - /plan db backup                  || Backup data of a database to a file
-Command Help - /plan db clear                   || Remove ALL Plan data from a database
+Command Help - /plan db                         || Plan veritabanını yönet
+Command Help - /plan db backup                  || Bir veritabanının verilerini bir dosyaya yedekleyin
+Command Help - /plan db clear                   || Veritabanından TÜM Plan verilerini kaldırın
 Command Help - /plan db hotswap                 || Veritabının hızlıca değiştirir
 Command Help - /plan db move                    || Veriyi Veritabanları arasında taşır
-Command Help - /plan db remove                  || Remove player's data from Current database
-Command Help - /plan db restore                 || Restore data from a file to a database
+Command Help - /plan db remove                  || Oyuncunun verilerini Mevcut veritabanından kaldır
+Command Help - /plan db restore                 || Bir dosyadaki verileri bir veritabanına geri yükleyin
 Command Help - /plan db uninstalled             || Set a server as uninstalled in the database.
-Command Help - /plan disable                    || Disable the plugin or part of it
-Command Help - /plan export                     || Export html or json files manually
-Command Help - /plan import                     || Import data
-Command Help - /plan info                       || Information about the plugin
+Command Help - /plan disable                    || Eklentiyi veya bir kısmını devre dışı bırakın
+Command Help - /plan export                     || Html veya json dosyalarını manuel olarak dışa aktarın
+Command Help - /plan import                     || Verileri içe aktar
+Command Help - /plan info                       || Eklenti hakkında bilgiler
 Command Help - /plan ingame                     || Oyuncu bilgilerini oyun içi gösterir
 Command Help - /plan json                       || View json of Player's raw data.
-Command Help - /plan logout                     || Log out other users from the panel.
+Command Help - /plan logout                     || Paneldeki diğer kullanıcıların oturumunu kapatın
 Command Help - /plan network                    || Network sayfasını görüntüler
 Command Help - /plan player                     || Oyunucunun sayfasını gösterir
 Command Help - /plan players                    || Oyuncu sayfasını görüntüler
@@ -127,8 +127,8 @@ Command Help - /plan reload                     || Plugini yeniden başlatır
 Command Help - /plan search                     || Bir oyuncu adı arar
 Command Help - /plan server                     || Sunucu Sayfasını gösterir
 Command Help - /plan servers                    || Sunucun tüm veritabanını listeler
-Command Help - /plan unregister                 || Unregister a user of Plan website
-Command Help - /plan users                      || List all web users
+Command Help - /plan unregister                 || Plan web sitesinin bir kullanıcısının kaydını iptal edin
+Command Help - /plan users                      || Tüm web kullanıcılarını listeleyin
 Database - Apply Patch                          || Yama uygulanıyor: ${0}..
 Database - Patches Applied                      || Yama tüm veritabanlarına başarıyla uygulandı.
 Database - Patches Applied Already              || Veritabanlarına yama zaten uygulanmış.
@@ -138,16 +138,16 @@ Database Notify - SQLite No WAL                 || SQLite WAL modu bu sunucu ver
 Disable                                         || Oyuncu analizi kapatıldı.
 Disable - Processing                            || Önceden işlenmemiş kritik görevler işleniyor. (${0})
 Disable - Processing Complete                   || İşlenme tamamlandı.
-Disable - Unsaved Session Save                  || Saving unfinished sessions..
+Disable - Unsaved Session Save                  || Bitmemiş oturumlar kaydediliyor ..
 Disable - Unsaved Session Save Timeout          || Timeout hit, storing the unfinished sessions on next enable instead.
 Disable - Waiting SQLite                        || Waiting queries to finish to avoid SQLite crashing JVM..
-Disable - Waiting SQLite Complete               || Closed SQLite connection.
+Disable - Waiting SQLite Complete               || Kapalı SQLite bağlantısı.
 Disable - Waiting Transactions                  || Waiting for unfinished transactions to avoid data loss..
 Disable - Waiting Transactions Complete         || Transaction queue closed.
 Disable - WebServer                             || Websunucusu kapatıldı.
 Enable                                          || Oyuncu analizi aktif edildi.
 Enable - Database                               || ${0}- Veritabanı bağlantısı kurulmuş.
-Enable - Notify Bad IP                          || 0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!
+Enable - Notify Bad IP                          || 0.0.0.0 geçerli bir adres değil, Alternatif_IP ayarlarını yapın. Yanlış bağlantılar verilebilir!
 Enable - Notify Empty IP                        || server.properties IP adresi kısmı boş & AlternatifIP kullanılmıyor. Bu yüzden yanlış linkler verilecektir!
 Enable - Notify Geolocations disabled           || Coğrafi konum toplama etkin değil. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan GeoLite2 Geolocation veritabanını indirmek için ilk çalıştırmada internet erişimi gerektir.
@@ -160,75 +160,75 @@ Enable FAIL - GeoDB Write                       || İndirilen GeoLite2 Geolocati
 Enable FAIL - WebServer (Proxy)                 || WebServer başlatılmadı!
 Enable FAIL - Wrong Database Type               || ${0} Desteklenmeyen bir veritabanı
 HTML - AND_BUG_REPORTERS                        || & Bug reporters!
-HTML - BANNED (Filters)                         || Banned
-HTML - COMPARING_15_DAYS                        || Comparing 15 days
-HTML - COMPARING_60_DAYS                        || Comparing 30d ago to Now
-HTML - COMPARING_7_DAYS                         || Comparing 7 days
+HTML - BANNED (Filters)                         || Yasaklandı
+HTML - COMPARING_15_DAYS                        || 15 gün karşılaştırılıyor
+HTML - COMPARING_60_DAYS                        || 30 gün öncesiyle şimdi karşılaştırılıyor.
+HTML - COMPARING_7_DAYS                         || 7 gün karşılaştırılıyor
 HTML - DATABASE_NOT_OPEN                        || Database is not open, check db status with /plan info
-HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
+HTML - DESCRIBE_RETENTION_PREDICTION            || Bu değer, önceki oyunculara dayalı bir tahmindir.
 HTML - ERROR                                    || Kimlik doğrulama hata nedeniyle başarısız oldu
-HTML - EXPIRED_COOKIE                           || User cookie has expired
-HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
-HTML - FILTER_ALL_PLAYERS                       || All players
-HTML - FILTER_BANNED                            || Ban status
-HTML - FILTER_GROUP                             || Group: 
-HTML - FILTER_OPS                               || Operator status
+HTML - EXPIRED_COOKIE                           || Kullanıcı çerezinin süresi doldu
+HTML - FILTER_ACTIVITY_INDEX_NOW                || Mevcut aktivite grubu
+HTML - FILTER_ALL_PLAYERS                       || Tüm oyuncular
+HTML - FILTER_BANNED                            || Yasaklama durumu
+HTML - FILTER_GROUP                             || Grup: 
+HTML - FILTER_OPS                               || Yetkili durumu
 HTML - INDEX_ACTIVE                             || Aktivite
 HTML - INDEX_INACTIVE                           || Etkisiz
 HTML - INDEX_IRREGULAR                          || Düzensiz
 HTML - INDEX_REGULAR                            || Düzenli
 HTML - INDEX_VERY_ACTIVE                        || Çok Aktif
 HTML - KILLED                                   || Öldürülen
-HTML - LABEL_1ST_WEAPON                         || Deadliest PvP Weapon
-HTML - LABEL_2ND_WEAPON                         || 2nd PvP Weapon
-HTML - LABEL_3RD_WEAPON                         || 3rd PvP Weapon
-HTML - LABEL_ACTIVE_PLAYTIME                    || Active Playtime
+HTML - LABEL_1ST_WEAPON                         || En Ölümcül PvP Silahı
+HTML - LABEL_2ND_WEAPON                         || 2. PvP Silahı
+HTML - LABEL_3RD_WEAPON                         || 3. PvP Silahı
+HTML - LABEL_ACTIVE_PLAYTIME                    || Aktif Oyun Süresi
 HTML - LABEL_ACTIVITY_INDEX                     || Aktivite göstergesi
 HTML - LABEL_AFK                                || AFK
-HTML - LABEL_AFK_TIME                           || AFK Time
-HTML - LABEL_AVG                                || Average
-HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
-HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
-HTML - LABEL_AVG_CHUNKS                         || Average Chunks
-HTML - LABEL_AVG_ENTITIES                       || Average Entities
-HTML - LABEL_AVG_KDR                            || Average KDR
-HTML - LABEL_AVG_MOB_KDR                        || Average Mob KDR
-HTML - LABEL_AVG_PLAYTIME                       || Average Playtime
-HTML - LABEL_AVG_SESSION_LENGTH                 || Average Session Length
-HTML - LABEL_AVG_SESSIONS                       || Average Sessions
-HTML - LABEL_AVG_TPS                            || Average TPS
+HTML - LABEL_AFK_TIME                           || AFK Süresi
+HTML - LABEL_AVG                                || Ortalama
+HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Ortalama Aktif Oyun Süresi
+HTML - LABEL_AVG_AFK_TIME                       || Ortalama AFK Süresi
+HTML - LABEL_AVG_CHUNKS                         || Ortalama Chunks
+HTML - LABEL_AVG_ENTITIES                       || Ortalama Yaratıklar
+HTML - LABEL_AVG_KDR                            || Ortalama KDR
+HTML - LABEL_AVG_MOB_KDR                        || Ortalama Mob KDR
+HTML - LABEL_AVG_PLAYTIME                       || Ortalama Oyun Süresi
+HTML - LABEL_AVG_SESSION_LENGTH                 || Ortalama Oturum Uzunluğu
+HTML - LABEL_AVG_SESSIONS                       || Ortalama Oturumlar
+HTML - LABEL_AVG_TPS                            || Ortalama TPS
 HTML - LABEL_BANNED                             || Yasaklanmış
 HTML - LABEL_BEST_PEAK                          || Tüm Zamanların Zirvesi
 HTML - LABEL_DAY_OF_WEEK                        || Day of the Week
 HTML - LABEL_DEATHS                             || Ölümler
-HTML - LABEL_DOWNTIME                           || Downtime
-HTML - LABEL_DURING_LOW_TPS                     || During Low TPS Spikes:
+HTML - LABEL_DOWNTIME                           || Arıza Süresi
+HTML - LABEL_DURING_LOW_TPS                     || Düşük TPS Artışları Sırasında:
 HTML - LABEL_ENTITIES                           || Varlıklar
 HTML - LABEL_FAVORITE_SERVER                    || Favori Sunucu
-HTML - LABEL_FIRST_SESSION_LENGTH               || First session length
-HTML - LABEL_FREE_DISK_SPACE                    || Free Disk Space
-HTML - LABEL_INACTIVE                           || Inactive
+HTML - LABEL_FIRST_SESSION_LENGTH               || İlk Oturum Uzunluğu
+HTML - LABEL_FREE_DISK_SPACE                    || Boş Disk Alanı
+HTML - LABEL_INACTIVE                           || Etkin değil
 HTML - LABEL_LAST_PEAK                          || Son Zirve
 HTML - LABEL_LAST_SEEN                          || Son Görülme
 HTML - LABEL_LOADED_CHUNKS                      || Yüklenmiş Chunks lar
 HTML - LABEL_LOADED_ENTITIES                    || Yüklenmiş Varlıklar
 HTML - LABEL_LONE_JOINS                         || Lone joins
-HTML - LABEL_LONE_NEW_JOINS                     || Lone newbie joins
-HTML - LABEL_LONGEST_SESSION                    || Longest Session
+HTML - LABEL_LONE_NEW_JOINS                     || Yalnız acemi katılıyor
+HTML - LABEL_LONGEST_SESSION                    || En Uzun Oturum
 HTML - LABEL_LOW_TPS                            || Low TPS Spikes
-HTML - LABEL_MAX_FREE_DISK                      || Max Free Disk
-HTML - LABEL_MIN_FREE_DISK                      || Min Free Disk
+HTML - LABEL_MAX_FREE_DISK                      || Maksimum Boş Disk
+HTML - LABEL_MIN_FREE_DISK                      || Minimum Boş Disk
 HTML - LABEL_MOB_DEATHS                         || Yaratık Yüzünden ölümler
 HTML - LABEL_MOB_KDR                            || Mob İstatistiği
 HTML - LABEL_MOB_KILLS                          || Öldürülen Mob
-HTML - LABEL_MOST_ACTIVE_GAMEMODE               || Most Active Gamemode
-HTML - LABEL_NAME                               || Name
-HTML - LABEL_NEW                                || New
+HTML - LABEL_MOST_ACTIVE_GAMEMODE               || En Aktif Oyun Modu
+HTML - LABEL_NAME                               || İsim
+HTML - LABEL_NEW                                || Yeni
 HTML - LABEL_NEW_PLAYERS                        || Yeni Oyuncular
 HTML - LABEL_NICKNAME                           || Takma ad
-HTML - LABEL_NO_SESSION_KILLS                   || None
-HTML - LABEL_ONLINE_FIRST_JOIN                  || Players online on first join
-HTML - LABEL_OPERATOR                           || Operator
+HTML - LABEL_NO_SESSION_KILLS                   || Yok
+HTML - LABEL_ONLINE_FIRST_JOIN                  || İlk katılımda çevrimiçi oyuncular
+HTML - LABEL_OPERATOR                           || Yetkililer
 HTML - LABEL_PER_PLAYER                         || / Player
 HTML - LABEL_PER_REGULAR_PLAYER                 || / Regular Player
 HTML - LABEL_PLAYER_DEATHS                      || Oyuncu ölüme sebep oldu
@@ -236,9 +236,9 @@ HTML - LABEL_PLAYER_KILLS                       || Oyuncu Öldürüldü
 HTML - LABEL_PLAYERS_ONLINE                     || Oyuncu Çevrimiçi
 HTML - LABEL_PLAYTIME                           || Oyun Süresi
 HTML - LABEL_REGISTERED                         || Kayıtlı
-HTML - LABEL_REGISTERED_PLAYERS                 || Registered Players
-HTML - LABEL_REGULAR                            || Regular
-HTML - LABEL_REGULAR_PLAYERS                    || Regular Players
+HTML - LABEL_REGISTERED_PLAYERS                 || Kayıtlı Oyuncular
+HTML - LABEL_REGULAR                            || Düzenli
+HTML - LABEL_REGULAR_PLAYERS                    || Normal Oyuncular
 HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || Relative Join Activity
 HTML - LABEL_RETENTION                          || New Player Retention
 HTML - LABEL_SERVER_DOWNTIME                    || Server Downtime
@@ -246,33 +246,33 @@ HTML - LABEL_SERVER_OCCUPIED                    || Server occupied
 HTML - LABEL_SESSION_ENDED                      ||  Oturum Sona Erdi
 HTML - LABEL_SESSION_MEDIAN                     || Session Median
 HTML - LABEL_TIMES_KICKED                       || Kere Atılmış
-HTML - LABEL_TOTAL_PLAYERS                      || Total Players
+HTML - LABEL_TOTAL_PLAYERS                      || Toplam Oyuncu
 HTML - LABEL_TOTAL_PLAYTIME                     || Total Playtime
 HTML - LABEL_UNIQUE_PLAYERS                     || Sunucuya İlk Defa Girenler
-HTML - LABEL_WEEK_DAYS                          || 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-HTML - LINK_BACK_NETWORK                        || Network page
-HTML - LINK_BACK_SERVER                         || Server page
-HTML - LINK_CHANGELOG                           || View Changelog
-HTML - LINK_DISCORD                             || General Support on Discord
-HTML - LINK_DOWNLOAD                            || Download
-HTML - LINK_ISSUES                              || Report Issues
-HTML - LINK_NIGHT_MODE                          || Night Mode
-HTML - LINK_PLAYER_PAGE                         || Player Page
-HTML - LINK_QUICK_VIEW                          || Quick view
+HTML - LABEL_WEEK_DAYS                          || 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'
+HTML - LINK_BACK_NETWORK                        || Ağ sayfası
+HTML - LINK_BACK_SERVER                         || Sunucu sayfası
+HTML - LINK_CHANGELOG                           || Değişim günlüğünü incele
+HTML - LINK_DISCORD                             || Discord'da Genel Destek
+HTML - LINK_DOWNLOAD                            || İndir
+HTML - LINK_ISSUES                              || Sorunları Bildir
+HTML - LINK_NIGHT_MODE                          || Gece modu
+HTML - LINK_PLAYER_PAGE                         || Oyuncu Sayfası
+HTML - LINK_QUICK_VIEW                          || Hızlı Görünüm
 HTML - LINK_SERVER_ANALYSIS                     || Sunucu analizi
-HTML - LINK_WIKI                                || Plan Wiki, Tutorials & Documentation
+HTML - LINK_WIKI                                || Plan Wiki, Öğreticiler ve Belgeler
 HTML - LOCAL_MACHINE                            || Yerel makine
-HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
-HTML - LOGIN_FAILED                             || Login failed: 
-HTML - LOGIN_FORGOT_PASSWORD                    || Forgot Password?
+HTML - LOGIN_CREATE_ACCOUNT                     || Hesap oluştur!
+HTML - LOGIN_FAILED                             || Giriş başarısız: 
+HTML - LOGIN_FORGOT_PASSWORD                    || Parolanızı mı unuttunuz?
 HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Forgot password? Unregister and register again.
-HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Use the following command in game to remove your current user:
-HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Or using console:
-HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || After using the command, 
-HTML - LOGIN_LOGIN                              || Login
-HTML - LOGIN_LOGOUT                             || Logout
-HTML - LOGIN_PASSWORD                           || "Password"
-HTML - LOGIN_USERNAME                           || "Username"
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Mevcut kullanıcınızı kaldırmak için oyunda aşağıdaki komutu kullanın:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Veya konsol kullanarak:
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || Komutu kullandıktan sonra, 
+HTML - LOGIN_LOGIN                              || Oturum aç
+HTML - LOGIN_LOGOUT                             || Çıkış Yap
+HTML - LOGIN_PASSWORD                           || "Parola"
+HTML - LOGIN_USERNAME                           || "Kullanıcı adı"
 HTML - NAV_PLUGINS                              || Pluginler
 HTML - NEW_CALENDAR                             || Yeni:
 HTML - NO_KILLS                                 || Öldürmesi yok
@@ -293,14 +293,14 @@ HTML - QUERY_ARE                                || `are`
 HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
 HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
 HTML - QUERY_JOINED_WITH_ADDRESS                || joined with address
-HTML - QUERY_LOADING_FILTERS                    || Loading filters..
+HTML - QUERY_LOADING_FILTERS                    || Filtreler yükleniyor..
 HTML - QUERY_MAKE                               || Make a query
 HTML - QUERY_MAKE_ANOTHER                       || Make another query
 HTML - QUERY_OF_PLAYERS                         || of Players who 
 HTML - QUERY_PERFORM_QUERY                      || Perform Query!
 HTML - QUERY_PLAYED_BETWEEN                     || Played between
-HTML - QUERY_REGISTERED_BETWEEN                 || Registered between
-HTML - QUERY_RESULTS                            || Query Results
+HTML - QUERY_REGISTERED_BETWEEN                 || Arasında kayıtlı
+HTML - QUERY_RESULTS                            || Sorgu Sonuçları
 HTML - QUERY_RESULTS_MATCH                      || matched ${resultCount} players
 HTML - QUERY_SESSIONS_WITHIN_VIEW               || Sessions within view
 HTML - QUERY_SHOW_VIEW                          || Show a view
@@ -308,19 +308,19 @@ HTML - QUERY_TIME_FROM                          || >from</label>
 HTML - QUERY_TIME_TO                            || >to</label>
 HTML - QUERY_VIEW                               ||   View:
 HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
-HTML - REGISTER                                 || Register
+HTML - REGISTER                                 || Kayıt ol
 HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
-HTML - REGISTER_COMPLETE                        || Complete Registration
-HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
+HTML - REGISTER_COMPLETE                        || Kaydı Tamamla
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || Artık kullanıcıyı kaydetmeyi bitirebilirsiniz.
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Code expires in 15 minutes
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Use the following command in game to finish registration:
 HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Or using console:
-HTML - REGISTER_CREATE_USER                     || Create a new user
-HTML - REGISTER_FAILED                          || Registration failed: 
+HTML - REGISTER_CREATE_USER                     || Yeni bir kullanıcı oluşturun
+HTML - REGISTER_FAILED                          || Kayıt başarısız:
 HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
-HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
-HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
-HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
+HTML - REGISTER_PASSWORD_TIP                    || Parola 8 karakterden fazla olmalıdır, ancak herhangi bir sınırlama yoktur.
+HTML - REGISTER_SPECIFY_PASSWORD                || Bir Parola belirlemeniz gerekiyor
+HTML - REGISTER_SPECIFY_USERNAME                || Kullanıcı adı belirlemeniz gerekiyor
 HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
 HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 characters.
 HTML - SESSION                                  || Oturum
@@ -341,19 +341,19 @@ HTML - SIDE_SESSIONS                            || Oturumlar
 HTML - SIDE_TO_MAIN_PAGE                        || to main page
 HTML - TEXT_CLICK_TO_EXPAND                     || Click to expand
 HTML - TEXT_CONTRIBUTORS_CODE                   || code contributor
-HTML - TEXT_CONTRIBUTORS_LOCALE                 || translator
+HTML - TEXT_CONTRIBUTORS_LOCALE                 || çevirmen
 HTML - TEXT_CONTRIBUTORS_MONEY                  || Extra special thanks to those who have monetarily supported the development.
 HTML - TEXT_CONTRIBUTORS_THANKS                 || In addition following <span class="col-plan">awesome people</span> have contributed:
 HTML - TEXT_DEV_VERSION                         || This version is a DEV release.
 HTML - TEXT_DEVELOPED_BY                        || is developed by
-HTML - TEXT_FIRST_SESSION                       || First session
-HTML - TEXT_LICENSED_UNDER                      || Player Analytics is developed and licensed under
+HTML - TEXT_FIRST_SESSION                       || İlk seans
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics, altında geliştirilir ve lisanslanır
 HTML - TEXT_METRICS                             || bStats Metrics
-HTML - TEXT_NO_EXTENSION_DATA                   || No Extension Data
-HTML - TEXT_NO_LOW_TPS                          || No low tps spikes
+HTML - TEXT_NO_EXTENSION_DATA                   || Uzantı Verisi Yok
+HTML - TEXT_NO_LOW_TPS                          || Düşük tps artışları yok
 HTML - TEXT_NO_SERVER                           || No server to display online activity for
 HTML - TEXT_NO_SERVERS                          || No servers found in the database
-HTML - TEXT_PLUGIN_INFORMATION                  || Information about the plugin
+HTML - TEXT_PLUGIN_INFORMATION                  || Eklenti hakkında bilgiler
 HTML - TEXT_PREDICTED_RETENTION                 || This value is a prediction based on previous players
 HTML - TEXT_SERVER_INSTRUCTIONS                 || It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.
 HTML - TEXT_VERSION                             || A new version has been released and is now available for download.
@@ -391,90 +391,90 @@ HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || Online Activity as Numbers
 HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || Online Activity Overview
 HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Performance as Numbers
 HTML - TITLE_PING                               || Ping
-HTML - TITLE_PLAYER                             || Player
-HTML - TITLE_PLAYER_OVERVIEW                    || Player Overview
+HTML - TITLE_PLAYER                             || Oyuncu
+HTML - TITLE_PLAYER_OVERVIEW                    || Oyuncuya Genel Bakış
 HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Oyuncu Etkinlik Grafiği
 HTML - TITLE_PVP_DEATHS                         || Recent PvP Deaths
 HTML - TITLE_PVP_KILLS                          || Recent PvP Kills
 HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE as Numbers
-HTML - TITLE_RECENT_KILLS                       || Recent Kills
+HTML - TITLE_RECENT_KILLS                       || Son Öldürmeler
 HTML - TITLE_RECENT_SESSIONS                    || En Son Oturumlar
 HTML - TITLE_SEEN_NICKNAMES                     || Görülen takma adlar
 HTML - TITLE_SERVER                             || Sunucu
 HTML - TITLE_SERVER_AS_NUMBERS                  || Server as Numbers
-HTML - TITLE_SERVER_OVERVIEW                    || Server Overview
-HTML - TITLE_SERVER_PLAYTIME                    || Server Playtime
-HTML - TITLE_SERVER_PLAYTIME_30                 || Server Playtime for 30 days
-HTML - TITLE_SESSION_START                      || Session Started
-HTML - TITLE_THEME_SELECT                       || Theme Select
+HTML - TITLE_SERVER_OVERVIEW                    || Sunucuya Genel Bakış
+HTML - TITLE_SERVER_PLAYTIME                    || Sunucu Oynatma Süresi
+HTML - TITLE_SERVER_PLAYTIME_30                 || 30 günlük Sunucu Oynatma Süresi
+HTML - TITLE_SESSION_START                      || Oturum Başladı
+HTML - TITLE_THEME_SELECT                       || Tema Seçimi
 HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || Punchcard
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Trend
-HTML - TITLE_TRENDS                             || Trends for 30 days
-HTML - TITLE_VERSION                            || Version
-HTML - TITLE_WEEK_COMPARISON                    || Week Comparison
+HTML - TITLE_TRENDS                             || 30 günlük trendler
+HTML - TITLE_VERSION                            || Versiyon
+HTML - TITLE_WEEK_COMPARISON                    || Hafta Karşılaştırması
 HTML - TITLE_WORLD                              || World Load
-HTML - TITLE_WORLD_PLAYTIME                     || Dünya OyunSüresi
+HTML - TITLE_WORLD_PLAYTIME                     || Dünya Oyun Süresi
 HTML - TITLE_WORST_PING                         || Worst Ping
 HTML - TOTAL_ACTIVE_TEXT                        || Toplam Aktiflik
 HTML - TOTAL_AFK                                || Toplam AFKlık
 HTML - TOTAL_PLAYERS                            || Toplam Oyuncular
 HTML - UNIQUE_CALENDAR                          || Benzersiz:
 HTML - UNIT_CHUNKS                              || Chunks
-HTML - UNIT_ENTITIES                            || Entities
+HTML - UNIT_ENTITIES                            || Yaratıklar
 HTML - UNIT_NO_DATA                             || No Data
-HTML - UNIT_THE_PLAYERS                         || Players
+HTML - UNIT_THE_PLAYERS                         || Oyuncular
 HTML - USER_AND_PASS_NOT_SPECIFIED              || Kullanıcı ve Şifre belirtilmedi
 HTML - USER_DOES_NOT_EXIST                      || Böyle Bir Kullanıcı Yok
-HTML - USER_INFORMATION_NOT_FOUND               || Registration failed, try again (The code expires after 15 minutes)
+HTML - USER_INFORMATION_NOT_FOUND               || Kayıt başarısız oldu, tekrar deneyin (Kodun süresi 15 dakika sonra dolar)
 HTML - USER_PASS_MISMATCH                       || Kullanıcı adı ve şifre uyuşmuyor
-HTML - Version Change log                       || View Changelog
+HTML - Version Change log                       || Değişim günlüğünü incele
 HTML - Version Current                          || You have version ${0}
 HTML - Version Download                         || Download Plan-${0}.jar
-HTML - Version Update                           || Update
+HTML - Version Update                           || Güncelleme
 HTML - Version Update Available                 || Version ${0} is Available!
-HTML - Version Update Dev                       || This version is a DEV release.
-HTML - Version Update Info                      || A new version has been released and is now available for download.
-HTML - WARNING_NO_GAME_SERVERS                  || Some data requires Plan to be installed on game servers.
+HTML - Version Update Dev                       || Bu sürüm bir DEV sürümüdür.
+HTML - Version Update Info                      || Yeni bir sürüm yayınlandı ve artık indirilebilir.
+HTML - WARNING_NO_GAME_SERVERS                  || Bazı veriler, Plan'ın oyun sunucularına yüklenmesini gerektirir.
 HTML - WARNING_NO_GEOLOCATIONS                  || Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).
 HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunks unavailable on Sponge
 HTML - WITH                                     || <th>Birlikte
 HTML ERRORS - ACCESS_DENIED_403                 || Giriş reddedildi
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Bir kullanıcıyı <b>/plan register</b><br>- ile kayıt ettiğinize emin olun ismin ve şifrenin doğru olup olmadığını kontol edin <br>- Kullanıcı adı ve şifre büyük / küçük harf duyarlıdır<br><br>Eğer şifreni unuttuysan, Yetkiliden sizi tekrar kayıt etmesini isteyin.
-HTML ERRORS - AUTHENTICATION_FAILED_401         || Authentication Failed.
+HTML ERRORS - AUTHENTICATION_FAILED_401         || Kimlik doğrulama başarısız oldu.
 HTML ERRORS - FORBIDDEN_403                     || Yasaklanmış.
 HTML ERRORS - NO_SERVERS_404                    || İsteği gerçekleştirecek çevrimiçi sunucu yok.
 HTML ERRORS - NOT_FOUND_404                     || Bulunamadı
 HTML ERRORS - NOT_PLAYED_404                    || Oyuncu bu sunucuda hiç oynamadı.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Böyle bir sayfa mevcut değil.
 HTML ERRORS - UNAUTHORIZED_401                  || Yetkisiz
-HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Make sure you're accessing a link given by a command, Examples:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>
 HTML ERRORS - UUID_404                          || Oyuncunun UUID si veritabanında bulunamadı.
 In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
 In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.
 In Depth Help - /plan db clear                  || Clears all Plan tables, removing all Plan-data in the process.
 In Depth Help - /plan db hotswap                || Reloads the plugin with the other database and changes the config to match.
-In Depth Help - /plan db move                   || Overwrites contents in the other database with the contents in another.
-In Depth Help - /plan db remove                 || Removes all data linked to a player from the Current database.
-In Depth Help - /plan db restore                || Uses SQLite backup file and overwrites contents of the target database.
+In Depth Help - /plan db move                   || Diğer veritabanındaki içeriklerin üzerine başka bir veritabanındaki içeriklerin üzerine yazar.
+In Depth Help - /plan db remove                 || Bir oyuncuyu bağlı tüm verileri Geçerli veritabanından kaldırır.
+In Depth Help - /plan db restore                || SQLite yedekleme dosyasını kullanır ve hedef veritabanının içeriğinin üzerine yazar.
 In Depth Help - /plan db uninstalled            || Marks a server in Plan database as uninstalled so that it will not show up in server queries.
 In Depth Help - /plan disable                   || Disable the plugin or part of it until next reload/restart.
-In Depth Help - /plan export                    || Performs an export to export location defined in the config.
-In Depth Help - /plan import                    || Performs an import to load data into the database.
-In Depth Help - /plan info                      || Display the current status of the plugin.
+In Depth Help - /plan export                    || Yapılandırmada tanımlanan dışa aktarma için bir dışa aktarma gerçekleştirir.
+In Depth Help - /plan import                    || Veritabanına veri yüklemek için bir içe aktarma gerçekleştirir.
+In Depth Help - /plan info                      || Eklentinin mevcut durumunu görüntüleyin.
 In Depth Help - /plan ingame                    || Oyun içindeyken oyuncu hakkında bilgi verir.
-In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
+In Depth Help - /plan json                      || Bir oyuncunun verilerini json formatında indirmenize izin verir. Hepsi.
 In Depth Help - /plan logout                    || Give username argument to log out another user from the panel, give * as argument to log out everyone.
 In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
 In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
 In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.
 In Depth Help - /plan register                  || Use without arguments to get link to register page. Use --code [code] after registration to get a user.
-In Depth Help - /plan reload                    || Disable and enable the plugin to reload any changes in config.
+In Depth Help - /plan reload                    || Yapılandırmadaki değişiklikleri yeniden yüklemek için eklentiyi devre dışı bırakın ve etkinleştirin.
 In Depth Help - /plan search                    || List all matching player names to given part of a name.
 In Depth Help - /plan server                    || Obtain a link to the /server page of a specific server, or the current server if no arguments are given.
-In Depth Help - /plan servers                   || List ids, names and uuids of servers in the database.
+In Depth Help - /plan servers                   || Veritabanındaki sunucuların kimliklerini, adlarını ve kullanıcılarını listeleyin.
 In Depth Help - /plan unregister                || Use without arguments to unregister player linked user, or with username argument to unregister another user.
-In Depth Help - /plan users                     || Lists web users as a table.
+In Depth Help - /plan users                     || Web kullanıcılarını tablo olarak listeler.
 Manage - Confirm Overwrite                      || ${0} içindeki verilen üzerinden yazılacak!
 Manage - Confirm Removal                        || ${0} İçindeki Veri Silinecek!
 Manage - Fail                                   || > §cBirşey yanlış gidiyor: ${0}
@@ -482,9 +482,9 @@ Manage - Fail File not found                    || > §cBurada bir dosya bulunam
 Manage - Fail Incorrect Database                || > §c'${0}' Desteklenmeyen bir VeriTabanı.
 Manage - Fail No Exporter                       || §eExporter '${0}' doesn't exist
 Manage - Fail No Importer                       || §eAlıcı '${0}' yok
-Manage - Fail No Server                         || No server found with given parameters.
+Manage - Fail No Server                         || Verilen parametrelere sahip sunucu bulunamadı.
 Manage - Fail Same Database                     || > §cAynı veritabanında veya benzerinde çalışamaz!
-Manage - Fail Same server                       || Can not mark this server as uninstalled (You are on it)
+Manage - Fail Same server                       || Bu sunucuyu kaldırılmış olarak işaretleyemezsiniz (Siz buradasınız)
 Manage - Fail, Confirmation                     || > §cKomutu onaylamak için '-a' komuta ekle: ${0}
 Manage - List Importers                         || Importers:
 Manage - Progress                               || ${0} / ${1} processed..
@@ -493,8 +493,8 @@ Manage - Start                                  || > §2Veri işleniyor..
 Manage - Success                                || > §aBaşarılı!
 Negative                                        || Hayır
 Positive                                        || Evet
-Today                                           || 'Today'
-Unavailable                                     || Unavailable
+Today                                           || 'Bugün'
+Unavailable                                     || Kullanım dışı
 Unknown                                         || Bilinmeyen
 Version - DEV                                   ||  Bu bir GELİŞTİRİCİ sürümüdür.
 Version - Latest                                || En son sürümü kullanıyorsunuz.
@@ -505,12 +505,12 @@ Version FAIL - Read versions.txt                || Sürüm bilgileri Github/vers
 Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || WebServer: Sertifika yok -> Görüntülemek için HTTP-server kullanılıyor.
 WebServer - Notify HTTP User Auth               || WebServer: Kullanıcı Yetkisi Devre Dışı! (HTTP Güvenli değil)
-WebServer - Notify HTTPS User Auth              || WebServer: User Authorization Disabled! (Disabled in config)
-Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
+WebServer - Notify HTTPS User Auth              || WebServer: Kullanıcı Yetkilendirmesi Devre Dışı! (Yapılandırmada devre dışı bırakıldı)
+Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist etkinleştirildi..
 Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
 WebServer - Notify no Cert file                 || WebServer: Setrifikası Dosyası Bulunamadı: ${0}
 WebServer - Notify Using Proxy                  || WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Address points to the Proxy
-WebServer FAIL - EOF                            || WebServer: EOF when reading Certificate file. (Check that the file is not empty)
+WebServer FAIL - EOF                            || WebServer: EOF when reading Certificate file. (Dosyanın boş olmadığını kontrol edin.)
 WebServer FAIL - Port Bind                      || Web Sunucusu başarıyla başlatılmadı. Bu (${0}) port mu kullanılıyor ? 
 WebServer FAIL - SSL Context                    || WebServer: SSL İçeriği Başlatma Başarısız Oldu.
 WebServer FAIL - Store Load                     || WebServer: SSL Sertifikası yüklenirken sorun oluştu.

@@ -34,7 +34,7 @@ CMD Arg Name - username                         || uživatel
 Cmd Confirm - accept                            || Přijmout
 Cmd Confirm - cancelled, no data change         || Zrušeno. Žádná data nebyla změněna.
 Cmd Confirm - cancelled, unregister             || Zrušeno. '${0}' nebyl odregistrován
-Cmd Confirm - clearing db                       || Chystáte se smazat všechna Plan-data v ${0}
+Cmd Confirm - clearing db                       || Chystáte se smazat všechna Plan data v ${0}
 Cmd Confirm - confirmation                      || Potvrdit: 
 Cmd Confirm - deny                              || Zrušit
 Cmd Confirm - Expired                           || Potvrzení vypršelo, použijte příkaz znovu
@@ -44,7 +44,7 @@ Cmd Confirm - overwriting db                    || Chystáte se přepsat data v 
 Cmd Confirm - remove player db                  || Chystáte se smazat data ${0} z ${1}
 Cmd Confirm - unregister                        || Chystáte se odregistrovat '${0}' linknutého s ${1}
 Cmd db - creating backup                        || Vytvářím soubor zálohy '${0}.db' s obsahem z ${1}
-Cmd db - removal                                || Mažu Plan-data z ${0}..
+Cmd db - removal                                || Mažu Plan data z ${0}..
 Cmd db - removal player                         || Mažu data ${0} z ${1}..
 Cmd db - server uninstalled                     || §aPokud je server stále nainstalovaný, automaticky se ukáže jako instalovaný v databázi.
 Cmd db - write                                  || Zapisuji do ${0}..
@@ -139,11 +139,11 @@ Disable                                         || Player Analytics vypnuty.
 Disable - Processing                            || Zpracovávání kritických nezpracovaných úkonů. (${0})
 Disable - Processing Complete                   || Zpracování dokončeno.
 Disable - Unsaved Session Save                  || Ukládání nedokončené relace.
-Disable - Unsaved Session Save Timeout          || Timeout hit, storing the unfinished sessions on next enable instead.
-Disable - Waiting SQLite                        || Waiting queries to finish to avoid SQLite crashing JVM..
-Disable - Waiting SQLite Complete               || Closed SQLite connection.
-Disable - Waiting Transactions                  || Waiting for unfinished transactions to avoid data loss..
-Disable - Waiting Transactions Complete         || Transaction queue closed.
+Disable - Unsaved Session Save Timeout          || Překročen časový limit, ukládánm nedokončené relace pro příští spojení.
+Disable - Waiting SQLite                        || Čekání na dokončení dotazu, aby se zabránilo pádu JVM SQLite..
+Disable - Waiting SQLite Complete               || Uzavřené připojení SQLite.
+Disable - Waiting Transactions                  || Čekám na nedokončené transakce, aby nedošlo ke ztrátě dat..
+Disable - Waiting Transactions Complete         || Fronta Transakce uzavřena.
 Disable - WebServer                             || Webserver je již vypnutý.
 Enable                                          || Player Analytics zapnuty.
 Enable - Database                               || ${0}-připojení k databázi navázáno.
@@ -152,7 +152,7 @@ Enable - Notify Empty IP                        || IP v server.properties je pr�
 Enable - Notify Geolocations disabled           || Sbírání geolokace není aktivní. (Data.Geolocations: false)
 Enable - Notify Geolocations Internet Required  || Plan potřebuje internetové připojení pro první start ke stažení GeoLite2 Geolocation databáze.
 Enable - Notify Webserver disabled              || WebServer nebyl inicializován. (WebServer.DisableWebServer: true)
-Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
+Enable - Storing preserved sessions             || Uložení relace, které byly zachovalé před předchozím spojením.
 Enable - WebServer                              || Webserver běží na PORTU ${0} (${1})
 Enable FAIL - Database                          || ${0}-Připojení k databázi selhalo: ${1}
 Enable FAIL - Database Patch                    || Patch databáze selhal, plugin musí být vypnut. Prosíme nahlašte tento problém
@@ -228,7 +228,7 @@ HTML - LABEL_NEW_PLAYERS                        || Noví hráči
 HTML - LABEL_NICKNAME                           || Přezdívka
 HTML - LABEL_NO_SESSION_KILLS                   || Žádný
 HTML - LABEL_ONLINE_FIRST_JOIN                  || Online hráči při prvním připojení
-HTML - LABEL_OPERATOR                           || Operator
+HTML - LABEL_OPERATOR                           || Operátor
 HTML - LABEL_PER_PLAYER                         || na hráče
 HTML - LABEL_PER_REGULAR_PLAYER                 || na pravidelného hráče
 HTML - LABEL_PLAYER_DEATHS                      || Smrti způsobené hráči
@@ -376,7 +376,7 @@ HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Online aktivita na proxy
 HTML - TITLE_GRAPH_PUNCHCARD                    || Štítek pro 30 dní
 HTML - TITLE_INSIGHTS                           || Postřehy za 30 dní
 HTML - TITLE_IS_AVAILABLE                       || je dostupný
-HTML - TITLE_JOIN_ADDRESSES                     || Join Addresses
+HTML - TITLE_JOIN_ADDRESSES                     || Připojovací IP
 HTML - TITLE_LAST_24_HOURS                      || Posledních 24 hodin
 HTML - TITLE_LAST_30_DAYS                       || Posledních 30 dní
 HTML - TITLE_LAST_7_DAYS                        || Posledních 7 dní
@@ -435,9 +435,9 @@ HTML - Version Update                           || Aktualizovat
 HTML - Version Update Available                 || Nová verze ${0} je dostupná!
 HTML - Version Update Dev                       || Toto je vývojářská verze.
 HTML - Version Update Info                      || Nová verze je dostupná ke stažení.
-HTML - WARNING_NO_GAME_SERVERS                  || Some data requires Plan to be installed on game servers.
-HTML - WARNING_NO_GEOLOCATIONS                  || Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).
-HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunks unavailable on Sponge
+HTML - WARNING_NO_GAME_SERVERS                  || Některá data vyžadují, aby byla na herní servery nainstalována aplikace Plan.
+HTML - WARNING_NO_GEOLOCATIONS                  || V konfiguraci je třeba povolit shromažďování geolokací (Přijměte GeoLite2 EULA).
+HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunky nejsou na Sponge dostupné
 HTML - WITH                                     || <th>S
 HTML ERRORS - ACCESS_DENIED_403                 || Přístup zamítnut
 HTML ERRORS - AUTH_FAIL_TIPS_401                || - Ujistěte se, že jste zaregistrovaní s uživatelem s <b>/plan register</b><br>- Zkontrolujte zda je jméno a heslo správné<br>- Jméno a heslo jsou citlivá na velká/malá písmena<br><br>Pokud jste zapomněli heslo, zeptejte se člena týmu ke smazání vašeho starého uživatele či nové registraci.
@@ -448,7 +448,7 @@ HTML ERRORS - NOT_FOUND_404                     || Nenalezeno
 HTML ERRORS - NOT_PLAYED_404                    || Hráč nebyl nenalezen.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Stránka neexistuje.
 HTML ERRORS - UNAUTHORIZED_401                  || Neautorizováno
-HTML ERRORS - UNKNOWN_PAGE_404                  || Ujistěte se, že přistupujete na odkaz poskytnutý příkazem, Příklad:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Ujistěte se, že přistupujete na odkaz poskytnutý příkazem, Příklad:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>
 HTML ERRORS - UUID_404                          || Hráčské UUID nebylo nalezeno v databázi.
 In Depth Help - /plan db                        || Použít jiné subpříkazy databáze ke změně dat
 In Depth Help - /plan db backup                 || Použití SQLite k zálohování cílové databáze do souboru.

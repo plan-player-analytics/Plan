@@ -448,7 +448,7 @@ HTML ERRORS - NOT_FOUND_404                     || Не обнаружена
 HTML ERRORS - NOT_PLAYED_404                    || Plan еще не видел этого игрока.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Страница не существует.
 HTML ERRORS - UNAUTHORIZED_401                  || Не авторизован
-HTML ERRORS - UNKNOWN_PAGE_404                  || Убедитесь, что вы получаете доступ к ссылке, заданной командой, Примеры:</p><p>/player/PlayerName<br>/server/ServerName</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Убедитесь, что вы получаете доступ к ссылке, заданной командой, Примеры:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>
 HTML ERRORS - UUID_404                          || UUID игрока не найден в базе данных.
 In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
 In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.

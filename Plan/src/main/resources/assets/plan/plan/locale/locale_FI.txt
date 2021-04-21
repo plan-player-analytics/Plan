@@ -448,7 +448,7 @@ HTML ERRORS - NOT_FOUND_404                     || Ei löytynyt
 HTML ERRORS - NOT_PLAYED_404                    || Pelaaja ei ole pelannut palvelimella.
 HTML ERRORS - PAGE_NOT_FOUND_404                || Sivua ei ole olemassa.
 HTML ERRORS - UNAUTHORIZED_401                  || Todennusta ei suoritettu loppuun.
-HTML ERRORS - UNKNOWN_PAGE_404                  || Varmista menneeesi komennon antamaan osoitteeseen, Esim:</p><p>/player/PelaajanNimi<br>/server/PalvelimenNimi</p>
+HTML ERRORS - UNKNOWN_PAGE_404                  || Varmista menneeesi komennon antamaan osoitteeseen, Esim:</p><p>/player/{uuid/nimi}<br>/server/{uuid/nimi/id}</p>
 HTML ERRORS - UUID_404                          || Pelaajan UUID:ta ei löytynyt tietokannasta.
 In Depth Help - /plan db                        || Käytä eri tietokanta alikomentoja vaikuttaaksesi tietokantaan
 In Depth Help - /plan db backup                 || Käyttää SQLiteä varmuuskopioimaan tiedot tiedostoon.

@@ -93,7 +93,7 @@ function createAccordionBody(i, session) {
                         </div>
                         <div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">
                             <div id="worldpie_${i}" class="chart-pie"></div>
-                            <a href="${session.network_server ? `./player/` : `../player/`}${session.player_url_name}" class="float-right btn bg-blue">
+                            <a href="${session.network_server ? `./player/` : `../player/`}${session.player_uuid}" class="float-right btn bg-blue">
                                 <i class="fa fa-user"></i><span> Player Page</span>
                             </a>
                             ${session.network_server ? `<a href="./server/${session.server_url_name}" class="float-right btn bg-light-green mr-2">
