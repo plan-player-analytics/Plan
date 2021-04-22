@@ -65,8 +65,14 @@ public class ServerTableValuesRowNumberPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        addColumn(TABLE_NAME, ROW_NUMBER + ' ' + Sql.INT + " NOT NULL DEFAULT 0");
+        if (!hasColumn(TABLE_NAME, ROW_NUMBER)) {
+            addColumn(TABLE_NAME, ROW_NUMBER + ' ' + Sql.INT + " NOT NULL DEFAULT 0");
+        }
 
+        updateRowIds();
+    }
+
+    private void updateRowIds() {
         String updateRowId = "UPDATE " + TABLE_NAME + " SET " +
                 ROW_NUMBER + "=?" +
                 WHERE + ID + "=?";

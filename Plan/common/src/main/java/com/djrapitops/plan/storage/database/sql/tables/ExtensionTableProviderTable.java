@@ -79,7 +79,7 @@ public class ExtensionTableProviderTable {
                 .column(ID, INT).primaryKey()
                 .column(PROVIDER_NAME, Sql.varchar(50)).notNull()
                 .column(COLOR, Sql.varchar(25)).notNull().defaultValue("'" + Color.NONE.name() + "'")
-                .column(VALUES_FOR, INT)
+                .column(VALUES_FOR, INT).defaultValue("0")
                 .column(CONDITION, Sql.varchar(54)) // 50 + 4 for "not_"
                 .column(COL_1, Sql.varchar(50))
                 .column(COL_2, Sql.varchar(50))

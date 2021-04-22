@@ -51,7 +51,7 @@ public class ExtensionServerTableValueTable {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
-                .column(ROW_NUMBER, INT).notNull()
+                .column(ROW_NUMBER, INT).notNull().defaultValue("0")
                 .column(VALUE_1, Sql.varchar(250))
                 .column(VALUE_2, Sql.varchar(250))
                 .column(VALUE_3, Sql.varchar(250))

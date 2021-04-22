@@ -31,7 +31,9 @@ import java.util.Map;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.ID;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.TABLE_ID;
+import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable.ROW_NUMBER;
+import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable.TABLE_NAME;
 
 public class PlayerTableValuesRowNumberPatch extends Patch {
 
@@ -65,8 +67,14 @@ public class PlayerTableValuesRowNumberPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        addColumn(TABLE_NAME, ROW_NUMBER + ' ' + Sql.INT + " NOT NULL DEFAULT 0");
+        if (!hasColumn(TABLE_NAME, ROW_NUMBER)) {
+            addColumn(TABLE_NAME, ROW_NUMBER + ' ' + Sql.INT + " NOT NULL DEFAULT 0");
+        }
 
+        updateRowIds();
+    }
+
+    private void updateRowIds() {
         String updateRowId = "UPDATE " + TABLE_NAME + " SET " +
                 ROW_NUMBER + "=?" +
                 WHERE + ID + "=?";
