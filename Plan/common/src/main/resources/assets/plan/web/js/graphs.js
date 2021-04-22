@@ -711,7 +711,13 @@ function worldPie(id, worldSeries, gmSeries) {
 }
 
 function updateGraphs() {
-    for (let graph of graphs) {
+    const scrollbar = {...Highcharts.theme.scrollbar};
+    graphs.forEach((graph, index, array) => {
+        if (Object.keys(graph).length === 0) {
+            array.splice(index, 1);
+            return;
+        }
+        Highcharts.theme["scrollbar"] = {...scrollbar};
         graph.update(Highcharts.theme);
-    }
+    })
 }
