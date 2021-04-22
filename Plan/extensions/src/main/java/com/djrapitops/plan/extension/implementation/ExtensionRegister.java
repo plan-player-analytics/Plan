@@ -70,6 +70,7 @@ public class ExtensionRegister {
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createExtension, EssentialsExtensionFactory::registerUpdateListeners);
         register(new FactionsExtensionFactory(), FactionsExtensionFactory::createExtension);
         register(new FactionsUUIDExtensionFactory(), FactionsUUIDExtensionFactory::createExtension, FactionsUUIDExtensionFactory::registerExpansion);
+        register(new FastLoginExtensionFactory(), FastLoginExtensionFactory::createExtension);
         register(new FloodgateExtensionFactory(), FloodgateExtensionFactory::createExtension, FloodgateExtensionFactory::registerListener);
         register(new GriefDefenderExtensionFactory(), GriefDefenderExtensionFactory::createExtension);
         register(new GriefPreventionExtensionFactory(), GriefPreventionExtensionFactory::createExtension);
