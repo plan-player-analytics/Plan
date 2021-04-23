@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -176,25 +176,30 @@ public interface <span class="typeNameLabel">SpongeTaskModule</span></pre>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindPingCounter(com.djrapitops.plan.gathering.timed.SpongePingCounter)">bindPingCounter</a></span>&#8203;(<a href="../../gathering/timed/SpongePingCounter.html" title="class in com.djrapitops.plan.gathering.timed">SpongePingCounter</a>&nbsp;pingCounter)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindOldDependencyCacheDeletion(com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask)">bindOldDependencyCacheDeletion</a></span>&#8203;(<a href="../../storage/upkeep/OldDependencyCacheDeletionTask.html" title="class in com.djrapitops.plan.storage.upkeep">OldDependencyCacheDeletionTask</a>&nbsp;deletionTask)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindRamAndCpuTask(com.djrapitops.plan.gathering.timed.SystemUsageBuffer.RamAndCpuTask)">bindRamAndCpuTask</a></span>&#8203;(<a href="../../gathering/timed/SystemUsageBuffer.RamAndCpuTask.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer.RamAndCpuTask</a>&nbsp;ramAndCpuTask)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindPingCounter(com.djrapitops.plan.gathering.timed.SpongePingCounter)">bindPingCounter</a></span>&#8203;(<a href="../../gathering/timed/SpongePingCounter.html" title="class in com.djrapitops.plan.gathering.timed">SpongePingCounter</a>&nbsp;pingCounter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindShutdownDataPreservation(com.djrapitops.plan.gathering.ShutdownDataPreservation)">bindShutdownDataPreservation</a></span>&#8203;(<a href="../../gathering/ShutdownDataPreservation.html" title="class in com.djrapitops.plan.gathering">ShutdownDataPreservation</a>&nbsp;dataPreservation)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindRamAndCpuTask(com.djrapitops.plan.gathering.timed.SystemUsageBuffer.RamAndCpuTask)">bindRamAndCpuTask</a></span>&#8203;(<a href="../../gathering/timed/SystemUsageBuffer.RamAndCpuTask.html" title="class in com.djrapitops.plan.gathering.timed">SystemUsageBuffer.RamAndCpuTask</a>&nbsp;ramAndCpuTask)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindShutdownHookRegistration(com.djrapitops.plan.gathering.ShutdownHook.Registrar)">bindShutdownHookRegistration</a></span>&#8203;(<a href="../../gathering/ShutdownHook.Registrar.html" title="class in com.djrapitops.plan.gathering">ShutdownHook.Registrar</a>&nbsp;registrar)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindShutdownDataPreservation(com.djrapitops.plan.gathering.ShutdownDataPreservation)">bindShutdownDataPreservation</a></span>&#8203;(<a href="../../gathering/ShutdownDataPreservation.html" title="class in com.djrapitops.plan.gathering">ShutdownDataPreservation</a>&nbsp;dataPreservation)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindShutdownHookRegistration(com.djrapitops.plan.gathering.ShutdownHook.Registrar)">bindShutdownHookRegistration</a></span>&#8203;(<a href="../../gathering/ShutdownHook.Registrar.html" title="class in com.djrapitops.plan.gathering">ShutdownHook.Registrar</a>&nbsp;registrar)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindTPSCounter(com.djrapitops.plan.gathering.timed.ServerTPSCounter)">bindTPSCounter</a></span>&#8203;(<a href="../../gathering/timed/ServerTPSCounter.html" title="class in com.djrapitops.plan.gathering.timed">ServerTPSCounter</a>&lt;org.spongepowered.api.world.World&gt;&nbsp;tpsCounter)</code></th>
 <td class="colLast">&nbsp;</td>
@@ -329,12 +334,23 @@ public interface <span class="typeNameLabel">SpongeTaskModule</span></pre>
 <a id="bindShutdownDataPreservation(com.djrapitops.plan.gathering.ShutdownDataPreservation)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>bindShutdownDataPreservation</h4>
 <pre class="methodSignature">@Binds
 @IntoSet
 <a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a>&nbsp;bindShutdownDataPreservation&#8203;(<a href="../../gathering/ShutdownDataPreservation.html" title="class in com.djrapitops.plan.gathering">ShutdownDataPreservation</a>&nbsp;dataPreservation)</pre>
+</li>
+</ul>
+<a id="bindOldDependencyCacheDeletion(com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>bindOldDependencyCacheDeletion</h4>
+<pre class="methodSignature">@Binds
+@IntoSet
+<a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a>&nbsp;bindOldDependencyCacheDeletion&#8203;(<a href="../../storage/upkeep/OldDependencyCacheDeletionTask.html" title="class in com.djrapitops.plan.storage.upkeep">OldDependencyCacheDeletionTask</a>&nbsp;deletionTask)</pre>
 </li>
 </ul>
 </li>
