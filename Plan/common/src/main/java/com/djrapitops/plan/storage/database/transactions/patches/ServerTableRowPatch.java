@@ -33,11 +33,11 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable.ID;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable.*;
 
-public class ServerTableValuesRowNumberPatch extends Patch {
+public class ServerTableRowPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(TABLE_NAME, ROW_NUMBER)
+        return hasColumn(TABLE_NAME, TABLE_ROW)
                 && tableRowIdsAreUniquePerTableId();
     }
 
@@ -45,7 +45,7 @@ public class ServerTableValuesRowNumberPatch extends Patch {
         String columnCountPerTableSql = SELECT +
                 TABLE_ID + ",COUNT(1) as c" +
                 FROM + TABLE_NAME +
-                WHERE + ROW_NUMBER + "=?" +
+                WHERE + TABLE_ROW + "=?" +
                 GROUP_BY + TABLE_ID;
         return query(new QueryStatement<Boolean>(columnCountPerTableSql) {
             @Override
@@ -65,8 +65,8 @@ public class ServerTableValuesRowNumberPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        if (!hasColumn(TABLE_NAME, ROW_NUMBER)) {
-            addColumn(TABLE_NAME, ROW_NUMBER + ' ' + Sql.INT + " NOT NULL DEFAULT 0");
+        if (!hasColumn(TABLE_NAME, TABLE_ROW)) {
+            addColumn(TABLE_NAME, TABLE_ROW + ' ' + Sql.INT + " NOT NULL DEFAULT 0");
         }
 
         updateRowIds();
@@ -74,7 +74,7 @@ public class ServerTableValuesRowNumberPatch extends Patch {
 
     private void updateRowIds() {
         String updateRowId = "UPDATE " + TABLE_NAME + " SET " +
-                ROW_NUMBER + "=?" +
+                TABLE_ROW + "=?" +
                 WHERE + ID + "=?";
         for (List<Integer> rowIds : fetchTableRowIds().values()) {
             execute(new ExecBatchStatement(updateRowId) {

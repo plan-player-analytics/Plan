@@ -35,7 +35,7 @@ public class ExtensionPlayerTableValueTable {
     public static final String TABLE_ID = "table_id";
     public static final String USER_UUID = "uuid";
 
-    public static final String ROW_NUMBER = "row_number";
+    public static final String TABLE_ROW = "table_row";
     // All values can be null
     public static final String VALUE_1 = "col_1_value";
     public static final String VALUE_2 = "col_2_value";
@@ -50,7 +50,7 @@ public class ExtensionPlayerTableValueTable {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull()
-                .column(ROW_NUMBER, INT).notNull().defaultValue("0")
+                .column(TABLE_ROW, INT).notNull().defaultValue("0")
                 .column(VALUE_1, Sql.varchar(250))
                 .column(VALUE_2, Sql.varchar(250))
                 .column(VALUE_3, Sql.varchar(250))

@@ -104,7 +104,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
         String sql = DELETE_FROM + TABLE_NAME +
                 WHERE + TABLE_ID + "=?" +
                 AND + USER_UUID + "=?" +
-                AND + ROW_NUMBER + ">=?"; // Since row count is zero indexed and afterRow is size the value should be removed.
+                AND + TABLE_ROW + ">=?"; // Since row count is zero indexed and afterRow is size the value should be removed.
 
         execute(new ExecStatement(sql) {
             @Override
@@ -124,7 +124,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
                 VALUE_2 + ',' +
                 VALUE_3 + ',' +
                 VALUE_4 + ',' +
-                ROW_NUMBER +
+                TABLE_ROW +
                 ") VALUES (?,?,?,?,?,?,?)";
 
         execute(new ExecBatchStatement(sql) {
@@ -161,7 +161,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
                 VALUE_4 + "=?" +
                 WHERE + TABLE_ID + "=?" +
                 AND + USER_UUID + "=?" +
-                AND + ROW_NUMBER + "=?";
+                AND + TABLE_ROW + "=?";
         execute(new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -190,7 +190,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
     }
 
     private Query<Integer> currentRowCount(Integer tableID) {
-        String sql = SELECT + "COALESCE(MAX(" + ROW_NUMBER + "), -1) as m" +
+        String sql = SELECT + "COALESCE(MAX(" + TABLE_ROW + "), -1) as m" +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ID + "=?" +
                 AND + USER_UUID + "=?";

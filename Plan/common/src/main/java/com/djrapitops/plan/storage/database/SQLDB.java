@@ -179,8 +179,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new UserInfoHostnamePatch(),
                 new ServerIsProxyPatch(),
                 new UserInfoHostnameAllowNullPatch(),
-                new ServerTableValuesRowNumberPatch(),
-                new PlayerTableValuesRowNumberPatch(),
+                new ServerTableRowPatch(),
+                new PlayerTableRowPatch(),
                 new ExtensionTableProviderValuesForPatch()
         };
     }
