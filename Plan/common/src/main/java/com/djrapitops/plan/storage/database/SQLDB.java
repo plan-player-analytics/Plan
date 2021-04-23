@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.*;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -261,11 +261,11 @@ public abstract class SQLDB extends AbstractDatabase {
             accessLock.checkAccess(transaction);
             transaction.executeTransaction(this);
             return CompletableFuture.completedFuture(null);
-        }, getTransactionExecutor()).handle(errorHandler(transaction, origin));
+        }, getTransactionExecutor()).exceptionally(errorHandler(transaction, origin));
     }
 
-    private BiFunction<CompletableFuture<Object>, Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, Exception origin) {
-        return (obj, throwable) -> {
+    private Function<Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, Exception origin) {
+        return throwable -> {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);
             }
