@@ -122,6 +122,13 @@ public final class ExtensionExtractor {
                 continue;
             }
 
+            try {
+                method.makeAccessible();
+            } catch (SecurityException failedToMakeAccessible) {
+                throw new IllegalArgumentException(extensionName + "." + method.getMethodName() + " could not be made accessible: " +
+                        failedToMakeAccessible.getMessage(), failedToMakeAccessible);
+            }
+
             method.getAnnotation(BooleanProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addBooleanMethod(method);

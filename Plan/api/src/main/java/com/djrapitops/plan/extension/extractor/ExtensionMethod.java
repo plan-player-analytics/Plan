@@ -77,6 +77,15 @@ public class ExtensionMethod {
         return getMethod().getName();
     }
 
+    /**
+     * @throws SecurityException If access modification fails.
+     */
+    public void makeAccessible() {
+        if (!method.isAccessible()) {
+            method.setAccessible(true);
+        }
+    }
+
     public enum ParameterType {
         SERVER_NONE(null),
         PLAYER_STRING(String.class),
