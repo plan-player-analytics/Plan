@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.html.structure;
 
 import com.djrapitops.plan.extension.table.Table;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -96,7 +97,11 @@ public class DynamicHtmlTable implements HtmlTable {
             long time = dateFormat.parse(valueString).getTime();
             builtBody.append("<td data-order=\"").append(time).append("\">").append(valueString);
         } catch (ParseException e) {
-            builtBody.append("<td>").append(valueString);
+            if (NumberUtils.isParsable(valueString)) {
+                builtBody.append("<td data-order=\"").append(valueString).append("\">").append(valueString);
+            } else {
+                builtBody.append("<td>").append(valueString);
+            }
         }
     }
 }
