@@ -99,6 +99,6 @@ public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
 
     @Override
     public DependencyLoader getDependencyLoader() {
-        return new DependencyLoader((URLClassLoader) getClass().getClassLoader(), getPluginLogger(), getPluginInformation());
+        return new DependencyLoader((URLClassLoader) getClass().getClassLoader(), getPluginInformation());
     }
 }
