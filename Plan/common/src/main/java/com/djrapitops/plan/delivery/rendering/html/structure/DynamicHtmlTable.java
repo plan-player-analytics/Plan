@@ -18,11 +18,15 @@ package com.djrapitops.plan.delivery.rendering.html.structure;
 
 import com.djrapitops.plan.extension.table.Table;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class DynamicHtmlTable implements HtmlTable {
     private final Header[] headers;
     private final List<Object[]> rows;
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d yyyy, HH:mm");
 
     public DynamicHtmlTable(Header[] headers, List<Object[]> rows) {
         this.headers = headers;
@@ -76,9 +80,7 @@ public class DynamicHtmlTable implements HtmlTable {
                 if (i > headerLength) {
                     builtBody.append("<td>-");
                 } else {
-                    builtBody.append("<td>");
-                    Object value = row[i];
-                    builtBody.append(value != null ? value : '-');
+                    appendValue(builtBody, row[i]);
                 }
                 builtBody.append("</td>");
             } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
@@ -86,5 +88,15 @@ public class DynamicHtmlTable implements HtmlTable {
             }
         }
         builtBody.append("</tr>");
+    }
+
+    private void appendValue(StringBuilder builtBody, Object value) {
+        String valueString = value != null ? value.toString() : "-";
+        try {
+            long time = dateFormat.parse(valueString).getTime();
+            builtBody.append("<td data-order=\"").append(time).append("\">").append(valueString);
+        } catch (ParseException e) {
+            builtBody.append("<td>").append(valueString);
+        }
     }
 }
