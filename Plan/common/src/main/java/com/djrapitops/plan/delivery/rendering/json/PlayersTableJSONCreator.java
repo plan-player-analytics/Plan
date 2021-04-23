@@ -47,6 +47,7 @@ public class PlayersTableJSONCreator {
     private final List<ExtensionDescription> extensionDescriptions;
     private final Map<UUID, ExtensionTabData> extensionData;
     private final Locale locale;
+    private final boolean playersPage;
 
     private final boolean openPlayerPageInNewTab;
 
@@ -62,10 +63,23 @@ public class PlayersTableJSONCreator {
             Formatters formatters,
             Locale locale
     ) {
+        this(players, extensionData, openPlayerPageInNewTab, formatters, locale, false);
+    }
+
+    public PlayersTableJSONCreator(
+            List<TablePlayer> players,
+            Map<UUID, ExtensionTabData> extensionData,
+            // Settings
+            boolean openPlayerPageInNewTab,
+            Formatters formatters,
+            Locale locale,
+            boolean playersPage
+    ) {
         // Data
         this.players = players;
         this.extensionData = extensionData;
         this.locale = locale;
+        this.playersPage = playersPage;
 
         extensionDescriptions = new ArrayList<>();
         addExtensionDescriptions(extensionData);
@@ -122,7 +136,8 @@ public class PlayersTableJSONCreator {
 
     private void addPlayerData(Map<String, Object> dataJson, TablePlayer player) {
         String name = player.getName().orElse(player.getPlayerUUID().toString());
-        String url = "../player/" + Html.encodeToURL(player.getPlayerUUID().toString());
+        String url = (playersPage ? "./player/" : "../player/") +
+                Html.encodeToURL(player.getPlayerUUID().toString());
 
         int loginTimes = player.getSessionCount().orElse(0);
         long activePlaytime = player.getActivePlaytime().orElse(-1L);

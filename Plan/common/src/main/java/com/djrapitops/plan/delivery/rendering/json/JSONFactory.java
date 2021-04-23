@@ -110,7 +110,8 @@ public class JSONFactory {
                 database.query(new NetworkTablePlayersQuery(System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
                 pluginData,
                 openPlayerLinksInNewTab,
-                formatters, locale
+                formatters, locale,
+                true // players page
         ).toJSONMap();
     }
 
