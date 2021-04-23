@@ -25,6 +25,7 @@ import com.djrapitops.plan.gathering.timed.VelocityPingCounter;
 import com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
+import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
@@ -67,4 +68,8 @@ public interface VelocityTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindJSONFileStorageCleanTask(JSONFileStorage.CleanTask cleanTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindOldDependencyCacheDeletion(OldDependencyCacheDeletionTask deletionTask);
 }

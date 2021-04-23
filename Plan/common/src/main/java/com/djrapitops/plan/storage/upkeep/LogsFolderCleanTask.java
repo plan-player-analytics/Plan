@@ -29,7 +29,6 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -81,7 +80,9 @@ public class LogsFolderCleanTask extends TaskSystem.Task {
 
     private void cleanFolder() {
         long now = System.currentTimeMillis();
-        for (File file : Objects.requireNonNull(folder.listFiles())) {
+        File[] files = folder.listFiles();
+        if (files == null) return;
+        for (File file : files) {
             long forDaysMs = TimeUnit.DAYS.toMillis(config.get(PluginSettings.KEEP_LOGS_DAYS));
             if (now - file.lastModified() > (forDaysMs > 0 ? forDaysMs : TimeUnit.DAYS.toMillis(1L))) {
                 try {
