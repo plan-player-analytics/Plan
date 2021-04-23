@@ -33,6 +33,7 @@ import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.VelocityPlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.apache.maven.model.building.ModelBuildingException;
 import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
@@ -97,7 +98,7 @@ public class PlanVelocity implements PlanPlugin {
 
         try {
             new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
-        } catch (IOException e) {
+        } catch (IOException | ModelBuildingException e) {
             java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
         }
 

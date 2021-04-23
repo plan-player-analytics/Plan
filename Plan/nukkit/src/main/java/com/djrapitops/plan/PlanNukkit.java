@@ -33,6 +33,7 @@ import net.playeranalytics.plugin.NukkitPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.apache.maven.model.building.ModelBuildingException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -70,7 +71,7 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
 
         try {
             new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
-        } catch (IOException e) {
+        } catch (IOException | ModelBuildingException e) {
             Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
         }
     }

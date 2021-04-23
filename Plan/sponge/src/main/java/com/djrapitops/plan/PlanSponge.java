@@ -28,6 +28,7 @@ import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.SpongePlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.apache.maven.model.building.ModelBuildingException;
 import org.bstats.sponge.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.Game;
@@ -118,7 +119,7 @@ public class PlanSponge implements PlanPlugin {
         runnableFactory = abstractionLayer.getRunnableFactory();
         try {
             new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
-        } catch (IOException e) {
+        } catch (IOException | ModelBuildingException e) {
             java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
         }
     }

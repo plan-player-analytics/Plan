@@ -20,6 +20,7 @@ import com.djrapitops.plan.utilities.java.Lists;
 import net.playeranalytics.plugin.dependencies.DependencyLoader;
 import net.playeranalytics.plugin.me.lucko.jarrelocator.Relocation;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.apache.maven.model.building.ModelBuildingException;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class DependencyStartup {
         this.dependencyLoader = dependencyLoader;
     }
 
-    public void loadDependencies() throws IOException {
+    public void loadDependencies() throws IOException, ModelBuildingException {
         logger.info("Resolving runtime dependencies..");
         dependencyLoader.addDependency(REPOSITORY_MAVEN_CENTRAL,
                 "com.h2database", "h2", "1.4.199",
