@@ -91,7 +91,7 @@ public class JSONFileStorage implements JSONStorage {
         Path writingTo = jsonDirectory.resolve(identifier + '-' + timestamp + JSON_FILE_EXTENSION);
         String jsonToWrite = addMissingTimestamp(json, timestamp);
         try {
-            Files.createDirectories(jsonDirectory);
+            if (!Files.isSymbolicLink(jsonDirectory)) Files.createDirectories(jsonDirectory);
             Files.write(writingTo, jsonToWrite.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
         } catch (IOException e) {
             logger.warn("Could not write a file to " + writingTo.toFile().getAbsolutePath() + ": " + e.getMessage());

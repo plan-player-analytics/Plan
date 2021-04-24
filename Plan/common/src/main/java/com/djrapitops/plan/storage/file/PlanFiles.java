@@ -67,7 +67,8 @@ public class PlanFiles implements SubSystem {
     public File getLogsFolder() {
         try {
             File folder = getFileFromPluginFolder("logs");
-            Files.createDirectories(folder.toPath());
+            Path dir = folder.toPath();
+            Files.createDirectories(dir);
             return folder;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -95,7 +96,8 @@ public class PlanFiles implements SubSystem {
         ResourceCache.invalidateAll();
         ResourceCache.cleanUp();
         try {
-            Files.createDirectories(dataFolder.toPath());
+            Path dir = getDataDirectory();
+            if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
             if (!configFile.exists()) Files.createFile(configFile.toPath());
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml, " + e.getMessage(), e);

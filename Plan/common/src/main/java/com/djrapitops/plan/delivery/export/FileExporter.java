@@ -51,7 +51,8 @@ abstract class FileExporter {
     }
 
     void export(Path to, List<String> content) throws IOException {
-        Files.createDirectories(to.getParent());
+        Path dir = to.getParent();
+        if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
         Files.write(to, content, StandardCharsets.UTF_8, OPEN_OPTIONS);
     }
 
@@ -60,7 +61,8 @@ abstract class FileExporter {
     }
 
     void export(Path to, WebResource resource) throws IOException {
-        Files.createDirectories(to.getParent());
+        Path dir = to.getParent();
+        if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
 
         try (
                 InputStream in = resource.asStream();
@@ -71,7 +73,8 @@ abstract class FileExporter {
     }
 
     void export(Path to, byte[] resource) throws IOException {
-        Files.createDirectories(to.getParent());
+        Path dir = to.getParent();
+        if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
 
         try (
                 InputStream in = new ByteArrayInputStream(resource);

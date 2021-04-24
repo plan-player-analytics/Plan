@@ -83,7 +83,8 @@ public class TestResources {
 
     private static void createEmptyFile(File toFile) {
         try {
-            Files.createDirectories(toFile.toPath().getParent());
+            Path dir = toFile.toPath().getParent();
+            if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
             if (!toFile.exists()) {
                 Files.createFile(toFile.toPath());
             }

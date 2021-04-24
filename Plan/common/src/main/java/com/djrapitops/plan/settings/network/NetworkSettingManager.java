@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -150,7 +151,8 @@ public class NetworkSettingManager implements SubSystem {
     private File createServerSettingsFolder() {
         try {
             File serverConfigFolder = files.getFileFromPluginFolder("serverConfiguration");
-            Files.createDirectories(serverConfigFolder.toPath());
+            Path dir = serverConfigFolder.toPath();
+            if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
             return serverConfigFolder;
         } catch (IOException e) {
             throw new EnableException("Could not initialize NetworkSettingManager: " + e.getMessage(), e);

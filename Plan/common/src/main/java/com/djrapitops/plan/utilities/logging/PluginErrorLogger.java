@@ -223,7 +223,8 @@ public class PluginErrorLogger implements ErrorLogger {
 
     private void writeNew(Path errorLog, Throwable throwable, List<String> lines) {
         try {
-            Files.createDirectories(errorLog.getParent());
+            Path dir = errorLog.getParent();
+            if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
             Files.write(errorLog, lines, StandardOpenOption.CREATE_NEW, StandardOpenOption.APPEND);
         } catch (IOException e) {
             throwable.addSuppressed(e);

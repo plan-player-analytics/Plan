@@ -43,11 +43,11 @@ public class Config extends ConfigNode {
 
     public Config(File configFile) {
         super("", null, null);
-        File folder = configFile.getParentFile();
         this.configFilePath = configFile.toPath();
+        Path dir = configFilePath.getParent();
 
         try {
-            Files.createDirectories(folder.toPath());
+            if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
             if (!Files.exists(configFilePath)) Files.createFile(configFilePath);
             read();
             save();
