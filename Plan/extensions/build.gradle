@@ -2,7 +2,7 @@ dependencies {
     compile project(path: ":api")
     compile 'com.djrapitops:Extension-AAC:4.4.2-R0.1'
     compile 'com.djrapitops:Extension-AdvancedAchievements:6.4.0-R0.1'
-    compile 'com.djrapitops:Extension-AdvancedBan:2.1.5-R0.10'
+    compile 'com.djrapitops:Extension-AdvancedBan:2.1.5-R1.0'
     compile 'com.djrapitops:Extension-ASkyBlock:3.0.9.4-R0.5'
     compile 'com.djrapitops:Extension-AuthMe:5.6.0-R0.1'
     compile 'com.djrapitops:Extension-BanManager:7.3.1-R0.2'
