@@ -4699,13 +4699,14 @@ input[type="button"].btn-block {
 
 .card-columns .card {
     margin-bottom: 0.75rem;
+    -webkit-backface-visibility: hidden;
 }
 
 @media (min-width: 576px) {
     .card-columns {
-        -moz-column-count: 3;
+        -webkit-column-count: 3;
         column-count: 3;
-        -moz-column-gap: 1.25rem;
+        -webkit-column-gap: 1.25rem;
         column-gap: 1.25rem;
         orphans: 1;
         widows: 1;
