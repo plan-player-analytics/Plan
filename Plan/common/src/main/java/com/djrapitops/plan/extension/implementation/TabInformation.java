@@ -24,7 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,9 +44,17 @@ public class TabInformation {
         this(
                 tabName,
                 icon,
-                elementOrder == null ? new ArrayList<>() : Arrays.asList(elementOrder),
+                createElementOrderList(elementOrder),
                 tabPriority
         );
+    }
+
+    private static List<ElementOrder> createElementOrderList(ElementOrder[] elementOrder) {
+        List<ElementOrder> list = new ArrayList<>();
+        if (elementOrder != null) {
+            Collections.addAll(list, elementOrder);
+        }
+        return list;
     }
 
     public TabInformation(String tabName, Icon icon, List<ElementOrder> elementOrder, int tabPriority) {
