@@ -711,7 +711,23 @@ function worldPie(id, worldSeries, gmSeries) {
 }
 
 function updateGraphs() {
-    for (let graph of graphs) {
+    // HighCharts nukes the scrollbar variable from the given parameter
+    // If the graph doesn't support srollbars (bar, pie and map charts for example)
+    // This workaround stores a copy of the scrollbar so that it can be set
+    const scrollbar = {...Highcharts.theme.scrollbar};
+
+    function updateGraph(graph, index, array) {
+        // Empty objects can be left in the array if existing graph is re-rendered
+        if (Object.keys(graph).length === 0) {
+            array.splice(index, 1);
+            return;
+        }
+
+        // scrollbar workaround
+        if (!Highcharts.theme["scrollbar"]) Highcharts.theme["scrollbar"] = {...scrollbar};
+
         graph.update(Highcharts.theme);
     }
+
+    graphs.forEach(updateGraph);
 }
