@@ -117,62 +117,71 @@ public class DataValueGatherer {
     private void addValuesToBuilder(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
         for (ExtensionMethod provider : methods.getBooleanProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            BooleanProvider annotation = provider.getExistingAnnotation(BooleanProvider.class);
-            dataBuilder.addValue(Boolean.class, dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .hideFromUsers(annotation)
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildBooleanProvidingCondition(() -> callMethod(provider, parameters, Boolean.class), annotation.conditionName()));
+            dataBuilder.addValue(Boolean.class, tryToBuildBoolean(dataBuilder, parameters, provider));
         }
         for (ExtensionMethod provider : methods.getDoubleProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            DoubleProvider annotation = provider.getExistingAnnotation(DoubleProvider.class);
-            dataBuilder.addValue(Double.class, dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildDouble(() -> callMethod(provider, parameters, Double.class)));
+            dataBuilder.addValue(Double.class, tryToBuildDouble(dataBuilder, parameters, provider));
         }
         for (ExtensionMethod provider : methods.getPercentageProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            PercentageProvider annotation = provider.getExistingAnnotation(PercentageProvider.class);
-            dataBuilder.addValue(Double.class, dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildPercentage(() -> callMethod(provider, parameters, Double.class)));
+            dataBuilder.addValue(Double.class, tryToBuildPercentage(dataBuilder, parameters, provider));
         }
         for (ExtensionMethod provider : methods.getNumberProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            NumberProvider annotation = provider.getExistingAnnotation(NumberProvider.class);
-            dataBuilder.addValue(Long.class, dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .format(annotation.format())
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildNumber(() -> callMethod(provider, parameters, Long.class)));
+            dataBuilder.addValue(Long.class, tryToBuildNumber(dataBuilder, parameters, provider));
         }
         for (ExtensionMethod provider : methods.getStringProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            StringProvider annotation = provider.getExistingAnnotation(StringProvider.class);
-            dataBuilder.addValue(String.class, dataBuilder.valueBuilder(annotation.text())
+            dataBuilder.addValue(String.class, tryToBuildString(dataBuilder, parameters, provider));
+        }
+        for (ExtensionMethod provider : methods.getGroupProviders()) {
+            if (brokenMethods.contains(provider)) continue;
+            dataBuilder.addValue(String[].class, tryToBuildGroups(dataBuilder, parameters, provider));
+        }
+        for (ExtensionMethod provider : methods.getTableProviders()) {
+            if (brokenMethods.contains(provider)) continue;
+            dataBuilder.addValue(Table.class, tryToBuildTable(dataBuilder, parameters, provider));
+        }
+        for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
+            if (brokenMethods.contains(provider)) continue;
+            addDataFromAnotherBuilder(dataBuilder, parameters, provider);
+        }
+    }
+
+    private DataValue<Table> tryToBuildTable(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+
+        TableProvider annotation = provider.getExistingAnnotation(TableProvider.class);
+        try {
+            return dataBuilder.valueBuilder(provider.getMethodName())
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildTable(() -> callMethod(provider, parameters, Table.class), annotation.tableColor());
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
+        }
+    }
+
+    private DataValue<String[]> tryToBuildGroups(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        GroupProvider annotation = provider.getExistingAnnotation(GroupProvider.class);
+        try {
+            return dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
+                    .icon(annotation.iconName(), annotation.iconFamily(), Color.NONE)
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildGroup(() -> callMethod(provider, parameters, String[].class));
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
+        }
+    }
+
+    private DataValue<String> tryToBuildString(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        StringProvider annotation = provider.getExistingAnnotation(StringProvider.class);
+        try {
+            return dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
                     .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
                     .description(annotation.description())
@@ -181,29 +190,84 @@ public class DataValueGatherer {
                     .showAsPlayerPageLink(annotation)
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildString(() -> callMethod(provider, parameters, String.class)));
+                    .buildString(() -> callMethod(provider, parameters, String.class));
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
         }
-        for (ExtensionMethod provider : methods.getGroupProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            GroupProvider annotation = provider.getExistingAnnotation(GroupProvider.class);
-            dataBuilder.addValue(String[].class, dataBuilder.valueBuilder(annotation.text())
+    }
+
+    private DataValue<Long> tryToBuildNumber(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        NumberProvider annotation = provider.getExistingAnnotation(NumberProvider.class);
+        try {
+            return dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), Color.NONE)
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .format(annotation.format())
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildGroup(() -> callMethod(provider, parameters, String[].class)));
+                    .buildNumber(() -> callMethod(provider, parameters, Long.class));
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
         }
-        for (ExtensionMethod provider : methods.getTableProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            TableProvider annotation = provider.getExistingAnnotation(TableProvider.class);
-            dataBuilder.addValue(Table.class, dataBuilder.valueBuilder(provider.getMethodName())
+    }
+
+    private DataValue<Double> tryToBuildPercentage(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        PercentageProvider annotation = provider.getExistingAnnotation(PercentageProvider.class);
+        try {
+            return dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildTable(() -> callMethod(provider, parameters, Table.class), annotation.tableColor()));
+                    .buildPercentage(() -> callMethod(provider, parameters, Double.class));
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
         }
-        for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            addDataFromAnotherBuilder(dataBuilder, parameters, provider);
+    }
+
+    private DataValue<Double> tryToBuildDouble(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        DoubleProvider annotation = provider.getExistingAnnotation(DoubleProvider.class);
+        try {
+            return dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildDouble(() -> callMethod(provider, parameters, Double.class));
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
+        }
+    }
+
+    private DataValue<Boolean> tryToBuildBoolean(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        BooleanProvider annotation = provider.getExistingAnnotation(BooleanProvider.class);
+        try {
+            return dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .hideFromUsers(annotation)
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildBooleanProvidingCondition(() -> callMethod(provider, parameters, Boolean.class), annotation.conditionName());
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
         }
     }
 
@@ -294,6 +358,14 @@ public class DataValueGatherer {
                 logFailure(unexpectedError);
             }
         }
+    }
+
+    private void logFailure(Throwable cause, String pluginName, String methodName) {
+        ErrorContext.Builder context = ErrorContext.builder()
+                .whatToDo("Report and/or disable " + pluginName + " extension in the Plan config.")
+                .related(pluginName)
+                .related("Method:" + methodName);
+        errorLogger.warn(cause, context.build());
     }
 
     private void logFailure(DataExtensionMethodCallException methodCallFailed) {
