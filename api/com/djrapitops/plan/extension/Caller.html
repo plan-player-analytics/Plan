@@ -187,8 +187,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li class="blockList">
 <h4>updatePlayerData</h4>
 <pre class="methodSignature">void&nbsp;updatePlayerData&#8203;(java.util.UUID&nbsp;playerUUID,
-                      java.lang.String&nbsp;playerName)
-               throws java.lang.IllegalArgumentException</pre>
+                      java.lang.String&nbsp;playerName)</pre>
 <div class="block">Calls all player methods of the associated <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a>.
  <p>
  Player methods have <code>UUID</code> or <code>String</code> as a method parameter and a Provider annotation.</div>
@@ -197,7 +196,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd><code>playerUUID</code> - UUID of the player.</dd>
 <dd><code>playerName</code> - Name of the player.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>java.lang.IllegalArgumentException</code> - If playerUUID or playerName is null.</dd>
+<dd><code>java.lang.IllegalArgumentException</code> - If playerUUID AND playerName is null.</dd>
 </dl>
 </li>
 </ul>
