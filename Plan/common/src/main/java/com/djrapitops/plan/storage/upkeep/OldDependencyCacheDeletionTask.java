@@ -77,10 +77,11 @@ public class OldDependencyCacheDeletionTask extends TaskSystem.Task {
         if (files == null) return;
         for (File file : files) {
             if (file.isDirectory()) {
-                deleteDirectory(directory);
+                deleteDirectory(file);
             } else {
                 Files.delete(file.toPath());
             }
         }
+        Files.delete(directory.toPath());
     }
 }
