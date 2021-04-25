@@ -31,9 +31,7 @@ import java.util.Map;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.ID;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.TABLE_ID;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable.TABLE_NAME;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable.TABLE_ROW;
+import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.*;
 
 public class PlayerTableRowPatch extends Patch {
 
