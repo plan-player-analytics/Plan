@@ -95,7 +95,10 @@ public class ConfigWriter {
         Map<String, ConfigNode> children = writing.childNodes;
         for (String key : writing.getNodeOrder()) {
             ConfigNode node = children.get(key);
-            if (node.value == null && node.nodeOrder.isEmpty()) {
+            // node is null:       Inconsistent config node state
+            // value is null:      Has no value (empty)
+            // nodeOrder is empty: Has no children
+            if (node == null || node.value == null && node.nodeOrder.isEmpty()) {
                 continue;
             }
 

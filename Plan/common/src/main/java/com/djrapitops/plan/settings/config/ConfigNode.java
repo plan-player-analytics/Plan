@@ -23,6 +23,7 @@
  */
 package com.djrapitops.plan.settings.config;
 
+import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -39,6 +40,8 @@ import java.util.stream.Collectors;
  * @author AuroraLS3
  */
 public class ConfigNode {
+
+    protected final UnitSemaphoreAccessLock nodeModificationLock = new UnitSemaphoreAccessLock();
 
     protected final String key;
     protected ConfigNode parent;
@@ -128,8 +131,11 @@ public class ConfigNode {
         if (parent == null) {
             throw new IllegalStateException("Can not remove root node from a tree.");
         }
-        parent.childNodes.remove(key);
+        nodeModificationLock.enter();
         parent.nodeOrder.remove(key);
+        parent.childNodes.remove(key);
+        nodeModificationLock.exit();
+
         updateParent(null);
 
         // Remove children recursively to avoid memory leaks
@@ -149,8 +155,12 @@ public class ConfigNode {
      */
     protected ConfigNode addChild(ConfigNode child) {
         getNode(child.key).ifPresent(ConfigNode::remove);
+
+        nodeModificationLock.enter();
         childNodes.put(child.key, child);
         nodeOrder.add(child.key);
+        nodeModificationLock.exit();
+
         child.updateParent(this);
         return child;
     }
@@ -197,6 +207,7 @@ public class ConfigNode {
     }
 
     public void reorder(List<String> newOrder) {
+        nodeModificationLock.enter();
         List<String> oldOrder = nodeOrder;
         nodeOrder = new ArrayList<>();
         for (String childKey : newOrder) {
@@ -207,6 +218,7 @@ public class ConfigNode {
         // Add those that were not in the new order, but are in the old order.
         oldOrder.removeAll(nodeOrder);
         nodeOrder.addAll(oldOrder);
+        nodeModificationLock.exit();
     }
 
     /**
