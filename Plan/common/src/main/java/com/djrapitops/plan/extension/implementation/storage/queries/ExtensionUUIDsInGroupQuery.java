@@ -58,7 +58,7 @@ public class ExtensionUUIDsInGroupQuery extends QueryStatement<Set<UUID>> {
         ExtensionProviderTable.set3PluginValuesToStatement(statement, 1, groupProvider, pluginName, serverUUID);
         int index = 4;
         for (String group : inGroups) {
-            statement.setString(index, group);
+            setStringOrNull(statement, index, group == null || "null".equalsIgnoreCase(group) ? null : group);
             index++;
         }
     }

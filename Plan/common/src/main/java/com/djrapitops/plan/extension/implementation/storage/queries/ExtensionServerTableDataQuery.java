@@ -131,7 +131,7 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
 
         String sql = SELECT +
                 "v1." + ExtensionGroupsTable.USER_UUID + " as uuid," +
-                "v1." + ExtensionGroupsTable.GROUP_NAME + " as group_value," +
+                "COALESCE(v1." + ExtensionGroupsTable.GROUP_NAME + ",'None') as group_value," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
                 "i1." + ExtensionIconTable.ICON_NAME + " as provider_icon_name," +
