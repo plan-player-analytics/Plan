@@ -12,19 +12,28 @@ softdepend:
   - BentoBox
   - CoreProtect
   - DiscordSRV
+  - DKCoins
   - DKBans
   - Essentials
   - Factions
+  - FastLogin
   - GriefPrevention
   - GriefPreventionPlus
   - Jobs
+  - Kingdoms
   - LiteBans
+  - LogBlock
   - LuckPerms
+  - MarriageMaster
   - mcMMO
   - MinigamesLib
+  - MyPet
   - nuVotifier
   - PlaceholderAPI
+  - ProtectionStones
   - ProtocolSupport
+  - Quests
+  - React
   - RedProtect
   - SuperbVote
   - Towny
