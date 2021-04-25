@@ -41,7 +41,7 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
 
     @Override
     public ValueBuilder valueBuilder(String text) {
-        if (text == null || text.isEmpty()) throw new IllegalArgumentException("'text' can't be null or empty");
+        if (text == null) throw new IllegalArgumentException("'text' can't be null");
         return new ExtValueBuilder(text, extension);
     }
 

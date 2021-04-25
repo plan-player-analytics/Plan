@@ -25,22 +25,13 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ExtendionDataBuilderTest {
+public class ExtensionDataBuilderTest {
     @Test
     void nullTextWhenCreatingValueBuilderThrowsException() {
         ExtDataBuilder builder = new ExtDataBuilder(new Extension());
         assertEquals(
-                "'text' can't be null or empty",
+                "'text' can't be null",
                 assertThrows(IllegalArgumentException.class, () -> builder.valueBuilder(null)).getMessage()
-        );
-    }
-
-    @Test
-    void emptyTextWhenCreatingValueBuilderThrowsException() {
-        ExtDataBuilder builder = new ExtDataBuilder(new Extension());
-        assertEquals(
-                "'text' can't be null or empty",
-                assertThrows(IllegalArgumentException.class, () -> builder.valueBuilder("")).getMessage()
         );
     }
 
