@@ -36,9 +36,9 @@ public interface Caller {
      *
      * @param playerUUID UUID of the player.
      * @param playerName Name of the player.
-     * @throws IllegalArgumentException If playerUUID or playerName is null.
+     * @throws IllegalArgumentException If playerUUID AND playerName is null.
      */
-    void updatePlayerData(UUID playerUUID, String playerName) throws IllegalArgumentException;
+    void updatePlayerData(UUID playerUUID, String playerName);
 
     /**
      * Calls all server methods of the associated {@link DataExtension}.

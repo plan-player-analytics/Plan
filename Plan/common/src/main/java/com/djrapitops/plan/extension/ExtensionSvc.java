@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
 import com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -52,6 +53,7 @@ public class ExtensionSvc implements ExtensionService {
     private final ServerInfo serverInfo;
     private final Processing processing;
     private final ExtensionRegister extensionRegister;
+    private final UUIDUtility uuidUtility;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
@@ -64,6 +66,7 @@ public class ExtensionSvc implements ExtensionService {
             ServerInfo serverInfo,
             Processing processing,
             ExtensionRegister extensionRegister,
+            UUIDUtility uuidUtility,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
@@ -72,6 +75,7 @@ public class ExtensionSvc implements ExtensionService {
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.extensionRegister = extensionRegister;
+        this.uuidUtility = uuidUtility;
         this.logger = logger;
         this.errorLogger = errorLogger;
 
@@ -157,7 +161,12 @@ public class ExtensionSvc implements ExtensionService {
         if (gatherer.shouldSkipEvent(event)) return;
         if (playerUUID == null && playerName == null) return;
 
-        gatherer.updateValues(playerUUID, playerName);
+        UUID realUUID = playerUUID != null ? playerUUID : uuidUtility.getUUIDOf(playerName);
+        String realPlayerName = playerName != null ?
+                playerName :
+                uuidUtility.getNameOf(realUUID).orElse(null);
+
+        gatherer.updateValues(realUUID, realPlayerName);
     }
 
     public void updateServerValues(CallEvents event) {

@@ -47,6 +47,9 @@ public class CallerImplementation implements Caller {
 
     @Override
     public void updatePlayerData(UUID playerUUID, String playerName) {
+        if (playerUUID == null && playerName == null) {
+            throw new IllegalArgumentException("playerUUID and name were null, can not update unidentifiable player!");
+        }
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(gatherer, playerUUID, playerName, CallEvents.MANUAL));
     }
 
