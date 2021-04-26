@@ -25,6 +25,9 @@ import com.djrapitops.plan.identification.storage.ServerLoader;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,6 +50,9 @@ public class ServerServerInfo extends ServerInfo {
     private final Processing processing;
     private final Addresses addresses;
 
+    private final Locale locale;
+    private final PluginLogger logger;
+
     @Inject
     public ServerServerInfo(
             ServerProperties serverProperties,
@@ -54,7 +60,9 @@ public class ServerServerInfo extends ServerInfo {
             ServerDBLoader fromDatabase,
             Processing processing,
             PlanConfig config,
-            Addresses addresses
+            Addresses addresses,
+            Locale locale,
+            PluginLogger logger
     ) {
         super(serverProperties);
         this.fromFile = fromFile;
@@ -62,10 +70,13 @@ public class ServerServerInfo extends ServerInfo {
         this.processing = processing;
         this.addresses = addresses;
         this.config = config;
+        this.locale = locale;
+        this.logger = logger;
     }
 
     @Override
     protected void loadServerInfo() {
+        logger.info(locale.getString(PluginLang.LOADING_SERVER_INFO));
         Optional<Server> loaded = fromFile.load(null);
         server = loaded.orElseGet(this::registerNew);
         processing.submitNonCritical(this::updateStorage);

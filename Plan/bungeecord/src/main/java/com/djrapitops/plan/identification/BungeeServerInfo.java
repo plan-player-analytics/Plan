@@ -23,6 +23,8 @@ import com.djrapitops.plan.identification.storage.ServerDBLoader;
 import com.djrapitops.plan.identification.storage.ServerFileLoader;
 import com.djrapitops.plan.identification.storage.ServerLoader;
 import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
@@ -41,6 +43,8 @@ public class BungeeServerInfo extends ServerInfo {
 
     private final Processing processing;
     private final Addresses addresses;
+
+    private final Locale locale;
     private final PluginLogger logger;
 
     @Inject
@@ -50,6 +54,7 @@ public class BungeeServerInfo extends ServerInfo {
             ServerDBLoader fromDatabase,
             Processing processing,
             Addresses addresses,
+            Locale locale,
             PluginLogger logger
     ) {
         super(serverProperties);
@@ -57,11 +62,13 @@ public class BungeeServerInfo extends ServerInfo {
         this.fromDatabase = fromDatabase;
         this.processing = processing;
         this.addresses = addresses;
+        this.locale = locale;
         this.logger = logger;
     }
 
     @Override
     public void loadServerInfo() {
+        logger.info(locale.getString(PluginLang.LOADING_SERVER_INFO));
         checkIfDefaultIP();
 
         this.server = fromFile.load(null).orElseGet(() -> fromDatabase.load(null)
