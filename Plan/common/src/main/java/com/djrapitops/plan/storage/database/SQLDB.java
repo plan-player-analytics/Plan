@@ -30,6 +30,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.RemoveIncorrectTebexPackageDataPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.*;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -181,7 +182,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new UserInfoHostnameAllowNullPatch(),
                 new ServerTableRowPatch(),
                 new PlayerTableRowPatch(),
-                new ExtensionTableProviderValuesForPatch()
+                new ExtensionTableProviderValuesForPatch(),
+                new RemoveIncorrectTebexPackageDataPatch()
         };
     }
 

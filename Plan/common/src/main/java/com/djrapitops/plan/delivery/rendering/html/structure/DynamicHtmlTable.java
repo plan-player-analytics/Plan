@@ -100,7 +100,13 @@ public class DynamicHtmlTable implements HtmlTable {
             if (NumberUtils.isParsable(valueString)) {
                 builtBody.append("<td data-order=\"").append(valueString).append("\">").append(valueString);
             } else {
-                builtBody.append("<td>").append(valueString);
+                // Removes non numbers from the value
+                String numbersInValue = valueString.replaceAll("\\D", "");
+                if (!numbersInValue.isEmpty()) {
+                    builtBody.append("<td data-order=\"").append(numbersInValue).append("\">").append(valueString);
+                } else {
+                    builtBody.append("<td>").append(valueString);
+                }
             }
         }
     }
