@@ -150,10 +150,10 @@ public class DataValueGatherer {
     }
 
     private DataValue<Table> tryToBuildTable(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-
         TableProvider annotation = provider.getExistingAnnotation(TableProvider.class);
         try {
             return dataBuilder.valueBuilder(provider.getMethodName())
+                    .methodName(provider)
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
                     .buildTable(() -> callMethod(provider, parameters, Table.class), annotation.tableColor());
