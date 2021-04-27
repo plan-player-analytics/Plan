@@ -32,7 +32,7 @@ public class RemoveIncorrectTebexPackageDataPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasTable("plan_tebex_payments") && !query(hasWrongRows());
+        return !hasTable("plan_tebex_payments") || !query(hasWrongRows());
     }
 
     private Query<Boolean> hasWrongRows() {
