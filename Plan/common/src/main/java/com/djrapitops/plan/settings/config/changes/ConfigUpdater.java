@@ -142,7 +142,8 @@ public class ConfigUpdater {
                 new ConfigChange.RemovedComment("Webserver.Disable_Webserver"),
                 new ConfigChange.BooleanToString("Time.Use_server_timezone", FormatSettings.TIMEZONE.getPath(), "server", "UTC"),
 
-                new ConfigChange.Removed("Plugin.Logging.Debug")
+                new ConfigChange.Removed("Plugin.Logging.Debug"),
+                new ConfigChange.Moved("Plugins.PlaceholderAPI.PlaceholderAPI", "Plugins.PlaceholderAPI.Tracked_player_placeholders")
         };
     }
 
