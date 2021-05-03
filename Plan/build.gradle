@@ -79,7 +79,7 @@ subprojects {
 
     ext.commonsTextVersion = "1.9"
     ext.commonsCompressVersion = "1.20"
-    ext.caffeineVersion = "2.8.0"
+    ext.caffeineVersion = "3.0.2"
     ext.h2Version = "1.4.199"
     ext.mysqlVersion = "8.0.24"
     ext.sqliteVersion = "3.34.0"
