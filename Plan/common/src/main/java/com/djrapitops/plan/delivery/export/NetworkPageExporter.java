@@ -175,10 +175,10 @@ public class NetworkPageExporter extends FileExporter {
     private void exportRequiredResources(ExportPaths exportPaths, Path toDirectory) throws IOException {
         exportResources(exportPaths, toDirectory,
                 "./img/Flaticon_circle.png",
-                "./css/bootstrap.min.css",
                 "./css/sb-admin-2.css",
                 "./css/style.css",
-                "./vendor/bootstrap/js/bootstrap.bundle.min.js",
+                "./vendor/bootstrap/bootstrap.bundle.min.js",
+                "./vendor/bootstrap/bootstrap.min.css",
                 "./vendor/datatables/datatables.min.js",
                 "./vendor/datatables/datatables.min.css",
                 "./vendor/highcharts/highstock.js",
