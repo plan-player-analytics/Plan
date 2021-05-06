@@ -187,6 +187,7 @@ public class NetworkPageExporter extends FileExporter {
                 "./vendor/highcharts/drilldown.js",
                 "./vendor/highcharts/highcharts-more.js",
                 "./vendor/highcharts/no-data-to-display.js",
+                "./vendor/masonry/masonry.pkgd.min.js",
                 "./vendor/fontawesome-free/css/all.min.css",
                 "./vendor/fontawesome-free/webfonts/fa-brands-400.eot",
                 "./vendor/fontawesome-free/webfonts/fa-brands-400.ttf",

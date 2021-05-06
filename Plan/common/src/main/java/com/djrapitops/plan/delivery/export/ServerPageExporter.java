@@ -213,6 +213,7 @@ public class ServerPageExporter extends FileExporter {
                 "../vendor/highcharts/no-data-to-display.js",
                 "../vendor/fullcalendar/fullcalendar.min.css",
                 "../vendor/momentjs/moment.js",
+                "../vendor/masonry/masonry.pkgd.min.js",
                 "../vendor/fullcalendar/fullcalendar.min.js",
                 "../vendor/fontawesome-free/css/all.min.css",
                 "../vendor/fontawesome-free/webfonts/fa-brands-400.eot",
