@@ -76,6 +76,7 @@ public class Contributors {
             new Contributor("WolverStones", LANG),
             new Contributor("BruilsiozPro", LANG),
             new Contributor("AppleMacOS", CODE),
+            new Contributor("10935336", LANG),
     };
 
     private Contributors() {
