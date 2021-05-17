@@ -134,7 +134,7 @@ subprojects {
 
         // Test Tooling Dependencies
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.1"   // JUnit 5
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.2"   // JUnit 5
         testCompile "org.junit.jupiter:junit-jupiter-params:5.7.2"   // JUnit 5, parameterized tests
         testCompile "org.mockito:mockito-core:3.10.0"                // Mockito Core
         testCompile "org.mockito:mockito-junit-jupiter:3.10.0"       // Mockito JUnit 5 Extension
