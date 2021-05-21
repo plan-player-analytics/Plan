@@ -78,6 +78,7 @@ public class Contributors {
             new Contributor("AppleMacOS", CODE),
             new Contributor("10935336", LANG),
             new Contributor("EyuphanMandiraci", LANG),
+			new Contributor("4drian3d", LANG),
     };
 
     private Contributors() {
