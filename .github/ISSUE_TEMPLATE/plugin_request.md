@@ -11,6 +11,6 @@ labels: 'New Feature, DataExtensions, Help Wanted'
 ### Plugin information
 
 <!-- Required -->
-**API or Source Code:** [Link]()  
+**API or Source Code:** [Link](URL HERE)  
 <!-- Required -->
-**Project page or Downloads:** [Link]()
+**Project page or Downloads:** [Link](URL HERE)
