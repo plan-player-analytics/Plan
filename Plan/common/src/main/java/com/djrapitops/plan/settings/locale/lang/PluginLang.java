@@ -23,7 +23,7 @@ package com.djrapitops.plan.settings.locale.lang;
  */
 public enum PluginLang implements Lang {
     ENABLED("Enable", "Player Analytics Enabled."),
-    ENABLED_WEB_SERVER("Enable - WebServer", "Webserver running on PORT ${0} (${1})"),
+    ENABLED_WEB_SERVER("Enable - WebServer", "Webserver running on PORT ${0} ( ${1} )"),
     ENABLED_DATABASE("Enable - Database", "${0}-database connection established."),
     API_ADD_RESOURCE_JS("API - js+", "PageExtension: ${0} added javascript(s) to ${1}, ${2}"),
     API_ADD_RESOURCE_CSS("API - css+", "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"),

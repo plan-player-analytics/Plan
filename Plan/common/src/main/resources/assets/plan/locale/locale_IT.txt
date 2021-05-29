@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || Geolocalizazione non attiva. 
 Enable - Notify Geolocations Internet Required  || Plan Richiede l'accesso a Internet al primo avvio per scaricare il database di geolocalizzazione GeoLite2.
 Enable - Notify Webserver disabled              || WebServer non avviato. (WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
-Enable - WebServer                              || Webserver avviato sulla PORTA ${0} (${1})
+Enable - WebServer                              || Webserver avviato sulla PORTA ${0} ( ${1} )
 Enable FAIL - Database                          || ${0}-Connessione al Database fallita: ${1}
 Enable FAIL - Database Patch                    || Upgrade del Database fallito, plan è stato disabilitato. Si prega di segnalare questo problema.
 Enable FAIL - GeoDB Write                       || Qualcosa è andato storto durante lo scaricamento del database GeoLite2

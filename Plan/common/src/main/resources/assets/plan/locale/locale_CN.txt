@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || 已关闭地理位置收集�
 Enable - Notify Geolocations Internet Required  || Plan 需要在首次运行时访问互联网以下载 GeoLite2 地理位置数据库。
 Enable - Notify Webserver disabled              || 网页服务器未初始化。(WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || 正在储存之前关机前留下的会话。
-Enable - WebServer                              || 网页服务器已在 ${0} (${1}) 端口上运行
+Enable - WebServer                              || 网页服务器已在 ${0} ( ${1} ) 端口上运行
 Enable FAIL - Database                          || ${0} - 连接到数据库失败：${1}
 Enable FAIL - Database Patch                    || 数据库补丁失败，插件必须被禁用。请报告此问题
 Enable FAIL - GeoDB Write                       || 保存已下载的 GeoLite2 地理位置数据库时发生问题

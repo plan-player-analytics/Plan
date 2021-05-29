@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || Coğrafi konum toplama etkin 
 Enable - Notify Geolocations Internet Required  || Plan GeoLite2 Geolocation veritabanını indirmek için ilk çalıştırmada internet erişimi gerektir.
 Enable - Notify Webserver disabled              || WebServer başlatılmadı. (WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || Önceki kapatmadan önce korunan oturumları saklama.
-Enable - WebServer                              || Webserver Bu port üzerinden çalışıyor ${0} (${1})
+Enable - WebServer                              || Webserver Bu port üzerinden çalışıyor ${0} ( ${1} )
 Enable FAIL - Database                          || ${0}-Veritabanı bağlantısı başarısız: ${1}
 Enable FAIL - Database Patch                    || VeriTabanı yaması başarısız, plugin devre dışı bırakılmış olmalı. Lütfen bu sorunu bildirin.
 Enable FAIL - GeoDB Write                       || İndirilen GeoLite2 Geolocation veritabanını kaydederken bir şeyler ters gitti.

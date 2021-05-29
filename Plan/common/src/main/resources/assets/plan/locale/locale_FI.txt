@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || Sijaintien keräys ei ole pä
 Enable - Notify Geolocations Internet Required  || Plan Vaatii internetin ensimmäisellä käynnistyskerralla GeoLite2 tietokannan lataamiseen.
 Enable - Notify Webserver disabled              || Web Palvelinta ei käynnistetty. (WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
-Enable - WebServer                              || Web Palvelin pyörii PORTILLA ${0} (${1})
+Enable - WebServer                              || Web Palvelin pyörii PORTILLA ${0} ( ${1} )
 Enable FAIL - Database                          || ${0}-Tietokanta yhteys epäonnistui: ${1}
 Enable FAIL - Database Patch                    || Tietokannan muutokset epäonnistuivat, Plan jouduttiin sulkemaan. Ilmoita tästä ongelmasta
 Enable FAIL - GeoDB Write                       || Jokin meni pieleen tallentaessa GeoLite2 tietokantaa

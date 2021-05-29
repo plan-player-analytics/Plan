@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || Sbírání geolokace není ak
 Enable - Notify Geolocations Internet Required  || Plan potřebuje internetové připojení pro první start ke stažení GeoLite2 Geolocation databáze.
 Enable - Notify Webserver disabled              || WebServer nebyl inicializován. (WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || Uložení relace, které byly zachovalé před předchozím spojením.
-Enable - WebServer                              || Webserver běží na PORTU ${0} (${1})
+Enable - WebServer                              || Webserver běží na PORTU ${0} ( ${1} )
 Enable FAIL - Database                          || ${0}-Připojení k databázi selhalo: ${1}
 Enable FAIL - Database Patch                    || Patch databáze selhal, plugin musí být vypnut. Prosíme nahlašte tento problém
 Enable FAIL - GeoDB Write                       || Něco se pokazilo při ukládání stažené GeoLite2 Geolocation databáze

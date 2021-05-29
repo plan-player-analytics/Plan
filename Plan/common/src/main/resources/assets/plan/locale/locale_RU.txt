@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || Геолокационный 
 Enable - Notify Geolocations Internet Required  || Plan'у Требуется доступ в Интернет при первом запуске, чтобы загрузить базу геолокации GeoLite2.
 Enable - Notify Webserver disabled              || Веб-сервер не был инициализирован. (WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
-Enable - WebServer                              || Веб-сервер работает на порте ${0} (${1})
+Enable - WebServer                              || Веб-сервер работает на порте ${0} ( ${1} )
 Enable FAIL - Database                          || ${0}-Ошибка подключения к базе данных: ${1}
 Enable FAIL - Database Patch                    || Ошибка обновления базы данных, плагин должен быть отключен. Пожалуйста, сообщите об этой проблеме
 Enable FAIL - GeoDB Write                       || Что-то пошло не так при сохранении загруженной базы геолокации GeoLite2

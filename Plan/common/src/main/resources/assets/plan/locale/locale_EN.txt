@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || Geolocation gathering is not 
 Enable - Notify Geolocations Internet Required  || Plan Requires internet access on first run to download GeoLite2 Geolocation database.
 Enable - Notify Webserver disabled              || WebServer was not initialized. (WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
-Enable - WebServer                              || Webserver running on PORT ${0} (${1})
+Enable - WebServer                              || Webserver running on PORT ${0} ( ${1} )
 Enable FAIL - Database                          || ${0}-Database Connection failed: ${1}
 Enable FAIL - Database Patch                    || Database Patching failed, plugin has to be disabled. Please report this issue
 Enable FAIL - GeoDB Write                       || Something went wrong saving the downloaded GeoLite2 Geolocation database
