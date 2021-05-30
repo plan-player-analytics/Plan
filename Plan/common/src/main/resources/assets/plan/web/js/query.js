@@ -421,13 +421,11 @@ function displayDataResultScreen(resultCount, view) {
                                     class="fas fa-fw fa-users col-black"></i>
                                 View: ${afterDate} - ${beforeDate}</h6>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover player-table dataTable">
-                                <tr>
-                                    <td>Loading..</td>
-                                </tr>
-                            </table>
-                        </div>
+                        <table class="table table-bordered table-striped table-hover player-table" style="width: 100%">
+                            <tr>
+                                <td>Loading..</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

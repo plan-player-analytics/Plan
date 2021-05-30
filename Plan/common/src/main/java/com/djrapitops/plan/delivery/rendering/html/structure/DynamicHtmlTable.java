@@ -40,12 +40,10 @@ public class DynamicHtmlTable implements HtmlTable {
 
     @Override
     public String toHtml() {
-        return "<div class=\"table-responsive\">" +
-                "<table class=\"table table-bordered table-striped table-hover player-plugin-table dataTable\">" +
+        return "<table class=\"table table-bordered table-striped table-hover player-plugin-table\" style=\"width: 100%\">" +
                 buildTableHeader() +
                 buildTableBody() +
-                "</table>" +
-                "</div>";
+                "</table>";
     }
 
     private String buildTableHeader() {

@@ -906,13 +906,11 @@
                                             class="fas fa-fw fa-users col-black"></i>
                                         Player List</h6>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover player-table dataTable">
-                                        <tr>
-                                            <td>Loading..</td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                <table class="table table-bordered table-striped table-hover player-table" style="width: 100%">
+                                    <tr>
+                                        <td>Loading..</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -1415,7 +1413,7 @@
             if (json) {
                 if (table) {
                     table.destroy();
-                    $('.player-table').replaceWith(`<table class="table table-bordered table-striped table-hover player-table dataTable">
+                    $('.player-table').replaceWith(`<table class="table table-bordered table-striped table-hover player-table" style="width: 100%">
                                         <tr>
                                             <td>Loading..</td>
                                         </tr>
