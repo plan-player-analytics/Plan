@@ -97,7 +97,10 @@ function reduceSidebar() {
         if (!isModalCloserHidden) closeModal.classList.add('hidden');
 
         // Close any open menu accordions when window is resized
-        $('.sidebar .collapse').collapse('hide');
+        document.querySelectorAll('.sidebar .collapse').forEach(element => {
+            let elCollapse = bootstrap.Collapse.getInstance(element);
+            if (elCollapse) { elCollapse.hide(); }
+        })
     } else if ($(window).width() > 1400 && isSidebarHidden) {
         body.classList.remove('sidebar-hidden');
         if (!isModalCloserHidden) closeModal.classList.add('hidden');
@@ -110,7 +113,11 @@ $(window).resize(reduceSidebar);
 
 function toggleSidebar() {
     document.querySelector('body').classList.toggle('sidebar-hidden');
-    $('.sidebar .collapse').collapse('hide');
+    // Close any open menu accordions
+    document.querySelectorAll('.sidebar .collapse').forEach(element => {
+        let elCollapse = bootstrap.Collapse.getInstance(element);
+        if (elCollapse) { elCollapse.hide(); }
+    })
 
     const closeModal = document.querySelector('.sidebar-close-modal');
     if ($(window).width() < 900) {
