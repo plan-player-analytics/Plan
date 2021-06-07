@@ -1,18 +1,18 @@
 dependencies {
     compileOnly project(":common")
-    compile project(path: ":common", configuration: 'shadow')
+    implementation project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compile "net.playeranalytics:platform-abstraction-layer-nukkit:$palVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-nukkit:$palVersion"
     compileOnly "cn.nukkit:nukkit:$nukkitVersion"
     compileOnly "com.creeperface.nukkit.placeholderapi:PlaceholderAPI:$nkPlaceholderapiVersion"
-    testCompile "cn.nukkit:nukkit:$nukkitVersion"
+    testImplementation "cn.nukkit:nukkit:$nukkitVersion"
 
-    testCompile project(path: ":common", configuration: 'testArtifacts')
+    testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
 shadowJar {
-    configurations = [project.configurations.compile]
+    configurations = [project.configurations.runtimeClasspath]
 
     relocate 'org.slf4j', 'plan.org.slf4j'
 }

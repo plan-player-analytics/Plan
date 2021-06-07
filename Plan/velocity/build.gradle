@@ -9,23 +9,23 @@ blossom {
 
 dependencies {
     compileOnly project(":common")
-    compile project(path: ":common", configuration: 'shadow')
+    implementation project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compile "net.playeranalytics:platform-abstraction-layer-velocity:$palVersion"
-    compile "org.bstats:bstats-velocity:$bstatsVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-velocity:$palVersion"
+    implementation "org.bstats:bstats-velocity:$bstatsVersion"
 
     compileOnly "com.velocitypowered:velocity-api:$velocityVersion"
-    testCompile "com.velocitypowered:velocity-api:$velocityVersion"
+    testImplementation "com.velocitypowered:velocity-api:$velocityVersion"
 
     annotationProcessor "com.velocitypowered:velocity-api:$velocityVersion"
 
-    testCompile project(path: ":common", configuration: 'testArtifacts')
+    testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
 shadowJar {
     dependsOn blossomSourceReplacementJava
     relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
 
-    configurations = [project.configurations.compile]
+    configurations = [project.configurations.runtimeClasspath]
 }

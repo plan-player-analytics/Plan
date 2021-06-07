@@ -1,22 +1,22 @@
 dependencies {
-    compile "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    compile project(":api")
+    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    implementation project(":api")
     compileOnly project(":extensions")
-    compile project(path: ":extensions", configuration: 'shadow')
-    compile "org.apache.commons:commons-text:$commonsTextVersion"
-    compile "org.apache.commons:commons-compress:$commonsCompressVersion"
-    compile "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+    implementation project(path: ":extensions", configuration: 'shadow')
+    implementation "org.apache.commons:commons-text:$commonsTextVersion"
+    implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
+    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     implementation "com.h2database:h2:$h2Version"
     implementation "mysql:mysql-connector-java:$mysqlVersion"
     implementation "org.xerial:sqlite-jdbc:$sqliteVersion"
-    compile "com.zaxxer:HikariCP:$hikariVersion"
-    compile "org.slf4j:slf4j-nop:$slf4jVersion"
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
-    compile "com.maxmind.geoip2:geoip2:$geoIpVersion"
-    compile "com.google.code.gson:gson:$gsonVersion"
+    implementation "com.zaxxer:HikariCP:$hikariVersion"
+    implementation "org.slf4j:slf4j-nop:$slf4jVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
-    testCompile project(":api")
-    testCompile "com.google.code.gson:gson:$gsonVersion"
+    testImplementation project(":api")
+    testImplementation "com.google.code.gson:gson:$gsonVersion"
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -30,13 +30,14 @@ task updateVersion(type: Copy) {
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
 }
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
     from 'build/sources/resources'
 }
 
 shadowJar {
     dependsOn processResources
-    configurations = [project.configurations.compile]
+    configurations = [project.configurations.runtimeClasspath]
 
     // Exclude these files
     exclude "**/*.svg"
@@ -68,4 +69,9 @@ shadowJar {
     exclude "org/jayway/**/*"
     exclude "google/protobuf/**/*"
     exclude "jargs/gnu/**/*"
+
+    // Exclude DB libraries because ??
+    exclude "org/sqlite/**/*"
+    exclude "org/h2/**/*"
+    exclude "com/mysql/**/*"
 }

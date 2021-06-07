@@ -1,21 +1,21 @@
 dependencies {
     compileOnly project(":common")
-    compile project(path: ":common", configuration: 'shadow')
+    implementation project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compile "net.playeranalytics:platform-abstraction-layer-bungeecord:$palVersion"
-    compile "org.bstats:bstats-bungeecord:$bstatsVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-bungeecord:$palVersion"
+    implementation "org.bstats:bstats-bungeecord:$bstatsVersion"
 
     compileOnly "net.md-5:bungeecord-api:$bungeeVersion"
     compileOnly "com.imaginarycode.minecraft:RedisBungee:$redisBungeeVersion"
-    testCompile "net.md-5:bungeecord-api:$bungeeVersion"
-    testCompile "com.imaginarycode.minecraft:RedisBungee:$redisBungeeVersion"
+    testImplementation "net.md-5:bungeecord-api:$bungeeVersion"
+    testImplementation "com.imaginarycode.minecraft:RedisBungee:$redisBungeeVersion"
 
-    testCompile project(path: ":common", configuration: 'testArtifacts')
+    testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
 shadowJar {
-    configurations = [project.configurations.compile]
+    configurations = [project.configurations.runtimeClasspath]
     
     relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
     relocate 'org.slf4j', 'plan.org.slf4j'

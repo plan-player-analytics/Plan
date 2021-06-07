@@ -1,26 +1,26 @@
 repositories {
     maven { // Placeholder API repository
-        url = "http://repo.extendedclip.com/content/repositories/placeholderapi/"
+        url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
 }
 
 dependencies {
     compileOnly project(":common")
-    compile project(path: ":common", configuration: 'shadow')
+    implementation project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compile "net.playeranalytics:platform-abstraction-layer-bukkit:$palVersion"
-    compile "org.bstats:bstats-bukkit:$bstatsVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-bukkit:$palVersion"
+    implementation "org.bstats:bstats-bukkit:$bstatsVersion"
     compileOnly "me.clip:placeholderapi:$placeholderapiVersion"
 
     compileOnly "com.destroystokyo.paper:paper-api:$paperVersion"
-    testCompile "com.destroystokyo.paper:paper-api:$paperVersion"
+    testImplementation "com.destroystokyo.paper:paper-api:$paperVersion"
 
-    testCompile project(path: ":common", configuration: 'testArtifacts')
+    testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
 shadowJar {
-    configurations = [project.configurations.compile]
+    configurations = [project.configurations.runtimeClasspath]
     
     relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
     relocate 'org.slf4j', 'plan.org.slf4j'
