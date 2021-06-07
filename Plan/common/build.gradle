@@ -6,9 +6,9 @@ dependencies {
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    implementation "com.h2database:h2:$h2Version"
-    implementation "mysql:mysql-connector-java:$mysqlVersion"
-    implementation "org.xerial:sqlite-jdbc:$sqliteVersion"
+    compileOnly "com.h2database:h2:$h2Version"
+    compileOnly "mysql:mysql-connector-java:$mysqlVersion"
+    compileOnly "org.xerial:sqlite-jdbc:$sqliteVersion"
     implementation "com.zaxxer:HikariCP:$hikariVersion"
     implementation "org.slf4j:slf4j-nop:$slf4jVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
@@ -37,7 +37,6 @@ processResources {
 
 shadowJar {
     dependsOn processResources
-    configurations = [project.configurations.runtimeClasspath]
 
     // Exclude these files
     exclude "**/*.svg"
@@ -52,7 +51,6 @@ shadowJar {
     relocate 'com.maxmind', 'plan.com.maxmind'
     relocate 'com.fasterxml', 'plan.com.fasterxml'
     relocate 'com.zaxxer', 'plan.com.zaxxer'
-    relocate 'com.google.protobuf', 'plan.com.google.protobuf'
     relocate 'com.google.gson', 'plan.com.google.gson'
     relocate 'com.google.errorprone', 'plan.com.google.errorprone'
     relocate 'org.h2', 'plan.org.h2'
@@ -70,8 +68,5 @@ shadowJar {
     exclude "google/protobuf/**/*"
     exclude "jargs/gnu/**/*"
 
-    // Exclude DB libraries because ??
-    exclude "org/sqlite/**/*"
-    exclude "org/h2/**/*"
-    exclude "com/mysql/**/*"
+    minimize()
 }

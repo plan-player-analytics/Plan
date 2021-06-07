@@ -14,8 +14,6 @@ dependencies {
 }
 
 shadowJar {
-    configurations = [project.configurations.runtimeClasspath]
-
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
     }
@@ -28,11 +26,7 @@ shadowJar {
 
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set('Plan')
-    classifier = null
-}
-
-build {
-    dependsOn tasks.named("shadowJar")
+    archiveClassifier.set('')
 }
 
 publishing {

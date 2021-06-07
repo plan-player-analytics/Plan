@@ -12,7 +12,5 @@ dependencies {
 }
 
 shadowJar {
-    configurations = [project.configurations.runtimeClasspath]
-
     relocate 'org.slf4j', 'plan.org.slf4j'
 }

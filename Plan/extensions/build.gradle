@@ -48,8 +48,6 @@ dependencies {
 }
 
 shadowJar {
-    configurations = [project.configurations.runtimeClasspath]
-
     dependencies {
         exclude(project(':api'))
     }

@@ -20,8 +20,6 @@ dependencies {
 }
 
 shadowJar {
-    configurations = [project.configurations.runtimeClasspath]
-    
     relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
     relocate 'org.slf4j', 'plan.org.slf4j'
 }

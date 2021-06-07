@@ -26,6 +26,4 @@ dependencies {
 shadowJar {
     dependsOn blossomSourceReplacementJava
     relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
-
-    configurations = [project.configurations.runtimeClasspath]
 }
