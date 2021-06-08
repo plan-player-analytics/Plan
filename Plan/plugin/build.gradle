@@ -27,6 +27,10 @@ shadowJar {
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set('Plan')
     archiveClassifier.set('')
+
+    build {
+        dependsOn tasks.named("shadowJar")
+    }
 }
 
 publishing {
