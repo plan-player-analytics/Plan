@@ -35,10 +35,9 @@ public class ProxyDBSystem extends DBSystem {
             Locale locale,
             MySQLDB mySQLDB,
             SQLiteDB.Factory sqLiteDB,
-            H2DB.Factory h2DB,
             PluginLogger logger
     ) {
-        super(locale, sqLiteDB, h2DB, logger);
+        super(locale, sqLiteDB, logger);
         databases.add(mySQLDB);
         db = mySQLDB;
     }

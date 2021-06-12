@@ -19,7 +19,6 @@ package utilities.mocks;
 import com.djrapitops.plan.PlanPlugin;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.PluginInformation;
-import net.playeranalytics.plugin.dependencies.DependencyLoader;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.Listeners;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -31,7 +30,6 @@ import utilities.mocks.objects.TestRunnableFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLClassLoader;
 import java.nio.file.Files;
 
 public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
@@ -95,10 +93,5 @@ public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
                 return "1.0.0";
             }
         };
-    }
-
-    @Override
-    public DependencyLoader getDependencyLoader() {
-        return new DependencyLoader((URLClassLoader) getClass().getClassLoader(), getPluginInformation());
     }
 }

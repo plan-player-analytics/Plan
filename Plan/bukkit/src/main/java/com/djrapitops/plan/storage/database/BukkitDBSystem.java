@@ -39,15 +39,13 @@ public class BukkitDBSystem extends DBSystem {
             Locale locale,
             MySQLDB mySQLDB,
             SQLiteDB.Factory sqLiteDB,
-            H2DB.Factory h2DB,
             PlanConfig config,
             PluginLogger logger
     ) {
-        super(locale, sqLiteDB, h2DB, logger);
+        super(locale, sqLiteDB, logger);
         this.config = config;
 
         databases.add(mySQLDB);
-        databases.add(h2DB.usingDefaultFile());
         databases.add(sqLiteDB.usingDefaultFile());
     }
 

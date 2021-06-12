@@ -130,35 +130,6 @@ public abstract class Sql {
         }
     }
 
-    // https://h2database.com/html/functions.html
-    public static class H2 extends MySQL {
-
-        @Override
-        public String epochSecondToDate(String sql) {
-            return "DATEADD('SECOND', " + sql + ", DATE '1970-01-01')";
-        }
-
-        @Override
-        public String dateToEpochSecond(String sql) {
-            return "DATEDIFF('SECOND', DATE '1970-01-01', " + sql + ')';
-        }
-
-        @Override
-        public String dateToDayOfWeek(String sql) {
-            return "DAY_OF_WEEK(" + sql + ')';
-        }
-
-        @Override
-        public String dateToHourStamp(String sql) {
-            return "DATE_FORMAT(" + sql + ",'yyyy-MM-dd HH:00:00')";
-        }
-
-        @Override
-        public String dateToHour(String sql) {
-            return "HOUR(" + sql + ')';
-        }
-    }
-
     // https://sqlite.org/lang_datefunc.html
     public static class SQLite extends Sql {
 

@@ -201,7 +201,6 @@ public class ServerPageExporter extends FileExporter {
                 "../img/Flaticon_circle.png",
                 "../css/sb-admin-2.css",
                 "../css/style.css",
-                "../vendor/jquery/jquery.min.js",
                 "../vendor/bootstrap/js/bootstrap.bundle.min.js",
                 "../vendor/datatables/datatables.min.js",
                 "../vendor/datatables/datatables.min.css",

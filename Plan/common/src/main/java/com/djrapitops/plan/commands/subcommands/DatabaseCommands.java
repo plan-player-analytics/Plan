@@ -209,10 +209,10 @@ public class DatabaseCommands {
 
     public void onMove(String mainCommand, CMDSender sender, Arguments arguments) {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite>"))));
 
         DBType toDB = arguments.get(1).flatMap(DBType::getForName)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite>"))));
 
         if (fromDB == toDB) {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_SAME_DB));
@@ -272,7 +272,7 @@ public class DatabaseCommands {
 
     public void onClear(String mainCommand, CMDSender sender, Arguments arguments) {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite>"))));
 
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
@@ -401,7 +401,7 @@ public class DatabaseCommands {
 
     public void onHotswap(CMDSender sender, Arguments arguments) {
         DBType toDB = arguments.get(0).flatMap(DBType::getForName)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite/H2>"))));
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite>"))));
 
         try {
             Database database = dbSystem.getActiveDatabaseByType(toDB);

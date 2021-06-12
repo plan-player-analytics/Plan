@@ -29,7 +29,6 @@ import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQu
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
-import com.djrapitops.plan.storage.database.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.SQLiteSchemaQueries;
 
@@ -88,8 +87,6 @@ public class CommonQueriesImplementation implements CommonQueries {
     public boolean doesDBHaveTable(String table) {
         DBType dbType = db.getType();
         switch (dbType) {
-            case H2:
-                return db.query(H2SchemaQueries.doesTableExist(table));
             case SQLITE:
                 return db.query(SQLiteSchemaQueries.doesTableExist(table));
             case MYSQL:
@@ -103,8 +100,6 @@ public class CommonQueriesImplementation implements CommonQueries {
     public boolean doesDBHaveTableColumn(String table, String column) {
         DBType dbType = db.getType();
         switch (dbType) {
-            case H2:
-                return db.query(H2SchemaQueries.doesColumnExist(table, column));
             case MYSQL:
                 return db.query(MySQLSchemaQueries.doesColumnExist(table, column));
             case SQLITE:

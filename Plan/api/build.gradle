@@ -4,7 +4,7 @@ dependencies {
     compileOnly "com.google.code.gson:gson:$gsonVersion"
 }
 
-ext.apiVersion = '5.3-R0.1'
+ext.apiVersion = '5.4-R0.1'
 
 publishing {
     repositories {

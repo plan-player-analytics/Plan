@@ -33,10 +33,10 @@ allprojects {
     wrapper.gradleVersion = "7.0.2"
 
     group "com.djrapitops"
-    version "5.3-SNAPSHOT"
+    version "5.4-SNAPSHOT"
 
     ext.majorVersion = '5'
-    ext.minorVersion = '3'
+    ext.minorVersion = '4'
     ext.buildVersion = buildVersion
     ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + ' build ' + project.ext.buildVersion
 
@@ -65,11 +65,11 @@ subprojects {
         daggerVersion = "2.37"
         daggerCompilerVersion = "2.37"
 
-        palVersion = "4.1.0"
+        palVersion = "5.0.0"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
-        paperVersion = "1.16.5-R0.1-SNAPSHOT"
+        paperVersion = "1.13.2-R0.1-SNAPSHOT"
         spongeVersion = "7.3.0"
         nukkitVersion = "1.0-SNAPSHOT"
         bungeeVersion = "1.16-R0.4"
@@ -79,14 +79,12 @@ subprojects {
         commonsTextVersion = "1.9"
         commonsCompressVersion = "1.20"
         caffeineVersion = "2.8.0"
-        h2Version = "1.4.199"
         mysqlVersion = "8.0.25"
         sqliteVersion = "3.34.0"
         hikariVersion = "4.0.3"
         slf4jVersion = "1.7.30"
         geoIpVersion = "2.15.0"
         gsonVersion = "2.8.7"
-        guavaVersion = "28.0-jre"
         bstatsVersion = "2.2.1"
         placeholderapiVersion = "2.10.9"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
@@ -120,9 +118,8 @@ subprojects {
         testImplementation "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testImplementation "org.xerial:sqlite-jdbc:$sqliteVersion"     // SQLite
+        testImplementation "org.xerial:sqlite-jdbc:$sqliteVersion"    // SQLite
         testImplementation "mysql:mysql-connector-java:$mysqlVersion" // MySQL
-        testImplementation "com.h2database:h2:$h2Version" // H2
     }
 
     configurations {

@@ -17,7 +17,6 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable;
@@ -46,11 +45,7 @@ public class ExtensionTableRowValueLengthPatch extends Patch {
     }
 
     private int columnVarcharLength(String table, String column) {
-        if (dbType == DBType.MYSQL) {
-            return query(MySQLSchemaQueries.columnVarcharLength(table, column));
-        } else {
-            return query(H2SchemaQueries.columnVarcharLength(table, column));
-        }
+        return query(MySQLSchemaQueries.columnVarcharLength(table, column));
     }
 
     @Override

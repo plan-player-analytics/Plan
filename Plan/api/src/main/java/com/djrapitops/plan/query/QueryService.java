@@ -48,7 +48,7 @@ public interface QueryService {
     /**
      * Get what kind of database is in use.
      *
-     * @return H2, SQLITE or MYSQL
+     * @return SQLITE or MYSQL
      * @throws IllegalStateException If database has not been initialized (Plugin failed to enable)
      */
     String getDBType();
