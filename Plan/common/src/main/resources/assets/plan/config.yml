@@ -21,7 +21,7 @@ Plugin:
   Configuration:
     Allow_proxy_to_manage_settings: true
 # -----------------------------------------------------
-# Supported databases: SQLite, H2, MySQL
+# Supported databases: SQLite, MySQL
 # -----------------------------------------------------
 Database:
   Type: SQLite

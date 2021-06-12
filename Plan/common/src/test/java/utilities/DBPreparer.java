@@ -49,11 +49,6 @@ public class DBPreparer {
         return Optional.of(prepareDBByName(dbName));
     }
 
-    public Optional<Database> prepareH2() {
-        String dbName = DBType.H2.getName();
-        return Optional.of(prepareDBByName(dbName));
-    }
-
     private SQLDB prepareDBByName(String dbName) {
         PlanConfig config = dependencies.config();
         config.set(WebserverSettings.PORT, testPortNumber);

@@ -63,15 +63,6 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1054: // MySQL
             case 1064:
             case 1146:
-            case 42000: // H2
-            case 42001:
-            case 42101:
-            case 42102:
-            case 42111:
-            case 42112:
-            case 42121:
-            case 42122:
-            case 42132:
                 context.related("SQL Grammar error")
                         .whatToDo("Report this, there is an SQL grammar error.");
                 break;
@@ -110,17 +101,6 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1364:
             case 1451:
             case 1557:
-            case 22001: // H2
-            case 22003:
-            case 22012:
-            case 22018:
-            case 22025:
-            case 23000:
-            case 23002:
-            case 23502:
-            case 23506:
-            case 23507:
-            case 23513:
                 context.related("Constraint Violation")
                         .whatToDo("Report this, there is an SQL Constraint Violation.");
                 break;

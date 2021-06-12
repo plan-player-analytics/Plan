@@ -6,7 +6,6 @@ dependencies {
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    implementation "com.h2database:h2:$h2Version"
     implementation "mysql:mysql-connector-java:$mysqlVersion"
     implementation "org.xerial:sqlite-jdbc:$sqliteVersion"
     implementation "com.zaxxer:HikariCP:$hikariVersion"
@@ -53,7 +52,6 @@ shadowJar {
     relocate 'com.zaxxer', 'plan.com.zaxxer'
     relocate 'com.google.gson', 'plan.com.google.gson'
     relocate 'com.google.errorprone', 'plan.com.google.errorprone'
-    relocate 'org.h2', 'plan.org.h2'
     relocate 'org.bstats', 'plan.org.bstats'
     relocate 'org.slf4j', 'plan.org.slf4j'
 

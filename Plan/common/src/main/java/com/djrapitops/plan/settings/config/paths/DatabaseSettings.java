@@ -33,8 +33,6 @@ public class DatabaseSettings {
     public static final Setting<String> MYSQL_HOST = new StringSetting("Database.MySQL.Host");
     public static final Setting<String> MYSQL_PORT = new StringSetting("Database.MySQL.Port", NumberUtils::isParsable);
     public static final Setting<String> MYSQL_USER = new StringSetting("Database.MySQL.User");
-    public static final Setting<String> H2_USER = new StringSetting("Database.H2.User");
-    public static final Setting<String> H2_PASS = new StringSetting("Database.H2.Password");
     public static final Setting<String> MYSQL_PASS = new StringSetting("Database.MySQL.Password");
     public static final Setting<String> MYSQL_DATABASE = new StringSetting("Database.MySQL.Database");
     public static final Setting<String> MYSQL_LAUNCH_OPTIONS = new StringSetting("Database.MySQL.Launch_options");

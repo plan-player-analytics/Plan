@@ -30,8 +30,7 @@ import java.util.Optional;
 public enum DBType {
 
     MYSQL("MySQL", true, new Sql.MySQL()),
-    SQLITE("SQLite", false, new Sql.SQLite()),
-    H2("H2", true, new Sql.H2());
+    SQLITE("SQLite", false, new Sql.SQLite());
 
     private final String name;
     private final String configName;

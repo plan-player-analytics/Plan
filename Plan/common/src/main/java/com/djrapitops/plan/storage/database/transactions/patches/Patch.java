@@ -19,7 +19,6 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.queries.schema.H2SchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.SQLiteSchemaQueries;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
@@ -75,8 +74,6 @@ public abstract class Patch extends OperationCriticalTransaction {
 
     protected boolean hasTable(String tableName) {
         switch (dbType) {
-            case H2:
-                return query(H2SchemaQueries.doesTableExist(tableName));
             case SQLITE:
                 return query(SQLiteSchemaQueries.doesTableExist(tableName));
             case MYSQL:
@@ -88,8 +85,6 @@ public abstract class Patch extends OperationCriticalTransaction {
 
     protected boolean hasColumn(String tableName, String columnName) {
         switch (dbType) {
-            case H2:
-                return query(H2SchemaQueries.doesColumnExist(tableName, columnName));
             case MYSQL:
                 return query(MySQLSchemaQueries.doesColumnExist(tableName, columnName));
             case SQLITE:
@@ -114,7 +109,6 @@ public abstract class Patch extends OperationCriticalTransaction {
     private String getRenameTableSQL(String from, String to) {
         switch (dbType) {
             case SQLITE:
-            case H2:
                 return ALTER_TABLE + from + " RENAME TO " + to;
             case MYSQL:
                 return "RENAME TABLE " + from + " TO " + to;

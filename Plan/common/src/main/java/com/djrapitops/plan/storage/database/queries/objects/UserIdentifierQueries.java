@@ -150,7 +150,7 @@ public class UserIdentifierQueries {
      * Query database for a Player name matching a specific player's UUID.
      *
      * @param playerUUID UUID of the Player
-     * @return Optional: name if found, empty if not - Case is stored unless using a H2 database.
+     * @return Optional: name if found, empty if not.
      */
     public static Query<Optional<String>> fetchPlayerNameOf(UUID playerUUID) {
         String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_NAME).where(UsersTable.USER_UUID + "=?").toString();

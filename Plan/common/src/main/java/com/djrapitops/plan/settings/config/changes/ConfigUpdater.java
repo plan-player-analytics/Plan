@@ -143,7 +143,11 @@ public class ConfigUpdater {
                 new ConfigChange.BooleanToString("Time.Use_server_timezone", FormatSettings.TIMEZONE.getPath(), "server", "UTC"),
 
                 new ConfigChange.Removed("Plugin.Logging.Debug"),
-                new ConfigChange.Moved("Plugins.PlaceholderAPI.Placeholders", "Plugins.PlaceholderAPI.Tracked_player_placeholders")
+                new ConfigChange.Moved("Plugins.PlaceholderAPI.Placeholders", "Plugins.PlaceholderAPI.Tracked_player_placeholders"),
+
+                new ConfigChange.Removed("Database.H2.User"),
+                new ConfigChange.Removed("Database.H2.Password"),
+                new ConfigChange.Removed("Database.H2"),
         };
     }
 
