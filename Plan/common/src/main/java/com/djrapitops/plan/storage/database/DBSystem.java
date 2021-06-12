@@ -54,7 +54,7 @@ public class DBSystem implements SubSystem {
     }
 
     public Database getActiveDatabaseByName(String dbName) {
-        if (dbName.equalsIgnoreCase("h2")) {
+        if ("h2".equalsIgnoreCase(dbName)) {
             throw new EnableException("H2 database is NO LONGER SUPPORTED. Downgrade to 5.3 build 1284 and migrate to SQLite or MySQL using '/plan db move h2 <db>' command");
         }
         return DBType.getForName(dbName)
