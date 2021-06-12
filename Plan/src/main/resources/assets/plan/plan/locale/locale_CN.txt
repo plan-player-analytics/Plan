@@ -1,517 +1,517 @@
-API - css+                                      || PageExtension: ${0} added stylesheet(s) to ${1}, ${2}
-API - js+                                       || PageExtension: ${0} added javascript(s) to ${1}, ${2}
-Cmd - Click Me                                  || 请点击此处
-Cmd - Link                                      || •链接
-Cmd - Link Network                              || Network page: 
-Cmd - Link Player                               || Player page: 
-Cmd - Link Player JSON                          || Player json: 
-Cmd - Link Players                              || Players page: 
-Cmd - Link Register                             || Register page: 
-Cmd - Link Server                               || Server page: 
-CMD Arg - backup-file                           || Name of the backup file (case sensitive)
-CMD Arg - code                                  || Code used to finalize registration.
-CMD Arg - db type backup                        || Type of the database to backup. Current database is used if not specified.
-CMD Arg - db type clear                         || Type of the database to remove all data from.
-CMD Arg - db type hotswap                       || Type of the database to start using.
-CMD Arg - db type move from                     || Type of the database to move data from.
-CMD Arg - db type move to                       || Type of the database to move data to. Can not be same as previous.
-CMD Arg - db type restore                       || Type of the database to restore to. Current database is used if not specified.
-CMD Arg - feature                               || Name of the feature to disable: ${0}
-CMD Arg - player identifier                     || Name or UUID of a player
-CMD Arg - player identifier remove              || Identifier for a player that will be removed from current database.
-CMD Arg - server identifier                     || Name, ID or UUID of a server
-CMD Arg - subcommand                            || Use the command without subcommand to see help.
-CMD Arg - username                              || Username of another user. If not specified player linked user is used.
-CMD Arg Name - backup-file                      || backup-file
+API - css+                                      || 页面扩展： ${0} 添加样式表(s) 到 ${1}, ${2}
+API - js+                                       || 页面扩展： ${0} 添加 javascript(s) 到 ${1}, ${2}
+Cmd - Click Me                                  || 点击此处
+Cmd - Link                                      || 链接
+Cmd - Link Network                              || 群组网络页面: 
+Cmd - Link Player                               || 玩家个人页面: 
+Cmd - Link Player JSON                          || 玩家 json: 
+Cmd - Link Players                              || 全体玩家页面: 
+Cmd - Link Register                             || 注册页面 page: 
+Cmd - Link Server                               || 服务器页面 page: 
+CMD Arg - backup-file                           || 备份文件的名称（区分大小写）
+CMD Arg - code                                  || 注册需要用到的代码。
+CMD Arg - db type backup                        || 要备份的数据库的类型。如果未指定，则使用当前数据库。
+CMD Arg - db type clear                         || 要清空数据的数据库类型。
+CMD Arg - db type hotswap                       || 要开始使用的新数据库类型。
+CMD Arg - db type move from                     || 要从移出数据的数据库类型。
+CMD Arg - db type move to                       || 要将数据移入的数据库类型。不能和之前一样。
+CMD Arg - db type restore                       || 要还原的数据库的类型。如果未指定，则使用当前数据库。
+CMD Arg - feature                               || 要禁用的功能名称：${0}
+CMD Arg - player identifier                     || 玩家的名称或 UUID
+CMD Arg - player identifier remove              || 要从当前数据库删除的玩家标识符
+CMD Arg - server identifier                     || 服务器的名称，ID 或 UUID
+CMD Arg - subcommand                            || 使用不带子命令的命令即可查看帮助。（直接输入）
+CMD Arg - username                              || 另一个用户的用户名。如果未指定，则使用玩家绑定的用户。
+CMD Arg Name - backup-file                      || 备份文件
 CMD Arg Name - code                             || ${code}
-CMD Arg Name - export kind                      || export kind
-CMD Arg Name - feature                          || feature
-CMD Arg Name - import kind                      || import kind
-CMD Arg Name - name or uuid                     || name/uuid
-CMD Arg Name - server                           || server
-CMD Arg Name - subcommand                       || subcommand
-CMD Arg Name - username                         || username
-Cmd Confirm - accept                            || Accept
-Cmd Confirm - cancelled, no data change         || Cancelled. No data was changed.
-Cmd Confirm - cancelled, unregister             || Cancelled. '${0}' was not unregistered
-Cmd Confirm - clearing db                       || You are about to remove all Plan-data in ${0}
-Cmd Confirm - confirmation                      || Confirm: 
-Cmd Confirm - deny                              || Cancel
-Cmd Confirm - Expired                           || Confirmation expired, use the command again
-Cmd Confirm - Fail on accept                    || The accepted action errored upon execution: ${0}
-Cmd Confirm - Fail on deny                      || The denied action errored upon execution: ${0}
-Cmd Confirm - overwriting db                    || You are about to overwrite data in Plan ${0} with data in ${1}
-Cmd Confirm - remove player db                  || You are about to remove data of ${0} from ${1}
-Cmd Confirm - unregister                        || You are about to unregister '${0}' linked to ${1}
-Cmd db - creating backup                        || Creating a backup file '${0}.db' with contents of ${1}
-Cmd db - removal                                || Removing Plan-data from ${0}..
-Cmd db - removal player                         || Removing data of ${0} from ${1}..
-Cmd db - server uninstalled                     || §aIf the server is still installed, it will automatically set itself as installed in the database.
-Cmd db - write                                  || Writing to ${0}..
-Cmd Disable - Disabled                          || §a现已禁用计划系统。您仍可使用 reload 重启插件。
-Cmd FAIL - Accepts only these arguments         || Accepts following as ${0}: ${1}
-Cmd FAIL - Database not open                    || §c数据库状态为 ${0} - 请稍后再试.
-Cmd FAIL - Empty search string                  || The search string can not be empty
-Cmd FAIL - Invalid Username                     || §c[数据统计] 此玩家不存在。
+CMD Arg Name - export kind                      || 导出类型
+CMD Arg Name - feature                          || 功能
+CMD Arg Name - import kind                      || 导入类型
+CMD Arg Name - name or uuid                     || 名称/uuid
+CMD Arg Name - server                           || 服务器
+CMD Arg Name - subcommand                       || 子命令
+CMD Arg Name - username                         || 用户名
+Cmd Confirm - accept                            || 接受
+Cmd Confirm - cancelled, no data change         || 已取消。没有数据被更改。
+Cmd Confirm - cancelled, unregister             || 已取消。 '${0}' 尚未注销
+Cmd Confirm - clearing db                       || 你将要删除 ${0} 中的所有 Plan 的数据
+Cmd Confirm - confirmation                      || 确认: 
+Cmd Confirm - deny                              || 取消
+Cmd Confirm - Expired                           || 确认已过期，请再次使用命令
+Cmd Confirm - Fail on accept                    || 接受操作在执行时出错： ${0}
+Cmd Confirm - Fail on deny                      || 拒绝操作在执行时出错： ${0}
+Cmd Confirm - overwriting db                    || 你将要用 ${1} 中的数据覆盖 Plan ${0} 中的数据。
+Cmd Confirm - remove player db                  || 你将从 ${1} 中删除 ${0} 的数据。
+Cmd Confirm - unregister                        || 您即将解除与 ${1} 链接的 '${0}' 的注册。
+Cmd db - creating backup                        || 创建一个备份文件 '${0}.db'，内容为 ${1}。
+Cmd db - removal                                || 从 ${0} 中删除 Plan 的数据...
+Cmd db - removal player                         || 从 ${1} 中删除 ${0} 的数据...
+Cmd db - server uninstalled                     || §a如果服务器没有真的卸载，则它将自动在数据库中把自己设置为已安装。
+Cmd db - write                                  || 正在写入${0}...
+Cmd Disable - Disabled                          || §a Plan 系统现在已被禁用。你仍然可以使用 reload 来重新启动插件。
+Cmd FAIL - Accepts only these arguments         || 接受以下内容 ${0}: ${1}
+Cmd FAIL - Database not open                    || §c数据库为 ${0} - 请稍后再试。
+Cmd FAIL - Empty search string                  || 搜索字符串不能为空
+Cmd FAIL - Invalid Username                     || §c该用户没有 UUID。
 Cmd FAIL - No Feature                           || §e请设置要禁用的功能！（当前支持 ${0}）
-Cmd FAIL - No Permission                        || §c[数据统计] 您没有所需权限。
-Cmd FAIL - No player                            || Player '${0}' was not found, they have no UUID.
-Cmd FAIL - No player register                   || Player '${0}' was not found in the database.
-Cmd FAIL - No server                            || Server '${0}' was not found from the database.
-Cmd FAIL - Require only one Argument            || §c[数据统计] 命令需要一个参数。
-Cmd FAIL - Requires Arguments                   || §c[数据统计] 命令缺少参数。${0}
-Cmd FAIL - see config                           || see '${0}' in config.yml
-Cmd FAIL - Unknown Username                     || §c[数据统计] 未在数据库中找到此玩家。
-Cmd FAIL - Users not linked                     || 用户未关联到你的游戏账户，因此你无权移除别人的账户.
+Cmd FAIL - No Permission                        || §c你没有所需的权限。
+Cmd FAIL - No player                            || 找不到玩家 '${0}'，他们没有 UUID。
+Cmd FAIL - No player register                   || 在数据库中找不到玩家 '${0}'。
+Cmd FAIL - No server                            || 在数据库中找不到服务器 '${0}'。
+Cmd FAIL - Require only one Argument            || §c需要单个参数 ${1}
+Cmd FAIL - Requires Arguments                   || §c需要参数 (${0}) ${1}
+Cmd FAIL - see config                           || 查看配置文件中的 '${0}'
+Cmd FAIL - Unknown Username                     || §c在此服务器上未找到该用户
+Cmd FAIL - Users not linked                     || 此用户未绑定到你的帐户，且你无权删除其他用户的帐户。
 Cmd FAIL - WebUser does not exists              || §c用户不存在！
 Cmd FAIL - WebUser exists                       || §c用户已存在！
-Cmd Footer - Help                               || §7Hover over command or arguments or use '/${0} ?' to learn more about them.
-Cmd Header - Analysis                           || §f»§2 玩家统计 - 统计结果
-Cmd Header - Help                               || > §2/${0} Help
-Cmd Header - Info                               || §f»§2 玩家统计 - 信息
-Cmd Header - Inspect                            || §f»§2 玩家统计 - 检视结果：
-Cmd Header - Network                            || > §2全服网络页面
-Cmd Header - Players                            || > §2玩家
-Cmd Header - Search                             || §f»§2 玩家统计 - 搜索结果：
-Cmd Header - server list                        || id::name::uuid
-Cmd Header - Servers                            || > §2服务器
-Cmd Header - web user list                      || username::linked to::permission level
-Cmd Header - Web Users                          || > §2${0} 个网页用户
-Cmd Info - Bungee Connection                    ||   §2已连接至Bungee：§f${0}
+Cmd Footer - Help                               || §7将鼠标悬停在参数或命令上来了解更多有关它们的信息，或者使用 '/${0} ?'。
+Cmd Header - Analysis                           || > §2分析结果
+Cmd Header - Help                               || > §2/${0} 帮助
+Cmd Header - Info                               || > §2玩家分析
+Cmd Header - Inspect                            || > §2玩家: §f${0}
+Cmd Header - Network                            || > §2群组网络页面
+Cmd Header - Players                            || > §2全体玩家
+Cmd Header - Search                             || > §2${0} 对于 §f${1}§2 的结果:
+Cmd Header - server list                        || id::名称::uuid
+Cmd Header - Servers                            || > §2全部服务器
+Cmd Header - web user list                      || 用户名::绑定到::权限等级
+Cmd Header - Web Users                          || > §2${0} 网页用户
+Cmd Info - Bungee Connection                    ||   §2连接至代理：§f${0}
 Cmd Info - Database                             ||   §2当前数据库：§f${0}
-Cmd Info - Reload Complete                      || §a成功重载插件
-Cmd Info - Reload Failed                        || §c重载插件时发生错误，建议重新启动服务器。
-Cmd Info - Update                               ||   §2更新可用：§f${0}
+Cmd Info - Reload Complete                      || §a重载完成
+Cmd Info - Reload Failed                        || §c重新加载插件出了点问题，建议重新启动。
+Cmd Info - Update                               ||   §2有可用更新：§f${0}
 Cmd Info - Version                              ||   §2版本：§f${0}
-Cmd network - No network                        || Server is not connected to a network. The link redirects to server page.
-Cmd Notify - No Address                         || §e无连接地址可用 - 使用localhost作为默认地址. 检索 'Alternative_IP' 设置.
-Cmd Notify - No WebUser                         || 您可能还没有网页账户，请输入 /plan register <密码>
-Cmd Notify - WebUser register                   || 已注册新用户：'${0}' 权限级别：${1}
-Cmd Qinspect - Active Playtime                  ||   §2活跃游戏时间: §f${0}
+Cmd network - No network                        || 服务器未连接到群组。此链接已重定向到服务器页面。
+Cmd Notify - No Address                         || §e没有可用的地址 - 已使用 localhost 作为后备地址。在配置文件中的 'Alternative_IP' 设置地址。
+Cmd Notify - No WebUser                         || 你可能没有网页账户，请使用 /plan register <password> 来注册
+Cmd Notify - WebUser register                   || 新用户已注册： '${0}' 权限等级： ${1}
+Cmd Qinspect - Active Playtime                  ||   §2活跃时间：§f${0}
 Cmd Qinspect - Activity Index                   ||   §2活跃指数：§f${0} | ${1}
-Cmd Qinspect - AFK Playtime                     ||   §2AFK时间: §f${0}
+Cmd Qinspect - AFK Playtime                     ||   §2挂机时间：§f${0}
 Cmd Qinspect - Deaths                           ||   §2死亡数：§f${0}
-Cmd Qinspect - Geolocation                      ||   §2从 §f${0} 登录
-Cmd Qinspect - Last Seen                        ||   §2最后在线：§f${0}
-Cmd Qinspect - Longest Session                  ||   §2最长在线时间：§f${0}
-Cmd Qinspect - Mob Kills                        ||   §2怪物击杀数：§f${0}
+Cmd Qinspect - Geolocation                      ||   §2登录位置：§f${0}
+Cmd Qinspect - Last Seen                        ||   §2上次在线：§f${0}
+Cmd Qinspect - Longest Session                  ||   §2最长的一次游玩：§f${0}
+Cmd Qinspect - Mob Kills                        ||   §2生物击杀数：§f${0}
 Cmd Qinspect - Player Kills                     ||   §2玩家击杀数：§f${0}
 Cmd Qinspect - Playtime                         ||   §2游玩时间：§f${0}
 Cmd Qinspect - Registered                       ||   §2注册时间：§f${0}
-Cmd Qinspect - Times Kicked                     ||   §2踢出次数：§f${0}
-Cmd SUCCESS - Feature disabled                  || §a已在下次插件重载前暂时禁用 '${0}'。
-Cmd SUCCESS - WebUser register                  || §a已成功添加新用户（${0}）！
-Cmd unregister - unregistering                  || Unregistering '${0}'..
-Cmd WARN - Database not open                    || §e数据库状态为 ${0} - 可能需要花费更多的时间..
-Cmd Web - Permission Levels                     || >\§70：访问所有页面\§71：访问 '/players' 及所有玩家页\§72：访问用户名与网页用户名一致的玩家页\§73+：无权限
-Command Help - /plan db                         || Manage Plan database
-Command Help - /plan db backup                  || Backup data of a database to a file
-Command Help - /plan db clear                   || Remove ALL Plan data from a database
-Command Help - /plan db hotswap                 || 热插拔数据库并重启插件
+Cmd Qinspect - Times Kicked                     ||   §2被踢次数：§f${0}
+Cmd SUCCESS - Feature disabled                  || §a暂时禁用 '${0}' 直到下一次重载插件。
+Cmd SUCCESS - WebUser register                  || §a成功添加了新用户(${0})！
+Cmd unregister - unregistering                  || 注销 '${0}' 中...
+Cmd WARN - Database not open                    || §e数据库状态为 ${0} - 这可能需要比预期更长的时间...
+Cmd Web - Permission Levels                     || >\§70: 访问所有页面\§71: 访问 '/players' 和全体玩家页面\§72: 访问用户名与网页用户名一致的玩家页\§73+: 没有权限
+Command Help - /plan db                         || 管理 Plan 数据库
+Command Help - /plan db backup                  || 将数据库的数据备份到一个文件中
+Command Help - /plan db clear                   || 从数据库中删除所有 Plan 数据
+Command Help - /plan db hotswap                 || 热交换数据库并重启插件
 Command Help - /plan db move                    || 在数据库间移动数据
-Command Help - /plan db remove                  || Remove player's data from Current database
-Command Help - /plan db restore                 || Restore data from a file to a database
-Command Help - /plan db uninstalled             || Set a server as uninstalled in the database.
-Command Help - /plan disable                    || Disable the plugin or part of it
-Command Help - /plan export                     || Export html or json files manually
-Command Help - /plan import                     || Import data
-Command Help - /plan info                       || Information about the plugin
-Command Help - /plan ingame                     || 在游戏内检视玩家数据
-Command Help - /plan json                       || View json of Player's raw data.
-Command Help - /plan logout                     || Log out other users from the panel.
-Command Help - /plan network                    || 查看全服网络页面
-Command Help - /plan player                     || 检视玩家数据
-Command Help - /plan players                    || 列出所有已缓存玩家名单
-Command Help - /plan register                   || 注册网页用户
-Command Help - /plan reload                     || 重新启动插件（重载配置）
+Command Help - /plan db remove                  || 从当前数据库中删除玩家的数据
+Command Help - /plan db restore                 || 将数据从文件恢复到数据库
+Command Help - /plan db uninstalled             || 在数据库中把一个服务器设置为已卸载。
+Command Help - /plan disable                    || 禁用整个插件或禁用插件的部分功能
+Command Help - /plan export                     || 手动导出 html 或 json 文件
+Command Help - /plan import                     || 导入数据
+Command Help - /plan info                       || 关于此插件的信息
+Command Help - /plan ingame                     || 在游戏中查看玩家信息
+Command Help - /plan json                       || 查看玩家的原始数据 json。
+Command Help - /plan logout                     || 将其他用户从面板上登出。
+Command Help - /plan network                    || 查看群组网络页面
+Command Help - /plan player                     || 查看玩家页面
+Command Help - /plan players                    || 查看全体玩家页面
+Command Help - /plan register                   || 注册一个网页用户
+Command Help - /plan reload                     || 重启 Plan
 Command Help - /plan search                     || 搜索玩家
-Command Help - /plan server                     || 查看服务器分析
+Command Help - /plan server                     || 查看服务器页面
 Command Help - /plan servers                    || 列出数据库中的服务器
-Command Help - /plan unregister                 || Unregister a user of Plan website
-Command Help - /plan users                      || List all web users
-Database - Apply Patch                          || 正在应用更新：${0}···
+Command Help - /plan unregister                 || 注销一个 Plan 网页账户
+Command Help - /plan users                      || 列出所有网页账户
+Database - Apply Patch                          || 正在应用补丁：${0}...
 Database - Patches Applied                      || 已成功应用所有数据库补丁。
 Database - Patches Applied Already              || 已应用所有数据库补丁。
 Database MySQL - Launch Options Error           || 启动参数出错，正使用默认参数（${0}）
 Database Notify - Clean                         || 移除了 ${0} 位用户的数据。
 Database Notify - SQLite No WAL                 || 此服务器版本不支持 SQLite WAL 模式，正使用默认模式。这可能会影响性能。
-Disable                                         || 已禁用插件。
-Disable - Processing                            || 正在处理未处理的关键任务。（${0}）
+Disable                                         || Plan 插件已禁用。
+Disable - Processing                            || 正在处理未处理的关键任务。(${0})
 Disable - Processing Complete                   || 处理完毕。
-Disable - Unsaved Session Save                  || 保存未完成的时域中..
-Disable - Unsaved Session Save Timeout          || Timeout hit, storing the unfinished sessions on next enable instead.
-Disable - Waiting SQLite                        || Waiting queries to finish to avoid SQLite crashing JVM..
-Disable - Waiting SQLite Complete               || Closed SQLite connection.
-Disable - Waiting Transactions                  || Waiting for unfinished transactions to avoid data loss..
-Disable - Waiting Transactions Complete         || Transaction queue closed.
-Disable - WebServer                             || 正在关闭网页服务器···
-Enable                                          || 已启用插件。
-Enable - Database                               || ${0}-已建立数据库连接。
-Enable - Notify Bad IP                          || 0.0.0.0 是一个不存在的连接地址，请修改 Alternative_IP 设定. 否则可能会导致给予玩家的网页地址错误!
-Enable - Notify Empty IP                        || server.properties 中的 IP 为空且未使用替代 IP。这将会导致地址出错！
-Enable - Notify Geolocations disabled           || 已关闭地理位置收集。（Data.Geolocations: false）
-Enable - Notify Geolocations Internet Required  || 插件需要在首次运行时访问互联网以下载 GeoLite2 地理位置数据库。
-Enable - Notify Webserver disabled              || 未初始化网页服务器。（WebServer.DisableWebServer: true）
-Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
-Enable - WebServer                              || 正在初始化网页服务器···
-Enable FAIL - Database                          || ${0}-连接数据库失败：${1}
-Enable FAIL - Database Patch                    || 数据库补丁失败，插件必须被禁用。请汇报此问题
+Disable - Unsaved Session Save                  || 保存未完成的会话中...
+Disable - Unsaved Session Save Timeout          || 超时，将在下一次启动储存未完成的会话。
+Disable - Waiting SQLite                        || 正在等待查询完成，以避免 SQLite 使 JVM 崩溃...
+Disable - Waiting SQLite Complete               || SQLite 连接已关闭。
+Disable - Waiting Transactions                  || 正在等待未完成的事务以避免数据丢失...
+Disable - Waiting Transactions Complete         || 事务队列已关闭。
+Disable - WebServer                             || 网页服务器已关闭。
+Enable                                          || Plan 插件已启用。
+Enable - Database                               || ${0} - 已连接到数据库。
+Enable - Notify Bad IP                          || 0.0.0.0 不是有效的地址，请修改 Alternative_IP 设置. 否则可能会导致网页地址错误!
+Enable - Notify Empty IP                        || server.properties 中的 IP 为空且未使用备用 IP。这可能会导致地址出错！
+Enable - Notify Geolocations disabled           || 已关闭地理位置收集。(Data.Geolocations: false)
+Enable - Notify Geolocations Internet Required  || Plan 需要在首次运行时访问互联网以下载 GeoLite2 地理位置数据库。
+Enable - Notify Webserver disabled              || 网页服务器未初始化。(WebServer.DisableWebServer: true)
+Enable - Storing preserved sessions             || 正在储存之前关机前留下的会话。
+Enable - WebServer                              || 网页服务器已在 ${0} ( ${1} ) 端口上运行
+Enable FAIL - Database                          || ${0} - 连接到数据库失败：${1}
+Enable FAIL - Database Patch                    || 数据库补丁失败，插件必须被禁用。请报告此问题
 Enable FAIL - GeoDB Write                       || 保存已下载的 GeoLite2 地理位置数据库时发生问题
-Enable FAIL - WebServer (Proxy)                 || 网页服务器未初始化
-Enable FAIL - Wrong Database Type               || ${0} 此数据类型不存在。
-HTML - AND_BUG_REPORTERS                        || & Bug reporters!
-HTML - BANNED (Filters)                         || Banned
-HTML - COMPARING_15_DAYS                        || 比较15天前
-HTML - COMPARING_60_DAYS                        || 比较30天前
-HTML - COMPARING_7_DAYS                         || 比较7天前
-HTML - DATABASE_NOT_OPEN                        || 数据库未开放, 请输入 /plan info 查看数据库状态
-HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
+Enable FAIL - WebServer (Proxy)                 || 网页服务器没有初始化!
+Enable FAIL - Wrong Database Type               || ${0} 是不支持的数据库类型
+HTML - AND_BUG_REPORTERS                        || 和其他问题报告者！
+HTML - BANNED (Filters)                         || 被封禁
+HTML - COMPARING_15_DAYS                        || 对比 15 天的情况
+HTML - COMPARING_60_DAYS                        || 对比 30 天前和现在的情况
+HTML - COMPARING_7_DAYS                         || 对比 7 天的情况
+HTML - DATABASE_NOT_OPEN                        || 数据库未开放, 使用 /plan info 查看数据库状态
+HTML - DESCRIBE_RETENTION_PREDICTION            || 这个数值是基于之前的玩家数据预测的。
 HTML - ERROR                                    || 认证时发生错误
-HTML - EXPIRED_COOKIE                           || 用户Cookie已过期
-HTML - FILTER_ACTIVITY_INDEX_NOW                || Current activity group
-HTML - FILTER_ALL_PLAYERS                       || All players
-HTML - FILTER_BANNED                            || Ban status
-HTML - FILTER_GROUP                             || Group: 
-HTML - FILTER_OPS                               || Operator status
+HTML - EXPIRED_COOKIE                           || 用户 Cookie 已过期
+HTML - FILTER_ACTIVITY_INDEX_NOW                || 活跃度分组
+HTML - FILTER_ALL_PLAYERS                       || 全体玩家
+HTML - FILTER_BANNED                            || 封禁状态
+HTML - FILTER_GROUP                             || 小组：
+HTML - FILTER_OPS                               || 管理员状态
 HTML - INDEX_ACTIVE                             || 活跃
 HTML - INDEX_INACTIVE                           || 不活跃
 HTML - INDEX_IRREGULAR                          || 偶尔上线
 HTML - INDEX_REGULAR                            || 经常上线
 HTML - INDEX_VERY_ACTIVE                        || 非常活跃
-HTML - KILLED                                   || 被击杀
-HTML - LABEL_1ST_WEAPON                         || 最致命的PVP武器
-HTML - LABEL_2ND_WEAPON                         || 更致命的武器
-HTML - LABEL_3RD_WEAPON                         || 致命的PvP武器
-HTML - LABEL_ACTIVE_PLAYTIME                    || Active Playtime
+HTML - KILLED                                   || 被击杀数
+HTML - LABEL_1ST_WEAPON                         || 最致命的 PVP 武器
+HTML - LABEL_2ND_WEAPON                         || 第二致命的 PVP 武器
+HTML - LABEL_3RD_WEAPON                         || 第三致命的 PVP 武器
+HTML - LABEL_ACTIVE_PLAYTIME                    || 活跃时间
 HTML - LABEL_ACTIVITY_INDEX                     || 活跃指数
-HTML - LABEL_AFK                                || AFK
+HTML - LABEL_AFK                                || 挂机
 HTML - LABEL_AFK_TIME                           || 挂机时间
 HTML - LABEL_AVG                                || 平均
-HTML - LABEL_AVG_ACTIVE_PLAYTIME                || Average Active Playtime
-HTML - LABEL_AVG_AFK_TIME                       || Average AFK Time
-HTML - LABEL_AVG_CHUNKS                         || Average Chunks
-HTML - LABEL_AVG_ENTITIES                       || Average Entities
-HTML - LABEL_AVG_KDR                            || 平均击杀比
-HTML - LABEL_AVG_MOB_KDR                        || 平均怪物击杀比
-HTML - LABEL_AVG_PLAYTIME                       || 平均游戏时间
-HTML - LABEL_AVG_SESSION_LENGTH                 || 平均时域长度
-HTML - LABEL_AVG_SESSIONS                       || Average Sessions
-HTML - LABEL_AVG_TPS                            || 平均TPS
-HTML - LABEL_BANNED                             || 已封禁
+HTML - LABEL_AVG_ACTIVE_PLAYTIME                || 平均活跃时间
+HTML - LABEL_AVG_AFK_TIME                       || 平均挂机时间
+HTML - LABEL_AVG_CHUNKS                         || 平均区块数
+HTML - LABEL_AVG_ENTITIES                       || 平均实体书
+HTML - LABEL_AVG_KDR                            || 平均 KDR
+HTML - LABEL_AVG_MOB_KDR                        || 平均生物 KDR
+HTML - LABEL_AVG_PLAYTIME                       || 平均游玩时间
+HTML - LABEL_AVG_SESSION_LENGTH                 || 平均会话时长
+HTML - LABEL_AVG_SESSIONS                       || 平均会话
+HTML - LABEL_AVG_TPS                            || 平均 TPS
+HTML - LABEL_BANNED                             || 已被封禁
 HTML - LABEL_BEST_PEAK                          || 所有时间峰值
 HTML - LABEL_DAY_OF_WEEK                        || 星期
 HTML - LABEL_DEATHS                             || 死亡数
 HTML - LABEL_DOWNTIME                           || 停机时间
-HTML - LABEL_DURING_LOW_TPS                     || TPS峰值:
-HTML - LABEL_ENTITIES                           || 实体数
-HTML - LABEL_FAVORITE_SERVER                    || 喜爱的服务器
-HTML - LABEL_FIRST_SESSION_LENGTH               || 第一个时域的长度
-HTML - LABEL_FREE_DISK_SPACE                    || 剩余磁盘空间
-HTML - LABEL_INACTIVE                           || 未激活
-HTML - LABEL_LAST_PEAK                          || 上次峰值
-HTML - LABEL_LAST_SEEN                          || 最后在线
-HTML - LABEL_LOADED_CHUNKS                      || 已加载的区块
-HTML - LABEL_LOADED_ENTITIES                    || 已加载的实体
+HTML - LABEL_DURING_LOW_TPS                     || 持续低 TPS 时间
+HTML - LABEL_ENTITIES                           || 实体
+HTML - LABEL_FAVORITE_SERVER                    || 最喜爱的服务器
+HTML - LABEL_FIRST_SESSION_LENGTH               || 第一次会话时长
+HTML - LABEL_FREE_DISK_SPACE                    || 剩余硬盘空间
+HTML - LABEL_INACTIVE                           || 不活跃
+HTML - LABEL_LAST_PEAK                          || 上次在线峰值
+HTML - LABEL_LAST_SEEN                          || 最后在线时间
+HTML - LABEL_LOADED_CHUNKS                      || 已加载区块
+HTML - LABEL_LOADED_ENTITIES                    || 已加载实体
 HTML - LABEL_LONE_JOINS                         || 单独加入
 HTML - LABEL_LONE_NEW_JOINS                     || 单独新玩家加入
-HTML - LABEL_LONGEST_SESSION                    || 最长时域
-HTML - LABEL_LOW_TPS                            || TPS最低峰
-HTML - LABEL_MAX_FREE_DISK                      || 最大可用磁盘空间
-HTML - LABEL_MIN_FREE_DISK                      || 最小可用磁盘空间
-HTML - LABEL_MOB_DEATHS                         || 被怪物击杀数
-HTML - LABEL_MOB_KDR                            || 怪物击杀比
-HTML - LABEL_MOB_KILLS                          || 怪物击杀数
-HTML - LABEL_MOST_ACTIVE_GAMEMODE               || 最常用的游戏模式
+HTML - LABEL_LONGEST_SESSION                    || 最长会话时间
+HTML - LABEL_LOW_TPS                            || 低 TPS 时间
+HTML - LABEL_MAX_FREE_DISK                      || 最大可用硬盘空间
+HTML - LABEL_MIN_FREE_DISK                      || 最小可用硬盘空间
+HTML - LABEL_MOB_DEATHS                         || 被生物击杀数
+HTML - LABEL_MOB_KDR                            || 生物 KDR
+HTML - LABEL_MOB_KILLS                          || 生物击杀数
+HTML - LABEL_MOST_ACTIVE_GAMEMODE               || 最常玩的游戏模式
 HTML - LABEL_NAME                               || 名称
 HTML - LABEL_NEW                                || 新
 HTML - LABEL_NEW_PLAYERS                        || 新玩家
 HTML - LABEL_NICKNAME                           || 昵称
 HTML - LABEL_NO_SESSION_KILLS                   || 无
-HTML - LABEL_ONLINE_FIRST_JOIN                  || 第一次加入服务器的在线玩家
+HTML - LABEL_ONLINE_FIRST_JOIN                  || 第一次进入服务器的在线玩家
 HTML - LABEL_OPERATOR                           || 管理员
 HTML - LABEL_PER_PLAYER                         || / 玩家
 HTML - LABEL_PER_REGULAR_PLAYER                 || / 普通玩家
-HTML - LABEL_PLAYER_DEATHS                      || 被玩家击杀数
-HTML - LABEL_PLAYER_KILLS                       || 玩家击杀数
+HTML - LABEL_PLAYER_DEATHS                      || 被玩家击杀次数
+HTML - LABEL_PLAYER_KILLS                       || 击杀玩家数
 HTML - LABEL_PLAYERS_ONLINE                     || 在线玩家
 HTML - LABEL_PLAYTIME                           || 游玩时间
-HTML - LABEL_REGISTERED                         || 已注册
+HTML - LABEL_REGISTERED                         || 注册时间
 HTML - LABEL_REGISTERED_PLAYERS                 || 已注册的玩家
 HTML - LABEL_REGULAR                            || 普通
 HTML - LABEL_REGULAR_PLAYERS                    || 普通玩家
 HTML - LABEL_RELATIVE_JOIN_ACTIVITY             || 最近加入活动
 HTML - LABEL_RETENTION                          || 新玩家留坑率
-HTML - LABEL_SERVER_DOWNTIME                    || 关服时间
-HTML - LABEL_SERVER_OCCUPIED                    || 开服时间
-HTML - LABEL_SESSION_ENDED                      ||  时域之末
-HTML - LABEL_SESSION_MEDIAN                     || 平均时域
-HTML - LABEL_TIMES_KICKED                       || 被踢次数
+HTML - LABEL_SERVER_DOWNTIME                    || 服务器停机时间
+HTML - LABEL_SERVER_OCCUPIED                    || 服务器在线时间
+HTML - LABEL_SESSION_ENDED                      ||  会话结束
+HTML - LABEL_SESSION_MEDIAN                     || 平均会话长度
+HTML - LABEL_TIMES_KICKED                       || 被踢出次数
 HTML - LABEL_TOTAL_PLAYERS                      || 总玩家数
-HTML - LABEL_TOTAL_PLAYTIME                     || 总游戏时间
-HTML - LABEL_UNIQUE_PLAYERS                     || 普通玩家
+HTML - LABEL_TOTAL_PLAYTIME                     || 总游玩时间
+HTML - LABEL_UNIQUE_PLAYERS                     || 独立玩家
 HTML - LABEL_WEEK_DAYS                          || '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'
-HTML - LINK_BACK_NETWORK                        || 全服网络页面
+HTML - LINK_BACK_NETWORK                        || 群组网络页面
 HTML - LINK_BACK_SERVER                         || 服务器页面
 HTML - LINK_CHANGELOG                           || 查看更新日志
-HTML - LINK_DISCORD                             || Discord支持
+HTML - LINK_DISCORD                             || 一般问题支持：Discord
 HTML - LINK_DOWNLOAD                            || 下载
-HTML - LINK_ISSUES                              || 提问
+HTML - LINK_ISSUES                              || 报告问题
 HTML - LINK_NIGHT_MODE                          || 夜间模式
 HTML - LINK_PLAYER_PAGE                         || 玩家页面
-HTML - LINK_QUICK_VIEW                          || 快速检索
+HTML - LINK_QUICK_VIEW                          || 快速浏览
 HTML - LINK_SERVER_ANALYSIS                     || 服务器分析
-HTML - LINK_WIKI                                || Plan Wiki,教程 & 文档
-HTML - LOCAL_MACHINE                            || 本机
-HTML - LOGIN_CREATE_ACCOUNT                     || Create an Account!
-HTML - LOGIN_FAILED                             || Login failed: 
-HTML - LOGIN_FORGOT_PASSWORD                    || Forgot Password?
-HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || Forgot password? Unregister and register again.
-HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || Use the following command in game to remove your current user:
-HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || Or using console:
-HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || After using the command, 
-HTML - LOGIN_LOGIN                              || Login
-HTML - LOGIN_LOGOUT                             || Logout
-HTML - LOGIN_PASSWORD                           || "Password"
-HTML - LOGIN_USERNAME                           || "Username"
+HTML - LINK_WIKI                                || Plan Wiki,教程和文档
+HTML - LOCAL_MACHINE                            || 本地主机
+HTML - LOGIN_CREATE_ACCOUNT                     || 创建一个账户！
+HTML - LOGIN_FAILED                             || 登录失败：
+HTML - LOGIN_FORGOT_PASSWORD                    || 忘记密码？
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1     || 忘记密码？ 注销并再次注册。
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_2     || 在游戏中使用以下命令来删除当前账户：
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_3     || 或使用控制台命令：
+HTML - LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4     || 使用命令后，
+HTML - LOGIN_LOGIN                              || 登录
+HTML - LOGIN_LOGOUT                             || 登出
+HTML - LOGIN_PASSWORD                           || "密码"
+HTML - LOGIN_USERNAME                           || "用户名"
 HTML - NAV_PLUGINS                              || 插件
 HTML - NEW_CALENDAR                             || 新：
-HTML - NO_KILLS                                 || 无击杀数
-HTML - NO_USER_PRESENT                          || 用户Cookie未提供
-HTML - NON_OPERATORS (Filters)                  || Non operators
-HTML - NOT_BANNED (Filters)                     || Not banned
+HTML - NO_KILLS                                 || 没有击杀数
+HTML - NO_USER_PRESENT                          || 用户 cookie 不存在
+HTML - NON_OPERATORS (Filters)                  || 非管理员
+HTML - NOT_BANNED (Filters)                     || 未被封禁
 HTML - OFFLINE                                  ||  离线
 HTML - ONLINE                                   ||  在线
-HTML - OPERATORS (Filters)                      || Operators
+HTML - OPERATORS (Filters)                      || 管理员
 HTML - PER_DAY                                  || / 天
 HTML - PLAYERS_TEXT                             || 玩家
-HTML - QUERY                                    || Query<
-HTML - QUERY_ACTIVITY_OF_MATCHED_PLAYERS        || Activity of matched players
-HTML - QUERY_ACTIVITY_ON                        || Activity on <span id="activity-date"></span>
-HTML - QUERY_ADD_FILTER                         || Add a filter..
-HTML - QUERY_AND                                || and 
-HTML - QUERY_ARE                                || `are`
-HTML - QUERY_ARE_ACTIVITY_GROUP                 || are in Activity Groups
-HTML - QUERY_ARE_PLUGIN_GROUP                   || are in ${plugin}'s ${group} Groups
-HTML - QUERY_JOINED_WITH_ADDRESS                || joined with address
-HTML - QUERY_LOADING_FILTERS                    || Loading filters..
-HTML - QUERY_MAKE                               || Make a query
-HTML - QUERY_MAKE_ANOTHER                       || Make another query
-HTML - QUERY_OF_PLAYERS                         || of Players who 
-HTML - QUERY_PERFORM_QUERY                      || Perform Query!
-HTML - QUERY_PLAYED_BETWEEN                     || Played between
-HTML - QUERY_REGISTERED_BETWEEN                 || Registered between
-HTML - QUERY_RESULTS                            || Query Results
-HTML - QUERY_RESULTS_MATCH                      || matched ${resultCount} players
-HTML - QUERY_SESSIONS_WITHIN_VIEW               || Sessions within view
-HTML - QUERY_SHOW_VIEW                          || Show a view
-HTML - QUERY_TIME_FROM                          || >from</label>
-HTML - QUERY_TIME_TO                            || >to</label>
-HTML - QUERY_VIEW                               ||   View:
-HTML - QUERY_ZERO_RESULTS                       || Query produced 0 results
-HTML - REGISTER                                 || Register
-HTML - REGISTER_CHECK_FAILED                    || Checking registration status failed: 
-HTML - REGISTER_COMPLETE                        || Complete Registration
-HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || You can now finish registering the user.
-HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || Code expires in 15 minutes
-HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || Use the following command in game to finish registration:
-HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || Or using console:
-HTML - REGISTER_CREATE_USER                     || Create a new user
-HTML - REGISTER_FAILED                          || Registration failed: 
-HTML - REGISTER_HAVE_ACCOUNT                    || Already have an account? Login!
-HTML - REGISTER_PASSWORD_TIP                    || Password should be more than 8 characters, but there are no limitations.
-HTML - REGISTER_SPECIFY_PASSWORD                || You need to specify a Password
-HTML - REGISTER_SPECIFY_USERNAME                || You need to specify a Username
-HTML - REGISTER_USERNAME_LENGTH                 || Username can be up to 50 characters, yours is 
-HTML - REGISTER_USERNAME_TIP                    || Username can be up to 50 characters.
-HTML - SESSION                                  || 时域
+HTML - QUERY                                    || 查询<
+HTML - QUERY_ACTIVITY_OF_MATCHED_PLAYERS        || 匹配玩家的活跃度
+HTML - QUERY_ACTIVITY_ON                        || 活跃在 <span id="activity-date"></span>
+HTML - QUERY_ADD_FILTER                         || 添加过滤器..
+HTML - QUERY_AND                                || 外加 
+HTML - QUERY_ARE                                || `是`
+HTML - QUERY_ARE_ACTIVITY_GROUP                 || 在活跃度分组中
+HTML - QUERY_ARE_PLUGIN_GROUP                   || 在 ${plugin} 插件的 ${group} 分组中
+HTML - QUERY_JOINED_WITH_ADDRESS                || 加入地址
+HTML - QUERY_LOADING_FILTERS                    || 加载过滤器中...
+HTML - QUERY_MAKE                               || 进行查询
+HTML - QUERY_MAKE_ANOTHER                       || 进行另一个查询
+HTML - QUERY_OF_PLAYERS                         || 查询玩家：
+HTML - QUERY_PERFORM_QUERY                      || 执行查询！
+HTML - QUERY_PLAYED_BETWEEN                     || 在此期间游玩过
+HTML - QUERY_REGISTERED_BETWEEN                 || 在此期间注册
+HTML - QUERY_RESULTS                            || 查询结果
+HTML - QUERY_RESULTS_MATCH                      || 匹配到 ${resultCount} 个玩家
+HTML - QUERY_SESSIONS_WITHIN_VIEW               || 查看范围内的会话
+HTML - QUERY_SHOW_VIEW                          || 日期范围
+HTML - QUERY_TIME_FROM                          || >从 </label>
+HTML - QUERY_TIME_TO                            || >到 </label>
+HTML - QUERY_VIEW                               ||   日期范围:
+HTML - QUERY_ZERO_RESULTS                       || 查询到 0 个结果
+HTML - REGISTER                                 || 注册
+HTML - REGISTER_CHECK_FAILED                    || 检查注册状态失败：
+HTML - REGISTER_COMPLETE                        || 注册完成
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_1         || 您现在可以完成用户注册流程。
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_2         || 注册代码将在 15 分钟后过期
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_3         || 在游戏中使用以下命令完成注册：
+HTML - REGISTER_COMPLETE_INSTRUCTIONS_4         || 或使用控制台：
+HTML - REGISTER_CREATE_USER                     || 创建一个新用户
+HTML - REGISTER_FAILED                          || 注册失败：
+HTML - REGISTER_HAVE_ACCOUNT                    || 已经有帐号了？ 登录！
+HTML - REGISTER_PASSWORD_TIP                    || 密码不能超过8个字符，没有其他限制。
+HTML - REGISTER_SPECIFY_PASSWORD                || 你需要填写密码
+HTML - REGISTER_SPECIFY_USERNAME                || 你需要填写用户名
+HTML - REGISTER_USERNAME_LENGTH                 || 用户名最多可以包含 50 个字符，你的用户名有
+HTML - REGISTER_USERNAME_TIP                    || 用户名最多可以包含 50 个字符。
+HTML - SESSION                                  || 会话次数
 HTML - SIDE_GEOLOCATIONS                        || 地理位置
 HTML - SIDE_INFORMATION                         || 信息
-HTML - SIDE_LINKS                               || LINKS
-HTML - SIDE_NETWORK_OVERVIEW                    || 全服网络预览
-HTML - SIDE_OVERVIEW                            || 预览
+HTML - SIDE_LINKS                               || 链接
+HTML - SIDE_NETWORK_OVERVIEW                    || 群组网络总览
+HTML - SIDE_OVERVIEW                            || 总览
 HTML - SIDE_PERFORMANCE                         || 性能
 HTML - SIDE_PLAYER_LIST                         || 玩家列表
 HTML - SIDE_PLAYERBASE                          || 玩家数据
-HTML - SIDE_PLAYERBASE_OVERVIEW                 || 玩家数据预览
+HTML - SIDE_PLAYERBASE_OVERVIEW                 || 玩家数据总览
 HTML - SIDE_PLUGINS                             || 插件
-HTML - SIDE_PVP_PVE                             || PvP & PvE
+HTML - SIDE_PVP_PVE                             || PvP 和 PvE
 HTML - SIDE_SERVERS                             || 服务器
 HTML - SIDE_SERVERS_TITLE                       || 服务器
-HTML - SIDE_SESSIONS                            || 时域
-HTML - SIDE_TO_MAIN_PAGE                        || 到主页面
-HTML - TEXT_CLICK_TO_EXPAND                     || 点击拓展
-HTML - TEXT_CONTRIBUTORS_CODE                   || 开发者
-HTML - TEXT_CONTRIBUTORS_LOCALE                 || 译者
-HTML - TEXT_CONTRIBUTORS_MONEY                  || 特别感谢那些在经济上支持该插件发展的人.
-HTML - TEXT_CONTRIBUTORS_THANKS                 || 另外以下 <span class="col-plan">awesome people</span> 也为该插件作出了贡献:
-HTML - TEXT_DEV_VERSION                         || 该版本为开发版本.
-HTML - TEXT_DEVELOPED_BY                        || 的开发者为
-HTML - TEXT_FIRST_SESSION                       || 第一时域
-HTML - TEXT_LICENSED_UNDER                      || Player Analytics开发和授权于
-HTML - TEXT_METRICS                             || bStats统计
-HTML - TEXT_NO_EXTENSION_DATA                   || 没有拓展数据
-HTML - TEXT_NO_LOW_TPS                          || 无tps低峰
-HTML - TEXT_NO_SERVER                           || 没有可显示的在线活动的服务器
+HTML - SIDE_SESSIONS                            || 会话
+HTML - SIDE_TO_MAIN_PAGE                        || 回到主页面
+HTML - TEXT_CLICK_TO_EXPAND                     || 点击展开
+HTML - TEXT_CONTRIBUTORS_CODE                   || 代码贡献者
+HTML - TEXT_CONTRIBUTORS_LOCALE                 || 翻译者
+HTML - TEXT_CONTRIBUTORS_MONEY                  || 特别感谢那些在经济上支持开发的人们。
+HTML - TEXT_CONTRIBUTORS_THANKS                 || 以下 <span class="col-plan">优秀人物</span> 也做出了贡献：
+HTML - TEXT_DEV_VERSION                         || 这是一个开发版本。
+HTML - TEXT_DEVELOPED_BY                        || 的开发者是
+HTML - TEXT_FIRST_SESSION                       || 第一此会话
+HTML - TEXT_LICENSED_UNDER                      || Player Analytics 开发和授权于 
+HTML - TEXT_METRICS                             || bStats 统计
+HTML - TEXT_NO_EXTENSION_DATA                   || 没有扩展数据
+HTML - TEXT_NO_LOW_TPS                          || 没有低 TPS 时间
+HTML - TEXT_NO_SERVER                           || 没有可显示在线活动的服务器
 HTML - TEXT_NO_SERVERS                          || 数据库中找不到服务器
 HTML - TEXT_PLUGIN_INFORMATION                  || 插件信息
-HTML - TEXT_PREDICTED_RETENTION                 || 这个数值根据之前的玩家预测得出
-HTML - TEXT_SERVER_INSTRUCTIONS                 || It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.
-HTML - TEXT_VERSION                             || 有新版本的插件可用.
+HTML - TEXT_PREDICTED_RETENTION                 || 这个数值是基于之前的玩家数据预测的
+HTML - TEXT_SERVER_INSTRUCTIONS                 || 看起来 Plan 没有安装在任何游戏服务器上或者游戏服务器未连接到相同的数据库。 群组网络教程请参见：<a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a>
+HTML - TEXT_VERSION                             || 有新版本可供下载。
 HTML - TITLE_30_DAYS                            || 30 天
 HTML - TITLE_30_DAYS_AGO                        || 30 天前
 HTML - TITLE_ALL                                || 全部
 HTML - TITLE_ALL_TIME                           || 所有时间
-HTML - TITLE_AS_NUMBERS                         || 数字统计
+HTML - TITLE_AS_NUMBERS                         || 数据
 HTML - TITLE_AVG_PING                           || 平均延迟
 HTML - TITLE_BEST_PING                          || 最低延迟
 HTML - TITLE_CALENDAR                           ||  日历
 HTML - TITLE_CONNECTION_INFO                    || 连接信息
 HTML - TITLE_COUNTRY                            || 国家和地区
-HTML - TITLE_CPU_RAM                            || CPU & RAM
-HTML - TITLE_CURRENT_PLAYERBASE                 || 当前玩家
-HTML - TITLE_DISK                               || 磁盘空间
-HTML - TITLE_GRAPH_DAY_BY_DAY                   || 每日
-HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || Hour by Hour
-HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || 全服网络在线活动
-HTML - TITLE_GRAPH_PUNCHCARD                    || 30天打卡签到
-HTML - TITLE_INSIGHTS                           || 30天Insights
+HTML - TITLE_CPU_RAM                            || CPU 和内存
+HTML - TITLE_CURRENT_PLAYERBASE                 || 当前玩家数
+HTML - TITLE_DISK                               || 硬盘空间
+HTML - TITLE_GRAPH_DAY_BY_DAY                   || 按天查看
+HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || 按小时查看
+HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || 群组网络在线活动
+HTML - TITLE_GRAPH_PUNCHCARD                    || 30 天打卡
+HTML - TITLE_INSIGHTS                           || 30 天分析
 HTML - TITLE_IS_AVAILABLE                       || 可用
-HTML - TITLE_JOIN_ADDRESSES                     || Join Addresses
+HTML - TITLE_JOIN_ADDRESSES                     || 加入地址
 HTML - TITLE_LAST_24_HOURS                      || 过去 24 小时
 HTML - TITLE_LAST_30_DAYS                       || 过去 30 天
 HTML - TITLE_LAST_7_DAYS                        || 过去 7 天
-HTML - TITLE_LAST_CONNECTED                     || 最后连接
-HTML - TITLE_LENGTH                             ||  长度
-HTML - TITLE_MOST_PLAYED_WORLD                  || 最多玩家的世界
-HTML - TITLE_NETWORK                            || 服务器全服网络
-HTML - TITLE_NETWORK_AS_NUMBERS                 || 全服数字统计
+HTML - TITLE_LAST_CONNECTED                     || 最后连接时间
+HTML - TITLE_LENGTH                             ||  游玩时长
+HTML - TITLE_MOST_PLAYED_WORLD                  || 玩的最多的世界
+HTML - TITLE_NETWORK                            || 群组网络
+HTML - TITLE_NETWORK_AS_NUMBERS                 || 群组网络数据
 HTML - TITLE_NOW                                || 现在
 HTML - TITLE_ONLINE_ACTIVITY                    || 在线活动
-HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || 在线活动数字统计
-HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || 在线活动预览
-HTML - TITLE_PERFORMANCE_AS_NUMBERS             || 性能数字统计
+HTML - TITLE_ONLINE_ACTIVITY_AS_NUMBERS         || 在线活动数据
+HTML - TITLE_ONLINE_ACTIVITY_OVERVIEW           || 在线活动总览
+HTML - TITLE_PERFORMANCE_AS_NUMBERS             || 性能数据
 HTML - TITLE_PING                               || 延迟
 HTML - TITLE_PLAYER                             || 玩家
-HTML - TITLE_PLAYER_OVERVIEW                    || 玩家预览
+HTML - TITLE_PLAYER_OVERVIEW                    || 玩家总览
 HTML - TITLE_PLAYERBASE_DEVELOPMENT             || 玩家发展
-HTML - TITLE_PVP_DEATHS                         || 最近的PVP死亡
-HTML - TITLE_PVP_KILLS                          || 最近的PVP击杀
-HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE数字统计
+HTML - TITLE_PVP_DEATHS                         || 最近的 PVP 死亡
+HTML - TITLE_PVP_KILLS                          || 最近的 PVP 击杀
+HTML - TITLE_PVP_PVE_NUMBERS                    || PvP 和 PvE 数据
 HTML - TITLE_RECENT_KILLS                       || 最近击杀
-HTML - TITLE_RECENT_SESSIONS                    || 最近时域
-HTML - TITLE_SEEN_NICKNAMES                     || 可视昵称
+HTML - TITLE_RECENT_SESSIONS                    || 最近会话
+HTML - TITLE_SEEN_NICKNAMES                     || 用过的昵称
 HTML - TITLE_SERVER                             || 服务器
-HTML - TITLE_SERVER_AS_NUMBERS                  || 服务器数字统计
-HTML - TITLE_SERVER_OVERVIEW                    || 服务器预览
+HTML - TITLE_SERVER_AS_NUMBERS                  || 服务器数据
+HTML - TITLE_SERVER_OVERVIEW                    || 服务器总览
 HTML - TITLE_SERVER_PLAYTIME                    || 服务器游戏时间
-HTML - TITLE_SERVER_PLAYTIME_30                 || 服务器30天的游戏时间
-HTML - TITLE_SESSION_START                      || 开始的时域
-HTML - TITLE_THEME_SELECT                       || 选择主题
+HTML - TITLE_SERVER_PLAYTIME_30                 || 最近 30 天内的服务器游玩时间
+HTML - TITLE_SESSION_START                      || 会话开始于
+HTML - TITLE_THEME_SELECT                       || 主题选择
 HTML - TITLE_TITLE_PLAYER_PUNCHCARD             || 打卡
 HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || 趋势
-HTML - TITLE_TRENDS                             || 30天趋势
+HTML - TITLE_TRENDS                             || 30 天趋势
 HTML - TITLE_VERSION                            || 版本
 HTML - TITLE_WEEK_COMPARISON                    || 每周对比
-HTML - TITLE_WORLD                              || 加载世界
+HTML - TITLE_WORLD                              || 世界加载
 HTML - TITLE_WORLD_PLAYTIME                     || 世界游玩时间
 HTML - TITLE_WORST_PING                         || 最高延迟
-HTML - TOTAL_ACTIVE_TEXT                        || 总活跃玩家
-HTML - TOTAL_AFK                                || 总挂机玩家
-HTML - TOTAL_PLAYERS                            || 总玩家
-HTML - UNIQUE_CALENDAR                          || 普通玩家:
+HTML - TOTAL_ACTIVE_TEXT                        || 总活跃时长
+HTML - TOTAL_AFK                                || 总挂机时长
+HTML - TOTAL_PLAYERS                            || 总游玩时长
+HTML - UNIQUE_CALENDAR                          || 独立：
 HTML - UNIT_CHUNKS                              || 区块
 HTML - UNIT_ENTITIES                            || 实体
 HTML - UNIT_NO_DATA                             || 没有数据
 HTML - UNIT_THE_PLAYERS                         || 玩家
 HTML - USER_AND_PASS_NOT_SPECIFIED              || 未指定用户名与密码
 HTML - USER_DOES_NOT_EXIST                      || 用户不存在
-HTML - USER_INFORMATION_NOT_FOUND               || Registration failed, try again (The code expires after 15 minutes)
-HTML - USER_PASS_MISMATCH                       || 用户名与密码不匹配
-HTML - Version Change log                       || View Changelog
-HTML - Version Current                          || You have version ${0}
-HTML - Version Download                         || Download Plan-${0}.jar
-HTML - Version Update                           || Update
-HTML - Version Update Available                 || Version ${0} is Available!
-HTML - Version Update Dev                       || This version is a DEV release.
-HTML - Version Update Info                      || A new version has been released and is now available for download.
-HTML - WARNING_NO_GAME_SERVERS                  || Some data requires Plan to be installed on game servers.
-HTML - WARNING_NO_GEOLOCATIONS                  || Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).
-HTML - WARNING_NO_SPONGE_CHUNKS                 || Chunks unavailable on Sponge
+HTML - USER_INFORMATION_NOT_FOUND               || 注册失败，请重试（注册代码有效期 15 分钟）
+HTML - USER_PASS_MISMATCH                       || 用户名和密码不匹配
+HTML - Version Change log                       || 查看更新日志
+HTML - Version Current                          || 你的版本是 ${0}
+HTML - Version Download                         || 下载 Plan - ${0}.jar
+HTML - Version Update                           || 更新
+HTML - Version Update Available                 || 新版本 ${0} 现在可用！
+HTML - Version Update Dev                       || 这是一个开发版本。
+HTML - Version Update Info                      || 有新版本可供下载。
+HTML - WARNING_NO_GAME_SERVERS                  || 要获取某些数据，你需要将 Plan 安装在游戏服务器上。
+HTML - WARNING_NO_GEOLOCATIONS                  || 需要在配置文件中启用地理位置收集(Accept GeoLite2 EULA)。
+HTML - WARNING_NO_SPONGE_CHUNKS                 || 区块数据在 Sponge 服务端不可用
 HTML - WITH                                     || <th> 与
 HTML ERRORS - ACCESS_DENIED_403                 || 拒绝访问
-HTML ERRORS - AUTH_FAIL_TIPS_401                || - 确保您已使用 <b>/plan register</b> 注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若您忘记了密码，请让工作人员删除您的旧密码并重新注册。
+HTML ERRORS - AUTH_FAIL_TIPS_401                || - 确保你已使用 <b>/plan register</b> 来注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若您忘记了密码，请让工作人员删除您的旧密码并重新注册。
 HTML ERRORS - AUTHENTICATION_FAILED_401         || 认证失败。
 HTML ERRORS - FORBIDDEN_403                     || 禁止访问
 HTML ERRORS - NO_SERVERS_404                    || 无可执行此请求的在线服务器。
 HTML ERRORS - NOT_FOUND_404                     || 未找到
-HTML ERRORS - NOT_PLAYED_404                    || 玩家从未在此服务器上游玩过。
+HTML ERRORS - NOT_PLAYED_404                    || Plan 没有找到此玩家。
 HTML ERRORS - PAGE_NOT_FOUND_404                || 页面不存在。
 HTML ERRORS - UNAUTHORIZED_401                  || 未认证
 HTML ERRORS - UNKNOWN_PAGE_404                  || 请确保您正通过命令所给出的链接访问，示例：</p><p>/player/玩家名<br>/server/服务器名</p>
-HTML ERRORS - UUID_404                          || 未在数据库中找到玩家的 UUID。
-In Depth Help - /plan db                        || Use different database subcommands to change the data in some way
-In Depth Help - /plan db backup                 || Uses SQLite to backup the target database to a file.
-In Depth Help - /plan db clear                  || Clears all Plan tables, removing all Plan-data in the process.
-In Depth Help - /plan db hotswap                || Reloads the plugin with the other database and changes the config to match.
-In Depth Help - /plan db move                   || Overwrites contents in the other database with the contents in another.
-In Depth Help - /plan db remove                 || Removes all data linked to a player from the Current database.
-In Depth Help - /plan db restore                || Uses SQLite backup file and overwrites contents of the target database.
-In Depth Help - /plan db uninstalled            || Marks a server in Plan database as uninstalled so that it will not show up in server queries.
-In Depth Help - /plan disable                   || Disable the plugin or part of it until next reload/restart.
-In Depth Help - /plan export                    || Performs an export to export location defined in the config.
-In Depth Help - /plan import                    || Performs an import to load data into the database.
-In Depth Help - /plan info                      || Display the current status of the plugin.
-In Depth Help - /plan ingame                    || 相比检视网页有着更少的信息。
-In Depth Help - /plan json                      || Allows you to download a player's data in json format. All of it.
-In Depth Help - /plan logout                    || Give username argument to log out another user from the panel, give * as argument to log out everyone.
-In Depth Help - /plan network                   || Obtain a link to the /network page, only does so on networks.
-In Depth Help - /plan player                    || Obtain a link to the /player page of a specific player, or the current player.
-In Depth Help - /plan players                   || Obtain a link to the /players page to see a list of players.
-In Depth Help - /plan register                  || Use without arguments to get link to register page. Use --code [code] after registration to get a user.
-In Depth Help - /plan reload                    || Disable and enable the plugin to reload any changes in config.
-In Depth Help - /plan search                    || List all matching player names to given part of a name.
-In Depth Help - /plan server                    || Obtain a link to the /server page of a specific server, or the current server if no arguments are given.
-In Depth Help - /plan servers                   || List ids, names and uuids of servers in the database.
-In Depth Help - /plan unregister                || Use without arguments to unregister player linked user, or with username argument to unregister another user.
-In Depth Help - /plan users                     || Lists web users as a table.
-Manage - Confirm Overwrite                      || 数据库 ${0} 中的数据将被覆盖！
-Manage - Confirm Removal                        || 数据库 ${0} 中的数据将被移除！
-Manage - Fail                                   || > §c[数据统计] 处理数据时发生错误！ ${0}
-Manage - Fail File not found                    || > §c[数据统计] 备份文件不存在！ ${0}
-Manage - Fail Incorrect Database                || > §c'${0}' 不是一个支持的数据库。
+HTML ERRORS - UUID_404                          || 未在数据库中找到此玩家的 UUID。
+In Depth Help - /plan db                        || 使用不同的数据库子命令来某种方式更改数据
+In Depth Help - /plan db backup                 || 使用 SQLite 将目标数据库备份到文件中。
+In Depth Help - /plan db clear                  || 清除所有 Plan 数据表，并删除所有处理中的 Plan 数据。
+In Depth Help - /plan db hotswap                || 用另一个数据库重新加载插件，并改变配置使其匹配。
+In Depth Help - /plan db move                   || 用一个数据库中的内容覆盖另一个数据库中的内容。
+In Depth Help - /plan db remove                 || 从当前数据库中删除与某个玩家相关的所有数据。
+In Depth Help - /plan db restore                || 使用 SQLite 备份文件并覆盖目标数据库的内容。
+In Depth Help - /plan db uninstalled            || 将 Plan 数据库中的一个服务器标记为已卸载，这样它就不会在服务器查询页面中显示出来。
+In Depth Help - /plan disable                   || 禁用整个插件或禁用插件的部分功能，直到下次重新加载/重新启动。
+In Depth Help - /plan export                    || 把数据导出到配置文件中指定的导出位置。
+In Depth Help - /plan import                    || 执行导入，将数据加载到数据库。
+In Depth Help - /plan info                      || 显示插件的当前状态。
+In Depth Help - /plan ingame                    || 显示正在游戏中的玩家的一些信息。
+In Depth Help - /plan json                      || 允许你下载 json 格式的玩家数据。所有的数据都在里面。
+In Depth Help - /plan logout                    || 输入用户名作为参数可以注销 Plan 上的一个用户，输入 * 作为参数可以注销所有用户。
+In Depth Help - /plan network                   || 获得一个指向 /network page（群组网络） 的链接，只能在群组网络上这样做。
+In Depth Help - /plan player                    || 获得一个指向特定玩家或当前玩家的 /player page（玩家页面） 的链接。
+In Depth Help - /plan players                   || 获得一个指向 /players page（全体玩家页面） 的链接，以查看玩家列表。
+In Depth Help - /plan register                  || 直接使用会获得注册页面的链接。添加 --code[注册代码] 参数可以注册一个账户。
+In Depth Help - /plan reload                    || 禁用然后重新启用本插件，会重新加载配置中的设置。
+In Depth Help - /plan search                    || 列出所有与给定名字部分相匹配的玩家名字。
+In Depth Help - /plan server                    || 获取一个指向特定服务器的 /server page（服务器页面） 的链接，如果没有给出参数，则获取当前服务器的链接。
+In Depth Help - /plan servers                   || 列出数据库中所有服务器的ID、名称和UUID。
+In Depth Help - /plan unregister                || 不含参数使用会注销当前绑定的账户，使用用户名作为参数能注销另一个用户。
+In Depth Help - /plan users                     || 以表格形式列出网页用户。
+Manage - Confirm Overwrite                      || 数据库 ${0} 中的数据将被覆盖!
+Manage - Confirm Removal                        || 数据库 ${0} 中的数据将被删除!
+Manage - Fail                                   || > §c发生了错误：${0}
+Manage - Fail File not found                    || > §c没有在 ${0} 发现文件
+Manage - Fail Incorrect Database                || > §c'${0}' 是一个不支持的数据库
 Manage - Fail No Exporter                       || §e导出器 '${0}' 不存在
 Manage - Fail No Importer                       || §e导入器 '${0}' 不存在
-Manage - Fail No Server                         || 找不到这个服务器.
-Manage - Fail Same Database                     || > §c[数据统计] 无法移动至相同的数据库！
-Manage - Fail Same server                       || 无法将服务器标记为未安装 (你已在该服务器)
-Manage - Fail, Confirmation                     || > §c[数据统计] 请添加 -a 以确认执行！${0}
+Manage - Fail No Server                         || 没有找到具有给定参数的服务器。
+Manage - Fail Same Database                     || > §c不能在同一个数据库中操作!
+Manage - Fail Same server                       || 不能将此服务器标记为已卸载（你在这个服务器上）。
+Manage - Fail, Confirmation                     || > §c添加 '-a' 参数来确认执行：${0}
 Manage - List Importers                         || 导入器：
-Manage - Progress                               || ${0} / ${1} processed..
-Manage - Remind HotSwap                         || §e[数据统计] 请切换至新数据库并重载插件（/plan db hotswap ${0}）
-Manage - Start                                  || »§7 正在处理数据...
-Manage - Success                                || §f» §2 成功！
+Manage - Progress                               || ${0} / ${1} 处理中...
+Manage - Remind HotSwap                         || §e请切换到新的数据库(/plan db hotswap ${0})并重新加载插件。
+Manage - Start                                  || > §2处理数据中...
+Manage - Success                                || > §a成功！
 Negative                                        || 否
 Positive                                        || 是
 Today                                           || '今天'
 Unavailable                                     || 不可用
-Unknown                                         || 未知
-Version - DEV                                   ||  这是开发版本。
-Version - Latest                                || 您正使用最新版本。
-Version - New                                   || 有新版本（${0}）可用 ${1}
-Version - New (old)                             || 新版本在 ${0} 可用
+Unknown                                         || 位置
+Version - DEV                                   ||  这是一个开发版本。
+Version - Latest                                || 你正在使用最新版本。
+Version - New                                   || 有新版本 (${0}) 可用 ${1}
+Version - New (old)                             || 有新版本可用：${0}
 Version FAIL - Read info (old)                  || 无法检查最新版本号
 Version FAIL - Read versions.txt                || 无法从 Github/versions.txt 加载版本信息
-Web User Listing                                ||   §2${0} §7：§f${1}
+Web User Listing                                ||   §2${0} §7: §f${1}
 WebServer - Notify HTTP                         || 网页服务器：无证书 -> 正使用 HTTP 服务器提供可视化效果。
-WebServer - Notify HTTP User Auth               || 网页服务器：已禁用用户认证！（HTTP 方式不安全）
-WebServer - Notify HTTPS User Auth              || 网页服务器: 用户验证已关闭! (关闭于配置文件)
-Webserver - Notify IP Whitelist                 || Webserver: IP Whitelist is enabled.
-Webserver - Notify IP Whitelist Block           || Webserver: ${0} was denied access to '${1}'. (not whitelisted)
-WebServer - Notify no Cert file                 || 网页服务器：未找到证书密钥存储文件：${0}
-WebServer - Notify Using Proxy                  || 网页服务器: 代理模式HTTPS已开启, 请确保您的反代已经配置为HTTPS模式并且Plan的Alternative_IP.Address已经指向代理
-WebServer FAIL - EOF                            || 网页服务器: 在读取证书文件时出现了EOF异常. (请检查证书文件完整性)
-WebServer FAIL - Port Bind                      || 未成功初始化网页服务器。端口（${0}）是否被占用？
+WebServer - Notify HTTP User Auth               || 网页服务器：已禁用用户登录！（HTTP 方式不安全）
+WebServer - Notify HTTPS User Auth              || 网页服务器: 用户登录已关闭! （已在配置文件中禁用）
+Webserver - Notify IP Whitelist                 || 网页服务器: IP 白名单已启用。
+Webserver - Notify IP Whitelist Block           || 网页服务器：${0} 被拒绝访问 '${1}'. （不在白名单中）
+WebServer - Notify no Cert file                 || 网页服务器：找不到证书密钥库文件：${0}
+WebServer - Notify Using Proxy                  || 网页服务器: HTTPS 代理模式已开启, 请确保你的反向代理已经配置为 HTTPS 模式并且 Plan 的 Alternative_IP.Address 选项已经指向代理
+WebServer FAIL - EOF                            || 网页服务器: 在读取证书文件时出现了EOF异常. （请检查证书文件完整性）
+WebServer FAIL - Port Bind                      || 未成功初始化网页服务器。端口(${0})是否被已被占用？
 WebServer FAIL - SSL Context                    || 网页服务器：SSL 环境初始化失败。
 WebServer FAIL - Store Load                     || 网页服务器：SSL 证书载入失败。
 Yesterday                                       || '昨天'

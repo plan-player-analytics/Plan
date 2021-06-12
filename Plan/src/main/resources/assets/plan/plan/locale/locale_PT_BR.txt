@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || A coleta de geolocalização 
 Enable - Notify Geolocations Internet Required  || O Plan requer acesso à internet na primeira execução para baixar o banco de dados de geolocalização do GeoLite2.
 Enable - Notify Webserver disabled              || O servidor web não foi inicializado. (WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
-Enable - WebServer                              || O servidor web está rodando na PORTA ${0} (${1})
+Enable - WebServer                              || O servidor web está rodando na PORTA ${0} ( ${1} )
 Enable FAIL - Database                          || ${0}-Falha na Conexão do Banco de Dados: ${1}
 Enable FAIL - Database Patch                    || O patch do banco de dados falhou, o plugin teve que ser desativado. Reporte esse problema no GitHub ou Discord para suporte.
 Enable FAIL - GeoDB Write                       || Algo deu errado ao salvar o banco de dados de geolocalização do GeoLite2

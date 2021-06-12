@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || 位置情報サービスが�
 Enable - Notify Geolocations Internet Required  || 「Plan」は初回起動時、「GeoLite2」の位置情報データベースをダウンロードするためインターネットアクセスが必要です
 Enable - Notify Webserver disabled              || ウェブサーバーの初期化に失敗しました (WebServer.DisableWebServer: true)
 Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
-Enable - WebServer                              || ウェブサーバーは次のポートで実行されています: ${0} (${1})
+Enable - WebServer                              || ウェブサーバーは次のポートで実行されています: ${0} ( ${1} )
 Enable FAIL - Database                          || 「${0}」のデータベースの接続に失敗しました: ${1}
 Enable FAIL - Database Patch                    || データベースのパッチ適用に失敗しました、プラグインを無効にする必要があります。バグ報告をお願いします
 Enable FAIL - GeoDB Write                       || ダウンロードした「GeoLite2」の位置情報データベースを保存中に何らかのエラーが発生しました

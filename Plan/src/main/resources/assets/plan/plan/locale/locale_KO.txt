@@ -153,7 +153,7 @@ Enable - Notify Geolocations disabled           || 위치 정보 수집이 활�
 Enable - Notify Geolocations Internet Required  || Plan GeoLite2 Geolocation 데이터베이스를 다운로드하려면 처음 실행할 때 인터넷 액세스가 필요합니다.
 Enable - Notify Webserver disabled              || 웹 서버가 초기화되지 않았습니다. (WebServer.DisableWebServer : true)
 Enable - Storing preserved sessions             || Storing sessions that were preserved before previous shutdown.
-Enable - WebServer                              || 해당 포트에서 실행되는 웹 서버 ${0} (${1})
+Enable - WebServer                              || 해당 포트에서 실행되는 웹 서버 ${0} ( ${1} )
 Enable FAIL - Database                          || ${0}-데이터베이스 연결 실패: ${1}
 Enable FAIL - Database Patch                    || 데이터베이스 패치에 실패했습니다. 플러그인을 비활성화해야합니다. 이 문제를 신고하십시오
 Enable FAIL - GeoDB Write                       || 다운로드 한 GeoLite2 Geolocation 데이터베이스를 저장하는 도중에 문제가 발생했습니다.
