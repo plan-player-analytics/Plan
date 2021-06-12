@@ -1,21 +1,19 @@
 dependencies {
-    compile project(path: ":common", configuration: 'shadow')
-    compile project(path: ":bukkit", configuration: 'shadow')
-    compile project(path: ":nukkit", configuration: 'shadow')
-    compile project(path: ":sponge", configuration: 'shadow')
-    compile project(path: ":bungeecord", configuration: 'shadow')
-    compile project(path: ":velocity", configuration: 'shadow')
-    testCompile project(path: ":common", configuration: 'testArtifacts')
-    testCompile project(path: ":bukkit", configuration: 'testArtifacts')
-    testCompile project(path: ":nukkit", configuration: 'testArtifacts')
-    testCompile project(path: ":sponge", configuration: 'testArtifacts')
-    testCompile project(path: ":bungeecord", configuration: 'testArtifacts')
-    testCompile project(path: ":velocity", configuration: 'testArtifacts')
+    implementation project(path: ":common", configuration: 'shadow')
+    implementation project(path: ":bukkit", configuration: 'shadow')
+    implementation project(path: ":nukkit", configuration: 'shadow')
+    implementation project(path: ":sponge", configuration: 'shadow')
+    implementation project(path: ":bungeecord", configuration: 'shadow')
+    implementation project(path: ":velocity", configuration: 'shadow')
+    testImplementation project(path: ":common", configuration: 'testArtifacts')
+    testImplementation project(path: ":bukkit", configuration: 'testArtifacts')
+    testImplementation project(path: ":nukkit", configuration: 'testArtifacts')
+    testImplementation project(path: ":sponge", configuration: 'testArtifacts')
+    testImplementation project(path: ":bungeecord", configuration: 'testArtifacts')
+    testImplementation project(path: ":velocity", configuration: 'testArtifacts')
 }
 
 shadowJar {
-    configurations = [project.configurations.compile]
-
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
     }
@@ -26,13 +24,13 @@ shadowJar {
     relocate 'javax.inject', 'plan.javax.inject'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
 
-    destinationDir = file("$rootDir/builds/")
-    baseName = "Plan"
-    classifier = null
-}
+    destinationDirectory.set(file("$rootDir/builds/"))
+    archiveBaseName.set('Plan')
+    archiveClassifier.set('')
 
-build {
-    dependsOn tasks.named("shadowJar")
+    build {
+        dependsOn tasks.named("shadowJar")
+    }
 }
 
 publishing {

@@ -9,22 +9,20 @@ blossom {
 
 dependencies {
     compileOnly project(":common")
-    compile project(path: ":common", configuration: 'shadow')
+    implementation project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    compile "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
-    compile "org.bstats:bstats-sponge:$bstatsVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
+    implementation "org.bstats:bstats-sponge:$bstatsVersion"
 
     compileOnly "org.spongepowered:spongeapi:$spongeVersion"
-    testCompile "org.spongepowered:spongeapi:$spongeVersion"
+    testImplementation "org.spongepowered:spongeapi:$spongeVersion"
 
     annotationProcessor "org.spongepowered:spongeapi:$spongeVersion"
 
-    testCompile project(path: ":common", configuration: 'testArtifacts')
+    testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
 shadowJar {
     relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
-
-    configurations = [project.configurations.compile]
 }
