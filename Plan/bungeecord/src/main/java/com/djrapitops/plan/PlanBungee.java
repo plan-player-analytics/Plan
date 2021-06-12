@@ -28,9 +28,7 @@ import net.playeranalytics.plugin.BungeePlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
-import org.apache.maven.model.building.ModelBuildingException;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,12 +52,6 @@ public class PlanBungee extends Plugin implements PlanPlugin {
         abstractionLayer = new BungeePlatformLayer(this);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
-
-        try {
-            new DependencyStartup(logger, abstractionLayer.getDependencyLoader()).loadDependencies();
-        } catch (IOException | ModelBuildingException e) {
-            getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
-        }
     }
 
     @Override

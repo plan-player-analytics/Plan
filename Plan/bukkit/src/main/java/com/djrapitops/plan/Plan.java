@@ -29,13 +29,11 @@ import net.playeranalytics.plugin.BukkitPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
-import org.apache.maven.model.building.ModelBuildingException;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -63,12 +61,6 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         abstractionLayer = new BukkitPlatformLayer(this);
         pluginLogger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
-
-        try {
-            new DependencyStartup(pluginLogger, abstractionLayer.getDependencyLoader()).loadDependencies();
-        } catch (IOException | ModelBuildingException e) {
-            getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName());
-        }
     }
 
     @Override
