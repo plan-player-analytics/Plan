@@ -22,7 +22,6 @@ import dagger.Module;
 import dagger.Provides;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.PluginInformation;
-import net.playeranalytics.plugin.dependencies.DependencyLoader;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.Listeners;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -61,12 +60,6 @@ public class PlatformAbstractionLayerModule {
     @Singleton
     RunnableFactory provideRunnableFactory(PlatformAbstractionLayer abstractionLayer) {
         return abstractionLayer.getRunnableFactory();
-    }
-
-    @Provides
-    @Singleton
-    DependencyLoader provideDependencyLoader(PlatformAbstractionLayer abstractionLayer) {
-        return abstractionLayer.getDependencyLoader();
     }
 
     @Provides

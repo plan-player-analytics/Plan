@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class OldDependencyCacheDeletionTask extends TaskSystem.Task {
 
+    private final File oldDependencyCache;
     private final File dependencyCache;
     private final File libraries;
 
@@ -43,7 +44,8 @@ public class OldDependencyCacheDeletionTask extends TaskSystem.Task {
             PlanFiles files,
             ErrorLogger errorLogger
     ) {
-        dependencyCache = files.getDataDirectory().resolve("dependency_cache").toFile();
+        oldDependencyCache = files.getDataDirectory().resolve("dependency_cache").toFile();
+        dependencyCache = files.getDataDirectory().resolve("dep_cache").toFile();
         libraries = files.getDataDirectory().resolve("libraries").toFile();
         this.errorLogger = errorLogger;
     }
@@ -56,6 +58,7 @@ public class OldDependencyCacheDeletionTask extends TaskSystem.Task {
 
     @Override
     public void run() {
+        tryToDeleteDirectory(oldDependencyCache);
         tryToDeleteDirectory(dependencyCache);
         tryToDeleteDirectory(libraries);
     }

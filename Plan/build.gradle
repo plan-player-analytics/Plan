@@ -65,7 +65,7 @@ subprojects {
         daggerVersion = "2.37"
         daggerCompilerVersion = "2.37"
 
-        palVersion = "4.1.0"
+        palVersion = "5.0.0"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
