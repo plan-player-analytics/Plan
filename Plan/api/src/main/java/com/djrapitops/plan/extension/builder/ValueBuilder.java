@@ -228,14 +228,14 @@ public interface ValueBuilder {
      * <p>
      * {@link ValueBuilder#buildBoolean(boolean)}
      */
-    DataValue<Boolean> buildBoolean(BooleanSupplier value);
+    DataValue<Boolean> buildBoolean(Supplier<Boolean> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      * <p>
      * {@link ValueBuilder#buildBooleanProvidingCondition(boolean, String)}
      */
-    DataValue<Boolean> buildBooleanProvidingCondition(BooleanSupplier value, String providedCondition);
+    DataValue<Boolean> buildBooleanProvidingCondition(Supplier<Boolean> value, String providedCondition);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
@@ -249,21 +249,21 @@ public interface ValueBuilder {
      * <p>
      * {@link ValueBuilder#buildNumber(Long)}
      */
-    DataValue<Long> buildNumber(LongSupplier value);
+    DataValue<Long> buildNumber(Supplier<Long> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      * <p>
      * {@link ValueBuilder#buildDouble(Double)}
      */
-    DataValue<Double> buildDouble(DoubleSupplier value);
+    DataValue<Double> buildDouble(Supplier<Double> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      * <p>
      * {@link ValueBuilder#buildPercentage(Double)}
      */
-    DataValue<Double> buildPercentage(DoubleSupplier percentage);
+    DataValue<Double> buildPercentage(Supplier<Double> percentage);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
