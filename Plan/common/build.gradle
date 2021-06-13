@@ -50,7 +50,6 @@ shadowJar {
     // Exclude unnecessary SQLite drivers
     exclude '**/Linux/android-arm/libsqlitejdbc.so'
     exclude '**/DragonFlyBSD/**/libsqlitejdbc.so'
-    exclude '**/sqlite/jdbc3/*'
 
     relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
 
