@@ -147,10 +147,8 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
         String tabContentHtml = buildContentHtml(tabData);
 
         String tabName = tabInformation.getTabName();
-        return new TabsElement.Tab(tabName.isEmpty()
-                ? Icon.called("info-circle").build().toHtml() + " General"
-                : Icon.fromExtensionIcon(tabInformation.getTabIcon()).toHtml() + ' ' + tabName,
-                tabContentHtml);
+        return tabName.isEmpty() ? new TabsElement.Tab(Icon.called("info-circle").build(), "General", tabContentHtml)
+                : new TabsElement.Tab(Icon.fromExtensionIcon(tabInformation.getTabIcon()), tabName, tabContentHtml);
     }
 
     private String buildContentHtml(ExtensionTabData tabData) {
