@@ -64,6 +64,7 @@ public class ResponseResolver {
     private final LoginResolver loginResolver;
     private final LogoutResolver logoutResolver;
     private final RegisterResolver registerResolver;
+    private final ErrorsPageResolver errorsPageResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
@@ -89,6 +90,7 @@ public class ResponseResolver {
             LoginResolver loginResolver,
             LogoutResolver logoutResolver,
             RegisterResolver registerResolver,
+            ErrorsPageResolver errorsPageResolver,
 
             ErrorLogger errorLogger
     ) {
@@ -107,6 +109,7 @@ public class ResponseResolver {
         this.loginResolver = loginResolver;
         this.logoutResolver = logoutResolver;
         this.registerResolver = registerResolver;
+        this.errorsPageResolver = errorsPageResolver;
         this.errorLogger = errorLogger;
     }
 
@@ -125,6 +128,8 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/auth/login", loginResolver);
         resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
         resolverService.registerResolver(plugin, "/auth/register", registerResolver);
+
+        resolverService.registerResolver(plugin, "/errors", errorsPageResolver);
 
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^.*/(vendor|css|js|img)/.*"), staticResourceResolver);

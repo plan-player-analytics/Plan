@@ -217,4 +217,8 @@ public class PageFactory {
                 locale.get(), theme.get(), versionChecker.get()
         );
     }
+
+    public Page errorsPage() throws IOException {
+        return new ErrorsPage(getResource("error.html"), locale.get(), theme.get(), versionChecker.get());
+    }
 }

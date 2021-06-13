@@ -424,4 +424,12 @@ public class ResponseFactory {
             return forInternalError(e, "Failed to generate query page");
         }
     }
+
+    public Response errorsPageResponse() {
+        try {
+            return forPage(pageFactory.errorsPage());
+        } catch (IOException e) {
+            return forInternalError(e, "Failed to generate errors page");
+        }
+    }
 }
