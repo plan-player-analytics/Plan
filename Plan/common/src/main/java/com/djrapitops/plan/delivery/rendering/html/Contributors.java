@@ -57,6 +57,7 @@ public class Contributors {
             new Contributor("Miclebrick", CODE),
             new Contributor("Morsmorse", LANG),
             new Contributor("Nogapra", LANG),
+            new Contributor("Sander0542", LANG),
             new Contributor("Saph1s", LANG),
             new Contributor("Shadowhackercz", LANG),
             new Contributor("shaokeyibb", LANG),
