@@ -53,6 +53,7 @@ public class RootJSONResolver {
             PvPPvEJSONCreator pvPPvEJSONCreator,
             PlayerBaseOverviewJSONCreator playerBaseOverviewJSONCreator,
             PerformanceJSONCreator performanceJSONCreator,
+            ErrorsJSONResolver errorsJSONResolver,
 
             PlayerJSONResolver playerJSONResolver,
             NetworkJSONResolver networkJSONResolver,
@@ -78,6 +79,7 @@ public class RootJSONResolver {
                 .add("network", networkJSONResolver.getResolver())
                 .add("filters", filtersJSONResolver)
                 .add("query", queryJSONResolver)
+                .add("errors", errorsJSONResolver)
                 .build();
     }
 
