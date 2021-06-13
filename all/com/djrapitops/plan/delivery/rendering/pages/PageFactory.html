@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -197,52 +197,57 @@ extends java.lang.Object</pre>
 <td class="colLast">&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code><a href="Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#errorsPage()">errorsPage</a></span>()</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getResource(java.lang.String)">getResource</a></span>&#8203;(java.lang.String&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code><a href="PlayerPluginTab.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PlayerPluginTab</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#inspectPluginTabs(java.util.UUID)">inspectPluginTabs</a></span>&#8203;(java.util.UUID&nbsp;playerUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#internalErrorPage(java.lang.String,java.lang.Throwable)">internalErrorPage</a></span>&#8203;(java.lang.String&nbsp;message,
                  java.lang.Throwable&nbsp;error)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code><a href="Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#loginPage()">loginPage</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code><a href="NetworkPage.html" title="class in com.djrapitops.plan.delivery.rendering.pages">NetworkPage</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#networkPage()">networkPage</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="PlayerPage.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PlayerPage</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#playerPage(java.util.UUID)">playerPage</a></span>&#8203;(java.util.UUID&nbsp;playerUUID)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="PlayersPage.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PlayersPage</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#playersPage()">playersPage</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code><a href="Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#queryPage()">queryPage</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#registerPage()">registerPage</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#serverPage(com.djrapitops.plan.identification.ServerUUID)">serverPage</a></span>&#8203;(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></th>
 <td class="colLast">
@@ -458,11 +463,25 @@ public&nbsp;PageFactory&#8203;(dagger.Lazy&lt;<a href="../../../version/VersionC
 <a id="queryPage()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>queryPage</h4>
 <pre class="methodSignature">public&nbsp;<a href="Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a>&nbsp;queryPage()
                throws java.io.IOException</pre>
+<dl>
+<dt><span class="throwsLabel">Throws:</span></dt>
+<dd><code>java.io.IOException</code></dd>
+</dl>
+</li>
+</ul>
+<a id="errorsPage()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>errorsPage</h4>
+<pre class="methodSignature">public&nbsp;<a href="Page.html" title="interface in com.djrapitops.plan.delivery.rendering.pages">Page</a>&nbsp;errorsPage()
+                throws java.io.IOException</pre>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.io.IOException</code></dd>
