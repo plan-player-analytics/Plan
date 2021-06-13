@@ -53,7 +53,7 @@ public class PlanCommand {
     private final ImportSystem importSystem;
     private final ErrorLogger errorLogger;
 
-    private final String DB_ARG_OPTIONS = "MySQL/SQLite";
+    private static final String DB_ARG_OPTIONS = "MySQL/SQLite";
 
     @Inject
     public PlanCommand(
