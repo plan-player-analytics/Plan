@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  */
 public class Locale extends HashMap<Lang, Message> {
 
-    private static final Pattern COMPILE = Pattern.compile("(<script id=[\"|'].*[\"|']>[\\s\\S]*?</script>|<script>[\\s\\S]*?</script>|<script src=[\"|'].*[\"|']></script>|<link [\\s\\S]*?>)");
+    private static final Pattern FIND_SCRIPT = Pattern.compile("(<script id=[\"|'].*[\"|']>[\\s\\S]*?</script>|<script>[\\s\\S]*?</script>|<script src=[\"|'].*[\"|']></script>|<link [\\s\\S]*?>)");
 
     public static Locale forLangCodeString(PlanFiles files, String code) throws IOException {
         return forLangCode(LangCode.fromString(code), files);
@@ -113,7 +113,7 @@ public class Locale extends HashMap<Lang, Message> {
             return from;
         }
 
-        Matcher scriptMatcher = COMPILE.matcher(from);
+        Matcher scriptMatcher = FIND_SCRIPT.matcher(from);
         List<String> foundScripts = new ArrayList<>();
         while (scriptMatcher.find()) {
             foundScripts.add(scriptMatcher.toMatchResult().group(0));
@@ -132,7 +132,7 @@ public class Locale extends HashMap<Lang, Message> {
 
         StringBuilder complete = new StringBuilder(translated.length());
 
-        String[] parts = COMPILE.split(translated.toString());
+        String[] parts = FIND_SCRIPT.split(translated.toString());
         for (int i = 0; i < parts.length; i++) {
             complete.append(parts[i]);
             if (i < parts.length - 1) {
