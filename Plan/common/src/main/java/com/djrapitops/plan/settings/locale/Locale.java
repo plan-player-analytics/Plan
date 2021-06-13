@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
  */
 public class Locale extends HashMap<Lang, Message> {
 
-    public static final Pattern COMPILE = Pattern.compile("(<script id=[\"|'].*[\"|']>[\\s\\S]*?</script>|<script>[\\s\\S]*?</script>|<script src=[\"|'].*[\"|']></script>|<link [\\s\\S]*?>)");
+    private static final Pattern COMPILE = Pattern.compile("(<script id=[\"|'].*[\"|']>[\\s\\S]*?</script>|<script>[\\s\\S]*?</script>|<script src=[\"|'].*[\"|']></script>|<link [\\s\\S]*?>)");
 
     public static Locale forLangCodeString(PlanFiles files, String code) throws IOException {
         return forLangCode(LangCode.fromString(code), files);
