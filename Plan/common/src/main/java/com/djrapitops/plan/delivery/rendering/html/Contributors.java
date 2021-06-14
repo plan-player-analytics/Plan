@@ -80,7 +80,8 @@ public class Contributors {
             new Contributor("10935336", LANG),
             new Contributor("EyuphanMandiraci", LANG),
             new Contributor("4drian3d", LANG),
-            new Contributor("\u6d1b\u4f0a", LANG)
+            new Contributor("\u6d1b\u4f0a", LANG),
+            new Contributor("portlek", CODE)
     };
 
     private Contributors() {
