@@ -8,7 +8,7 @@ dependencies {
     implementation 'com.djrapitops:Extension-BanManager:7.3.1-R0.2'
     implementation 'com.djrapitops:Extension-BentoBox:1.15.5-R1.0'
     implementation 'com.djrapitops:Extension-CoreProtect:2.16.0-R0.4'
-    implementation 'com.djrapitops:Extension-DiscordSRV:1.18.0-R0.3'
+    implementation 'com.djrapitops:Extension-DiscordSRV:1.18.0-R0.4'
     implementation 'com.djrapitops:Extension-DKBans:2.1.2-R0.3'
     implementation 'com.djrapitops:Extension-DKCoins:3.0.5-R0.1'
     implementation 'com.djrapitops:Extension-EssentialsX:2.15.0-R0.6'
