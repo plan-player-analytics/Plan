@@ -37,7 +37,14 @@ function openPage() {
 
     if (uriHash.length > 1) {
         const bootstrapTabId = uriHash[1];
-        $('a[href="#' + bootstrapTabId + '"]').tab('show');
+        let tab = document.querySelector('a[href="#' + bootstrapTabId + '"]');
+        let tabInstance = bootstrap.Tab.getInstance(tab);
+
+        if (tabInstance) { // show tab if it has been instantiated
+            tabInstance.show();
+        } else { // create new Tab object and show the tab
+            new bootstrap.Tab(tab).show();
+        }
     }
 }
 
