@@ -1378,3 +1378,7 @@ body.sidebar-hidden .navbar-nav {
     padding-bottom: 0.5rem;
     padding-right: 0.5rem;
 }
+
+.sidebar .nav-item .collapse {
+    z-index: 2;
+}
