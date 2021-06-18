@@ -224,7 +224,7 @@ img {
 .table-dark th,
 .table-dark td,
 .table-dark thead th {
-    border-color: #4b4d5a;
+    border-color: #4b4d5a !important;
 }
 
 .table-dark.table-hover tbody tr:hover {

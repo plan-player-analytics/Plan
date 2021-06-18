@@ -2,6 +2,17 @@ a {
     text-decoration: none;
 }
 
+hr {
+    background-color: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    opacity: 1;
+}
+
+small, .small {
+    font-weight: 400;
+}
+
+
 @media (max-width: 1520px) {
     html {
         font-size: 95%;
@@ -20,6 +31,24 @@ a {
 .table-dark.accordion-striped tbody tr:nth-of-type(4n+1):not(.bg-teal),
 .table-dark.accordion-striped tbody tr:nth-of-type(4n+2):not(.bg-teal) {
     background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table {
+    --bs-table-striped-color: none;
+}
+
+.table-dark {
+    --bs-table-striped-bg: transparent;
+    --bs-table-bg: none;
+}
+
+.table-dark.table-bordered {
+    border: 0;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
 }
 
 .card-body p + p {
