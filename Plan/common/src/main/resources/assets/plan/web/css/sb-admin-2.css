@@ -1755,90 +1755,36 @@ select.form-control:focus::-ms-value {
     color: #858796;
 }
 
-/*
- * TODO: why all the extra selectors in bg colors? Probably need to do something about this
- * pls fix
- * BS5 doesn't have this many selectors so probably should remove them
- */
-
 .bg-primary {
     background-color: #4e73df !important;
-}
-
-a.bg-primary:hover, a.bg-primary:focus,
-button.bg-primary:hover,
-button.bg-primary:focus {
-    background-color: #2653d4 !important;
 }
 
 .bg-secondary {
     background-color: #858796 !important;
 }
 
-a.bg-secondary:hover, a.bg-secondary:focus,
-button.bg-secondary:hover,
-button.bg-secondary:focus {
-    background-color: #6b6d7d !important;
-}
-
 .bg-success {
     background-color: #1cc88a !important;
-}
-
-a.bg-success:hover, a.bg-success:focus,
-button.bg-success:hover,
-button.bg-success:focus {
-    background-color: #169b6b !important;
 }
 
 .bg-info {
     background-color: #36b9cc !important;
 }
 
-a.bg-info:hover, a.bg-info:focus,
-button.bg-info:hover,
-button.bg-info:focus {
-    background-color: #2a96a5 !important;
-}
-
 .bg-warning {
     background-color: #f6c23e !important;
-}
-
-a.bg-warning:hover, a.bg-warning:focus,
-button.bg-warning:hover,
-button.bg-warning:focus {
-    background-color: #f4b30d !important;
 }
 
 .bg-danger {
     background-color: #e74a3b !important;
 }
 
-a.bg-danger:hover, a.bg-danger:focus,
-button.bg-danger:hover,
-button.bg-danger:focus {
-    background-color: #d52a1a !important;
-}
-
 .bg-light {
     background-color: #f8f9fc !important;
 }
 
-a.bg-light:hover, a.bg-light:focus,
-button.bg-light:hover,
-button.bg-light:focus {
-    background-color: #d4daed !important;
-}
-
 .bg-dark {
     background-color: #5a5c69 !important;
-}
-
-a.bg-dark:hover, a.bg-dark:focus,
-button.bg-dark:hover,
-button.bg-dark:focus {
-    background-color: #42444e !important;
 }
 
 .border {
@@ -2025,18 +1971,6 @@ a.text-dark:hover, a.text-dark:focus {
 #wrapper #content-wrapper #content {
     flex: 1 0 auto;
 }
-
-/* TODO: might break flexbox
-.container,
-.container-fluid,
-.container-sm,
-.container-md,
-.container-lg,
-.container-xl {
-    padding-left: var(--bs-gutter-x,1.5rem);
-    padding-right: var(--bs-gutter-x,1.5rem);
-}
-*/
 
 .scroll-to-top {
     position: fixed;
@@ -2753,15 +2687,11 @@ a.text-dark:hover, a.text-dark:focus {
         margin: 0 1rem;
     }
 
-    /*
-     * TODO: Which width is correct?
-     */
     .sidebar .nav-item .nav-link {
         display: block;
-        width: 100%;
+        width: 14rem;
         text-align: left;
         padding: 1rem;
-        width: 14rem;
     }
     .sidebar .nav-item .nav-link i {
         font-size: 0.85rem;
