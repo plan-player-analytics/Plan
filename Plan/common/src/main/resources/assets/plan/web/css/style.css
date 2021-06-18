@@ -183,12 +183,6 @@ div.scrollbar {
 }
 
 /* Navbar ====================================== */
-.col-red .navbar .navbar-brand,
-.col-red .navbar .navbar-brand:hover,
-.col-red .navbar .navbar-brand:active,
-.col-red .navbar .navbar-brand:focus {
-    color: #fff;
-}
 
 .col-red .navbar .nav > li > a:hover,
 .col-red .navbar .nav > li > a:focus,
@@ -214,13 +208,6 @@ div.scrollbar {
 
 .col-red .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-pink .navbar .navbar-brand,
-.col-pink .navbar .navbar-brand:hover,
-.col-pink .navbar .navbar-brand:active,
-.col-pink .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-pink .navbar .nav > li > a:hover,
@@ -249,13 +236,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-purple .navbar .navbar-brand,
-.col-purple .navbar .navbar-brand:hover,
-.col-purple .navbar .navbar-brand:active,
-.col-purple .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-purple .navbar .nav > li > a:hover,
 .col-purple .navbar .nav > li > a:focus,
 .col-purple .navbar .nav .open > a,
@@ -280,13 +260,6 @@ div.scrollbar {
 
 .col-purple .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-deep-purple .navbar .navbar-brand,
-.col-deep-purple .navbar .navbar-brand:hover,
-.col-deep-purple .navbar .navbar-brand:active,
-.col-deep-purple .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-deep-purple .navbar .nav > li > a:hover,
@@ -315,13 +288,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-indigo .navbar .navbar-brand,
-.col-indigo .navbar .navbar-brand:hover,
-.col-indigo .navbar .navbar-brand:active,
-.col-indigo .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-indigo .navbar .nav > li > a:hover,
 .col-indigo .navbar .nav > li > a:focus,
 .col-indigo .navbar .nav .open > a,
@@ -346,13 +312,6 @@ div.scrollbar {
 
 .col-indigo .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-blue .navbar .navbar-brand,
-.col-blue .navbar .navbar-brand:hover,
-.col-blue .navbar .navbar-brand:active,
-.col-blue .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-blue .navbar .nav > li > a:hover,
@@ -381,13 +340,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-light-blue .navbar .navbar-brand,
-.col-light-blue .navbar .navbar-brand:hover,
-.col-light-blue .navbar .navbar-brand:active,
-.col-light-blue .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-light-blue .navbar .nav > li > a:hover,
 .col-light-blue .navbar .nav > li > a:focus,
 .col-light-blue .navbar .nav .open > a,
@@ -412,13 +364,6 @@ div.scrollbar {
 
 .col-light-blue .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-cyan .navbar .navbar-brand,
-.col-cyan .navbar .navbar-brand:hover,
-.col-cyan .navbar .navbar-brand:active,
-.col-cyan .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-cyan .navbar .nav > li > a:hover,
@@ -447,13 +392,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-teal .navbar .navbar-brand,
-.col-teal .navbar .navbar-brand:hover,
-.col-teal .navbar .navbar-brand:active,
-.col-teal .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-teal .navbar .nav > li > a:hover,
 .col-teal .navbar .nav > li > a:focus,
 .col-teal .navbar .nav .open > a,
@@ -478,13 +416,6 @@ div.scrollbar {
 
 .col-teal .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-green .navbar .navbar-brand,
-.col-green .navbar .navbar-brand:hover,
-.col-green .navbar .navbar-brand:active,
-.col-green .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-green .navbar .nav > li > a:hover,
@@ -513,13 +444,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-light-green .navbar .navbar-brand,
-.col-light-green .navbar .navbar-brand:hover,
-.col-light-green .navbar .navbar-brand:active,
-.col-light-green .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-light-green .navbar .nav > li > a:hover,
 .col-light-green .navbar .nav > li > a:focus,
 .col-light-green .navbar .nav .open > a,
@@ -544,13 +468,6 @@ div.scrollbar {
 
 .col-light-green .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-lime .navbar .navbar-brand,
-.col-lime .navbar .navbar-brand:hover,
-.col-lime .navbar .navbar-brand:active,
-.col-lime .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-lime .navbar .nav > li > a:hover,
@@ -579,13 +496,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-yellow .navbar .navbar-brand,
-.col-yellow .navbar .navbar-brand:hover,
-.col-yellow .navbar .navbar-brand:active,
-.col-yellow .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-yellow .navbar .nav > li > a:hover,
 .col-yellow .navbar .nav > li > a:focus,
 .col-yellow .navbar .nav .open > a,
@@ -610,13 +520,6 @@ div.scrollbar {
 
 .col-yellow .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-amber .navbar .navbar-brand,
-.col-amber .navbar .navbar-brand:hover,
-.col-amber .navbar .navbar-brand:active,
-.col-amber .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-amber .navbar .nav > li > a:hover,
@@ -645,13 +548,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-orange .navbar .navbar-brand,
-.col-orange .navbar .navbar-brand:hover,
-.col-orange .navbar .navbar-brand:active,
-.col-orange .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-orange .navbar .nav > li > a:hover,
 .col-orange .navbar .nav > li > a:focus,
 .col-orange .navbar .nav .open > a,
@@ -676,13 +572,6 @@ div.scrollbar {
 
 .col-orange .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-deep-orange .navbar .navbar-brand,
-.col-deep-orange .navbar .navbar-brand:hover,
-.col-deep-orange .navbar .navbar-brand:active,
-.col-deep-orange .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-deep-orange .navbar .nav > li > a:hover,
@@ -711,13 +600,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-brown .navbar .navbar-brand,
-.col-brown .navbar .navbar-brand:hover,
-.col-brown .navbar .navbar-brand:active,
-.col-brown .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-brown .navbar .nav > li > a:hover,
 .col-brown .navbar .nav > li > a:focus,
 .col-brown .navbar .nav .open > a,
@@ -742,13 +624,6 @@ div.scrollbar {
 
 .col-brown .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-grey .navbar .navbar-brand,
-.col-grey .navbar .navbar-brand:hover,
-.col-grey .navbar .navbar-brand:active,
-.col-grey .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-grey .navbar .nav > li > a:hover,
@@ -777,13 +652,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-blue-grey .navbar .navbar-brand,
-.col-blue-grey .navbar .navbar-brand:hover,
-.col-blue-grey .navbar .navbar-brand:active,
-.col-blue-grey .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-blue-grey .navbar .nav > li > a:hover,
 .col-blue-grey .navbar .nav > li > a:focus,
 .col-blue-grey .navbar .nav .open > a,
@@ -810,13 +678,6 @@ div.scrollbar {
     background-color: rgba(0, 0, 0, 0.08);
 }
 
-.col-black .navbar .navbar-brand,
-.col-black .navbar .navbar-brand:hover,
-.col-black .navbar .navbar-brand:active,
-.col-black .navbar .navbar-brand:focus {
-    color: #fff;
-}
-
 .col-black .navbar .nav > li > a:hover,
 .col-black .navbar .nav > li > a:focus,
 .col-black .navbar .nav .open > a,
@@ -841,13 +702,6 @@ div.scrollbar {
 
 .col-black .navbar .bars:hover {
     background-color: rgba(0, 0, 0, 0.08);
-}
-
-.col-white .navbar .navbar-brand,
-.col-white .navbar .navbar-brand:hover,
-.col-white .navbar .navbar-brand:active,
-.col-white .navbar .navbar-brand:focus {
-    color: #fff;
 }
 
 .col-white .navbar .nav > li > a:hover,

@@ -2,7 +2,6 @@
  * SB Admin 2 custom changes
  * Compiled from a diff between SB Admin 2
  * and Plan's version of SB Admin 2
- * TODO: Remove all unused/dropped CSS
  */
 img {
     height: auto;
@@ -445,36 +444,6 @@ select.form-control:focus::-ms-value {
 
 .was-validated .form-check-input:valid ~ .form-check-label, .form-check-input.is-valid ~ .form-check-label {
     color: #1cc88a;
-}
-
-.was-validated .custom-control-input:valid ~ .custom-control-label, .custom-control-input.is-valid ~ .custom-control-label {
-    color: #1cc88a;
-}
-
-.was-validated .custom-control-input:valid ~ .custom-control-label::before, .custom-control-input.is-valid ~ .custom-control-label::before {
-    border-color: #1cc88a;
-}
-
-.was-validated .custom-control-input:valid:checked ~ .custom-control-label::before, .custom-control-input.is-valid:checked ~ .custom-control-label::before {
-    border-color: #34e3a4;
-    background-color: #34e3a4;
-}
-
-.was-validated .custom-control-input:valid:focus ~ .custom-control-label::before, .custom-control-input.is-valid:focus ~ .custom-control-label::before {
-    box-shadow: 0 0 0 0.2rem rgba(28, 200, 138, 0.25);
-}
-
-.was-validated .custom-control-input:valid:focus:not(:checked) ~ .custom-control-label::before, .custom-control-input.is-valid:focus:not(:checked) ~ .custom-control-label::before {
-    border-color: #1cc88a;
-}
-
-.was-validated .custom-file-input:valid ~ .custom-file-label, .custom-file-input.is-valid ~ .custom-file-label {
-    border-color: #1cc88a;
-}
-
-.was-validated .custom-file-input:valid:focus ~ .custom-file-label, .custom-file-input.is-valid:focus ~ .custom-file-label {
-    border-color: #1cc88a;
-    box-shadow: 0 0 0 0.2rem rgba(28, 200, 138, 0.25);
 }
 
 .invalid-feedback {
@@ -1114,66 +1083,7 @@ select.form-control:focus::-ms-value {
     border-radius: 0.35rem;
 }
 
-.custom-control-input:checked ~ .custom-control-label::before {
-    border-color: #4e73df;
-    background-color: #4e73df;
-}
-
-.custom-control-input:focus ~ .custom-control-label::before {
-    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
-}
-
-.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
-    border-color: #bac8f3;
-}
-
-.custom-control-input:not(:disabled):active ~ .custom-control-label::before {
-    background-color: #e5ebfa;
-    border-color: #e5ebfa;
-}
-
-.custom-control-input[disabled] ~ .custom-control-label, .custom-control-input:disabled ~ .custom-control-label {
-    color: #858796;
-}
-
-.custom-control-input[disabled] ~ .custom-control-label::before, .custom-control-input:disabled ~ .custom-control-label::before {
-    background-color: #eaecf4;
-}
-
-.custom-control-label::before {
-    border: #b7b9cc solid 1px;
-}
-
-.custom-checkbox .custom-control-label::before {
-    border-radius: 0.35rem;
-}
-
-.custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::before {
-    border-color: #4e73df;
-    background-color: #4e73df;
-}
-
-.custom-checkbox .custom-control-input:disabled:checked ~ .custom-control-label::before {
-    background-color: rgba(78, 115, 223, 0.5);
-}
-
-.custom-checkbox .custom-control-input:disabled:indeterminate ~ .custom-control-label::before {
-    background-color: rgba(78, 115, 223, 0.5);
-}
-
-.custom-radio .custom-control-input:disabled:checked ~ .custom-control-label::before {
-    background-color: rgba(78, 115, 223, 0.5);
-}
-
-.custom-switch .custom-control-label::after {
-    background-color: #b7b9cc;
-}
-
-.custom-switch .custom-control-input:disabled:checked ~ .custom-control-label::before {
-    background-color: rgba(78, 115, 223, 0.5);
-}
-
-.custom-select {
+.form-select {
     color: #6e707e;
     background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%235a5c69' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
     border: 1px solid #d1d3e2;
@@ -1419,10 +1329,6 @@ select.form-control:focus::-ms-value {
 
 .badge {
     border-radius: 0.35rem;
-}
-
-.jumbotron {
-    background-color: #eaecf4;
 }
 
 .alert {
@@ -2977,24 +2883,6 @@ a.text-dark:hover, a.text-dark:focus {
 
 .card .card-header[data-bs-toggle="collapse"].collapsed::after {
     content: '\f105';
-}
-
-.bg-login-image {
-    background: url("https://source.unsplash.com/K4mSJ7kc0As/600x800");
-    background-position: center;
-    background-size: cover;
-}
-
-.bg-register-image {
-    background: url("https://source.unsplash.com/Mv9hjnEUHR4/600x800");
-    background-position: center;
-    background-size: cover;
-}
-
-.bg-password-image {
-    background: url("https://source.unsplash.com/oWTW-jNGl9I/600x800");
-    background-position: center;
-    background-size: cover;
 }
 
 form.user .custom-checkbox.small label {
