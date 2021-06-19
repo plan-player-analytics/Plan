@@ -38,7 +38,7 @@ small, .small {
 }
 
 .table-dark {
-    --bs-table-striped-bg: transparent;
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.05);
     --bs-table-bg: none;
 }
 
