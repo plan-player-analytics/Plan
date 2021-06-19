@@ -349,6 +349,11 @@ function displayResults(json) {
         data: json.data.players.data,
         order: [[5, "desc"]]
     });
+
+    if (nightmode) {
+        document.querySelector('.table').classList.add('table-dark');
+    }
+
     const activityIndexHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(2)");
     const lastSeenHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(6)");
     activityIndexHeader.innerHTML += ` (${json.view.beforeDate})`
