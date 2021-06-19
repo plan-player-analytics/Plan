@@ -25,12 +25,11 @@ class MultipleChoiceFilter extends Filter {
     render(filterCount) {
         const select = filterCount === 0 ? "of Players who " : "and ";
         let html =
-            `<div id="${this.id}" class="mt-2 row">
-                <div class="col-12">
+            `<div id="${this.id}" class="mt-2">
                     <label class="form-label" for="${this.id}">${select}${this.label}:</label>
-                </div>
-                <div class="col-11">
-                    <select class="form-control" multiple style="margin-bottom: 0.5rem;">`;
+                <div class="row">
+                    <div class="col-11 flex-fill">
+                        <select class="form-control" multiple style="margin-bottom: 0.5rem;">`;
 
         for (const option of this.options.options) {
             html += `<option>${option}</option>`;
@@ -39,9 +38,10 @@ class MultipleChoiceFilter extends Filter {
         html +=
             `       </select>
                 </div>
-                <div class="col-1 col-md-auto my-auto">
-                    <button class="filter-remover btn btn-outline-secondary float-end"
-                      onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                    <div class="col-1 col-md-auto my-auto">
+                        <button class="filter-remover btn btn-outline-secondary float-end"
+                          onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                    </div>
                 </div>
             </div>`;
         return html;
@@ -127,7 +127,7 @@ class BetweenDateFilter extends Filter {
         return (
             `<div id="${id}">
                 <label>${select}${this.label}:</label>
-                <div class="my-2 row justify-content-start justify-content-md-center">
+                <div class="my-2 row justify-content-start">
                     <div class="col-6 col-md-3">
                         <div class="input-group">
                             <div class="input-group-text">
@@ -146,7 +146,7 @@ class BetweenDateFilter extends Filter {
                                 onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)">
                         </div>
                     </div>
-                    <div class="col-12 col-md-auto text-center my-1 my-md-2">
+                    <div class="col-12 col-md-1 text-center my-1 my-md-2 flex-fill">
                         <label for="inlineFormCustomSelectPref">&</label>
                     </div>
                     <div class="col-6 col-md-3">
