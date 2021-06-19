@@ -930,6 +930,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 .bg-teal-outline {
     border-color: #009688;
     border-style: solid;
+    border-width: 3px;
     outline: #009688 solid 1px;
 }
 
