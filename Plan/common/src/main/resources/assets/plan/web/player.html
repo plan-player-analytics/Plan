@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="utf-8">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
     <meta content="Player Analytics, player page that displays more insights about a specific player"
           name="description">
@@ -20,6 +19,9 @@
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+          integrity="sha256-hHKA3d/HttC8OW3Sl093W8DoZudhHJDj++kZYo6MLzA="
+          crossorigin="anonymous">
     <link href="../css/sb-admin-2.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
 
@@ -80,7 +82,7 @@
 
         <li class="nav-item">
             <a aria-controls="pluginsPages" aria-expanded="true" class="nav-link collapsed"
-               data-target="#pluginsPages" data-toggle="collapse" href="#">
+               data-bs-target="#pluginsPages" data-bs-toggle="collapse" href="#">
                 <i class="fas fa-fw fa-cubes"></i>
                 <span>Plugins</span>
             </a>
@@ -93,18 +95,18 @@
 
         <hr class="sidebar-divider">
 
-        <div class="ml-3 align-items-center justify-content-between">
-            <button class="btn bg-plan" data-target="#colorChooserModal" data-toggle="modal" type="button">
+        <div class="ms-md-3 text-center text-md-start">
+            <button class="btn bg-plan" data-bs-target="#colorChooserModal" data-bs-toggle="modal" type="button">
                 <i class="fa fa-palette"></i>
             </button>
-            <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
+            <button class="btn bg-plan" data-bs-target="#informationModal" data-bs-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
             <a class="btn bg-plan" href="../auth/logout" id="logout-button">
                 <i class="fa fa-fw fa-door-open"></i> Logout
             </a>
         </div>
-        <div class="ml-3 align-items-center justify-content-between">
+        <div class="ms-md-3 text-center text-md-start">
             ${version}
         </div>
     </ul>
@@ -131,7 +133,7 @@
                         <div class="col-xs-12 col-sm-12 col-lg-6">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-address-card"></i>
                                         ${playerName}</h6>
                                 </div>
@@ -149,10 +151,10 @@
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                             <p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span
-                                                    class="float-right"><b id="data_player_kills"></b></span></p>
+                                                    class="float-end"><b id="data_player_kills"></b></span></p>
                                             <p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span
-                                                    class="float-right"><b id="data_mob_kills"></b></span></p>
-                                            <p><i class="fa fa-fw fa-skull"></i> Deaths<span class="float-right"><b
+                                                    class="float-end"><b id="data_mob_kills"></b></span></p>
+                                            <p><i class="fa fa-fw fa-skull"></i> Deaths<span class="float-end"><b
                                                     id="data_deaths"></b></span></p>
                                         </div>
                                     </div>
@@ -160,48 +162,48 @@
                                     <div class="row">
                                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                             <p><i class="col-green far fa-fw fa-clock"></i> Total Playtime <span
-                                                    class="float-right" id="data_playtime"></span></p>
+                                                    class="float-end" id="data_playtime"></span></p>
                                             <p><i class="col-green far fa-fw fa-clock"></i> Total Active <span
-                                                    class="float-right" id="data_active_playtime"></span></p>
+                                                    class="float-end" id="data_active_playtime"></span></p>
                                             <p><i class="col-grey far fa-fw fa-clock"></i> Total AFK <span
-                                                    class="float-right" id="data_afk_time"></span></p>
+                                                    class="float-end" id="data_afk_time"></span></p>
                                             <hr>
                                             <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions <span
-                                                    class="float-right"><b id="data_session_count"></b></span></p>
+                                                    class="float-end"><b id="data_session_count"></b></span></p>
                                             <p><i class="col-teal far fa-fw fa-clock"></i> Longest Session <span
-                                                    class="float-right" id="data_longest_session_length"></span></p>
+                                                    class="float-end" id="data_longest_session_length"></span></p>
                                             <p><i class="col-teal far fa-fw fa-clock"></i> Session Median <span
-                                                    class="float-right" id="data_session_median"></span></p>
+                                                    class="float-end" id="data_session_median"></span></p>
                                             <hr>
                                             <p><i class="col-light-green fa fa-fw fa-user-plus"></i>
-                                                <b>Registered</b><span class="float-right"
+                                                <b>Registered</b><span class="float-end"
                                                                        id="data_registered"></span>
                                             </p>
                                         </div>
                                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                             <p><i class="col-lime fa fa-fw fa-user"></i> Activity Index <span
-                                                    class="float-right"><b id="data_activity_index"></b> (<span
+                                                    class="float-end"><b id="data_activity_index"></b> (<span
                                                     id="data_activity_index_group"></span>)</span></p>
                                             <p><i class="col-green fa fa-fw fa-server"></i> Favorite Server <span
-                                                    class="float-right" id="data_favorite_server"></span></p>
+                                                    class="float-end" id="data_favorite_server"></span></p>
                                             <p>&nbsp; </p>
                                             <hr>
                                             <p><i class="col-amber fa fa-fw fa-signal"></i> Average Ping <span
-                                                    class="float-right" id="data_average_ping"></span></p>
+                                                    class="float-end" id="data_average_ping"></span></p>
                                             <p><i class="col-amber fa fa-fw fa-signal"></i> Best Ping <span
-                                                    class="float-right" id="data_best_ping"></span></p>
+                                                    class="float-end" id="data_best_ping"></span></p>
                                             <p><i class="col-amber fa fa-fw fa-signal"></i> Worst Ping <span
-                                                    class="float-right" id="data_worst_ping"></span></p>
+                                                    class="float-end" id="data_worst_ping"></span></p>
                                             <hr>
                                             <p><i class="col-teal far fa-fw fa-calendar"></i> <b>Last Seen</b><span
-                                                    class="float-right" id="data_last_seen"></span></p>
+                                                    class="float-end" id="data_last_seen"></span></p>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i class="fa fa-fw fa-signature"></i>
+                                    <h6 class="m-0 fw-bold col-black"><i class="fa fa-fw fa-signature"></i>
                                         Seen Nicknames</h6>
                                 </div>
                                 <div class="scrollbar">
@@ -219,7 +221,7 @@
                             </div>
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i class="fa fa-fw fa-wifi"></i>
+                                    <h6 class="m-0 fw-bold col-black"><i class="fa fa-fw fa-wifi"></i>
                                         Connection information</h6>
                                 </div>
                                 <div class="scrollbar">
@@ -240,7 +242,7 @@
                         <div class="col-xl-6 col-lg-6 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i class="fas fa-fw fa-braille"></i>
+                                    <h6 class="m-0 fw-bold col-black"><i class="fas fa-fw fa-braille"></i>
                                         Punchcard</h6>
                                 </div>
                                 <div class="chart-area" id="punchCard">
@@ -249,7 +251,7 @@
                             </div>
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw col-blue fa-book-open"></i>
                                         Online Activity</h6>
                                 </div>
@@ -323,7 +325,7 @@
                             <!-- Calendar -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-calendar-alt col-teal"></i>
                                         Session Calendar</h6>
                                 </div>
@@ -334,9 +336,9 @@
                             <!-- Most Recent Sessions -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-calendar col-teal"></i>
-                                        Recent Sessions<span class="float-right"><i
+                                        Recent Sessions<span class="float-end"><i
                                                 class="far fa-fw fa-hand-pointer"></i>
                                                 <small>Click to expand</small></span></h6>
                                 </div>
@@ -359,7 +361,7 @@
                             <!-- World Playtime -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-clock col-teal"></i>
                                         World Playtime</h6>
                                 </div>
@@ -384,7 +386,7 @@
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw fa-campground col-red"></i>
                                         PvP & PvE as Numbers</h6>
                                 </div>
@@ -452,17 +454,17 @@
                         <div class="col-lg-4 mb-4 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-life-ring col-red"></i>
                                         Insights</h6>
                                 </div>
                                 <div class="card-body" id="data_insights">
                                     <p><i class="col-amber fa fa-fw fa-khanda"></i> Deadliest PvP Weapon
-                                        <span class="float-right"><b id="data_weapon_1st"></b></span></p>
+                                        <span class="float-end"><b id="data_weapon_1st"></b></span></p>
                                     <p><i class="col-grey fa fa-fw fa-khanda"></i> 2nd PvP Weapon
-                                        <span class="float-right"><b id="data_weapon_2nd"></b></span></p>
+                                        <span class="float-end"><b id="data_weapon_2nd"></b></span></p>
                                     <p><i class="col-brown fa fa-fw fa-khanda"></i> 3rd PvP Weapon
-                                        <span class="float-right"><b id="data_weapon_3rd"></b></span></p>
+                                        <span class="float-end"><b id="data_weapon_3rd"></b></span></p>
                                 </div>
                             </div>
                         </div>
@@ -473,7 +475,7 @@
                         <div class="col-xl-6 col-lg-6 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fas fa-fw fa-crosshairs col-red"></i>
                                         Recent PvP Kills</h6>
                                 </div>
@@ -484,7 +486,7 @@
                         <div class="col-xl-6 col-lg-6 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fas fa-fw fa-skull col-red"></i>
                                         Recent PvP Deaths</h6>
                                 </div>
@@ -509,9 +511,9 @@
                             <!-- Servers -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw fa-server col-light-green"></i>
-                                        Servers<span class="float-right"><i class="far fa-fw fa-hand-pointer"></i>
+                                        Servers<span class="float-end"><i class="far fa-fw fa-hand-pointer"></i>
                                                 <small>Click to expand</small></span></h6>
                                 </div>
                                 <div class="scrollbar">
@@ -533,7 +535,7 @@
                             <!-- World Playtime -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw fa-network-wired col-teal"></i>
                                         Server Playtime</h6>
                                 </div>
@@ -556,9 +558,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="colorChooserModalLabel"><i class="fa fa-palette"></i> Theme Select
                     </h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <button class="btn color-chooser" id="choose-plan" type="button"><i
@@ -606,7 +606,7 @@
                     <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
                         Night Mode
                     </button>
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -621,9 +621,7 @@
                     <h5 class="modal-title" id="informationModalLabel"><i class="fa fa-fw fa-question-circle"></i>
                         Information about the plugin
                     </h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <p>Player Analytics is developed and licensed under <a
@@ -665,7 +663,7 @@
                        target="_blank"><i class="fa fa-fw fa-chart-area"></i> Velocity</a>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -678,7 +676,7 @@
             <div class="modal-content">
                 ${updateModal}
                 <div class="modal-footer">
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -688,10 +686,12 @@
 <!-- End of Page Wrapper -->
 
 <!-- Bootstrap core JavaScript-->
-<script crossorigin="anonymous"
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k="
+        crossorigin="anonymous"></script>
 
 <!-- Page level plugins -->
 <script src="../vendor/datatables/datatables.min.js"></script>
@@ -703,6 +703,7 @@
 <link href='../vendor/fullcalendar/fullcalendar.min.css' rel='stylesheet'/>
 <script src='../vendor/momentjs/moment.js'></script>
 <script src='../vendor/fullcalendar/fullcalendar.min.js'></script>
+<script src="../vendor/masonry/masonry.pkgd.min.js"></script>
 
 <!-- Custom scripts for all pages-->
 <script src="../js/sb-admin-2.js"></script>

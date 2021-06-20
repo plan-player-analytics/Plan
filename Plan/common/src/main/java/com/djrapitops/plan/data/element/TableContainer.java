@@ -151,10 +151,7 @@ public class TableContainer {
 
     private String getTableHeader() {
         if (jqueryDatatable != null) {
-            return "<div class=\"table-responsive\">" +
-                    "<table class=\"table table-bordered table-striped table-hover " +
-                    jqueryDatatable +
-                    " dataTable\">";
+            return "<table class=\"table table-bordered table-striped table-hover " + jqueryDatatable + "\" style=\"width: 100%\">";
         } else {
             return "<div class=\"scrollbar\"><table class=\"table table-striped\">";
         }

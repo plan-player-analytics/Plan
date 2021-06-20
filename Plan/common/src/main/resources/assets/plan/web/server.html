@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="utf-8">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
     <meta content="Player Analytics, server analysis page that allows gaining insights to how players play on your server."
           name="description">
@@ -19,6 +18,9 @@
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+          integrity="sha256-hHKA3d/HttC8OW3Sl093W8DoZudhHJDj++kZYo6MLzA="
+          crossorigin="anonymous">
     <link href="../css/sb-admin-2.css" rel="stylesheet">
     <link href="../css/style.css" rel="stylesheet">
 </head>
@@ -60,8 +62,8 @@
 
         <li class="nav-item">
             <a aria-controls="onlineActivityPages" aria-expanded="true" class="nav-link collapsed"
-               data-target="#onlineActivityPages"
-               data-toggle="collapse" href="#">
+               data-bs-target="#onlineActivityPages"
+               data-bs-toggle="collapse" href="#">
                 <i class="fas fa-fw fa-chart-area"></i>
                 <span>Online Activity</span>
             </a>
@@ -83,8 +85,8 @@
 
         <li class="nav-item">
             <a aria-controls="playerbasePages" aria-expanded="true" class="nav-link collapsed"
-               data-target="#playerbasePages"
-               data-toggle="collapse" href="#">
+               data-bs-target="#playerbasePages"
+               data-bs-toggle="collapse" href="#">
                 <i class="fas fa-fw fa-users"></i>
                 <span>Playerbase</span>
             </a>
@@ -130,18 +132,18 @@
             <hr class="sidebar-divider">
         </div>
 
-        <div class="ml-3 align-items-center justify-content-between">
-            <button class="btn bg-plan" data-target="#colorChooserModal" data-toggle="modal" type="button">
+        <div class="ms-md-3 text-center text-md-start">
+            <button class="btn bg-plan" data-bs-target="#colorChooserModal" data-bs-toggle="modal" type="button">
                 <i class="fa fa-palette"></i>
             </button>
-            <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
+            <button class="btn bg-plan" data-bs-target="#informationModal" data-bs-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
             <a class="btn bg-plan" href="../auth/logout" id="logout-button">
                 <i class="fa fa-fw fa-door-open"></i> Logout
             </a>
         </div>
-        <div class="ml-3 align-items-center justify-content-between">
+        <div class="ms-md-3 text-center text-md-start">
             ${version}
         </div>
     </ul>
@@ -173,7 +175,7 @@
                         <div class="col-xl-9 col-lg-9 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fas fa-fw fa-chart-area col-blue"></i>
                                         Online Activity</h6>
                                 </div>
@@ -185,25 +187,25 @@
                         <div class="col-xl-3 col-lg-3 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black">Last 7 days</h6>
+                                    <h6 class="m-0 fw-bold col-black">Last 7 days</h6>
                                 </div>
                                 <div class="card-body" id="data_7_days">
                                     <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                            class="float-right"><b id="data_unique"></b></span></p>
+                                            class="float-end"><b id="data_unique"></b></span></p>
                                     <p><i class="col-blue fa fa-fw fa-user"></i> Unique Players / Day<span
-                                            class="float-right"><b id="data_unique_day"></b></span></p>
+                                            class="float-end"><b id="data_unique_day"></b></span></p>
                                     <p><i class="col-light-green fa fa-fw fa-users"></i> New Players<span
-                                            class="float-right"><b id="data_new"></b></span></p>
+                                            class="float-end"><b id="data_new"></b></span></p>
                                     <p><i class="col-light-green fa fa-fw fa-user-circle"></i> New Player Retention
-                                        <span class="float-right"><span id="data_retention"></span>&nbsp<b
+                                        <span class="float-end"><span id="data_retention"></span>&nbsp<b
                                                 id="data_retention_perc"></b></span></p>
                                     <hr>
                                     <p><i class="col-orange fa fa-fw fa-tachometer-alt"></i> Average TPS<span
-                                            class="float-right"><b id="data_avg_tps"></b></span></p>
+                                            class="float-end"><b id="data_avg_tps"></b></span></p>
                                     <p><i class="col-red fa fa-fw fa-exclamation-circle"></i> Low TPS Spikes<span
-                                            class="float-right"><b id="data_low_tps_spikes"></b></span></p>
+                                            class="float-end"><b id="data_low_tps_spikes"></b></span></p>
                                     <p><i class="col-red fa fa-fw fa-power-off"></i> Downtime<span
-                                            class="float-right" id="data_downtime"></span></p>
+                                            class="float-end" id="data_downtime"></span></p>
                                 </div>
                             </div>
                         </div>
@@ -214,39 +216,39 @@
                         <div class="col-lg-4 mb-4 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i class="fa fa-fw fa-book-open"></i>
+                                    <h6 class="m-0 fw-bold col-black"><i class="fa fa-fw fa-book-open"></i>
                                         Server as Numbers</h6>
                                 </div>
                                 <div class="card-body" id="data_numbers">
                                     <p><i class="col-black fa fa-fw fa-users"></i> Total Players<span
-                                            class="float-right"><b id="data_total"></b></span></p>
+                                            class="float-end"><b id="data_total"></b></span></p>
                                     <p><i class="col-lime fa fa-fw fa-users"></i> Regular Players<span
-                                            class="float-right"><b id="data_regular"></b></span></p>
+                                            class="float-end"><b id="data_regular"></b></span></p>
                                     <p><i class="col-blue fa fa-fw fa-user"></i> Players Online<span
-                                            class="float-right"><b id="data_online"></b></span></p>
+                                            class="float-end"><b id="data_online"></b></span></p>
                                     <hr>
                                     <p><i class="col-blue fa fa-fw fa-chart-line"></i> Last Peak: <span
-                                            id="data_last_peak_date"></span><span class="float-right"><b
+                                            id="data_last_peak_date"></span><span class="float-end"><b
                                             id="data_last_peak_players"></b>
                                                 Players</span></p>
                                     <p><i class="col-green fa fa-fw fa-chart-line"></i> Best Peak: <span
-                                            id="data_best_peak_date"></span><span class="float-right"><b
+                                            id="data_best_peak_date"></span><span class="float-end"><b
                                             id="data_best_peak_players"></b>
                                                 Players</span></p>
                                     <hr>
                                     <p><i class="col-green far fa-fw fa-clock"></i> Total Playtime<span
-                                            class="float-right" id="data_playtime"></span></p>
+                                            class="float-end" id="data_playtime"></span></p>
                                     <p><i class="col-green far fa-fw fa-clock"></i> Average Playtime / Player<span
-                                            class="float-right" id="data_player_playtime"></span></p>
+                                            class="float-end" id="data_player_playtime"></span></p>
                                     <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
-                                            class="float-right"><b id="data_sessions"></b></span></p>
+                                            class="float-end"><b id="data_sessions"></b></span></p>
                                     <hr>
                                     <p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span
-                                            class="float-right"><b id="data_player_kills"></b></span></p>
+                                            class="float-end"><b id="data_player_kills"></b></span></p>
                                     <p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span
-                                            class="float-right"><b id="data_mob_kills"></b></span></p>
+                                            class="float-end"><b id="data_mob_kills"></b></span></p>
                                     <p><i class="col-black fa fa-fw fa-skull"></i> Deaths<span
-                                            class="float-right"><b id="data_deaths"></b></span></p>
+                                            class="float-end"><b id="data_deaths"></b></span></p>
                                 </div>
                             </div>
                         </div>
@@ -255,7 +257,7 @@
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw fa-exchange-alt"></i>
                                         Week Comparison</h6>
                                 </div>
@@ -351,24 +353,24 @@
                                 <ul class="nav nav-tabs" id="onlineActivityTab" role="tablist">
                                     <li class="nav-item">
                                         <a aria-controls="home" aria-selected="true" class="nav-link active col-black"
-                                           data-toggle="tab" href="#unique-tab" id="online-unique-tab" role="tab"><i
+                                           data-bs-toggle="tab" href="#unique-tab" id="online-unique-tab" role="tab"><i
                                                 class="fa fa-fw fa-chart-area col-blue"></i> Day by Day</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="home" aria-selected="true" class="nav-link col-black"
-                                           data-toggle="tab" href="#hourly-unique-tab" id="online-hourly-unique-tab"
+                                           data-bs-toggle="tab" href="#hourly-unique-tab" id="online-hourly-unique-tab"
                                            role="tab"><i
                                                 class="fa fa-fw fa-chart-area col-blue"></i> Hour by Hour</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="profile" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab"
+                                           data-bs-toggle="tab"
                                            href="#calendar-tab" id="online-calendar-tab" role="tab"><i
                                                 class="far fa-fw fa-calendar col-teal"></i> Server Calendar</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#punchcard-tab" id="online-punchcard-tab"
+                                           data-bs-toggle="tab" href="#punchcard-tab" id="online-punchcard-tab"
                                            role="tab"><i class="fa fa-fw fa-braille col-black"></i>
                                             Punchcard for 30 days</a>
                                     </li>
@@ -409,7 +411,7 @@
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw fa-book-open col-blue"></i>
                                         Online Activity as Numbers</h6>
                                 </div>
@@ -498,27 +500,27 @@
                         <div class="col-lg-4 mb-4 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-life-ring col-red"></i>
                                         Insights for 30 days</h6>
                                 </div>
                                 <div class="card-body" id="data_insights">
                                     <p><i class="col-light-green fa fa-fw fa-user-friends"></i>
-                                        Players online on first join<span class="float-right"><b>
+                                        Players online on first join<span class="float-end"><b>
                                             <span id="data_players_first_join_avg"></span></b></span></p>
                                     <p><i class="col-light-green fa fa-fw fa-user-clock"></i>
-                                        Average First session length<span class="float-right"><b>
+                                        Average First session length<span class="float-end"><b>
                                             <span id="data_first_session_length_avg"></span></b></span></p>
                                     <p><i class="col-light-green fa fa-fw fa-user-clock"></i>
-                                        Median First session length<span class="float-right"><b>
+                                        Median First session length<span class="float-end"><b>
                                             <span id="data_first_session_length_median"></span></b></span></p>
                                     <p><i class="col-teal far fa-fw fa-calendar"></i> Lone joins<span
-                                            class="float-right"><b><span id="data_lone_joins"></span></b>
+                                            class="float-end"><b><span id="data_lone_joins"></span></b>
                                             </span></p>
                                     <p><i class="col-teal far fa-fw fa-calendar-plus"></i> Lone newbie joins<span
-                                            class="float-right"><b><span id="data_lone_new_joins"></span></b>
+                                            class="float-end"><b><span id="data_lone_new_joins"></span></b>
                                             </span></p>
-                                    <p class="float-right"><i class="text-success fa fa-caret-up"></i><i
+                                    <p class="float-end"><i class="text-success fa fa-caret-up"></i><i
                                             class="text-danger fa fa-caret-down"></i>
                                         <small>Comparing 15 days</small>
                                     </p>
@@ -548,9 +550,9 @@
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-calendar col-teal"></i>
-                                        Recent Sessions<span class="float-right"><i
+                                        Recent Sessions<span class="float-end"><i
                                                 class="far fa-fw fa-hand-pointer"></i>
                                                 <small>Click to expand</small></span></h6>
                                 </div>
@@ -574,7 +576,7 @@
                             <!-- World Playtime -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-clock col-teal"></i>
                                         World Playtime</h6>
                                 </div>
@@ -585,21 +587,21 @@
                             <!-- Insights -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-life-ring col-red"></i>
                                         Insights for 30 days</h6>
                                 </div>
                                 <div class="card-body" id="data_insights">
                                     <p><i class="fa fa-fw fa-gamepad col-teal"></i> Most Active Gamemode<span
-                                            class="float-right"><b id="data_most_active_gamemode"></b>
+                                            class="float-end"><b id="data_most_active_gamemode"></b>
                                                 (<span id="data_most_active_gamemode_perc"></span>)</span></p>
                                     <p><i class="fa fa-fw fa-users col-teal"></i> Server occupied<span
-                                            class="float-right"><span id="data_server_occupied"></span> (<span
+                                            class="float-end"><span id="data_server_occupied"></span> (<span
                                             id="data_server_occupied_perc"></span>)</span></p>
                                     <p><i class="far fa-fw fa-clock col-green"></i> Playtime<span
-                                            class="float-right" id="data_total_playtime"></span></p>
+                                            class="float-end" id="data_total_playtime"></span></p>
                                     <p><i class="far fa-fw fa-clock col-grey"></i> AFK Time<span
-                                            class="float-right"><span id="data_afk_time"></span> (<span
+                                            class="float-end"><span id="data_afk_time"></span> (<span
                                             id="data_afk_time_perc"></span>)</span></p>
                                 </div>
                             </div>
@@ -627,7 +629,7 @@
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw fa-campground col-red"></i>
                                         PvP & PvE as Numbers</h6>
                                 </div>
@@ -690,17 +692,17 @@
                         <div class="col-lg-4 mb-4 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-life-ring col-red"></i>
                                         Insights for 30 days</h6>
                                 </div>
                                 <div class="card-body" id="data_insights">
                                     <p><i class="col-amber fa fa-fw fa-khanda"></i> Deadliest PvP Weapon
-                                        <span class="float-right"><b id="data_weapon_1st"></b></span></p>
+                                        <span class="float-end"><b id="data_weapon_1st"></b></span></p>
                                     <p><i class="col-grey fa fa-fw fa-khanda"></i> 2nd PvP Weapon
-                                        <span class="float-right"><b id="data_weapon_2nd"></b></span></p>
+                                        <span class="float-end"><b id="data_weapon_2nd"></b></span></p>
                                     <p><i class="col-brown fa fa-fw fa-khanda"></i> 3rd PvP Weapon
-                                        <span class="float-right"><b id="data_weapon_3rd"></b></span></p>
+                                        <span class="float-end"><b id="data_weapon_3rd"></b></span></p>
                                 </div>
                             </div>
                         </div>
@@ -711,7 +713,7 @@
                         <div class="col-xl-8 col-lg-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fas fa-fw fa-crosshairs col-red"></i>
                                         Recent Kills</h6>
                                 </div>
@@ -743,7 +745,7 @@
                         <div class="col-xl-8 col-lg-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fas fa-fw fa-chart-line col-amber"></i>
                                         Playerbase development</h6>
                                 </div>
@@ -755,7 +757,7 @@
                         <div class="col-xl-4 col-lg-4 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw fa-users col-amber"></i>
                                         Current Playerbase</h6>
                                 </div>
@@ -769,7 +771,7 @@
                         <div class="col-lg-8 mb-8 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fa fa-fw fa-exchange-alt col-amber"></i>
                                         Trends for 30 days</h6>
                                 </div>
@@ -846,7 +848,7 @@
                         <div class="col-lg-4 mb-4 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="far fa-fw fa-life-ring col-red"></i>
                                         Insights for 30 days</h6>
                                 </div>
@@ -854,14 +856,14 @@
                                     <p><i class="fa fa-fw fa-user col-light-green"></i> New <i
                                             class="fa fa-fw fa-long-arrow-alt-right"></i> <i
                                             class="fa fa-fw fa-user col-lime"></i> Regular<span
-                                            class="float-right"><b><span
+                                            class="float-end"><b><span
                                             id="data_new_to_regular"></span></b></span></p>
                                     <p><i class="fa fa-fw fa-user col-lime"></i> Regular <i
                                             class="fa fa-fw fa-long-arrow-alt-right"></i> <i
                                             class="fa fa-fw fa-user col-blue-grey"></i> Inactive<span
-                                            class="float-right"><b><span
+                                            class="float-end"><b><span
                                             id="data_regular_to_inactive"></span></b></span></p>
-                                    <p class="float-right"><i class="text-success fa fa-caret-up"></i><i
+                                    <p class="float-end"><i class="text-success fa fa-caret-up"></i><i
                                             class="text-danger fa fa-caret-down"></i>
                                         <small>Comparing 30d ago to Now</small>
                                     </p>
@@ -871,7 +873,7 @@
                             <!-- Hostname Analytics -->
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black">
+                                    <h6 class="m-0 fw-bold col-black">
                                         <i class="fa fa-fw fa-location-arrow col-amber"></i>
                                         Join Addresses
                                     </h6>
@@ -902,17 +904,15 @@
                         <div class="col-xl-12 col-lg-12 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fas fa-fw fa-users col-black"></i>
                                         Player List</h6>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover player-table dataTable">
-                                        <tr>
-                                            <td>Loading..</td>
-                                        </tr>
-                                    </table>
-                                </div>
+                                <table class="table table-bordered table-striped table-hover player-table" style="width: 100%">
+                                    <tr>
+                                        <td>Loading..</td>
+                                    </tr>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -938,7 +938,7 @@
                         <div class="col-xl-12 col-lg-12 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fas fa-fw fa-globe col-green"></i>
                                         Geolocations</h6>
                                 </div>
@@ -962,7 +962,7 @@
                         <div class="col-xl-12 col-lg-12 col-sm-12">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                    <h6 class="m-0 fw-bold col-black"><i
                                             class="fas fa-fw fa-wifi col-green"></i>
                                         Connection Information</h6>
                                 </div>
@@ -1006,36 +1006,36 @@
                                 <ul class="nav nav-tabs" id="performanceChartTab" role="tablist">
                                     <li class="nav-item">
                                         <a aria-controls="home" aria-selected="true" class="nav-link active col-black"
-                                           data-toggle="tab" href="#all" id="performance-all-tab" role="tab"><i
+                                           data-bs-toggle="tab" href="#all" id="performance-all-tab" role="tab"><i
                                                 class="fa fa-fw fa-cogs col-blue-grey"></i> All</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="profile" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab"
+                                           data-bs-toggle="tab"
                                            href="#tps" id="performance-tps-tab" role="tab"><i
                                                 class="fa fa-fw fa-tachometer-alt col-deep-orange"></i> TPS</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#cpuram" id="performance-hardware-tab"
+                                           data-bs-toggle="tab" href="#cpuram" id="performance-hardware-tab"
                                            role="tab"><i
                                                 class="fa fa-fw fa-microchip col-light-green"></i>
                                             CPU & RAM</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#worldload" id="performance-minecraft-tab"
+                                           data-bs-toggle="tab" href="#worldload" id="performance-minecraft-tab"
                                            role="tab"><i class="fa fa-fw fa-map col-purple"></i>
                                             World Load</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#ping" id="performance-ping-tab" role="tab"><i
+                                           data-bs-toggle="tab" href="#ping" id="performance-ping-tab" role="tab"><i
                                                 class="fa fa-fw fa-signal col-amber"></i> Ping</a>
                                     </li>
                                     <li class="nav-item">
                                         <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
-                                           data-toggle="tab" href="#disk" id="performance-disk-tab" role="tab"><i
+                                           data-bs-toggle="tab" href="#disk" id="performance-disk-tab" role="tab"><i
                                                 class="fa fa-fw fa-hdd col-green"></i> Disk Space</a>
                                     </li>
                                 </ul>
@@ -1165,15 +1165,15 @@
                                 <div class="card-body" id="data_insights">
                                     <p>During Low TPS Spikes:</p>
                                     <p><i class="fa fa-fw fa-users col-red"></i> Average Players<span
-                                            class="float-right"><b id="data_low_tps_players"></b></span></p>
+                                            class="float-end"><b id="data_low_tps_players"></b></span></p>
                                     <p><i class="fa fa-fw fa-dragon col-red"></i> Average Entities<span
-                                            class="float-right"><b id="data_low_tps_entities"></b></span></p>
+                                            class="float-end"><b id="data_low_tps_entities"></b></span></p>
                                     <p><i class="fa fa-fw fa-map col-red"></i> Average Chunks<span
-                                            class="float-right"><b id="data_low_tps_chunks"></b></span></p>
+                                            class="float-end"><b id="data_low_tps_chunks"></b></span></p>
                                     <p><i class="fa fa-fw fa-tachometer-alt col-red"></i> Average CPU<span
-                                            class="float-right"><b id="data_low_tps_cpu"></b></span></p>
+                                            class="float-end"><b id="data_low_tps_cpu"></b></span></p>
                                     <p><i class="fa fa-fw fa-tachometer-alt col-red"></i> Average TPS<span
-                                            class="float-right"><b id="data_low_tps_tps"></b></span></p>
+                                            class="float-end"><b id="data_low_tps_tps"></b></span></p>
                                 </div>
                             </div>
                         </div>
@@ -1194,9 +1194,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="colorChooserModalLabel"><i class="fa fa-palette"></i> Theme Select
                     </h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <button class="btn color-chooser" id="choose-plan" type="button"><i
@@ -1244,7 +1242,7 @@
                     <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
                         Night Mode
                     </button>
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -1259,9 +1257,7 @@
                     <h5 class="modal-title" id="informationModalLabel"><i class="fa fa-fw fa-question-circle"></i>
                         Information about the plugin
                     </h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <p>Player Analytics is developed and licensed under <a
@@ -1303,7 +1299,7 @@
                        target="_blank"><i class="fa fa-fw fa-chart-area"></i> Velocity</a>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -1316,7 +1312,7 @@
             <div class="modal-content">
                 ${updateModal}
                 <div class="modal-footer">
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -1326,10 +1322,12 @@
 <!-- End of Page Wrapper -->
 
 <!-- Bootstrap core JavaScript-->
-<script crossorigin="anonymous"
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k="
+        crossorigin="anonymous"></script>
 
 <!-- Page level plugins -->
 <script src="../vendor/datatables/datatables.min.js"></script>
@@ -1343,6 +1341,7 @@
 <link href='../vendor/fullcalendar/fullcalendar.min.css' rel='stylesheet'/>
 <script src='../vendor/momentjs/moment.js'></script>
 <script src='../vendor/fullcalendar/fullcalendar.min.js'></script>
+<script src="../vendor/masonry/masonry.pkgd.min.js"></script>
 
 <!-- Custom scripts for all pages-->
 <script src="../js/domUtils.js"></script>
@@ -1418,7 +1417,7 @@
             if (json) {
                 if (table) {
                     table.destroy();
-                    $('.player-table').replaceWith(`<table class="table table-bordered table-striped table-hover player-table dataTable">
+                    $('.player-table').replaceWith(`<table class="table table-bordered table-striped table-hover player-table" style="width: 100%">
                                         <tr>
                                             <td>Loading..</td>
                                         </tr>

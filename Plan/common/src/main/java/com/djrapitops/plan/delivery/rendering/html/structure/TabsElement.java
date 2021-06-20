@@ -50,7 +50,7 @@ public class TabsElement {
             String contentHtml = tab.getContentHtml();
 
             nav.append("<li role=\"presentation\" class=\"nav-item col-black\"")
-                    .append("><a href=\"#").append(id).append("\" class=\"nav-link col-black").append(first ? " active" : "").append('"').append(" data-toggle=\"tab\">")
+                    .append("><a href=\"#").append(id).append("\" class=\"nav-link col-black").append(first ? " active" : "").append('"').append(" data-bs-toggle=\"tab\">")
                     .append(navHtml).append("</a></li>");
             content.append("<div role=\"tabpanel\" class=\"tab-pane fade").append(first ? " in active show" : "")
                     .append("\" id=\"").append(id).append("\">")
