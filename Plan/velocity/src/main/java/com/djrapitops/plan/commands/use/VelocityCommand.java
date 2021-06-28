@@ -18,8 +18,8 @@ package com.djrapitops.plan.commands.use;
 
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.velocitypowered.api.command.Command;
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class VelocityCommand implements Command {
+public class VelocityCommand implements SimpleCommand {
 
     private final RunnableFactory runnableFactory;
     private final ErrorLogger errorLogger;
@@ -40,7 +40,9 @@ public class VelocityCommand implements Command {
     }
 
     @Override
-    public void execute(CommandSource source, String[] args) {
+    public void execute(final Invocation invocation) {
+        CommandSource source = invocation.source();
+        String[] args = invocation.arguments();
         runnableFactory.create(() -> {
             try {
                 command.getExecutor().accept(getSender(source), new Arguments(args));
@@ -62,7 +64,9 @@ public class VelocityCommand implements Command {
     }
 
     @Override
-    public List<String> suggest(CommandSource source, String[] currentArgs) {
+    public List<String> suggest(final Invocation invocation) {
+        CommandSource source = invocation.source();
+        String[] currentArgs = invocation.arguments();
         try {
             return command.getArgumentResolver().apply(getSender(source), new Arguments(currentArgs));
         } catch (Exception e) {

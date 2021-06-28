@@ -16,9 +16,10 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import net.kyori.text.TextComponent;
-import net.kyori.text.event.ClickEvent;
-import net.kyori.text.event.HoverEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Collection;
@@ -26,65 +27,65 @@ import java.util.Collection;
 public class VelocityMessageBuilder implements MessageBuilder {
 
     private final VelocityCMDSender sender;
-    private TextComponent.Builder builder;
+    private final TextComponent.Builder builder;
 
     public VelocityMessageBuilder(VelocityCMDSender sender) {
         this.sender = sender;
-        builder = TextComponent.builder();
+        builder = Component.text();
     }
 
     @Override
     public MessageBuilder addPart(String content) {
-        builder = builder.append(content);
+        builder.append(Component.text(content));
         return this;
     }
 
     @Override
     public MessageBuilder newLine() {
-        builder = builder.append("\n");
+        builder.append(Component.text("\n"));
         return this;
     }
 
     @Override
     public MessageBuilder link(String url) {
-        builder = builder.clickEvent(ClickEvent.openUrl(url));
+        builder.clickEvent(ClickEvent.openUrl(url));
         return this;
     }
 
     @Override
     public MessageBuilder command(String command) {
-        builder = builder.clickEvent(ClickEvent.runCommand(command));
+        builder.clickEvent(ClickEvent.runCommand(command));
         return this;
     }
 
     @Override
     public MessageBuilder hover(String s) {
-        builder = builder.hoverEvent(HoverEvent.showText(TextComponent.of(s)));
+        builder.hoverEvent(HoverEvent.showText(Component.text(s)));
         return this;
     }
 
     @Override
     public MessageBuilder hover(String... strings) {
-        TextComponent.Builder hoverText = TextComponent.builder();
+        TextComponent.Builder hoverText = Component.text();
         for (String string : strings) {
-            hoverText.append(string);
+            hoverText.append(Component.text(string));
         }
-        builder = builder.hoverEvent(HoverEvent.showText(hoverText.build()));
+        builder.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder hover(Collection<String> lines) {
-        TextComponent.Builder hoverText = TextComponent.builder();
-        hoverText.append(new TextStringBuilder().appendWithSeparators(lines, "\n").build());
-        builder = builder.hoverEvent(HoverEvent.showText(hoverText.build()));
+        TextComponent.Builder hoverText = Component.text();
+        hoverText.append(Component.text(new TextStringBuilder().appendWithSeparators(lines, "\n").build()));
+        builder.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder indent(int amount) {
         for (int i = 0; i < amount; i++) {
-            builder = builder.append(" ");
+            builder.append(Component.text(" "));
         }
         return this;
     }
