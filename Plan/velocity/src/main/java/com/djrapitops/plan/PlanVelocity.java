@@ -23,6 +23,7 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
@@ -146,9 +147,12 @@ public class PlanVelocity implements PlanPlugin {
             logger.warn("Attempted to register a null command!");
             return;
         }
-        proxy.getCommandManager().register(
-                new VelocityCommand(runnableFactory, system.getErrorLogger(), command),
-                command.getAliases().toArray(new String[0])
+        CommandManager commandManager = proxy.getCommandManager();
+        commandManager.register(
+                commandManager.metaBuilder(command.getPrimaryAlias())
+                        .aliases(command.getAliases().toArray(new String[0]))
+                        .build(),
+                new VelocityCommand(runnableFactory, system.getErrorLogger(), command)
         );
     }
 
