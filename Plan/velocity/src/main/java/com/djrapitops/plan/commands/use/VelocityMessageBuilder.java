@@ -29,6 +29,9 @@ public class VelocityMessageBuilder implements MessageBuilder {
     private final VelocityCMDSender sender;
     private final TextComponent.Builder builder;
 
+    // Store reference to previous component to properly add hover & click events
+    private Component previousComponent;
+
     public VelocityMessageBuilder(VelocityCMDSender sender) {
         this.sender = sender;
         builder = Component.text();
@@ -36,31 +39,37 @@ public class VelocityMessageBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder addPart(String content) {
-        builder.append(Component.text(content));
+        if (previousComponent != null) {
+            builder.append(previousComponent);
+        }
+        previousComponent = Component.text(content);
         return this;
     }
 
     @Override
     public MessageBuilder newLine() {
-        builder.append(Component.text("\n"));
+        if (previousComponent != null) {
+            builder.append(previousComponent);
+        }
+        previousComponent = Component.text("\n");
         return this;
     }
 
     @Override
     public MessageBuilder link(String url) {
-        builder.clickEvent(ClickEvent.openUrl(url));
+        previousComponent = previousComponent.clickEvent(ClickEvent.openUrl(url));
         return this;
     }
 
     @Override
     public MessageBuilder command(String command) {
-        builder.clickEvent(ClickEvent.runCommand(command));
+        previousComponent = previousComponent.clickEvent(ClickEvent.runCommand(command));
         return this;
     }
 
     @Override
     public MessageBuilder hover(String s) {
-        builder.hoverEvent(HoverEvent.showText(Component.text(s)));
+        previousComponent = previousComponent.hoverEvent(HoverEvent.showText(Component.text(s)));
         return this;
     }
 
@@ -70,7 +79,7 @@ public class VelocityMessageBuilder implements MessageBuilder {
         for (String string : strings) {
             hoverText.append(Component.text(string));
         }
-        builder.hoverEvent(HoverEvent.showText(hoverText.build()));
+        previousComponent = previousComponent.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
@@ -78,14 +87,17 @@ public class VelocityMessageBuilder implements MessageBuilder {
     public MessageBuilder hover(Collection<String> lines) {
         TextComponent.Builder hoverText = Component.text();
         hoverText.append(Component.text(new TextStringBuilder().appendWithSeparators(lines, "\n").build()));
-        builder.hoverEvent(HoverEvent.showText(hoverText.build()));
+        previousComponent = previousComponent.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder indent(int amount) {
         for (int i = 0; i < amount; i++) {
-            builder.append(Component.text(" "));
+            if (previousComponent != null) {
+                builder.append(previousComponent);
+            }
+            previousComponent = Component.text(" ");
         }
         return this;
     }
@@ -97,6 +109,9 @@ public class VelocityMessageBuilder implements MessageBuilder {
 
     @Override
     public void send() {
+        if (previousComponent != null) {
+            builder.append(previousComponent);
+        }
         sender.commandSource.sendMessage(builder.build());
     }
 }
