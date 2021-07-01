@@ -15,12 +15,3 @@ updates:
   - dependency-name: com.h2database:h2
     versions:
     - "> 1.4.199"
-  - dependency-name: com.velocitypowered:velocity-api
-    versions:
-    - 2.0.0-SNAPSHOT
-  - dependency-name: com.creeperface.nukkit.placeholderapi:PlaceholderAPI
-    versions:
-    - 1.4-SNAPSHOT
-  - dependency-name: cn.nukkit:nukkit
-    versions:
-    - 2.0.0-SNAPSHOT
