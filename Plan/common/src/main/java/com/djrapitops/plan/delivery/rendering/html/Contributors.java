@@ -81,7 +81,8 @@ public class Contributors {
             new Contributor("EyuphanMandiraci", LANG),
             new Contributor("4drian3d", LANG),
             new Contributor("\u6d1b\u4f0a", LANG),
-            new Contributor("portlek", CODE)
+            new Contributor("portlek", CODE),
+            new Contributor("KairuByte", CODE)
     };
 
     private Contributors() {
