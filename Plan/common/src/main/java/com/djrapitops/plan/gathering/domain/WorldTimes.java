@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
+import org.apache.commons.text.TextStringBuilder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -196,5 +198,16 @@ public class WorldTimes {
         for (Map.Entry<String, GMTimes> entry : worldTimes.getWorldTimes().entrySet()) {
             setGMTimesForWorld(entry.getKey(), entry.getValue());
         }
+    }
+
+    public String toJson() {
+        return "{\"times\": {" +
+                new TextStringBuilder().appendWithSeparators(times.entrySet().stream()
+                        .map(entry -> "\"" + entry.getKey() + "\": " + entry.getValue().toJson())
+                        .iterator(), ",").build() +
+                "  }," +
+                "  \"currentWorld\": \"" + currentWorld + "\"," +
+                "  \"currentGamemode\": \"" + currentGamemode + "\"" +
+                "}";
     }
 }

@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
+import org.apache.commons.text.TextStringBuilder;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -57,11 +59,16 @@ public class GMTimes extends TimeKeeper {
 
     public static String magicNumberToGMName(int magicNumber) {
         switch (magicNumber) {
-            case 0: return SURVIVAL;
-            case 1: return CREATIVE;
-            case 2: return ADVENTURE;
-            case 3: return SPECTATOR;
-            default: return "UNKOWN";
+            case 0:
+                return SURVIVAL;
+            case 1:
+                return CREATIVE;
+            case 2:
+                return ADVENTURE;
+            case 3:
+                return SPECTATOR;
+            default:
+                return "UNKOWN";
         }
     }
 
@@ -122,5 +129,16 @@ public class GMTimes extends TimeKeeper {
                 ", state='" + state + '\'' +
                 ", lastStateChange=" + lastStateChange +
                 '}';
+    }
+
+    public String toJson() {
+        return "{\"times\": {" +
+                new TextStringBuilder().appendWithSeparators(times.entrySet().stream()
+                        .map(entry -> "\"" + entry.getKey() + "\": " + entry.getValue())
+                        .iterator(), ",").build() +
+                "  }," +
+                "  \"state\": \"" + state + "\"," +
+                "  \"lastStateChange\": " + lastStateChange +
+                "}";
     }
 }

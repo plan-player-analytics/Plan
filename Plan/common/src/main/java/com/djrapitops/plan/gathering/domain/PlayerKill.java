@@ -124,4 +124,14 @@ public class PlayerKill implements DateHolder {
     public boolean isNotSelfKill() {
         return !isSelfKill();
     }
+
+    public String toJson() {
+        return "{\"killer\": \"" + killer + "\"," +
+                "  \"victim\": \"" + victim + "\"," +
+                "  \"weapon\": \"" + weapon + "\"," +
+                "  \"date\": " + date + "," +
+                "  \"victimName\": \"" + victimName + "\"," +
+                "  \"killerName\": \"" + killerName + "\"" +
+                "}";
+    }
 }

@@ -191,16 +191,14 @@ public class FinishedSession implements DateHolder {
      * @return Serialized format
      */
     public String serializeCSV() {
-        Gson gson = new Gson();
-
         return String.valueOf(playerUUID) + ';' +
                 serverUUID + ';' +
                 start + ';' +
                 end + ';' +
                 afkTime + ';' +
-                gson.toJson(getExtraData(WorldTimes.class).orElseGet(WorldTimes::new)) + ';' +
-                gson.toJson(getExtraData(PlayerKills.class).orElseGet(PlayerKills::new)) + ';' +
-                gson.toJson(getExtraData(MobKillCounter.class).orElseGet(MobKillCounter::new)) + ';' +
-                gson.toJson(getExtraData(DeathCounter.class).orElseGet(DeathCounter::new));
+                getExtraData(WorldTimes.class).orElseGet(WorldTimes::new).toJson() + ';' +
+                getExtraData(PlayerKills.class).orElseGet(PlayerKills::new).toJson() + ';' +
+                getExtraData(MobKillCounter.class).orElseGet(MobKillCounter::new).toJson() + ';' +
+                getExtraData(DeathCounter.class).orElseGet(DeathCounter::new).toJson();
     }
 }
