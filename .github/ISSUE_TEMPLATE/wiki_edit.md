@@ -1,7 +1,7 @@
 ---
 name: Wiki Edit Suggestion
 about: Suggest modification to the wiki.
-labels: 'Question'
+labels: 'Wiki-edit'
 
 ---
 
