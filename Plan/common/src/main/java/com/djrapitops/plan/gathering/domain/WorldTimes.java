@@ -206,8 +206,8 @@ public class WorldTimes {
                         .map(entry -> "\"" + entry.getKey() + "\": " + entry.getValue().toJson())
                         .iterator(), ",").build() +
                 "  }," +
-                "  \"currentWorld\": \"" + currentWorld + "\"," +
-                "  \"currentGamemode\": \"" + currentGamemode + "\"" +
+                (currentWorld != null ? "\"currentWorld\": \"" + currentWorld + "\"," : "\"currentWorld\": null,") +
+                (currentGamemode != null ? "\"currentGamemode\": \"" + currentGamemode + "\"" : "\"currentGamemode\": null") +
                 "}";
     }
 }
