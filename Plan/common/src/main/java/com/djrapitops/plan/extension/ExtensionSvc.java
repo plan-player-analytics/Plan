@@ -162,6 +162,8 @@ public class ExtensionSvc implements ExtensionService {
         if (playerUUID == null && playerName == null) return;
 
         UUID realUUID = playerUUID != null ? playerUUID : uuidUtility.getUUIDOf(playerName);
+        if (realUUID == null) return;
+
         String realPlayerName = playerName != null ?
                 playerName :
                 uuidUtility.getNameOf(realUUID).orElse(null);
