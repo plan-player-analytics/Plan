@@ -94,7 +94,7 @@ public class VelocityPingCounter extends TaskSystem.Task {
             Player player = plugin.getProxy().getPlayer(uuid).orElse(null);
             if (player != null) {
                 int ping = getPing(player);
-                if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
+                if (ping <= -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
                     continue;
                 }

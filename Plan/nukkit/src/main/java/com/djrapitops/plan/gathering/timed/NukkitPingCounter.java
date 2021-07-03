@@ -93,7 +93,7 @@ public class NukkitPingCounter extends TaskSystem.Task implements Listener {
             Optional<Player> player = Server.getInstance().getPlayer(uuid);
             if (player.isPresent()) {
                 int ping = player.get().getPing();
-                if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
+                if (ping <= -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
                     continue;
                 }
