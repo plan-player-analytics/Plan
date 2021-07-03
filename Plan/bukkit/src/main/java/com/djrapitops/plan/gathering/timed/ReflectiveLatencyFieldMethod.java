@@ -50,7 +50,7 @@ public class ReflectiveLatencyFieldMethod implements PingMethod {
             Method getHandleMethod = craftPlayerClass.getDeclaredMethod("getHandle");
             localHandle = lookup.unreflect(getHandleMethod);
 
-            localPing = lookup.findGetter(entityPlayer, "ping", Integer.TYPE);
+            localPing = lookup.findGetter(entityPlayer, "latency", Integer.TYPE);
         } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException | IllegalArgumentException reflectiveEx) {
             reasonForUnavailability = reflectiveEx.toString();
             return false;
