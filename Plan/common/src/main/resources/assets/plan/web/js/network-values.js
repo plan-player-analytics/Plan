@@ -373,7 +373,8 @@ function loadHourlyUniqueAndNewGraph(json, error) {
     }
 }
 
-function loadServerPie(json, error) {
+// Lowercase due to locale translation: Server
+function loadserverPie(json, error) {
     if (json) {
         serverPieSeries = {
             name: 'Server Playtime',

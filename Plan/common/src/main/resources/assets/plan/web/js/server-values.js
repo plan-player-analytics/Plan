@@ -47,6 +47,7 @@ function displayError(element, error) {
 }
 
 /* This function loads Server Overview tab */
+// Lowercase due to locale translation: Server
 function loadserverOverviewValues(json, error) {
     const tab = document.getElementById('server-overview');
 
