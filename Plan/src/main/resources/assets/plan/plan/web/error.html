@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="utf-8">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
     <meta content="Player Analytics, generic error/debug page" name="description">
     <meta content="AuroraLS3" name="author">
@@ -18,6 +17,9 @@
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+          integrity="sha256-hHKA3d/HttC8OW3Sl093W8DoZudhHJDj++kZYo6MLzA="
+          crossorigin="anonymous">
     <link href="css/sb-admin-2.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
@@ -45,18 +47,18 @@
 
         <hr class="sidebar-divider">
 
-        <div class="ml-3 align-items-center justify-content-between">
-            <button class="btn bg-plan" data-target="#colorChooserModal" data-toggle="modal" type="button">
+        <div class="ms-md-3 text-center text-md-start">
+            <button class="btn bg-plan" data-bs-target="#colorChooserModal" data-bs-toggle="modal" type="button">
                 <i class="fa fa-palette"></i>
             </button>
-            <button class="btn bg-plan" data-target="#informationModal" data-toggle="modal" type="button">
+            <button class="btn bg-plan" data-bs-target="#informationModal" data-bs-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
             <a class="btn bg-plan" href="auth/logout" id="logout-button">
                 <i class="fa fa-fw fa-door-open"></i> Logout
             </a>
         </div>
-        <div class="ml-3 align-items-center justify-content-between">
+        <div class="ms-md-3 text-center text-md-start">
             ${version}
         </div>
     </ul>
@@ -98,9 +100,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="colorChooserModalLabel"><i class="fa fa-palette"></i> Theme Select
                     </h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <button class="btn color-chooser" id="choose-plan" type="button"><i
@@ -148,7 +148,7 @@
                     <button class="btn" id="night-mode-toggle" type="button"><i class="fa fa-fw fa-cloud-moon"></i>
                         Night Mode
                     </button>
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -163,9 +163,7 @@
                     <h5 class="modal-title" id="informationModalLabel"><i class="fa fa-fw fa-question-circle"></i>
                         Information about the plugin
                     </h5>
-                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
                 </div>
                 <div class="modal-body">
                     <p>Player Analytics is developed and licensed under <a
@@ -207,7 +205,7 @@
                        target="_blank"><i class="fa fa-fw fa-chart-area"></i> Velocity</a>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -220,7 +218,7 @@
             <div class="modal-content">
                 ${updateModal}
                 <div class="modal-footer">
-                    <button class="btn bg-plan" data-dismiss="modal" type="button">OK</button>
+                    <button class="btn bg-plan" data-bs-dismiss="modal" type="button">OK</button>
                 </div>
             </div>
         </div>
@@ -230,10 +228,12 @@
 <!-- End of Page Wrapper -->
 
 <!-- Bootstrap core JavaScript-->
-<script crossorigin="anonymous"
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k="
+        crossorigin="anonymous"></script>
 
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.js"></script>

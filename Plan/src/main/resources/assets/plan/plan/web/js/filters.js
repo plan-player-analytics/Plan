@@ -25,18 +25,25 @@ class MultipleChoiceFilter extends Filter {
     render(filterCount) {
         const select = filterCount === 0 ? "of Players who " : "and ";
         let html =
-            `<div id="${this.id}" class="mt-2 input-group input-row">
-                <div class="col-12">
-                    <label for="${this.id}">${select}${this.label}:</label>
-                    <button class="filter-remover btn btn-outline-secondary float-right"
-                        onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
-                    <select class="form-control" multiple style="margin-bottom: 0.5rem;">`;
+            `<div id="${this.id}" class="mt-2">
+                    <label class="form-label" for="${this.id}">${select}${this.label}:</label>
+                <div class="row">
+                    <div class="col-11 flex-fill">
+                        <select class="form-control" multiple style="margin-bottom: 0.5rem;">`;
 
         for (const option of this.options.options) {
             html += `<option>${option}</option>`;
         }
 
-        html += `</select></div></div>`;
+        html +=
+            `       </select>
+                </div>
+                    <div class="col-1 col-md-auto my-auto">
+                        <button class="filter-remover btn btn-outline-secondary float-end"
+                          onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                    </div>
+                </div>
+            </div>`;
         return html;
     }
 
@@ -119,50 +126,51 @@ class BetweenDateFilter extends Filter {
         const select = filterCount === 0 ? "of Players who " : "and ";
         return (
             `<div id="${id}">
-                <label class="ml-2 mt-0 mb-0">${select}${this.label}:</label>
-                <div class="mt-2 input-group input-row">
-                    <div class="col-3">
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend"><div class="input-group-text">
+                <label>${select}${this.label}:</label>
+                <div class="my-2 row justify-content-start">
+                    <div class="col-6 col-md-3">
+                        <div class="input-group">
+                            <div class="input-group-text">
                                 <i class="far fa-calendar"></i>
-                            </div></div>
+                            </div>
                             <input id="${id}-afterdate" class="form-control" placeholder="${this.afterDate}" type="text"
                                 onkeyup="setFilterOption('${id}', '${id}-afterdate', 'afterDate', isValidDate, correctDate)">
                         </div>
                     </div>
-                    <div class="col-2">
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend"><div class="input-group-text">
+                    <div class="col-6 col-md-2">
+                        <div class="input-group">
+                            <div class="input-group-text">
                                 <i class="far fa-clock"></i>
-                            </div></div>
+                            </div>
                             <input id="${id}-aftertime" class="form-control" placeholder="${this.afterTime}" type="text"
                                 onkeyup="setFilterOption('${id}', '${id}-aftertime', 'afterTime', isValidTime, correctTime)">
                         </div>
                     </div>
-                    <div class="col-auto">
-                        <label class="mt-2 mb-0" for="inlineFormCustomSelectPref">&</label>
+                    <div class="col-12 col-md-1 text-center my-1 my-md-2 flex-fill">
+                        <label for="inlineFormCustomSelectPref">&</label>
                     </div>
-                    <div class="col-3">
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend"><div class="input-group-text">
+                    <div class="col-6 col-md-3">
+                        <div class="input-group">
+                            <div class="input-group-text">
                                 <i class="far fa-calendar"></i>
-                            </div></div>
+                            </div>
                             <input id="${id}-beforedate" class="form-control" placeholder="${this.beforeDate}" type="text"
                                 onkeyup="setFilterOption('${id}', '${id}-beforedate', 'beforeDate', isValidDate, correctDate)">
                         </div>
                     </div>
-                    <div class="col-2">
-                        <div class="input-group mb-2">
-                            <div class="input-group-prepend"><div class="input-group-text">
+                    <div class="col-5 col-md-2">
+                        <div class="input-group">
+                            <div class="input-group-text">
                                 <i class="far fa-clock"></i>
-                            </div></div>
+                            </div>
                             <input id="${id}-beforetime"  class="form-control" placeholder="${this.beforeTime}" type="text"
                                 onkeyup="setFilterOption('${id}', '${id}-beforetime', 'beforeTime', isValidTime, correctTime)">
                         </div>
                     </div>
-                    <button class="filter-remover btn btn-outline-secondary float-right"
-                        style="position: absolute;right: 0.8rem;"
+                    <div class="col-1 col-md-auto">
+                        <button class="filter-remover btn btn-outline-secondary float-end" 
                         onclick="removeFilter('${this.id}')"><i class="far fa-fw fa-trash-alt"></i></button>
+                    </div>
                 </div>
             </div>`
         );

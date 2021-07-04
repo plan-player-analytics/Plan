@@ -349,6 +349,11 @@ function displayResults(json) {
         data: json.data.players.data,
         order: [[5, "desc"]]
     });
+
+    if (nightmode) {
+        document.querySelector('.table').classList.add('table-dark');
+    }
+
     const activityIndexHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(2)");
     const lastSeenHeader = document.querySelector("#DataTables_Table_0 thead th:nth-of-type(6)");
     activityIndexHeader.innerHTML += ` (${json.view.beforeDate})`
@@ -417,17 +422,15 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xs-12 col-sm-12 col-lg-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black" title=" ${afterDate} ${afterTime} - ${beforeDate} ${beforeTime}"><i
+                            <h6 class="m-0 fw-bold col-black" title=" ${afterDate} ${afterTime} - ${beforeDate} ${beforeTime}"><i
                                     class="fas fa-fw fa-users col-black"></i>
                                 View: ${afterDate} - ${beforeDate}</h6>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover player-table dataTable">
-                                <tr>
-                                    <td>Loading..</td>
-                                </tr>
-                            </table>
-                        </div>
+                        <table class="table table-bordered table-striped table-hover player-table" style="width: 100%">
+                            <tr>
+                                <td>Loading..</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -436,7 +439,7 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xl-8 col-lg-8 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black"><i
+                            <h6 class="m-0 fw-bold col-black"><i
                                     class="fas fa-fw fa-chart-line col-amber"></i>
                                 Activity of matched players</h6>
                         </div>
@@ -446,7 +449,7 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xl-4 col-lg-4 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black"><i
+                            <h6 class="m-0 fw-bold col-black"><i
                                     class="fa fa-fw fa-users col-amber"></i>
                                 Activity on <span id="activity-date"></span></h6>
                         </div>
@@ -459,29 +462,29 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xl-3 col-lg-3 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black"><i class="col-teal far fa-calendar"></i> Sessions within view</h6>
+                            <h6 class="m-0 fw-bold col-black"><i class="col-teal far fa-calendar"></i> Sessions within view</h6>
                         </div>
                         <div class="card-body" id="data_players">
                             <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
-                                    class="float-right"><b id="data_total_sessions"></b></span></p>
+                                    class="float-end"><b id="data_total_sessions"></b></span></p>
                             <p><i class="col-teal far fa-fw fa-calendar-check"></i> Average Sessions / Player<span
-                                    class="float-right"><b id="data_average_sessions"></b></span></p>
+                                    class="float-end"><b id="data_average_sessions"></b></span></p>
                             <p><i class="col-teal far fa-fw fa-clock"></i> Average Session Length<span
-                                    class="float-right" id="data_average_session_length"></span></p>
+                                    class="float-end" id="data_average_session_length"></span></p>
                             <hr>
                             <p><i class="col-green far fa-fw fa-clock"></i> Playtime<span
-                                    class="float-right" id="data_total_playtime"></span></p>
+                                    class="float-end" id="data_total_playtime"></span></p>
                             <p><i class="col-green far fa-fw fa-clock"></i> Active Playtime<span
-                                    class="float-right" id="data_total_active_playtime"></span></p>
+                                    class="float-end" id="data_total_active_playtime"></span></p>
                             <p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span
-                                    class="float-right" id="data_total_afk_playtime"></span></p>
+                                    class="float-end" id="data_total_afk_playtime"></span></p>
                             <hr>
                             <p><i class="col-green far fa-fw fa-clock"></i> Average Playtime / Player<span
-                                    class="float-right" id="data_average_playtime"></span></p>
+                                    class="float-end" id="data_average_playtime"></span></p>
                             <p><i class="col-green far fa-fw fa-clock"></i> Average Active Playtime / Player<span
-                                    class="float-right" id="data_average_active_playtime"></span></p>
+                                    class="float-end" id="data_average_active_playtime"></span></p>
                             <p><i class="col-grey far fa-fw fa-clock"></i> Average AFK Time / Player<span
-                                    class="float-right" id="data_average_afk_playtime"></span></p>
+                                    class="float-end" id="data_average_afk_playtime"></span></p>
                         </div>
                     </div>
                 </div>
@@ -489,7 +492,7 @@ function displayDataResultScreen(resultCount, view) {
                 <div class="col-xl-9 col-lg-9 col-sm-12">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                            <h6 class="m-0 font-weight-bold col-black"><i
+                            <h6 class="m-0 fw-bold col-black"><i
                                     class="fas fa-fw fa-globe col-green"></i>
                                 Geolocations</h6>
                         </div>

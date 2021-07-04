@@ -1,8 +1,8 @@
-const trend_up_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-up\"></i> ";
-const trend_up_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-up\"></i> ";
-const trend_down_bad = "<span class=\"badge badge-danger\"><i class=\"fa fa-caret-down\"></i> ";
-const trend_down_good = "<span class=\"badge badge-success\"><i class=\"fa fa-caret-down\"></i> ";
-const trend_same = "<span class=\"badge badge-warning\"><i class=\"fa fa-caret-right\"></i> ";
+const trend_up_good = "<span class=\"badge bg-success\"><i class=\"fa fa-caret-up\"></i> ";
+const trend_up_bad = "<span class=\"badge bg-danger\"><i class=\"fa fa-caret-up\"></i> ";
+const trend_down_bad = "<span class=\"badge bg-danger\"><i class=\"fa fa-caret-down\"></i> ";
+const trend_down_good = "<span class=\"badge bg-success\"><i class=\"fa fa-caret-down\"></i> ";
+const trend_same = "<span class=\"badge bg-warning\"><i class=\"fa fa-caret-right\"></i> ";
 
 const trend_end = "</span>";
 
@@ -276,19 +276,19 @@ function addserverToNav(server) {
 function createnetworkserverBox(i, server) {
     return `<div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold col-black">
+                    <h6 class="m-0 fw-bold col-black">
                         <i class="fas fa-fw fa-server col-light-green"></i> ${server.name}
                     </h6>
                     <div class="mb-0 col-lg-6">
-                        <p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players<span class="float-right"><b>${server.players}</b></span></p>
-                        <p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online<span class="float-right"><b>${server.online}</b></span></p>
+                        <p class="mb-1"><i class="fa fa-fw fa-users col-black"></i> Registered Players<span class="float-end"><b>${server.players}</b></span></p>
+                        <p class="mb-0"><i class="fa fa-fw fa-user col-blue"></i> Players Online<span class="float-end"><b>${server.online}</b></span></p>
                     </div>
                 </div>
                 <div class="d-flex align-items-center justify-content-between">
-                    <a class="btn col-light-green ml-2" href="server/${server.name}">
+                    <a class="btn col-light-green ms-2" href="server/${server.name}">
                         <i class="fa fa-fw fa-chart-line"></i> Server Analysis
                     </a>
-                    <button class="btn bg-blue my-2 mr-2" id="server_quick_view_${i}">
+                    <button class="btn bg-blue my-2 me-2" id="server_quick_view_${i}">
                         Quick view <i class="fa fa-fw fa-caret-square-right"></i>
                     </button>
                 </div>
@@ -373,7 +373,8 @@ function loadHourlyUniqueAndNewGraph(json, error) {
     }
 }
 
-function loadServerPie(json, error) {
+// Lowercase due to locale translation: Server
+function loadserverPie(json, error) {
     if (json) {
         serverPieSeries = {
             name: 'Server Playtime',

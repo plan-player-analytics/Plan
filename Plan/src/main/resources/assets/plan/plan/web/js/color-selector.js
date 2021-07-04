@@ -150,16 +150,16 @@
         `.bg-lime {background-color: ${lime};color: #eee8d5;}` +
         `.bg-yellow {background-color: ${yellow};color: #eee8d5;}` +
         `.bg-amber {background-color: ${amber};color: #eee8d5;}` +
-        `.badge-warning {background-color: ${warningColor};color: #eee8d5;}` +
+        `.bg-warning {background-color: ${warningColor};color: #eee8d5;}` +
         `.bg-orange {background-color: ${orange};color: #eee8d5;}` +
         `.bg-deep-orange {background-color: ${deepOrange};color: #eee8d5;}` +
-        `.badge-danger {background-color: ${dangerColor};color: #eee8d5;}` +
+        `.bg-danger {background-color: ${dangerColor};color: #eee8d5;}` +
         `.bg-brown {background-color: ${brown};color: #eee8d5;}` +
         `.bg-grey {background-color: ${grey};color: #eee8d5;}` +
         `.bg-blue-grey {background-color: ${blueGrey};color: #eee8d5;}` +
         `.bg-black {background-color: ${black};color: #eee8d5;}` +
         `.bg-plan,.page-item.active .page-link {background-color: ${planColor};color: #eee8d5;}` +
-        `.badge-success {background-color: ${successColor};color: #eee8d5;}` +
+        `.bg-success {background-color: ${successColor};color: #eee8d5;}` +
         `.bg-night {background-color: #44475a;color: #eee8d5;}` +
         `.bg-red-outline {outline-color: ${red};border-color: ${red};}` +
         `.bg-pink-outline {outline-color: ${pink};border-color: ${pink};}` +
@@ -215,16 +215,18 @@
                 '.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr,form .btn, .btn-outline-secondary{background-color:#44475a!important;border-color:#6272a4!important;}' +
                 '.bg-white.collapse-inner {border:1px solid;}' +
                 '.card-header {background-color:#44475a;border-color:#6272a4;}' +
-                '#content,.col-black,.text-gray-900,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.close,.fc-title,.fc-time,pre,.table-dark,input::placeholder{color:#eee8d5 !important;}' +
+                '#content,.col-black,.text-gray-900,.text-gray-800,.collapse-item,.modal-title,.modal-body,.page-loader,.fc-title,.fc-time,pre,.table-dark,input::placeholder{color:#eee8d5 !important;}' +
                 '.collapse-item:hover,.nav-link.active {background-color: #606270 !important;}' +
                 '.nav-tabs .nav-link.active {background-color: #44475a !important;border-color:#6272a4 #6272a4 #44475a !important;}' +
                 '.fc-today {background:#646e8c !important}' +
                 '.fc-popover-body,.fc-popover-header{background-color: #44475a !important;color: #eee8d5 !important;}' +
-                'select,input,.dataTables_paginate .page-item:not(.active) a,.input-group-prepend > * {background-color:#44475a !important;border-color:#6272a4 !important;color: #eee8d5 !important;}' +
+                'select,input,.dataTables_paginate .page-item:not(.active) a,.input-group-text,.input-group-text > * {background-color:#44475a !important;border-color:#6272a4 !important;color: #eee8d5 !important;}' +
                 nightModeColors +
                 '</style>');
             // Turn bright tables to dark
             $('.table').addClass('table-dark');
+            // Turn modal close buttons light
+            document.querySelectorAll('button.btn-close').forEach(element => { element.classList.add('btn-close-white'); })
             // Sidebar is grey when in night mode
             disableColorSetters();
             setColor('night');
@@ -233,6 +235,8 @@
             $('#nightmode').remove();
             // Turn dark tables bright again
             $('.table').removeClass('table-dark');
+            // Turn modal close buttons dark
+            document.querySelectorAll('button.btn-close').forEach(element => { element.classList.remove('btn-close-white'); })
             // Sidebar is colorful
             enableColorSetters();
             setColor(window.localStorage.getItem('themeColor'));
