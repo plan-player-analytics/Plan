@@ -64,7 +64,8 @@ public class ErrorsJSONResolver implements Resolver {
 
     private List<ErrorFile> loadErrorLogs() {
         File[] files = this.files.getLogsFolder().listFiles();
-        if (files == null || files.length == 0) return Collections.emptyList();
+        // Can't use Collections.emptyList since Gson doesn't serialize it
+        if (files == null || files.length == 0) return new ArrayList<>();
 
         List<ErrorFile> errorFiles = new ArrayList<>();
         for (File file : files) {
