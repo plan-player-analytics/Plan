@@ -86,7 +86,7 @@ public class SpongePingCounter extends TaskSystem.Task {
             Optional<Player> player = Sponge.getServer().getPlayer(uuid);
             if (player.isPresent()) {
                 int ping = getPing(player.get());
-                if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
+                if (ping <= -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
                     continue;
                 }

@@ -220,7 +220,7 @@ function mapToDataSeries(performanceData) {
 }
 
 function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries) {
-    graphs.push(Highcharts.stockChart(id, {
+    const chart = Highcharts.stockChart(id, {
         rangeSelector: {
             selected: 2,
             buttons: linegraphButtons
@@ -270,7 +270,23 @@ function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeri
             enabled: true
         },
         series: [playersOnlineSeries, tpsSeries, cpuSeries, ramSeries, entitySeries, chunkSeries]
-    }));
+    });
+
+    function toggleLabels() {
+        if (!chart || !chart.yAxis || !chart.yAxis.length) return;
+        const newWidth = $(window).width();
+        chart.yAxis[0].update({labels: {enabled: newWidth >= 900}});
+        chart.yAxis[1].update({labels: {enabled: newWidth >= 900}});
+        chart.yAxis[2].update({labels: {enabled: newWidth >= 1000}});
+        chart.yAxis[3].update({labels: {enabled: newWidth >= 1000}});
+        chart.yAxis[4].update({labels: {enabled: newWidth >= 1400}});
+        chart.yAxis[5].update({labels: {enabled: newWidth >= 1400}});
+    }
+
+    $(window).resize(toggleLabels);
+    toggleLabels();
+
+    graphs.push(chart);
 }
 
 function playersChart(id, playersOnlineSeries, sel) {

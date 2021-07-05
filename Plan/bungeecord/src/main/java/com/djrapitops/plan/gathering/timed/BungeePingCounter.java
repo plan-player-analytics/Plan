@@ -90,7 +90,7 @@ public class BungeePingCounter extends TaskSystem.Task implements Listener {
             ProxiedPlayer player = ProxyServer.getInstance().getPlayer(uuid);
             if (player != null) {
                 int ping = getPing(player);
-                if (ping < -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
+                if (ping <= -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
                     // Don't accept bad values
                     continue;
                 }

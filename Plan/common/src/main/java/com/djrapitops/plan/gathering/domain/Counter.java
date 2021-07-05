@@ -57,4 +57,8 @@ public class Counter {
                 "count=" + count +
                 '}';
     }
+
+    public String toJson() {
+        return "{\"count\": " + count + "}";
+    }
 }

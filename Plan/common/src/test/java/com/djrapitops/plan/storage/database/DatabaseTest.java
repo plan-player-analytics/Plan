@@ -51,6 +51,7 @@ import utilities.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
@@ -256,7 +257,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         Sql sql = db.getType().getSql();
         String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset) / 1000))) + " as date";
 
-        System.out.println(testSQL);
         String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
         String result = db.query(new QueryAllStatement<String>(testSQL) {
             @Override
@@ -264,7 +264,35 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 return set.next() ? set.getString("date") : null;
             }
         });
-        assertEquals(expected, result);
+        assertEquals(expected, result, () -> "Expected <" + expected + "> but was: <" + result + "> for query <" + testSQL + ">");
+    }
+
+    @Test
+    default void sqlDateParsingSanitySQLDoesNotApplyTimezone() {
+        Database db = db();
+
+        List<org.junit.jupiter.api.function.Executable> assertions = new ArrayList<>();
+        long now = System.currentTimeMillis();
+        for (int i = 0; i < 24; i++) {
+            long hourChange = TimeUnit.HOURS.toMillis(i);
+            assertions.add(() -> {
+                long time = now + hourChange;
+                int offset = 0;
+
+                Sql sql = db.getType().getSql();
+                String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset) / 1000))) + " as date";
+
+                String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
+                String result = db.query(new QueryAllStatement<String>(testSQL) {
+                    @Override
+                    public String processResults(ResultSet set) throws SQLException {
+                        return set.next() ? set.getString("date") : null;
+                    }
+                });
+                assertEquals(expected, result, () -> "Expected <" + expected + "> but was: <" + result + "> for query <" + testSQL + ">");
+            });
+        }
+        assertAll(assertions);
     }
 
     @Test
