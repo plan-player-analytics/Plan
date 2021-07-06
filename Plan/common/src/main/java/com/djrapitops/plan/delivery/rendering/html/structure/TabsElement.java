@@ -26,9 +26,11 @@ import org.apache.commons.lang3.RegExUtils;
  */
 public class TabsElement {
 
+    private final int pluginId;
     private final Tab[] tabs;
 
-    public TabsElement(Tab... tabs) {
+    public TabsElement(int pluginId, Tab... tabs) {
+        this.pluginId = pluginId;
         this.tabs = tabs;
     }
 
@@ -45,7 +47,7 @@ public class TabsElement {
         content.append("<div class=\"tab-content\">");
         boolean first = true;
         for (Tab tab : tabs) {
-            String id = tab.getId();
+            String id = tab.getId(pluginId);
             String navHtml = tab.getNavHtml();
             String contentHtml = tab.getContentHtml();
 
@@ -83,8 +85,8 @@ public class TabsElement {
             return contentHtml;
         }
 
-        public String getId() {
-            return "tab_" + RegExUtils.removeAll(title, "[^a-zA-Z0-9]*").toLowerCase();
+        public String getId(int pluginId) {
+            return "tab_" + pluginId + "_" + RegExUtils.removeAll(title, "[^a-zA-Z0-9]*").toLowerCase();
         }
     }
 }

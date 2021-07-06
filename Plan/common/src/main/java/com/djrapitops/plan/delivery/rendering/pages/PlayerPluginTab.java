@@ -112,6 +112,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
                 tabsElement = buildContentHtml(genericTabData);
             } else {
                 tabsElement = new TabsElement(
+                        datum.getPluginID(),
                         datum.getTabs().stream().map(this::wrapToTabElementTab).toArray(TabsElement.Tab[]::new)
                 ).toHtmlFull();
             }
