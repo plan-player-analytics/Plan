@@ -190,21 +190,16 @@ public class RequestHandler implements HttpHandler {
         URIPath path = new URIPath(exchange.getRequestURI().getPath());
         URIQuery query = new URIQuery(exchange.getRequestURI().getRawQuery());
         byte[] requestBody = new byte[0];
-        if (
-                exchange.getRequestMethod().equalsIgnoreCase("POST") &&
-                exchange.getRequestHeaders().getFirst("Content-Type").equalsIgnoreCase("application/x-www-form-urlencoded")
-        ) {
-            try {
-                int b;
-                ByteArrayOutputStream buf = new ByteArrayOutputStream(512);
-                while ((b = exchange.getRequestBody().read()) != -1) {
-                    buf.write((byte) b);
-                }
-
-                requestBody = buf.toByteArray();
-            } catch (IOException ignored) {
-                // requestBody stays empty
+        try {
+            int b;
+            ByteArrayOutputStream buf = new ByteArrayOutputStream(512);
+            while ((b = exchange.getRequestBody().read()) != -1) {
+                buf.write((byte) b);
             }
+
+            requestBody = buf.toByteArray();
+        } catch (IOException ignored) {
+            // requestBody stays empty
         }
         WebUser user = getWebUser(exchange);
         Map<String, String> headers = getRequestHeaders(exchange);

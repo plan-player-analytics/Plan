@@ -119,7 +119,14 @@ public final class Request {
             return lazyFormBody;
         }
 
-        lazyFormBody = new URIQuery(new String(body));
+        if (
+                method.equalsIgnoreCase("POST") &&
+                getHeader("Content-type").orElse("").equalsIgnoreCase("application/x-www-form-urlencoded")
+        ) {
+            lazyFormBody = new URIQuery(new String(body));
+        } else {
+            lazyFormBody = new URIQuery("");
+        }
         return lazyFormBody;
     }
 
