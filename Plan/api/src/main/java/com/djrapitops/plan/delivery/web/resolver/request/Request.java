@@ -120,8 +120,8 @@ public final class Request {
         }
 
         if (
-                method.equalsIgnoreCase("POST") &&
-                getHeader("Content-type").orElse("").equalsIgnoreCase("application/x-www-form-urlencoded")
+                "POST".equalsIgnoreCase(method) &&
+                "application/x-www-form-urlencoded".equalsIgnoreCase(getHeader("Content-type").orElse(""))
         ) {
             lazyFormBody = new URIQuery(new String(body));
         } else {
