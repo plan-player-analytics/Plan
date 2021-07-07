@@ -59,10 +59,12 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
  * Make an XMLHttpRequest for JSON data.
  * @param address Address to request from
  * @param callback function with (json, error) parameters to call after the request.
+ * @param postBody If supplied, use POST method instead of GET.
  */
-function jsonRequest(address, callback) {
+function jsonRequest(address, callback, postBody) {
     setTimeout(function () {
         const xhr = new XMLHttpRequest();
+        const usingPostMethod = postBody !== undefined;
         xhr.withCredentials = true;
         xhr.onreadystatechange = function () {
             if (this.readyState === 4) {
@@ -89,7 +91,10 @@ function jsonRequest(address, callback) {
         xhr.ontimeout = function () {
             callback(null, "Timed out after 45 seconds. (" + address + ")")
         };
-        xhr.open("GET", address, true);
-        xhr.send();
+        xhr.open(usingPostMethod ? "POST" : "GET", address, true);
+        if (usingPostMethod) {
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        }
+        xhr.send(usingPostMethod ? postBody : null);
     }, 0);
 }
