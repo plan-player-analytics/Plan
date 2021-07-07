@@ -90,7 +90,9 @@ interface HttpsServerTest {
         HttpURLConnection loginConnection = null;
         String cookie = "";
         try {
-            loginConnection = connector.getConnection("GET", address + "/auth/login?user=test&password=testPass");
+            loginConnection = connector.getConnection("POST", address + "/auth/login");
+            loginConnection.setDoOutput(true);
+            loginConnection.getOutputStream().write("user=test&password=testPass".getBytes());
             try (InputStream in = loginConnection.getInputStream()) {
                 String responseBody = new String(IOUtils.toByteArray(in));
                 assertTrue(responseBody.contains("\"success\":true"), () -> "Not successful: " + responseBody);
