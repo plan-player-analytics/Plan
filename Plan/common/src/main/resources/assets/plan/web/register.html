@@ -217,7 +217,7 @@
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
-        jsonRequest(`./auth/register?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
+        jsonPostRequest(`./auth/register`, `user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
             if (error) {
                 return displayError('Registration failed: ' + error);
             }

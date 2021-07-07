@@ -55,12 +55,13 @@ public class RegisterResolver implements NoAuthResolver {
                     .build();
         }
 
-        String username = query.get("user").orElseThrow(() -> new BadRequestException("'user' parameter not defined"));
+        URIQuery form = request.getFormBody();
+        String username = form.get("user").orElseThrow(() -> new BadRequestException("'user' parameter not defined"));
 
         boolean alreadyExists = dbSystem.getDatabase().query(WebUserQueries.fetchUser(username)).isPresent();
         if (alreadyExists) throw new BadRequestException("User already exists!");
 
-        String password = query.get("password").orElseThrow(() -> new BadRequestException("'password' parameter not defined"));
+        String password = form.get("password").orElseThrow(() -> new BadRequestException("'password' parameter not defined"));
         try {
             String code = RegistrationBin.addInfoForRegistration(username, password);
             return Response.builder()
