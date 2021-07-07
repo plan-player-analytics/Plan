@@ -185,6 +185,7 @@
 
 <script id="mainScript">
     const errorElement = document.getElementById("fail-msg");
+    let finalizeModal;
 
     function displayError(message) {
         errorElement.innerText = message;
@@ -194,9 +195,11 @@
     function checkIfRegistered(code) {
         jsonRequest(`./auth/register?code=${encodeURIComponent(code)}`, (json, error) => {
             if (error) {
+                finalizeModal.hide();
                 displayError('Checking registration status failed: ' + error)
             }
             if (json && json.success) {
+                finalizeModal.hide();
                 window.location.href = "./login";
             } else {
                 setTimeout(() => checkIfRegistered(code), 5000);
@@ -223,7 +226,8 @@
             }
             const code = json.code;
             $('.register-code').text(code);
-            $('#finalizeModal').modal();
+            finalizeModal = new bootstrap.Modal(document.getElementById("finalizeModal"));
+            finalizeModal.show();
             setTimeout(() => checkIfRegistered(code), 10000);
         });
     })
