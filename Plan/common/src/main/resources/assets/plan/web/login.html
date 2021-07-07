@@ -41,7 +41,7 @@
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
-        jsonRequest(`./auth/login`, (json, error) => {
+        jsonPostRequest(`./auth/login`, `user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
             if (error) {
                 if (error.includes("HTTP 403")) {
                     location.reload();
@@ -60,7 +60,7 @@
             } else {
                 return displayError('Login failed: ' + json.error);
             }
-        }, `user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`);
+        });
     }
 
     document.addEventListener('keydown', (event) => {
