@@ -34,25 +34,27 @@ public final class Request {
     private final URIQuery query;
     private final WebUser user;
     private final Map<String, String> headers;
-    private final URIQuery formBody;
+    private final byte[] body;
+
+    private URIQuery lazyFormBody = null;
 
     /**
      * Constructor.
      *
-     * @param method   HTTP method, GET, PUT, POST, etc
-     * @param path     Requested path /example/target
-     * @param query    Request parameters ?param=value etc
-     * @param user     Web user doing the request (if authenticated)
-     * @param headers  Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
-     * @param formBody Map representation of application/x-www-form-urlencoded POST data, if present
+     * @param method  HTTP method, GET, PUT, POST, etc
+     * @param path    Requested path /example/target
+     * @param query   Request parameters ?param=value etc
+     * @param user    Web user doing the request (if authenticated)
+     * @param headers Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+     * @param body    Raw body as bytes, if present
      */
-    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, URIQuery formBody) {
+    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, byte[] body) {
         this.method = method;
         this.path = path;
         this.query = query;
         this.user = user;
         this.headers = headers;
-        this.formBody = formBody;
+        this.body = body;
     }
 
     // Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no form body
@@ -68,7 +70,7 @@ public final class Request {
         }
         this.user = user;
         this.headers = headers;
-        this.formBody = new URIQuery("");
+        this.body = new byte[0];
     }
 
     /**
@@ -99,12 +101,26 @@ public final class Request {
     }
 
     /**
-     * Get the POST Form body, if present.
+     * Get the raw body, if present.
+     *
+     * @return byte[].
+     */
+    public byte[] getRawBody() {
+        return body;
+    }
+
+    /**
+     * Get the body as an url-encoded form, if present.
      *
      * @return {@link URIQuery}.
      */
-    public Optional<URIQuery> getFormBody() {
-        return Optional.ofNullable(formBody);
+    public URIQuery getFormBody() {
+        if (lazyFormBody != null) {
+            return lazyFormBody;
+        }
+
+        lazyFormBody = new URIQuery(new String(body));
+        return lazyFormBody;
     }
 
     /**
@@ -127,7 +143,7 @@ public final class Request {
     }
 
     public Request omitFirstInPath() {
-        return new Request(method, path.omitFirst(), query, user, headers, formBody);
+        return new Request(method, path.omitFirst(), query, user, headers, body);
     }
 
     @Override
@@ -138,7 +154,7 @@ public final class Request {
                 ", query=" + query +
                 ", user=" + user +
                 ", headers=" + headers +
-                ", formBody=" + formBody +
+                ", body=" + body +
                 '}';
     }
 }
