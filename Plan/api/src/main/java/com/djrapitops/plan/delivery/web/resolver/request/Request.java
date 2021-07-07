@@ -34,25 +34,28 @@ public final class Request {
     private final URIQuery query;
     private final WebUser user;
     private final Map<String, String> headers;
+    private final URIQuery formBody;
 
     /**
      * Constructor.
      *
-     * @param method  HTTP method, GET, PUT, POST, etc
-     * @param path    Requested path /example/target
-     * @param query   Request parameters ?param=value etc
-     * @param user    Web user doing the request (if authenticated)
-     * @param headers Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+     * @param method   HTTP method, GET, PUT, POST, etc
+     * @param path     Requested path /example/target
+     * @param query    Request parameters ?param=value etc
+     * @param user     Web user doing the request (if authenticated)
+     * @param headers  Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+     * @param formBody Map representation of application/x-www-form-urlencoded POST data, if present
      */
-    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers) {
+    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, URIQuery formBody) {
         this.method = method;
         this.path = path;
         this.query = query;
         this.user = user;
         this.headers = headers;
+        this.formBody = formBody;
     }
 
-    // Special constructor that figures out URIPath and URIQuery from "/path/and?query=params"
+    // Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no form body
     public Request(String method, String target, WebUser user, Map<String, String> headers) {
         this.method = method;
         if (target.contains("?")) {
@@ -65,6 +68,7 @@ public final class Request {
         }
         this.user = user;
         this.headers = headers;
+        this.formBody = new URIQuery("");
     }
 
     /**
@@ -95,6 +99,15 @@ public final class Request {
     }
 
     /**
+     * Get the POST Form body, if present.
+     *
+     * @return {@link URIQuery}.
+     */
+    public Optional<URIQuery> getFormBody() {
+        return Optional.ofNullable(formBody);
+    }
+
+    /**
      * Get the user making the request.
      *
      * @return the user if authentication is enabled
@@ -114,7 +127,7 @@ public final class Request {
     }
 
     public Request omitFirstInPath() {
-        return new Request(method, path.omitFirst(), query, user, headers);
+        return new Request(method, path.omitFirst(), query, user, headers, formBody);
     }
 
     @Override
@@ -125,6 +138,7 @@ public final class Request {
                 ", query=" + query +
                 ", user=" + user +
                 ", headers=" + headers +
+                ", formBody=" + formBody +
                 '}';
     }
 }
