@@ -73,7 +73,6 @@ public class BukkitServerShutdownSave extends ServerShutdownSave {
 
             return (Boolean) minecraftServerClass.getMethod("isStopped").invoke(minecraftServer);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -88,7 +87,6 @@ public class BukkitServerShutdownSave extends ServerShutdownSave {
 
             return (Boolean) minecraftServerClass.getMethod("isStopped").invoke(minecraftServer);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
-            e.printStackTrace();
             return false;
         }
     }
