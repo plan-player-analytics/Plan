@@ -9,3 +9,5 @@ include 'bungeecord'
 include 'velocity'
 include 'plugin'
 include 'extensions'
+include 'standalone'
+
