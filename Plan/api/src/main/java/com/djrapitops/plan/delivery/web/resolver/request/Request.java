@@ -34,6 +34,7 @@ public final class Request {
     private final URIQuery query;
     private final WebUser user;
     private final Map<String, String> headers;
+    private final byte[] body;
 
     /**
      * Constructor.
@@ -43,16 +44,20 @@ public final class Request {
      * @param query   Request parameters ?param=value etc
      * @param user    Web user doing the request (if authenticated)
      * @param headers Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+     * @param body    Raw body as bytes, if present
      */
-    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers) {
+    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, byte[] body) {
         this.method = method;
         this.path = path;
         this.query = query;
         this.user = user;
         this.headers = headers;
+        this.body = body;
     }
 
-    // Special constructor that figures out URIPath and URIQuery from "/path/and?query=params"
+    /**
+     * Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no form body.
+     */
     public Request(String method, String target, WebUser user, Map<String, String> headers) {
         this.method = method;
         if (target.contains("?")) {
@@ -65,6 +70,7 @@ public final class Request {
         }
         this.user = user;
         this.headers = headers;
+        this.body = new byte[0];
     }
 
     /**
@@ -95,6 +101,15 @@ public final class Request {
     }
 
     /**
+     * Get the raw body, if present.
+     *
+     * @return byte[].
+     */
+    public byte[] getRequestBody() {
+        return body;
+    }
+
+    /**
      * Get the user making the request.
      *
      * @return the user if authentication is enabled
@@ -114,7 +129,7 @@ public final class Request {
     }
 
     public Request omitFirstInPath() {
-        return new Request(method, path.omitFirst(), query, user, headers);
+        return new Request(method, path.omitFirst(), query, user, headers, body);
     }
 
     @Override
@@ -125,6 +140,7 @@ public final class Request {
                 ", query=" + query +
                 ", user=" + user +
                 ", headers=" + headers +
+                ", body=" + body.length +
                 '}';
     }
 }

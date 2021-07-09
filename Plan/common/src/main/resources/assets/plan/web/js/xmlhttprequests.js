@@ -56,40 +56,68 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
 }
 
 /**
- * Make an XMLHttpRequest for JSON data.
+ * Make a GET XMLHttpRequest for JSON data.
  * @param address Address to request from
  * @param callback function with (json, error) parameters to call after the request.
  */
 function jsonRequest(address, callback) {
     setTimeout(function () {
-        const xhr = new XMLHttpRequest();
-        xhr.withCredentials = true;
-        xhr.onreadystatechange = function () {
-            if (this.readyState === 4) {
-                try {
-                    if (this.status === 200 || (this.status === 0 && this.responseText)) {
-                        var json = JSON.parse(this.responseText);
-                        setTimeout(function () {
-                            callback(json, null)
-                        }, 0);
-                    } else if (this.status === 404 || this.status === 403 || this.status === 500) {
-                        callback(null, "HTTP " + this.status + " (See " + address + ")")
-                    } else if (this.status === 400) {
-                        const json = JSON.parse(this.responseText);
-                        callback(json, json.error)
-                    } else if (this.status === 0) {
-                        callback(null, "Request did not reach the server. (Server offline / Adblocker?)")
-                    }
-                } catch (e) {
-                    callback(null, e.message + " (See " + address + ")")
-                }
-            }
-        };
-        xhr.timeout = 45000;
-        xhr.ontimeout = function () {
-            callback(null, "Timed out after 45 seconds. (" + address + ")")
-        };
+        const xhr = newConfiguredXHR(callback);
+
         xhr.open("GET", address, true);
         xhr.send();
     }, 0);
+}
+
+/**
+ * Make a POST XMLHttpRequest for JSON data.
+ * @param address Address to request from
+ * @param postBody POST body (form).
+ * @param callback function with (json, error) parameters to call after the request.
+ */
+function jsonPostRequest(address, postBody, callback) {
+    setTimeout(function () {
+        const xhr = newConfiguredXHR(callback);
+
+        xhr.open("POST", address, true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.send(postBody);
+    }, 0);
+}
+
+/**
+ * Create new XMLHttpRequest configured for methods such as jsonRequest
+ * @param callback function with (json, error) parameters to call after the request.
+ */
+function newConfiguredXHR(callback) {
+    const xhr = new XMLHttpRequest();
+
+    xhr.withCredentials = true;
+    xhr.onreadystatechange = function () {
+        if (this.readyState === 4) {
+            try {
+                if (this.status === 200 || (this.status === 0 && this.responseText)) {
+                    var json = JSON.parse(this.responseText);
+                    setTimeout(function () {
+                        callback(json, null)
+                    }, 0);
+                } else if (this.status === 404 || this.status === 403 || this.status === 500) {
+                    callback(null, "HTTP " + this.status + " (See " + address + ")")
+                } else if (this.status === 400) {
+                    const json = JSON.parse(this.responseText);
+                    callback(json, json.error)
+                } else if (this.status === 0) {
+                    callback(null, "Request did not reach the server. (Server offline / Adblocker?)")
+                }
+            } catch (e) {
+                callback(null, e.message + " (See " + address + ")")
+            }
+        }
+    };
+    xhr.timeout = 45000;
+    xhr.ontimeout = function () {
+        callback(null, "Timed out after 45 seconds. (" + address + ")")
+    };
+
+    return xhr;
 }

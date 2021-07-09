@@ -41,6 +41,8 @@ import org.apache.commons.text.TextStringBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -187,9 +189,20 @@ public class RequestHandler implements HttpHandler {
         String requestMethod = exchange.getRequestMethod();
         URIPath path = new URIPath(exchange.getRequestURI().getPath());
         URIQuery query = new URIQuery(exchange.getRequestURI().getRawQuery());
+        byte[] requestBody = new byte[0];
+        try (ByteArrayOutputStream buf = new ByteArrayOutputStream(512)) {
+            int b;
+            while ((b = exchange.getRequestBody().read()) != -1) {
+                buf.write((byte) b);
+            }
+
+            requestBody = buf.toByteArray();
+        } catch (IOException ignored) {
+            // requestBody stays empty
+        }
         WebUser user = getWebUser(exchange);
         Map<String, String> headers = getRequestHeaders(exchange);
-        return new Request(requestMethod, path, query, user, headers);
+        return new Request(requestMethod, path, query, user, headers, requestBody);
     }
 
     private WebUser getWebUser(HttpExchange exchange) {

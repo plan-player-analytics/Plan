@@ -126,7 +126,9 @@ public class AccessControlTest {
         HttpURLConnection loginConnection = null;
         String cookie = "";
         try {
-            loginConnection = CONNECTOR.getConnection("GET", address + "/auth/login?user=" + username + "&password=testPass");
+            loginConnection = CONNECTOR.getConnection("POST", address + "/auth/login");
+            loginConnection.setDoOutput(true);
+            loginConnection.getOutputStream().write(("user=" + username + "&password=testPass").getBytes());
             try (InputStream in = loginConnection.getInputStream()) {
                 String responseBody = new String(IOUtils.toByteArray(in));
                 assertTrue(responseBody.contains("\"success\":true"), () -> "Not successful: " + responseBody);
