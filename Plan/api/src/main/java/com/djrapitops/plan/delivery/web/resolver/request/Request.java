@@ -36,8 +36,6 @@ public final class Request {
     private final Map<String, String> headers;
     private final byte[] body;
 
-    private URIQuery lazyFormBody = null;
-
     /**
      * Constructor.
      *
@@ -107,27 +105,6 @@ public final class Request {
      */
     public byte[] getRequestBody() {
         return body;
-    }
-
-    /**
-     * Get the body as an url-encoded form, if present.
-     *
-     * @return {@link URIQuery}.
-     */
-    public URIQuery getFormBody() {
-        if (lazyFormBody != null) {
-            return lazyFormBody;
-        }
-
-        if (
-                "POST".equalsIgnoreCase(method) &&
-                "application/x-www-form-urlencoded".equalsIgnoreCase(getHeader("Content-type").orElse(""))
-        ) {
-            lazyFormBody = new URIQuery(new String(body));
-        } else {
-            lazyFormBody = new URIQuery("");
-        }
-        return lazyFormBody;
     }
 
     /**
