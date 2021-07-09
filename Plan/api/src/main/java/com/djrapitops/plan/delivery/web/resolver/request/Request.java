@@ -55,7 +55,9 @@ public final class Request {
         this.body = body;
     }
 
-    // Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no form body
+    /**
+     * Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no form body.
+     */
     public Request(String method, String target, WebUser user, Map<String, String> headers) {
         this.method = method;
         if (target.contains("?")) {
