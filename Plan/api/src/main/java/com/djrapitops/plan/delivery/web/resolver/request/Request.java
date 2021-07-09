@@ -105,7 +105,7 @@ public final class Request {
      *
      * @return byte[].
      */
-    public byte[] getRawBody() {
+    public byte[] getRequestBody() {
         return body;
     }
 
@@ -161,7 +161,7 @@ public final class Request {
                 ", query=" + query +
                 ", user=" + user +
                 ", headers=" + headers +
-                ", body=" + body +
+                ", body=" + body.length +
                 '}';
     }
 }
