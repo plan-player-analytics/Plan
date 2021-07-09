@@ -82,8 +82,9 @@ public class Contributors {
             new Contributor("4drian3d", LANG),
             new Contributor("\u6d1b\u4f0a", LANG),
             new Contributor("portlek", CODE),
+            new Contributor("mbax", CODE),
             new Contributor("KairuByte", CODE),
-            new Contributor("mbax", CODE)
+            new Contributor("rymiel", CODE)
     };
 
     private Contributors() {
