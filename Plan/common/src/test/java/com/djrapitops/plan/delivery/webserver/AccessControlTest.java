@@ -192,7 +192,9 @@ public class AccessControlTest {
             "/v1/players,200",
             "/query,200",
             "/v1/filters,200",
-            "/v1/query,400"
+            "/v1/query,400",
+            "/v1/errors,200",
+            "/errors,200",
     })
     void levelZeroCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel0);
@@ -250,7 +252,9 @@ public class AccessControlTest {
             "/v1/players,200",
             "/query,200",
             "/v1/filters,200",
-            "/v1/query,400"
+            "/v1/query,400",
+            "/v1/errors,403",
+            "/errors,403",
     })
     void levelOneCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel1);
@@ -308,7 +312,9 @@ public class AccessControlTest {
             "/v1/players,403",
             "/query,403",
             "/v1/filters,403",
-            "/v1/query,403"
+            "/v1/query,403",
+            "/v1/errors,403",
+            "/errors,403",
     })
     void levelTwoCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel2);

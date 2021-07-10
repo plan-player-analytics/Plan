@@ -20,6 +20,11 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 
 public class RequestBodyConverter {
+
+  private RequestBodyConverter() {
+    /* Static utility class */
+  }
+
   /**
    * Get the body of a request as an url-encoded form.
    *
@@ -27,8 +32,8 @@ public class RequestBodyConverter {
    */
   public static URIQuery formBody(Request request) {
     if (
-        "POST".equalsIgnoreCase(request.getMethod()) &&
-            "application/x-www-form-urlencoded".equalsIgnoreCase(request.getHeader("Content-type").orElse(""))
+            "POST".equalsIgnoreCase(request.getMethod()) &&
+                    "application/x-www-form-urlencoded".equalsIgnoreCase(request.getHeader("Content-type").orElse(""))
     ) {
       return new URIQuery(new String(request.getRequestBody()));
     } else {
