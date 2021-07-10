@@ -29,6 +29,7 @@ import org.bukkit.entity.Player;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
+import java.util.Optional;
 
 public class ReflectiveLatencyFieldMethod implements PingMethod {
 
@@ -37,26 +38,29 @@ public class ReflectiveLatencyFieldMethod implements PingMethod {
 
     private String reasonForUnavailability;
 
-    @Override
-    public boolean isAvailable() {
-        MethodHandle localHandle = null;
-        MethodHandle localPing = null;
+    private static Optional<String> setPingField() {
         try {
             Class<?> craftPlayerClass = Reflection.getCraftBukkitClass("entity.CraftPlayer");
             Class<?> entityPlayer = Reflection.getMinecraftClass("EntityPlayer");
 
             MethodHandles.Lookup lookup = MethodHandles.publicLookup();
+            Method handleMethod = craftPlayerClass.getDeclaredMethod("getHandle");
 
-            Method getHandleMethod = craftPlayerClass.getDeclaredMethod("getHandle");
-            localHandle = lookup.unreflect(getHandleMethod);
-
-            localPing = lookup.findGetter(entityPlayer, "latency", Integer.TYPE);
+            getHandleMethod = lookup.unreflect(handleMethod);
+            pingField = lookup.findGetter(entityPlayer, "latency", Integer.TYPE);
         } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException | IllegalArgumentException reflectiveEx) {
-            reasonForUnavailability = reflectiveEx.toString();
+            return Optional.of(reflectiveEx.toString());
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public boolean isAvailable() {
+        Optional<String> reasonsForFailure = setPingField();
+        if (reasonsForFailure.isPresent()) {
+            reasonForUnavailability = reasonsForFailure.get();
             return false;
         }
-        getHandleMethod = localHandle;
-        pingField = localPing;
         return pingField != null;
     }
 
