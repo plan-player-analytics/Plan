@@ -62,7 +62,6 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
     //the server is pinging the client every 40 Ticks (2 sec) - so check it then
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
 
-    private static boolean pingMethodAvailable;
 
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
@@ -72,6 +71,7 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
     private final ServerInfo serverInfo;
     private final RunnableFactory runnableFactory;
 
+    private final boolean pingMethodAvailable;
     private PingMethod pingMethod;
 
     @Inject
