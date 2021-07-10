@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -24,12 +25,14 @@ class ActiveSessionTest {
 
     @Test
     void noStackOverflowErrorFromFinishingSession() {
-        ActiveSession session = RandomData.randomUnfinishedSession(TestConstants.SERVER_UUID, TestConstants.WORLDS, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID);
+        Assertions.assertDoesNotThrow(() -> {
+            ActiveSession session = RandomData.randomUnfinishedSession(TestConstants.SERVER_UUID, TestConstants.WORLDS, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID);
 
-        FinishedSession finishedSession = session.toFinishedSession(System.currentTimeMillis());
+            FinishedSession finishedSession = session.toFinishedSession(System.currentTimeMillis());
 
-        session.hashCode(); // Error was here
-        finishedSession.hashCode();
+            session.hashCode(); // Error was here
+            finishedSession.hashCode();
+        });
     }
 
 }
