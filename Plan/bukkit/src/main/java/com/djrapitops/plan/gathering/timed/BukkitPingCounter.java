@@ -117,7 +117,7 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
         }
         Logger.getGlobal().log(
                 Level.WARNING,
-                "Plan: No Ping method found - Ping will not be recorded:" + reasonsForUnavailability.toString()
+                () -> "Plan: No Ping method found - Ping will not be recorded:" + reasonsForUnavailability.toString()
         );
 
         return Optional.empty();
