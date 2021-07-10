@@ -27,8 +27,6 @@ import com.djrapitops.plan.utilities.java.Reflection;
 import org.bukkit.entity.Player;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.reflect.Method;
 
 public class ReflectiveUnmappedLatencyFieldMethod implements PingMethod {
 
@@ -37,27 +35,25 @@ public class ReflectiveUnmappedLatencyFieldMethod implements PingMethod {
 
     private String reasonForUnavailability;
 
+    private static void setMethods() throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, ClassNotFoundException {
+        MethodHandle[] methodHandles = PingMethodReflection.getMethods(
+                Reflection.getCraftBukkitClass("entity.CraftPlayer"),
+                Class.forName("net.minecraft.server.level.EntityPlayer"),
+                "getHandle",
+                "e"
+        );
+        getHandleMethod = methodHandles[0];
+        pingField = methodHandles[1];
+    }
+
     @Override
     public boolean isAvailable() {
-        MethodHandle localHandle = null;
-        MethodHandle localPing = null;
         try {
-            Class<?> craftPlayerClass = Reflection.getCraftBukkitClass("entity.CraftPlayer");
-            Class<?> entityPlayer = Class.forName("net.minecraft.server.level.EntityPlayer");
-
-            MethodHandles.Lookup lookup = MethodHandles.publicLookup();
-
-            Method getHandleMethod = craftPlayerClass.getDeclaredMethod("getHandle");
-            localHandle = lookup.unreflect(getHandleMethod);
-
-            // e is latency in unmapped jar
-            localPing = lookup.findGetter(entityPlayer, "e", Integer.TYPE);
+            setMethods();
         } catch (NoSuchMethodException | IllegalAccessException | NoSuchFieldException | ClassNotFoundException | IllegalArgumentException reflectiveEx) {
             reasonForUnavailability = reflectiveEx.toString();
             return false;
         }
-        getHandleMethod = localHandle;
-        pingField = localPing;
         return pingField != null;
     }
 

@@ -113,10 +113,10 @@ public final class URIQuery {
 
     @Override
     public String toString() {
-        Map<String, String> byKey = new HashMap<>(this.byKey);
-        byKey.remove("password");
+        Map<String, String> copyOfByKey = new HashMap<>(this.byKey);
+        copyOfByKey.remove("password");
         return "URIQuery{" +
-                "byKey=" + byKey +
+                "byKey=" + copyOfByKey +
                 '}';
     }
 }
