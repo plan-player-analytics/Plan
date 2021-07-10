@@ -33,7 +33,7 @@
     <div class="col-12 mt-5 text-center">
         <img alt="logo" class="w-15" src="img/Flaticon_circle.png">
     </div>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center container-fluid">
         <div class="col-xl-6 col-lg-7 col-md-9">
             <div class="card o-hidden border-0 shadow-lg my-5">
                 <div class="card-body p-0">
@@ -185,6 +185,7 @@
 
 <script id="mainScript">
     const errorElement = document.getElementById("fail-msg");
+    let finalizeModal;
 
     function displayError(message) {
         errorElement.innerText = message;
@@ -194,9 +195,11 @@
     function checkIfRegistered(code) {
         jsonRequest(`./auth/register?code=${encodeURIComponent(code)}`, (json, error) => {
             if (error) {
+                finalizeModal.hide();
                 displayError('Checking registration status failed: ' + error)
             }
             if (json && json.success) {
+                finalizeModal.hide();
                 window.location.href = "./login";
             } else {
                 setTimeout(() => checkIfRegistered(code), 5000);
@@ -217,13 +220,14 @@
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
-        jsonRequest(`./auth/register?user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
+        jsonPostRequest(`./auth/register`, `user=${encodeURIComponent(user)}&password=${encodeURIComponent(password)}`, (json, error) => {
             if (error) {
                 return displayError('Registration failed: ' + error);
             }
             const code = json.code;
             $('.register-code').text(code);
-            $('#finalizeModal').modal();
+            finalizeModal = new bootstrap.Modal(document.getElementById("finalizeModal"));
+            finalizeModal.show();
             setTimeout(() => checkIfRegistered(code), 10000);
         });
     })
