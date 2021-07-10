@@ -24,7 +24,7 @@ dependencies {
     implementation 'com.djrapitops:Extension-KingdomsX:1.10.17-R0.3'
     implementation 'com.djrapitops:Extension-Lands:5.4.12-R0.1'
     implementation 'com.djrapitops:Extension-Litebans:0.3.4-R0.1'
-    implementation 'com.djrapitops:Extension-LogBlock:1.16.1.2-R0.3'
+    implementation 'com.djrapitops:Extension-LogBlock:1.16.1.2-R0.4'
     implementation 'com.djrapitops:Extension-LuckPerms:5.0-R0.2'
     implementation 'com.djrapitops:Extension-MarriageMaster:2.3-R0.2'
     implementation 'com.djrapitops:Extension-McMMO:2.1.149-R1.5'
