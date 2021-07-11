@@ -4293,7 +4293,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">Schedules export tasks so that they are not all run at once.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/export/ExportScheduler.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.scheduling.RunnableFactory,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.utilities.logging.ErrorLogger)">ExportScheduler(PlanConfig, DBSystem, RunnableFactory, Exporter, ErrorLogger)</a></span> - Constructor for class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ExportScheduler.html" title="class in com.djrapitops.plan.delivery.export">ExportScheduler</a></dt>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/export/ExportScheduler.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.playeranalytics.plugin.scheduling.RunnableFactory,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.utilities.logging.ErrorLogger)">ExportScheduler(PlanConfig, DBSystem, ServerInfo, RunnableFactory, Exporter, ErrorLogger)</a></span> - Constructor for class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ExportScheduler.html" title="class in com.djrapitops.plan.delivery.export">ExportScheduler</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/export/Exporter.html#exportServerJSON(com.djrapitops.plan.identification.Server)">exportServerJSON(Server)</a></span> - Method in class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a></dt>
 <dd>&nbsp;</dd>
@@ -4309,7 +4309,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>
 <div class="block">System in charge of exporting html.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/export/ExportSystem.html#%3Cinit%3E(com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.export.ExportScheduler)">ExportSystem(DBSystem, ServerInfo, ExportScheduler)</a></span> - Constructor for class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ExportSystem.html" title="class in com.djrapitops.plan.delivery.export">ExportSystem</a></dt>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/export/ExportSystem.html#%3Cinit%3E(com.djrapitops.plan.delivery.export.ExportScheduler,net.playeranalytics.plugin.scheduling.RunnableFactory)">ExportSystem(ExportScheduler, RunnableFactory)</a></span> - Constructor for class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ExportSystem.html" title="class in com.djrapitops.plan.delivery.export">ExportSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/export/ExportTask.html" title="class in com.djrapitops.plan.delivery.export"><span class="typeNameLink">ExportTask</span></a> - Class in <a href="com/djrapitops/plan/delivery/export/package-summary.html">com.djrapitops.plan.delivery.export</a></dt>
 <dd>&nbsp;</dd>
@@ -12616,6 +12616,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/BStatsSponge.html#run()">run()</a></span> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/BStatsSponge.html" title="class in com.djrapitops.plan">BStatsSponge</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/export/ExportScheduler.html#run()">run()</a></span> - Method in class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ExportScheduler.html" title="class in com.djrapitops.plan.delivery.export">ExportScheduler</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/export/ExportTask.html#run()">run()</a></span> - Method in class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ExportTask.html" title="class in com.djrapitops.plan.delivery.export">ExportTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/webserver/cache/JSONFileStorage.CleanTask.html#run()">run()</a></span> - Method in class com.djrapitops.plan.delivery.webserver.cache.<a href="com/djrapitops/plan/delivery/webserver/cache/JSONFileStorage.CleanTask.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONFileStorage.CleanTask</a></dt>
@@ -12710,8 +12712,6 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <div class="deprecationComment">Deprecated due to use of APF Config</div>
 </div>
 </dd>
-<dt><span class="memberNameLink"><a href="com/djrapitops/plan/delivery/export/ExportScheduler.html#scheduleExport()">scheduleExport()</a></span> - Method in class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ExportScheduler.html" title="class in com.djrapitops.plan.delivery.export">ExportScheduler</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/SchedulerService.html" title="interface in com.djrapitops.plan.settings"><span class="typeNameLink">SchedulerService</span></a> - Interface in <a href="com/djrapitops/plan/settings/package-summary.html">com.djrapitops.plan.settings</a></dt>
 <dd>
 <div class="block">Service for registering async tasks as Plan.</div>

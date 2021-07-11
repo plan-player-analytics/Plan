@@ -122,17 +122,26 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
+<li>net.playeranalytics.plugin.scheduling.PluginRunnable</li>
+<li>
+<ul class="inheritance">
 <li>com.djrapitops.plan.delivery.export.ExportScheduler</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
+<dl>
+<dt>All Implemented Interfaces:</dt>
+<dd><code>java.lang.Runnable</code></dd>
+</dl>
 <hr>
 <pre>@Singleton
 public class <span class="typeNameLabel">ExportScheduler</span>
-extends java.lang.Object</pre>
+extends net.playeranalytics.plugin.scheduling.PluginRunnable</pre>
 <div class="block">Schedules export tasks so that they are not all run at once.</div>
 </li>
 </ul>
@@ -154,8 +163,9 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.scheduling.RunnableFactory,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.utilities.logging.ErrorLogger)">ExportScheduler</a></span>&#8203;(<a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.playeranalytics.plugin.scheduling.RunnableFactory,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.utilities.logging.ErrorLogger)">ExportScheduler</a></span>&#8203;(<a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
                <a href="../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
+               <a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
                net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
                <a href="Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a>&nbsp;exporter,
                <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></th>
@@ -181,10 +191,17 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#scheduleExport()">scheduleExport</a></span>()</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#run()">run</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
 </table>
+<ul class="blockList">
+<li class="blockList"><a id="methods.inherited.from.class.net.playeranalytics.plugin.scheduling.PluginRunnable">
+<!--   -->
+</a>
+<h3>Methods inherited from class&nbsp;net.playeranalytics.plugin.scheduling.PluginRunnable</h3>
+<code>cancel</code></li>
+</ul>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
 <!--   -->
@@ -208,7 +225,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.scheduling.RunnableFactory,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<a id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.playeranalytics.plugin.scheduling.RunnableFactory,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -217,6 +234,7 @@ extends java.lang.Object</pre>
 <pre>@Inject
 public&nbsp;ExportScheduler&#8203;(<a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
                        <a href="../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
+                       <a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
                        net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
                        <a href="Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a>&nbsp;exporter,
                        <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</pre>
@@ -232,13 +250,13 @@ public&nbsp;ExportScheduler&#8203;(<a href="../../settings/config/PlanConfig.htm
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a id="scheduleExport()">
+<a id="run()">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>scheduleExport</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;scheduleExport()</pre>
+<h4>run</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;run()</pre>
 </li>
 </ul>
 </li>
