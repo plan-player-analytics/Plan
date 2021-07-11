@@ -214,7 +214,7 @@ Export:
 # -----------------------------------------------------
 Plugins:
   Buycraft:
-    # http://help.buycraft.net/article/36-where-to-find-the-secret-key
+    # https://docs.tebex.io/store/faq#how-can-i-find-my-secret-key
     Secret: '-'
   Factions:
     HideFactions:
