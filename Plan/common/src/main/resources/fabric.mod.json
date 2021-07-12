@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "plan",
+  "name": "Plan",
+  "version": "@version@",
+
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "net.playeranalytics.plan.PlanFabric"
+    ]
+  },
+  "depends": {
+    "minecraft": ">=1.17.x",
+    "java": ">=16"
+  }
+}

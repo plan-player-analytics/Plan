@@ -24,6 +24,7 @@ task updateVersion(type: Copy) {
         include 'plugin.yml'
         include 'bungee.yml'
         include 'nukkit.yml'
+        include 'fabric.mod.json'
     }
     into 'build/sources/resources/'
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
