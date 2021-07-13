@@ -1,18 +1,20 @@
+import net.fabricmc.loom.task.RemapJarTask
+
 plugins {
     id 'fabric-loom' version '0.8-SNAPSHOT'
 }
 
 dependencies {
     compileOnly project(":common")
-    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    implementation project(path: ":common", configuration: 'shadow')
+    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    shadow project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
     minecraft "com.mojang:minecraft:1.17.1"
     mappings "net.fabricmc:yarn:1.17.1+build.10:v2"
     modImplementation "net.fabricmc:fabric-loader:0.11.6"
 
-    //Fabric api
+    // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.37.0+1.17"
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
@@ -21,3 +23,21 @@ dependencies {
 compileJava {
     options.release = 16
 }
+
+shadowJar {
+    from remapJar
+    configurations = [project.configurations.shadow]
+    exclude('net.fabricmc:*')
+    exclude('/mappings/')
+}
+/*
+task remappedShadowJar(type: RemapJarTask) {
+    dependsOn tasks.shadowJar
+    input = tasks.shadowJar.archiveFile
+    addNestedDependencies = true
+}
+*/
+shadowJar.dependsOn remapJar
+tasks.build.dependsOn shadowJar
+
+//tasks.assemble.dependsOn tasks.remappedShadowJar
