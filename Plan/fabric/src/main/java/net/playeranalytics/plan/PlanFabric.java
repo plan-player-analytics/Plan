@@ -20,9 +20,15 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.commands.use.Subcommand;
+import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.gathering.ServerShutdownSave;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.playeranalytics.plugin.FabricPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -30,6 +36,11 @@ import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Main class for Plan's Fabric version.
@@ -38,24 +49,29 @@ import java.io.InputStream;
  */
 public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
-    private MinecraftServer server;
+    private MinecraftDedicatedServer server;
+
+    private PlanSystem system;
+    private Locale locale;
+    private ServerShutdownSave serverShutdownSave;
+
     private PluginLogger pluginLogger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
 
     @Override
     public InputStream getResource(String resource) {
-        return null;
+        return this.getClass().getResourceAsStream("/" + resource);
     }
 
     @Override
     public ColorScheme getColorScheme() {
-        return null;
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), pluginLogger);
     }
 
     @Override
     public PlanSystem getSystem() {
-        return null;
+        return system;
     }
 
     @Override
@@ -65,16 +81,65 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void onEnable() {
+        abstractionLayer = new FabricPlatformLayer(this);
+        pluginLogger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
         PlanFabricComponent component = DaggerPlanFabricComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
                 .server(server)
                 .build();
+
+        try {
+            system = component.system();
+            serverShutdownSave = component.serverShutdownSave();
+            locale = system.getLocaleSystem().getLocale();
+            system.enable();
+
+            pluginLogger.info(locale.getString(PluginLang.ENABLED));
+        } catch (AbstractMethodError e) {
+            pluginLogger.error("Plugin ran into AbstractMethodError, server restart is required! This error is likely caused by updating the JAR without a restart.");
+        } catch (EnableException e) {
+            pluginLogger.error("----------------------------------------");
+            pluginLogger.error("Error: " + e.getMessage());
+            pluginLogger.error("----------------------------------------");
+            pluginLogger.error("Plugin failed to initialize correctly. If this issue is caused by config settings you can use /plan reload");
+            onDisable();
+        } catch (Exception e) {
+            String version = abstractionLayer.getPluginInformation().getVersion();
+            pluginLogger.error(this.getClass().getSimpleName() + "-v" + version, e);
+            pluginLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
+            pluginLogger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+            onDisable();
+        }
     }
 
     @Override
     public void onDisable() {
+        storeSessionsOnShutdown();
+        runnableFactory.cancelAllKnownTasks();
 
+        if (system != null) system.disable();
+
+        pluginLogger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED));
+    }
+
+    private void storeSessionsOnShutdown() {
+        if (serverShutdownSave != null) {
+            Optional<Future<?>> complete = serverShutdownSave.performSave();
+            if (complete.isPresent()) {
+                try {
+                    complete.get().get(4, TimeUnit.SECONDS); // wait for completion for 4s
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (ExecutionException e) {
+                    pluginLogger.error("Failed to save sessions to database on shutdown: " + e.getCause().getMessage());
+                } catch (TimeoutException e) {
+                    pluginLogger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED_UNSAVED_SESSIONS_TIMEOUT));
+                }
+            }
+        }
     }
 
     @Override
@@ -86,13 +151,9 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
     public void onInitializeServer() {
         // TODO move to separate class?
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            this.server = server;
+            this.server = (MinecraftDedicatedServer) server;
+            onEnable();
         });
-
-        abstractionLayer = new FabricPlatformLayer(this);
-        pluginLogger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
-        onEnable();
     }
 
     public MinecraftServer getServer() {

@@ -26,8 +26,7 @@ import com.djrapitops.plan.modules.ServerCommandModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import dagger.BindsInstance;
 import dagger.Component;
-import net.minecraft.server.MinecraftServer;
-import net.playeranalytics.plan.modules.fabric.FabricPlanModule;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.playeranalytics.plan.modules.fabric.FabricServerPropertiesModule;
 import net.playeranalytics.plan.modules.fabric.FabricSuperClassBindingModule;
 import net.playeranalytics.plan.modules.fabric.FabricTaskModule;
@@ -69,7 +68,7 @@ public interface PlanFabricComponent {
         Builder abstractionLayer(PlatformAbstractionLayer abstractionLayer);
 
         @BindsInstance
-        Builder server(MinecraftServer server);
+        Builder server(MinecraftDedicatedServer server);
 
         PlanFabricComponent build();
     }

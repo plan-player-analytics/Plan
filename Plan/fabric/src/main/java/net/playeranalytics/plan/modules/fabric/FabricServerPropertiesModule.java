@@ -19,7 +19,6 @@ package net.playeranalytics.plan.modules.fabric;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import dagger.Module;
 import dagger.Provides;
-import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plan.identification.properties.FabricServerProperties;
 
 import javax.inject.Singleton;

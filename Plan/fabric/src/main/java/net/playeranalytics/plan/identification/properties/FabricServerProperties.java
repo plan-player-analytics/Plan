@@ -17,26 +17,26 @@
 package net.playeranalytics.plan.identification.properties;
 
 import com.djrapitops.plan.identification.properties.ServerProperties;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 
 import javax.inject.Inject;
 
 /**
- * ServerProperties for Fabric.
+ * server.properties fetcher for Fabric
  *
  * @author Kopo942
  */
 public class FabricServerProperties extends ServerProperties {
 
     @Inject
-    public FabricServerProperties(MinecraftServer server) {
+    public FabricServerProperties(MinecraftDedicatedServer server) {
         super(
-                server.getName(),
+                "Fabric",
                 server.getServerPort(),
                 server.getVersion(),
-                "",
-                server::getServerIp,
-                server.getMaxPlayerCount()
+                "implVersion",
+                () -> (server.getServerIp() == null) ? "" : server.getServerIp(),
+                server.getProperties().maxPlayers
         );
     }
 }
