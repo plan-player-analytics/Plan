@@ -25,19 +25,42 @@ compileJava {
 }
 
 shadowJar {
-    from remapJar
     configurations = [project.configurations.shadow]
     exclude('net.fabricmc:*')
     exclude('/mappings/')
+
+    relocate('org.apache', 'plan.org.apache') {
+        exclude 'org/apache/logging/**'
+    }
+    relocate 'dagger', 'plan.dagger'
+    relocate 'com.mysql', 'plan.com.mysql'
+    // Don't relocate SQLite since the org.sqlite.NativeDB class calls are not relocated properly
+    // relocate 'org.sqlite', 'plan.org.sqlite'
+    relocate 'javax.inject', 'plan.javax.inject'
+    relocate 'com.github.benmanes', 'plan.com.github.benmanes'
 }
-/*
-task remappedShadowJar(type: RemapJarTask) {
+
+remapJar {
     dependsOn tasks.shadowJar
-    input = tasks.shadowJar.archiveFile
+    mustRunAfter tasks.shadowJar
+    input = shadowJar.archiveFile.get()
     addNestedDependencies = true
+
+    destinationDirectory.set(file("$rootDir/builds/"))
+    archiveBaseName.set('PlanFabric')
+    archiveClassifier.set('')
 }
-*/
-shadowJar.dependsOn remapJar
-tasks.build.dependsOn shadowJar
+
+shadowJar.finalizedBy(remapJar)
+
+/*
+tasks.assemble.dependsOn tasks.remapJar
+
+artifacts {
+    archives remapJar
+    shadow shadowJar
+}
+
+ */
 
 //tasks.assemble.dependsOn tasks.remappedShadowJar
