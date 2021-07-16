@@ -17,27 +17,44 @@
 package net.playeranalytics.plugin.server;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
+import net.playeranalytics.plan.gathering.listeners.FabricListener;
+
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FabricListeners implements Listeners {
 
     private final DedicatedServerModInitializer plugin;
+    private final Set<FabricListener> listeners;
 
     public FabricListeners(DedicatedServerModInitializer plugin) {
         this.plugin = plugin;
+        this.listeners = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 
     @Override
-    public void registerListener(Object o) {
-
+    public void registerListener(Object listener) {
+        if (listener == null) {
+            throw new IllegalArgumentException("listener can not be null!");
+        } else if (!(listener instanceof FabricListener)) {
+            throw new IllegalArgumentException("listener needs to be of type " + listener.getClass().getName() + ", but was " + listener.getClass());
+        } else {
+            if (!((FabricListener) listener).isEnabled()) {
+                ((FabricListener) listener).register();
+                listeners.add((FabricListener) listener);
+            }
+        }
     }
 
     @Override
-    public void unregisterListener(Object o) {
-
+    public void unregisterListener(Object listener) {
+        ((FabricListener) listener).disable();
+        listeners.remove(listener);
     }
 
     @Override
     public void unregisterListeners() {
-
+        // TODO implement
     }
 }

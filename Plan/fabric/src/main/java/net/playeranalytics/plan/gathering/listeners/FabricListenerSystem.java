@@ -18,31 +18,44 @@ package net.playeranalytics.plan.gathering.listeners;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
+import net.playeranalytics.plan.gathering.listeners.fabric.PlayerOnlineListener;
+import net.playeranalytics.plugin.server.Listeners;
 
 import javax.inject.Inject;
 
 /**
  * Listener system for the Fabric platform.
+ *
  * @author Kopo942
  */
 public class FabricListenerSystem extends ListenerSystem {
 
+    private final Listeners listeners;
+    private final PlayerOnlineListener playerOnlineListener;
+
     @Inject
-    public FabricListenerSystem() {
+    public FabricListenerSystem(
+            Listeners listeners,
+            PlayerOnlineListener playerOnlineListener
+    ) {
+        this.listeners = listeners;
+
+        this.playerOnlineListener = playerOnlineListener;
 
     }
+
     @Override
     protected void registerListeners() {
-
+        listeners.registerListener(playerOnlineListener);
     }
 
     @Override
     protected void unregisterListeners() {
-
+        listeners.unregisterListener(playerOnlineListener);
     }
 
     @Override
     public void callEnableEvent(PlanPlugin plugin) {
-
+        // TODO implement
     }
 }
