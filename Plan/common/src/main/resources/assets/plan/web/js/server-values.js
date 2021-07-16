@@ -369,7 +369,7 @@ async function loadOptimizedPerformanceGraph(json, error) {
                 value: json.zones.diskThresholdMed,
                 color: json.colors.low
             }, {
-                value: json.zones.tpsThresholdHigh,
+                value: json.zones.diskThresholdHigh,
                 color: json.colors.med
             }, {
                 value: Number.MAX_VALUE,
