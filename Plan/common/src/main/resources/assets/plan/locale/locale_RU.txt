@@ -194,11 +194,11 @@ HTML - LABEL_AVG_ENTITIES                       || Сред. Существ
 HTML - LABEL_AVG_KDR                            || Сред. KDR
 HTML - LABEL_AVG_MOB_KDR                        || Сред. моб KDR
 HTML - LABEL_AVG_PLAYTIME                       || Среднее время игры
-HTML - LABEL_AVG_SESSION_LENGTH                 || Средняя продолжительность сеанса
+HTML - LABEL_AVG_SESSION_LENGTH                 || Средняя продолжительность сессии
 HTML - LABEL_AVG_SESSIONS                       || Средняя сессия
 HTML - LABEL_AVG_TPS                            || Средний TPS
 HTML - LABEL_BANNED                             || Забанен
-HTML - LABEL_BEST_PEAK                          || Максимальный пик
+HTML - LABEL_BEST_PEAK                          || Максимальный Пик
 HTML - LABEL_DAY_OF_WEEK                        || День недели
 HTML - LABEL_DEATHS                             || Смерти
 HTML - LABEL_DOWNTIME                           || Время простоя
@@ -235,7 +235,7 @@ HTML - LABEL_PLAYER_DEATHS                      || Смерть из-за игр
 HTML - LABEL_PLAYER_KILLS                       || Убито игроков
 HTML - LABEL_PLAYERS_ONLINE                     || Игроки онлайн
 HTML - LABEL_PLAYTIME                           || Время игры
-HTML - LABEL_REGISTERED                         || Зарегистрированный
+HTML - LABEL_REGISTERED                         || Зарегистрирован
 HTML - LABEL_REGISTERED_PLAYERS                 || Зарегистрированные игроки
 HTML - LABEL_REGULAR                            || Постоянный
 HTML - LABEL_REGULAR_PLAYERS                    || Постоянные игроки
@@ -304,7 +304,7 @@ HTML - QUERY_REGISTERED_BETWEEN                 || Зарегистрирова�
 HTML - QUERY_RESULTS                            || Результаты Запроса
 HTML - QUERY_RESULTS_MATCH                      || найдено ${resultCount} игроков
 HTML - QUERY_SESSIONS_WITHIN_VIEW               || Сеансы в пределах видимости
-HTML - QUERY_SHOW_VIEW                          || Показывать обзор
+HTML - QUERY_SHOW_VIEW                          || Показывать результат
 HTML - QUERY_TIME_FROM                          || >с</label>
 HTML - QUERY_TIME_TO                            || >в</label>
 HTML - QUERY_VIEW                               ||   Просмотр:
@@ -339,7 +339,7 @@ HTML - SIDE_PVP_PVE                             || PvP & PvE
 HTML - SIDE_SERVERS                             || Серверы
 HTML - SIDE_SERVERS_TITLE                       || СЕРВЕРЫ
 HTML - SIDE_SESSIONS                            || Сессии
-HTML - SIDE_TO_MAIN_PAGE                        || на главную страницу
+HTML - SIDE_TO_MAIN_PAGE                        || На главную страницу
 HTML - TEXT_CLICK_TO_EXPAND                     || Нажмите, чтобы развернуть
 HTML - TEXT_CONTRIBUTORS_CODE                   || автор кода
 HTML - TEXT_CONTRIBUTORS_LOCALE                 || переводчик
@@ -362,7 +362,7 @@ HTML - TITLE_30_DAYS                            || 30 дней
 HTML - TITLE_30_DAYS_AGO                        || 30 дней назад
 HTML - TITLE_ALL                                || Все
 HTML - TITLE_ALL_TIME                           || Все время
-HTML - TITLE_AS_NUMBERS                         || как числа
+HTML - TITLE_AS_NUMBERS                         || В числах
 HTML - TITLE_AVG_PING                           || Средний пинг
 HTML - TITLE_BEST_PING                          || Наилучший пинг
 HTML - TITLE_CALENDAR                           ||  Календарь
@@ -371,8 +371,8 @@ HTML - TITLE_COUNTRY                            || Страна
 HTML - TITLE_CPU_RAM                            || ЦПУ & ОЗУ
 HTML - TITLE_CURRENT_PLAYERBASE                 || Текущая база игроков
 HTML - TITLE_DISK                               || Дисковое пространство
-HTML - TITLE_GRAPH_DAY_BY_DAY                   || Статистика за день
-HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || Статистика за час
+HTML - TITLE_GRAPH_DAY_BY_DAY                   || Статистика по дням
+HTML - TITLE_GRAPH_HOUR_BY_HOUR                 || Статистика по часам
 HTML - TITLE_GRAPH_NETWORK_ONLINE_ACTIVITY      || Сетевая активность
 HTML - TITLE_GRAPH_PUNCHCARD                    || Перфокарта на 30 дней
 HTML - TITLE_INSIGHTS                           || Статистика за 30 дней
@@ -394,7 +394,7 @@ HTML - TITLE_PERFORMANCE_AS_NUMBERS             || Производительн�
 HTML - TITLE_PING                               || Пинг
 HTML - TITLE_PLAYER                             || Игрок
 HTML - TITLE_PLAYER_OVERVIEW                    || Обзор игрока
-HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Разработка базы игроков
+HTML - TITLE_PLAYERBASE_DEVELOPMENT             || Развитие базы игроков
 HTML - TITLE_PVP_DEATHS                         || Недавние PvP смерти
 HTML - TITLE_PVP_KILLS                          || Недавние PvP убийства
 HTML - TITLE_PVP_PVE_NUMBERS                    || PvP & PvE в числах
@@ -413,7 +413,7 @@ HTML - TITLE_TPS                                || TPS
 HTML - TITLE_TREND                              || Тенденция
 HTML - TITLE_TRENDS                             || тенденция за 30 дней
 HTML - TITLE_VERSION                            || Версия
-HTML - TITLE_WEEK_COMPARISON                    || Сравнение недели
+HTML - TITLE_WEEK_COMPARISON                    || Сравнение за неделю
 HTML - TITLE_WORLD                              || Загрузка мира
 HTML - TITLE_WORLD_PLAYTIME                     || Время игры в мире
 HTML - TITLE_WORST_PING                         || Наихудший пинг
