@@ -26,7 +26,7 @@ import com.djrapitops.plan.settings.FabricConfigSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import dagger.Binds;
 import dagger.Module;
-import net.minecraft.world.World;
+import net.minecraft.server.world.ServerWorld;
 import net.playeranalytics.plan.FabricServerShutdownSave;
 import net.playeranalytics.plan.gathering.FabricSensor;
 import net.playeranalytics.plan.gathering.listeners.FabricListenerSystem;
@@ -56,8 +56,8 @@ public interface FabricSuperClassBindingModule {
     ServerShutdownSave bindServerShutdownSave(FabricServerShutdownSave shutdownSave);
 
     @Binds
-    ServerSensor<World> bindServerSensor(FabricSensor sensor);
+    ServerSensor<ServerWorld> bindServerSensor(FabricSensor sensor);
 
     @Binds
-    ServerSensor<?> bindGenericsServerSensor(ServerSensor<World> sensor);
+    ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerWorld> sensor);
 }

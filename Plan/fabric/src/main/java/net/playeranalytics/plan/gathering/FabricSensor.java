@@ -17,25 +17,57 @@
 package net.playeranalytics.plan.gathering;
 
 import com.djrapitops.plan.gathering.ServerSensor;
-import net.minecraft.world.World;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.world.ServerWorld;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class FabricSensor implements ServerSensor<World> {
+public class FabricSensor implements ServerSensor<ServerWorld> {
+
+    private final MinecraftDedicatedServer server;
 
     @Inject
-    public FabricSensor() {
+    public FabricSensor(
+            MinecraftDedicatedServer server
+    ) {
+        this.server = server;
+    }
+
+    @Override
+    public double getTPS() {
+        //Returns the ticks per second of the last 100 ticks
+        int length = server.lastTickLengths.length;
+        double totalTickLength = 0;
+        for (long tickLength : server.lastTickLengths) {
+            totalTickLength += tickLength;
+        }
+        return 1000 / (totalTickLength / length);
+    }
+
+    @Override
+    public Iterable<ServerWorld> getWorlds() {
+        return server.getWorlds();
+    }
+
+    @Override
+    public int getEntityCount(ServerWorld world) {
+        return ServerSensor.super.getEntityCount(world);
+    }
+
+    @Override
+    public int getChunkCount(ServerWorld world) {
+        return world.getChunkManager().getLoadedChunkCount();
     }
 
     @Override
     public boolean supportsDirectTPS() {
-        return false;
+        return true;
     }
 
     @Override
     public int getOnlinePlayerCount() {
-        return 0;
+        return server.getCurrentPlayerCount();
     }
 }

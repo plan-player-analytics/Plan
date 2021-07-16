@@ -21,12 +21,12 @@ import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
-import net.minecraft.world.World;
+import net.minecraft.server.world.ServerWorld;
 
 @Module
 public interface FabricTaskModule {
 
     @Binds
     @IntoSet
-    TaskSystem.Task bindTPSCounter(ServerTPSCounter<World> tpsCounter);
+    TaskSystem.Task bindTPSCounter(ServerTPSCounter<ServerWorld> tpsCounter);
 }
