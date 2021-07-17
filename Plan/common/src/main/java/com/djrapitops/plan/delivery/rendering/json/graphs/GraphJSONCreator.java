@@ -32,6 +32,7 @@ import com.djrapitops.plan.delivery.rendering.json.graphs.stack.StackGraph;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
@@ -131,6 +132,10 @@ public class GraphJSONCreator {
         TPSMutator lowResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(twoMonthsAgo, monthAgo, lowResolution, serverUUID)));
         TPSMutator highResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID)));
 
+        String serverName = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
+                .map(Server::getIdentifiableName)
+                .orElse(serverUUID.toString());
+
         List<Number[]> values = lowestResolutionData.toArrays(new LineGraph.GapStrategy(
                 config.isTrue(DisplaySettings.GAPS_IN_GRAPH_DATA),
                 lowestResolution + TimeUnit.MINUTES.toMillis(1),
@@ -172,6 +177,8 @@ public class GraphJSONCreator {
                         .put("diskThresholdMed", config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_MED))
                         .put("diskThresholdHigh", config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH))
                         .build())
+                .put("serverName", serverName)
+                .put("serverUUID", serverUUID)
                 .build();
     }
 
