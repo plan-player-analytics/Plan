@@ -449,6 +449,14 @@ function loadJoinAddressPie(json, error) {
 }
 
 function loadPerformanceServerOptions() {
+    const refreshElement = document.querySelector(`#performance .refresh-element`);
+    refreshElement.querySelector('i').addEventListener('click', () => {
+        if (refreshElement.querySelector('.refresh-notice').innerHTML.length) {
+            return;
+        }
+        onSelectPerformanceServers();
+        refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
+    });
     const selector = document.getElementById('performance-server-selector');
     jsonRequest('./v1/network/listServers', function (json, error) {
         if (json) {
@@ -461,7 +469,7 @@ function loadPerformanceServerOptions() {
         } else if (error) {
             selector.innerText = `Failed to load server list: ${error}`
         }
-    })
+    });
 }
 
 async function onSelectPerformanceServers() {
@@ -477,7 +485,8 @@ async function onSelectPerformanceServers() {
         servers: [],
         errors: [],
         zones: {},
-        colors: {}
+        colors: {},
+        timestamp_f: ''
     }
     const time = new Date().getTime();
     const monthMs = 2592000000;
@@ -488,22 +497,27 @@ async function onSelectPerformanceServers() {
                 loadedJson.servers.push(json);
                 loadedJson.zones = json.zones;
                 loadedJson.colors = json.colors;
+                loadedJson.timestamp_f = json.timestamp_f;
             } else if (error) {
                 loadedJson.errors.push(error);
             }
         });
     }
     await awaitUntil(() => selectedServerUUIDs.length === (loadedJson.servers.length + loadedJson.errors.length));
+
+    jsonRequest(`./v1/network/performanceOverview?servers=${serverUUIDs}`, loadPerformanceValues);
     if (loadedJson.errors.length) {
-        loadPerformanceGraph(undefined, loadedJson.errors[0]);
+        await loadPerformanceGraph(undefined, loadedJson.errors[0]);
     } else {
-        loadPerformanceGraph({
+        await loadPerformanceGraph({
             servers: loadedJson.servers,
             zones: loadedJson.zones,
             colors: loadedJson.colors
         }, undefined);
     }
-    jsonRequest(`./v1/network/performanceOverview?servers=${serverUUIDs}`, loadPerformanceValues);
+    const refreshElement = document.querySelector(`#performance .refresh-element`);
+    refreshElement.querySelector('.refresh-time').innerText = loadedJson.timestamp_f;
+    refreshElement.querySelector('.refresh-notice').innerHTML = "";
 }
 
 async function loadPerformanceGraph(json, error) {
