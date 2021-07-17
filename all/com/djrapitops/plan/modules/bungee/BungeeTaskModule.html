@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -191,6 +191,11 @@ public interface <span class="typeNameLabel">BungeeTaskModule</span></pre>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindResourceWriteTask(com.djrapitops.plan.delivery.web.ResourceWriteTask)">bindResourceWriteTask</a></span>&#8203;(<a href="../../delivery/web/ResourceWriteTask.html" title="class in com.djrapitops.plan.delivery.web">ResourceWriteTask</a>&nbsp;resourceWriteTask)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindTPSCounter(com.djrapitops.plan.gathering.timed.ProxyTPSCounter)">bindTPSCounter</a></span>&#8203;(<a href="../../gathering/timed/ProxyTPSCounter.html" title="class in com.djrapitops.plan.gathering.timed">ProxyTPSCounter</a>&nbsp;counter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -313,12 +318,23 @@ public interface <span class="typeNameLabel">BungeeTaskModule</span></pre>
 <a id="bindOldDependencyCacheDeletion(com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>bindOldDependencyCacheDeletion</h4>
 <pre class="methodSignature">@Binds
 @IntoSet
 <a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a>&nbsp;bindOldDependencyCacheDeletion&#8203;(<a href="../../storage/upkeep/OldDependencyCacheDeletionTask.html" title="class in com.djrapitops.plan.storage.upkeep">OldDependencyCacheDeletionTask</a>&nbsp;deletionTask)</pre>
+</li>
+</ul>
+<a id="bindResourceWriteTask(com.djrapitops.plan.delivery.web.ResourceWriteTask)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>bindResourceWriteTask</h4>
+<pre class="methodSignature">@Binds
+@IntoSet
+<a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a>&nbsp;bindResourceWriteTask&#8203;(<a href="../../delivery/web/ResourceWriteTask.html" title="class in com.djrapitops.plan.delivery.web">ResourceWriteTask</a>&nbsp;resourceWriteTask)</pre>
 </li>
 </ul>
 </li>
