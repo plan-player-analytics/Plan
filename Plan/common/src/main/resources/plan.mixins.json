@@ -6,6 +6,7 @@
   "mixins": [
     "EntityMixin",
     "PlayerEntityMixin",
+    "ServerPlayerEntityMixin",
     "ServerPlayNetworkHandlerMixin"
   ],
   "injectors": {

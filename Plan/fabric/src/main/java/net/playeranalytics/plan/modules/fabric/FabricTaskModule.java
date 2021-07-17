@@ -18,6 +18,7 @@ package net.playeranalytics.plan.modules.fabric;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
+import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
@@ -34,5 +35,13 @@ public interface FabricTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindPingCounter(FabricPingCounter pingCounter);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindRamAndCpuTask(SystemUsageBuffer.RamAndCpuTask ramAndCpuTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindDiskTask(SystemUsageBuffer.DiskTask diskTask);
 
 }

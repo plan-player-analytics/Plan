@@ -18,10 +18,7 @@ package net.playeranalytics.plan.gathering.listeners;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
-import net.playeranalytics.plan.gathering.listeners.fabric.ChatListener;
-import net.playeranalytics.plan.gathering.listeners.fabric.DeathEventListener;
-import net.playeranalytics.plan.gathering.listeners.fabric.FabricAFKListener;
-import net.playeranalytics.plan.gathering.listeners.fabric.PlayerOnlineListener;
+import net.playeranalytics.plan.gathering.listeners.fabric.*;
 import net.playeranalytics.plugin.server.Listeners;
 
 import javax.inject.Inject;
@@ -33,43 +30,52 @@ import javax.inject.Inject;
  */
 public class FabricListenerSystem extends ListenerSystem {
 
-    private final Listeners listeners;
-    private final PlayerOnlineListener playerOnlineListener;
+    private final ChatListener chatListener;
     private final DeathEventListener deathEventListener;
     private final FabricAFKListener fabricAFKListener;
-    private final ChatListener chatListener;
+    private final GameModeChangeListener gameModeChangeListener;
+    private final PlayerOnlineListener playerOnlineListener;
+    private final WorldChangeListener worldChangeListener;
+    private final Listeners listeners;
 
     @Inject
     public FabricListenerSystem(
-            Listeners listeners,
-            PlayerOnlineListener playerOnlineListener,
-            DeathEventListener deathEventListener,
             ChatListener chatListener,
-            FabricAFKListener fabricAFKListener
-    ) {
-        this.listeners = listeners;
-
-        this.playerOnlineListener = playerOnlineListener;
-        this.deathEventListener = deathEventListener;
+            DeathEventListener deathEventListener,
+            FabricAFKListener fabricAFKListener,
+            GameModeChangeListener gameModeChangeListener,
+            PlayerOnlineListener playerOnlineListener,
+            WorldChangeListener worldChangeListener,
+            Listeners listeners
+            ) {
         this.chatListener = chatListener;
+        this.deathEventListener = deathEventListener;
         this.fabricAFKListener = fabricAFKListener;
+        this.playerOnlineListener = playerOnlineListener;
+        this.gameModeChangeListener = gameModeChangeListener;
+        this.worldChangeListener = worldChangeListener;
+        this.listeners = listeners;
 
     }
 
     @Override
     protected void registerListeners() {
-        listeners.registerListener(playerOnlineListener);
-        listeners.registerListener(deathEventListener);
         listeners.registerListener(chatListener);
+        listeners.registerListener(deathEventListener);
         listeners.registerListener(fabricAFKListener);
+        listeners.registerListener(gameModeChangeListener);
+        listeners.registerListener(playerOnlineListener);
+        listeners.registerListener(worldChangeListener);
     }
 
     @Override
     protected void unregisterListeners() {
-        listeners.unregisterListener(playerOnlineListener);
-        listeners.unregisterListener(deathEventListener);
         listeners.unregisterListener(chatListener);
+        listeners.unregisterListener(deathEventListener);
         listeners.unregisterListener(fabricAFKListener);
+        listeners.unregisterListener(gameModeChangeListener);
+        listeners.unregisterListener(playerOnlineListener);
+        listeners.unregisterListener(worldChangeListener);
     }
 
     @Override

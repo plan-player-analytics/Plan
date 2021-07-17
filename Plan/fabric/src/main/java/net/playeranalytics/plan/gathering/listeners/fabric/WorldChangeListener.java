@@ -16,81 +16,74 @@
  */
 package net.playeranalytics.plan.gathering.listeners.fabric;
 
-import com.djrapitops.plan.delivery.domain.Nickname;
-import com.djrapitops.plan.gathering.cache.NicknameCache;
+import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.transactions.events.NicknameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
-import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
+import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Event Listener for chat events.
- *
- * @author AuroraLS3
- */
-public class ChatListener implements FabricListener {
+public class WorldChangeListener implements FabricListener {
 
+    private final WorldAliasSettings worldAliasSettings;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
-    private final NicknameCache nicknameCache;
     private final ErrorLogger errorLogger;
 
     private boolean isEnabled = false;
 
-
     @Inject
-    public ChatListener(
+    public WorldChangeListener(
+            WorldAliasSettings worldAliasSettings,
             ServerInfo serverInfo,
             DBSystem dbSystem,
-            NicknameCache nicknameCache,
             ErrorLogger errorLogger
     ) {
+        this.worldAliasSettings = worldAliasSettings;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
-        this.nicknameCache = nicknameCache;
         this.errorLogger = errorLogger;
     }
 
-    public void onChat(ServerPlayNetworkHandler handler, String message) {
-
+    public void onWorldChange(ServerPlayerEntity player) {
         try {
-            actOnChatEvent(handler);
+            actOnEvent(player);
         } catch (Exception e) {
-            errorLogger.error(e, ErrorContext.builder().related(handler, message).build());
+            errorLogger.error(e, ErrorContext.builder().related(getClass(), player).build());
         }
     }
 
-    private void actOnChatEvent(ServerPlayNetworkHandler handler) {
+    private void actOnEvent(ServerPlayerEntity player) {
         long time = System.currentTimeMillis();
-        ServerPlayerEntity player = handler.player;
-        UUID uuid = player.getUuid();
-        String displayName = player.getDisplayName().asString();
 
-        dbSystem.getDatabase().executeTransaction(new NicknameStoreTransaction(
-                uuid, new Nickname(displayName, time, serverInfo.getServerUUID()),
-                (playerUUID, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
-        ));
+        UUID uuid = player.getUuid();
+
+        String worldName = player.getServerWorld().getRegistryKey().getValue().toString();
+        String gameMode = player.interactionManager.getGameMode().name();
+
+        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
+        worldAliasSettings.addWorld(worldName);
+
+        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(uuid);
+        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
     }
 
     @Override
     public void register() {
-        PlanFabricEvents.ON_CHAT.register((handler, message) -> {
-            if (!isEnabled) {
-                return;
-            }
-            onChat(handler, message);
-
-        });
-
         this.enable();
+        if (!isEnabled) {
+            return;
+        }
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> onWorldChange(player));
     }
 
     @Override

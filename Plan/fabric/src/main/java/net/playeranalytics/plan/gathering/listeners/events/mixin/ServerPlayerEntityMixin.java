@@ -16,21 +16,20 @@
  */
 package net.playeranalytics.plan.gathering.listeners.events.mixin;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.GameMode;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(PlayerEntity.class)
-public class PlayerEntityMixin {
+@Mixin(ServerPlayerEntity.class)
+public class ServerPlayerEntityMixin {
 
-    @Inject(method = "onKilledOther", at = @At(value = "TAIL"))
-    public void onDeath(ServerWorld world, LivingEntity other, CallbackInfo ci) {
-        PlanFabricEvents.ON_KILLED.invoker().onKilled(other, (PlayerEntity) (Object) this);
+    @Inject(method = "changeGameMode", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"))
+    public void onGameModeChanged(GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
+        PlanFabricEvents.ON_GAMEMODE_CHANGE.invoker().onGameModeChange((ServerPlayerEntity) (Object) this, gameMode);
     }
 
 }
