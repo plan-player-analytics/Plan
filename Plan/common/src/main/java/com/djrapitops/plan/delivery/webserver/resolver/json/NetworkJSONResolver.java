@@ -53,6 +53,7 @@ public class NetworkJSONResolver {
                 .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, networkSessionsOverviewJSONCreator))
                 .add("servers", forJSON(DataID.SERVERS, jsonFactory::serversAsJSONMaps))
                 .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation))
+                .add("listServers", forJSON(DataID.LIST_SERVERS, jsonFactory::listServers))
                 .build();
     }
 

@@ -48,6 +48,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Factory with different JSON creation methods placed to a single class.
@@ -258,4 +259,16 @@ public class JSONFactory {
         return tableEntries;
     }
 
+    public Map<String, Object> listServers() {
+        Collection<Server> servers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection());
+        return Maps.builder(String.class, Object.class)
+                .put("servers", servers.stream()
+                        .map(server -> Maps.builder(String.class, Object.class)
+                                .put("serverUUID", server.getUuid())
+                                .put("serverName", server.getIdentifiableName())
+                                .put("proxy", server.isProxy())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+    }
 }

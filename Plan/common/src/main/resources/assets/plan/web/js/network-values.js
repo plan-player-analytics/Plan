@@ -450,7 +450,7 @@ function loadJoinAddressPie(json, error) {
 
 function loadPerformanceServerOptions() {
     const selector = document.getElementById('performance-server-selector');
-    jsonRequest('./v1/listServers', function (json, error) {
+    jsonRequest('./v1/network/listServers', function (json, error) {
         if (json) {
             let options = ``;
             for (let server of json.servers) {
