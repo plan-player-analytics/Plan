@@ -18,6 +18,7 @@ package net.playeranalytics.plan.gathering.listeners;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
+import net.playeranalytics.plan.gathering.listeners.fabric.ChatListener;
 import net.playeranalytics.plan.gathering.listeners.fabric.DeathEventListener;
 import net.playeranalytics.plan.gathering.listeners.fabric.FabricAFKListener;
 import net.playeranalytics.plan.gathering.listeners.fabric.PlayerOnlineListener;
@@ -36,18 +37,21 @@ public class FabricListenerSystem extends ListenerSystem {
     private final PlayerOnlineListener playerOnlineListener;
     private final DeathEventListener deathEventListener;
     private final FabricAFKListener fabricAFKListener;
+    private final ChatListener chatListener;
 
     @Inject
     public FabricListenerSystem(
             Listeners listeners,
             PlayerOnlineListener playerOnlineListener,
             DeathEventListener deathEventListener,
+            ChatListener chatListener,
             FabricAFKListener fabricAFKListener
     ) {
         this.listeners = listeners;
 
         this.playerOnlineListener = playerOnlineListener;
         this.deathEventListener = deathEventListener;
+        this.chatListener = chatListener;
         this.fabricAFKListener = fabricAFKListener;
 
     }
@@ -56,6 +60,7 @@ public class FabricListenerSystem extends ListenerSystem {
     protected void registerListeners() {
         listeners.registerListener(playerOnlineListener);
         listeners.registerListener(deathEventListener);
+        listeners.registerListener(chatListener);
         listeners.registerListener(fabricAFKListener);
     }
 
@@ -63,6 +68,7 @@ public class FabricListenerSystem extends ListenerSystem {
     protected void unregisterListeners() {
         listeners.unregisterListener(playerOnlineListener);
         listeners.unregisterListener(deathEventListener);
+        listeners.unregisterListener(chatListener);
         listeners.unregisterListener(fabricAFKListener);
     }
 

@@ -1,12 +1,13 @@
 package net.playeranalytics.plan.gathering.listeners.fabric;
 
 import com.djrapitops.plan.gathering.afk.AFKTracker;
-import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
+import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -17,11 +18,9 @@ public class FabricAFKListener implements FabricListener {
 
     // Static so that /reload does not cause afk tracking to fail.
     static AFKTracker afkTracker;
-
-    private boolean isEnabled = false;
-
     private final Map<UUID, Boolean> ignorePermissionInfo;
     private final ErrorLogger errorLogger;
+    private boolean isEnabled = false;
 
     @Inject
     public FabricAFKListener(PlanConfig config, ErrorLogger errorLogger) {
@@ -61,7 +60,26 @@ public class FabricAFKListener implements FabricListener {
     @Override
     public void register() {
         this.enable();
-        //TODO: register chat, move, leave and commandevents
+        PlanFabricEvents.ON_CHAT.register((handler, message) -> {
+            if (!isEnabled) {
+                return;
+            }
+            event(handler.player);
+            boolean isAfkCommand = message.substring(1).toLowerCase().startsWith("afk");
+            if (isAfkCommand) {
+                UUID uuid = handler.player.getUuid();
+                afkTracker.usedAfkCommand(uuid, System.currentTimeMillis());
+            }
+        });
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            if (!this.isEnabled) {
+                return;
+            }
+            ignorePermissionInfo.remove(handler.player.getUuid());
+        });
+        PlanFabricEvents.ON_MOVE.register((handler, packet) -> {
+            event(handler.player);
+        });
     }
 
 
