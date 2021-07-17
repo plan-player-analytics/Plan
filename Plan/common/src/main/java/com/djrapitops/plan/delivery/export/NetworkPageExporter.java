@@ -98,8 +98,8 @@ public class NetworkPageExporter extends FileExporter {
 
         // Fixes refreshingJsonRequest ignoring old data of export
         String html = StringUtils.replaceEach(page.toHtml(),
-                new String[]{"loadPlayersOnlineGraph, 'network-overview', true);"},
-                new String[]{"loadPlayersOnlineGraph, 'network-overview');"});
+                new String[]{"loadPlayersOnlineGraph, 'network-overview', true);", "&middot; Performance"},
+                new String[]{"loadPlayersOnlineGraph, 'network-overview');", "&middot; Performance (Unavailable with Export)"});
 
         export(to, exportPaths.resolveExportPaths(html));
     }
