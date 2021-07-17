@@ -17,11 +17,14 @@
 package net.playeranalytics.plan.gathering;
 
 import com.djrapitops.plan.gathering.ServerSensor;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.world.ServerWorld;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class FabricSensor implements ServerSensor<ServerWorld> {
@@ -41,9 +44,9 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
         int length = server.lastTickLengths.length;
         double totalTickLength = 0;
         for (long tickLength : server.lastTickLengths) {
-            totalTickLength += tickLength;
+            totalTickLength += Math.max(tickLength, TimeUnit.MILLISECONDS.toNanos(50));
         }
-        return 1000 / (totalTickLength / length);
+        return Math.pow(10, 9) / (totalTickLength / length);
     }
 
     @Override
@@ -53,7 +56,11 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
 
     @Override
     public int getEntityCount(ServerWorld world) {
-        return ServerSensor.super.getEntityCount(world);
+        int entities = 0;
+        for (Entity ignored : world.iterateEntities()) {
+            entities++;
+        }
+        return entities;
     }
 
     @Override
