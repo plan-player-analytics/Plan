@@ -170,7 +170,7 @@ public class TPSMutator {
 
         for (TPS tpsObj : tpsData) {
             double tps = tpsObj.getTicksPerSecond();
-            if (tps < threshold) {
+            if (0 <= tps && tps < threshold) {
                 if (!wasLow) {
                     spikeCount++;
                     wasLow = true;
