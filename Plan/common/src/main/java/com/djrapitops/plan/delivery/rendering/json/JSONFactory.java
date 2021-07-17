@@ -264,7 +264,7 @@ public class JSONFactory {
         return Maps.builder(String.class, Object.class)
                 .put("servers", servers.stream()
                         .map(server -> Maps.builder(String.class, Object.class)
-                                .put("serverUUID", server.getUuid())
+                                .put("serverUUID", server.getUuid().toString())
                                 .put("serverName", server.getIdentifiableName())
                                 .put("proxy", server.isProxy())
                                 .build())

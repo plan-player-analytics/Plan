@@ -466,29 +466,43 @@ function loadPerformanceServerOptions() {
 
 async function onSelectPerformanceServers() {
     const selector = document.getElementById('performance-server-selector');
-    const selectedServerUUIDs = selector.options
-        .filter(option => option.selected)
-        .map(option => option.getAttribute('data-plan-server-uuid'));
+    const selectedServerUUIDs = [];
+
+    for (const option of selector.selectedOptions) {
+        selectedServerUUIDs.push(option.getAttribute('data-plan-server-uuid'));
+    }
 
     const serverUUIDs = encodeURIComponent(JSON.stringify(selectedServerUUIDs));
-    const servers = {
+    const loadedJson = {
         servers: [],
-        errors: []
+        errors: [],
+        zones: {},
+        colors: {}
     }
     const time = new Date().getTime();
     const monthMs = 2592000000;
     const after = time - monthMs;
     for (const serverUUID of selectedServerUUIDs) {
-        jsonRequest(`./v1/graph/optimizedPerformance?server=${serverUUID}&after=${after}`, (json, error) => {
+        jsonRequest(`./v1/graph?type=optimizedPerformance&server=${serverUUID}&after=${after}`, (json, error) => {
             if (json) {
-                servers.servers.push(json);
+                loadedJson.servers.push(json);
+                loadedJson.zones = json.zones;
+                loadedJson.colors = json.colors;
             } else if (error) {
-                servers.errors.push(error);
+                loadedJson.errors.push(error);
             }
         });
     }
-    await awaitUntil(() => selectedServerUUIDs.length === (servers.servers.length + servers.errors.length));
-    loadPerformanceGraph(servers.servers, servers.errors.length ? servers.errors[0] : undefined);
+    await awaitUntil(() => selectedServerUUIDs.length === (loadedJson.servers.length + loadedJson.errors.length));
+    if (loadedJson.errors.length) {
+        loadPerformanceGraph(undefined, loadedJson.errors[0]);
+    } else {
+        loadPerformanceGraph({
+            servers: loadedJson.servers,
+            zones: loadedJson.zones,
+            colors: loadedJson.colors
+        }, undefined);
+    }
     jsonRequest(`./v1/network/performanceOverview?servers=${serverUUIDs}`, loadPerformanceValues);
 }
 
