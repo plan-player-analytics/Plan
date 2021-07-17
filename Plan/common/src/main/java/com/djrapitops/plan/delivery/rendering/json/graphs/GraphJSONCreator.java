@@ -123,22 +123,15 @@ public class GraphJSONCreator {
     }
 
     public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID, URIQuery query) {
-        long after = getAfter(query);
-
         long now = System.currentTimeMillis();
-        long twoMonthsAgo = Math.max(now - TimeUnit.DAYS.toMillis(60), after);
-        long monthAgo = Math.max(now - TimeUnit.DAYS.toMillis(30), after);
-
-        boolean twoMonthsOrLess = after >= twoMonthsAgo;
-        boolean monthsOrLess = after >= monthAgo;
+        long twoMonthsAgo = now - TimeUnit.DAYS.toMillis(60);
+        long monthAgo = now - TimeUnit.DAYS.toMillis(30);
 
         long lowestResolution = TimeUnit.MINUTES.toMillis(20);
         long lowResolution = TimeUnit.MINUTES.toMillis(5);
         Database db = dbSystem.getDatabase();
-        TPSMutator lowestResolutionData = twoMonthsOrLess ? new TPSMutator(Collections.emptyList())
-                : new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(0, twoMonthsAgo, lowestResolution, serverUUID)));
-        TPSMutator lowResolutionData = monthsOrLess ? new TPSMutator(Collections.emptyList())
-                : new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(twoMonthsAgo, monthAgo, lowResolution, serverUUID)));
+        TPSMutator lowestResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(0, twoMonthsAgo, lowestResolution, serverUUID)));
+        TPSMutator lowResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(twoMonthsAgo, monthAgo, lowResolution, serverUUID)));
         TPSMutator highResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID)));
 
         String serverName = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
