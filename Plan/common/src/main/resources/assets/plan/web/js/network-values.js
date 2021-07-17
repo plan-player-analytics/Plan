@@ -464,15 +464,32 @@ function loadPerformanceServerOptions() {
     })
 }
 
-function onSelectPerformanceServers() {
+async function onSelectPerformanceServers() {
     const selector = document.getElementById('performance-server-selector');
     const selectedServerUUIDs = selector.options
         .filter(option => option.selected)
         .map(option => option.getAttribute('data-plan-server-uuid'));
 
     const serverUUIDs = encodeURIComponent(JSON.stringify(selectedServerUUIDs));
-    jsonRequest(`./v1/graph/optimizedPerformance?servers=${serverUUIDs}`, loadPerformanceGraph);
-    jsonRequest(`./v1/performanceOverview?servers=${serverUUIDs}`, loadPerformanceValues);
+    const servers = {
+        servers: [],
+        errors: []
+    }
+    const time = new Date().getTime();
+    const monthMs = 2592000000;
+    const after = time - monthMs;
+    for (const serverUUID of selectedServerUUIDs) {
+        jsonRequest(`./v1/graph/optimizedPerformance?server=${serverUUID}&after=${after}`, (json, error) => {
+            if (json) {
+                servers.servers.push(json);
+            } else if (error) {
+                servers.errors.push(error);
+            }
+        });
+    }
+    await awaitUntil(() => selectedServerUUIDs.length === (servers.servers.length + servers.errors.length));
+    loadPerformanceGraph(servers.servers, servers.errors.length ? servers.errors[0] : undefined);
+    jsonRequest(`./v1/network/performanceOverview?servers=${serverUUIDs}`, loadPerformanceValues);
 }
 
 async function loadPerformanceGraph(json, error) {

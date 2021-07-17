@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
@@ -94,7 +95,7 @@ public class GraphsJSONResolver implements Resolver {
             ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
             storedJSON = jsonResolverService.resolve(
                     timestamp, dataID, serverUUID,
-                    theServerUUID -> generateGraphDataJSONOfType(dataID, theServerUUID)
+                    theServerUUID -> generateGraphDataJSONOfType(dataID, theServerUUID, request.getQuery())
             );
         } else {
             // Assume network
@@ -138,12 +139,12 @@ public class GraphsJSONResolver implements Resolver {
         }
     }
 
-    private Object generateGraphDataJSONOfType(DataID id, ServerUUID serverUUID) {
+    private Object generateGraphDataJSONOfType(DataID id, ServerUUID serverUUID, URIQuery query) {
         switch (id) {
             case GRAPH_PERFORMANCE:
                 return graphJSON.performanceGraphJSON(serverUUID);
             case GRAPH_OPTIMIZED_PERFORMANCE:
-                return graphJSON.optimizedPerformanceGraphJSON(serverUUID);
+                return graphJSON.optimizedPerformanceGraphJSON(serverUUID, query);
             case GRAPH_ONLINE:
                 return graphJSON.playersOnlineGraph(serverUUID);
             case GRAPH_UNIQUE_NEW:

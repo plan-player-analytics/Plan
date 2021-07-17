@@ -121,3 +121,16 @@ function newConfiguredXHR(callback) {
 
     return xhr;
 }
+
+function awaitUntil(predicateFunction) {
+    return new Promise((resolve => {
+        const handlerFunction = () => {
+            if (predicateFunction.apply()) {
+                resolve();
+            } else {
+                setTimeout(handlerFunction, 10)
+            }
+        };
+        handlerFunction();
+    }))
+}

@@ -29,6 +29,8 @@ import com.djrapitops.plan.delivery.rendering.json.graphs.pie.Pie;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.delivery.rendering.json.graphs.special.WorldMap;
 import com.djrapitops.plan.delivery.rendering.json.graphs.stack.StackGraph;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
@@ -120,16 +122,23 @@ public class GraphJSONCreator {
                 "}}";
     }
 
-    public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID) {
+    public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID, URIQuery query) {
+        long after = getAfter(query);
+
         long now = System.currentTimeMillis();
-        long twoMonthsAgo = now - TimeUnit.DAYS.toMillis(60);
-        long monthAgo = now - TimeUnit.DAYS.toMillis(30);
+        long twoMonthsAgo = Math.max(now - TimeUnit.DAYS.toMillis(60), after);
+        long monthAgo = Math.max(now - TimeUnit.DAYS.toMillis(30), after);
+
+        boolean twoMonthsOrLess = after >= twoMonthsAgo;
+        boolean monthsOrLess = after >= monthAgo;
 
         long lowestResolution = TimeUnit.MINUTES.toMillis(20);
         long lowResolution = TimeUnit.MINUTES.toMillis(5);
         Database db = dbSystem.getDatabase();
-        TPSMutator lowestResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(0, twoMonthsAgo, lowestResolution, serverUUID)));
-        TPSMutator lowResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(twoMonthsAgo, monthAgo, lowResolution, serverUUID)));
+        TPSMutator lowestResolutionData = twoMonthsOrLess ? new TPSMutator(Collections.emptyList())
+                : new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(0, twoMonthsAgo, lowestResolution, serverUUID)));
+        TPSMutator lowResolutionData = monthsOrLess ? new TPSMutator(Collections.emptyList())
+                : new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(twoMonthsAgo, monthAgo, lowResolution, serverUUID)));
         TPSMutator highResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID)));
 
         String serverName = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
@@ -180,6 +189,16 @@ public class GraphJSONCreator {
                 .put("serverName", serverName)
                 .put("serverUUID", serverUUID)
                 .build();
+    }
+
+    private long getAfter(URIQuery query) {
+        try {
+            return query.get("after")
+                    .map(Long::parseLong)
+                    .orElse(0L) - 500L; // Some headroom for out-of-sync clock.
+        } catch (NumberFormatException badType) {
+            throw new BadRequestException("'after': " + badType.toString());
+        }
     }
 
     public String playersOnlineGraph(ServerUUID serverUUID) {
