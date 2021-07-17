@@ -29,9 +29,12 @@ import com.djrapitops.plan.delivery.rendering.json.graphs.pie.Pie;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.delivery.rendering.json.graphs.special.WorldMap;
 import com.djrapitops.plan.delivery.rendering.json.graphs.stack.StackGraph;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
@@ -119,7 +122,9 @@ public class GraphJSONCreator {
                 "}}";
     }
 
-    public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID) {
+    public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID, URIQuery query) {
+        long after = getAfter(query); // TODO Implement if performance issues become apparent.
+
         long now = System.currentTimeMillis();
         long twoMonthsAgo = now - TimeUnit.DAYS.toMillis(60);
         long monthAgo = now - TimeUnit.DAYS.toMillis(30);
@@ -130,6 +135,10 @@ public class GraphJSONCreator {
         TPSMutator lowestResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(0, twoMonthsAgo, lowestResolution, serverUUID)));
         TPSMutator lowResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServerInResolution(twoMonthsAgo, monthAgo, lowResolution, serverUUID)));
         TPSMutator highResolutionData = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID)));
+
+        String serverName = db.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
+                .map(Server::getIdentifiableName)
+                .orElse(serverUUID.toString());
 
         List<Number[]> values = lowestResolutionData.toArrays(new LineGraph.GapStrategy(
                 config.isTrue(DisplaySettings.GAPS_IN_GRAPH_DATA),
@@ -172,7 +181,19 @@ public class GraphJSONCreator {
                         .put("diskThresholdMed", config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_MED))
                         .put("diskThresholdHigh", config.get(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH))
                         .build())
+                .put("serverName", serverName)
+                .put("serverUUID", serverUUID)
                 .build();
+    }
+
+    private long getAfter(URIQuery query) {
+        try {
+            return query.get("after")
+                    .map(Long::parseLong)
+                    .orElse(0L) - 500L; // Some headroom for out-of-sync clock.
+        } catch (NumberFormatException badType) {
+            throw new BadRequestException("'after': " + badType.toString());
+        }
     }
 
     public String playersOnlineGraph(ServerUUID serverUUID) {

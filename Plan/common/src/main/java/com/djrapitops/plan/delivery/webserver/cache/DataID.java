@@ -49,8 +49,8 @@ public enum DataID {
     PLAYERBASE_OVERVIEW,
     PERFORMANCE_OVERVIEW,
     EXTENSION_NAV,
-    EXTENSION_TABS
-    ;
+    EXTENSION_TABS,
+    LIST_SERVERS;
 
     public String of(ServerUUID serverUUID) {
         return name() + '-' + serverUUID;
