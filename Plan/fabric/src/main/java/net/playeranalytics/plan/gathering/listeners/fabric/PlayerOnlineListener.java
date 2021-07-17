@@ -38,14 +38,17 @@ import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.google.common.net.InetAddresses;
+import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
+import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -104,33 +107,45 @@ public class PlayerOnlineListener implements FabricListener {
             if (!this.isEnabled) {
                 return;
             }
-            actOnJoinEvent(handler.player);
+            onPlayerJoin(handler.player);
         });
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             if (!this.isEnabled) {
                 return;
             }
-            actOnQuitEvent(handler.player);
+            onPlayerQuit(handler.player);
+        });
+        PlanFabricEvents.ON_KICKED.register((source, targets, reason) -> {
+            if (!this.isEnabled) {
+                return;
+            }
+            for (ServerPlayerEntity target : targets) {
+                onPlayerKick(target);
+            }
+        });
+        PlanFabricEvents.ON_LOGIN.register((address, profile, reason) -> {
+            if (!this.isEnabled) {
+                return;
+            }
+            onPlayerLogin(address, profile, reason != null);
         });
         this.enable();
     }
 
-    //TODO: Call
-    public void onPlayerLogin(ServerPlayerEntity player, boolean banned) {
+    public void onPlayerLogin(SocketAddress address, GameProfile profile, boolean banned) {
         try {
-            UUID playerUUID = player.getUuid();
+            UUID playerUUID = profile.getId();
             ServerUUID serverUUID = serverInfo.getServerUUID();
-            String joinAddress = player.networkHandler.connection.getAddress().toString();
+            String joinAddress = address.toString();
             if (!joinAddress.isEmpty()) {
                 joinAddresses.put(playerUUID, joinAddress.substring(0, joinAddress.lastIndexOf(':')));
             }
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> banned));
         } catch (Exception e) {
-            errorLogger.error(e, ErrorContext.builder().related(getClass(), player).build());
+            errorLogger.error(e, ErrorContext.builder().related(getClass(), address, profile, banned).build());
         }
     }
 
-    //TODO: Call
     public void onPlayerKick(ServerPlayerEntity player) {
         try {
             UUID uuid = player.getUuid();
@@ -139,6 +154,14 @@ public class PlayerOnlineListener implements FabricListener {
             }
 
             dbSystem.getDatabase().executeTransaction(new KickStoreTransaction(uuid));
+        } catch (Exception e) {
+            errorLogger.error(e, ErrorContext.builder().related(getClass(), player).build());
+        }
+    }
+
+    public void onPlayerJoin(ServerPlayerEntity player) {
+        try {
+            actOnJoinEvent(player);
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(getClass(), player).build());
         }
@@ -204,7 +227,6 @@ public class PlayerOnlineListener implements FabricListener {
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_LEAVE));
     }
 
-    //TODO: Call
     public void onPlayerQuit(ServerPlayerEntity player) {
         try {
             actOnQuitEvent(player);

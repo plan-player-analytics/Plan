@@ -16,14 +16,20 @@
  */
 package net.playeranalytics.plan.gathering.listeners.events;
 
+import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
+
+import java.net.SocketAddress;
+import java.util.Collection;
 
 public class PlanFabricEvents {
 
@@ -48,6 +54,18 @@ public class PlanFabricEvents {
     public static final Event<OnGameModeChange> ON_GAMEMODE_CHANGE = EventFactory.createArrayBacked(OnGameModeChange.class, callbacks -> (handler, packet) -> {
         for (OnGameModeChange callback : callbacks) {
             callback.onGameModeChange(handler, packet);
+        }
+    });
+
+    public static final Event<OnPlayerKicked> ON_KICKED = EventFactory.createArrayBacked(OnPlayerKicked.class, callbacks -> (source, targets, reason) -> {
+        for (OnPlayerKicked callback : callbacks) {
+            callback.onKicked(source, targets, reason);
+        }
+    });
+
+    public static final Event<OnLogin> ON_LOGIN = EventFactory.createArrayBacked(OnLogin.class, callbacks -> (address, profile, reason) -> {
+        for (OnLogin callback : callbacks) {
+            callback.onLogin(address, profile, reason);
         }
     });
 
@@ -93,6 +111,30 @@ public class PlanFabricEvents {
          * @param newGameMode the new gamemode
          */
         void onGameModeChange(ServerPlayerEntity player, GameMode newGameMode);
+    }
+
+    @FunctionalInterface
+    public interface OnPlayerKicked {
+        /**
+         * Called when a player (or multiple) get kicked from the server
+         *
+         * @param source the source that initated the kick
+         * @param targets the player(s) that got kicked
+         * @param reason the provided kick reason
+         */
+        void onKicked(ServerCommandSource source, Collection<ServerPlayerEntity> targets, Text reason);
+    }
+
+    @FunctionalInterface
+    public interface OnLogin {
+        /**
+         * Called when a player attempts to login
+         *
+         * @param address the address of the player
+         * @param profile the profile of the player
+         * @param reason the provided kick reason (null if player is permitted to join)
+         */
+        void onLogin(SocketAddress address, GameProfile profile, Text reason);
     }
 
 }
