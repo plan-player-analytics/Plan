@@ -17,11 +17,15 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.building.Update;
+import org.apache.commons.text.TextStringBuilder;
+
+import java.util.Collection;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -76,5 +80,13 @@ public class ServerTable {
                 .column(PROXY, Sql.BOOL).notNull().defaultValue(false)
                 .column(MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
                 .toString();
+    }
+
+    public static String selectServerIds(Collection<ServerUUID> serverUUIDs) {
+        return '(' + SELECT + TABLE_NAME + '.' + SERVER_ID +
+                FROM + TABLE_NAME +
+                WHERE + TABLE_NAME + '.' + SERVER_UUID + " IN ('" +
+                new TextStringBuilder().appendWithSeparators(serverUUIDs, "','").build() +
+                "'))";
     }
 }

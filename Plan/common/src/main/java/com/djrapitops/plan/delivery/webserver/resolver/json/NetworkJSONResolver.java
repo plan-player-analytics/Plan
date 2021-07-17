@@ -44,7 +44,8 @@ public class NetworkJSONResolver {
             AsyncJSONResolverService asyncJSONResolverService, JSONFactory jsonFactory,
             NetworkOverviewJSONCreator networkOverviewJSONCreator,
             NetworkPlayerBaseOverviewJSONCreator networkPlayerBaseOverviewJSONCreator,
-            NetworkSessionsOverviewJSONCreator networkSessionsOverviewJSONCreator
+            NetworkSessionsOverviewJSONCreator networkSessionsOverviewJSONCreator,
+            NetworkPerformanceJSONResolver networkPerformanceJSONResolver
     ) {
         this.asyncJSONResolverService = asyncJSONResolverService;
         resolver = CompositeResolver.builder()
@@ -54,6 +55,7 @@ public class NetworkJSONResolver {
                 .add("servers", forJSON(DataID.SERVERS, jsonFactory::serversAsJSONMaps))
                 .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation))
                 .add("listServers", forJSON(DataID.LIST_SERVERS, jsonFactory::listServers))
+                .add("performanceOverview", networkPerformanceJSONResolver)
                 .build();
     }
 

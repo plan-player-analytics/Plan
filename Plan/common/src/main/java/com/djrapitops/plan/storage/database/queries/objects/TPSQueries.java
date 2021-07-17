@@ -445,4 +445,31 @@ public class TPSQueries {
             }
         };
     }
+
+    public static Query<Map<Integer, List<TPS>>> fetchTPSDataOfServers(long after, long before, Collection<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "*" + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                AND + DATE + ">=?" +
+                AND + DATE + "<=?" +
+                ORDER_BY + DATE;
+
+        return new QueryStatement<Map<Integer, List<TPS>>>(sql, 50000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Map<Integer, List<TPS>> processResults(ResultSet set) throws SQLException {
+                Map<Integer, List<TPS>> data = new HashMap<>();
+                while (set.next()) {
+                    int serverId = set.getInt(SERVER_ID);
+                    data.computeIfAbsent(serverId, Lists::create)
+                            .add(extractTPS(set));
+                }
+                return data;
+            }
+        };
+    }
 }
