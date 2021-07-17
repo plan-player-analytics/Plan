@@ -452,7 +452,7 @@ public class TPSQueries {
                 AND + DATE + ">=?" +
                 AND + DATE + "<=?" +
                 ORDER_BY + DATE;
-
+        System.out.println(sql);
         return new QueryStatement<Map<Integer, List<TPS>>>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

@@ -123,6 +123,8 @@ public class GraphJSONCreator {
     }
 
     public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID, URIQuery query) {
+        long after = getAfter(query); // TODO Implement if performance issues become apparent.
+
         long now = System.currentTimeMillis();
         long twoMonthsAgo = now - TimeUnit.DAYS.toMillis(60);
         long monthAgo = now - TimeUnit.DAYS.toMillis(30);

@@ -143,9 +143,9 @@ public class NetworkPerformanceJSONResolver implements Resolver {
         numbers.put("server_downtime_24h", timeAmount.apply(downtimeDay));
 
         if (!tpsData.isEmpty()) {
-            numbers.put("avg_server_downtime_30d", timeAmount.apply(downtimeMonth / (long) tpsData.size()));
-            numbers.put("avg_server_downtime_7d", timeAmount.apply(downtimeWeek / (long) tpsData.size()));
-            numbers.put("avg_server_downtime_24h", timeAmount.apply(downtimeDay / (long) tpsData.size()));
+            numbers.put("avg_server_downtime_30d", timeAmount.apply(downtimeMonth / tpsData.size()));
+            numbers.put("avg_server_downtime_7d", timeAmount.apply(downtimeWeek / tpsData.size()));
+            numbers.put("avg_server_downtime_24h", timeAmount.apply(downtimeDay / tpsData.size()));
         } else {
             numbers.put("avg_server_downtime_30d", "-");
             numbers.put("avg_server_downtime_7d", "-");
