@@ -17,6 +17,7 @@
 package com.djrapitops.plan.modules.velocity;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.delivery.web.ResourceWriteTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
@@ -72,4 +73,8 @@ public interface VelocityTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindOldDependencyCacheDeletion(OldDependencyCacheDeletionTask deletionTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindResourceWriteTask(ResourceWriteTask resourceWriteTask);
 }
