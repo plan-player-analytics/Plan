@@ -22,6 +22,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
 import net.minecraft.server.world.ServerWorld;
+import net.playeranalytics.plan.gathering.timed.FabricPingCounter;
 
 @Module
 public interface FabricTaskModule {
@@ -29,4 +30,9 @@ public interface FabricTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindTPSCounter(ServerTPSCounter<ServerWorld> tpsCounter);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindPingCounter(FabricPingCounter pingCounter);
+
 }

@@ -18,6 +18,8 @@ package net.playeranalytics.plan.gathering.listeners;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
+import net.playeranalytics.plan.gathering.listeners.fabric.DeathEventListener;
+import net.playeranalytics.plan.gathering.listeners.fabric.FabricAFKListener;
 import net.playeranalytics.plan.gathering.listeners.fabric.PlayerOnlineListener;
 import net.playeranalytics.plugin.server.Listeners;
 
@@ -32,26 +34,36 @@ public class FabricListenerSystem extends ListenerSystem {
 
     private final Listeners listeners;
     private final PlayerOnlineListener playerOnlineListener;
+    private final DeathEventListener deathEventListener;
+    private final FabricAFKListener fabricAFKListener;
 
     @Inject
     public FabricListenerSystem(
             Listeners listeners,
-            PlayerOnlineListener playerOnlineListener
+            PlayerOnlineListener playerOnlineListener,
+            DeathEventListener deathEventListener,
+            FabricAFKListener fabricAFKListener
     ) {
         this.listeners = listeners;
 
         this.playerOnlineListener = playerOnlineListener;
+        this.deathEventListener = deathEventListener;
+        this.fabricAFKListener = fabricAFKListener;
 
     }
 
     @Override
     protected void registerListeners() {
         listeners.registerListener(playerOnlineListener);
+        listeners.registerListener(deathEventListener);
+        listeners.registerListener(fabricAFKListener);
     }
 
     @Override
     protected void unregisterListeners() {
         listeners.unregisterListener(playerOnlineListener);
+        listeners.unregisterListener(deathEventListener);
+        listeners.unregisterListener(fabricAFKListener);
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
@@ -33,18 +34,22 @@ import javax.inject.Singleton;
 @Singleton
 public class FabricServerShutdownSave extends ServerShutdownSave {
 
+    private final MinecraftDedicatedServer server;
+
     @Inject
     public FabricServerShutdownSave(
+            MinecraftDedicatedServer server,
             Locale locale,
             DBSystem dbSystem,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
         super(locale, dbSystem, logger, errorLogger);
+        this.server = server;
     }
 
     @Override
     protected boolean checkServerShuttingDownStatus() {
-        return false; // TODO: not yet implemented
+        return !server.isRunning();
     }
 }

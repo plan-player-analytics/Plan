@@ -10,6 +10,9 @@
       "net.playeranalytics.plan.PlanFabric"
     ]
   },
+  "mixins": [
+    "plan.mixins.json"
+  ],
   "depends": {
     "minecraft": ">=1.17",
     "java": ">=16"

@@ -36,7 +36,9 @@ import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -153,6 +155,9 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             this.server = (MinecraftDedicatedServer) server;
             onEnable();
+        });
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
+            onDisable();
         });
     }
 
