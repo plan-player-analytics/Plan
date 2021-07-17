@@ -82,7 +82,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
 
     @Override
     public Optional<Response> resolve(Request request) {
-        List<ServerUUID> serverUUIDs = request.getQuery().get("serverUUIDs")
+        List<ServerUUID> serverUUIDs = request.getQuery().get("servers")
                 .map(this::getUUIDList)
                 .orElse(Collections.emptyList())
                 .stream().map(ServerUUID::from)
