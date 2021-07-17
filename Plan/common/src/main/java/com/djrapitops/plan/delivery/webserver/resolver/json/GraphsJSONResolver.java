@@ -88,7 +88,7 @@ public class GraphsJSONResolver implements Resolver {
     }
 
     private JSONStorage.StoredJSON getGraphJSON(Request request, DataID dataID) {
-        long timestamp = Identifiers.getTimestamp(request);
+        Optional<Long> timestamp = Identifiers.getTimestamp(request);
 
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {

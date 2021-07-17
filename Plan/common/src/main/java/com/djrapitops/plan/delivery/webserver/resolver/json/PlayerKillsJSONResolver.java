@@ -68,7 +68,7 @@ public class PlayerKillsJSONResolver implements Resolver {
 
     private Response getResponse(Request request) {
         ServerUUID serverUUID = identifiers.getServerUUID(request);
-        long timestamp = Identifiers.getTimestamp(request);
+        Optional<Long> timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON = jsonResolverService.resolve(timestamp, DataID.KILLS, serverUUID,
                 theUUID -> Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(theUUID))
         );
