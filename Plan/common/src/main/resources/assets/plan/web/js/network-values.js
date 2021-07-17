@@ -614,3 +614,34 @@ function loadPerformanceValues(json, error) {
     element.querySelector('#data_chunks_7d').innerText = data.chunks_7d;
     element.querySelector('#data_chunks_24h').innerText = data.chunks_24h;
 }
+
+function loadPingGraph(json, error) {
+    if (json) {
+        const series = {
+            avgPing: {
+                name: s.name.avgPing,
+                type: s.type.spline,
+                tooltip: s.tooltip.twoDecimals,
+                data: json.avg_ping_series,
+                color: json.colors.avg
+            },
+            maxPing: {
+                name: s.name.maxPing,
+                type: s.type.spline,
+                tooltip: s.tooltip.zeroDecimals,
+                data: json.max_ping_series,
+                color: json.colors.max
+            },
+            minPing: {
+                name: s.name.minPing,
+                type: s.type.spline,
+                tooltip: s.tooltip.zeroDecimals,
+                data: json.min_ping_series,
+                color: json.colors.min
+            }
+        };
+        lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
+    } else if (error) {
+        document.getElementById('pingGraph').innerText = `Failed to load graph data: ${error}`;
+    }
+}

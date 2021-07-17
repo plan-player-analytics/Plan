@@ -1130,6 +1130,7 @@
         refreshingJsonRequest("./v1/graph?type=joinAddressPie", loadJoinAddressPie, 'playerbase-overview');
         refreshingJsonRequest("./v1/graph?type=activity", loadActivityGraphs, 'playerbase-overview');
         refreshingJsonRequest("./v1/graph?type=geolocation", loadGeolocationGraph, 'geolocations');
+        refreshingJsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", loadPingGraph, 'performance');
 
         setLoadingText('Sorting out plugin tables..');
 
