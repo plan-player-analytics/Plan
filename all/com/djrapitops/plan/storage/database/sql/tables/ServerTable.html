@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9};
+var data = {"i0":9,"i1":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -237,6 +237,11 @@ extends java.lang.Object</pre>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createTableSQL(com.djrapitops.plan.storage.database.DBType)">createTableSQL</a></span>&#8203;(<a href="../../DBType.html" title="enum in com.djrapitops.plan.storage.database">DBType</a>&nbsp;dbType)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#selectServerIds(java.util.Collection)">selectServerIds</a></span>&#8203;(java.util.Collection&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -411,10 +416,19 @@ public static final&nbsp;java.lang.String MAX_PLAYERS</pre>
 <a id="createTableSQL(com.djrapitops.plan.storage.database.DBType)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>createTableSQL</h4>
 <pre class="methodSignature">public static&nbsp;java.lang.String&nbsp;createTableSQL&#8203;(<a href="../../DBType.html" title="enum in com.djrapitops.plan.storage.database">DBType</a>&nbsp;dbType)</pre>
+</li>
+</ul>
+<a id="selectServerIds(java.util.Collection)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>selectServerIds</h4>
+<pre class="methodSignature">public static&nbsp;java.lang.String&nbsp;selectServerIds&#8203;(java.util.Collection&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</pre>
 </li>
 </ul>
 </li>
