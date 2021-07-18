@@ -74,7 +74,10 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
 
         getLogger().info( "Loading dependencies, this might take a while...");
         try {
-            ApplicationBuilder.appending("Plan").downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries")).build();
+            ApplicationBuilder.appending("Plan")
+                    .logger((message, args) -> Logger.getGlobal().log(Level.INFO, message, args))
+                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
+                    .build();
         } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
             String version = abstractionLayer.getPluginInformation().getVersion();
             Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);

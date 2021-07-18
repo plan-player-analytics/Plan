@@ -7,8 +7,8 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
-    id "io.github.slimjar" version "1.2.1"
+    id "com.github.johnrengelman.shadow" version "7.0.0" apply false
+    id "io.github.slimjar" version "1.2.1" apply false
     id "java"
     id "jacoco"
     id "checkstyle"
@@ -42,6 +42,10 @@ allprojects {
     compileJava { options.encoding = "UTF-8" }
     tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
     javadoc { options.encoding = 'UTF-8' }
+
+    repositories {
+        maven { url = "https://repo.vshnv.tech/snapshots" }
+    }
 }
 
 logger.lifecycle("Building artifact for version $fullVersion")

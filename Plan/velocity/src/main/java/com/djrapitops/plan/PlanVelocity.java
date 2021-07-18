@@ -106,7 +106,10 @@ public class PlanVelocity implements PlanPlugin {
 
         logger.info("Loading dependencies, this might take a while...");
         try {
-            ApplicationBuilder.appending("Plan").downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries")).build();
+            ApplicationBuilder.appending("Plan")
+                    .logger((message, args) -> java.util.logging.Logger.getGlobal().log(Level.INFO, message, args))
+                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
+                    .build();
         } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
             String version = abstractionLayer.getPluginInformation().getVersion();
             java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
