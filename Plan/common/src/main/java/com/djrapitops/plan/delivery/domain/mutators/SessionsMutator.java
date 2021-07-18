@@ -282,16 +282,9 @@ public class SessionsMutator {
             sessionMap.put("mob_kills", session.getMobKillCount());
             sessionMap.put("deaths", session.getDeathCount());
             sessionMap.put("player_kills", session.getExtraData(PlayerKills.class)
-                    .map(PlayerKills::asList).map(kills -> kills.stream().map(
-                            kill -> {
-                                Map<String, Object> killMap = new HashMap<>();
-                                killMap.put("date", formatters.secondLong().apply(kill.getDate()));
-                                killMap.put("victim", kill.getVictimName().orElse(kill.getVictim().toString()));
-                                killMap.put("killer", playerName);
-                                killMap.put("weapon", kill.getWeapon());
-                                return killMap;
-                            }).collect(Collectors.toList())
-                    ).orElseGet(ArrayList::new));
+                    .map(PlayerKills::asMutator)
+                    .map(killsMutator -> killsMutator.toJSONAsMap(formatters))
+                    .orElseGet(ArrayList::new));
             sessionMap.put("first_session", session.isFirstSession());
             WorldPie worldPie = graphs.pie().worldPie(session.getExtraData(WorldTimes.class).orElseGet(WorldTimes::new));
             sessionMap.put("world_series", worldPie.getSlices());

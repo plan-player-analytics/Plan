@@ -99,7 +99,7 @@ public class KillsTable {
 
             // Kill data
             statement.setString(5, playerUUID.toString());
-            statement.setString(6, kill.getVictim().toString());
+            statement.setString(6, kill.getVictim().getUuid().toString());
             statement.setString(7, serverUUID.toString());
             statement.setLong(8, kill.getDate());
             statement.setString(9, StringUtils.truncate(kill.getWeapon(), WEAPON_COLUMN_LENGTH));

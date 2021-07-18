@@ -112,7 +112,7 @@ public class RandomData {
         long end = RandomData.randomTimeAfter(start);
 
         if (uuids.length >= 2) {
-            List<PlayerKill> kills = RandomData.randomKills(uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));
+            List<PlayerKill> kills = RandomData.randomKills(serverUUID, uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));
             extraData.put(PlayerKills.class, new PlayerKills(kills));
         }
         extraData.put(MobKillCounter.class, new MobKillCounter());
@@ -135,7 +135,7 @@ public class RandomData {
                 .ifPresent(worldTimes -> worldTimes.setAll(RandomData.randomWorldTimes(worlds)));
 
         if (uuids.length >= 2) {
-            List<PlayerKill> randomKills = RandomData.randomKills(uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));
+            List<PlayerKill> randomKills = RandomData.randomKills(serverUUID, uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));
             session.getExtraData().get(PlayerKills.class).ifPresent(kills -> kills.addAll(randomKills));
         }
 
@@ -166,12 +166,12 @@ public class RandomData {
         return new WorldTimes(times);
     }
 
-    public static List<PlayerKill> randomKills(UUID killer, UUID... victimUUIDs) {
+    public static List<PlayerKill> randomKills(ServerUUID serverUUID, UUID killer, UUID... victimUUIDs) {
         if (victimUUIDs == null || victimUUIDs.length == 1 && victimUUIDs[0] == null) return Collections.emptyList();
 
-        return pickMultiple(randomInt(3, 15), () -> new PlayerKill(
+        return pickMultiple(randomInt(3, 15), () -> TestData.getPlayerKill(
                 killer, pickAtRandom(victimUUIDs),
-                randomString(randomInt(10, KillsTable.WEAPON_COLUMN_LENGTH)),
+                serverUUID, randomString(randomInt(10, KillsTable.WEAPON_COLUMN_LENGTH)),
                 randomTime()
         ));
     }

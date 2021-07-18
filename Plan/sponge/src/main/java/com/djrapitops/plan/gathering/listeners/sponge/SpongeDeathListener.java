@@ -20,6 +20,8 @@ import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.delivery.formatting.ItemNameFormatter;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.PlayerKill;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
@@ -54,14 +56,17 @@ import java.util.UUID;
  */
 public class SpongeDeathListener {
 
+    private final ServerInfo serverInfo;
     private final Processing processing;
     private final ErrorLogger errorLogger;
 
     @Inject
     public SpongeDeathListener(
+            ServerInfo serverInfo,
             Processing processing,
             ErrorLogger errorLogger
     ) {
+        this.serverInfo = serverInfo;
         this.processing = processing;
         this.errorLogger = errorLogger;
     }
@@ -85,12 +90,20 @@ public class SpongeDeathListener {
             Player killer = foundKiller.get();
 
             Runnable processor = dead instanceof Player
-                    ? new PlayerKillProcessor(killer.getUniqueId(), time, dead.getUniqueId(), findWeapon(event))
+                    ? new PlayerKillProcessor(getKiller(killer), getVictim((Player) dead), serverInfo.getServerIdentifier(), findWeapon(event), time)
                     : new MobKillProcessor(killer.getUniqueId());
             processing.submitCritical(processor);
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
+    }
+
+    private PlayerKill.Killer getKiller(Player killer) {
+        return new PlayerKill.Killer(killer.getUniqueId(), killer.getName());
+    }
+
+    private PlayerKill.Victim getVictim(Player victim) {
+        return new PlayerKill.Victim(victim.getUniqueId(), victim.getName());
     }
 
     public Optional<Player> findKiller(List<EntityDamageSource> causes, int depth) {
