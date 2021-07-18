@@ -161,13 +161,12 @@ implements <a href="../../CriticalRunnable.html" title="interface in com.djrapit
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(java.util.UUID,long,java.util.UUID,java.lang.String)">PlayerKillProcessor</a></span>&#8203;(java.util.UUID&nbsp;killer,
-                   long&nbsp;time,
-                   java.util.UUID&nbsp;victim,
-                   java.lang.String&nbsp;weaponName)</code></th>
-<td class="colLast">
-<div class="block">Constructor.</div>
-</td>
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,long)">PlayerKillProcessor</a></span>&#8203;(<a href="../../../gathering/domain/PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
+                   <a href="../../../gathering/domain/PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim,
+                   <a href="../../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server,
+                   java.lang.String&nbsp;weaponName,
+                   long&nbsp;time)</code></th>
+<td class="colLast">&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -216,24 +215,17 @@ implements <a href="../../CriticalRunnable.html" title="interface in com.djrapit
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a id="&lt;init&gt;(java.util.UUID,long,java.util.UUID,java.lang.String)">
+<a id="&lt;init&gt;(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,long)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>PlayerKillProcessor</h4>
-<pre>public&nbsp;PlayerKillProcessor&#8203;(java.util.UUID&nbsp;killer,
-                           long&nbsp;time,
-                           java.util.UUID&nbsp;victim,
-                           java.lang.String&nbsp;weaponName)</pre>
-<div class="block">Constructor.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>killer</code> - UUID of the killer.</dd>
-<dd><code>time</code> - Epoch ms the event occurred.</dd>
-<dd><code>victim</code> - Dead entity (Mob or Player)</dd>
-<dd><code>weaponName</code> - Weapon used.</dd>
-</dl>
+<pre>public&nbsp;PlayerKillProcessor&#8203;(<a href="../../../gathering/domain/PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
+                           <a href="../../../gathering/domain/PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim,
+                           <a href="../../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server,
+                           java.lang.String&nbsp;weaponName,
+                           long&nbsp;time)</pre>
 </li>
 </ul>
 </li>
