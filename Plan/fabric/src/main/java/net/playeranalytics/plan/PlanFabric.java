@@ -26,9 +26,11 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.playeranalytics.plan.commands.CommandManager;
 import net.playeranalytics.plugin.FabricPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -36,9 +38,7 @@ import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -52,6 +52,7 @@ import java.util.concurrent.TimeoutException;
 public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     private MinecraftDedicatedServer server;
+    private CommandManager commandManager;
 
     private PlanSystem system;
     private Locale locale;
@@ -78,7 +79,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void registerCommand(Subcommand command) {
-
+        commandManager.registerRoot(command);
     }
 
     @Override
@@ -115,6 +116,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             pluginLogger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
+        registerCommand(component.planCommand().build());
     }
 
     @Override
@@ -151,6 +153,11 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+            commandManager = new CommandManager(dispatcher);
+        });
+
+
         // TODO move to separate class?
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             this.server = (MinecraftDedicatedServer) server;
