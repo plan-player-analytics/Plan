@@ -452,7 +452,6 @@ public class TPSQueries {
                 AND + DATE + ">=?" +
                 AND + DATE + "<=?" +
                 ORDER_BY + DATE;
-        System.out.println(sql);
         return new QueryStatement<Map<Integer, List<TPS>>>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -475,23 +474,23 @@ public class TPSQueries {
 
     public static Query<Optional<Long>> fetchLatestServerStartTime(ServerUUID serverUUID, long dataGapThreshold) {
         String selectPreviousRowNumber = SELECT +
-                "-1+ROW_NUMBER() over (ORDER BY " + DATE + ") AS previous_rn," +
-                "DATE AS date" +
+                "-1+ROW_NUMBER() over (ORDER BY " + DATE + ") AS previous_rn, " +
+                DATE + " AS d1" +
                 FROM + TABLE_NAME +
-                ORDER_BY + DATE + " DESC" +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                ORDER_BY + DATE + " DESC";
         String selectRowNumber = SELECT +
-                "ROW_NUMBER() over (ORDER BY " + DATE + ") AS rn," +
-                "DATE AS previous_date" +
+                "ROW_NUMBER() over (ORDER BY " + DATE + ") AS rn, " +
+                DATE + " AS previous_date" +
                 FROM + TABLE_NAME +
-                ORDER_BY + DATE + " DESC" +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                ORDER_BY + DATE + " DESC";
         String selectStartTime = SELECT +
-                "MAX(date) AS start_time" +
+                "MAX(d1) AS start_time" +
                 FROM + "(" + selectPreviousRowNumber + ") t1" +
                 INNER_JOIN +
                 "(" + selectRowNumber + ") t2 ON t1.previous_rn=t2.rn" +
-                WHERE + "date - previous_date > ?;";
+                WHERE + "d1 - previous_date > ?;";
 
         return new QueryStatement<Optional<Long>>(selectStartTime) {
             @Override
