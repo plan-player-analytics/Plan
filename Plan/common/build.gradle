@@ -31,7 +31,7 @@ task updateVersion(type: Copy) {
 
 task determineWebAssetModifications {
     def versionFile = file("build/resources/main/assets/plan/WebAssetVersion.yml")
-    versionFile.mkdirs()
+    versionFile.parentFile.mkdirs()
     versionFile.text = "" // Clear previous build
     ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
     tree.forEach { File f ->
