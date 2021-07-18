@@ -17,6 +17,7 @@
 package net.playeranalytics.plan.gathering.listeners.events.mixin;
 
 import com.djrapitops.plan.commands.use.*;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -62,8 +63,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public boolean hasPermission(String permission) {
-        // TODO
-        return true;
+        return Permissions.check((ServerCommandSource) (Object) this, permission, 2);
     }
 
     @Override

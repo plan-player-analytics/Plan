@@ -28,10 +28,12 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 
+import java.security.Permission;
 import java.util.concurrent.CompletableFuture;
 
 public class CommandManager {
@@ -98,9 +100,7 @@ public class CommandManager {
         literal.executes(ctx -> execute(ctx, subcommand));
         literal.requires(src -> {
             for (String permission : subcommand.getRequiredPermissions()) {
-                // TODO Implement permission api
-                //https://github.com/lucko/fabric-permissions-api
-                //if (!Permissions.check(src, permission, 2)) return false;
+                if (!Permissions.check(src, permission, 2)) return false;
             }
             return true;
         });

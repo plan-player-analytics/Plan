@@ -15,6 +15,12 @@
   ],
   "depends": {
     "minecraft": ">=1.17",
-    "java": ">=16"
+    "java": ">=16",
+    "fabric-api-base": "*",
+    "fabric-command-api-v1": "*",
+    "fabric-entity-events-v1": "*",
+    "fabric-lifecycle-events-v1": "*",
+    "fabric-networking-v0": "*",
+    "fabric-permissions-api-v0": "*"
   }
 }

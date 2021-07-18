@@ -20,6 +20,7 @@ import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
@@ -57,8 +58,7 @@ public class FabricAFKListener implements FabricListener {
             UUID uuid = player.getUuid();
             long time = System.currentTimeMillis();
 
-            //TODO: Implement https://github.com/lucko/fabric-permissions-api
-            boolean ignored = ignorePermissionInfo.computeIfAbsent(uuid, keyUUID -> /*player.hasPermission(Permissions.IGNORE_AFK.getPermission())*/ false);
+            boolean ignored = ignorePermissionInfo.computeIfAbsent(uuid, keyUUID -> Permissions.check(player, com.djrapitops.plan.settings.Permissions.IGNORE_AFK.getPermission()));
             if (ignored) {
                 afkTracker.hasIgnorePermission(uuid);
                 ignorePermissionInfo.put(uuid, true);
