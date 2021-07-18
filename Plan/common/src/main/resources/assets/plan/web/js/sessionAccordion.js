@@ -109,18 +109,19 @@ function createKillsTable(player_kills) {
     let table = '<table class="table mb-0"><tbody>';
 
     if (!player_kills.length) {
-        table += `<tr><td>None</td><td>-</td><td>-</td></tr>`
+        table += `<tr><td>None</td><td>-</td><td>-</td><td>-</td></tr>`
     }
 
     for (const kill of player_kills) {
         table += `<tr>
                     <td>${kill.date}</td>
-                    <td>${kill.killer} ${
-            kill.killer === kill.victim
+                    <td>${kill.killerName} ${
+            kill.killerUUID === kill.victimUUID
                 ? '<i class="fa fa-fw fa-skull-crossbones col-red"></i>'
                 : '<i class="fa fa-fw fa-angle-right col-red"></i>'
-        } ${kill.victim}</td>
+        } ${kill.victimName}</td>
                     <td>${kill.weapon}</td>
+                    <td>${kill.serverName}</td>
                 </tr>`
     }
 
