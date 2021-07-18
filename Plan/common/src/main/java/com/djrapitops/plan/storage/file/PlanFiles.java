@@ -137,7 +137,7 @@ public class PlanFiles implements SubSystem {
         ));
     }
 
-    private Optional<File> attemptToFind(String resourceName) {
+    public Optional<File> attemptToFind(String resourceName) {
         Path dir = getCustomizationDirectory();
         if (dir.toFile().exists() && dir.toFile().isDirectory()) {
             Path asPath = dir.resolve(resourceName);
