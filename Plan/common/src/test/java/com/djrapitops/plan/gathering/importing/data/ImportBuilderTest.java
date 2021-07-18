@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestData;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -100,7 +101,7 @@ class ImportBuilderTest {
         UserImportData.UserImportDataBuilder builder = UserImportData.builder(TestConstants.SERVER_UUID);
 
         UUID uuid = UUID.randomUUID();
-        PlayerKill playerKill = new PlayerKill(uuid, uuid, randomString, 1);
+        PlayerKill playerKill = TestData.getPlayerKill(uuid, uuid, TestConstants.SERVER_UUID, randomString, 1);
         GMTimes gmTimes = new GMTimes(randomString, randomInt);
 
         UserImportData data = builder.uuid(uuid)

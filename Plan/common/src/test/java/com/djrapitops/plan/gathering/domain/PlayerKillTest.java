@@ -18,11 +18,12 @@ package com.djrapitops.plan.gathering.domain;
 
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
+import utilities.TestConstants;
+import utilities.TestData;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * Tests for {@link PlayerKill}.
@@ -33,11 +34,11 @@ class PlayerKillTest {
 
     private final String weapon = RandomData.randomString(10);
     private final UUID testUUID = UUID.randomUUID();
-    private final PlayerKill underTest = new PlayerKill(testUUID, testUUID, weapon, 100L);
+    private final PlayerKill underTest = TestData.getPlayerKill(testUUID, testUUID, TestConstants.SERVER_UUID, weapon, 100L);
 
     @Test
     void victimUUIDIsReturned() {
-        assertEquals(testUUID, underTest.getVictim());
+        assertEquals(testUUID, underTest.getVictim().getUuid());
     }
 
     @Test
@@ -51,14 +52,9 @@ class PlayerKillTest {
     }
 
     @Test
-    void noVictimFound() {
-        assertFalse(underTest.getVictimName().isPresent());
-    }
-
-    @Test
     void victimFound() {
-        String expectedName = "Test Victim";
-        PlayerKill underTest = new PlayerKill(testUUID, testUUID, weapon, 100L, expectedName);
-        assertEquals("Test Victim", underTest.getVictimName().orElse("Unknown"));
+        String expectedName = "player_name";
+        PlayerKill underTest = TestData.getPlayerKill(testUUID, testUUID, TestConstants.SERVER_UUID, weapon, 100L);
+        assertEquals(expectedName, underTest.getVictim().getName());
     }
 }

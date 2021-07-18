@@ -16,6 +16,7 @@
  */
 package utilities;
 
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -79,8 +80,8 @@ public class TestData {
         ActiveSession sessionOne = new ActiveSession(uuid, serverUUID, playerFirstJoin, serverWorldNames[0], gms[0]);
 
         UUID otherUUID = uuid.equals(playerUUID) ? player2UUID : playerUUID;
-        sessionOne.addPlayerKill(new PlayerKill(uuid, otherUUID, "Iron Sword", 1234750L));
-        sessionOne.addPlayerKill(new PlayerKill(uuid, otherUUID, "Gold Sword", 1234800L));
+        sessionOne.addPlayerKill(TestData.getPlayerKill(uuid, otherUUID, serverUUID, "Iron Sword", 1234750L));
+        sessionOne.addPlayerKill(TestData.getPlayerKill(uuid, otherUUID, serverUUID, "Gold Sword", 1234800L));
 
         // Length 500ms
         sessions.add(sessionOne.toFinishedSession(1235000L));
@@ -182,5 +183,21 @@ public class TestData {
 
     public static BaseUser getPlayer2BaseUser() {
         return new BaseUser(player2UUID, player2Name, playerFirstJoin, 0);
+    }
+
+    public static PlayerKill getPlayerKill(UUID killerUUID, UUID victimUUID, ServerUUID serverUUID, String weapon, long time) {
+        return new PlayerKill(
+                new PlayerKill.Killer(killerUUID, getPlayerName(killerUUID)),
+                new PlayerKill.Victim(victimUUID, getPlayerName(victimUUID)),
+                new ServerIdentifier(serverUUID, TestConstants.SERVER_NAME),
+                weapon,
+                time
+        );
+    }
+
+    private static String getPlayerName(UUID uuid) {
+        if (playerUUID.equals(uuid)) return TestConstants.PLAYER_ONE_NAME;
+        if (player2UUID.equals(uuid)) return TestConstants.PLAYER_TWO_NAME;
+        return "player_name";
     }
 }

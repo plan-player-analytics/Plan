@@ -17,6 +17,8 @@
 package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
+import com.djrapitops.plan.delivery.domain.PlayerIdentifier;
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -29,13 +31,11 @@ import java.util.UUID;
  */
 public class PlayerKill implements DateHolder {
 
-    private final UUID killer;
-    private final UUID victim;
+    private final Killer killer;
+    private final Victim victim;
     private final String weapon;
     private final long date;
-
-    private String victimName;
-    private String killerName;
+    private final ServerIdentifier server;
 
     /**
      * Creates a PlayerKill object with given parameters.
@@ -45,37 +45,71 @@ public class PlayerKill implements DateHolder {
      * @param weapon Weapon used.
      * @param date   Epoch millisecond at which the kill occurred.
      */
+    @Deprecated
     public PlayerKill(UUID killer, UUID victim, String weapon, long date) {
+        this.killer = new Killer(killer, null);
+        this.victim = new Victim(victim, null);
+        this.weapon = weapon;
+        this.date = date;
+        this.server = new ServerIdentifier(null, "");
+    }
+
+    @Deprecated
+    public PlayerKill(UUID killer, UUID victim, String weapon, long date, String victimName) {
+        this.killer = new Killer(killer, null);
+        this.victim = new Victim(victim, victimName);
+        this.weapon = weapon;
+        this.date = date;
+        this.server = new ServerIdentifier(null, "");
+    }
+
+    @Deprecated
+    public PlayerKill(UUID killer, UUID victim, String weapon, long date, String victimName, String killerName) {
+        this.killer = new Killer(killer, killerName);
+        this.victim = new Victim(victim, victimName);
+        this.weapon = weapon;
+        this.date = date;
+        this.server = new ServerIdentifier(null, "");
+    }
+
+    public PlayerKill(Killer killer, Victim victim, ServerIdentifier server, String weapon, long date) {
         this.killer = killer;
         this.victim = victim;
         this.weapon = weapon;
         this.date = date;
+        this.server = server;
     }
 
-    public PlayerKill(UUID killer, UUID victim, String weapon, long date, String victimName) {
-        this(killer, victim, weapon, date);
-        this.victimName = victimName;
+    @Deprecated
+    public UUID getKillerUUID() {
+        return killer.getUuid();
     }
 
-    public PlayerKill(UUID killer, UUID victim, String weapon, long date, String victimName, String killerName) {
-        this(killer, victim, weapon, date, victimName);
-        this.killerName = killerName;
+    @Deprecated
+    public UUID getVictimUUID() {
+        return victim.getUuid();
     }
 
-    public UUID getKiller() {
+    @Deprecated
+    public Optional<String> getVictimName() {
+        return Optional.ofNullable(victim.getName());
+    }
+
+    @Deprecated
+    public Optional<String> getKillerName() {
+        return Optional.ofNullable(killer.getName());
+    }
+
+    public Killer getKiller() {
         return killer;
     }
 
-    public UUID getVictim() {
+    public Victim getVictim() {
         return victim;
     }
 
-    public Optional<String> getVictimName() {
-        return Optional.ofNullable(victimName);
-    }
-
-    public Optional<String> getKillerName() {
-        return Optional.ofNullable(killerName);
+    public ServerIdentifier getServer() {
+        return server;
     }
 
     @Override
@@ -100,12 +134,13 @@ public class PlayerKill implements DateHolder {
         return date == that.date &&
                 Objects.equals(killer, that.killer) &&
                 Objects.equals(victim, that.victim) &&
+                Objects.equals(server, that.server) &&
                 Objects.equals(weapon, that.weapon);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(killer, victim, date, weapon);
+        return Objects.hash(killer, victim, server, date, weapon);
     }
 
     @Override
@@ -113,12 +148,13 @@ public class PlayerKill implements DateHolder {
         return "PlayerKill{" +
                 "killer=" + killer + ", " +
                 "victim=" + victim + ", " +
+                "server=" + server + ", " +
                 "date=" + date + ", " +
                 "weapon='" + weapon + "'}";
     }
 
     public boolean isSelfKill() {
-        return killer.equals(victim);
+        return killer.isSame(victim);
     }
 
     public boolean isNotSelfKill() {
@@ -126,12 +162,23 @@ public class PlayerKill implements DateHolder {
     }
 
     public String toJson() {
-        return "{\"killer\": \"" + killer + "\"," +
-                "  \"victim\": \"" + victim + "\"," +
+        return "{\"killer\": " + killer.toJson() + "," +
+                "  \"victim\": " + victim.toJson() + "," +
+                "  \"server\": " + server.toJson() + "," +
                 "  \"weapon\": \"" + weapon + "\"," +
-                "  \"date\": " + date + "," +
-                "  \"victimName\": \"" + victimName + "\"," +
-                "  \"killerName\": \"" + killerName + "\"" +
+                "  \"date\": " + date +
                 "}";
+    }
+
+    public static class Victim extends PlayerIdentifier {
+        public Victim(UUID uuid, String name) {
+            super(uuid, name);
+        }
+    }
+
+    public static class Killer extends PlayerIdentifier {
+        public Killer(UUID uuid, String name) {
+            super(uuid, name);
+        }
     }
 }
