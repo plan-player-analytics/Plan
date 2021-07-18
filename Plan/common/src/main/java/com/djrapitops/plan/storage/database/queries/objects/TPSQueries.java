@@ -485,12 +485,19 @@ public class TPSQueries {
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
                 ORDER_BY + DATE + " DESC";
+        String selectFirstEntryDate = SELECT + "MIN(" + DATE + ") as start_time" +
+                FROM + TABLE_NAME +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
+        // Finds the start time since difference between d1 and previous date is a gap,
+        // so d1 is always first entry after a gap in the data. MAX finds the latest.
+        // Union ensures if there are no gaps to use the first date recorded.
         String selectStartTime = SELECT +
                 "MAX(d1) AS start_time" +
                 FROM + "(" + selectPreviousRowNumber + ") t1" +
                 INNER_JOIN +
                 "(" + selectRowNumber + ") t2 ON t1.previous_rn=t2.rn" +
-                WHERE + "d1 - previous_date > ?;";
+                WHERE + "d1 - previous_date > ?" +
+                UNION + selectFirstEntryDate;
 
         return new QueryStatement<Optional<Long>>(selectStartTime) {
             @Override
@@ -498,11 +505,19 @@ public class TPSQueries {
                 statement.setString(1, serverUUID.toString());
                 statement.setString(2, serverUUID.toString());
                 statement.setLong(3, dataGapThreshold);
+                statement.setString(4, serverUUID.toString());
             }
 
             @Override
             public Optional<Long> processResults(ResultSet set) throws SQLException {
-                return set.next() ? Optional.of(set.getLong("start_time")) : Optional.empty();
+                long startTime = 0;
+                while (set.next()) {
+                    long gotStartTime = set.getLong("start_time");
+                    if (!set.wasNull()) {
+                        startTime = Math.max(startTime, gotStartTime);
+                    }
+                }
+                return startTime != 0 ? Optional.of(startTime) : Optional.empty();
             }
         };
     }
