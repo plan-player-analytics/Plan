@@ -30,7 +30,8 @@ task updateVersion(type: Copy) {
 }
 
 task determineWebAssetModifications {
-    file("build/sources/resources/WebAssetVersion.yml").text = "" // Clear previous build
+    def versionFile = file("build/resources/main/assets/plan/WebAssetVersion.yml")
+    versionFile.text = "" // Clear previous build
     ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
     tree.forEach { File f ->
         def gitModified = new ByteArrayOutputStream()
@@ -38,10 +39,10 @@ task determineWebAssetModifications {
             commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
             standardOutput = gitModified
         }
-        def modified = Integer.parseInt(gitModified.toString().strip())
+        // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
+        def modified = Long.parseLong(gitModified.toString().strip()) * 1000
         def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
-        file("build/sources/resources/WebAssetVersion.yml").text += String.format(
-                // writing YAML as raw text probably isn't the best idea
+        versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
                 "%s: %s\n", relativePath.toString().replace('.', ','), modified
         )
     }
