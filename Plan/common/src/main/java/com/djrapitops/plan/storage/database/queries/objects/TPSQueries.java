@@ -472,4 +472,39 @@ public class TPSQueries {
             }
         };
     }
+
+    public static Query<Optional<Long>> fetchLatestServerStartTime(ServerUUID serverUUID, long dataGapThreshold) {
+        String selectPreviousRowNumber = SELECT +
+                "-1+ROW_NUMBER() over (ORDER BY " + DATE + ") AS previous_rn," +
+                "DATE AS date" +
+                FROM + TABLE_NAME +
+                ORDER_BY + DATE + " DESC" +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
+        String selectRowNumber = SELECT +
+                "ROW_NUMBER() over (ORDER BY " + DATE + ") AS rn," +
+                "DATE AS previous_date" +
+                FROM + TABLE_NAME +
+                ORDER_BY + DATE + " DESC" +
+                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
+        String selectStartTime = SELECT +
+                "MAX(date) AS start_time" +
+                FROM + "(" + selectPreviousRowNumber + ") t1" +
+                INNER_JOIN +
+                "(" + selectRowNumber + ") t2 ON t1.previous_rn=t2.rn" +
+                WHERE + "date - previous_date > ?;";
+
+        return new QueryStatement<Optional<Long>>(selectStartTime) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+                statement.setString(2, serverUUID.toString());
+                statement.setLong(3, dataGapThreshold);
+            }
+
+            @Override
+            public Optional<Long> processResults(ResultSet set) throws SQLException {
+                return set.next() ? Optional.of(set.getLong("start_time")) : Optional.empty();
+            }
+        };
+    }
 }
