@@ -69,6 +69,7 @@ function loadNetworkOverviewValues(json, error) {
     data = json.numbers;
     element = tab.querySelector('#data_numbers');
 
+    element.querySelector('#data_current_uptime').innerText = data.current_uptime;
     element.querySelector('#data_total').innerText = data.total_players;
     element.querySelector('#data_regular').innerText = data.regular_players;
     element.querySelector('#data_online').innerText = data.online_players;
@@ -325,6 +326,7 @@ function onViewserver(i, servers) {
             quickView.querySelector('#data_avg_tps').innerText = server.avg_tps;
             quickView.querySelector('#data_low_tps_spikes').innerText = server.low_tps_spikes;
             quickView.querySelector('#data_downtime').innerText = server.downtime;
+            quickView.querySelector('#data_current_uptime').innerText = server.current_uptime;
         }, 0);
     }
 }

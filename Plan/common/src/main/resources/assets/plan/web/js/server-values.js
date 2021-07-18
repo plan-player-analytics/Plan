@@ -74,6 +74,7 @@ function loadserverOverviewValues(json, error) {
     data = json.numbers;
     element = tab.querySelector('#data_numbers');
 
+    element.querySelector('#data_current_uptime').innerText = data.current_uptime;
     element.querySelector('#data_total').innerText = data.total_players;
     element.querySelector('#data_regular').innerText = data.regular_players;
     element.querySelector('#data_online').innerText = data.online_players;

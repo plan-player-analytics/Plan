@@ -74,7 +74,7 @@ subprojects {
         nukkitVersion = "1.0-SNAPSHOT"
         bungeeVersion = "1.16-R0.4"
         velocityVersion = "3.0.0-SNAPSHOT"
-        redisBungeeVersion = "0.6.3"
+        redisBungeeVersion = "0.3.8-SNAPSHOT"
 
         commonsTextVersion = "1.9"
         commonsCompressVersion = "1.21"
@@ -98,9 +98,6 @@ subprojects {
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots" } // BungeeCord
         maven { url = "https://repo.md-5.net/content/repositories/snapshots/" } // RedisBungee
         maven { url = "https://repo.velocitypowered.com/snapshots/" } // Velocity
-        maven { url = "https://repo.opencollab.dev/maven-snapshots/" } // Nukkit snapshot
-        maven { url = "https://repo.opencollab.dev/maven-releases/" } // Nukkit release
-        maven { url = "https://repo.codemc.org/repository/maven-public" } // bStats
         maven { url = "https://repo.playeranalytics.net/releases" } // Plan
     }
 

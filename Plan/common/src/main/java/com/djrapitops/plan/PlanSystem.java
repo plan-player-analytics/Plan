@@ -55,6 +55,8 @@ import javax.inject.Singleton;
 @Singleton
 public class PlanSystem implements SubSystem {
 
+    private static final long SERVER_ENABLE_TIME = System.currentTimeMillis();
+
     private boolean enabled = false;
 
     private final PlanFiles files;
@@ -297,5 +299,9 @@ public class PlanSystem implements SubSystem {
     @Deprecated
     public ErrorLogger getErrorLogger() {
         return errorLogger;
+    }
+
+    public static long getServerEnableTime() {
+        return SERVER_ENABLE_TIME;
     }
 }

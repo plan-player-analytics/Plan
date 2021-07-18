@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.SQLDB;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class QueryAPIQuery<T> implements Query<T> {
 
@@ -56,5 +57,25 @@ public class QueryAPIQuery<T> implements Query<T> {
         } catch (SQLException e) {
             throw DBOpException.forCause(sql, e);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "QueryAPIQuery{" +
+                "sql='" + sql + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QueryAPIQuery<?> that = (QueryAPIQuery<?>) o;
+        return Objects.equals(sql, that.sql);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sql);
     }
 }
