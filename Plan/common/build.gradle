@@ -30,19 +30,19 @@ task updateVersion(type: Copy) {
 }
 
 task determineWebAssetModifications {
-    file("build/sources/resources/WebAssetVersion.yml").text = ""
+    file("build/sources/resources/WebAssetVersion.yml").text = "" // Clear previous build
     ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
     tree.forEach { File f ->
-        def buildInfo = new ByteArrayOutputStream()
+        def gitModified = new ByteArrayOutputStream()
         exec {
             commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
-            standardOutput = buildInfo
+            standardOutput = gitModified
         }
-        def date = Integer.parseInt(buildInfo.toString().strip())
+        def modified = Integer.parseInt(gitModified.toString().strip())
+        def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
         file("build/sources/resources/WebAssetVersion.yml").text += String.format(
-                "%s: %s\n",
-                tree.getDir().toPath().relativize(f.toPath()).toString().replace('.', ','),
-                date
+                // writing YAML as raw text probably isn't the best idea
+                "%s: %s\n", relativePath.toString().replace('.', ','), modified
         )
     }
 }
