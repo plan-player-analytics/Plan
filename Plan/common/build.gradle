@@ -28,6 +28,25 @@ task updateVersion(type: Copy) {
     into 'build/sources/resources/'
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
 }
+
+task determineWebAssetModifications {
+    file("build/sources/resources/WebAssetVersion.yml").text = ""
+    ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
+    tree.forEach { File f ->
+        def buildInfo = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
+            standardOutput = buildInfo
+        }
+        def date = Integer.parseInt(buildInfo.toString().strip())
+        file("build/sources/resources/WebAssetVersion.yml").text += String.format(
+                "%s: %s\n",
+                tree.getDir().toPath().relativize(f.toPath()).toString().replace('.', ','),
+                date
+        )
+    }
+}
+
 processResources {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
@@ -35,6 +54,7 @@ processResources {
 }
 
 shadowJar {
+    dependsOn determineWebAssetModifications
     dependsOn processResources
 
     // Exclude these files
