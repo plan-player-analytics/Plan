@@ -79,7 +79,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void registerCommand(Subcommand command) {
-        commandManager.registerRoot(command);
+        commandManager.registerRoot(command, runnableFactory);
     }
 
     @Override
