@@ -27,6 +27,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
+import net.playeranalytics.plan.PlanFabric;
 
 import java.net.SocketAddress;
 import java.util.Collection;
@@ -66,6 +67,26 @@ public class PlanFabricEvents {
     public static final Event<OnLogin> ON_LOGIN = EventFactory.createArrayBacked(OnLogin.class, callbacks -> (address, profile, reason) -> {
         for (OnLogin callback : callbacks) {
             callback.onLogin(address, profile, reason);
+        }
+    });
+
+    /**
+     * Called when Plan is enabled.
+     * <p>
+     * This includes, but might not be limited to:
+     * <ul>
+     * <li>First time the plugin enables successfully</li>
+     * <li>Plan is reloaded</li>
+     * <li>Plan is enabled after it was disabled</li>
+     * </ul>
+     * <p>
+     * This event provides full access to the Plan instance. However, <strong>it is advised to
+     * only call {@link PlanFabric#isSystemEnabled} to determine if the enable was successful.</strong>
+     * It is not guaranteed that this event is called when the plugin fails to enable properly.
+     */
+    public static final Event<OnEnable> ON_ENABLE = EventFactory.createArrayBacked(OnEnable.class, callbacks -> (plugin) -> {
+        for (OnEnable callback : callbacks) {
+            callback.onEnable(plugin);
         }
     });
 
@@ -132,9 +153,13 @@ public class PlanFabricEvents {
          *
          * @param address the address of the player
          * @param profile the profile of the player
-         * @param reason the provided kick reason (null if player is permitted to join)
+         * @param reason  the provided kick reason (null if player is permitted to join)
          */
         void onLogin(SocketAddress address, GameProfile profile, Text reason);
     }
 
+    @FunctionalInterface
+    public interface OnEnable {
+        void onEnable(PlanFabric plugin);
+    }
 }

@@ -117,6 +117,9 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             onDisable();
         }
         registerCommand(component.planCommand().build());
+        if (system != null) {
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+        }
     }
 
     @Override
