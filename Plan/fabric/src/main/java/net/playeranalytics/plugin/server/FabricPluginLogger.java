@@ -28,31 +28,31 @@ public class FabricPluginLogger implements PluginLogger {
 
     @Override
     public PluginLogger info(String message) {
-        logger.info(message);
+        logger.info("[Plan] " + message);
         return this;
     }
 
     @Override
     public PluginLogger warn(String message) {
-        logger.warn(message);
+        logger.warn("[Plan] " + message);
         return this;
     }
 
     @Override
     public PluginLogger error(String message) {
-        logger.error(message);
+        logger.error("[Plan] " + message);
         return this;
     }
 
     @Override
     public PluginLogger warn(String message, Throwable throwable) {
-        logger.warn(message, throwable);
+        logger.warn("[Plan] " + message, throwable);
         return this;
     }
 
     @Override
     public PluginLogger error(String message, Throwable throwable) {
-        logger.error(message, throwable);
+        logger.error("[Plan] " + message, throwable);
         return this;
     }
 }
