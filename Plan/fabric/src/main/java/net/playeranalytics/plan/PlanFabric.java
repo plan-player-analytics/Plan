@@ -156,19 +156,16 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            commandManager = new CommandManager(dispatcher);
-        });
-
-
-        // TODO move to separate class?
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             this.server = (MinecraftDedicatedServer) server;
             onEnable();
         });
-        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-            onDisable();
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+            commandManager = new CommandManager(dispatcher);
         });
+
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }
 
     public MinecraftServer getServer() {

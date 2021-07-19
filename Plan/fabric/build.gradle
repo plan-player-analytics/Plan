@@ -9,7 +9,7 @@ dependencies {
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     shadow project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
-    include(modImplementation('me.lucko:fabric-permissions-api:0.1-SNAPSHOT'))
+    modImplementation('me.lucko:fabric-permissions-api:0.1-SNAPSHOT')
 
     minecraft "com.mojang:minecraft:1.17.1"
     mappings "net.fabricmc:yarn:1.17.1+build.21:v2"

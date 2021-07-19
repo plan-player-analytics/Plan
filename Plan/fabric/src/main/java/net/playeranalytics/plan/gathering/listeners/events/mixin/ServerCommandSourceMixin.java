@@ -17,12 +17,12 @@
 package net.playeranalytics.plan.gathering.listeners.events.mixin;
 
 import com.djrapitops.plan.commands.use.*;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.playeranalytics.plan.commands.CommandManager;
 import net.playeranalytics.plan.commands.use.FabricMessageBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -63,7 +63,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public boolean hasPermission(String permission) {
-        return Permissions.check((ServerCommandSource) (Object) this, permission, 2);
+        return CommandManager.checkPermission((ServerCommandSource) (Object) this, permission);
     }
 
     @Override

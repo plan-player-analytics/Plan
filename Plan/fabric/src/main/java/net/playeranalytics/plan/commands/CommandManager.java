@@ -33,7 +33,6 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
 
-import java.security.Permission;
 import java.util.concurrent.CompletableFuture;
 
 public class CommandManager {
@@ -92,6 +91,28 @@ public class CommandManager {
         }
     }
 
+    public static boolean checkPermission(ServerCommandSource src, String permission) {
+        if (isPermissionsApiAvailable()) {
+            return Permissions.check(src, permission, 2);
+        } else if (src.hasPermissionLevel(2)) {
+            return true;
+        } else {
+            return switch (permission) {
+                case "plan.player.self", "plan.ingame.self", "plan.register.self", "plan.unregister.self", "plan.json.self" -> true;
+                default -> false;
+            };
+        }
+    }
+
+    public static boolean isPermissionsApiAvailable() {
+        try {
+            Class.forName("me.lucko.fabric.api.permissions.v0.Permissions");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false; // not available
+        }
+    }
+
     private LiteralArgumentBuilder<ServerCommandSource> buildCommand(Subcommand subcommand, String alias) {
         RequiredArgumentBuilder<ServerCommandSource, String> arguments = RequiredArgumentBuilder.argument("arguments", StringArgumentType.greedyString());
         arguments.suggests((context, builder) -> arguments(subcommand, context, builder));
@@ -100,7 +121,7 @@ public class CommandManager {
         literal.executes(ctx -> execute(ctx, subcommand));
         literal.requires(src -> {
             for (String permission : subcommand.getRequiredPermissions()) {
-                if (!Permissions.check(src, permission, 2)) return false;
+                if (!checkPermission(src, permission)) return false;
             }
             return true;
         });
