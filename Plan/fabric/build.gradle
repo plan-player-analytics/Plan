@@ -1,12 +1,10 @@
-import net.fabricmc.loom.task.RemapJarTask
-
 plugins {
     id 'fabric-loom' version '0.8-SNAPSHOT'
 }
 
 dependencies {
-    compileOnly project(":common")
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    implementation project(path: ":common", configuration: 'shadow')
     shadow project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
     modImplementation('me.lucko:fabric-permissions-api:0.1-SNAPSHOT')
