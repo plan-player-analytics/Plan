@@ -62,7 +62,7 @@ subprojects {
     targetCompatibility = JavaVersion.VERSION_1_8
 
     ext {
-        daggerVersion = "2.37"
+        daggerVersion = "2.38"
         daggerCompilerVersion = "2.37"
 
         palVersion = "5.0.0"
