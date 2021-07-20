@@ -19,6 +19,8 @@ package net.playeranalytics.plan.gathering.listeners.fabric;
 import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.PlayerKill;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
@@ -39,28 +41,31 @@ public class DeathEventListener implements FabricListener {
 
     private final Processing processing;
     private final ErrorLogger errorLogger;
+    private final ServerInfo serverInfo;
 
     private boolean isEnabled = false;
 
     @Inject
     public DeathEventListener(
+            ServerInfo serverInfo,
             Processing processing,
             ErrorLogger errorLogger
     ) {
+        this.serverInfo = serverInfo;
         this.processing = processing;
         this.errorLogger = errorLogger;
     }
 
     @Override
     public void register() {
-        PlanFabricEvents.ON_KILLED.register((dead, killer) -> {
+        PlanFabricEvents.ON_KILLED.register((victim, killer) -> {
             if (!this.isEnabled) {
                 return;
             }
             long time = System.currentTimeMillis();
-            if (dead instanceof ServerPlayerEntity) {
+            if (victim instanceof ServerPlayerEntity) {
                 // Process Death
-                SessionCache.getCachedSession(dead.getUuid()).ifPresent(ActiveSession::addDeath);
+                SessionCache.getCachedSession(victim.getUuid()).ifPresent(ActiveSession::addDeath);
             }
 
             try {
@@ -71,16 +76,24 @@ public class DeathEventListener implements FabricListener {
 
                 ServerPlayerEntity player = foundKiller.get();
 
-                Runnable processor = dead instanceof ServerPlayerEntity
-                        ? new PlayerKillProcessor(player.getUuid(), time, dead.getUuid(), findWeapon(player))
+                Runnable processor = victim instanceof ServerPlayerEntity
+                        ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayerEntity) victim), serverInfo.getServerIdentifier(), findWeapon(player), time)
                         : new MobKillProcessor(player.getUuid());
                 processing.submitCritical(processor);
             } catch (Exception e) {
-                errorLogger.error(e, ErrorContext.builder().related(getClass(), dead, killer).build());
+                errorLogger.error(e, ErrorContext.builder().related(getClass(), victim, killer).build());
             }
 
         });
         this.enable();
+    }
+
+    private PlayerKill.Killer getKiller(ServerPlayerEntity killer) {
+        return new PlayerKill.Killer(killer.getUuid(), killer.getName().asString());
+    }
+
+    private PlayerKill.Victim getVictim(ServerPlayerEntity victim) {
+        return new PlayerKill.Victim(victim.getUuid(), victim.getName().asString());
     }
 
     public Optional<ServerPlayerEntity> getCause(Entity killer) {
