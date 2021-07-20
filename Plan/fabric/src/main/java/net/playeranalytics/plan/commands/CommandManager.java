@@ -38,12 +38,34 @@ import java.util.concurrent.CompletableFuture;
 
 public class CommandManager {
 
-    private RunnableFactory runnableFactory;
     private final CommandDispatcher<ServerCommandSource> dispatcher;
+    private RunnableFactory runnableFactory;
     private LiteralArgumentBuilder<ServerCommandSource> root;
 
     public CommandManager(CommandDispatcher<ServerCommandSource> dispatcher) {
         this.dispatcher = dispatcher;
+    }
+
+    public static boolean checkPermission(ServerCommandSource src, String permission) {
+        if (isPermissionsApiAvailable()) {
+            return Permissions.check(src, permission, 2);
+        } else if (src.hasPermissionLevel(2)) {
+            return true;
+        } else {
+            return switch (permission) {
+                case "plan.player.self", "plan.ingame.self", "plan.register.self", "plan.unregister.self", "plan.json.self" -> true;
+                default -> false;
+            };
+        }
+    }
+
+    public static boolean isPermissionsApiAvailable() {
+        try {
+            Class.forName("me.lucko.fabric.api.permissions.v0.Permissions");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false; // not available
+        }
     }
 
     public CompletableFuture<Suggestions> arguments(final Subcommand subcommand, final CommandContext<ServerCommandSource> ctx, final SuggestionsBuilder builder) {
@@ -95,28 +117,6 @@ public class CommandManager {
                 }
             }
             parent.then(argumentBuilder);
-        }
-    }
-
-    public static boolean checkPermission(ServerCommandSource src, String permission) {
-        if (isPermissionsApiAvailable()) {
-            return Permissions.check(src, permission, 2);
-        } else if (src.hasPermissionLevel(2)) {
-            return true;
-        } else {
-            return switch (permission) {
-                case "plan.player.self", "plan.ingame.self", "plan.register.self", "plan.unregister.self", "plan.json.self" -> true;
-                default -> false;
-            };
-        }
-    }
-
-    public static boolean isPermissionsApiAvailable() {
-        try {
-            Class.forName("me.lucko.fabric.api.permissions.v0.Permissions");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false; // not available
         }
     }
 

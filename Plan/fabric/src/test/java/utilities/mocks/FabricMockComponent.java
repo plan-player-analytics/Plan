@@ -45,7 +45,7 @@ public class FabricMockComponent {
         this.tempDir = tempDir;
     }
 
-    public PlanPlugin getPlanMock() throws Exception {
+    public PlanPlugin getPlanMock() {
         if (planMock == null) {
             planMock = PlanFabricMocker.setUp()
                     .withDataFolder(tempDir.resolve("data").toFile())
@@ -54,7 +54,7 @@ public class FabricMockComponent {
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanPlugin planMock = getPlanMock();
             component = DaggerPlanFabricComponent.builder()

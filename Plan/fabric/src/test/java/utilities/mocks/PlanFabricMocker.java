@@ -46,7 +46,6 @@ public class PlanFabricMocker extends Mocker {
         super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
-        ;
 
         return this;
     }

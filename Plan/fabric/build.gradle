@@ -61,15 +61,3 @@ remapJar {
 }
 
 shadowJar.finalizedBy(remapJar)
-
-/*
-tasks.assemble.dependsOn tasks.remapJar
-
-artifacts {
-    archives remapJar
-    shadow shadowJar
-}
-
- */
-
-//tasks.assemble.dependsOn tasks.remappedShadowJar

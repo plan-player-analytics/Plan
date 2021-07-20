@@ -50,7 +50,7 @@ public class FabricListenerSystem extends ListenerSystem {
             PlayerOnlineListener playerOnlineListener,
             WorldChangeListener worldChangeListener,
             Listeners listeners
-            ) {
+    ) {
         this.chatListener = chatListener;
         this.deathEventListener = deathEventListener;
         this.fabricAFKListener = fabricAFKListener;

@@ -46,7 +46,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Task that handles player ping calculation on Fabric based servers.
  *
- * @author BrainStone, Drex
+ * @author BrainStone
+ * @author DrexHD
  */
 public class FabricPingCounter extends TaskSystem.Task implements FabricListener {
 

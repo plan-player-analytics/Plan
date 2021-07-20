@@ -100,9 +100,7 @@ public class FabricAFKListener implements FabricListener {
             }
             ignorePermissionInfo.remove(handler.player.getUuid());
         });
-        PlanFabricEvents.ON_MOVE.register((handler, packet) -> {
-            event(handler.player);
-        });
+        PlanFabricEvents.ON_MOVE.register((handler, packet) -> event(handler.player));
     }
 
 

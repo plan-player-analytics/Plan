@@ -16,7 +16,6 @@
  */
 package net.playeranalytics.plugin.server;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 
 import java.util.Collections;
@@ -25,11 +24,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class FabricListeners implements Listeners {
 
-    private final DedicatedServerModInitializer plugin;
     private final Set<FabricListener> listeners;
 
-    public FabricListeners(DedicatedServerModInitializer plugin) {
-        this.plugin = plugin;
+    public FabricListeners() {
         this.listeners = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 

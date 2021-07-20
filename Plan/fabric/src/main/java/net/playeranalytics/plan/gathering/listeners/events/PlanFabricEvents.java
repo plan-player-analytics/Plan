@@ -118,7 +118,7 @@ public class PlanFabricEvents {
          * Called when a sends a valid movement packet
          *
          * @param handler the handler of the sending player
-         * @param packet the send packet
+         * @param packet  the send packet
          */
         void onMove(ServerPlayNetworkHandler handler, PlayerMoveC2SPacket packet);
     }
@@ -128,7 +128,7 @@ public class PlanFabricEvents {
         /**
          * Called when a player changes gamemode
          *
-         * @param player the player that changed gamemodes
+         * @param player      the player that changed gamemodes
          * @param newGameMode the new gamemode
          */
         void onGameModeChange(ServerPlayerEntity player, GameMode newGameMode);
@@ -139,9 +139,9 @@ public class PlanFabricEvents {
         /**
          * Called when a player (or multiple) get kicked from the server
          *
-         * @param source the source that initated the kick
+         * @param source  the source that initated the kick
          * @param targets the player(s) that got kicked
-         * @param reason the provided kick reason
+         * @param reason  the provided kick reason
          */
         void onKicked(ServerCommandSource source, Collection<ServerPlayerEntity> targets, Text reason);
     }

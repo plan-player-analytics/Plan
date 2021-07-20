@@ -48,21 +48,25 @@ public class FabricPlatformLayer implements PlatformAbstractionLayer {
 
     @Override
     public Listeners getListeners() {
-        if (this.listeners == null) { this.listeners = new FabricListeners(this.plugin); }
+        if (this.listeners == null) {
+            this.listeners = new FabricListeners();
+        }
         return listeners;
     }
 
     @Override
     public RunnableFactory getRunnableFactory() {
         if (this.runnableFactory == null) {
-            this.runnableFactory = new FabricRunnableFactory(this.plugin);
+            this.runnableFactory = new FabricRunnableFactory();
         }
         return runnableFactory;
     }
 
     @Override
     public PluginInformation getPluginInformation() {
-        if (this.pluginInformation == null) { this.pluginInformation = new FabricPluginInformation(this.plugin); }
+        if (this.pluginInformation == null) {
+            this.pluginInformation = new FabricPluginInformation(this.plugin);
+        }
         return pluginInformation;
     }
 }

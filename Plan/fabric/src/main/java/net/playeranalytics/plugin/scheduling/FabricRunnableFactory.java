@@ -16,8 +16,6 @@
  */
 package net.playeranalytics.plugin.scheduling;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
-
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,24 +24,23 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class FabricRunnableFactory implements RunnableFactory {
 
-    private final DedicatedServerModInitializer plugin;
     private final ScheduledExecutorService executorService;
     private final Set<FabricTask> tasks;
 
-    public FabricRunnableFactory(DedicatedServerModInitializer plugin) {
-        this.plugin = plugin;
+    public FabricRunnableFactory() {
         this.executorService = Executors.newScheduledThreadPool(8);
         this.tasks = Collections.newSetFromMap(new ConcurrentHashMap<>());
     }
 
     @Override
     public UnscheduledTask create(Runnable runnable) {
-        return new UnscheduledFabricTask(plugin, executorService, runnable, task -> {});
+        return new UnscheduledFabricTask(executorService, runnable, task -> {
+        });
     }
 
     @Override
     public UnscheduledTask create(PluginRunnable runnable) {
-        return new UnscheduledFabricTask(plugin, executorService, runnable, runnable::setCancellable);
+        return new UnscheduledFabricTask(executorService, runnable, runnable::setCancellable);
     }
 
     @Override

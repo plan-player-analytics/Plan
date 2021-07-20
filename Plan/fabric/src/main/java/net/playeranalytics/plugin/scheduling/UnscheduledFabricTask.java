@@ -16,21 +16,17 @@
  */
 package net.playeranalytics.plugin.scheduling;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
-
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class UnscheduledFabricTask implements UnscheduledTask {
 
-    private final DedicatedServerModInitializer plugin;
     private final ScheduledExecutorService scheduler;
     private final Runnable runnable;
     private final Consumer<Task> cancellableConsumer;
 
-    public UnscheduledFabricTask(DedicatedServerModInitializer plugin, ScheduledExecutorService scheduler, Runnable runnable, Consumer<Task> cancellableConsumer) {
-        this.plugin = plugin;
+    public UnscheduledFabricTask(ScheduledExecutorService scheduler, Runnable runnable, Consumer<Task> cancellableConsumer) {
         this.scheduler = scheduler;
         this.runnable = runnable;
         this.cancellableConsumer = cancellableConsumer;
