@@ -50,5 +50,6 @@ public class FabricRunnableFactory implements RunnableFactory {
     public void cancelAllKnownTasks() {
         this.tasks.forEach(Task::cancel);
         this.tasks.clear();
+        executorService.shutdown();
     }
 }

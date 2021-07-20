@@ -26,9 +26,11 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.playeranalytics.plan.commands.CommandManager;
 import net.playeranalytics.plugin.FabricPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -50,6 +52,7 @@ import java.util.concurrent.TimeoutException;
 public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     private MinecraftDedicatedServer server;
+    private CommandManager commandManager;
 
     private PlanSystem system;
     private Locale locale;
@@ -76,7 +79,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void registerCommand(Subcommand command) {
-
+        commandManager.registerRoot(command, runnableFactory);
     }
 
     @Override
@@ -112,6 +115,10 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             pluginLogger.error("Plugin Failed to Initialize Correctly. If this issue is caused by config settings you can use /plan reload");
             pluginLogger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
+        }
+        registerCommand(component.planCommand().build());
+        if (system != null) {
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
     }
 
@@ -149,11 +156,16 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
-        // TODO move to separate class?
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             this.server = (MinecraftDedicatedServer) server;
             onEnable();
         });
+
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+            commandManager = new CommandManager(dispatcher);
+        });
+
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }
 
     public MinecraftServer getServer() {

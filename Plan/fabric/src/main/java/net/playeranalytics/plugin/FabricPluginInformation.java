@@ -42,6 +42,6 @@ public class FabricPluginInformation implements PluginInformation {
 
     @Override
     public String getVersion() {
-        return "fabricTest";
+        return FabricLoader.getInstance().getModContainer("plan").get().getMetadata().getVersion().getFriendlyString();
     }
 }

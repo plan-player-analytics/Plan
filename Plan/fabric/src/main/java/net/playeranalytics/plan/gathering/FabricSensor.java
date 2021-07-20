@@ -17,25 +17,64 @@
 package net.playeranalytics.plan.gathering;
 
 import com.djrapitops.plan.gathering.ServerSensor;
-import net.minecraft.world.World;
+import net.minecraft.entity.Entity;
+import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.world.ServerWorld;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class FabricSensor implements ServerSensor<World> {
+public class FabricSensor implements ServerSensor<ServerWorld> {
+
+    private final MinecraftDedicatedServer server;
 
     @Inject
-    public FabricSensor() {
+    public FabricSensor(
+            MinecraftDedicatedServer server
+    ) {
+        this.server = server;
+    }
+
+    @Override
+    public double getTPS() {
+        //Returns the ticks per second of the last 100 ticks
+        int length = server.lastTickLengths.length;
+        double totalTickLength = 0;
+        for (long tickLength : server.lastTickLengths) {
+            totalTickLength += Math.max(tickLength, TimeUnit.MILLISECONDS.toNanos(50));
+        }
+        return Math.pow(10, 9) / (totalTickLength / length);
+    }
+
+    @Override
+    public Iterable<ServerWorld> getWorlds() {
+        return server.getWorlds();
+    }
+
+    @Override
+    public int getEntityCount(ServerWorld world) {
+        int entities = 0;
+        for (Entity ignored : world.iterateEntities()) {
+            entities++;
+        }
+        return entities;
+    }
+
+    @Override
+    public int getChunkCount(ServerWorld world) {
+        return world.getChunkManager().getLoadedChunkCount();
     }
 
     @Override
     public boolean supportsDirectTPS() {
-        return false;
+        return true;
     }
 
     @Override
     public int getOnlinePlayerCount() {
-        return 0;
+        return server.getCurrentPlayerCount();
     }
 }

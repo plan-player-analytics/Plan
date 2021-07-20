@@ -18,15 +18,30 @@ package net.playeranalytics.plan.modules.fabric;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
+import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
-import net.minecraft.world.World;
+import net.minecraft.server.world.ServerWorld;
+import net.playeranalytics.plan.gathering.timed.FabricPingCounter;
 
 @Module
 public interface FabricTaskModule {
 
     @Binds
     @IntoSet
-    TaskSystem.Task bindTPSCounter(ServerTPSCounter<World> tpsCounter);
+    TaskSystem.Task bindTPSCounter(ServerTPSCounter<ServerWorld> tpsCounter);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindPingCounter(FabricPingCounter pingCounter);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindRamAndCpuTask(SystemUsageBuffer.RamAndCpuTask ramAndCpuTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindDiskTask(SystemUsageBuffer.DiskTask diskTask);
+
 }

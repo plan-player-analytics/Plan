@@ -50,6 +50,10 @@ public class CommandWithSubcommands extends Subcommand {
         return subcommands.stream().filter(sender::hasAllPermissionsFor).collect(Collectors.toList());
     }
 
+    public List<Subcommand> getSubcommands() {
+        return subcommands;
+    }
+
     public void onHelp(CMDSender sender, Arguments arguments) {
         List<Subcommand> hasPermissionFor = getPermittedSubcommands(sender);
         sender.buildMessage()

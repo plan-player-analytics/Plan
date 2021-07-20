@@ -17,8 +17,11 @@
 package net.playeranalytics.plan.gathering.listeners;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
-import net.playeranalytics.plan.gathering.listeners.fabric.PlayerOnlineListener;
+import net.playeranalytics.plan.PlanFabric;
+import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
+import net.playeranalytics.plan.gathering.listeners.fabric.*;
 import net.playeranalytics.plugin.server.Listeners;
 
 import javax.inject.Inject;
@@ -30,32 +33,58 @@ import javax.inject.Inject;
  */
 public class FabricListenerSystem extends ListenerSystem {
 
-    private final Listeners listeners;
+    private final ChatListener chatListener;
+    private final DeathEventListener deathEventListener;
+    private final FabricAFKListener fabricAFKListener;
+    private final GameModeChangeListener gameModeChangeListener;
     private final PlayerOnlineListener playerOnlineListener;
+    private final WorldChangeListener worldChangeListener;
+    private final Listeners listeners;
 
     @Inject
     public FabricListenerSystem(
-            Listeners listeners,
-            PlayerOnlineListener playerOnlineListener
-    ) {
-        this.listeners = listeners;
-
+            ChatListener chatListener,
+            DeathEventListener deathEventListener,
+            FabricAFKListener fabricAFKListener,
+            GameModeChangeListener gameModeChangeListener,
+            PlayerOnlineListener playerOnlineListener,
+            WorldChangeListener worldChangeListener,
+            Listeners listeners
+            ) {
+        this.chatListener = chatListener;
+        this.deathEventListener = deathEventListener;
+        this.fabricAFKListener = fabricAFKListener;
         this.playerOnlineListener = playerOnlineListener;
+        this.gameModeChangeListener = gameModeChangeListener;
+        this.worldChangeListener = worldChangeListener;
+        this.listeners = listeners;
 
     }
 
     @Override
     protected void registerListeners() {
+        listeners.registerListener(chatListener);
+        listeners.registerListener(deathEventListener);
+        listeners.registerListener(fabricAFKListener);
+        listeners.registerListener(gameModeChangeListener);
         listeners.registerListener(playerOnlineListener);
+        listeners.registerListener(worldChangeListener);
     }
 
     @Override
     protected void unregisterListeners() {
+        listeners.unregisterListener(chatListener);
+        listeners.unregisterListener(deathEventListener);
+        listeners.unregisterListener(fabricAFKListener);
+        listeners.unregisterListener(gameModeChangeListener);
         listeners.unregisterListener(playerOnlineListener);
+        listeners.unregisterListener(worldChangeListener);
     }
 
     @Override
     public void callEnableEvent(PlanPlugin plugin) {
-        // TODO implement
+        boolean isEnabled = plugin.isSystemEnabled();
+        PlanFabricEvents.ON_ENABLE.invoker().onEnable((PlanFabric) plugin);
+        CapabilitySvc.notifyAboutEnable(isEnabled);
     }
 }

@@ -36,9 +36,9 @@ public class FabricListeners implements Listeners {
     @Override
     public void registerListener(Object listener) {
         if (listener == null) {
-            throw new IllegalArgumentException("listener can not be null!");
+            throw new IllegalArgumentException("Listener can not be null!");
         } else if (!(listener instanceof FabricListener)) {
-            throw new IllegalArgumentException("listener needs to be of type " + listener.getClass().getName() + ", but was " + listener.getClass());
+            throw new IllegalArgumentException("Listener needs to be of type " + listener.getClass().getName() + ", but was " + listener.getClass());
         } else {
             if (!((FabricListener) listener).isEnabled()) {
                 ((FabricListener) listener).register();
@@ -55,6 +55,7 @@ public class FabricListeners implements Listeners {
 
     @Override
     public void unregisterListeners() {
-        // TODO implement
+        listeners.forEach(FabricListener::disable);
+        listeners.clear();
     }
 }
