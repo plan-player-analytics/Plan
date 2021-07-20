@@ -36,7 +36,7 @@ public class FabricServerProperties extends ServerProperties {
                 server.getServerPort(),
                 server.getVersion(),
                 FabricLoader.getInstance().getModContainer("fabric").get().getMetadata().getVersion().getFriendlyString() +
-                        " (API)" +
+                        " (API), " +
                         FabricLoader.getInstance().getModContainer("fabricloader").get().getMetadata().getVersion().getFriendlyString() +
                         " (loader)",
                 () -> (server.getServerIp() == null) ? "" : server.getServerIp(),
