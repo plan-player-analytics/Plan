@@ -223,6 +223,7 @@ public enum HtmlLang implements Lang {
     NO_KILLS("No Kills"),
     LABEL_MAX_FREE_DISK("Max Free Disk"),
     LABEL_MIN_FREE_DISK("Min Free Disk"),
+    LABEL_CURRENT_UPTIME("Current Uptime"),
 
     LOGIN_LOGIN("Login"),
     LOGIN_LOGOUT("Logout"),

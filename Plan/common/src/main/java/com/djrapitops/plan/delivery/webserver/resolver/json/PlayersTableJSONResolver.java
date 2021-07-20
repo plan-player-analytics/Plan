@@ -78,7 +78,7 @@ public class PlayersTableJSONResolver implements Resolver {
     }
 
     private JSONStorage.StoredJSON getStoredJSON(Request request) {
-        long timestamp = Identifiers.getTimestamp(request);
+        Optional<Long> timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException

@@ -108,7 +108,7 @@ public class PlayerCalendar {
 
             for (PlayerKill kill : session.getExtraData(PlayerKills.class).map(PlayerKills::asList).orElseGet(ArrayList::new)) {
                 long time = kill.getDate();
-                String victim = kill.getVictimName().orElse(kill.getVictim().toString());
+                String victim = kill.getVictim().getName();
                 entries.add(CalendarEntry
                         .of(locale.getString(HtmlLang.KILLED) + ": " + victim, time)
                         .withEnd(time + fiveMinutes)

@@ -33,7 +33,7 @@ public class ResourceSettings {
     }
 
     public boolean shouldBeCustomized(String plugin, String fileName) {
-        ConfigNode fileCustomization = config.getNode("Customized_files").orElseGet(() -> config.addNode("Customized_files"));
+        ConfigNode fileCustomization = getCustomizationConfigNode();
         fileCustomization.setComment(Collections.singletonList("The files are placed in /Plan/web/ if the setting is 'true' when accessed."));
 
         ConfigNode pluginCustomization = fileCustomization.getNode(plugin).orElseGet(() -> fileCustomization.addNode(plugin));
@@ -51,6 +51,10 @@ public class ResourceSettings {
             }
             return false;
         }
+    }
+
+    public ConfigNode getCustomizationConfigNode() {
+        return config.getNode("Customized_files").orElseGet(() -> config.addNode("Customized_files"));
     }
 
 }

@@ -74,7 +74,7 @@ public class SessionsJSONResolver implements Resolver {
     }
 
     private JSONStorage.StoredJSON getStoredJSON(Request request) {
-        long timestamp = Identifiers.getTimestamp(request);
+        Optional<Long> timestamp = Identifiers.getTimestamp(request);
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request);
             return jsonResolverService.resolve(timestamp, DataID.SESSIONS, serverUUID,

@@ -22,10 +22,13 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.Trend;
 import com.djrapitops.plan.gathering.ServerSensor;
+import com.djrapitops.plan.gathering.ServerUptimeCalculator;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
@@ -50,24 +53,30 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
 
     private final Formatter<Long> day;
     private final PlanConfig config;
+    private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ServerSensor<?> serverSensor;
     private final Formatter<Long> timeAmount;
+    private final ServerUptimeCalculator serverUptimeCalculator;
     private final Formatter<DateHolder> year;
 
     @Inject
     public NetworkOverviewJSONCreator(
             PlanConfig config,
+            Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerSensor<?> serverSensor,
+            ServerUptimeCalculator serverUptimeCalculator,
             Formatters formatters
     ) {
         this.config = config;
+        this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
+        this.serverUptimeCalculator = serverUptimeCalculator;
 
         year = formatters.year();
         day = formatters.dayLong();
@@ -127,6 +136,8 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         Long sessionCount = db.query(SessionQueries.sessionCount(0L, now));
         numbers.put("sessions", sessionCount);
         numbers.put("session_length_avg", sessionCount != 0 ? timeAmount.apply(totalPlaytime / sessionCount) : "-");
+        numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
+                .orElse(locale.getString(GenericLang.UNAVAILABLE)));
 
         return numbers;
     }

@@ -84,6 +84,8 @@ public class Contributors {
             new Contributor("portlek", CODE),
             new Contributor("mbax", CODE),
             new Contributor("rymiel", CODE),
+            new Contributor("Perchun_Pak", LANG),
+            new Contributor("HexedHero", CODE),
             new Contributor("DrexHD", CODE)
     };
 

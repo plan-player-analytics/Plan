@@ -170,15 +170,21 @@ public class TPS implements DateHolder {
     }
 
     public Number[] toArray() {
+        double tps = getTicksPerSecond();
+        double cpu = getCPUUsage();
+        long ram = getUsedMemory();
+        int entities = getEntityCount();
+        int chunks = getChunksLoaded();
+        long disk = getFreeDiskSpace();
         return new Number[]{
                 getDate(),
                 getPlayers(),
-                getTicksPerSecond(),
-                getCPUUsage(),
-                getUsedMemory(),
-                getEntityCount(),
-                getChunksLoaded(),
-                getFreeDiskSpace()
+                tps >= 0 ? tps : null,
+                cpu >= 0 ? cpu : null,
+                ram >= 0 ? ram : null,
+                entities >= 0 ? entities : null,
+                chunks >= 0 ? chunks : null,
+                disk >= 0 ? disk : null
         };
     }
 }

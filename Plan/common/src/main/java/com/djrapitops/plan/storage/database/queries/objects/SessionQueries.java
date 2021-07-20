@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.PlayerName;
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
@@ -72,6 +73,7 @@ public class SessionQueries {
             KillsTable.KILLER_UUID + ',' +
             KillsTable.VICTIM_UUID + ',' +
             "v." + UsersTable.USER_NAME + " as victim_name, " +
+            "k." + UsersTable.USER_NAME + " as killer_name, " +
             KillsTable.DATE + ',' +
             KillsTable.WEAPON +
             FROM + SessionsTable.TABLE_NAME + " s" +
@@ -80,6 +82,7 @@ public class SessionQueries {
             LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID + ')' +
             LEFT_JOIN + KillsTable.TABLE_NAME + " ON " + "s." + SessionsTable.ID + '=' + KillsTable.TABLE_NAME + '.' + KillsTable.SESSION_ID +
             LEFT_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + '=' + KillsTable.VICTIM_UUID +
+            LEFT_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + '=' + KillsTable.KILLER_UUID +
             INNER_JOIN + WorldTimesTable.TABLE_NAME + " ON s." + SessionsTable.ID + '=' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID +
             INNER_JOIN + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID + '=' + WorldTable.TABLE_NAME + '.' + WorldTable.ID;
 
@@ -202,15 +205,29 @@ public class SessionQueries {
 
             if (!existingWorldTimes.isPresent()) extraData.put(WorldTimes.class, worldTimes);
 
+            ServerName serverName = new ServerName(
+                    Server.getIdentifiableName(
+                            set.getString("server_name"),
+                            set.getInt("server_id")
+                    ));
+            extraData.put(ServerName.class, serverName);
+
             PlayerKills playerKills = existingPlayerKills.orElseGet(PlayerKills::new);
 
             String victimName = set.getString("victim_name");
             if (victimName != null) {
-                UUID killer = UUID.fromString(set.getString(KillsTable.KILLER_UUID));
-                UUID victim = UUID.fromString(set.getString(KillsTable.VICTIM_UUID));
-                long date = set.getLong(KillsTable.DATE);
+                PlayerKill.Killer killer = new PlayerKill.Killer(
+                        UUID.fromString(set.getString(KillsTable.KILLER_UUID)),
+                        set.getString("killer_name")
+                );
+                PlayerKill.Victim victim = new PlayerKill.Victim(
+                        UUID.fromString(set.getString(KillsTable.VICTIM_UUID)),
+                        victimName
+                );
+                ServerIdentifier serverIdentifier = new ServerIdentifier(serverUUID, serverName);
                 String weapon = set.getString(KillsTable.WEAPON);
-                PlayerKill newKill = new PlayerKill(killer, victim, weapon, date, victimName);
+                long date = set.getLong(KillsTable.DATE);
+                PlayerKill newKill = new PlayerKill(killer, victim, serverIdentifier, weapon, date);
 
                 if (!playerKills.contains(newKill)) {
                     playerKills.add(newKill);
@@ -219,11 +236,6 @@ public class SessionQueries {
             if (!existingPlayerKills.isPresent()) extraData.put(PlayerKills.class, playerKills);
 
             extraData.put(PlayerName.class, new PlayerName(set.getString("name")));
-            extraData.put(ServerName.class, new ServerName(
-                    Server.getIdentifiableName(
-                            set.getString("server_name"),
-                            set.getInt("server_id")
-                    )));
 
             session.setAsFirstSessionIfMatches(set.getLong("registered"));
 
