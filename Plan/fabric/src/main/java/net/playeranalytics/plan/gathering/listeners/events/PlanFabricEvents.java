@@ -84,7 +84,7 @@ public class PlanFabricEvents {
      * only call {@link PlanFabric#isSystemEnabled} to determine if the enable was successful.</strong>
      * It is not guaranteed that this event is called when the plugin fails to enable properly.
      */
-    public static final Event<OnEnable> ON_ENABLE = EventFactory.createArrayBacked(OnEnable.class, callbacks -> (plugin) -> {
+    public static final Event<OnEnable> ON_ENABLE = EventFactory.createArrayBacked(OnEnable.class, callbacks -> plugin -> {
         for (OnEnable callback : callbacks) {
             callback.onEnable(plugin);
         }
