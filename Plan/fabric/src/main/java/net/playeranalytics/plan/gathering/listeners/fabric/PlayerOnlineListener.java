@@ -220,7 +220,7 @@ public class PlayerOnlineListener implements FabricListener {
         return joinAddresses.get(player.getUuid());
     }
 
-    //TODO: Call
+    // No event priorities on Fabric, so this has to be called with onPlayerQuit()
     public void beforePlayerQuit(ServerPlayerEntity player) {
         UUID playerUUID = player.getUuid();
         String playerName = player.getEntityName();
@@ -228,6 +228,7 @@ public class PlayerOnlineListener implements FabricListener {
     }
 
     public void onPlayerQuit(ServerPlayerEntity player) {
+        beforePlayerQuit(player);
         try {
             actOnQuitEvent(player);
         } catch (Exception e) {
