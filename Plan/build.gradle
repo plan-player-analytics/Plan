@@ -82,7 +82,7 @@ subprojects {
         mysqlVersion = "8.0.26"
         sqliteVersion = "3.36.0.1"
         hikariVersion = "4.0.3"
-        slf4jVersion = "1.7.31"
+        slf4jVersion = "1.7.32"
         geoIpVersion = "2.15.0"
         gsonVersion = "2.8.7"
         bstatsVersion = "2.2.1"
