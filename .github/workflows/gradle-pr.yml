@@ -21,11 +21,12 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Set up JDK 1.11
-        uses: actions/setup-java@v1
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.16
+        uses: actions/setup-java@v2
         with:
-          java-version: 1.11
+          distribution: 'adopt'
+          java-version: '16'
       - name: Verify MariaDB connection
         env:
           PORT: ${{ job.services.mariadb.ports[3306] }}
@@ -33,6 +34,15 @@ jobs:
           while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
             sleep 1
           done
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Build with Gradle
         env:
           MYSQL_DB: test
@@ -42,3 +52,9 @@ jobs:
         run: |
           cd Plan
           ./gradlew build
+      - name: Cleanup Gradle cache
+        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
