@@ -105,7 +105,7 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
          Optional<Long> webAssetVersion = webAssetVersions.getWebAssetVersion(resource);
          if (resourceFile.isPresent() && webAssetVersion.isPresent()) {
              if (webAssetVersion.get() > resourceFile.get().lastModified()) {
-                 return new Optional.of(new AssetInfo(
+                 return Optional.of(new AssetInfo(
                      resource,
                      resourceFile.get().lastModified(),
                      webAssetVersion.get()
