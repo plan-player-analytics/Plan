@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10};
+var data = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -209,77 +209,82 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <th class="colLast" scope="col">Description</th>
 </tr>
 <tr id="i0" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.io.File&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#attemptToFind(java.lang.String)">attemptToFind</a></span>&#8203;(java.lang.String&nbsp;resourceName)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
+<tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#disable()">disable</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Performs disable actions for the subsystem</div>
 </td>
 </tr>
-<tr id="i1" class="rowColor">
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#enable()">enable</a></span>()</code></th>
 <td class="colLast">
 <div class="block">Performs enable actions for the subsystem.</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>java.io.File</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getConfigFile()">getConfigFile</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;<a href="Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a>&gt;</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCustomizableResource(java.lang.String)">getCustomizableResource</a></span>&#8203;(java.lang.String&nbsp;resourceName)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.nio.file.Path</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getCustomizationDirectory()">getCustomizationDirectory</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.nio.file.Path</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDataDirectory()">getDataDirectory</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.io.File</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getDataFolder()">getDataFolder</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>java.io.File</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getFileFromPluginFolder(java.lang.String)">getFileFromPluginFolder</a></span>&#8203;(java.lang.String&nbsp;name)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>java.nio.file.Path</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getJSONStorageDirectory()">getJSONStorageDirectory</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>java.io.File</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLocaleFile()">getLocaleFile</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>java.nio.file.Path</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLogsDirectory()">getLogsDirectory</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>java.io.File</code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getLogsFolder()">getLogsFolder</a></span>()</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code><a href="Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getResourceFromJar(java.lang.String)">getResourceFromJar</a></span>&#8203;(java.lang.String&nbsp;resourceName)</code></th>
 <td class="colLast">
 <div class="block">Get a file in the jar as a <a href="Resource.html" title="interface in com.djrapitops.plan.storage.file"><code>Resource</code></a>.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code><a href="Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a></code></td>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#getResourceFromPluginFolder(java.lang.String)">getResourceFromPluginFolder</a></span>&#8203;(java.lang.String&nbsp;resourceName)</code></th>
 <td class="colLast">
@@ -492,6 +497,15 @@ public&nbsp;PlanFiles&#8203;(@Named("dataFolder")
 <li class="blockList">
 <h4>getCustomizableResource</h4>
 <pre class="methodSignature">public&nbsp;java.util.Optional&lt;<a href="Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a>&gt;&nbsp;getCustomizableResource&#8203;(java.lang.String&nbsp;resourceName)</pre>
+</li>
+</ul>
+<a id="attemptToFind(java.lang.String)">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>attemptToFind</h4>
+<pre class="methodSignature">public&nbsp;java.util.Optional&lt;java.io.File&gt;&nbsp;attemptToFind&#8203;(java.lang.String&nbsp;resourceName)</pre>
 </li>
 </ul>
 <a id="getJSONStorageDirectory()">

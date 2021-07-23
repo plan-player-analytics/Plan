@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6};
+var data = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -199,6 +199,11 @@ public interface <span class="typeNameLabel">VelocityTaskModule</span></pre>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindTPSCounter(com.djrapitops.plan.gathering.timed.ProxyTPSCounter)">bindTPSCounter</a></span>&#8203;(<a href="../../gathering/timed/ProxyTPSCounter.html" title="class in com.djrapitops.plan.gathering.timed">ProxyTPSCounter</a>&nbsp;counter)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code><a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a></code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#bindWebAssetVersionCheckTask(com.djrapitops.plan.delivery.web.WebAssetVersionCheckTask)">bindWebAssetVersionCheckTask</a></span>&#8203;(<a href="../../delivery/web/WebAssetVersionCheckTask.html" title="class in com.djrapitops.plan.delivery.web">WebAssetVersionCheckTask</a>&nbsp;webAssetVersionCheckTask)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </table>
 </li>
 </ul>
@@ -329,12 +334,23 @@ public interface <span class="typeNameLabel">VelocityTaskModule</span></pre>
 <a id="bindResourceWriteTask(com.djrapitops.plan.delivery.web.ResourceWriteTask)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>bindResourceWriteTask</h4>
 <pre class="methodSignature">@Binds
 @IntoSet
 <a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a>&nbsp;bindResourceWriteTask&#8203;(<a href="../../delivery/web/ResourceWriteTask.html" title="class in com.djrapitops.plan.delivery.web">ResourceWriteTask</a>&nbsp;resourceWriteTask)</pre>
+</li>
+</ul>
+<a id="bindWebAssetVersionCheckTask(com.djrapitops.plan.delivery.web.WebAssetVersionCheckTask)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>bindWebAssetVersionCheckTask</h4>
+<pre class="methodSignature">@Binds
+@IntoSet
+<a href="../../TaskSystem.Task.html" title="class in com.djrapitops.plan">TaskSystem.Task</a>&nbsp;bindWebAssetVersionCheckTask&#8203;(<a href="../../delivery/web/WebAssetVersionCheckTask.html" title="class in com.djrapitops.plan.delivery.web">WebAssetVersionCheckTask</a>&nbsp;webAssetVersionCheckTask)</pre>
 </li>
 </ul>
 </li>
