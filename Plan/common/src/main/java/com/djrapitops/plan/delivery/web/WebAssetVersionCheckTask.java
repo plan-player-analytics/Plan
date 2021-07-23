@@ -109,7 +109,7 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
                      resource,
                      resourceFile.get().lastModified(),
                      webAssetVersion.get()
-                 )));
+                 ));
              }
          }
          return Optional.empty();
