@@ -121,7 +121,7 @@ public class MySQLDB extends SQLDB {
                 hikariConfig.setMaximumPoolSize(1);
             }
             hikariConfig.setMaxLifetime(TimeUnit.MINUTES.toMillis(25L));
-            hikariConfig.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(10L));
+            hikariConfig.setLeakDetectionThreshold(TimeUnit.SECONDS.toMillis(29L));
 
             this.dataSource = new HikariDataSource(hikariConfig);
         } catch (HikariPool.PoolInitializationException e) {
