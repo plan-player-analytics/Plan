@@ -40,8 +40,8 @@ public class ExtensionTableRowValueLengthPatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         return dbType == DBType.SQLITE || // SQLite does not limit varchar lengths
-                (columnVarcharLength(playerTable, ExtensionPlayerTableValueTable.VALUE_4) >= 250
-                        && columnVarcharLength(serverTable, ExtensionServerTableValueTable.VALUE_5) >= 250);
+                columnVarcharLength(playerTable, ExtensionPlayerTableValueTable.VALUE_4) >= 250
+                        && columnVarcharLength(serverTable, ExtensionServerTableValueTable.VALUE_5) >= 250;
     }
 
     private int columnVarcharLength(String table, String column) {

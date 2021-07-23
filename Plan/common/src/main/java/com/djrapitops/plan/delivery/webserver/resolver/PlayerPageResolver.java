@@ -60,7 +60,7 @@ public class PlayerPageResolver implements Resolver {
             return uuidUtility.getNameOf(nameOrUUID).map(user.getName()::equalsIgnoreCase) // uuid matches user
                     .orElse(false); // uuid or name don't match
         }).orElse(true); // No name or UUID given
-        return user.hasPermission("page.player.other") || (user.hasPermission("page.player.self") && isOwnPage);
+        return user.hasPermission("page.player.other") || user.hasPermission("page.player.self") && isOwnPage;
     }
 
     @Override

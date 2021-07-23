@@ -156,7 +156,7 @@ public class RequestHandler implements HttpHandler {
         }
         if (response.getCode() != 401 // Not failed
                 && response.getCode() != 403 // Not blocked
-                && (request != null && request.getUser().isPresent()) // Logged in
+                && request != null && request.getUser().isPresent() // Logged in
         ) {
             bruteForceGuard.resetAttemptCount(accessor);
         }

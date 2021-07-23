@@ -38,10 +38,10 @@ public class GeoInfoOptimizationPatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         return !hasTable(oldTableName)
-                || (hasColumn(oldTableName, GeoInfoTable.ID)
+                || hasColumn(oldTableName, GeoInfoTable.ID)
                 && hasColumn(oldTableName, GeoInfoTable.USER_UUID)
                 && !hasColumn(oldTableName, "user_id")
-                && !hasTable(tempTableName)); // If this table exists the patch has failed to finish.
+                && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
 
     @Override
