@@ -350,7 +350,7 @@ function displayResults(json) {
         order: [[5, "desc"]]
     });
 
-    if (nightmode) {
+    if ('undefined' !== typeof nightmode && nightmode == true) {
         document.querySelector('.table').classList.add('table-dark');
     }
 

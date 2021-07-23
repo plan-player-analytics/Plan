@@ -12,8 +12,6 @@ plugins {
     id "jacoco"
     id "checkstyle"
     id "org.sonarqube" version "3.3"
-    // id "net.ltgt.apt" version "0.21"
-    // id "net.ltgt.apt-idea" version "0.21"
 }
 
 apply plugin: 'nebula-aggregate-javadocs'
@@ -30,7 +28,6 @@ def determineBuildVersion = {
 def buildVersion = determineBuildVersion()
 
 allprojects {
-    wrapper.gradleVersion = "7.0.2"
 
     group "com.djrapitops"
     version "5.4-SNAPSHOT"
@@ -58,12 +55,13 @@ subprojects {
     apply plugin: "checkstyle"
     apply plugin: "jacoco"
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    compileJava {
+        options.release = 8
+    }
 
     ext {
-        daggerVersion = "2.37"
-        daggerCompilerVersion = "2.37"
+        daggerVersion = "2.38"
+        daggerCompilerVersion = "2.38"
 
         palVersion = "5.0.0"
 
@@ -82,7 +80,7 @@ subprojects {
         mysqlVersion = "8.0.26"
         sqliteVersion = "3.36.0.1"
         hikariVersion = "4.0.3"
-        slf4jVersion = "1.7.31"
+        slf4jVersion = "1.7.32"
         geoIpVersion = "2.15.0"
         gsonVersion = "2.8.7"
         bstatsVersion = "2.2.1"
@@ -92,6 +90,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        google()
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" } // Spigot
         maven { url = "https://papermc.io/repo/repository/maven-public/" } // Paper
         maven { url = "https://repo.spongepowered.org/repository/maven-public/" } // Sponge
@@ -146,7 +145,7 @@ subprojects {
 
     jacocoTestReport {
         reports {
-            xml.enabled true
+            xml.required = true
             // xml.destination file("${buildDir}/jacoco/report.xml")
         }
     }
