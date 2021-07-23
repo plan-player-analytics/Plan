@@ -82,17 +82,7 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
             for (ConfigNode child : planCustomizationNode.get().getChildren()) {
                 if (child.getBoolean()) {
                     String resource = child.getKey(false).replace(',', '.');
-                    Optional<File> resourceFile = files.attemptToFind(resource);
-                    Optional<Long> webAssetVersion = webAssetVersions.getWebAssetVersion(resource);
-                    if (resourceFile.isPresent() && webAssetVersion.isPresent()) {
-                        if (webAssetVersion.get() > resourceFile.get().lastModified()) {
-                            outdated.add(new AssetInfo(
-                                resource,
-                                resourceFile.get().lastModified(),
-                                webAssetVersion.get()
-                            ));
-                        }
-                    }
+                    findOutdatedResource(resource).ifPresent(outdated::add);
                 }
             }
 
@@ -108,6 +98,21 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
                 ));
             }
         }
+    }
+
+    private Optional<AssetInfo> findOutdatedResource(String resource) {
+         Optional<File> resourceFile = files.attemptToFind(resource);
+         Optional<Long> webAssetVersion = webAssetVersions.getWebAssetVersion(resource);
+         if (resourceFile.isPresent() && webAssetVersion.isPresent()) {
+             if (webAssetVersion.get() > resourceFile.get().lastModified()) {
+                 return new Optional.of(new AssetInfo(
+                     resource,
+                     resourceFile.get().lastModified(),
+                     webAssetVersion.get()
+                 )));
+             }
+         }
+         return Optional.empty();
     }
 
     private Optional<ConfigNode> getPlanCustomizationNode() {
