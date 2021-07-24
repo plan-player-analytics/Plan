@@ -26,7 +26,7 @@
     catch(err) {
     }
 //-->
-var data = {"i0":9,"i1":9,"i2":9};
+var data = {"i0":9,"i1":9,"i2":9,"i3":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -192,6 +192,11 @@ extends java.lang.Object</pre>
 <th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#createSet(K)">createSet</a></span>&#8203;(K&nbsp;key)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static &lt;K,&#8203;V&gt;<br>java.util.Map&lt;V,&#8203;K&gt;</code></td>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#reverse(java.util.Map)">reverse</a></span>&#8203;(java.util.Map&lt;K,&#8203;V&gt;&nbsp;map)</code></th>
+<td class="colLast">&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -241,11 +246,20 @@ extends java.lang.Object</pre>
 <a id="builder(java.lang.Class,java.lang.Class)">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>builder</h4>
 <pre class="methodSignature">public static&nbsp;&lt;K,&#8203;V&gt;&nbsp;<a href="Maps.Builder.html" title="class in com.djrapitops.plan.utilities.java">Maps.Builder</a>&lt;K,&#8203;V&gt;&nbsp;builder&#8203;(java.lang.Class&lt;K&gt;&nbsp;key,
                                                           java.lang.Class&lt;V&gt;&nbsp;value)</pre>
+</li>
+</ul>
+<a id="reverse(java.util.Map)">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>reverse</h4>
+<pre class="methodSignature">public static&nbsp;&lt;K,&#8203;V&gt;&nbsp;java.util.Map&lt;V,&#8203;K&gt;&nbsp;reverse&#8203;(java.util.Map&lt;K,&#8203;V&gt;&nbsp;map)</pre>
 </li>
 </ul>
 </li>
