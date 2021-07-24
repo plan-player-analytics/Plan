@@ -21,7 +21,6 @@ import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
-import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -34,6 +33,7 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.LiteralText;
+import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.util.concurrent.CompletableFuture;
@@ -43,11 +43,11 @@ public class CommandManager {
     private final CommandDispatcher<ServerCommandSource> dispatcher;
     private RunnableFactory runnableFactory;
     private LiteralArgumentBuilder<ServerCommandSource> root;
-    private final ErrorLogger errorLogger;
+    private final PlanFabric plugin;
 
-    public CommandManager(CommandDispatcher<ServerCommandSource> dispatcher, ErrorLogger errorLogger) {
+    public CommandManager(CommandDispatcher<ServerCommandSource> dispatcher, PlanFabric plugin) {
         this.dispatcher = dispatcher;
-        this.errorLogger = errorLogger;
+        this.plugin = plugin;
     }
 
     public static boolean checkPermission(ServerCommandSource src, String permission) {
@@ -82,7 +82,7 @@ public class CommandManager {
                 subcommand.getExecutor().accept((CMDSender) ctx.getSource(), new Arguments(getCommandArguments(ctx)));
             } catch (Exception e) {
                 ctx.getSource().sendError(new LiteralText("An internal error occurred, see the console for details."));
-                errorLogger.error(e, ErrorContext.builder()
+                plugin.getSystem().getErrorLogger().error(e, ErrorContext.builder()
                         .related(ctx.getSource().getClass())
                         .related(subcommand.getPrimaryAlias() + " " + getCommandArguments(ctx))
                         .build());
