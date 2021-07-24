@@ -17,8 +17,6 @@
 package com.djrapitops.plan.placeholder;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 
@@ -99,7 +97,6 @@ public final class PlanPlaceholders {
 
         if (uuid != null) {
             player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
-            SessionCache.getCachedSession(uuid).ifPresent(session -> player.putRawData(PlayerKeys.ACTIVE_SESSION, session));
         } else {
             player = null;
         }
