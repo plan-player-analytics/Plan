@@ -62,7 +62,6 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
 
     private boolean isEnabled = false;
 
-
     @Inject
     public FabricPingCounter(
             Listeners listeners,
@@ -140,6 +139,10 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
     }
 
     public void onPlayerJoin(ServerPlayerEntity player) {
+        if (!this.isEnabled) {
+            return;
+        }
+
         Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
         if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
             return;
@@ -152,6 +155,10 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
     }
 
     public void onPlayerQuit(ServerPlayerEntity player) {
+        if (!this.isEnabled) {
+            return;
+        }
+
         removePlayer(player);
     }
 
