@@ -58,7 +58,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public Optional<String> getPlayerName() {
-        return Optional.ofNullable(getPlayer().isPresent() ? getPlayer().get().getEntityName() : null);
+        return getPlayer().map(ServerPlayerEntity::getEntityName);
     }
 
     @Override
