@@ -161,7 +161,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             onEnable();
         });
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> commandManager = new CommandManager(dispatcher));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> commandManager = new CommandManager(dispatcher, system.getErrorLogger()));
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }
