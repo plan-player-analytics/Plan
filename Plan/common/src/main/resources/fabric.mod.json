@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "plan",
+  "name": "Plan",
+  "version": "@version@",
+
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "net.playeranalytics.plan.PlanFabric"
+    ]
+  },
+  "mixins": [
+    "plan.mixins.json"
+  ],
+  "depends": {
+    "minecraft": ">=1.17",
+    "java": ">=16",
+    "fabric-api-base": "*",
+    "fabric-command-api-v1": "*",
+    "fabric-entity-events-v1": "*",
+    "fabric-lifecycle-events-v1": "*",
+    "fabric-networking-v0": "*"
+  },
+  "suggests": {
+    "fabric-permissions-api-v0": "*"
+  }
+}
