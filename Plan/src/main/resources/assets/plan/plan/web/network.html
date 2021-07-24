@@ -75,6 +75,9 @@
                     <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
                             class="far fa-fw fa-calendar-alt"></i>
                         Sessions</a>
+                    <a class="collapse-item nav-button" href="#tab-performance">
+                        <i class="fas fa-fw fa-cogs"></i>
+                        <span>Performance</span></a>
                     <hr class="nav-servers dropdown-divider mx-3 my-2">
                     <div class="nav-servers" id="navSrvContainer">
                     </div>
@@ -248,6 +251,9 @@
                                     Some data requires Plan to be installed on game servers.
                                 </div>
                                 <div class="card-body" id="data_numbers">
+                                    <p><i class="col-light-green fa fa-fw fa-power-off"></i> Current Uptime<span
+                                            class="float-end" id="data_current_uptime"></span></p>
+                                    <hr>
                                     <p><i class="col-black fa fa-fw fa-users"></i> Total Players<span
                                             class="float-end"><b id="data_total"></b></span></p>
                                     <p><i class="col-lime fa fa-fw fa-users"></i> Regular Players<span
@@ -376,6 +382,8 @@
                                         <span class="data_server_name"></span> as Numbers</h6>
                                 </div>
                                 <div class="card-body" id="data_quick_view">
+                                    <p><i class="col-light-green fa fa-fw fa-power-off"></i> Current Uptime<span
+                                            class="float-end" id="data_current_uptime"></span></p>
                                     <p><i class="col-blue fa fa-fw fa-chart-line"></i> Last Peak: <span
                                             id="data_last_peak_date"></span><span class="float-end"><b
                                             id="data_last_peak_players"></b> Players</span>
@@ -471,6 +479,205 @@
                     </div>
                 </div> <!-- /.container-fluid -->
             </div> <!-- End of Sessions tab -->
+            <!-- Begin Performance Tab -->
+            <div class="tab" id="performance">
+                <div class="container-fluid mt-4">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
+                            &middot; Performance
+                            <span class="refresh-element">
+                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                            </span>
+                        </h1>
+                    </div>
+
+                    <div class="row">
+                        <!-- Performance Charts -->
+                        <div class="col-xl-12 col-lg-12 col-sm-12">
+                            <div class="card shadow mb-4">
+                                <ul class="nav nav-tabs" id="performanceChartTab" role="tablist">
+                                    <li class="nav-item">
+                                        <a aria-controls="profile" aria-selected="true"
+                                           class="nav-link col-black active"
+                                           data-bs-toggle="tab"
+                                           href="#tps" id="performance-tps-tab" role="tab"><i
+                                                class="fa fa-fw fa-tachometer-alt col-deep-orange"></i> TPS</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
+                                           data-bs-toggle="tab" href="#cpu" id="performance-cpu-tab"
+                                           role="tab"><i
+                                                class="fa fa-fw fa-tachometer-alt col-amber"></i>
+                                            CPU</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
+                                           data-bs-toggle="tab" href="#ram" id="performance-ram-tab"
+                                           role="tab"><i
+                                                class="fa fa-fw fa-microchip col-light-green"></i>
+                                            RAM</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
+                                           data-bs-toggle="tab" href="#entity" id="performance-entity-tab"
+                                           role="tab"><i class="fa fa-fw fa-dragon col-purple"></i>
+                                            Entities</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
+                                           data-bs-toggle="tab" href="#chunk" id="performance-chunk-tab"
+                                           role="tab"><i class="fa fa-fw fa-map col-blue-grey"></i>
+                                            Chunks</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
+                                           data-bs-toggle="tab" href="#ping" id="performance-ping-tab" role="tab"><i
+                                                class="fa fa-fw fa-signal col-amber"></i> Ping</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a aria-controls="contact" aria-selected="false" class="nav-link col-black"
+                                           data-bs-toggle="tab" href="#disk" id="performance-disk-tab" role="tab"><i
+                                                class="fa fa-fw fa-hdd col-green"></i> Disk Space</a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="performanceChartTabContent">
+                                    <div aria-labelledby="performance-tps-tab" class="tab-pane show active" id="tps"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="tpsGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-hardware-tab" class="tab-pane" id="cpu"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="cpuGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-hardware-tab" class="tab-pane" id="ram"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="ramGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-entity-tab" class="tab-pane"
+                                         id="entity"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="entityGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-chunk-tab" class="tab-pane"
+                                         id="chunk"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="chunkGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-ping-tab" class="tab-pane" id="ping"
+                                         role="tabpanel">
+                                        <p>This data is from only the proxy server (bungeecord or velocity)</p>
+                                        <div class="chart-area" id="pingGraph"><span class="loader"></span></div>
+                                    </div>
+                                    <div aria-labelledby="performance-disk-tab" class="tab-pane" id="disk"
+                                         role="tabpanel">
+                                        <div class="chart-area" id="diskGraph"><span class="loader"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Performance as Numbers -->
+                        <div class="col-lg-8 mb-8 col-sm-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                            class="fa fa-fw fa-book-open col-blue-grey"></i>
+                                        Performance as Numbers</h6>
+                                </div>
+                                <table class="table" id="data_numbers">
+                                    <thead>
+                                    <th></th>
+                                    <th>Last 30 days</th>
+                                    <th>Last 7 days</th>
+                                    <th>Last 24 hours</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><i class="fa fa-fw fa-exclamation-circle col-red"></i>
+                                            Low TPS Spikes
+                                        </td>
+                                        <td id="data_low_tps_spikes_30d"></td>
+                                        <td id="data_low_tps_spikes_7d"></td>
+                                        <td id="data_low_tps_spikes_24h"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa fa-fw fa-power-off col-red"></i>
+                                            Total Downtime (No Data)
+                                        </td>
+                                        <td id="data_server_downtime_30d"></td>
+                                        <td id="data_server_downtime_7d"></td>
+                                        <td id="data_server_downtime_24h"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa fa-fw fa-power-off col-red"></i>
+                                            Average Downtime / Server
+                                        </td>
+                                        <td id="data_avg_server_downtime_30d"></td>
+                                        <td id="data_avg_server_downtime_7d"></td>
+                                        <td id="data_avg_server_downtime_24h"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa fa-fw fa-tachometer-alt col-orange"></i> Average TPS</td>
+                                        <td id="data_tps_30d"></td>
+                                        <td id="data_tps_7d"></td>
+                                        <td id="data_tps_24h"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa fa-fw fa-tachometer-alt col-amber"></i> Average CPU Usage</td>
+                                        <td id="data_cpu_30d"></td>
+                                        <td id="data_cpu_7d"></td>
+                                        <td id="data_cpu_24h"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa fa-fw fa-microchip col-light-green"></i> Average RAM Usage</td>
+                                        <td id="data_ram_30d"></td>
+                                        <td id="data_ram_7d"></td>
+                                        <td id="data_ram_24h"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa fa-fw fa-dragon col-purple"></i> Average Entities</td>
+                                        <td id="data_entities_30d"></td>
+                                        <td id="data_entities_7d"></td>
+                                        <td id="data_entities_24h"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <i class="fa fa-fw fa-map col-blue-grey"></i> Average Chunks
+                                            <i class="far fa-fw fa-eye hidden" id="sponge-chunk-warning"
+                                               title="Chunks unavailable on Sponge"></i>
+                                        </td>
+                                        <td id="data_chunks_30d"></td>
+                                        <td id="data_chunks_7d"></td>
+                                        <td id="data_chunks_24h"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- End of Performance as numbers-->
+                        <!-- Insights -->
+                        <div class="col-lg-4 mb-4 col-sm-12">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold col-black"><i
+                                            class="fa fa-fw fa-server col-light-green"></i>
+                                        Server selector</h6>
+                                </div>
+                                <select class="form-control" id="performance-server-selector" multiple>
+                                    <option selected>Proxy server</option>
+                                    <option>Server 1</option>
+                                    <option>Skyblock</option>
+                                    <option>Server 3</option>
+                                </select>
+                                <button class="btn bg-plan" onclick="onSelectPerformanceServers()">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- /.container-fluid -->
+            </div> <!-- End of Performance tab -->
             <!-- Begin Playerbase Overview Tab -->
             <div class="tab" id="playerbase-overview">
                 <div class="container-fluid mt-4">
@@ -928,6 +1135,7 @@
         refreshingJsonRequest("./v1/graph?type=joinAddressPie", loadJoinAddressPie, 'playerbase-overview');
         refreshingJsonRequest("./v1/graph?type=activity", loadActivityGraphs, 'playerbase-overview');
         refreshingJsonRequest("./v1/graph?type=geolocation", loadGeolocationGraph, 'geolocations');
+        refreshingJsonRequest("../v1/graph?type=aggregatedPing&server=${serverUUID}", loadPingGraph, 'performance');
 
         setLoadingText('Sorting out plugin tables..');
 
@@ -936,6 +1144,8 @@
         $('.player-plugin-table').DataTable({
             responsive: true
         });
+
+        loadPerformanceServerOptions();
 
         setLoadingText('Almost done..');
         openPage();

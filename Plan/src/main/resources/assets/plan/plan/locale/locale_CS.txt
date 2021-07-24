@@ -73,14 +73,14 @@ Cmd Header - Inspect                            || > §2Hráč: §f${0}
 Cmd Header - Network                            || > §2Stránka Sítě
 Cmd Header - Players                            || > §2Hráčů
 Cmd Header - Search                             || > §2${0} Výsledky pro §f${1}§2:
-Cmd Header - server list                        || id::name::uuid
+Cmd Header - server list                        || id::jméno::uuid
 Cmd Header - Servers                            || > §2Servery
-Cmd Header - web user list                      || username::linked to::permission level
+Cmd Header - web user list                      || uživatel::spojen s::úroveň práv
 Cmd Header - Web Users                          || > §2${0} Web uživatelé
 Cmd Info - Bungee Connection                    ||   §2Připojen na Proxy: §f${0}
 Cmd Info - Database                             ||   §2Aktivní databáze: §f${0}
 Cmd Info - Reload Complete                      || §aReload Dokončen
-Cmd Info - Reload Failed                        || §cNěco se pokazilo při reloadu pluginu, doporučejem restart serveru.
+Cmd Info - Reload Failed                        || §cNěco se pokazilo při reloadu pluginu, doporučejeme restart serveru.
 Cmd Info - Update                               ||   §2Dostupná aktualizace: §f${0}
 Cmd Info - Version                              ||   §2Verze: §f${0}
 Cmd network - No network                        || Server není připojen k síti. Odkaz odkazuje na server stránku.
@@ -165,7 +165,7 @@ HTML - COMPARING_15_DAYS                        || Srovnání posledních 15 dn�
 HTML - COMPARING_60_DAYS                        || Srovnání posledních 60 dní
 HTML - COMPARING_7_DAYS                         || Srovnání posledních 7 dní
 HTML - DATABASE_NOT_OPEN                        || Databáze není otevřená, ověřte status databáze s /plan info
-HTML - DESCRIBE_RETENTION_PREDICTION            || This value is a prediction based on previous players.
+HTML - DESCRIBE_RETENTION_PREDICTION            || Tato hodnota je odhad dle předchozích hráčů.
 HTML - ERROR                                    || Autentifikace neuspěšná kvůli chybě
 HTML - EXPIRED_COOKIE                           || Uživatelské cookie expirovalo
 HTML - FILTER_ACTIVITY_INDEX_NOW                || Aktuální skupina aktivit
@@ -332,7 +332,7 @@ HTML - SIDE_OVERVIEW                            || Přehled
 HTML - SIDE_PERFORMANCE                         || Výkon
 HTML - SIDE_PLAYER_LIST                         || Seznam hráčů
 HTML - SIDE_PLAYERBASE                          || Hráči
-HTML - SIDE_PLAYERBASE_OVERVIEW                 || Překled základny hráčů
+HTML - SIDE_PLAYERBASE_OVERVIEW                 || Přehled základny hráčů
 HTML - SIDE_PLUGINS                             || PLUGINY
 HTML - SIDE_PVP_PVE                             || PvP & PvE
 HTML - SIDE_SERVERS                             || Servery
@@ -464,7 +464,7 @@ In Depth Help - /plan import                    || Vykoná import k načtení da
 In Depth Help - /plan info                      || Zobrazí aktuální status pluginu.
 In Depth Help - /plan ingame                    || Ukáže některé informace o hráči ve hře.
 In Depth Help - /plan json                      || Dovolí stáhnout hráčská data v json formátu. Všechna.
-In Depth Help - /plan logout                    || Give username argument to log out another user from the panel, give * as argument to log out everyone.
+In Depth Help - /plan logout                    || Vložte argument přezdívky hráče k odhlášení jiného uživatele, použijte * pro odhlášení všech.
 In Depth Help - /plan network                   || Získání odkazu k /network page, pouze na sítích.
 In Depth Help - /plan player                    || Získání odkazu k /player page specifického hráče, či aktuálního.
 In Depth Help - /plan players                   || Získání odkazu k /players page k zobrazení seznamu hráčů.
