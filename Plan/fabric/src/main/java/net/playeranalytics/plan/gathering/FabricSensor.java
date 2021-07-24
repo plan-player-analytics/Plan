@@ -42,10 +42,14 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
         //Returns the ticks per second of the last 100 ticks
         int length = server.lastTickLengths.length;
         double totalTickLength = 0;
+        int count = 0;
         for (long tickLength : server.lastTickLengths) {
+            if (tickLength == 0) continue; // Ignore uninitialized values in array
             totalTickLength += Math.max(tickLength, TimeUnit.MILLISECONDS.toNanos(50));
+            count++;
         }
-        return Math.pow(10, 9) / (totalTickLength / length);
+        double averageTickLength = totalTickLength / count;
+        return count != 0 ? TimeUnit.SECONDS.toNanos(1) / averageTickLength : -1;
     }
 
     @Override
