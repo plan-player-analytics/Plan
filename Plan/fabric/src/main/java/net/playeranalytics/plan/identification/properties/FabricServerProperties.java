@@ -20,8 +20,6 @@ import com.djrapitops.plan.identification.properties.ServerProperties;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 
-import javax.inject.Inject;
-
 /**
  * server.properties fetcher for Fabric
  *
@@ -29,7 +27,6 @@ import javax.inject.Inject;
  */
 public class FabricServerProperties extends ServerProperties {
 
-    @Inject
     public FabricServerProperties(MinecraftDedicatedServer server) {
         super(
                 "Fabric",

@@ -28,9 +28,9 @@ import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.playeranalytics.plan.commands.CommandManager;
+import net.playeranalytics.plan.identification.properties.FabricServerProperties;
 import net.playeranalytics.plugin.FabricPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -92,6 +92,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
                 .server(server)
+                .serverProperties(new FabricServerProperties(getServer()))
                 .build();
 
         try {
@@ -166,7 +167,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }
 
-    public MinecraftServer getServer() {
+    public MinecraftDedicatedServer getServer() {
         return server;
     }
 }
