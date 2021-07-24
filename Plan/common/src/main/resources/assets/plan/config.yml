@@ -185,7 +185,13 @@ Formatting:
 # World aliases can be used to rename worlds and to combine multiple worlds into a group.
 # -----------------------------------------------------
 World_aliases:
-  world: world
+  # List of world names: aliases, case sensitive. Set alias of two worlds to same one to group them.
+  # Automatically generated, if regex matches world will not be added here.
+  List:
+    world: world
+  # List of - "alias:regex" rules, Set alias of multiple worlds that match regex to group them
+  Regex:
+    - "Alias for world:^abc$"
 # -----------------------------------------------------
 # These settings will make Plan write .js, .css, .json and .html files to some location on disk.
 # Relative path will render to /plugins/Plan/path

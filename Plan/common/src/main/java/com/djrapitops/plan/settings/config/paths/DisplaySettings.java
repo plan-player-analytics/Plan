@@ -43,7 +43,7 @@ public class DisplaySettings {
     public static final Setting<String> CMD_COLOR_MAIN = new StringSetting("Display_options.Command_colors.Main");
     public static final Setting<String> CMD_COLOR_SECONDARY = new StringSetting("Display_options.Command_colors.Secondary");
     public static final Setting<String> CMD_COLOR_TERTIARY = new StringSetting("Display_options.Command_colors.Highlight");
-    public static final Setting<ConfigNode> WORLD_ALIASES = new Setting<ConfigNode>("World_aliases", ConfigNode.class) {
+    public static final Setting<ConfigNode> WORLD_ALIASES = new Setting<ConfigNode>("World_aliases.List", ConfigNode.class) {
         @Override
         public ConfigNode getValueFrom(ConfigNode node) {
             return node.getNode(path).orElseGet(() -> node.addNode(path));

@@ -148,6 +148,8 @@ public class ConfigUpdater {
                 new ConfigChange.Removed("Database.H2.User"),
                 new ConfigChange.Removed("Database.H2.Password"),
                 new ConfigChange.Removed("Database.H2"),
+
+                new ConfigChange.MoveLevelDown("World_aliases", "World_aliases.List")
         };
     }
 
