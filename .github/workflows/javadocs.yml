@@ -36,6 +36,7 @@ jobs:
           cp scripts/index.html javadocs/index.html
           cd javadocs
           touch .nojekyll
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
