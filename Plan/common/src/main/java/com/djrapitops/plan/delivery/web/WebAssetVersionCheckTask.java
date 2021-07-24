@@ -72,7 +72,7 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
             try {
                 webAssetVersions.prepare();
             } catch (IOException e) {
-                logger.warn("Could not read web asset versions, ", e);
+                logger.warn(String.format("Could not read web asset versions, %s", e.toString()));
                 logger.warn("Web asset version check will be skipped!");
                 return;
             }
@@ -92,27 +92,27 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
             }
             for (AssetInfo asset : outdated) {
                 logger.warn(String.format("- %s was modified %s, but the plugin contains a version from %s",
-                    asset.filename,
-                    formatters.secondLong().apply(asset.modifiedAt),
-                    formatters.secondLong().apply(asset.expectedModifiedAt)
+                        asset.filename,
+                        formatters.secondLong().apply(asset.modifiedAt),
+                        formatters.secondLong().apply(asset.expectedModifiedAt)
                 ));
             }
         }
     }
 
     private Optional<AssetInfo> findOutdatedResource(String resource) {
-         Optional<File> resourceFile = files.attemptToFind(resource);
-         Optional<Long> webAssetVersion = webAssetVersions.getWebAssetVersion(resource);
-         if (resourceFile.isPresent() && webAssetVersion.isPresent()) {
-             if (webAssetVersion.get() > resourceFile.get().lastModified()) {
-                 return Optional.of(new AssetInfo(
-                     resource,
-                     resourceFile.get().lastModified(),
-                     webAssetVersion.get()
-                 ));
-             }
-         }
-         return Optional.empty();
+        Optional<File> resourceFile = files.attemptToFind(resource);
+        Optional<Long> webAssetVersion = webAssetVersions.getWebAssetVersion(resource);
+        if (resourceFile.isPresent() && webAssetVersion.isPresent()) {
+            if (webAssetVersion.get() > resourceFile.get().lastModified()) {
+                return Optional.of(new AssetInfo(
+                        resource,
+                        resourceFile.get().lastModified(),
+                        webAssetVersion.get()
+                ));
+            }
+        }
+        return Optional.empty();
     }
 
     private Optional<ConfigNode> getPlanCustomizationNode() {

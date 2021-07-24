@@ -30,33 +30,35 @@ task updateVersion(type: Copy) {
 }
 
 task determineWebAssetModifications {
-    def versionFile = file("build/resources/main/assets/plan/WebAssetVersion.yml")
-    versionFile.parentFile.mkdirs()
-    versionFile.text = "" // Clear previous build
-    ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
-    tree.forEach { File f ->
-        def gitModified = new ByteArrayOutputStream()
-        exec {
-            commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
-            standardOutput = gitModified
+    doLast {
+        mkdir "build/resources/main/assets/plan"
+        def versionFile = file("build/resources/main/assets/plan/WebAssetVersion.yml")
+        versionFile.text = "" // Clear previous build
+        ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
+        tree.forEach { File f ->
+            def gitModified = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
+                standardOutput = gitModified
+            }
+            // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
+            def modified = Long.parseLong(gitModified.toString().strip()) * 1000
+            def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
+            versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
+                    "%s: %s\n", relativePath.toString().replace('.', ','), modified
+            )
         }
-        // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
-        def modified = Long.parseLong(gitModified.toString().strip()) * 1000
-        def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
-        versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
-                "%s: %s\n", relativePath.toString().replace('.', ','), modified
-        )
     }
 }
 
 processResources {
+    dependsOn determineWebAssetModifications
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
     from 'build/sources/resources'
 }
 
 shadowJar {
-    dependsOn determineWebAssetModifications
     dependsOn processResources
 
     // Exclude these files
