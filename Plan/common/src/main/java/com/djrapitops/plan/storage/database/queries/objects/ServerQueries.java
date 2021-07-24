@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.sql.PreparedStatement;
@@ -148,7 +149,7 @@ public class ServerQueries {
 
     public static Query<Map<ServerUUID, String>> fetchServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                ServerTable.SERVER_UUID, ServerTable.NAME)
+                ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
                 .toString();
 
         return new QueryAllStatement<Map<ServerUUID, String>>(sql) {
@@ -157,7 +158,7 @@ public class ServerQueries {
                 Map<ServerUUID, String> names = new HashMap<>();
                 while (set.next()) {
                     ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
-                    names.put(serverUUID, set.getString(ServerTable.NAME));
+                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.SERVER_ID)));
                 }
                 return names;
             }
@@ -232,5 +233,9 @@ public class ServerQueries {
                 return set.next() ? set.getInt("max_id") : 1;
             }
         };
+    }
+
+    public static Query<Map<String, ServerUUID>> fetchServerNamesToUUIDs() {
+        return db -> Maps.reverse(db.query(fetchServerNames()));
     }
 }
