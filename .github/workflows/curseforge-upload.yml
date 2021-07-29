@@ -9,7 +9,6 @@ jobs:
     if: ${{ github.event.release.prerelease == false }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Download release artifact for upload
         run: |
           curl 'https://api.github.com/repos/plan/plan-player-analytics/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric"))' > asset.txt
@@ -35,7 +34,6 @@ jobs:
     if: ${{ github.event.release.prerelease == true }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: Download release artifact for upload
         run: |
           curl 'https://api.github.com/repos/plan/plan-player-analytics/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric"))' > asset.txt
