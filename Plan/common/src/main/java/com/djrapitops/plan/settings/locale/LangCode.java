@@ -38,7 +38,7 @@ public enum LangCode {
     RU("Russian", "Saph1s & Perhun_Pak"),
     TR("Turkish", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
     PT_BR("Portuguese (Brazil)", "jvmuller"),
-    ZH_TW("Traditional Chinese", "\u6d1b\u4f0a & ");
+    ZH_TW("Traditional Chinese", "\u6d1b\u4f0a & zisunny104");
 
     private final String name;
     private final String authors;
