@@ -1,0 +1,56 @@
+name: Upload artifact to CurseForge
+
+on:
+  release:
+    types: [ released, prereleased ]
+
+jobs:
+  upload_release:
+    if: ${{ github.event.release.prerelease == false }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifact for upload
+        run: |
+          curl 'https://api.github.com/repos/plan/plan-player-analytics/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric"))' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          jq -r '.name' asset.txt > name.txt
+          wget -i url.txt
+          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
+      - name: Upload release to CurseForge 🚀
+        uses: itsmeow/curseforge-upload@master
+        with:
+          token: ${{ secrets.CF_API_TOKEN }}
+          project_id: 508727
+          game_endpoint: minecraft
+          file_path: ${{ env.JAR_FILENAME }}
+          changelog: ${{ github.event.release.body }}
+          changelog_type: markdown
+          display_name: ${{ github.event.release.name }}
+          game_versions: 2:Java 16,73242:1.17,73242:1.17.1,Fabric
+          release_type: release
+          relations: fabric-api:requiredDependency,luckperms:optionalDependency
+
+  upload_prerelease:
+    if: ${{ github.event.release.prerelease == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifact for upload
+        run: |
+          curl 'https://api.github.com/repos/plan/plan-player-analytics/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric"))' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          jq -r '.name' asset.txt > name.txt
+          wget -i url.txt
+          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
+      - name: Upload prerelease to CurseForge 🚀
+        uses: itsmeow/curseforge-upload@master
+        with:
+          token: ${{ secrets.CF_API_TOKEN }}
+          project_id: 508727
+          game_endpoint: minecraft
+          file_path: ${{ env.JAR_FILENAME }}
+          changelog: ${{ github.event.release.body }}
+          changelog_type: markdown
+          display_name: ${{ github.event.release.name }}
+          game_versions: 2:Java 16,73242:1.17,73242:1.17.1,Fabric
+          release_type: prerelease
+          relations: fabric-api:requiredDependency,luckperms:optionalDependency
