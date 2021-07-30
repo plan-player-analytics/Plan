@@ -190,7 +190,7 @@ HTML - LABEL_AVG                                || 平均
 HTML - LABEL_AVG_ACTIVE_PLAYTIME                || 平均活跃时间
 HTML - LABEL_AVG_AFK_TIME                       || 平均挂机时间
 HTML - LABEL_AVG_CHUNKS                         || 平均区块数
-HTML - LABEL_AVG_ENTITIES                       || 平均实体书
+HTML - LABEL_AVG_ENTITIES                       || 平均实体数
 HTML - LABEL_AVG_KDR                            || 平均 KDR
 HTML - LABEL_AVG_MOB_KDR                        || 平均生物 KDR
 HTML - LABEL_AVG_PLAYTIME                       || 平均游玩时间
@@ -422,10 +422,10 @@ HTML - TOTAL_PLAYERS                            || 总游玩时长
 HTML - UNIQUE_CALENDAR                          || 独立：
 HTML - UNIT_CHUNKS                              || 区块
 HTML - UNIT_ENTITIES                            || 实体
-HTML - UNIT_NO_DATA                             || 没有数据
+HTML - UNIT_NO_DATA                             || 无数据
 HTML - UNIT_THE_PLAYERS                         || 玩家
 HTML - USER_AND_PASS_NOT_SPECIFIED              || 未指定用户名与密码
-HTML - USER_DOES_NOT_EXIST                      || 用户不存在
+HTML - USER_DOES_NOT_EXIST                      || 用户名不存在
 HTML - USER_INFORMATION_NOT_FOUND               || 注册失败，请重试（注册代码有效期 15 分钟）
 HTML - USER_PASS_MISMATCH                       || 用户名和密码不匹配
 HTML - Version Change log                       || 查看更新日志
