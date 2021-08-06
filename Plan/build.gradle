@@ -42,10 +42,6 @@ allprojects {
     compileJava { options.encoding = "UTF-8" }
     tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
     javadoc { options.encoding = 'UTF-8' }
-
-    repositories {
-        maven { url = "https://repo.vshnv.tech/snapshots" }
-    }
 }
 
 logger.lifecycle("Building artifact for version $fullVersion")
