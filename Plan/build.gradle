@@ -7,7 +7,8 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.github.johnrengelman.shadow" version "7.0.0" apply false
+    id "io.github.slimjar" version "1.2.1" apply false
     id "java"
     id "jacoco"
     id "checkstyle"
@@ -48,6 +49,7 @@ logger.lifecycle("Building artifact for version $fullVersion")
 subprojects {
     // Build plugins
     apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: "io.github.slimjar"
     apply plugin: "java"
     apply plugin: "maven-publish"
 
