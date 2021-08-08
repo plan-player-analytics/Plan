@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import io.github.slimjar.app.builder.ApplicationBuilder;
+import io.github.slimjar.resolver.data.Repository;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.playeranalytics.plugin.BungeePlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -33,8 +34,10 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,6 +65,8 @@ public class PlanBungee extends Plugin implements PlanPlugin {
         try {
             ApplicationBuilder.appending("Plan")
                     .logger((message, args) -> getLogger().log(Level.INFO, message, args))
+                    // Use paper repository for downloading slimjar dependencies
+                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
                     .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
                     .build();
         } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {

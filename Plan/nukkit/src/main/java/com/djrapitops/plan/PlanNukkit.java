@@ -30,6 +30,7 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import io.github.slimjar.app.builder.ApplicationBuilder;
+import io.github.slimjar.resolver.data.Repository;
 import net.playeranalytics.plugin.NukkitPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -37,12 +38,10 @@ import net.playeranalytics.plugin.server.PluginLogger;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -76,6 +75,8 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
         try {
             ApplicationBuilder.appending("Plan")
                     .logger((message, args) -> Logger.getGlobal().log(Level.INFO, message, args))
+                    // Use paper repository for downloading slimjar dependencies
+                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
                     .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
                     .build();
         } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
