@@ -32,6 +32,12 @@ public class FabricPluginLogger implements PluginLogger {
         return this;
     }
 
+    public void info(String message, Object... args) {
+        String replacedMsg = message.replaceAll("(?<=\\{).+?(?=\\})", "");
+        String formattedMsg = "[Plan] " + replacedMsg;
+        logger.info(formattedMsg, args);
+    }
+
     @Override
     public PluginLogger warn(String message) {
         logger.warn("[Plan] " + message);

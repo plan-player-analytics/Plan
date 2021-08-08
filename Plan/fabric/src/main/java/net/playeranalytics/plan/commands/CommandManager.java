@@ -81,11 +81,15 @@ public class CommandManager {
             try {
                 subcommand.getExecutor().accept((CMDSender) ctx.getSource(), new Arguments(getCommandArguments(ctx)));
             } catch (Exception e) {
-                ctx.getSource().sendError(new LiteralText("An internal error occurred, see the console for details."));
-                plugin.getSystem().getErrorLogger().error(e, ErrorContext.builder()
-                        .related(ctx.getSource().getClass())
-                        .related(subcommand.getPrimaryAlias() + " " + getCommandArguments(ctx))
-                        .build());
+                if (e instanceof IllegalArgumentException) {
+                    ctx.getSource().sendError(new LiteralText(e.getMessage()));
+                } else {
+                    ctx.getSource().sendError(new LiteralText("An internal error occurred, see the console for details."));
+                    plugin.getSystem().getErrorLogger().error(e, ErrorContext.builder()
+                            .related(ctx.getSource().getClass())
+                            .related(subcommand.getPrimaryAlias() + " " + getCommandArguments(ctx))
+                            .build());
+                }
             }
         }).runTaskAsynchronously();
         return 1;
