@@ -1,0 +1,621 @@
+html:
+  text:
+    noLowTps: 'Geen lage tps-pieken'
+    clickToExpand: 'Klik om uit te breiden'
+    comparing15days: '15 dagen vergelijken'
+    comparing30daysAgo: '30 dagen tot nu vergelijken'
+    noExtensionData: 'Geen extensiegegevens'
+  label:
+    comparing7days: '7 dagen vergelijken'
+    averageKdr: 'Gemiddeld KDR'
+    perDay: '/ Dag'
+    averageEntities: 'Gemiddelde Entiteiten'
+    averageSessions: 'Gemiddelde sessies'
+    playersOnline: 'Spelers Online'
+    secondDeadliestWeapon: '2e PvP-wapen'
+    totalAfk: 'Totaal AFK'
+    favoriteServer: 'Favoeriete Server'
+    mostActiveGamemode: 'Meest actieve spelmodus'
+    afkTime: 'AFK Tijd'
+    lastConnected: 'Laatst verbonden'
+    regular: Regulier
+    downtime: Uitvaltijd
+    perRegularPlayer: '/ Reguliere speler'
+    minFreeDisk: 'Min Vrije schijfruimte'
+    deadliestWeapon: 'Dodelijkste PvP-wapen'
+    registered: Geregistreerd
+    currentUptime: 'Current Uptime'
+    averageChunks: 'Gemiddelde Chunks'
+    averageMobKdr: 'Gemiddeld Mob KDR'
+    lastSeen: 'Laatste gezien'
+    killed: Vermoord
+    sessionEnded: ' Beëindigd'
+    uniquePlayers: 'Unieke spelers'
+    weekdays: ''Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag''
+    firstSession: 'Eerste sessie'
+    mobKdr: 'Mob KDR'
+    averageSessionLength: 'Gemiddelde sessieduur'
+    duringLowTps: 'Tijdens lage TPS-pieken:'
+    afk: AFK
+    loadedEntities: 'Geladen Entiteiten'
+    playerKills: 'Player moorden'
+    active: Actief
+    totalPlaytime: 'Totale speeltijd'
+    newPlayers: 'Nieuwe Spelers'
+    averagePlaytime: 'Gemiddelde Speeltijd'
+    indexInactive: Inactief
+    maxFreeDisk: 'Max Vrije schijfruimte'
+    totalPlayers: 'Totaal aantal spelers'
+    averageTps: 'Gemiddelde TPS'
+    longestSession: 'Langste sessie'
+    nickname: Gebruikersnaam
+    operator: Operator
+    indexRegular: Regelmatig
+    regularPlayers: 'Reguliere speler'
+    mobDeaths: 'Mob veroorzaakt doden'
+    thirdDeadliestWeapon: '3e PvP-wapen'
+    serverOccupied: 'Server bezet'
+    activityIndex: Activiteitsindex
+    irregular: Onregelmatig
+    loneJoins: 'Eenzame inloggen'
+    serverAnalysis: Serveranalyse
+    playerDeaths: 'Speler veroorzaakte moorden'
+    averageAfkTime: 'Gemiddelde AFK Tijd'
+    totalPlayersOld: 'Totaal aantal spelers'
+    activePlaytime: 'Actieve Speeltijd'
+    totalActive: 'Totaal actief'
+    sessionMedian: Sessiemediaan
+    newPlayerRetention: 'Retentie nieuwe speler'
+    onlineOnFirstJoin: 'Spelers online bij eerste deelname'
+    new: Nieuw
+    serverDowntime: Serveruitva
+    session: Sessie
+    banned: Verbannen
+    lowTpsSpikes: 'Lage TPS-pieken'
+    averageActivePlaytime: 'Gemiddelde Actieve Speeltijd'
+    playtime: Speeltijd
+    inactive: Inactief
+    entities: Entiteiten
+    mobKills: 'Mob Moorden'
+    name: Naam
+    lastPeak: 'Laatste piek'
+    quickView: 'Snel overzicht'
+    relativeJoinActivity: 'Relatieve deelname aan activiteit'
+    deaths: Sterfgevallen
+    timesKicked: 'Aantal keer afgetapt'
+    loneNewbieJoins: 'Eenzame nieuweling inloggen'
+    loadedChunks: 'Geladen Chunks'
+    dayOfweek: 'Dag van de Week'
+    firstSessionLength: 'Duur eerste sessie'
+    perPlayer: '/ Spelers'
+    players: Spelers
+    diskSpace: 'Vrije schijfruimte'
+    bestPeak: 'Piek aller tijden'
+    veryActive: 'Heel Actief'
+    average: Gemiddelde
+    registeredPlayers: 'Geregistreerde spelers'
+  sidebar:
+    networkOverview: Netwerkoverzicht
+    pvpPve: 'PvP & PvE'
+    overview: Overzicht
+    links: LINKS
+    serverPage: Serverpagina
+    sessions: Sessies
+    playerbaseOverview: Spelersbasis-overzicht
+    playerbase: Spelersbasis
+    plugins: PLUGINS
+    query: 'Maak een query'
+    geolocations: Geolocaties
+    networkPage: Netwerkpagina
+    playerList: 'Speler lijst'
+    toMainPage: 'naar hoofdpagina'
+    serversTitle: SERVERS
+    performance: Prestatie
+    playerPage: Spelerpagina
+    servers: Servers
+    information: INFORMATIE
+  version:
+    updateButton: Update
+    changelog: 'Bekijk changelog'
+    updateModal:
+      title: 'Versie ${0} is beschikbaar!'
+      text: 'Een nieuwe versie is uitgebracht en is nu beschikbaar om te downloaden.'
+    isDev: 'Deze versie is een DEV-release.'
+    download: 'Download Plan-${0}.jar'
+    current: 'Je hebt versie ${0}'
+  error:
+    auth:
+      registrationFailed: 'Registratie mislukt, probeer het opnieuw (de code verloopt na 15 minuten)'
+      expiredCookie: 'Gebruikerscookie is verlopen'
+      noCookie: 'Gebruikerscookie niet aanwezig'
+      userNotFound: 'Gebruiker bestaat niet'
+      loginFailed: 'Gebruiker en wachtwoord kwamen niet overeen'
+      dbClosed: 'Database is niet open, controleer db-status met /plan info'
+      generic: 'Authenticatie mislukt vanwege fout'
+      emptyForm: 'Gebruiker en wachtwoord niet gespecificeerd'
+    404NotFound: 'Niet gevonden'
+    404UnknownPage: 'Zorg ervoor dat u een link opent die door een opdracht wordt gegeven, Voorbeelden:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>'
+    playerNotSeen: 'Plan heeft deze speler niet gezien.'
+    authFailedTips: '- Zorg ervoor dat u een gebruiker heeft geregistreerd met <b>/plan register</b><br>- Controleer of de gebruikersnaam en het wachtwoord correct zijn<br>- De gebruikersnaam en het wachtwoord zijn hoofdlettergevoelig<br><br>Als u uw wachtwoord bent vergeten kunt u een beheerder vragen om uw oude account te verwijderen en een nieuwe te registreren.'
+    UUIDNotFound: 'Speler UUID is niet gevonden in de database.'
+    404PageNotFound: 'Pagina bestaat niet.'
+    401Unauthorized: Onbevoegd
+    noServersOnline: 'Er zijn geen servers online om het verzoek uit te voeren.'
+    403Forbidden: Verboden
+    authFailed: 'Authenticatie mislukt.'
+  title:
+    graph:
+      hourByHour: 'Uur voor uur'
+      dayByDay: 'Dag voor dag'
+      networkOnlineActivity: 'Online netwerkactiviteit'
+    recentSessions: 'Recente sessies'
+    trends30days: 'Trends voor 30 dagen'
+    thirtyDaysAgo: '30 dagen geleden'
+    allTime: 'Alle Tijd'
+    tps: TPS
+    themeSelect: 'Thema selecteren'
+    connectionInfo: Verbindingsinformatie
+    country: Land
+    last30days: 'Afgelopen 30 dagen'
+    asNumbers: 'als nummers'
+    worstPing: 'Slechtste ping'
+    now: Nu
+    worldPlaytime: 'Wereld speeltijd'
+    networkAsNumbers: 'Netwerk als getallen'
+    disk: Schijfruimte
+    sessionStart: 'Sessie gestart'
+    player: Speler
+    serverPlaytime: 'Server speeltijd'
+    calendar: ' Kalender'
+    playerOverview: 'Speler overzicht'
+    serverAsNumberse: 'Server als getallen'
+    thirtyDays: '30 dagen'
+    last7days: 'Afgelopen 7 dagen'
+    network: Netwerk
+    trend: Trend
+    weekComparison: Weekvergelijking
+    recentPvpKills: 'Recente PvP-moorden'
+    performanceAsNumbers: 'Prestaties als getallen'
+    recentKills: 'Recente moorden'
+    last24hours: 'Afgelopen 24 uur'
+    currentPlayerbase: 'Huidige spelerbasis'
+    server: Server
+    length: ' Lengte'
+    punchcard: Ponskaart
+    punchcard30days: 'Ponskaart voor 30 dagen'
+    onlineActivity: 'Online activiteit'
+    world: Wereldbelasting
+    pvpPveAsNumbers: 'PvP & PvE als getallen'
+    serverOverview: Serveroverzicht
+    playerbaseDevelopment: Spelerbasis-ontwikkeling
+    onlineActivityAsNumbers: 'Online activiteit als getallen'
+    joinAddresses: 'Inlog adressen'
+    ping: Ping
+    recentPvpDeaths: 'Recente PvP-doden'
+    seenNicknames: 'Bijnamen gezien'
+    averagePing: 'Gemiddelde ping'
+    cpuRam: 'CPU & RAM'
+    bestPing: 'Beste ping'
+    insights30days: 'Inzichten voor 30 dagen'
+    playersOnlineOverview: 'Overzicht van online activiteiten'
+    mostPlayedWorld: 'Meest gespeelde wereld'
+    serverPlaytime30days: 'Server speeltijd voor 30 dagen'
+    all: Alle
+  modal:
+    version:
+      available: 'is beschikbaar'
+      title: Versie
+      changelog: 'Bekijk changelog'
+      text: 'Een nieuwe versie is uitgebracht en is nu beschikbaar om te downloaden.'
+      download: Download
+      dev: 'Deze versie is een DEV-release.'
+    info:
+      developer: 'is ontwikkeld door'
+      contributors: 'Extra speciale dank aan degenen die de ontwikkeling financieel hebben ondersteund.'
+        code: 'code bijdrager'
+        bugreporters: '& Bug melders!'
+        text: 'Daarnaast hebben de volgende <span class="col-plan">geweldige mensen</span> bijgedragen:'
+        translator: vertaler
+      license: 'Player Analytics is ontwikkeld en gelicentieerd onder'
+      metrics: bStats-statistieken
+      text: 'Informatie over de plugin'
+      bugs: 'Problemen melden'
+      discord: 'Algemene ondersteuning op Discord'
+      wiki: 'Plan Wiki, Tutorials & Documentatie'
+  register:
+    register: Registreer
+    error:
+      usernameLength: 'Gebruikersnaam kan maximaal 50 tekens lang zijn, de jouwe is '
+      checkFailed: 'Het controleren van de registratiestatus is mislukt: '
+      noPassword: 'U moet een wachtwoord opgeven'
+      failed: 'Registratie mislukt: '
+      noUsername: 'U moet een gebruikersnaam opgeven'
+    completion4: 'Of via console:'
+    createNewUser: 'Nieuwe gebruiker aanmaken'
+    passwordTip: 'Wachtwoord kan het beste langer zijn dan 8 tekens, maar er zijn geen beperkingen.'
+    login: 'Heb je al een account? Log in!'
+    usernameTip: 'Gebruikersnaam mag maximaal 50 tekens bevatten.'
+    completion2: 'Code verloopt over 15 minuten'
+    completion1: 'U kunt nu de registratie van de gebruiker voltooien.'
+    completion: 'Voltooi registratie'
+    completion3: 'Gebruik de volgende opdracht in het spel om de registratie te voltooien::'
+  description:
+    noGameServers: 'Voor sommige gegevens moet Plan op gameservers zijn geïnstalleerd.'
+    newPlayerRetention: 'Deze waarde is een voorspelling op basis van eerdere spelers.'
+    noServers: 'Er zijn geen servers gevonden in de database'
+    noGeolocations: 'Het verzamelen van geolocatie moet worden ingeschakeld in de configuratie (Accept GeoLite2 EULA).'
+    noServerOnlinActivity: 'Er is geen server om online activiteit voor weer te geven'
+    predictedNewPlayerRetention: 'Deze waarde is een voorspelling op basis van eerdere spelers'
+    noSpongeChunks: 'Chunks niet beschikbaar op Sponge'
+    noServersLong: 'Het lijkt erop dat Plan op geen enkele gameserver is geïnstalleerd of niet is verbonden met dezelfde database. Zie <a href="https://github.com/plan-player-analytics/Plan/wiki">de wiki</a> voor een netwerkhandleiding.'
+  query:
+    filter:
+      country:
+        text: 'have joined from country'
+      operators: Operators
+      activity:
+        text: 'zijn in activiteitengroepen'
+      generic:
+        and: 'en '
+        allPlayers: 'Alle spelers'
+        start: 'van Spelers die '
+      title:
+        activityGroup: 'Huidige activiteitengroep'
+      nonOperators: 'Geen operators'
+      pluginGroup:
+        text: 'zijn in ${plugin}'s ${group} groepen'
+        name: 'Groep: '
+      banned: Verbannen
+      registeredBetween:
+        text: 'Geregistreerd tussen'
+      notBanned: 'Niet verbannen'
+      playedBetween:
+        text: 'Spelers tussen'
+      joinAddress:
+        text: 'aangemeld met adres'
+      banStatus:
+        name: Verbodsstatus
+      operatorStatus:
+        name: Operatorstatus
+      view: '  Weergave:'
+    label:
+      view: 'Toon een weergave'
+      makeAnother: 'Maak nog een query'
+      to: >naar</label>
+      from: >van</label>
+    performQuery: 'Query Uitvoeren!'
+    title: Query<
+      sessionsWithinView: 'Sessies in weergave'
+      activity: 'Activiteit van gematchte spelers'
+      activityOnDate: 'Activiteit op <span id="activity-date"></span>'
+    results:
+      title: 'Query Resultaat'
+      match: 'matchte ${resultCount} spelers'
+      none: 'Query heeft 0 resultaten opgeleverd'
+    filters:
+      loading: 'Filters laden..'
+      add: 'Voeg een filter toe..'
+    generic:
+      are: `zijn`
+  generic:
+    none: Geen
+  login:
+    forgotPassword4: 'Na gebruik van de opdracht, '
+    forgotPassword2: 'Gebruik de volgende opdracht in het spel om je huidige gebruiker te verwijderen:'
+    forgotPassword: 'Wachtwoord Vergeten?'
+    forgotPassword1: 'Wachtwoord Vergeten? Uitschrijven en opnieuw registreren.'
+    logout: Uitloggen
+    username: '"Gebruikersnaam"'
+    failed: 'Login niet gelukt: '
+    register: 'Maak een account!'
+    password: '"Wachtwoord"'
+    login: Inloggen
+    forgotPassword3: 'Of via console:'
+  calendar:
+    unique:
+      Uniek:
+    new:
+      Nieuwe:
+  value:
+    noKills: 'Geen Moorden'
+    online: ' Online'
+    with: <th>Met
+    localMachine: 'Lokaal apparaat'
+    offline: ' Offline'
+  button:
+    nightMode: Donkeremodus
+  unit:
+    chunks: Chunks
+    entities: Entiteiten
+    players: Spelers
+  side:
+    plugins: Plugins
+plugin:
+  webserver:
+    fail:
+      portInUse: 'WebServer is niet succesvol geïnitialiseerd. Is poort (${0}) in gebruik?'
+      SSLContext: 'WebServer: SSL-contextinitialisatie mislukt.'
+      certStoreLoad: 'WebServer: Laden SSL-certificaat mislukt.'
+      certFileEOF: 'WebServer: EOF bij het lezen van het certificaatbestand. (Controleer of het bestand niet leeg is)'
+    notify:
+      reverseProxy: 'WebServer: HTTPS-proxymodus ingeschakeld, zorg ervoor dat uw reverse-proxy routert met HTTPS en de Plan Alternative_IP.Address-instelling wijst naar de proxy'
+      ipWhitelistBlock: 'Webserver: ${0} heeft geen toegang to '${1}'. (niet op de whitelist)'
+      authDisabledNoHTTPS: 'WebServer: Gebruikersautorisatie uitgeschakeld! (Niet veilig via HTTP)'
+      noCertFile: 'WebServer: Certificaat KeyStore-bestand niet gevonden: ${0}'
+      authDisabledConfig: 'WebServer: Gebruikersautorisatie uitgeschakeld! (Uitgeschakeld in configuratie)'
+      ipWhitelist: 'Webserver: IP Whitelist is ingeschakeld.'
+      http: 'WebServer: Geen Certificaat -> HTTP-server gebruiken voor visualisatie.'
+  version:
+    checkFail: 'Het nieuwste versienummer kan niet worden gecontroleerd'
+    isDev: ' Dit is een DEV-release.'
+    updateAvailableSpigot: 'Nieuwe versie is beschikbaar op ${0}'
+    updateAvailable: 'Nieuwe release (${0}) is beschikbaar voor ${1}'
+    checkFailGithub: 'Versie-informatie kon niet worden geladen vanuit Github/versions.txt'
+    isLatest: 'Je gebruikt de laatste versie.'
+  generic:
+    unavailable: 'Niet beschikbaar'
+    loadingServerInfo: 'Loading server identifying information'
+    dbFaultyLaunchOptions: 'Startopties waren defect, gebruik maken van standaardopties (${0})'
+    yesterday: "'Gisteren'"
+    dbNotifyClean: 'Gegevens van ${0} spelers zijn verwijderd.'
+    dbNotifySQLiteWAL: 'SQLite WAL-modus wordt niet ondersteund op deze serverversie, de standaard wordt niet gebruiker. Dit heeft mogelijk invloed op de prestaties.'
+    unknown: Onbekend
+    yes: Ja
+    no: Nee
+    today: "'Vandaag'"
+    dbPatchesAlreadyApplied: 'Alle databasepatches zijn al toegepast.'
+    dbApplyingPatch: 'Patch Toepassen: ${0}..'
+    dbPatchesApplied: 'Alle databasepatches zijn succesvol toegepast.'
+  disable:
+    webserver: 'Webserver is uitgeschakeld.'
+    savingSessionsTimeout: 'Time-outhit, de onvoltooide sessies worden opgeslagen bij de volgende inschakeling.'
+    savingSessions: 'Onvoltooide sessies opslaan..'
+    waitingDbComplete: 'SQLite-verbinding gesloten.'
+    disabled: 'Player Analytics uitgeschakeld.'
+    processingComplete: 'Verwerking voltooid.'
+    waitingDb: 'Wachten op het voltooien van query's om te voorkomen dat JVM door SQLite crasht..'
+    waitingTransactions: 'Wachten op onvoltooide transacties om gegevensverlies te voorkomen..'
+    waitingTransactionsComplete: 'Transactiewachtrij gesloten.'
+    database: 'Kritieke onverwerkte taken verwerken. (${0})'
+  enable:
+    notify:
+      storeSessions: 'Sessies opslaan die zijn bewaard vóór de vorige afsluiting.'
+      webserverDisabled: 'Webserver is niet geïnitialiseerd. (WebServer.DisableWebServer: true)'
+      geoInternetRequired: 'Plan Vereist internettoegang bij de eerste run om de GeoLite2 Geolocation-database te downloaden.'
+      geoDisabled: 'Geolocatie verzamelen is niet actief. (Data.Geolocations: false)'
+      badIP: '0.0.0.0 is geen geldig adres, stel de Alternative_IP-instelling in. Er kunnen onjuiste links worden gegeven!'
+      emptyIP: 'IP in server.properties is leeg en de Alternative_IP-instelling is niet in gebruik. Er kunnen onjuiste links worden gegeven!'
+    fail:
+      geoDBWrite: 'Er is iets misgegaan bij het opslaan van de gedownloade GeoLite2 Geolocation-database'
+      database: '${0}-Databaseverbinding mislukt: ${1}'
+      webServer: 'WebServer is niet geïnitialiseerd!'
+      databaseType: '${0} is geen ondersteunde database'
+      databasePatch: 'Database patchen is mislukt, plugin moet worden uitgeschakeld. Meld dit probleem a.u.b.'
+    webserver: 'Webserver draait op PORT ${0} ( ${1} )'
+    database: '${0}-databaseverbinding tot stand gebracht.'
+    enabled: 'Player Analytics ingeschakeld.'
+  apiCSSAdded: 'PaginaUitbreiding: ${0} heeft stylesheet(s) toegevoegd aan ${1}, ${2}'
+  apiJSAdded: 'PaginaUitbreiding: ${0} heeft javascript(s) toegevoegd aan ${1}, ${2}'
+command:
+  help:
+    dbClear:
+      inDepth: 'Wist alle Plan-tabellen en verwijdert alle Plan-gegevens tijdens het proces.'
+      description: 'ALLE Plan-gegevens verwijderen uit een database'
+    dbHotswap:
+      inDepth: 'Laat de plugin opnieuw met de andere database en wijzig de configuratie zodat deze overeenkomt.'
+      description: 'Snel van database veranderen'
+    dbUninstalled:
+      description: 'Stel een server in als verwijderd in de database.'
+      inDepth: 'Markeert een server in de Plan-database als verwijderd, zodat deze niet wordt weergegeven in serverquery's.'
+    info:
+      inDepth: 'Toon de huidige status van de plugin.'
+      description: 'Informatie over de plugin'
+    dbBackup:
+      description: 'Back-up van gegevens van een database naar een bestand'
+      inDepth: 'Gebruikt SQLite om een back-up te maken van de database naar een bestand.'
+    server:
+      inDepth: 'Verkrijg een link naar de /server pagina van een specifieke server, of de huidige server als er geen argumenten worden gegeven.'
+      description: 'Bekijk de serverpagina'
+    unregister:
+      description: 'Een gebruiker van de Plan-website uitschrijven'
+      inDepth: 'Gebruik zonder argumenten om de aan een speler gekoppelde gebruiker uit te schrijven, of met gebruikersnaamargument om een andere gebruiker uit te schrijven.'
+    reload:
+      inDepth: 'Schakel de plugin uit en in om eventuele wijzigingen in de configuratie opnieuw te laden.'
+      description: 'Herstart Plan'
+    player:
+      description: 'Een spelerspagina bekijken'
+      inDepth: 'Verkrijg een link naar de /player pagina van een specifieke speler, of de huidige speler.'
+    import:
+      description: 'Gegevens importeren'
+      inDepth: 'Voer een import uit om gegevens naar de database te laden.'
+    logout:
+      description: 'Andere gebruikers uitloggen uit het paneel.'
+      inDepth: 'Geef gebruikersnaam argument om een andere gebruiker uit te loggen van het paneel, geef * als argument om iedereen uit te loggen.'
+    servers:
+      description: 'Servers in database weergeven'
+      inDepth: 'Geef een lijst met id's, namen en uuids van servers weer uit de database.'
+    dbRestore:
+      description: 'Gegevens herstellen van een bestand naar een database'
+      inDepth: 'Gebruikt SQLite-back-upbestand en overschrijft de inhoud van de database.'
+    export:
+      inDepth: 'Voer een export uit naar de exportlocatie gedefinieerd in de configuratie.'
+      description: 'Exporteer html- of json-bestanden handmatig'
+    disable:
+      description: 'Schakel de plugin of een deel ervan uit'
+      inDepth: 'Schakel de plug-in of een deel ervan uit tot de volgende herlaad/herstart.'
+    dbMove:
+      inDepth: 'Overschrijft inhoud in de database met de inhoud in een andere.'
+      description: 'Gegevens verplaatsen tussen databases'
+    dbRemove:
+      inDepth: 'Verwijder alle gegevens die aan een speler zijn gekoppeld uit de huidige database.'
+      description: 'Spelersgegevens uit de huidige database verwijderen'
+    users:
+      inDepth: 'Geeft webgebruikers weer als een tabel.'
+      description: 'Lijst van alle webgebruikers'
+    search:
+      inDepth: 'Lijst van alle overeenkomende spelersnamen op een gedeeldte van een naam.'
+      description: 'Zoek naar een spelersnaam'
+    json:
+      description: 'Bekijk json van een spelers onbewerkte data.'
+      inDepth: 'Hiermee kunt u alle gegevens van een speler downloaden als json.'
+    players:
+      description: 'Bekijk de spelerspagina'
+      inDepth: 'Verkrijg een link naar de /players pagina om een lijst met spelers te zien.'
+    database:
+      inDepth: 'Gebruik verschillende database-subopdrachten om de gegevens op de een of andere manier te wijzigen'
+      description: 'Beheer Plan database'
+    ingame:
+      inDepth: 'Geef informatie weer over de speler in het spel.'
+      description: 'Spelersinfo bekijken in het spel'
+    network:
+      inDepth: 'Verkrijg een link naar de /network pagina, dit werkt alleen op netwerken.'
+      description: 'Bekijk de netwerkpagina'
+    register:
+      description: 'Registreer een webgebruiker'
+      inDepth: 'Gebruik zonder argumenten om een link naar de registratiepagina te krijgen. Gebruik --code [code] na registratie om een gebruiker te krijgen.'
+  database:
+    failDbNotOpen: '§cDatabase is ${0} - probeer het later opnieuw.'
+    creatingBackup: 'Een back-upbestand '${0}.db' maken met een inhoud van ${1}'
+    manage:
+      progress: '${0} / ${1} verwerkt..'
+      fail: '> §cEr is iets fout gegaan: ${0}'
+      success: '> §aSucces!'
+      failSameServer: 'Kan deze server niet markeren als verwijderd (u bevindt zich erop)'
+      confirmOverwrite: 'Gegevens in ${0} worden overschreven!'
+      failIncorrectDB: '> §c'${0}' is geen ondersteunde database.'
+      start: '> §2Gegevensverwerking..'
+      failSameDB: '> §cKan niet van en naar dezelfde database werken!'
+      failNoServer: 'Geen server gevonden met opgegeven parameters.'
+      confirmRemoval: 'Gegevens in ${0} worden verwijderd!'
+      hotswap: '§eVergeet niet om naar de nieuwe database te wisselen (/plan db hotswap ${0}) en de plugin opnieuw te laden.'
+      confirm: '> §cVoeg het '-a' argument toe om uitvoering te bevestigen: ${0}'
+      importers:
+        Importeurs:
+      failFileNotFound: '> Geen bestand gevonden op ${0}'
+    playerRemoval: 'Gegevens van ${0} verwijderen uit ${1}..'
+    warnDbNotOpen: '§eDatabase is ${0} - Dit kan langer duren dan verwacht..'
+    unregister: ''${0}' Uitschrijven..'
+    write: 'Schrijven naar ${0}..'
+    serverUninstalled: '§aAls de server nog steeds is geïnstalleerd, wordt deze automatisch ingesteld als geïnstalleerd in de database.'
+    removal: 'Plan-gegevens verwijderen van ${0}..'
+  fail:
+    playerNotFound: 'Speler '${0}' is niet gevonden, deze heeft geen UUID.'
+    webUserNotFound: '§cGebruiker bestaat niet!'
+    invalidArguments: 'Accepteert het volgende als ${0}: ${1}'
+    missingLink: 'Gebruiker is niet gekoppeld aan uw account en u heeft geen toestemming om de accounts van andere gebruikers te verwijderen.'
+    invalidUsername: '§cGebruiker heeft geen UUID.'
+    playerNotInDatabase: 'Speler '${0}' is niet gevonden in de database.'
+    tooManyArguments: '§cEén argument vereist ${1}'
+    onAccept: 'De geaccepteerde actie gaf een fout bij de uitvoering: ${0}'
+    serverNotFound: 'Server '${0}' is niet gevonden in de database.'
+    webUserExists: '§cGebruiker bestaat al!'
+    noPermission: '§cU beschikt niet over de vereiste toestemming.'
+    seeConfig: 'zien '${0}' in config.yml'
+    missingArguments: '§cArgumenten vereist (${0}) ${1}'
+    onDeny: 'De geweigerde actie heeft een fout gemaakt bij de uitvoering: ${0}'
+    missingFeature: '§eDefinieer een functie om uit te schakelen! (ondersteunt momenteel ${0})'
+    emptyString: 'De zoekreeks mag niet leeg zijn'
+    unknownUsername: '§cGebruiker is niet gezien op deze server'
+  general:
+    reloadComplete: '§aHerladen voltooid'
+    noWebuser: 'U heeft misschien geen webgebruiker, gebruik /plan register <wachtwoord>'
+    failNoExporter: '§eExporteur '${0}' bestaat niet'
+    webUserList: '  §2${0} §7: §f${1}'
+    successWebUserRegister: '§aNieuwe gebruiker (${0}) sucesvol toegevoegd!'
+    notifyWebUserRegister: 'Geregistreerde nieuwe gebruiker: '${0}' Recht niveau: ${1}'
+    failNoImporter: '§eImporteur '${0}' bestaat niet'
+    noAddress: '§eEr was geen adres beschikbaar - localhost wordt gebruikt als terugval. Stel de 'Alternative_IP'-instelling in.'
+    webPermissionLevels: '>\§70: Toeging tot alle pagina's\§71:
+                                                           Toegang tot '/players' en alle spelerpagina's\§72:
+                                                             Toegang tot de spelerpagina met dezelfde gebruikersnaam als de webgebruiker\§73+: Geen rechten'
+    featureDisabled: '§a'${0}' tijdelijk uitgeschakeld tot de volgende keer dat de plugin opnieuw wordt geladen.'
+    reloadFailed: '§cEr is iets misgegaan tijdens het herladen van de plugin, een herstart wordt aanbevolen.'
+    pluginDisabled: '§aPlansystemen zijn nu uitgeschakeld. U kunt nog steeds opnieuw laden gebruiken om de plug-in opnieuw te starten.'
+  confirmation:
+    cancelNoUnregister: 'Geannuleerd. '${0}' is niet uitgeschreven'
+    dbClear: 'U staat op het punt om alle abonnementsgegevens te verwijderen in ${0}'
+    dbOverwrite: 'U staat op het punt gegevens in Plan ${0} te overschrijven met gegevens in ${1}'
+    dbRemovePlayer: 'U staat op het punt om gegevens van ${0} te verwijderen van ${1}'
+    cancelNoChanges: 'Geannuleerd. Er zijn geen gegevens gewijzigd.'
+    accept: Accepteer
+    unregister: 'U staat op het punt de registratie van '${0}' gekoppeld aan ${1} ongedaan te maken'
+    deny: Annuleren
+    expired: 'Bevestiging verlopen, gebruik de opdracht opnieuw'
+    confirm: 'Bevestig: '
+  argument:
+    dbTypeMoveFrom:
+      description: 'Type van de database waaruit u gegevens wilt verplaatsen.'
+    username: gebruikersnaam
+      description: 'Gebruikersnaam van een andere gebruiker. Indien niet gespecificeerd, dan wordt de spelers gekoppelde gebruiker gebruikt.'
+    nameOrUUID: naam/uuid
+      removeDescription: 'Identificatie voor een speler die uit de huidige database moet worden verwijderd.'
+      description: 'Naam of UUID van een speler'
+    code:
+      name: ${code}
+      description: 'Code gebruikt om de registratie af te ronden.'
+    server: server
+      description: 'Naam, ID of UUID van een server'
+    backupFile: 'backup bestand'
+      description: 'Naam van het backup bestand (hoofdlettergevoelig)'
+    dbTypeRemove:
+      description: 'Type van de database waarvan u alle date van wilt verwijderen.'
+    dbTypeHotswap:
+      description: 'Type van de database om te gaan gebruiken.'
+    subcommand: subopdracht
+      description: 'Gebruik de opdracht zonder subopdracht om hulp te zien.'
+    dbTypeMoveTo:
+      description: 'Type van de database waarnaar de gegevens moeten worden verplaatst. Kan niet hetzelfde zijn als de vorige.'
+    feature: feature
+      description: 'Naam van de functie die moet worden uitgeschakeld: ${0}'
+    dbBackup:
+      description: 'Type van de database waarvan u een back-up wilt maken. Current database is used if not specified.'
+    exportKind: 'soort uitvoer'
+    dbRestore:
+      description: 'Type van de database waarnaar moet worden teruggezet. De huidige database wordt gebruikt indien deze niet gespecificeerd is.'
+    importKind: 'soort invoer'
+  link:
+    noNetwork: 'Server is niet verbonden met een netwerk. De link verwijst door naar de serverpagina.'
+    server: 'Serverpagina: '
+    link: Koppel
+    player: 'Spelerpagina: '
+    playerJson: 'Speler json: '
+    register: 'Registratiepagina: '
+    players: 'Spelerspagina: '
+    network: 'Netwerkpagina: '
+    clickMe: 'Klik mij'
+  header:
+    serverList: id::name::uuid
+    inspect: '> §2Speler: §f${0}'
+    analysis: '> §2Analyse resultaten'
+    webUsers: '> §2${0} Webgebruikers'
+    players: '> §2Spelers'
+    search: '> §2${0} Resultaten voor §f${1}§2:'
+    webUserList: 'username::linked to::permission level'
+    servers: '> §2Servers'
+    help: '> §2/${0} Hulp'
+    network: '> §2Netwerkpagina'
+    info: '> §2Spelersanalyse'
+  ingame:
+    playerKills: '  §2Speler moorden: §f${0}'
+    activityIndex: '  §2Activiteitsindex: §f${0} | ${1}'
+    geolocation: '  §2Ingelogd vanaf: §f${0}'
+    registered: '  §2Geregistreerd: §f${0}'
+    deaths: '  §2Sterfgevallen: §f${0}'
+    afkPlaytime: '  §2AFK Tijd: §f${0}'
+    lastSeen: '  §2Laatst gezien: §f${0}'
+    activePlaytime: '  §2Actieve speeltijd: §f${0}'
+    timesKicked: '  §2Aantal keer afgetrapt: §f${0}'
+    longestSession: '  §2Langste sessie: §f${0}'
+    playtime: '  §2Speeltijd: §f${0}'
+    mobKills: '  §2Mob moorden: §f${0}'
+  subcommand:
+    info:
+      proxy: '  §2Verbonden met proxy: §f${0}'
+      version: '  §2Versie: §f${0}'
+      database: '  §2Huidige database: §f${0}'
+      update: '  §2Update Beschikbaar: §f${0}'
+  footer:
+    help: '§7Plaats de muisaanwijzer op een opdracht of argumenten of gebruik '/${0} ?' om er meer over te weten te komen.'
+generic:
+  noData: 'Geen gegevens'
+403AccessDenied: 'Toegang geweigerd'

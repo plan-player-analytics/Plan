@@ -1,0 +1,621 @@
+html:
+  text:
+    noLowTps: 'Ei matalan TPS:n piikkejä'
+    clickToExpand: 'Klikkaa laajentaaksesi'
+    comparing15days: 'Verrataan 15 päivää'
+    comparing30daysAgo: 'Verrataan 30 päivää sitten nykyhetkeen'
+    noExtensionData: 'Ei dataa lisäosista'
+  label:
+    comparing7days: 'Verrataan 7 päivää'
+    averageKdr: 'Keskimäräinen Tapposuhde'
+    perDay: '/ Päivä'
+    averageEntities: 'Average Entities'
+    averageSessions: 'Keskimääräinen Sessiomäärä'
+    playersOnline: 'Pelaajia Paikalla'
+    secondDeadliestWeapon: '2. PvP Ase'
+    totalAfk: AFK
+    favoriteServer: Lempipalvelin
+    mostActiveGamemode: 'Aktiivisin pelitila'
+    afkTime: 'Aika AFK:ina'
+    lastConnected: 'Viimeisin yhteys'
+    regular: Kantapelaaja
+    downtime: 'Poissa päältä'
+    perRegularPlayer: '/ Kantapelaaja'
+    minFreeDisk: 'Minimi vapaa levytila'
+    deadliestWeapon: 'Tappavin PvP Ase'
+    registered: Rekisteröitynyt
+    currentUptime: 'Current Uptime'
+    averageChunks: 'Average Chunks'
+    averageMobKdr: 'Keskimäräinen Otus-Tapposuhde'
+    lastSeen: 'Nähty Viimeksi'
+    killed: Tappanut
+    sessionEnded: ' Istunto Päättyi'
+    uniquePlayers: 'Uniikkeja pelaajia'
+    weekdays: ''Maanantai', 'Tiistai', 'Keskiviikko', 'Torstai', 'Perjantai', 'Lauantai', 'Sunnuntai''
+    firstSession: 'Ensimmäinen sessio'
+    mobKdr: Otus-Tapposuhde
+    averageSessionLength: 'Keskimäräinen istunnon pituus'
+    duringLowTps: 'Matalan TPS:n aikana:'
+    afk: AFK
+    loadedEntities: 'Ladatut Entiteetit'
+    playerKills: 'Tapetut Pelaajat'
+    active: Aktiivinen
+    totalPlaytime: 'Peliaikaa yhteensä'
+    newPlayers: 'Uusia pelaajia'
+    averagePlaytime: 'Keskimäräinen peliaika'
+    indexInactive: Inaktiivinen
+    maxFreeDisk: 'Maksimi vapaa levytila'
+    totalPlayers: Pelaajia
+    averageTps: 'Keskimäräinen TPS'
+    longestSession: 'Pisin istunto'
+    nickname: Lempinimi
+    operator: Operaattori
+    indexRegular: Säännöllinen
+    regularPlayers: Kantapelaajia
+    mobDeaths: 'Otusten aiheuttamat Kuolemat'
+    thirdDeadliestWeapon: '3. PvP Ase'
+    serverOccupied: 'Palvelin pelaajien käytössä'
+    activityIndex: 'Aktiivisuus Indeksi'
+    irregular: Epäsäännöllinen
+    loneJoins: 'Yksinäiset pelaajien liittymiset'
+    serverAnalysis: 'Palvelimen Analyysi'
+    playerDeaths: 'Pelaajien aiheuttamat Kuolemat'
+    averageAfkTime: 'Keskimäräinen AFK aika'
+    totalPlayersOld: 'Kaikki Pelaajat'
+    activePlaytime: 'Aktiivinen peliaika'
+    totalActive: Aktiivisena
+    sessionMedian: 'Istuntojen Mediaani'
+    newPlayerRetention: 'Uusien pysyvyys'
+    onlineOnFirstJoin: 'Paikalla ekalla liittymiskerralla'
+    new: Uudet
+    serverDowntime: 'Palvelin pois päältä'
+    session: Istunto
+    banned: Pannassa
+    lowTpsSpikes: 'Matalan TPS:n piikit'
+    averageActivePlaytime: 'Keskimäräinen Aktiivinen peliaika'
+    playtime: Peliaika
+    inactive: Inaktiivinen
+    entities: Entiteetit
+    mobKills: 'Tapetut Otukset'
+    name: Nimi
+    lastPeak: 'Viimeisin huippu'
+    quickView: Pika-katsaus
+    relativeJoinActivity: 'Verrannollinen liittymis aktiivisuus'
+    deaths: Kuolemat
+    timesKicked: 'Heitetty pihalle'
+    loneNewbieJoins: 'Yksinäiset uusien pelaajien liittymiset'
+    loadedChunks: 'Ladatut Chunkit'
+    dayOfweek: 'Viikon päivä'
+    firstSessionLength: 'Ensimmäisen istunnon pituus'
+    perPlayer: '/ Pelaaja'
+    players: Pelaajia
+    diskSpace: 'Vapaa Levytila'
+    bestPeak: 'Paras Huippu'
+    veryActive: 'Todella Aktiivinen'
+    average: Keskimäräinen
+    registeredPlayers: 'Rekisteröidyt pelaajat'
+  sidebar:
+    networkOverview: 'Verkoston yhteenveto'
+    pvpPve: 'PvP & PvE'
+    overview: Yhteenveto
+    links: LINKIT
+    serverPage: Palvelin
+    sessions: Istunnot
+    playerbaseOverview: 'Pelaajakunnan yhteenveto'
+    playerbase: Pelaajakunta
+    plugins: LISÄOSAT
+    query: 'Tee kysely'
+    geolocations: Sijainnit
+    networkPage: Verkosto
+    playerList: Pelaajalista
+    toMainPage: pääsivu
+    serversTitle: PALVELIMET
+    performance: Suorituskyky
+    playerPage: 'Pelaajan sivu'
+    servers: Palvelimet
+    information: TIETOJA
+  version:
+    updateButton: Päivitys
+    changelog: 'Katso muutoslistaa'
+    updateModal:
+      title: 'Versio ${0} on Saatavilla!'
+      text: 'Uusi versio on julkaistu ja on ladattavissa.'
+    isDev: 'Tämä versio on DEV julkaisu.'
+    download: 'Lataa Plan-${0}.jar'
+    current: 'Sinulla on versio ${0}'
+  error:
+    auth:
+      registrationFailed: 'Rekisteröityminen epäonnistui, yritä uudestaan (Koodi vanhenee 15 minuutin jälkeen)'
+      expiredCookie: 'Käyttäjän kirjautumiseväste vanheni'
+      noCookie: 'Käyttäjän kirjautumisevästettä ei annettu'
+      userNotFound: 'Käyttäjää ei ole olemassa'
+      loginFailed: 'Käyttäjä ja salasana ei täsmää'
+      dbClosed: 'Tietokanta ei ole auki, tarkista tietokannan status /plan info komennolla'
+      generic: 'Todennus epäonnistui virheen vuoksi'
+      emptyForm: 'Käyttäjää ja salasana vaaditaan.'
+    404NotFound: 'Ei löytynyt'
+    404UnknownPage: 'Varmista menneeesi komennon antamaan osoitteeseen, Esim:</p><p>/player/{uuid/nimi}<br>/server/{uuid/nimi/id}</p>'
+    playerNotSeen: 'Pelaaja ei ole pelannut palvelimella.'
+    authFailedTips: '- Varmista että olet rekisteröinyt käyttäjän komennolla <b>/plan register</b><br>- Tarkista että käyttäjänimi ja salaasana ovat oikein<br>- Nimi ja salasana ovat CASE SENSITIVE<br><br>Jos unohdit salasanasi, pyydä valvojia poistamaan käyttäjäsi ja uudelleenrekisteröidy.'
+    UUIDNotFound: 'Pelaajan UUID:ta ei löytynyt tietokannasta.'
+    404PageNotFound: 'Sivua ei ole olemassa.'
+    401Unauthorized: 'Todennusta ei suoritettu loppuun.'
+    noServersOnline: 'Ei palvelimia jolla toiminto voitaisiin suorittaa.'
+    403Forbidden: Kielletty
+    authFailed: 'Todennus ei onnistunut.'
+  title:
+    graph:
+      hourByHour: 'Tunnittainen katsaus'
+      dayByDay: 'Päivittäinen katsaus'
+      networkOnlineActivity: 'Verkoston paikallaolo'
+    recentSessions: 'Viimeisimmät Istunnot'
+    trends30days: 'Suunnat 30 päivälle'
+    thirtyDaysAgo: '30 päivää sitten'
+    allTime: 'Kaikkien aikojen'
+    tps: TPS
+    themeSelect: Teemavalikko
+    connectionInfo: 'Yhteyksien tiedot'
+    country: Maa
+    last30days: 'Viimeiset 30 päivää'
+    asNumbers: Numeroina
+    worstPing: 'Huonoin Vasteaika'
+    now: Nyt
+    worldPlaytime: 'Maailmakohtainen Peliaika'
+    networkAsNumbers: 'Verkosto Numeroina'
+    disk: Levytila
+    sessionStart: 'Istunto alkoi'
+    player: Pelaaja
+    serverPlaytime: 'Palvelimen peliaika'
+    calendar: ' Kalenteri'
+    playerOverview: 'Yhteenveto Pelaajasta'
+    serverAsNumberse: 'Palvelin Numeroina'
+    thirtyDays: '30 päivää'
+    last7days: 'Viimeiset 7 päivää'
+    network: Verkosto
+    trend: Suunta
+    weekComparison: 'Viikkojen vertaus'
+    recentPvpKills: 'Viimeaikaiset PvP Tapot'
+    performanceAsNumbers: 'Suorituskyky Numeroina'
+    recentKills: 'Viimeaikaiset Tapot'
+    last24hours: 'Viimeiset 24 tuntia'
+    currentPlayerbase: 'Nykyiset pelaajat'
+    server: Palvelin
+    length: ' Pituus'
+    punchcard: Reikäkortti
+    punchcard30days: 'Reikäkortti 30 päivälle'
+    onlineActivity: Paikallaolo
+    world: 'Maailmojen Resurssit'
+    pvpPveAsNumbers: 'PvP & PvE Numeroina'
+    serverOverview: 'Yhteenveto Palvelimesta'
+    playerbaseDevelopment: 'Pelaajakunnan kehitys'
+    onlineActivityAsNumbers: 'Paikallaolo Numeroina'
+    joinAddresses: 'Join Addresses'
+    ping: Vasteaika
+    recentPvpDeaths: 'Viimeaikaiset PvP Kuolemat'
+    seenNicknames: 'Nähdyt Lempinimet'
+    averagePing: 'Keskimääräinen Vasteaika'
+    cpuRam: 'CPU & RAM'
+    bestPing: 'Paras Vasteaika'
+    insights30days: 'Katsauksia 30 päivälle'
+    playersOnlineOverview: 'Yhteenveto Paikallaolosta'
+    mostPlayedWorld: 'Eniten pelattu maailma'
+    serverPlaytime30days: 'Palvelimen peliaika 30 päivälle'
+    all: Kaikki
+  modal:
+    version:
+      available: 'on saatavilla'
+      title: Versio
+      changelog: 'Katso muutoslokia'
+      text: 'Uusi versio on julkaistu ja on nyt ladattavissa.'
+      download: Lataa
+      dev: 'Tämä versio on KEHITYS versio.'
+    info:
+      developer: 'on kehittänyt'
+      contributors: 'Suuret kiitokset rahallisesti tukeneille henkilöille.'
+        code: 'koodin tuottaja'
+        bugreporters: '& Bugien ilmoittajat!'
+        text: 'Myös seuraavat <span class="col-plan">mahtavat ihmiset</span> ovat tukeneet kehitystä:'
+        translator: kääntäjä
+      license: 'Player Analytics:iä kehitetään, ja käyttää lisenssiä'
+      metrics: 'bStats Metriikat'
+      text: 'Tietoa lisäosasta'
+      bugs: 'Ilmoita ongelmista'
+      discord: Discord-tuki
+      wiki: 'Plan Wiki, ohjeet ja dokumentaatio'
+  register:
+    register: Rekisteröidy
+    error:
+      usernameLength: 'Käyttäjänimi voi olla enintään 50 merkkiä, sinun on'
+      checkFailed: 'Rekisteröitymisen tilan tarkistus epäonnistui:'
+      noPassword: 'Anna salasana'
+      failed: 'Rekisteröinti epäonnistui:'
+      noUsername: 'Anna käyttäjänimi'
+    completion4: 'Tai konsolia:'
+    createNewUser: 'Luo uusi käyttäjä'
+    passwordTip: 'Salasana kannattaa olla yli 8 merkkiä, mutta ei ole rajoituksia.'
+    login: 'Aiempi käyttäjä? Kirjaudu sisään!'
+    usernameTip: 'Käyttäjänimi voi olla enintään 50 merkkiä.'
+    completion2: 'Koodi vanhenee 15 minuutissa'
+    completion1: 'Voit viimeistellä käyttäjän rekisteröinnin.'
+    completion: 'Viimeistele rekisteröinti'
+    completion3: 'Käytä seuraavaa komentoa pelissä viimeistelläksesi rekisteröinnin:'
+  description:
+    noGameServers: 'Some data requires Plan to be installed on game servers.'
+    newPlayerRetention: 'This value is a prediction based on previous players.'
+    noServers: 'Palvelimia ei löytynyt tietokannasta'
+    noGeolocations: 'Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).'
+    noServerOnlinActivity: 'Ei palvelinta jolle näyttää aktiivisuutta'
+    predictedNewPlayerRetention: 'Tämä arvo on arvattu ennustus edellisten pelaajien perusteella'
+    noSpongeChunks: 'Chunks unavailable on Sponge'
+    noServersLong: 'Vaikuttaa että Plan peli-palvelimia ei ole asennettu tai yhdistetty samaan tietokantaan. Katso <a href="https://github.com/plan-player-analytics/Plan/wiki">wikiin</a> lisätietoja varten.'
+  query:
+    filter:
+      country:
+        text: 'have joined from country'
+      operators: Operaattorit
+      activity:
+        text: 'ovat Aktiivisuus Luokissa'
+      generic:
+        and: ja
+        allPlayers: 'All players'
+        start: 'pelaajista ketkä'
+      title:
+        activityGroup: 'Current activity group'
+      nonOperators: Ei-operaattorit
+      pluginGroup:
+        text: 'ovat ${plugin}:n ${group} Luokissa'
+        name: 'Group: '
+      banned: Pannassa
+      registeredBetween:
+        text: 'Rekisteröityvät välillä'
+      notBanned: Ei-pannassa
+      playedBetween:
+        text: 'Pelasivat välillä'
+      joinAddress:
+        text: 'joined with address'
+      banStatus:
+        name: 'Ban status'
+      operatorStatus:
+        name: 'Operator status'
+      view: '  Näkymä:'
+    label:
+      view: 'Näytä näkymä'
+      makeAnother: 'Tee toinen kysely'
+      to: >tänne</label>
+      from: >tästä</label>
+    performQuery: 'Tee kysely!'
+    title: Kysely<
+      sessionsWithinView: 'Istunnot näkymän sisällä'
+      activity: 'Vastaavien pelaajien aktiivisuus'
+      activityOnDate: 'Aktiivisuus <span id="activity-date"></span>'
+    results:
+      title: 'Kyselyn tulokset'
+      match: 'vastasi ${resultCount} pelaajaa'
+      none: 'Ei tuloksia'
+    filters:
+      loading: 'Ladataan suodattimia..'
+      add: 'Lisää suodatin..'
+    generic:
+      are: `ovat`
+  generic:
+    none: None
+  login:
+    forgotPassword4: 'Komennon jälkeen,'
+    forgotPassword2: 'Käytä komentoa pelissä poistaaksesi käyttäjäsi:'
+    forgotPassword: 'Unohtuiko salasana?'
+    forgotPassword1: 'Unohtuiko salasana? Poista käyttäjä ja uudelleen rekisteröidy.'
+    logout: 'Kirjaudu ulos'
+    username: '"Käyttäjänimi"'
+    failed: 'Kirjautuminen epäonnistui:'
+    register: 'Luo käyttäjä!'
+    password: '"Salasana"'
+    login: Kirjaudu
+    forgotPassword3: 'Tai konsolia:'
+  calendar:
+    unique:
+      Uniikit:
+    new:
+      Uudet:
+  value:
+    noKills: 'Ei Tappoja'
+    online: ' Paikalla'
+    with: <th>Millä
+    localMachine: 'Paikallinen laite'
+    offline: ' Ei Paikalla'
+  button:
+    nightMode: Yö-tila
+  unit:
+    chunks: Chunkkia
+    entities: Entiteettiä
+    players: Pelaajia
+  side:
+    plugins: Lisäosat
+plugin:
+  webserver:
+    fail:
+      portInUse: 'Web Palvelin ei käynnistynyt. Onko portti (${0}) käytössä?'
+      SSLContext: 'Web Palvelin: SSL Viitepalvelun käynnistys ei onnistunut.'
+      certStoreLoad: 'Web Palvelin: SSL Sertifikaatin lataus ei onnistunut.'
+      certFileEOF: 'Web Palvelin: EOF lukiessa Sertifikaattia. (Tarkista että tiedosto ei ole tyhjä)'
+    notify:
+      reverseProxy: 'Web Palvelin: Proxy-tolan HTTPS käytössä, varmista että reverse-proxy käyttää HTTPS ja että Plan Alternative_IP.Address osoittaa Proxy-palvelimeen'
+      ipWhitelistBlock: 'Web Palvelin: ${0} kiellettiin pääsy osoitteeseen '${1}'. (ei sallimislistalla)'
+      authDisabledNoHTTPS: 'Web Palvelin: Käyttäjien varmennus ei käytössä! (Ei turvallista HTTP-protokollalla)'
+      noCertFile: 'Web Palvelin: Sertifikaatti AvainKirjasto tiedostoa ei löytynyt: ${0}'
+      authDisabledConfig: 'Web Palvelin: Käyttäjien varmennus ei käytössä! (Sammutettu asetuksista)'
+      ipWhitelist: 'Web Palvelin: IP sallimislista käytössä.'
+      http: 'Web Palvelin: Ei Sertifikaattia -> Käytetään HTTP-Palvelinta.'
+  version:
+    checkFail: 'Uuden version tarkistus epäonnistui'
+    isDev: ' Tämä on KEHITYS julkaisu.'
+    updateAvailableSpigot: 'Uusi Versio on saatavilla ${0}'
+    updateAvailable: 'Uusi Julkaisu (${0}) on saatavilla ${1}'
+    checkFailGithub: 'Uuden version tarkistus epäonnistui Github/versions.txt:ta'
+    isLatest: 'Käytät uusinta versiota.'
+  generic:
+    unavailable: 'Ei saatavilla'
+    loadingServerInfo: 'Loading server identifying information'
+    dbFaultyLaunchOptions: 'LauchOptions-asetus oli virheellinen, käytetään oletusta (${0})'
+    yesterday: "'Eilen'"
+    dbNotifyClean: 'Poistetiin ${0}n pelaajan tiedot.'
+    dbNotifySQLiteWAL: 'SQLite WAL tilaa ei tueta tällä versiolla, Käytetään perustilaa. Tämä voi vaikuttaa suorituskykyyn.'
+    unknown: Tuntematon
+    yes: Kyllä
+    no: Ei
+    today: "'Tänään'"
+    dbPatchesAlreadyApplied: 'Kaikki tietokannan muutokset oli jo tehty.'
+    dbApplyingPatch: 'Muutetaan Tietokantaa: ${0}..'
+    dbPatchesApplied: 'Tietokannan muutokset suoritettu onnistuneesti.'
+  disable:
+    webserver: 'Web palvelin on sammutettu.'
+    savingSessionsTimeout: 'Timeout hit, storing the unfinished sessions on next enable instead.'
+    savingSessions: 'Tallennetaan päättymättömät istunnot..'
+    waitingDbComplete: 'Closed SQLite connection.'
+    disabled: 'Player Analytics Sammutettu.'
+    processingComplete: 'Suoritus valmis.'
+    waitingDb: 'Waiting queries to finish to avoid SQLite crashing JVM..'
+    waitingTransactions: 'Waiting for unfinished transactions to avoid data loss..'
+    waitingTransactionsComplete: 'Transaction queue closed.'
+    database: 'Suoritetaan kriittisiä suorittamattomia toimintoja. (${0})'
+  enable:
+    notify:
+      storeSessions: 'Storing sessions that were preserved before previous shutdown.'
+      webserverDisabled: 'Web Palvelinta ei käynnistetty. (WebServer.DisableWebServer: true)'
+      geoInternetRequired: 'Plan Vaatii internetin ensimmäisellä käynnistyskerralla GeoLite2 tietokannan lataamiseen.'
+      geoDisabled: 'Sijaintien keräys ei ole päällä. (Data.Geolocations: false)'
+      badIP: '0.0.0.0 ei ole toimiva osoite, aseta Alternative_IP asetukset. Linkit ovat virheellisiä!'
+      emptyIP: 'IP server.properties tiedostossa on tyhjä & Alternative_IP ei ole käytössä. Linkit ovat virheellisiä!'
+    fail:
+      geoDBWrite: 'Jokin meni pieleen tallentaessa GeoLite2 tietokantaa'
+      database: '${0}-Tietokanta yhteys epäonnistui: ${1}'
+      webServer: 'Web Palvelin ei käynnistynyt!'
+      databaseType: '${0} ei ole tuettu Tietokanta'
+      databasePatch: 'Tietokannan muutokset epäonnistuivat, Plan jouduttiin sulkemaan. Ilmoita tästä ongelmasta'
+    webserver: 'Web Palvelin pyörii PORTILLA ${0} ( ${1} )'
+    database: '${0}-tietokanta yhteys luotu.'
+    enabled: 'Player Analytics Käynnistetty.'
+  apiCSSAdded: 'PageExtension: ${0} lisäsi tyylejä sivulle ${1}, ${2}'
+  apiJSAdded: 'PageExtension: ${0} lisäsi javascriptia sivulle ${1}, ${2}'
+command:
+  help:
+    dbClear:
+      inDepth: 'Tyhjentää kaikki Plan taulut, poistaen tiedot samalla.'
+      description: 'Poista KAIKKI Plan tiedot tietokannasta'
+    dbHotswap:
+      inDepth: 'Käynnistää ohjelman uudelleen toisella tietokannalla ja muuttaa samalla asetustiedoston tiedot.'
+      description: 'Vaihda tietokantaa lennosta'
+    dbUninstalled:
+      description: 'Aseta palvelin poistetuksi tietokannassa.'
+      inDepth: 'Merkitsee palvelimen poistetuksi jotta se ei näy palvelin-kyselyissä.'
+    info:
+      inDepth: 'Näyttää tietoja ohjelmasta'
+      description: 'Tietoa ohjelmasta'
+    dbBackup:
+      description: 'Varmuuskopioi tietokanta tiedostoon'
+      inDepth: 'Käyttää SQLiteä varmuuskopioimaan tiedot tiedostoon.'
+    server:
+      inDepth: 'Hanki linkki annetun tai nykyisen palvelimen /server sivulle'
+      description: 'Katso Palvelimen sivua'
+    unregister:
+      description: 'Poista Plan sivuston käyttäjä rekisteristä'
+      inDepth: 'Käytä ilman argumentteja poistaaksesi nykyiseen pelaajaan linkitetty käyttäjä, tai anna käyttäjänimi joka poistaa'
+    reload:
+      inDepth: 'Sammuta ja käynnistä ohjelma uudelleen asetusten uudelleenlataamiseksi.'
+      description: 'Käynnistä Plan uudelleen'
+    player:
+      description: 'Katso Pelaajan sivua'
+      inDepth: 'Hanki linkki annetun tai nykyisen pelaajan /player sivulle.'
+    import:
+      description: 'Tuo tietoja'
+      inDepth: 'Tuo tietoja tietokantaan'
+    logout:
+      description: 'Log out other users from the panel.'
+      inDepth: 'Give username argument to log out another user from the panel, give * as argument to log out everyone.'
+    servers:
+      description: 'Listaa tietokannassa olevat palvelimet'
+      inDepth: 'Listaa id:t, nimet ja uuid:t tietokannassa olevista palvelimista.'
+    dbRestore:
+      description: 'Palauta tiedot tiedostosta tietokantaan'
+      inDepth: 'Käyttää SQLiteä palauttamaan tiedot tiedostosta ylikirjoittaen tietokannan tiedot.'
+    export:
+      inDepth: 'Toimittaa viennin asetuksissa olevaan sijaintiin'
+      description: 'Vie html tai json tietoja manuaalisesti'
+    disable:
+      description: 'Sammuta Plan tai osa siitä'
+      inDepth: 'Sammuta ohjelma tai osa siitä seuraavaan käynnistykseen asti.'
+    dbMove:
+      inDepth: 'Korvaa tiedot tietokannassa toisen tietokannan tiedoilla.'
+      description: 'Siirrä tietoa tietokantojen välillä'
+    dbRemove:
+      inDepth: 'Poistaa kaikki pelaajaan liitetyt tiedot nykyisestä tietokannasta.'
+      description: 'Poista pelaajan tiedot nykyisestä tietokannasta'
+    users:
+      inDepth: 'Listaa sivuston käyttäjät.'
+      description: 'Listaa sivuston käyttäjät'
+    search:
+      inDepth: 'Etsi pelaajia joiden nimessä on haettu teksti'
+      description: 'Etsi pelaajan nimeä'
+    json:
+      description: 'Näkymä pelaajan raakadatasta.'
+      inDepth: 'Antaa lataa pelaajasta tiedot json-muodossa.'
+    players:
+      description: 'Katso Pelaajat sivua'
+      inDepth: 'Hanki linkki /players sivulle nähdäksesi pelaajalistan'
+    database:
+      inDepth: 'Käytä eri tietokanta alikomentoja vaikuttaaksesi tietokantaan'
+      description: 'Hallitse Plan tietokantoja'
+    ingame:
+      inDepth: 'Näyttää tietoja pelaajasta pelin sisällä.'
+      description: 'Katso pelaajan tietoja pelissä'
+    network:
+      inDepth: 'Hanki linkki /network sivulle, toimii vain verkostoissa'
+      description: 'Katso Verkoston sivua'
+    register:
+      description: 'Rekisteröi Web Käyttäjä'
+      inDepth: 'Käytä ilman argumentteja rekisteröimissivua varten. Käytä --code [code] rekisteröidäksesi käyttäjän.'
+  database:
+    failDbNotOpen: '§cTietokanta: ${0} - Yritä uudelleen myöhemmin.'
+    creatingBackup: 'Luotiin varmuuskopiotiedosto '${0}.db' ${1} tietokannan tiedoista'
+    manage:
+      progress: '${0} / ${1} muutettu..'
+      fail: '> §cJokin meni vikaan: ${0}'
+      success: '> §aOnnistui!'
+      failSameServer: 'Ei voi merkitä tätä palvelinta poistetuksi (Olet siellä)'
+      confirmOverwrite: 'Tiedot ${0}:ssa ylikirjoitetaan!'
+      failIncorrectDB: '> §c'${0}' ei ole tuettu tietokanta.'
+      start: '> §2Muutetaan tietoa..'
+      failSameDB: '> §cEi voi käyttää samaa tietokantaa molempiin asioihin!'
+      failNoServer: 'Palvelinta ei löytynyt annetuilla parametreilla.'
+      confirmRemoval: 'Tiedot ${0}:ssa poistetaan!'
+      hotswap: '§eMuista vaihtaa tietokantaa (/plan db hotswap ${0}) & käynnistä Plan uudelleen.'
+      confirm: '> §cLisää '-a' vahvistaaksesi: ${0}'
+      importers:
+        Tuojat:
+      failFileNotFound: '> §cTiedostoa ei löytynyt ${0}'
+    playerRemoval: 'Poistetaan pelaajan ${0} tietoja ${1} tietokannasta..'
+    warnDbNotOpen: '§eTietokanta: ${0} - Tämä voi viedä hiukan aikaa..'
+    unregister: 'Poistetaan '${0}' rekisteristä..'
+    write: 'Kirjoitetaan tietoja ${0} tietokantaan..'
+    serverUninstalled: '§aJos palvelin on yhä asennettu, se merkkaa itsensä asennetuksi seuraavalla käynnistyksellä.'
+    removal: 'Poistetaan Plan-tietoja ${0} tietokannasta..'
+  fail:
+    playerNotFound: 'Pelaajaa '${0}' ei löydetty, heillä ei ole UUID:ta.'
+    webUserNotFound: '§cKäyttäjää ei ole olemassa!'
+    invalidArguments: 'Hyväksyy seuraavat vaihtoehdot ${0}: ${1}'
+    missingLink: 'Käyttäjä ei ole linkitetty sinun pelaajaasi, eikä sinulla ole lupaa poistaa toisten käyttäjiä.'
+    invalidUsername: '§cPelaajalla ei löytynyt UUID:ta.'
+    playerNotInDatabase: 'Pelaajaa '${0}' ei löytynyt tietokannasta.'
+    tooManyArguments: '§cAnna ainakin yksi muuttuja ${1}'
+    onAccept: 'Hyväksytty toiminto antoi virheen: ${0}'
+    serverNotFound: 'Palvelinta '${0}' ei löytynyt tietokannasta.'
+    webUserExists: '§cKäyttäjä on jo olemassa!'
+    noPermission: '§cSinulla ei ole lupaa.'
+    seeConfig: 'katso '${0}' asetustiedostossa config.yml'
+    missingArguments: '§cMääritä enemmän muuttujia (${0}) ${1}'
+    onDeny: 'Kielletty toiminto antoi virheen: ${0}'
+    missingFeature: '§eValitse sammutettava osa! (tällähetkellä tuetut: ${0})'
+    emptyString: 'Hakusana ei voi olla tyhjä'
+    unknownUsername: '§cPelaajaa ei ole nähty tällä palvelimella.'
+  general:
+    reloadComplete: '§aUudelleenlataus onnistui!'
+    noWebuser: 'Sinulla ei ehkä ole Web Käyttäjää, käytä /plan register <salasana>-komentoa'
+    failNoExporter: '§eViejää '${0}' ei ole olemassa'
+    webUserList: '  §2${0} §7: §f${1}'
+    successWebUserRegister: '§aLisättiin uusi Web Käyttäjä (${0})!'
+    notifyWebUserRegister: 'Rekisteröitiin uusi Web Käyttäjä: '${0}' Lupa taso: ${1}'
+    failNoImporter: '§eTuojaa '${0}' ei ole olemassa'
+    noAddress: '§eOsoitetta ei ollut saatavilla - käytetään localhost:ia sen sijasta. Aseta 'Alternative_IP' asetukset.'
+    webPermissionLevels: '>\§70: Pääsy kaikille sivuille\§71: Pääsy '/players' ja pelaajien sivuille\§72:
+                                                                       Pääsy pelaajan sivulle, jolla on sama nimi kuin Web Käyttäjällä\§73+: Ei pääsyä'
+    featureDisabled: '§aSammutettiin '${0}' toistaiseksi, kunnes Plan ladataan uudelleen.'
+    reloadFailed: '§cUudelleenlatauksessa esiintyi ongelmia. Käynnistystä uudelleen suositellaan.'
+    pluginDisabled: '§aPlan on nyt poissa päältä. Voit käyttää reload komentoa uudelleenkäynnistykseen.'
+  confirmation:
+    cancelNoUnregister: 'Peruutettu. '${0}' ei poistettu rekisteristä'
+    dbClear: 'Olet poistamassa kaikki Plan tiedot tietokannasta ${0}'
+    dbOverwrite: 'Olet ylikirjoittamassa kaikki Plan tiedot tietokannassa ${0} tiedolla ${1} tietokannasta'
+    dbRemovePlayer: 'Olet poistamassa pelaajan ${0} tiedot tietokannasta ${1}'
+    cancelNoChanges: 'Peruutettu. Tietoja ei muutettu.'
+    accept: Hyväksy
+    unregister: 'Olet poistamassa rekisteröitymistiedon '${0}' joka on linkitetty pelaajaan ${1}'
+    deny: Peruuta
+    expired: 'Vahvistus vanheni, käytä komentoa uudelleen'
+    confirm:
+      Hyväksy:
+  argument:
+    dbTypeMoveFrom:
+      description: 'Tietokannan tyyppi josta tietoa poistetaan.'
+    username: käyttäjänimi
+      description: 'Toisen käyttäjän käyttäjänimi. Jos ei annettu, pelaajaan linkitettyä käyttäjää käytetään.'
+    nameOrUUID: nimi/uuid
+      removeDescription: 'Poistettavan pelaajan UUID tai nimi.'
+      description: 'Pelaajan UUID tai nimi.'
+    code:
+      name: ${koodi}
+      description: 'Koodi jota käytetään rekisteröitymiseen.'
+    server: palvelin
+      description: 'Palvelimen nimi, ID tai UUID'
+    backupFile: varmuuskopio-tiedosto
+      description: 'Varmuuskopiotiedoston nimi (kirjainkooolla on väliä)'
+    dbTypeRemove:
+      description: 'Tietokannan tyyppi josta kaikki tieto poistetaan.'
+    dbTypeHotswap:
+      description: 'Tietokannan tyyppi jota aletaan käyttää.'
+    subcommand: alikomento
+      description: 'Käytä komentoa ilman alikomentoa nähdäksesi käyttöohjeet.'
+    dbTypeMoveTo:
+      description: 'Tietokannan tyyppi johon tietoa siirretään. Ei voi olla sama kuin edellinen.'
+    feature: ominaisuus
+      description: 'Ominaisuuden nimi joka poistetaan käytöstä: ${0}'
+    dbBackup:
+      description: 'Tietokannan tyyppi joka varmuuskopioidaan. Nykyinen jos ei annettu.'
+    exportKind: 'viennin muoto'
+    dbRestore:
+      description: 'Tietokannan tyyppi johon tiedot palautetaan. Nykyiseen jos ei annettu.'
+    importKind: 'tuonnin muoto'
+  link:
+    noNetwork: 'Palvelinta ei ole liitetty verkostoon. Linkki menee palvelimen sivulle.'
+    server: 'Palvelimen sivu:'
+    link: Linkki
+    player: 'Pelaajan sivu:'
+    playerJson: 'Pelaajan json:'
+    register: 'Rekisteröitymis sivu:'
+    players: 'Pelaajat sivu:'
+    network: 'Verkoston sivu:'
+    clickMe: 'Klikkaa minua'
+  header:
+    serverList: id::nimi::uuid
+    inspect: '> §2Pelaaja: §f${0}'
+    analysis: '> §2Analyysin tulokset'
+    webUsers: '> §2${0} Web Käyttäjät'
+    players: '> §2Pelaajat'
+    search: '> §2${0} Tulosta haulle §f${1}§2:'
+    webUserList: 'käyttäjänimi::linkitetty pelaajaan::lupa taso'
+    servers: '> §2Palvelimet'
+    help: '> §2/${0} Apu'
+    network: '> §2Verkoston Sivu'
+    info: '> §2Player Analytics'
+  ingame:
+    playerKills: '  §2Pelaajien Tappoja: §f${0}'
+    activityIndex: '  §2Aktiivisuus Indeksi: §f${0} | ${1}'
+    geolocation: '  §2Kirjautui sisään maasta: §f${0}'
+    registered: '  §2Rekisteröitynyt: §f${0}'
+    deaths: '  §2Kuolemat: §f${0}'
+    afkPlaytime: '  §2AFK aika: §f${0}'
+    lastSeen: '  §2Viimeksi nähty: §f${0}'
+    activePlaytime: '  §2Aktiivinen peliaika: §f${0}'
+    timesKicked: '  §2Potkittu Pellolle: §f${0}'
+    longestSession: '  §2Pisin istunto: §f${0}'
+    playtime: '  §2Peliaika: §f${0}'
+    mobKills: '  §2Otusten Tappoja: §f${0}'
+  subcommand:
+    info:
+      proxy: '  §2Yhdistetty Proxyyn: §f${0}'
+      version: '  §2Versio: §f${0}'
+      database: '  §2Nykyinen Tietokanta: §f${0}'
+      update: '  §2Päivitys saatavilla: §f${0}'
+  footer:
+    help: '§7Laita hiiri komennon tai vaihtoehtojen päälle tai käytä '/${0} ?' saadaksesi lisätietoa'
+generic:
+  noData: 'Ei tietoa'
+403AccessDenied: 'Pääsy Kielletty'

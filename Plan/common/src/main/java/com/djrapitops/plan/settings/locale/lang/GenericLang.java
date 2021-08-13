@@ -22,12 +22,12 @@ package com.djrapitops.plan.settings.locale.lang;
  * @author AuroraLS3
  */
 public enum GenericLang implements Lang {
-    YES("", "Positive", "Yes"),
-    NO("", "Negative", "No"),
-    UNKNOWN("", "Unknown", "Unknown"),
-    UNAVAILABLE("", "Unavailable", "Unavailable"),
-    TODAY("", "Today", "'Today'"),
-    YESTERDAY("", "Yesterday", "'Yesterday'");
+    YES("plugin.generic.yes", "Positive", "Yes"),
+    NO("plugin.generic.no", "Negative", "No"),
+    UNKNOWN("plugin.generic.unknown", "Unknown", "Unknown"),
+    UNAVAILABLE("plugin.generic.unavailable", "Unavailable", "Unavailable"),
+    TODAY("plugin.generic.today", "Today", "'Today'"),
+    YESTERDAY("plugin.generic.yesterday", "Yesterday", "'Yesterday'");
 
     private final String key;
     private final String identifier;

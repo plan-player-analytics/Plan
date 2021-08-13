@@ -17,11 +17,10 @@
 package com.djrapitops.plan.settings.locale.lang;
 
 public enum FilterLang implements Lang {
-    OPERATORS("", "Operators"),
-    NON_OPERATORS("", "Non operators"),
-    BANNED("", "Banned"),
-    NOT_BANNED("", "Not banned"),
-    ;
+    OPERATORS("html.query.filter.operators", "Operators"),
+    NON_OPERATORS("html.query.filter.nonOperators", "Non operators"),
+    BANNED("html.query.filter.banned", "Banned"),
+    NOT_BANNED("html.query.filter.notBanned", "Not banned");
 
     private final String key;
     private final String defaultValue;

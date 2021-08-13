@@ -1,0 +1,621 @@
+html:
+  text:
+    noLowTps: TPSの低下が存在しません
+    clickToExpand: クリックして展開
+    comparing15days: 直近15日との比較
+    comparing30daysAgo: 30日前との比較
+    noExtensionData: '「Extension Data」が存在しません'
+  label:
+    comparing7days: 直近1週間との比較
+    averageKdr: 平均KDR
+    perDay: /日
+    averageEntities: 'Average Entities'
+    averageSessions: 'Average Sessions'
+    playersOnline: オンラインのプレイヤー
+    secondDeadliestWeapon: 2番目にPvPで使用されている武器
+    totalAfk: 累計離席時間
+    favoriteServer: お気に入りのサーバー
+    mostActiveGamemode: 最も使用したゲームモード
+    afkTime: 離席時間
+    lastConnected: 直近の接続
+    regular: よくオンラインのプレイヤー
+    downtime: ダウンタイム
+    perRegularPlayer: /登録済みプレイヤー(1登録済みプレイヤーあたりの)
+    minFreeDisk: ディスクの最低空き容量
+    deadliestWeapon: 最もPvPで使用されている武器
+    registered: 登録
+    currentUptime: 'Current Uptime'
+    averageChunks: 'Average Chunks'
+    averageMobKdr: モブに対してのKDR
+    lastSeen: 直近のオンライン
+    killed: 殺した人
+    sessionEnded: ' ログアウトした時間'
+    uniquePlayers: 接続したプレイヤーの総数
+    weekdays: ''月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日', '日曜日''
+    firstSession: 初参加
+    mobKdr: Mobに対してのKDR
+    averageSessionLength: 平均接続時間
+    duringLowTps:
+      TPSの低下までの時間:
+    afk: 離席
+    loadedEntities: ロードされたエンティ数
+    playerKills: プレイヤーキル
+    active: よくログインしている
+    totalPlaytime: トータルプレイ時間
+    newPlayers: 新規プレイヤー
+    averagePlaytime: 平均プレイ時間
+    indexInactive: 休止中
+    maxFreeDisk: ディスクの最大空き容量
+    totalPlayers: トータルプレイヤー数
+    averageTps: 平均TPS
+    longestSession: 最長接続時間
+    nickname: ニックネーム
+    operator: 管理者
+    indexRegular: しばしばログインしている
+    regularPlayers: よくオンラインのプレイヤー
+    mobDeaths: Mobによって殺された回数
+    thirdDeadliestWeapon: 3番目にPvPで使用されている武器
+    serverOccupied: プレイヤーがログインしている時間
+    activityIndex: 活動指数
+    irregular: たまにログインしている
+    loneJoins: 一人での接続
+    serverAnalysis: サーバーの分析結果
+    playerDeaths: プレイヤーによるキル
+    averageAfkTime: 'Average AFK Time'
+    totalPlayersOld: 全プレイヤー数
+    activePlaytime: 'Active Playtime'
+    totalActive: 累計活動時間
+    sessionMedian: 平均オンライン
+    newPlayerRetention: 新規プレイヤーの継続率
+    onlineOnFirstJoin: 新規ログイン時のオンラインプレイヤー
+    new: New
+    serverDowntime: サーバーダウンタイム
+    session: オンライン
+    banned: BAN履歴
+    lowTpsSpikes: TPSの低下値
+    averageActivePlaytime: 'Average Active Playtime'
+    playtime: プレイ時間
+    inactive: 休止中
+    entities: エンティティ数
+    mobKills: Mobを殺した回数
+    name: 名前
+    lastPeak: 直近のピークタイム
+    quickView: クイックビュー
+    relativeJoinActivity: オンラインと活動との関係性
+    deaths: 死亡回数
+    timesKicked: キック回数
+    loneNewbieJoins: 新しく一人での参加
+    loadedChunks: ロードされたチャンク数
+    dayOfweek: 曜日
+    firstSessionLength: 初参加時の接続時間
+    perPlayer: /プレイヤー(1プレイヤーあたりの)
+    players: プレイヤー
+    diskSpace: ドライブの空き容量
+    bestPeak: 全体のピークタイム
+    veryActive: とてもログインしている
+    average: 平均
+    registeredPlayers: 登録済みプレイヤー
+  sidebar:
+    networkOverview: ネットワーク概要
+    pvpPve: PvPとPvE
+    overview: 概要
+    links: LINKS
+    serverPage: サーバーページ
+    sessions: 接続履歴
+    playerbaseOverview: プレイヤーベース概要
+    playerbase: プレイヤーベース
+    plugins: プラグイン
+    query: 'Make a query'
+    geolocations: 地域
+    networkPage: ネットワークページ
+    playerList: プレイヤー一覧
+    toMainPage: メインページに戻る
+    serversTitle: 接続されているサーバー
+    performance: パフォーマンス
+    playerPage: プレイヤーページ
+    servers: 接続されているサーバー
+    information: インフォメーション
+  version:
+    updateButton: Update
+    changelog: 'View Changelog'
+    updateModal:
+      title: 'Version ${0} is Available!'
+      text: 'A new version has been released and is now available for download.'
+    isDev: 'This version is a DEV release.'
+    download: 'Download Plan-${0}.jar'
+    current: 'You have version ${0}'
+  error:
+    auth:
+      registrationFailed: 'Registration failed, try again (The code expires after 15 minutes)'
+      expiredCookie: ユーザーのクッキーの有効期限切れです
+      noCookie: ユーザーのクッキーが存在しません
+      userNotFound: 入力されたユーザーは存在しません
+      loginFailed: 入力されたユーザー名とパスワードが間違っています
+      dbClosed: 'データベースを開くことができませんでした。「/plan info」コマンドを実行して状況を確認して下さい'
+      generic: エラーが発生したため認証に失敗しました
+      emptyForm: ユーザーとパスワードが入力されてません
+    404NotFound: ページが見つかりませんでした
+    404UnknownPage: 'リンクが間違っています、コマンド等を使用しURLを確認して下さい。 URL例:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>'
+    playerNotSeen: プレイヤーはこのサーバーでプレイしていません
+    authFailedTips: '- 登録したユーザーを<b>「/plan register 」</b>で確認できます。<br>- 入力したユーザー名とパスワードが正しいことを確認して下さい<br>- ユーザー名とパスワードは大文字と小文字が区別されています<br><br>パスワードを忘れた場合は、管理者に古いユーザーを削除して新しくユーザーを再登録するよう依頼して下さい'
+    UUIDNotFound: データベース内にプレヤーのUUIDが存在しません
+    404PageNotFound: ページは存在しません
+    401Unauthorized: 未認証状態です
+    noServersOnline: リクエストを処理するサーバーがオンラインではありません
+    403Forbidden: 閲覧禁止
+    authFailed: 認証に失敗しました
+  title:
+    graph:
+      hourByHour: 'Hour by Hour'
+      dayByDay: 詳細情報
+      networkOnlineActivity: ネットワーク内の接続状況
+    recentSessions: 最近のログイン
+    trends30days: 1ヶ月間の増減
+    thirtyDaysAgo: 1ヶ月前
+    allTime: 全体
+    tps: TPS
+    themeSelect: テーマ選択
+    connectionInfo: 接続情報
+    country: 国/地域
+    last30days: 1ヶ月
+    asNumbers: の情報
+    worstPing: 最低Ping値
+    now: 現在
+    worldPlaytime: ワールドごとのプレイ時間
+    networkAsNumbers: ネットワーク数
+    disk: ドライブの容量
+    sessionStart: 接続した時間
+    player: プレイヤー
+    serverPlaytime: 各サーバーのプレイ時間
+    calendar: カレンダー
+    playerOverview: プレイヤーの概要
+    serverAsNumberse: サーバーの状況
+    thirtyDays: 1ヶ月
+    last7days: 一週間
+    network: ネットワーク
+    trend: 増減
+    weekComparison: 直近1周間での比較
+    recentPvpKills: 最近のPVPによるキル
+    performanceAsNumbers: パフォーマンスの情報
+    recentKills: 最近のキル
+    last24hours: 24時間
+    currentPlayerbase: ログインプレイヤー
+    server: サーバー
+    length: ' 長さ'
+    punchcard: パンチカード
+    punchcard30days: 1ヶ月のパンチボード
+    onlineActivity: 接続状況
+    world: ワールドのロード数
+    pvpPveAsNumbers: PVPとPvEの情報
+    serverOverview: サーバーの概要
+    playerbaseDevelopment: 登録されているプレイヤーの推移
+    onlineActivityAsNumbers: 接続状況の情報
+    joinAddresses: 'Join Addresses'
+    ping: Ping
+    recentPvpDeaths: 最近のPVPによる死亡
+    seenNicknames: ニックネーム一覧
+    averagePing: 平均Ping値
+    cpuRam: CPUとメモリー
+    bestPing: 最高Ping値
+    insights30days: 1ヶ月のパンチボード
+    playersOnlineOverview: 接続状況の概要
+    mostPlayedWorld: よくプレイしているワールド
+    serverPlaytime30days: 各サーバーでの1ヶ月のプレイ時間
+    all: 全て
+  modal:
+    version:
+      available: が利用可能です
+      title: バージョン
+      changelog: 変更履歴の確認
+      text: 新バージョンがリリースされており、ダウンロード可能です
+      download: ダウンロード
+      dev: このバージョンは開発版です
+    info:
+      developer:
+        開発者:
+      contributors: このプラグイン開発に募金して頂いた人々へ特別な感謝を
+        code: :プログラミング貢献者　
+        bugreporters: '& Bug reporters!'
+        text: '加えて、以下の<span class="col-plan">素晴らしい人々</span>が開発に貢献しています'
+        translator: :翻訳者　
+      license: '「Player Analytics」は以下のライセンスの下、開発されています'
+      metrics: '「bStats Metrics」が有効になっています'
+      text: プラグインに関する情報
+      bugs: バグ報告
+      discord: Discordのサポートチャンネル
+      wiki: 「Plan」のwiki、チュートリアルとドキュメント
+  register:
+    register: Register
+    error:
+      usernameLength: 'Username can be up to 50 characters, yours is '
+      checkFailed: 'Checking registration status failed: '
+      noPassword: 'You need to specify a Password'
+      failed: 'Registration failed: '
+      noUsername: 'You need to specify a Username'
+    completion4: 'Or using console:'
+    createNewUser: 'Create a new user'
+    passwordTip: 'Password should be more than 8 characters, but there are no limitations.'
+    login: 'Already have an account? Login!'
+    usernameTip: 'Username can be up to 50 characters.'
+    completion2: 'Code expires in 15 minutes'
+    completion1: 'You can now finish registering the user.'
+    completion: 'Complete Registration'
+    completion3: 'Use the following command in game to finish registration:'
+  description:
+    noGameServers: 'Some data requires Plan to be installed on game servers.'
+    newPlayerRetention: 'This value is a prediction based on previous players.'
+    noServers: データーベース内に登録されたサーバーが見つかりません
+    noGeolocations: 'Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).'
+    noServerOnlinActivity: オンラインアクティビティを表示するサーバーがありません
+    predictedNewPlayerRetention: これは以前のプレーヤーから基づいた予測値です
+    noSpongeChunks: 'Chunks unavailable on Sponge'
+    noServersLong: 'It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.'
+  query:
+    filter:
+      country:
+        text: 'have joined from country'
+      operators: Operators
+      activity:
+        text: 'are in Activity Groups'
+      generic:
+        and: 'and '
+        allPlayers: 'All players'
+        start: 'of Players who '
+      title:
+        activityGroup: 'Current activity group'
+      nonOperators: 'Non operators'
+      pluginGroup:
+        text: 'are in ${plugin}'s ${group} Groups'
+        name: 'Group: '
+      banned: Banned
+      registeredBetween:
+        text: 'Registered between'
+      notBanned: 'Not banned'
+      playedBetween:
+        text: 'Played between'
+      joinAddress:
+        text: 'joined with address'
+      banStatus:
+        name: 'Ban status'
+      operatorStatus:
+        name: 'Operator status'
+      view: '  View:'
+    label:
+      view: 'Show a view'
+      makeAnother: 'Make another query'
+      to: >to</label>
+      from: >from</label>
+    performQuery: 'Perform Query!'
+    title: Query<
+      sessionsWithinView: 'Sessions within view'
+      activity: 'Activity of matched players'
+      activityOnDate: 'Activity on <span id="activity-date"></span>'
+    results:
+      title: 'Query Results'
+      match: 'matched ${resultCount} players'
+      none: 'Query produced 0 results'
+    filters:
+      loading: 'Loading filters..'
+      add: 'Add a filter..'
+    generic:
+      are: `are`
+  generic:
+    none: なし
+  login:
+    forgotPassword4: 'After using the command, '
+    forgotPassword2: 'Use the following command in game to remove your current user:'
+    forgotPassword: 'Forgot Password?'
+    forgotPassword1: 'Forgot password? Unregister and register again.'
+    logout: Logout
+    username: '"Username"'
+    failed: 'Login failed: '
+    register: 'Create an Account!'
+    password: '"Password"'
+    login: Login
+    forgotPassword3: 'Or using console:'
+  calendar:
+    unique:
+      接続したプレイヤーの総数:
+    new:
+      New:
+  value:
+    noKills: プレイヤーキルなし
+    online: ' オンライン'
+    with: <th>死亡原因
+    localMachine: ローカルマシン
+    offline: ' オフライン'
+  button:
+    nightMode: ナイトモード
+  unit:
+    chunks: チャンク
+    entities: エンティティ数
+    players: プレイヤー
+  side:
+    plugins: プラグイン
+plugin:
+  webserver:
+    fail:
+      portInUse: 'Webサーバー: 初期化が正常に終了しませんでした。ポート番号(${0})は使用されていませんか?'
+      SSLContext: 'Webサーバー: SSLコンテキストの初期化に失敗しました。'
+      certStoreLoad: 'Webサーバー: SSL証明書のロードに失敗しました'
+      certFileEOF: 'Webサーバー: 証明書ファイルをロード中にEOFエラーが発生しました (ファイルが殻になっていないか確認してください)'
+    notify:
+      reverseProxy: 'Webサーバー: Proxy-mode HTTPSが有効になっています、リバースプロキシがHTTPSを使用してルーティングされていることと、PlanのAlternative_IP.Addressがプロキシを指定していることを確認してください。'
+      ipWhitelistBlock: 'Webサーバー: 「${0}」の「${1}」へのアクセスが拒否されました(ホワイトリストには未登録です)'
+      authDisabledNoHTTPS: 'Webサーバー: ユーザー認証を無効にします (HTTP経由だと安全ではないためです)'
+      noCertFile: 'Webサーバー: 次のパスに保存された認証キーファイルが存在しません: ${0}'
+      authDisabledConfig: 'Webサーバー: ユーザー認証を無効にします! (Configで無効化されています)'
+      ipWhitelist: 'Webサーバー: IPのホワイトリストが有効になっています'
+      http: 'Webサーバー: 証明書が存在ません -> HTTPサーバーを使用します'
+  version:
+    checkFail: 新しいバージョンのチェックに失敗しました
+    isDev: ' このバージョンは開発版です'
+    updateAvailableSpigot: 新しいバージョンは次のURLで入手可能です${0}
+    updateAvailable: '新しいバージョンの${0}が次のURLで入手可能です ${1}'
+    checkFailGithub: Github/versions.txtに存在するバージョン情報のロードに失敗しました
+    isLatest: 最新版の「Plan」を使用しています
+  generic:
+    unavailable: 利用不可
+    loadingServerInfo: 'Loading server identifying information'
+    dbFaultyLaunchOptions: '起動オプションに問題があります,デフォルトのオプションを使用して下さい (${0})'
+    yesterday: "'昨日'"
+    dbNotifyClean: '${0} のプレイヤーデータを削除しています'
+    dbNotifySQLiteWAL: SQLiteのWALモードはこのサーバのバージョンではサポートされていないため、初期設定に変更します。これはサーバーのパフォーマンスに影響を与える可能性があります
+    unknown: 不明
+    yes: ある
+    no: ない
+    today: "'本日'"
+    dbPatchesAlreadyApplied: データベースに全てのパッチが適用済みです
+    dbApplyingPatch: '次のパッチを適用しています: ${0}..'
+    dbPatchesApplied: データベースに全てのパッチが正常に適用されました
+  disable:
+    webserver: ウェブサーバーが無効になりました
+    savingSessionsTimeout: 'Timeout hit, storing the unfinished sessions on next enable instead.'
+    savingSessions: 未保存のセッションを保存しています・・
+    waitingDbComplete: 'Closed SQLite connection.'
+    disabled: プレイヤー分析が無効になりました
+    processingComplete: 処理が完了しました
+    waitingDb: 'Waiting queries to finish to avoid SQLite crashing JVM..'
+    waitingTransactions: 'Waiting for unfinished transactions to avoid data loss..'
+    waitingTransactionsComplete: 'Transaction queue closed.'
+    database: '未実行の重要な処理があります (${0})'
+  enable:
+    notify:
+      storeSessions: 'Storing sessions that were preserved before previous shutdown.'
+      webserverDisabled: 'ウェブサーバーの初期化に失敗しました (WebServer.DisableWebServer: true)'
+      geoInternetRequired: 「Plan」は初回起動時、「GeoLite2」の位置情報データベースをダウンロードするためインターネットアクセスが必要です
+      geoDisabled: '位置情報サービスが有効ではありません。 (Data.Geolocations: false)'
+      badIP: 'IP「0.0.0.0」は有効ではないため, 「Alternative_IP」の設定を行ってください。誤ったリンクが表示される可能性があります!'
+      emptyIP: 'server.propertiesの設定で、IPの項目が設定されておらずAlternative IPが使用されていません。そのため誤ったリンクが表示されます!'
+    fail:
+      geoDBWrite: ダウンロードした「GeoLite2」の位置情報データベースを保存中に何らかのエラーが発生しました
+      database: '「${0}」のデータベースの接続に失敗しました: ${1}'
+      webServer: ウェブサーバーの初期化に失敗しました!
+      databaseType: 「${0}」はサポートされていないデータベースです
+      databasePatch: データベースのパッチ適用に失敗しました、プラグインを無効にする必要があります。バグ報告をお願いします
+    webserver: 'ウェブサーバーは次のポートで実行されています: ${0} ( ${1} )'
+    database: ${0}のデータベースの接続が確立しました
+    enabled: プレイヤー分析が有効になりました
+  apiCSSAdded: 'ページ拡張機能: 「${0}」が「${1}」,「${2}」にスタイルシートを追加'
+  apiJSAdded: 'ページ拡張機能: 「${0}」が「${1}」,「${2}」にJavascriptの機能を追加'
+command:
+  help:
+    dbClear:
+      inDepth: 全てのPlanのデータベーステーブルを削除します。この処理によってPlanのデータは全て削除されます
+      description: データベース内のPlanデータを削除します
+    dbHotswap:
+      inDepth: コンフィグの設定や異なるデータベースを設定時、設定が正しく反映されるようにプラグインをリロードします
+      description: データベースを高速で変更します
+    dbUninstalled:
+      description: サーバーに設定されているデータベースを未設定にします
+      inDepth: サーバーで使用していたPlanのデータベースとの接続を解除し、サーバーのクエリに表示されないようにします
+    info:
+      inDepth: Planの現在の状態を表示します
+      description: Planの情報を表示します
+    dbBackup:
+      description: データベースのデータをファイルにバックアップします
+      inDepth: SQLiteによってデータベースをファイルにバックアップします
+    server:
+      inDepth: 特定のサーバーの「/server」ページへのリンクを取得します。引数が未指定の場合、現在のサーバーの「/server」ページへのリンクになります
+      description: サーバーページのURLを表示します
+    unregister:
+      description: ウェブページからユーザーを未登録にします
+      inDepth: 別のユーザーの登録を解除します。引数が未指定の場合、ユーザーにリンクされたのプレイヤーの登録を解除します。
+    reload:
+      inDepth: このプラグインを一度無効にし、有効にします。この時、コンフィグの変更が反映されます
+      description: 「Plan」を再起動します
+    player:
+      description: 「プレイヤー」のURLを表示します
+      inDepth: 特定もしくは、現在のプレイヤーの「/player」ページへのリンクを取得します
+    import:
+      description: データをインポートします
+      inDepth: データベースにデータをロードするためのインポートを行います
+    logout:
+      description: 'Log out other users from the panel.'
+      inDepth: 'Give username argument to log out another user from the panel, give * as argument to log out everyone.'
+    servers:
+      description: データベース内のBukkit/Spigotサーバー一覧を表示します
+      inDepth: データベース内に存在する全サーバーのID、名前、UUIDを表示します
+    dbRestore:
+      description: ファイルからデータベースにデータを復元します
+      inDepth: SQLiteのバックアップファイルを用いてデータベースを復元します。この時、復元先のデータベース内のデータは上書きされます
+    export:
+      inDepth: コンフィグで指定した出力先にデータをエクスポートします
+      description: 手動でHTMLかJsonファイルにエクスポートします
+    disable:
+      description: PlanもしくはPlanの一部を無効化します
+      inDepth: Planもしくはその一部をリロード/リスタートコマンドを使用するまで、無効化します
+    dbMove:
+      inDepth: 他のデータベースのデータを別データベースに移動させます。この時、別のデータベース内のデータは上書きされます
+      description: データベース間でデータを移動します
+    dbRemove:
+      inDepth: 現在使用しているデータベースからプレイヤーとリンクしているデータを全て削除します
+      description: 現在使用しているデータベースからプレイヤーデータを削除します
+    users:
+      inDepth: ウェブユーザーの一覧を表で表示します
+      description: ウェブページの全ユーザーを表示ます
+    search:
+      inDepth: 名前が一致もしくは、部分一致する全てのプレイヤーを表示します
+      description: プレイヤー名を検索します
+    json:
+      description: Jsonで保存されているプレイヤーデータを表示します
+      inDepth: プレイヤーのデータをJsonでダウンロードできるようにします。このJsonには全てのプレイヤーデータが格納されています
+    players:
+      description: 「プレイヤー」のページのURLを表示します
+      inDepth: プレイヤー一覧の「/player」ページへのリンクを取得します
+    database:
+      inDepth: 異なるデータベースのサブコマンドを使用することで、様々な方法でデータを変更/更新/削除します
+      description: Planのデータベースを管理します
+    ingame:
+      inDepth: ゲーム内にいるプレイヤーに関する情報を表示します。
+      description: プレイヤー情報をゲーム内で表示します
+    network:
+      inDepth: 「/network」ページへのリンクを取得します、これは「ネットワーク」が有効時のみ実行されます
+      description: 「ネットワーク」のページのURLを表示します
+    register:
+      description: ウェブユーザーを登録します
+      inDepth: '引数なしで実行された場合、登録ページへのリンクが取得できます。引数「 --code [コード]」を使用して実行することで登録したユーザーを取得できます。'
+  database:
+    failDbNotOpen: '§cデータベースは${0}です - しばらくしてからもう一度お試し下さい'
+    creatingBackup: 「${1}」のデータを含むバックアップ「${0}.db」を作成中
+    manage:
+      progress: '${0} / ${1} を処理中..'
+      fail: '> §c何かがうまくいきませんでした: ${0}'
+      success: '> §a成功しました!'
+      failSameServer: このサーバーをアンインストールするサーバーとして指定することはできません(あなたがこのサーバーにログインしているため)
+      confirmOverwrite: ${0}のデータは上書きされます!
+      failIncorrectDB: '> §c「${0}」はサポートされていないデータベースです'
+      start: '> §2データを処理中です..'
+      failSameDB: '> §c同じデータベースを操作することはできません！'
+      failNoServer: 指定されたパラメーターを持つサーバーが存在しませんでした
+      confirmRemoval: ${0}のデータは削除されます!
+      hotswap: '§e新しいデータベースに交換することを忘れないで下さい(/plan db hotswap ${0})。そして、プラグインをリロードして下さい'
+      confirm: '> §c実行を確認するために引数「-a」を追加します: ${0}'
+      importers:
+        インポーター:
+      failFileNotFound: '> §c「${0}」にファイルが見つかりませんでした'
+    playerRemoval: 「${1}」から「${0}」のデータを削除中..
+    warnDbNotOpen: '§eデータベースは${0}です - 想定以上の時間がかかるかもしれません'
+    unregister: 「${0}」の登録を解除中..
+    write: 「${0}」に書き込み中です..
+    serverUninstalled: §aサーバーがまだ追加中の場合、データベースに追加済みとして表示されます
+    removal: 「${0}」からPlanのデータを削除中..
+  fail:
+    playerNotFound: プレイヤー「${0}」はUUIDが無いため見つけることができませんでした
+    webUserNotFound: §c入力されたユーザーは存在しません!
+    invalidArguments: 「${0}」とします。「${1}」
+    missingLink: 入力されたユーザーはあなたのアカウントにリンクされていないため、それを削除する権限はありません
+    invalidUsername: §cこのユーザーはUUIDを所持していません
+    playerNotInDatabase: プレイヤー「${0}」はデータベース内には存在しません
+    tooManyArguments: §c一つの引数「${1}」が必要です
+    onAccept: '確定中に以下のエラーが発生しまた: ${0}'
+    serverNotFound: サーバー「${0}」はデータベース内には存在しません
+    webUserExists: §c入力されたユーザー名は既に使われています!
+    noPermission: §cあなたには実行する権限がありません
+    seeConfig: 「config.yml」内の「${0}」を参照してください
+    missingArguments: '§c引数「(${0}) ${1}」が必要です'
+    onDeny: 'キャンセル中に以下のエラーが発生しまた: ${0}'
+    missingFeature: '§eこの機能は現在使用されていません！ (現在、「${0}」をサポートしています)'
+    emptyString: 検索欄は空欄にできません
+    unknownUsername: §c入力されたユーザーはBukkit/Spigotサーバー上にいません
+  general:
+    reloadComplete: §aリロードが完了しました
+    noWebuser: 'ウェブユーザーの情報がない可能性があります、「/plan register <パスワード>」を使用してユーザーを登録して下さい'
+    failNoExporter: '§eエクスポーター 「${0}」が存在しません'
+    webUserList: '  §2${0} §7: §f${1}'
+    successWebUserRegister: §a新規ユーザー「(${0})」の登録に成功しました！
+    notifyWebUserRegister: '登録が完了しました: '${0}' 権限レベル: ${1}'
+    failNoImporter: '§eインポーター 「${0}」が存在しません'
+    noAddress: '§e設定したアドレスが利用できませんでした - フォールバックとしてlocalhostを使用しています。「Alternative_IP」の設定を行います。'
+    webPermissionLevels: '>\§70: 全てのページにアクセスできます\§71:「/players」と全てのプレイヤーページにアクセスできます\§72: ウェブユーザーと同じユーザー名でプレイヤーページにアクセスできます\§73+:権限を保持していません'
+    featureDisabled: §a次にプラグインがリロードされるまで一時的に「${0}」を無効にしました。
+    reloadFailed: §cプラグインのリロード中に何らかの問題が発生しました、Bukkit/SpigotサーバーかBungeeCordの再起動をお勧めします
+    pluginDisabled: §a「Plan」は無効になりました。「reload」コマンドを使ってプラグインを再起動できます
+  confirmation:
+    cancelNoUnregister: キャンセルされました。「'${0}'」は登録済みです。
+    dbClear: 「${0}」内に存在するPlanのデータを削除しようとしています
+    dbOverwrite: Planのデータ「${0}」を「${1}」で上書きしようとしています
+    dbRemovePlayer: 「${0}」を「${1}」から削除しようとしています
+    cancelNoChanges: キャンセルされました。データの変更は行われません。
+    accept: 確定
+    unregister: 「${1}」にリンクされている「${0}」を解除しようとしています
+    deny: キャンセル
+    expired: 有効期限切れのため、再度コマンドを使用してください
+    confirm: '確認: '
+  argument:
+    dbTypeMoveFrom:
+      description: データ移行元のデータベース
+    username: ユーザーネーム
+      description: 他のユーザー名、空欄の場合はリンクされているプレイヤー名が指定されます
+    nameOrUUID: 名前/uuid
+      removeDescription: 現在のデータベースから削除されるプレイヤーの識別子
+      description: プレイヤーの名前もしくはUUID
+    code:
+      name: ${code}
+      description: 登録を完了させるために必要なコード
+    server: サーバー
+      description: サーバーの名前もしくはID、UUID
+    backupFile: バックアップファイル
+      description: 'バックアップファイル名 (大文字と小文字は区別されます)'
+    dbTypeRemove:
+      description: 全データを削除するデータベース
+    dbTypeHotswap:
+      description: 使用するデータベース
+    subcommand: サブコマンド
+      description: コマンドをサブコマンド無しで実行することでヘルプを見ることが可能です
+    dbTypeMoveTo:
+      description: データ移行先のデータベース、以前のコマンドと同じ物を使用することはできません
+    feature: 機能
+      description: 「${0}」を無効化する機能の名前
+    dbBackup:
+      description: バックアップするデータベース、空欄の場合は現在のデータベースが指定されます
+    exportKind: エクスポート系
+    dbRestore:
+      description: データをリストアするデータベース、空欄の場合は現在のデータベースが指定されます
+    importKind: インポート系
+  link:
+    noNetwork: サーバーがネットワークに接続されていません。リンクはサーバーメージにリダイレクトされます
+    server: 'サーバーページ: '
+    link: リンク
+    player: 'プレイヤーページ: '
+    playerJson: 'プレイヤーのjson: '
+    register: '登録ページ: '
+    players: 'プレイヤーページ: '
+    network: 'ネットワークページ: '
+    clickMe: ここをクリック
+  header:
+    serverList: 'Minecraft id::名前::uuid'
+    inspect: '> §2プレイヤー: §f${0}'
+    analysis: '> §2分析結果'
+    webUsers: '> §2${0} ウェブユーザー'
+    players: '> §2プレイヤー'
+    search: '> §2${0} §f${1}§2 の結果:'
+    webUserList: ユーザー名::別プレイヤーとのリンク::権限レベル
+    servers: '> §2サーバー'
+    help: '> §2/${0}の詳細'
+    network: '> §2ネットワークページ'
+    info: '> §2プレイヤーの分析結果'
+  ingame:
+    playerKills: '  §2キルカウント(プレイヤー): §f${0}'
+    activityIndex: '  §2活動指数: §f${0} | ${1}'
+    geolocation: '  §2接続地域: §f${0}'
+    registered: '  §2登録日: §f${0}'
+    deaths: '  §2死亡回数: §f${0}'
+    afkPlaytime: '  §2放置時間: §f${0}'
+    lastSeen: '  §2最終ログイン日: §f${0}'
+    activePlaytime: '  §2アクティブなプレイ時間: §f${0}'
+    timesKicked: '  §2キックされた回数: §f${0}'
+    longestSession: '  §2最長ログイン時間: §f${0}'
+    playtime: '  §2プレイ時間: §f${0}'
+    mobKills: '  §2キルカウント(モブ): §f${0}'
+  subcommand:
+    info:
+      proxy: '  §2BungeeCordに接続済み: §f${0}'
+      version: '  §2バージョン: §f${0}'
+      database: '  §2現在のデータベース: §f${0}'
+      update: '  §2利用可能なアップデート: §f${0}'
+  footer:
+    help: '§7コマンドや引数の上にカーソルを合わせるか「/${0} ?」を使用することで詳細を確認できます'
+generic:
+  noData: データなし
+403AccessDenied: アクセスが拒否されました
