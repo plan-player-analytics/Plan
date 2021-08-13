@@ -65,6 +65,6 @@ public enum LangCode {
     }
 
     public String getFileName() {
-        return "locale_" + name() + ".txt";
+        return "locale_" + name() + ".yml";
     }
 }

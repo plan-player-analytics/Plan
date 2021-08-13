@@ -294,6 +294,25 @@ public class ConfigNode {
                 .collect(Collectors.toMap(node -> node.getKey(fullKeys), ConfigNode::getString));
     }
 
+    /**
+     * @return List of config keys
+     */
+    public List<String> getConfigPaths() {
+        Stack<ConfigNode> dfs = new Stack<>();
+        dfs.push(this);
+
+        List<String> configPaths = new ArrayList<>();
+        while (!dfs.isEmpty()) {
+            ConfigNode next = dfs.pop();
+            if (next.isLeafNode()) {
+                configPaths.add(next.getKey(true));
+            } else {
+                dfs.addAll(next.getChildren());
+            }
+        }
+        return configPaths;
+    }
+
     public Integer getInteger(String path) {
         return getNode(path).map(ConfigNode::getInteger).orElse(null);
     }
