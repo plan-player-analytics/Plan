@@ -100,12 +100,12 @@ public interface ConfigValueParser<T> {
             boolean containsSpace = value.isEmpty() || value.contains(" ");
             boolean startsWithSpecialSymbol = value.startsWith("-") || value.startsWith("#") || value.startsWith("&");
 
-            if (surroundedByDoubleQuotes || containsSpace || startsWithSpecialSymbol) {
+            if (surroundedByDoubleQuotes) {
                 return "'" + value + "'";
-            } else if (surroundedByQuotes) {
-                return "\"" + value + "\"";
+            } else if (surroundedByQuotes || containsSpace || startsWithSpecialSymbol) {
+                return '"' + value + '"';
             }
-            return value;
+            return '"' + value + '"';
         }
     }
 
