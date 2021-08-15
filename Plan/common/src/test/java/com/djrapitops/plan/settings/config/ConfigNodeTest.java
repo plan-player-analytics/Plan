@@ -207,14 +207,14 @@ class ConfigNodeTest {
         String oldPath = FIRST_LEVEL + "." + SECOND_LEVEL;
         String newPath = "New_Path";
 
-        String oldValue = "\"TestValue\"";
+        String oldValue = "TestValue";
         ConfigNode node = testTree.getNode(FIRST_LEVEL).orElseThrow(AssertionError::new);
         node.set(oldValue);
 
         testTree.moveChild(oldPath, newPath);
 
         ConfigNode parentNode = testTree.getNode(FIRST_LEVEL).orElseThrow(AssertionError::new);
-        assertEquals(oldValue, parentNode.value);
+        assertEquals(oldValue, parentNode.getString());
     }
 
     @Test
