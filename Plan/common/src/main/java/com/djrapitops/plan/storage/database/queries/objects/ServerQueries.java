@@ -44,6 +44,31 @@ public class ServerQueries {
         /* Static method class */
     }
 
+    public static Query<Collection<Server>> fetchUninstalledServerInformation() {
+        String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME + WHERE + ServerTable.INSTALLED + "=?";
+        return new QueryStatement<Collection<Server>>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, false);
+            }
+
+            @Override
+            public Collection<Server> processResults(ResultSet set) throws SQLException {
+                Collection<Server> servers = new HashSet<>();
+                while (set.next()) {
+                    servers.add(new Server(
+                            set.getInt(ServerTable.SERVER_ID),
+                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                            set.getString(ServerTable.NAME),
+                            set.getString(ServerTable.WEB_ADDRESS),
+                            set.getBoolean(ServerTable.PROXY)
+                    ));
+                }
+                return servers;
+            }
+        };
+    }
+
     /**
      * Query database for all Plan server information.
      *
