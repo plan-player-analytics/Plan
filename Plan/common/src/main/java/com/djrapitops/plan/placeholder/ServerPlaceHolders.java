@@ -154,13 +154,13 @@ public class ServerPlaceHolders implements Placeholders {
     private void registerDynamicCategoryPlaceholders(PlanPlaceholders placeholders, Database database) {
         List<TopCategoryQuery> queries = new ArrayList<>();
         queries.addAll(createCategoryQueriesForAllTimespans("playtime", (index, timespan) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(serverInfo.getServerUUID(), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
-        queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(serverInfo.getServerUUID(), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));))
+        queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(serverInfo.getServerUUID(), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
 
         for (int i = 0; i < 10; i++) {
             for (TopCategoryQuery query : queries) {
                 final int nth = i;
                 placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth),
-                        () -> database.query(query.getQuery(nth)));
+                        () -> database.query(query.getQuery(nth)).orElse("-"));
             }
         }
     }
@@ -195,7 +195,7 @@ public class ServerPlaceHolders implements Placeholders {
             return timeSpan;
         }
 
-        public Query<String> getQuery(int i) {
+        public Query<Optional<String>> getQuery(int i) {
             return queryCreator.apply(i, timeSpanMillis);
         }
     }
