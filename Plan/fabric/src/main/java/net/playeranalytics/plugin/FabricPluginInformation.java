@@ -37,7 +37,7 @@ public class FabricPluginInformation implements PluginInformation {
 
     @Override
     public File getDataFolder() {
-        return FabricLoader.getInstance().getGameDir().resolve("mods").resolve("Plan").toFile();
+        return FabricLoader.getInstance().getGameDir().resolve("config").resolve("Plan").toFile();
     }
 
     @Override
