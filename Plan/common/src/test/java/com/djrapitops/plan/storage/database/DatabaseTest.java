@@ -45,6 +45,7 @@ import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utilities.*;
 
@@ -268,6 +269,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @Disabled
     default void sqlDateParsingSanitySQLDoesNotApplyTimezone() {
         Database db = db();
 
