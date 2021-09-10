@@ -22,10 +22,18 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.analysis.TopListQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -140,5 +148,55 @@ public class ServerPlaceHolders implements Placeholders {
         placeholders.registerStatic("server_uuid",
                 serverInfo::getServerUUID);
 
+        registerDynamicCategoryPlaceholders(placeholders, database);
+    }
+
+    private void registerDynamicCategoryPlaceholders(PlanPlaceholders placeholders, Database database) {
+        List<TopCategoryQuery> queries = new ArrayList<>();
+        queries.addAll(createCategoryQueriesForAllTimespans("playtime", (index, timespan) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(serverInfo.getServerUUID(), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
+        queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(serverInfo.getServerUUID(), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));))
+
+        for (int i = 0; i < 10; i++) {
+            for (TopCategoryQuery query : queries) {
+                final int nth = i;
+                placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth),
+                        () -> database.query(query.getQuery(nth)));
+            }
+        }
+    }
+
+    private List<TopCategoryQuery> createCategoryQueriesForAllTimespans(String category, BiFunction<Integer, Long, Query<Optional<String>>> queryCreator) {
+        return Arrays.asList(
+                new TopCategoryQuery(category, queryCreator, "month", TimeUnit.DAYS.toMillis(30)),
+                new TopCategoryQuery(category, queryCreator, "week", TimeUnit.DAYS.toMillis(7)),
+                new TopCategoryQuery(category, queryCreator, "day", TimeUnit.DAYS.toMillis(1)),
+                new TopCategoryQuery(category, queryCreator, "total", System.currentTimeMillis())
+        );
+    }
+
+    public static class TopCategoryQuery {
+        private final String category;
+        private final BiFunction<Integer, Long, Query<Optional<String>>> queryCreator;
+        private final String timeSpan;
+        private final long timeSpanMillis;
+
+        public TopCategoryQuery(String category, BiFunction<Integer, Long, Query<Optional<String>>> queryCreator, String timeSpan, long timespan) {
+            this.category = category;
+            this.queryCreator = queryCreator;
+            this.timeSpan = timeSpan;
+            this.timeSpanMillis = timespan;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public String getTimeSpan() {
+            return timeSpan;
+        }
+
+        public Query<String> getQuery(int i) {
+            return queryCreator.apply(i, timeSpanMillis);
+        }
     }
 }
