@@ -210,9 +210,9 @@ function createserverAccordionTitle(i, server) {
 // Lowercase due to locale translation: Server
 function createserverAccordionBody(i, server) {
 
-    return `<tr class="collapse" data-parent="#tableSAccordion" id="server_t_` + i + `">` +
+    return `<tr class="collapse" data-bs-parent="#tableSAccordion" id="server_t_` + i + `">` +
         `<td colspan="4">` +
-        `<div class="collapse row" data-parent="#tableSAccordion" id="server_t_` + i + `">` +
+        `<div class="collapse row" data-bs-parent="#tableSAccordion" id="server_t_` + i + `">` +
         `<div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">` +
         (server.operator ? `<p><i class="col-blue fab fa-fw fa-superpowers"></i> Operator</p>` : ``) +
         (server.banned ? `<p><i class="col-red fas fa-fw fa-gavel"></i> Banned</p>` : ``) +
