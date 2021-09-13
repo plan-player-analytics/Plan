@@ -110,7 +110,7 @@ subprojects {
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'      // JUnit 5
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.0'      // JUnit 5
         testImplementation "org.mockito:mockito-core:3.12.4"                // Mockito Core
         testImplementation "org.mockito:mockito-junit-jupiter:3.12.4"       // Mockito JUnit 5 Extension
         testImplementation "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
