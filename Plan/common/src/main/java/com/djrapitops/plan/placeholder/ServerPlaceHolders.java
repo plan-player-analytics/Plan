@@ -16,14 +16,17 @@
  */
 package com.djrapitops.plan.placeholder;
 
+import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueries;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
@@ -33,7 +36,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiFunction;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -68,79 +70,78 @@ public class ServerPlaceHolders implements Placeholders {
         Formatter<Double> percentage = formatters.percentage();
 
         Database database = dbSystem.getDatabase();
-        ServerUUID serverUUID = serverInfo.getServerUUID();
 
         placeholders.registerStatic("server_tps_day",
-                () -> decimals.apply(database.query(TPSQueries.averageTPS(dayAgo(), now(), serverUUID))));
+                parameters -> decimals.apply(database.query(TPSQueries.averageTPS(dayAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_tps_week",
-                () -> decimals.apply(database.query(TPSQueries.averageTPS(weekAgo(), now(), serverUUID))));
+                parameters -> decimals.apply(database.query(TPSQueries.averageTPS(weekAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_tps_month",
-                () -> decimals.apply(database.query(TPSQueries.averageTPS(monthAgo(), now(), serverUUID))));
+                parameters -> decimals.apply(database.query(TPSQueries.averageTPS(monthAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_cpu_day",
-                () -> percentage.apply(database.query(TPSQueries.averageCPU(dayAgo(), now(), serverUUID))));
+                parameters -> percentage.apply(database.query(TPSQueries.averageCPU(dayAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_cpu_week",
-                () -> percentage.apply(database.query(TPSQueries.averageCPU(weekAgo(), now(), serverUUID))));
+                parameters -> percentage.apply(database.query(TPSQueries.averageCPU(weekAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_cpu_month",
-                () -> percentage.apply(database.query(TPSQueries.averageCPU(monthAgo(), now(), serverUUID))));
+                parameters -> percentage.apply(database.query(TPSQueries.averageCPU(monthAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_ram_day",
-                () -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(dayAgo(), now(), serverUUID))));
+                parameters -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(dayAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_ram_week",
-                () -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(weekAgo(), now(), serverUUID))));
+                parameters -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(weekAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_ram_month",
-                () -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(monthAgo(), now(), serverUUID))));
+                parameters -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageRAM(monthAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_chunks_day",
-                () -> database.query(TPSQueries.averageChunks(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageChunks(dayAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_chunks_week",
-                () -> database.query(TPSQueries.averageChunks(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageChunks(weekAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_chunks_month",
-                () -> database.query(TPSQueries.averageChunks(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageChunks(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_entities_day",
-                () -> database.query(TPSQueries.averageEntities(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageEntities(dayAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_entities_week",
-                () -> database.query(TPSQueries.averageEntities(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageEntities(weekAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_entities_month",
-                () -> database.query(TPSQueries.averageEntities(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageEntities(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_max_free_disk_day",
-                () -> database.query(TPSQueries.maxFreeDisk(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.maxFreeDisk(dayAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_max_free_disk_week",
-                () -> database.query(TPSQueries.maxFreeDisk(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.maxFreeDisk(weekAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_max_free_disk_month",
-                () -> database.query(TPSQueries.maxFreeDisk(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.maxFreeDisk(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_min_free_disk_day",
-                () -> database.query(TPSQueries.minFreeDisk(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.minFreeDisk(dayAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_min_free_disk_week",
-                () -> database.query(TPSQueries.minFreeDisk(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.minFreeDisk(weekAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_min_free_disk_month",
-                () -> database.query(TPSQueries.minFreeDisk(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.minFreeDisk(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_average_free_disk_day",
-                () -> database.query(TPSQueries.averageFreeDisk(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageFreeDisk(dayAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_average_free_disk_week",
-                () -> database.query(TPSQueries.averageFreeDisk(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageFreeDisk(weekAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_average_free_disk_month",
-                () -> database.query(TPSQueries.averageFreeDisk(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(TPSQueries.averageFreeDisk(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_name",
                 () -> serverInfo.getServer().getName());
@@ -151,21 +152,30 @@ public class ServerPlaceHolders implements Placeholders {
         registerDynamicCategoryPlaceholders(placeholders, database);
     }
 
+    private ServerUUID getServerUUID(Arguments parameters) {
+        return parameters.get(0).flatMap(this::getServerUUIDForServerIdentifier).orElseGet(serverInfo::getServerUUID);
+    }
+
+    private Optional<ServerUUID> getServerUUIDForServerIdentifier(String serverIdentifier) {
+        return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
+                .map(Server::getUuid);
+    }
+
     private void registerDynamicCategoryPlaceholders(PlanPlaceholders placeholders, Database database) {
         List<TopCategoryQuery> queries = new ArrayList<>();
-        queries.addAll(createCategoryQueriesForAllTimespans("playtime", (index, timespan) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(serverInfo.getServerUUID(), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
-        queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(serverInfo.getServerUUID(), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
+        queries.addAll(createCategoryQueriesForAllTimespans("playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
+        queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
 
         for (int i = 0; i < 10; i++) {
             for (TopCategoryQuery query : queries) {
                 final int nth = i;
                 placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth),
-                        () -> database.query(query.getQuery(nth)).orElse("-"));
+                        parameters -> database.query(query.getQuery(nth, parameters)).orElse("-"));
             }
         }
     }
 
-    private List<TopCategoryQuery> createCategoryQueriesForAllTimespans(String category, BiFunction<Integer, Long, Query<Optional<String>>> queryCreator) {
+    private List<TopCategoryQuery> createCategoryQueriesForAllTimespans(String category, QueryCreator queryCreator) {
         return Arrays.asList(
                 new TopCategoryQuery(category, queryCreator, "month", TimeUnit.DAYS.toMillis(30)),
                 new TopCategoryQuery(category, queryCreator, "week", TimeUnit.DAYS.toMillis(7)),
@@ -174,13 +184,17 @@ public class ServerPlaceHolders implements Placeholders {
         );
     }
 
+    interface QueryCreator {
+        Query<Optional<String>> apply(Integer number, Long timespan, Arguments parameters);
+    }
+
     public static class TopCategoryQuery {
         private final String category;
-        private final BiFunction<Integer, Long, Query<Optional<String>>> queryCreator;
+        private final QueryCreator queryCreator;
         private final String timeSpan;
         private final long timeSpanMillis;
 
-        public TopCategoryQuery(String category, BiFunction<Integer, Long, Query<Optional<String>>> queryCreator, String timeSpan, long timespan) {
+        public TopCategoryQuery(String category, QueryCreator queryCreator, String timeSpan, long timespan) {
             this.category = category;
             this.queryCreator = queryCreator;
             this.timeSpan = timeSpan;
@@ -195,8 +209,8 @@ public class ServerPlaceHolders implements Placeholders {
             return timeSpan;
         }
 
-        public Query<Optional<String>> getQuery(int i) {
-            return queryCreator.apply(i, timeSpanMillis);
+        public Query<Optional<String>> getQuery(int i, Arguments parameters) {
+            return queryCreator.apply(i, timeSpanMillis, parameters);
         }
     }
 }

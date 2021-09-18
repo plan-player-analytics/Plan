@@ -16,12 +16,17 @@
  */
 package com.djrapitops.plan.placeholder;
 
+import com.djrapitops.plan.commands.use.Arguments;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 /**
  * Placeholders about operators.
@@ -45,7 +50,16 @@ public class OperatorPlaceholders implements Placeholders {
     @Override
     public void register(PlanPlaceholders placeholders) {
         placeholders.registerStatic("operators_total",
-                () -> dbSystem.getDatabase().query(PlayerCountQueries.operators(serverInfo.getServerUUID()))
+                parameters -> dbSystem.getDatabase().query(PlayerCountQueries.operators(getServerUUID(parameters)))
         );
+    }
+
+    private ServerUUID getServerUUID(Arguments parameters) {
+        return parameters.get(0).flatMap(this::getServerUUIDForServerIdentifier).orElseGet(serverInfo::getServerUUID);
+    }
+
+    private Optional<ServerUUID> getServerUUIDForServerIdentifier(String serverIdentifier) {
+        return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
+                .map(Server::getUuid);
     }
 }
