@@ -11,7 +11,7 @@ dependencies {
 
     minecraft "com.mojang:minecraft:1.17.1"
     mappings "net.fabricmc:yarn:1.17.1+build.35:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.11.6"
+    modImplementation "net.fabricmc:fabric-loader:0.11.7"
 
     // Fabric API
     Set<String> apiModules = [
