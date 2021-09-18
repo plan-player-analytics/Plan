@@ -28,37 +28,37 @@ public class FabricPluginLogger implements PluginLogger {
 
     @Override
     public PluginLogger info(String message) {
-        logger.info("[Plan] " + message);
+        logger.info("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""));
         return this;
     }
 
     public void info(String message, Object... args) {
-        String replacedMsg = message.replaceAll("(?<=\\{).+?(?=\\})", "");
+        String replacedMsg = message.replaceAll("(?<=\\{).+?(?=})", "");
         String formattedMsg = "[Plan] " + replacedMsg;
-        logger.info(formattedMsg, args);
+        logger.info(formattedMsg.replaceAll("§[0-9a-fk-or]", ""), args);
     }
 
     @Override
     public PluginLogger warn(String message) {
-        logger.warn("[Plan] " + message);
+        logger.warn("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""));
         return this;
     }
 
     @Override
     public PluginLogger error(String message) {
-        logger.error("[Plan] " + message);
+        logger.error("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""));
         return this;
     }
 
     @Override
     public PluginLogger warn(String message, Throwable throwable) {
-        logger.warn("[Plan] " + message, throwable);
+        logger.warn("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""), throwable);
         return this;
     }
 
     @Override
     public PluginLogger error(String message, Throwable throwable) {
-        logger.error("[Plan] " + message, throwable);
+        logger.error("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""), throwable);
         return this;
     }
 }
