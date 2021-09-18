@@ -16,17 +16,17 @@
  */
 package net.playeranalytics.plugin;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.playeranalytics.plan.PlanFabric;
 
 import java.io.File;
 import java.io.InputStream;
 
 public class FabricPluginInformation implements PluginInformation {
 
-    private final DedicatedServerModInitializer plugin;
+    private final PlanFabric plugin;
 
-    public FabricPluginInformation(DedicatedServerModInitializer plugin) {
+    public FabricPluginInformation(PlanFabric plugin) {
         this.plugin = plugin;
     }
 
@@ -37,11 +37,16 @@ public class FabricPluginInformation implements PluginInformation {
 
     @Override
     public File getDataFolder() {
-        return FabricLoader.getInstance().getGameDir().resolve("config").resolve("Plan").toFile();
+        return plugin.getDataFolder();
     }
 
     @Override
     public String getVersion() {
-        return FabricLoader.getInstance().getModContainer("plan").get().getMetadata().getVersion().getFriendlyString();
+        return FabricLoader.getInstance()
+                .getModContainer("plan")
+                .orElseThrow()
+                .getMetadata()
+                .getVersion()
+                .getFriendlyString();
     }
 }

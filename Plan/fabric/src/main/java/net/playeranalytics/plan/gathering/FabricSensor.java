@@ -40,7 +40,6 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
     @Override
     public double getTPS() {
         //Returns the ticks per second of the last 100 ticks
-        int length = server.lastTickLengths.length;
         double totalTickLength = 0;
         int count = 0;
         for (long tickLength : server.lastTickLengths) {
@@ -48,8 +47,11 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
             totalTickLength += Math.max(tickLength, TimeUnit.MILLISECONDS.toNanos(50));
             count++;
         }
-        double averageTickLength = totalTickLength / count;
-        return count != 0 ? TimeUnit.SECONDS.toNanos(1) / averageTickLength : -1;
+        if (count == 0) {
+            return -1;
+        } else {
+            return TimeUnit.SECONDS.toNanos(1) / (totalTickLength / count);
+        }
     }
 
     @Override

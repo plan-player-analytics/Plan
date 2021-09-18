@@ -32,9 +32,9 @@ public class FabricServerProperties extends ServerProperties {
                 "Fabric",
                 server.getServerPort(),
                 server.getVersion(),
-                FabricLoader.getInstance().getModContainer("fabric").get().getMetadata().getVersion().getFriendlyString() +
+                FabricLoader.getInstance().getModContainer("fabric").orElseThrow().getMetadata().getVersion().getFriendlyString() +
                         " (API), " +
-                        FabricLoader.getInstance().getModContainer("fabricloader").get().getMetadata().getVersion().getFriendlyString() +
+                        FabricLoader.getInstance().getModContainer("fabricloader").orElseThrow().getMetadata().getVersion().getFriendlyString() +
                         " (loader)",
                 () -> (server.getServerIp() == null) ? "" : server.getServerIp(),
                 server.getProperties().maxPlayers
