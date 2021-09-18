@@ -16,9 +16,8 @@
  */
 package com.djrapitops.plan.placeholder;
 
+import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 
@@ -99,7 +98,6 @@ public final class PlanPlaceholders {
 
         if (uuid != null) {
             player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
-            SessionCache.getCachedSession(uuid).ifPresent(session -> player.putRawData(PlayerKeys.ACTIVE_SESSION, session));
         } else {
             player = null;
         }
@@ -126,7 +124,7 @@ public final class PlanPlaceholders {
 
         StaticPlaceholderLoader staticLoader = staticPlaceholders.get(placeholder);
         if (staticLoader != null) {
-            return Objects.toString(staticLoader.apply(parameters));
+            return Objects.toString(staticLoader.apply(new Arguments(parameters)));
         }
 
         PlayerPlaceholderLoader loader = playerPlaceholders.get(placeholder);
@@ -139,5 +137,5 @@ public final class PlanPlaceholders {
 
     public interface PlayerPlaceholderLoader extends BiFunction<PlayerContainer, List<String>, Serializable> {}
 
-    public interface StaticPlaceholderLoader extends Function<List<String>, Serializable> {}
+    public interface StaticPlaceholderLoader extends Function<Arguments, Serializable> {}
 }

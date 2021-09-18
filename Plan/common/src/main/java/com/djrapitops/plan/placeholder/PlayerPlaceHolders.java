@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.domain.mutators.PlayerVersusMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -157,6 +158,45 @@ public class PlayerPlaceHolders implements Placeholders {
                         config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
                 ).getGroup()
         );
+
+        registerKillPlaceholders(placeholders, time);
+    }
+
+    private void registerKillPlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+        placeholders.register("player_player_caused_deaths",
+                player -> PlayerVersusMutator.forContainer(player).toPlayerDeathCount()
+        );
+        placeholders.register("player_deaths",
+                player -> PlayerVersusMutator.forContainer(player).toDeathCount()
+        );
+        placeholders.register("player_mob_caused_deaths",
+                player -> PlayerVersusMutator.forContainer(player).toMobDeathCount()
+        );
+        placeholders.register("player_kdr",
+                player -> PlayerVersusMutator.forContainer(player).toKillDeathRatio()
+        );
+        placeholders.register("player_mob_kdr",
+                player -> PlayerVersusMutator.forContainer(player).toMobKillDeathRatio()
+        );
+        for (int i = 1; i <= 10; i++) {
+            final int index = i;
+            placeholders.register("player_recent_kill_" + index,
+                    player -> player.getValue(PlayerKeys.PLAYER_KILLS)
+                            .filter(list -> list.size() >= index)
+                            .map(list -> list.get(index))
+                            .map(PlayerKill::getVictim)
+                            .map(PlayerKill.Victim::getName)
+                            .orElse("-")
+            );
+            placeholders.register("player_recent_death_" + index,
+                    player -> player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS)
+                            .filter(list -> list.size() >= index)
+                            .map(list -> list.get(index))
+                            .map(PlayerKill::getKiller)
+                            .map(PlayerKill.Killer::getName)
+                            .orElse("-")
+            );
+        }
     }
 
     private void registerPlaytimePlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {

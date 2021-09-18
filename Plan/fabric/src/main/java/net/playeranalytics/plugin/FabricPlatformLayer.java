@@ -16,7 +16,7 @@
  */
 package net.playeranalytics.plugin;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
+import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plugin.scheduling.FabricRunnableFactory;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.FabricListeners;
@@ -27,14 +27,14 @@ import org.apache.logging.log4j.LogManager;
 
 public class FabricPlatformLayer implements PlatformAbstractionLayer {
 
-    private final DedicatedServerModInitializer plugin;
+    private final PlanFabric plugin;
 
     private PluginLogger pluginLogger;
     private Listeners listeners;
     private PluginInformation pluginInformation;
     private RunnableFactory runnableFactory;
 
-    public FabricPlatformLayer(DedicatedServerModInitializer plugin) {
+    public FabricPlatformLayer(PlanFabric plugin) {
         this.plugin = plugin;
     }
 

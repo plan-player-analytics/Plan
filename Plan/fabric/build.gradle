@@ -1,5 +1,7 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
-    id 'fabric-loom' version '0.8-SNAPSHOT'
+    id 'fabric-loom' version '0.9.+'
 }
 
 dependencies {
@@ -10,7 +12,7 @@ dependencies {
     modImplementation('me.lucko:fabric-permissions-api:0.1-SNAPSHOT')
 
     minecraft "com.mojang:minecraft:1.17.1"
-    mappings "net.fabricmc:yarn:1.17.1+build.21:v2"
+    mappings "net.fabricmc:yarn:1.17.1+build.35:v2"
     modImplementation "net.fabricmc:fabric-loader:0.11.6"
 
     // Fabric API
@@ -23,14 +25,36 @@ dependencies {
     ]
 
     apiModules.forEach {
-        modImplementation(fabricApi.module(it, "0.37.0+1.17"))
+        modImplementation(fabricApi.module(it, "0.37.1+1.17"))
     }
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
+
+    slim "mysql:mysql-connector-java:$mysqlVersion"
+    slim "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
 compileJava {
     options.release = 16
+}
+
+tasks.register('updateVersion', Copy) {
+    from('src/main/resources') {
+        include 'fabric.mod.json'
+    }
+    into 'build/sources/resources/'
+    filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+}
+
+processResources {
+    dependsOn updateVersion
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from 'build/sources/resources'
+}
+
+slimJar {
+    relocate 'com.mysql', 'plan.com.mysql'
+    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
 }
 
 shadowJar {
@@ -42,7 +66,6 @@ shadowJar {
         exclude 'org/apache/logging/**'
     }
     relocate 'dagger', 'plan.dagger'
-    relocate 'com.mysql', 'plan.com.mysql'
     // Don't relocate SQLite since the org.sqlite.NativeDB class calls are not relocated properly
     // relocate 'org.sqlite', 'plan.org.sqlite'
     relocate 'javax.inject', 'plan.javax.inject'

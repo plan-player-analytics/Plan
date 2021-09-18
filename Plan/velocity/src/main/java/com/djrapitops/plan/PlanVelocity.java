@@ -27,9 +27,12 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import io.github.slimjar.app.builder.ApplicationBuilder;
+import io.github.slimjar.resolver.data.Repository;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.VelocityPlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -38,8 +41,14 @@ import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.logging.Level;
 
 /**
@@ -54,6 +63,9 @@ import java.util.logging.Level;
         name = "Plan",
         version = "@version@",
         description = "Player Analytics Plugin by AuroraLS3",
+        dependencies = {
+                @Dependency(id = "viaversion", optional = true)
+        },
         authors = {"AuroraLS3"}
 )
 public class PlanVelocity implements PlanPlugin {
@@ -94,6 +106,22 @@ public class PlanVelocity implements PlanPlugin {
         PlatformAbstractionLayer abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
+
+        logger.info("Loading dependencies, this might take a while...");
+        try {
+            ApplicationBuilder.appending("Plan")
+                    .logger((message, args) -> java.util.logging.Logger.getGlobal().log(Level.INFO, message, args))
+                    // Use paper repository for downloading slimjar dependencies
+                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
+                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
+                    .build();
+        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
+            String version = abstractionLayer.getPluginInformation().getVersion();
+            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+            logger.error("Plan failed to load its dependencies correctly!");
+            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+            onDisable();
+        }
 
         PlanVelocityComponent component = DaggerPlanVelocityComponent.builder()
                 .plan(this)

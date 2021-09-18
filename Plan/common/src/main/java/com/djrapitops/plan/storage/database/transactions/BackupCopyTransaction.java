@@ -84,6 +84,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyPlanServerInformation() {
+        copy(LargeStoreQueries::storeAllPlanServerInformation, ServerQueries.fetchUninstalledServerInformation());
         copy(LargeStoreQueries::storeAllPlanServerInformation, ServerQueries.fetchPlanServerInformationCollection());
     }
 

@@ -387,7 +387,6 @@ public class DatabaseCommands {
         String identifier = arguments.concatenate(" ");
         Server server = dbSystem.getDatabase()
                 .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
-                .filter(s -> !s.isProxy())
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier)));
 
         if (server.getUuid().equals(serverInfo.getServerUUID())) {

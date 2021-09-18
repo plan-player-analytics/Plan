@@ -26,7 +26,7 @@ public enum LangCode {
     CUSTOM("Custom", ""),
     EN("English", "AuroraLS3"),
     ES("Spanish", "Catalina, itaquito, Elguerrero & 4drian3d"),
-    CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f), qsefthuopq, shaokeyibb, Fur_xia & 10935336"),
+    CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f), qsefthuopq, shaokeyibb, Fur_xia, 10935336 & SkipM4"),
     CS("Czech", "Shadowhackercz, QuakyCZ, MrFriggo & WolverStones"),
     DE("Deutsch", "Eyremba, fuzzlemann, Morsmorse & hallo1142"),
     FI("Finnish", "AuroraLS3"),
@@ -38,7 +38,7 @@ public enum LangCode {
     RU("Russian", "Saph1s & Perhun_Pak"),
     TR("Turkish", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
     PT_BR("Portuguese (Brazil)", "jvmuller"),
-    ZH_TW("Traditional Chinese", "\u6d1b\u4f0a");
+    ZH_TW("Traditional Chinese", "\u6d1b\u4f0a & zisunny104");
 
     private final String name;
     private final String authors;

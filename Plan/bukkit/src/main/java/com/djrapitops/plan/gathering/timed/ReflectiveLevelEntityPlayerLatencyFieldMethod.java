@@ -38,12 +38,20 @@ public class ReflectiveLevelEntityPlayerLatencyFieldMethod implements PingMethod
     private static void setMethods() throws IllegalAccessException, NoSuchFieldException, NoSuchMethodException, ClassNotFoundException {
         MethodHandle[] methodHandles = PingMethodReflection.getMethods(
                 Reflection.getCraftBukkitClass("entity.CraftPlayer"),
-                Class.forName("net.minecraft.server.level.EntityPlayer"),
+                getEntityPlayer(),
                 "getHandle",
                 "latency"
         );
         getHandleMethod = methodHandles[0];
         pingField = methodHandles[1];
+    }
+
+    private static Class<?> getEntityPlayer() throws ClassNotFoundException {
+        try {
+            return Class.forName("net.minecraft.server.level.EntityPlayer");
+        } catch (NullPointerException classLoaderError) {
+            throw new ClassNotFoundException("net.minecraft.server.level.EntityPlayer");
+        }
     }
 
     @Override

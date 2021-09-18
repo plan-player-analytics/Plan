@@ -25,19 +25,28 @@ import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import io.github.slimjar.app.builder.ApplicationBuilder;
+import io.github.slimjar.resolver.data.Repository;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.server.MinecraftServer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.playeranalytics.plan.commands.CommandManager;
+import net.playeranalytics.plan.identification.properties.FabricServerProperties;
 import net.playeranalytics.plugin.FabricPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
-import net.playeranalytics.plugin.server.PluginLogger;
+import net.playeranalytics.plugin.server.FabricPluginLogger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -58,7 +67,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
     private Locale locale;
     private ServerShutdownSave serverShutdownSave;
 
-    private PluginLogger pluginLogger;
+    private FabricPluginLogger pluginLogger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
 
@@ -84,14 +93,11 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void onEnable() {
-        abstractionLayer = new FabricPlatformLayer(this);
-        pluginLogger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
-
         PlanFabricComponent component = DaggerPlanFabricComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
                 .server(server)
+                .serverProperties(new FabricServerProperties(getServer()))
                 .build();
 
         try {
@@ -151,22 +157,42 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public File getDataFolder() {
-        return null;
+        return FabricLoader.getInstance().getConfigDir().resolve("plan").toFile();
     }
 
     @Override
     public void onInitializeServer() {
+        abstractionLayer = new FabricPlatformLayer(this);
+        pluginLogger = (FabricPluginLogger) abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
+        pluginLogger.info("Loading dependencies, this might take a while...");
+        try {
+            ApplicationBuilder.appending("Plan")
+                    .logger((message, args) -> pluginLogger.info(message, args))
+                    // Use paper repository for downloading slimjar dependencies
+                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
+                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
+                    .build();
+        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
+            String version = abstractionLayer.getPluginInformation().getVersion();
+            pluginLogger.error(this.getClass().getSimpleName() + "-v" + version, e);
+            pluginLogger.error("Plan failed to load its dependencies correctly!");
+            pluginLogger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+            onDisable();
+        }
+
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             this.server = (MinecraftDedicatedServer) server;
             onEnable();
         });
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> commandManager = new CommandManager(dispatcher, system.getErrorLogger()));
+        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> commandManager = new CommandManager(dispatcher, this));
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }
 
-    public MinecraftServer getServer() {
+    public MinecraftDedicatedServer getServer() {
         return server;
     }
 }

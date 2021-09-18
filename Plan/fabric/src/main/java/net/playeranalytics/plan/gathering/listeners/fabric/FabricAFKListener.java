@@ -77,7 +77,9 @@ public class FabricAFKListener implements FabricListener {
     private boolean checkPermission(ServerPlayerEntity player, String permission) {
         if (CommandManager.isPermissionsApiAvailable()) {
             return Permissions.check(player, permission);
-        } else return player.hasPermissionLevel(2);
+        } else {
+            return false;
+        }
     }
 
     @Override

@@ -20,8 +20,6 @@ import com.djrapitops.plan.identification.properties.ServerProperties;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 
-import javax.inject.Inject;
-
 /**
  * server.properties fetcher for Fabric
  *
@@ -29,15 +27,14 @@ import javax.inject.Inject;
  */
 public class FabricServerProperties extends ServerProperties {
 
-    @Inject
     public FabricServerProperties(MinecraftDedicatedServer server) {
         super(
                 "Fabric",
                 server.getServerPort(),
                 server.getVersion(),
-                FabricLoader.getInstance().getModContainer("fabric").get().getMetadata().getVersion().getFriendlyString() +
+                FabricLoader.getInstance().getModContainer("fabric").orElseThrow().getMetadata().getVersion().getFriendlyString() +
                         " (API), " +
-                        FabricLoader.getInstance().getModContainer("fabricloader").get().getMetadata().getVersion().getFriendlyString() +
+                        FabricLoader.getInstance().getModContainer("fabricloader").orElseThrow().getMetadata().getVersion().getFriendlyString() +
                         " (loader)",
                 () -> (server.getServerIp() == null) ? "" : server.getServerIp(),
                 server.getProperties().maxPlayers

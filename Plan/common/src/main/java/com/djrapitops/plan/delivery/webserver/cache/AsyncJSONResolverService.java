@@ -90,7 +90,7 @@ public class AsyncJSONResolverService {
 
             // No new enough version, let's refresh and send old version of the file
             updatedJSON = scheduleJSONForUpdate(timestamp, identifier, jsonCreator);
-            storedJSON = getOldFromCache(timestamp, identifier);
+            storedJSON = getOldFromCache(timestamp, identifier).orElse(null);
         }
 
         if (storedJSON != null) {
@@ -117,8 +117,8 @@ public class AsyncJSONResolverService {
         }
     }
 
-    private JSONStorage.StoredJSON getOldFromCache(long newerThanTimestamp, String identifier) {
-        return jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp).orElse(null);
+    private Optional<JSONStorage.StoredJSON> getOldFromCache(long newerThanTimestamp, String identifier) {
+        return jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp);
     }
 
     private JSONStorage.StoredJSON getNewFromCache(long newerThanTimestamp, String identifier) {
