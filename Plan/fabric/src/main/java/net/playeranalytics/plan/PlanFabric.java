@@ -157,7 +157,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public File getDataFolder() {
-        return FabricLoader.getInstance().getGameDir().resolve("mods").resolve("Plan").toFile();
+        return FabricLoader.getInstance().getConfigDir().resolve("plan").toFile();
     }
 
     @Override

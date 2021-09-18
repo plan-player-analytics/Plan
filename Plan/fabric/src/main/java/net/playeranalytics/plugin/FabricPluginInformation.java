@@ -17,11 +17,18 @@
 package net.playeranalytics.plugin;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.playeranalytics.plan.PlanFabric;
 
 import java.io.File;
 import java.io.InputStream;
 
 public class FabricPluginInformation implements PluginInformation {
+
+    private final PlanFabric plugin;
+
+    public FabricPluginInformation(PlanFabric plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public InputStream getResourceFromJar(String resource) {
@@ -30,7 +37,7 @@ public class FabricPluginInformation implements PluginInformation {
 
     @Override
     public File getDataFolder() {
-        return FabricLoader.getInstance().getGameDir().resolve("config").resolve("Plan").toFile();
+        return plugin.getDataFolder();
     }
 
     @Override
