@@ -140,7 +140,7 @@ public final class Reflection {
     private static Class<?> getCanonicalClass(String canonicalName) {
         try {
             return Class.forName(canonicalName);
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | NullPointerException e) {
             throw new IllegalArgumentException("Cannot find " + canonicalName, e);
         }
     }
