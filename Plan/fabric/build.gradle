@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id 'fabric-loom' version '0.9.+'
 }
@@ -34,6 +36,20 @@ dependencies {
 
 compileJava {
     options.release = 16
+}
+
+tasks.register('updateVersion', Copy) {
+    from('src/main/resources') {
+        include 'fabric.mod.json'
+    }
+    into 'build/sources/resources/'
+    filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+}
+
+processResources {
+    dependsOn updateVersion
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from 'build/sources/resources'
 }
 
 slimJar {
