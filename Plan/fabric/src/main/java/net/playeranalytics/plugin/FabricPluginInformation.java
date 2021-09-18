@@ -16,19 +16,12 @@
  */
 package net.playeranalytics.plugin;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
 import java.io.InputStream;
 
 public class FabricPluginInformation implements PluginInformation {
-
-    private final DedicatedServerModInitializer plugin;
-
-    public FabricPluginInformation(DedicatedServerModInitializer plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public InputStream getResourceFromJar(String resource) {
@@ -42,6 +35,11 @@ public class FabricPluginInformation implements PluginInformation {
 
     @Override
     public String getVersion() {
-        return FabricLoader.getInstance().getModContainer("plan").get().getMetadata().getVersion().getFriendlyString();
+        return FabricLoader.getInstance()
+                .getModContainer("plan")
+                .orElseThrow()
+                .getMetadata()
+                .getVersion()
+                .getFriendlyString();
     }
 }
