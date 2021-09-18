@@ -339,7 +339,7 @@ function playersChart(id, playersOnlineSeries, sel) {
             type: s.type.spline,
             tooltip: s.tooltip.zeroDecimals,
             data: averageGroupPoints(groupByInterval, minDate),
-            color: "#1E90FF",
+            color: "#02458d",
             yAxis: 0
         };
     }
@@ -360,7 +360,7 @@ function playersChart(id, playersOnlineSeries, sel) {
         type: s.type.spline,
         tooltip: s.tooltip.zeroDecimals,
         data: [],
-        color: "#1E90FF",
+        color: "#02458d",
         yAxis: 0
     };
 
@@ -373,18 +373,20 @@ function playersChart(id, playersOnlineSeries, sel) {
             softMax: 2,
             softMin: 0
         },
+        /* Average online players graph Disabled
         xAxis: {
             events: {
                 afterSetExtremes: updateAveragePlayers
             }
         },
+        */
         title: {text: ''},
         plotOptions: {
             areaspline: {
                 fillOpacity: 0.4
             }
         },
-        series: [playersOnlineSeries, emptyAveragePlayersSeries]
+        series: [playersOnlineSeries, /*emptyAveragePlayersSeries*/]
     }));
 }
 
