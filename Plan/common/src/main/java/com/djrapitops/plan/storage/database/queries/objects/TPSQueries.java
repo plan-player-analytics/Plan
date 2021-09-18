@@ -478,13 +478,13 @@ public class TPSQueries {
                 DATE + " AS d1" +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
-                ORDER_BY + DATE + " DESC";
+                ORDER_BY + "d1 DESC";
         String selectRowNumber = SELECT +
                 "ROW_NUMBER() over (ORDER BY " + DATE + ") AS rn, " +
                 DATE + " AS previous_date" +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
-                ORDER_BY + DATE + " DESC";
+                ORDER_BY + "previous_date DESC";
         String selectFirstEntryDate = SELECT + "MIN(" + DATE + ") as start_time" +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
