@@ -52,5 +52,5 @@ jobs:
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
           game_versions: 2:Java 16,73242:1.17,73242:1.17.1,Fabric
-          release_type: prerelease
+          release_type: beta
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
