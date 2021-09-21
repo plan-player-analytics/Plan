@@ -50,7 +50,7 @@ public enum HtmlLang implements Lang {
     TEXT_CONTRIBUTORS_THANKS("html.modal.info.contributors.text", "In addition following <span class=\"col-plan\">awesome people</span> have contributed:"),
     TEXT_CONTRIBUTORS_CODE("html.modal.info.contributors.code", "code contributor"),
     TEXT_CONTRIBUTORS_LOCALE("html.modal.info.contributors.translator", "translator"),
-    TEXT_CONTRIBUTORS_MONEY("html.modal.info.contributors.", "Extra special thanks to those who have monetarily supported the development."),
+    TEXT_CONTRIBUTORS_MONEY("html.modal.info.contributors.donate", "Extra special thanks to those who have monetarily supported the development."),
     TEXT_METRICS("html.modal.info.metrics", "bStats Metrics"),
     TITLE_VERSION("html.modal.version.title", "Version"),
     TITLE_IS_AVAILABLE("html.modal.version.available", "is Available"),
@@ -258,7 +258,7 @@ public enum HtmlLang implements Lang {
     QUERY_TIME_TO("html.query.label.to", ">to</label>"),
     QUERY_TIME_FROM("html.query.label.from", ">from</label>"),
     QUERY_SHOW_VIEW("html.query.label.view", "Show a view"),
-    QUERY("html.query.title", "Query<"),
+    QUERY("html.query.title.text", "Query<"),
     QUERY_MAKE_ANOTHER("html.query.label.makeAnother", "Make another query"),
     QUERY_MAKE("html.sidebar.query", "Make a query"),
 

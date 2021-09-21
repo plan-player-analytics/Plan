@@ -22,13 +22,13 @@ package com.djrapitops.plan.settings.locale.lang;
  * @author AuroraLS3
  */
 public enum HelpLang implements Lang {
-    ARG_SERVER("command.argument.server", "CMD Arg Name - server", "server"),
-    ARG_NAME_UUID("command.argument.nameOrUUID", "CMD Arg Name - name or uuid", "name/uuid"),
+    ARG_SERVER("command.argument.server.name", "CMD Arg Name - server", "server"),
+    ARG_NAME_UUID("command.argument.nameOrUUID.name", "CMD Arg Name - name or uuid", "name/uuid"),
     ARG_CODE("command.argument.code.name", "CMD Arg Name - code", "${code}"),
-    ARG_USERNAME("command.argument.username", "CMD Arg Name - username", "username"),
-    ARG_FEATURE("command.argument.feature", "CMD Arg Name - feature", "feature"),
-    ARG_SUBCOMMAND("command.argument.subcommand", "CMD Arg Name - subcommand", "subcommand"),
-    ARG_BACKUP_FILE("command.argument.backupFile", "CMD Arg Name - backup-file", "backup-file"),
+    ARG_USERNAME("command.argument.username.name", "CMD Arg Name - username", "username"),
+    ARG_FEATURE("command.argument.feature.name", "CMD Arg Name - feature", "feature"),
+    ARG_SUBCOMMAND("command.argument.subcommand.name", "CMD Arg Name - subcommand", "subcommand"),
+    ARG_BACKUP_FILE("command.argument.backupFile.name", "CMD Arg Name - backup-file", "backup-file"),
     ARG_EXPORT_KIND("command.argument.exportKind", "CMD Arg Name - export kind", "export kind"),
     ARG_IMPORT_KIND("command.argument.importKind", "CMD Arg Name - import kind", "import kind"),
     DESC_ARG_SERVER_IDENTIFIER("command.argument.server.description", "CMD Arg - server identifier", "Name, ID or UUID of a server"),
