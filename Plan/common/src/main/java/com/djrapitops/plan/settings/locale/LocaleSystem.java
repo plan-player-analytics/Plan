@@ -155,7 +155,7 @@ public class LocaleSystem implements SubSystem {
 
         for (LangCode code : LangCode.values()) {
             if (code == LangCode.CUSTOM) continue;
-            File oldFile = files.getFileFromPluginFolder("locale_" + code.getName() + ".txt");
+            File oldFile = files.getFileFromPluginFolder("locale_" + code + ".txt");
             if (!files.getFileFromPluginFolder(code.getFileName()).exists() && oldFile.exists()) {
                 try {
                     // TODO remove debug?
