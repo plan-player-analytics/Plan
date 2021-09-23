@@ -1,619 +1,624 @@
-html:
-  text:
-    noLowTps: '낮은 tps 스파이크 없음'
-    clickToExpand: '확장하려면 클릭'
-    comparing15days: '지난 15일 비교'
-    comparing30daysAgo: '지난 30일 비교'
-    noExtensionData: '확장 데이터 없음'
-  label:
-    comparing7days: '지난 7일 비교'
-    averageKdr: '평균 사망 횟수(KDR)'
-    perDay: '/ Day'
-    averageEntities: 'Average Entities'
-    averageSessions: 'Average Sessions'
-    playersOnline: '접속중인 플레이어'
-    secondDeadliestWeapon: '2nd PvP 무기'
-    totalAfk: '총 AFK 시간'
-    favoriteServer: '즐겨찾는 서버'
-    mostActiveGamemode: '가장 활동적인 게임모드'
-    afkTime: 'AFK 시간'
-    lastConnected: '마지막 연결'
-    regular: 신규
-    downtime: 다운타임
-    perRegularPlayer: '/ 일반 플레이어'
-    minFreeDisk: '최소 여유 디스크용량'
-    deadliestWeapon: '치명적인 PvP 무기'
-    registered: 신규
-    currentUptime: 'Current Uptime'
-    averageChunks: 'Average Chunks'
-    averageMobKdr: '평균 몬스터 사망 횟수(Mob KDR)'
-    lastSeen: '마지막으로 본'
-    killed: Killed
-    sessionEnded: ' 종료'
-    uniquePlayers: '기존 플레이어'
-    weekdays: ''월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일''
-    firstSession: '첫 번째 세션'
-    mobKdr: '몬스터 KDR'
-    averageSessionLength: '평균 접속 시간(세션 길이)'
-    duringLowTps: '낮은 TPS 스파이크 동안:'
-    afk: AFK
-    loadedEntities: '로드된 엔티티'
-    playerKills: '플레이어 킬수'
-    active: 활동적인
-    totalPlaytime: '총 플레이타임'
-    newPlayers: '신규 플레이어수'
-    averagePlaytime: '평균 플레이 타임'
-    indexInactive: 비활성
-    maxFreeDisk: '최대 여유 디스크용량'
-    totalPlayers: '총 플레이어수'
-    averageTps: '평균 TPS'
-    longestSession: '가장 긴 접속 시간'
-    nickname: 닉네임
-    operator: 관리자(OP)
-    indexRegular: 규칙적인
-    regularPlayers: '신규 플레이어'
-    mobDeaths: '몬스터한테 죽은 횟수'
-    thirdDeadliestWeapon: '3rd PvP 무기'
-    serverOccupied: '점유된 서버'
-    activityIndex: '활동 색인'
-    irregular: 불규칙한
-    loneJoins: '최근 접속(Lone Joins)'
-    serverAnalysis: '서버 분석'
-    playerDeaths: '플레이어에 의한 죽은 횟수'
-    averageAfkTime: 'Average AFK Time'
-    totalPlayersOld: '총 플레이어'
-    activePlaytime: 'Active Playtime'
-    totalActive: '총 활성화 시간'
-    sessionMedian: '세션 중앙값'
-    newPlayerRetention: '신규 플레이어 유지'
-    onlineOnFirstJoin: '처음 참가할 때 온라인 플레이어'
-    new: 신규
-    serverDowntime: '서버 다운타임'
-    session: 세션
-    banned: Banned
-    lowTpsSpikes: '낮은 TPS 스파이크'
-    averageActivePlaytime: 'Average Active Playtime'
-    playtime: 플레이타임
-    inactive: 비활성
-    entities: 엔티티
-    mobKills: '몬스터 킬수'
-    name: 이름
-    lastPeak: '마지막 피크'
-    quickView: '퀵 뷰'
-    relativeJoinActivity: '상대 조인 활동'
-    deaths: '죽은 횟수'
-    timesKicked: '접속종료한 시간'
-    loneNewbieJoins: '최근 신규 접속(Lone New Joins)'
-    loadedChunks: '로드된 청크'
-    dayOfweek: 요일
-    firstSessionLength: '최초 접속 시간'
-    perPlayer: '/ 플레이어'
-    players: 플레이어들
-    diskSpace: '여유 디스크 공간'
-    bestPeak: '최고의 피크'
-    veryActive: '매우 활성화된'
-    average: 평균
-    registeredPlayers: '신규 플레이어'
-  sidebar:
-    networkOverview: '네트워크 개요'
-    pvpPve: 'PvP & PvE'
-    overview: 개요
-    links: LINKS
-    serverPage: '서버 페이지'
-    sessions: '세션 목록'
-    playerbaseOverview: '플레이어 기반 개요'
-    playerbase: '플레이어 기반'
-    plugins: '플러그인 목록'
-    query: 'Make a query'
-    geolocations: '지리적 위치'
-    networkPage: '네트워크 페이지'
-    playerList: '플레이어 목록'
-    toMainPage: '메인 페이지로'
-    serversTitle: '서버 목록'
-    performance: 성능
-    playerPage: '플레이어 페이지'
-    servers: '서버 목록'
-    information: 정보
-  version:
-    updateButton: Update
-    changelog: 'View Changelog'
-    updateModal:
-      title: 'Version ${0} is Available!'
-      text: 'A new version has been released and is now available for download.'
-    isDev: 'This version is a DEV release.'
-    download: 'Download Plan-${0}.jar'
-    current: 'You have version ${0}'
-  error:
-    auth:
-      registrationFailed: '등록 실패, 다시 시도 (코드는 15분 후에 만료 됨)'
-      expiredCookie: '사용자 쿠키가 만료되었습니다.'
-      noCookie: '사용자 쿠키가 없습니다.'
-      userNotFound: '사용자가 존재하지 않습니다'
-      loginFailed: '사용자와 비밀번호가 일치하지 않습니다'
-      dbClosed: '데이터베이스가 열려 있지 않습니다. /plan info 로 데이터베이스 상태를 확인하십시오.'
-      generic: '오류로 인해 인증에 실패했습니다.'
-      emptyForm: '사용자 및 암호가 지정되지 않았습니다.'
-    404NotFound: 'Not Found 404'
-    404UnknownPage: 'Make sure you're accessing a link given by a command, Examples:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>'
-    playerNotSeen: 'Plan has not seen this player. 404'
-    authFailedTips: '- Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register.'
-    UUIDNotFound: 'Player UUID was not found in the database. 404'
-    404PageNotFound: 'Page does not exist. 404'
-    401Unauthorized: 'Unauthorized 401'
-    noServersOnline: 'No Servers online to perform the request. 404'
-    403Forbidden: 'Forbidden 403'
-    authFailed: 'Authentication Failed. 401'
-  title:
-    graph:
-      hourByHour: 'Hour by Hour'
-      dayByDay: 'Day by Day'
-      networkOnlineActivity: '네트워크 온라인 활동'
-    recentSessions: '최근 세션'
-    trends30days: '30일 동안의 트렌드'
-    thirtyDaysAgo: '30일 전'
-    allTime: '모든 시간'
-    tps: TPS
-    themeSelect: '테마 선택'
-    connectionInfo: '연결 정보'
-    country: 국가
-    last30days: '지난 30일'
-    asNumbers: 숫자로
-    worstPing: 'Worst Ping'
-    now: 현재
-    worldPlaytime: '맵 플레이 타임'
-    networkAsNumbers: '네트워크 숫자'
-    disk: '디스크 공간'
-    sessionStart: '세션 시작'
-    player: 플레이어
-    serverPlaytime: '서버 플레이 타임'
-    calendar: ' 달력'
-    playerOverview: '플레이어 개요'
-    serverAsNumberse: '서버 번호'
-    thirtyDays: 30일
-    last7days: '지난 7일'
-    network: 네트워크
-    trend: 트렌드
-    weekComparison: '주 비교'
-    recentPvpKills: '최근 PvP 처치'
-    performanceAsNumbers: '성능 통계'
-    recentKills: '최근 킬'
-    last24hours: '지난 24시간'
-    currentPlayerbase: '현재 플레이어 베이스'
-    server: 서버
-    length: ' 길이'
-    punchcard: '펀치 카드'
-    punchcard30days: '30일 동안의 펀치 카드'
-    onlineActivity: '온라인 활동'
-    world: '월드 로드'
-    pvpPveAsNumbers: 'PvP & PvE 통계'
-    serverOverview: '서버 개요'
-    playerbaseDevelopment: 'Playerbase 개발'
-    onlineActivityAsNumbers: '온라인 활동 숫자'
-    joinAddresses: 'Join Addresses'
-    ping: Ping
-    recentPvpDeaths: '최근 PvP 사망'
-    seenNicknames: '본 별명'
-    averagePing: '평균 Ping'
-    cpuRam: 'CPU & RAM'
-    bestPing: '최고 Ping'
-    insights30days: '30일 동안의 인사이트'
-    playersOnlineOverview: '온라인 활동 개요'
-    mostPlayedWorld: '가장 많이 플레이 한 맵'
-    serverPlaytime30days: '서버 플레이 타임 - 최근 30일'
-    all: 모두
-  modal:
-    version:
-      available: '사용할 수 있습니다'
-      title: 버전
-      changelog: '변경 로그 보기'
-      text: '새 버전이 출시되었으며 이제 다운로드 할 수 있습니다.'
-      download: 다운로드
-      dev: '이 버전은 DEV 릴리스입니다.'
-    info:
-      developer: '에 의해 개발되었습니다'
-      contributors: '금전적으로 개발을 지원 해주신 분들께 특별히 감사드립니다.'
-        code: '코드 기여자'
-        bugreporters: '& Bug reporters!'
-        text: '또한 다음 <span class="col-plan">멋진 사람들</span>이 기여했습니다.'
-        translator: 번역
-      license: '플레이어 분석 개발 및 라이센스하에 있습니다'
-      metrics: 'bStats 메트릭'
-      text: '플러그인에 대한 정보'
-      bugs: '문제 보고'
-      discord: '디스코드로 기술지원'
-      wiki: 'Plan 위키, 튜토리얼 & 문서'
-  register:
-    register: Register
-    error:
-      usernameLength: 'Username can be up to 50 characters, yours is '
-      checkFailed: 'Checking registration status failed: '
-      noPassword: 'You need to specify a Password'
-      failed: 'Registration failed: '
-      noUsername: 'You need to specify a Username'
-    completion4: 'Or using console:'
-    createNewUser: 'Create a new user'
-    passwordTip: 'Password should be more than 8 characters, but there are no limitations.'
-    login: 'Already have an account? Login!'
-    usernameTip: 'Username can be up to 50 characters.'
-    completion2: 'Code expires in 15 minutes'
-    completion1: 'You can now finish registering the user.'
-    completion: 'Complete Registration'
-    completion3: 'Use the following command in game to finish registration:'
-  description:
-    noGameServers: 'Some data requires Plan to be installed on game servers.'
-    newPlayerRetention: 'This value is a prediction based on previous players.'
-    noServers: '데이터베이스에 서버가 없습니다.'
-    noGeolocations: 'Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).'
-    noServerOnlinActivity: '온라인 활동을 표시 할 서버가 없습니다.'
-    predictedNewPlayerRetention: '이 값은 기존 플레이어를 기반으로 한 예측입니다.'
-    noSpongeChunks: 'Chunks unavailable on Sponge'
-    noServersLong: 'It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.'
-  query:
-    filter:
-      country:
-        text: 'have joined from country'
-      operators: Operators
-      activity:
-        text: 'are in Activity Groups'
-      generic:
-        and: 'and '
-        allPlayers: 'All players'
-        start: 'of Players who '
-      title:
-        activityGroup: 'Current activity group'
-      nonOperators: 'Non operators'
-      pluginGroup:
-        text: 'are in ${plugin}'s ${group} Groups'
-        name: 'Group: '
-      banned: Banned
-      registeredBetween:
-        text: 'Registered between'
-      notBanned: 'Not banned'
-      playedBetween:
-        text: 'Played between'
-      joinAddress:
-        text: 'joined with address'
-      banStatus:
-        name: 'Ban status'
-      operatorStatus:
-        name: 'Operator status'
-      view: '  View:'
-    label:
-      view: 'Show a view'
-      makeAnother: 'Make another query'
-      to: >to</label>
-      from: >from</label>
-    performQuery: 'Perform Query!'
-    title: Query<
-      sessionsWithinView: 'Sessions within view'
-      activity: 'Activity of matched players'
-      activityOnDate: 'Activity on <span id="activity-date"></span>'
-    results:
-      title: 'Query Results'
-      match: 'matched ${resultCount} players'
-      none: 'Query produced 0 results'
-    filters:
-      loading: 'Loading filters..'
-      add: 'Add a filter..'
-    generic:
-      are: `are`
-  generic:
-    none: None
-  login:
-    forgotPassword4: 'After using the command, '
-    forgotPassword2: 'Use the following command in game to remove your current user:'
-    forgotPassword: 'Forgot Password?'
-    forgotPassword1: 'Forgot password? Unregister and register again.'
-    logout: Logout
-    username: '"Username"'
-    failed: 'Login failed: '
-    register: 'Create an Account!'
-    password: '"Password"'
-    login: Login
-    forgotPassword3: 'Or using console:'
-  calendar:
-    unique:
-      Unique:
-    new:
-      New:
-  value:
-    noKills: '살인 없음'
-    online: ' 온라인'
-    with: <th>With
-    localMachine: '로컬 머신'
-    offline: ' 오프라인'
-  button:
-    nightMode: '야간 모드'
-  unit:
-    chunks: '청크 수'
-    entities: '엔티티 수'
-    players: 플레이어
-  side:
-    plugins: 플러그인
 plugin:
-  webserver:
-    fail:
-      portInUse: '웹서버: 성공적으로 초기화되지 않았습니다. 해당 포트 (${0})가 사용 중입니까?'
-      SSLContext: '웹서버: SSL 컨텍스트 초기화에 실패했습니다.'
-      certStoreLoad: '웹서버: SSL 인증서 로드에 실패했습니다.'
-      certFileEOF: '웹서버: 인증서 파일을 읽을 때 EOF. (파일이 비어 있지 않은지 확인하십시오)'
-    notify:
-      reverseProxy: '웹서버: 프록시 모드 HTTPS를 사용하도록 설정 한 경우 역방향 프록시가 HTTPS를 사용하여 라우팅되고 Alternative_IP 계획이 있는지 확인합니다.'
-      ipWhitelistBlock: '웹서버: ${0} '${1}'에 대한 액세스가 거부되었습니다. (허용되지 않음)'
-      authDisabledNoHTTPS: '웹서버: 사용자 인증이 비활성화되었습니다! (HTTP를 통해 안전하지 않음)'
-      noCertFile: '웹서버: 인증서 키 저장소 파일을 찾을 수 없음 : ${0}'
-      authDisabledConfig: '웹서버: 사용자 인증이 비활성화되었습니다! (구성에서 비활성화 됨)'
-      ipWhitelist: '웹서버: IP 화이트리스트가 활성화되었습니다.'
-      http: '웹서버: 인증서 없음-> 시각화를 위해 HTTP 서버 사용.'
-  version:
-    checkFail: '최신 버전을 확인하지 못했습니다.'
-    isDev: ' 이것은 DEV 릴리스입니다.'
-    updateAvailableSpigot: '최신 버전은 ${0}'
-    updateAvailable: '최신 버전 (${0}) 이며, 현재 버전은 ${1} 입니다.'
-    checkFailGithub: 'Github/versions.txt 에서 버전 정보를 불러올 수 없습니다.'
-    isLatest: '최신 버전을 사용하고 있습니다.'
-  generic:
-    unavailable: Unavailable
-    loadingServerInfo: 'Loading server identifying information'
-    dbFaultyLaunchOptions: '기본값을 사용하여 시작 옵션에 결함이 있습니다. (${0})'
-    yesterday: "'어제'"
-    dbNotifyClean: '${0} 플레이어의 데이터를 삭제했습니다'
-    dbNotifySQLiteWAL: '이 서버 버전에서는 SQLite WAL 모드가 지원되지 않으며 기본값을 사용합니다. 이것은 성능에 영향을 줄 수도 있고 그렇지 않을 수도 있습니다.'
-    unknown: '알 수 없음'
-    yes: 예
-    no: 아니오
-    today: "'오늘'"
-    dbPatchesAlreadyApplied: '모든 데이터베이스 패치가 이미 적용되었습니다.'
-    dbApplyingPatch: '패치 적용 중: ${0}..'
-    dbPatchesApplied: '모든 데이터베이스 패치가 성공적으로 적용되었습니다.'
-  disable:
-    webserver: '웹 서버가 비활성화되었습니다.'
-    savingSessionsTimeout: 'Timeout hit, storing the unfinished sessions on next enable instead.'
-    savingSessions: '완료되지 않은 세션 저장 ..'
-    waitingDbComplete: 'Closed SQLite connection.'
-    disabled: '플레이어 분석이 비활성화되었습니다.'
-    processingComplete: '처리가 완료되었습니다.'
-    waitingDb: 'Waiting queries to finish to avoid SQLite crashing JVM..'
-    waitingTransactions: 'Waiting for unfinished transactions to avoid data loss..'
-    waitingTransactionsComplete: 'Transaction queue closed.'
-    database: '처리되지 않은 중요한 작업이 있습니다.. (${0})'
-  enable:
-    notify:
-      storeSessions: 'Storing sessions that were preserved before previous shutdown.'
-      webserverDisabled: '웹 서버가 초기화되지 않았습니다. (WebServer.DisableWebServer : true)'
-      geoInternetRequired: 'Plan GeoLite2 Geolocation 데이터베이스를 다운로드하려면 처음 실행할 때 인터넷 액세스가 필요합니다.'
-      geoDisabled: '위치 정보 수집이 활성화되지 않았습니다. (Data.Geolocations : false)'
-      badIP: '0.0.0.0은 유효한 주소가 아닙니다. Alternative_IP 설정을 지정하십시오. 잘못된 링크로 제공 될 수 있습니다!'
-      emptyIP: 'server.properties의 IP가 비어 있고 대체 IP가 사용되지 않습니다. 잘못된 링크가 제공 될 수 있습니다!'
-    fail:
-      geoDBWrite: '다운로드 한 GeoLite2 Geolocation 데이터베이스를 저장하는 도중에 문제가 발생했습니다.'
-      database: '${0}-데이터베이스 연결 실패: ${1}'
-      webServer: '웹 서버가 초기화되지 않았습니다!'
-      databaseType: '${0} 해당 데이터베이스는 지원되지 않습니다.'
-      databasePatch: '데이터베이스 패치에 실패했습니다. 플러그인을 비활성화해야합니다. 이 문제를 신고하십시오'
-    webserver: '해당 포트에서 실행되는 웹 서버 ${0} ( ${1} )'
-    database: '${0}-데이터베이스 연결이 설정되었습니다.'
-    enabled: '플레이어 분석이 활성화되었습니다.'
-  apiCSSAdded: 'PageExtension: ${0} added stylesheet(s) to ${1}, ${2}'
-  apiJSAdded: 'PageExtension: ${0} added javascript(s) to ${1}, ${2}'
-command:
-  help:
-    dbClear:
-      inDepth: 'Clears all Plan tables, removing all Plan-data in the process.'
-      description: '데이터베이스에 있는 모든 데이터를 삭제합니다.'
-    dbHotswap:
-      inDepth: 'Reloads the plugin with the other database and changes the config to match.'
-      description: '데이터베이스를 빠르게 변경합니다.'
-    dbUninstalled:
-      description: '서버에서 설치한 데이터베이스를 삭제합니다.'
-      inDepth: 'Marks a server in Plan database as uninstalled so that it will not show up in server queries.'
-    info:
-      inDepth: 'Display the current status of the plugin.'
-      description: 'Plan 플러그인에 대한 정보를 확인합니다.'
-    dbBackup:
-      description: '데이터베이스 파일로 백업합니다.'
-      inDepth: 'Uses SQLite to backup the target database to a file.'
-    server:
-      inDepth: 'Obtain a link to the /server page of a specific server, or the current server if no arguments are given.'
-      description: '서버 정보 열람하기'
-    unregister:
-      description: 'Plan 페이지 계정 탈퇴합니다.'
-      inDepth: 'Use without arguments to unregister player linked user, or with username argument to unregister another user.'
-    reload:
-      inDepth: 'Disable and enable the plugin to reload any changes in config.'
-      description: 'Plan 플러그인을 리로드합니다.'
-    player:
-      description: '플레이어 정보 확인합니다.'
-      inDepth: 'Obtain a link to the /player page of a specific player, or the current player.'
-    import:
-      description: '저장된 데이터를 불러옵니다.'
-      inDepth: 'Performs an import to load data into the database.'
-    logout:
-      description: 'Log out other users from the panel.'
-      inDepth: 'Give username argument to log out another user from the panel, give * as argument to log out everyone.'
-    servers:
-      description: '서버 목록 열람하기'
-      inDepth: 'List ids, names and uuids of servers in the database.'
-    dbRestore:
-      description: '파일에서 데이터베이스로 데이터를 복원합니다.'
-      inDepth: 'Uses SQLite backup file and overwrites contents of the target database.'
-    export:
-      inDepth: 'Performs an export to export location defined in the config.'
-      description: 'HTML 또는 JSON 형식 파일로 내보냅니다.'
+    version:
+        checkFail: "최신 버전을 확인하지 못했습니다."
+        checkFailGithub: "Github/versions.txt 에서 버전 정보를 불러올 수 없습니다."
+        isLatest: "최신 버전을 사용하고 있습니다."
+        isDev: " 이것은 DEV 릴리스입니다."
+        updateAvailableSpigot: "최신 버전은 ${0}"
+        updateAvailable: "최신 버전 (${0}) 이며, 현재 버전은 ${1} 입니다."
     disable:
-      description: '플러그인 비활성화합니다.'
-      inDepth: 'Disable the plugin or part of it until next reload/restart.'
-    dbMove:
-      inDepth: 'Overwrites contents in the other database with the contents in another.'
-      description: '데이터베이스 간에 데이터 이동 합니다.'
-    dbRemove:
-      inDepth: 'Removes all data linked to a player from the Current database.'
-      description: '현재 데이터베이스에서 플레이어 데이터를 제거합니다.'
-    users:
-      inDepth: '웹 사용자를 표로 나열합니다.'
-      description: '모든 웹 사용자 나열합니다.'
-    search:
-      inDepth: 'List all matching player names to given part of a name.'
-      description: '플레이어명을 검색합니다.'
-    json:
-      description: '플레이어 로우 데이터의 json를 열람합니다.'
-      inDepth: 'Allows you to download a player's data in json format. All of it.'
-    players:
-      description: '플레이어 목록 확인합니다.'
-      inDepth: 'Obtain a link to the /players page to see a list of players.'
+        savingSessionsTimeout: "Timeout hit, storing the unfinished sessions on next enable instead."
+        disabled: "플레이어 분석이 비활성화되었습니다."
+        webserver: "웹 서버가 비활성화되었습니다."
+        waitingTransactions: "Waiting for unfinished transactions to avoid data loss.."
+        waitingDbComplete: "Closed SQLite connection."
+        database: "처리되지 않은 중요한 작업이 있습니다.. (${0})"
+        waitingTransactionsComplete: "Transaction queue closed."
+        waitingDb: "Waiting queries to finish to avoid SQLite crashing JVM.."
+        processingComplete: "처리가 완료되었습니다."
+        savingSessions: "완료되지 않은 세션 저장 .."
+    generic:
+        dbApplyingPatch: "패치 적용 중: ${0}.."
+        dbNotifySQLiteWAL: "이 서버 버전에서는 SQLite WAL 모드가 지원되지 않으며 기본값을 사용합니다. 이것은 성능에 영향을 줄 수도 있고 그렇지 않을 수도 있습니다."
+        dbPatchesAlreadyApplied: "모든 데이터베이스 패치가 이미 적용되었습니다."
+        unavailable: "Unavailable"
+        dbFaultyLaunchOptions: "기본값을 사용하여 시작 옵션에 결함이 있습니다. (${0})"
+        dbNotifyClean: "${0} 플레이어의 데이터를 삭제했습니다"
+        today: "'오늘'"
+        yes: "예"
+        dbPatchesApplied: "모든 데이터베이스 패치가 성공적으로 적용되었습니다."
+        loadingServerInfo: "Loading server identifying information"
+        unknown: "알 수 없음"
+        no: "아니오"
+        yesterday: "'어제'"
+    enable:
+        enabled: "플레이어 분석이 활성화되었습니다."
+        notify:
+            geoInternetRequired: "Plan GeoLite2 Geolocation 데이터베이스를 다운로드하려면 처음 실행할 때 인터넷 액세스가 필요합니다."
+            webserverDisabled: "웹 서버가 초기화되지 않았습니다. (WebServer.DisableWebServer : true)"
+            geoDisabled: "위치 정보 수집이 활성화되지 않았습니다. (Data.Geolocations : false)"
+            emptyIP: "server.properties의 IP가 비어 있고 대체 IP가 사용되지 않습니다. 잘못된 링크가 제공 될 수 있습니다!"
+            badIP: "0.0.0.0은 유효한 주소가 아닙니다. Alternative_IP 설정을 지정하십시오. 잘못된 링크로 제공 될 수 있습니다!"
+            storeSessions: "Storing sessions that were preserved before previous shutdown."
+        database: "${0}-데이터베이스 연결이 설정되었습니다."
+        fail:
+            geoDBWrite: "다운로드 한 GeoLite2 Geolocation 데이터베이스를 저장하는 도중에 문제가 발생했습니다."
+            database: "${0}-데이터베이스 연결 실패: ${1}"
+            databasePatch: "데이터베이스 패치에 실패했습니다. 플러그인을 비활성화해야합니다. 이 문제를 신고하십시오"
+            webServer: "웹 서버가 초기화되지 않았습니다!"
+            databaseType: "${0} 해당 데이터베이스는 지원되지 않습니다."
+        webserver: "해당 포트에서 실행되는 웹 서버 ${0} ( ${1} )"
+    webserver:
+        fail:
+            SSLContext: "웹서버: SSL 컨텍스트 초기화에 실패했습니다."
+            certStoreLoad: "웹서버: SSL 인증서 로드에 실패했습니다."
+            portInUse: "웹서버: 성공적으로 초기화되지 않았습니다. 해당 포트 (${0})가 사용 중입니까?"
+            certFileEOF: "웹서버: 인증서 파일을 읽을 때 EOF. (파일이 비어 있지 않은지 확인하십시오)"
+        notify:
+            authDisabledNoHTTPS: "웹서버: 사용자 인증이 비활성화되었습니다! (HTTP를 통해 안전하지 않음)"
+            ipWhitelistBlock: "웹서버: ${0} '${1}'에 대한 액세스가 거부되었습니다. (허용되지 않음)"
+            noCertFile: "웹서버: 인증서 키 저장소 파일을 찾을 수 없음 : ${0}"
+            ipWhitelist: "웹서버: IP 화이트리스트가 활성화되었습니다."
+            http: "웹서버: 인증서 없음-> 시각화를 위해 HTTP 서버 사용."
+            reverseProxy: "웹서버: 프록시 모드 HTTPS를 사용하도록 설정 한 경우 역방향 프록시가 HTTPS를 사용하여 라우팅되고 Alternative_IP 계획이 있는지 확인합니다."
+            authDisabledConfig: "웹서버: 사용자 인증이 비활성화되었습니다! (구성에서 비활성화 됨)"
+    apiCSSAdded: "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"
+    apiJSAdded: "PageExtension: ${0} added javascript(s) to ${1}, ${2}"
+command:
+    help:
+        player:
+            inDepth: "Obtain a link to the /player page of a specific player, or the current player."
+            description: "플레이어 정보 확인합니다."
+        dbMove:
+            inDepth: "Overwrites contents in the other database with the contents in another."
+            description: "데이터베이스 간에 데이터 이동 합니다."
+        disable:
+            inDepth: "Disable the plugin or part of it until next reload/restart."
+            description: "플러그인 비활성화합니다."
+        dbRemove:
+            description: "현재 데이터베이스에서 플레이어 데이터를 제거합니다."
+            inDepth: "Removes all data linked to a player from the Current database."
+        dbUninstalled:
+            inDepth: "Marks a server in Plan database as uninstalled so that it will not show up in server queries."
+            description: "서버에서 설치한 데이터베이스를 삭제합니다."
+        network:
+            inDepth: "Obtain a link to the /network page, only does so on networks."
+            description: "네트워크 정보를 확인합니다."
+        export:
+            description: "HTML 또는 JSON 형식 파일로 내보냅니다."
+            inDepth: "Performs an export to export location defined in the config."
+        users:
+            description: "모든 웹 사용자 나열합니다."
+            inDepth: "웹 사용자를 표로 나열합니다."
+        dbClear:
+            inDepth: "Clears all Plan tables, removing all Plan-data in the process."
+            description: "데이터베이스에 있는 모든 데이터를 삭제합니다."
+        database:
+            description: "Plan 데이터베이스 관리자"
+            inDepth: "Use different database subcommands to change the data in some way"
+        dbHotswap:
+            inDepth: "Reloads the plugin with the other database and changes the config to match."
+            description: "데이터베이스를 빠르게 변경합니다."
+        import:
+            inDepth: "Performs an import to load data into the database."
+            description: "저장된 데이터를 불러옵니다."
+        dbRestore:
+            description: "파일에서 데이터베이스로 데이터를 복원합니다."
+            inDepth: "Uses SQLite backup file and overwrites contents of the target database."
+        server:
+            inDepth: "Obtain a link to the /server page of a specific server, or the current server if no arguments are given."
+            description: "서버 정보 열람하기"
+        logout:
+            inDepth: "Give username argument to log out another user from the panel, give * as argument to log out everyone."
+            description: "Log out other users from the panel."
+        json:
+            inDepth: "Allows you to download a player's data in json format. All of it."
+            description: "플레이어 로우 데이터의 json를 열람합니다."
+        ingame:
+            inDepth: "Displays some information about the player in game."
+            description: "게임에서 플레이어 정보를 열람합니다."
+        reload:
+            inDepth: "Disable and enable the plugin to reload any changes in config."
+            description: "Plan 플러그인을 리로드합니다."
+        servers:
+            description: "서버 목록 열람하기"
+            inDepth: "List ids, names and uuids of servers in the database."
+        unregister:
+            inDepth: "Use without arguments to unregister player linked user, or with username argument to unregister another user."
+            description: "Plan 페이지 계정 탈퇴합니다."
+        players:
+            inDepth: "Obtain a link to the /players page to see a list of players."
+            description: "플레이어 목록 확인합니다."
+        register:
+            description: "Plan 웹 사이트에 사용자 등록"
+            inDepth: "Use without arguments to get link to register page. Use --code [code] after registration to get a user."
+        info:
+            description: "Plan 플러그인에 대한 정보를 확인합니다."
+            inDepth: "Display the current status of the plugin."
+        dbBackup:
+            inDepth: "Uses SQLite to backup the target database to a file."
+            description: "데이터베이스 파일로 백업합니다."
+        search:
+            inDepth: "List all matching player names to given part of a name."
+            description: "플레이어명을 검색합니다."
+    subcommand:
+        info:
+            proxy: "  §2프록시에 연결됨: §f${0}"
+            version: "  §2버전: §f${0}"
+            database: "  §2현재 데이터베이스: §f${0}"
+            update: "  §2최신 버전: §f${0}"
+    fail:
+        invalidArguments: "다음을 수락합니다. ${0}: ${1}"
+        missingLink: "사용자가 귀하의 계정에 연결되어 있지 않으며 다른 사용자의 계정을 제거 할 권한이 없습니다."
+        missingFeature: "§e비활성화 할 기능을 정의하십시오! (현재 ${0})"
+        tooManyArguments: "§c단일 인수가 필요합니다. ${1}"
+        noPermission: "§c필요한 권한이 없습니다."
+        onDeny: "실행시 오류가 발생한 거부 된 작업: ${0}"
+        serverNotFound: "서버 '${0}' 데이터베이스에서 찾을 수 없습니다."
+        seeConfig: "config.yml의 '${0}'참조"
+        webUserExists: "§c사용자가 이미 존재합니다!"
+        playerNotFound: "플레이어 '${0}' 찾을 수 없으며 UUID가 없습니다."
+        onAccept: "실행시 오류가 발생한 수락 된 작업: ${0}"
+        missingArguments: "§c필수 인수 (${0}) ${1}"
+        invalidUsername: "§c사용자에게 UUID가 없습니다."
+        emptyString: "검색 문자열은 비워 둘 수 없습니다."
+        unknownUsername: "§c이 서버에 사용자가 표시되지 않았습니다."
+        playerNotInDatabase: "플레이어 '${0}' 데이터베이스에서 찾을 수 없습니다."
+        webUserNotFound: "§c사용자가 없습니다!"
+    confirmation:
+        accept: "동의하기"
+        cancelNoChanges: "취소되었습니다. 데이터가 변경되지 않았습니다."
+        unregister: "${1}에 연결된 '${0}'의 등록을 취소하려고합니다."
+        deny: "취소"
+        dbRemovePlayer: "${1}에서 ${0}의 데이터를 제거하려고합니다."
+        dbOverwrite: "Plan의 데이터를 덮어 쓰려고합니다. ${0} 데이터 포함 ${1}"
+        confirm: "확인: "
+        dbClear: "${0} 에 대한 모든 데이터를 삭제하려고 합니다."
+        expired: "확인이 만료되었습니다. 명령을 다시 사용하십시오."
+        cancelNoUnregister: "취소되었습니다. '${0}' 이(가) 등록되지 않았습니다."
+    argument:
+        server:
+            name: "서버"
+            description: "Name, ID or UUID of a server"
+        username:
+            name: "사용자 이름"
+            description: "다른 사용자의 사용자 이름입니다. 지정되지 않은 경우 플레이어 연결 사용자가 사용됩니다."
+        dbRestore:
+            description: "복원할 데이터베이스의 유형입니다. 지정하지 않으면 현재 사용 중인 데이터베이스로 진행됩니다."
+        code:
+            name: "${code}"
+            description: "등록을 완료하는데에 사용되는 코드입니다."
+        backupFile:
+            description: "백업 파일 이름(대소문자 구분)"
+            name: "백업 파일"
+        dbTypeMoveFrom:
+            description: "데이터를 이동할 데이터베이스 유형입니다."
+        dbTypeHotswap:
+            description: "사용 시작할 데이터베이스 유형입니다."
+        feature:
+            description: "비활성화할 기능의 이름: ${0}"
+            name: "기능"
+        nameOrUUID:
+            description: "Name or UUID of a player"
+            name: "name/uuid"
+            removeDescription: "현재 데이터베이스에서 삭제할 플레이어 식별자입니다."
+        subcommand:
+            description: "도움말을 보려면 하위 명령어 없이 명령어를 사용하십시오."
+            name: "하위 명령"
+        importKind: "로드 종류"
+        dbTypeMoveTo:
+            description: "데이터를 이동할 데이터베이스 유형입니다."
+        dbTypeRemove:
+            description: "모든 데이터를 제거할 데이터베이스 유형입니다."
+        dbBackup:
+            description: "백업할 데이터베이스 유형입니다. 지정하지 않으면 현재 데이터베이스로 사용됩니다."
+        exportKind: "추출 종류"
     database:
-      inDepth: 'Use different database subcommands to change the data in some way'
-      description: 'Plan 데이터베이스 관리자'
+        manage:
+            failIncorrectDB: "> §c'${0}' 지원되는 데이터베이스가 아닙니다."
+            confirmRemoval: "Data in ${0} will be removed!"
+            success: "> §a성공!"
+            failNoServer: "주어진 매개 변수를 가진 서버가 없습니다."
+            start: "> §2데이터 처리 중.."
+            hotswap: "§e새 데이터베이스 (/plan db hotswap ${0})로 교체하고 플러그인을 다시 로드해야합니다."
+            importers: "Importers: "
+            confirm: "> §cAdd '-a' argument to confirm execution: ${0}"
+            confirmOverwrite: "Data in ${0} will be overwritten!"
+            failSameServer: "이 서버를 제거된 것으로 표시할 수 없습니다.(현재 사용 중입니다.)"
+            failFileNotFound: "> §c${0}에 파일이 없습니다."
+            fail: "> §c문제가 발생했습니다: ${0}"
+            progress: "${0} / ${1} 처리 중.."
+            failSameDB: "> §c동일한 데이터베이스에서 작업할 수 없습니다!"
+        unregister: "'${0}'등록 취소 .."
+        write: "쓰기 ${0}.."
+        playerRemoval: "${1}에서 ${0}의 데이터를 제거하는 중 .."
+        removal: "${0}에서 Plan 데이터를 제거하는 중 .."
+        serverUninstalled: "§a서버가 여전히 설치되어 있으면 자동으로 데이터베이스에 설치된 것으로 설정됩니다."
+        failDbNotOpen: "§c데이터베이스는 ${0} - 입니다. 잠시 후 다시 시도하십시오."
+        warnDbNotOpen: "§e${0}데이터베이스가 예상보다 오래 걸릴 수 있습니다 .."
+        creatingBackup: "${1} 내용으로 백업 파일 '${0}.db'만들기"
+    general:
+        featureDisabled: "§a다음 플러그인을 다시 로드할 때까지 일시적으로 '${0}'을 (를) 비활성화했습니다."
+        failNoImporter: "§eImporter '${0}' doesn't exist"
+        failNoExporter: "§eExporter '${0}' doesn't exist"
+        noWebuser: "웹 사용자가 없을 수 있습니다. /plan register <password>를 사용하십시오."
+        reloadComplete: "§a구성파일 불러오기 완료했습니다."
+        reloadFailed: "§c플러그인 리로드 도중 에러 발생했습니다."
+        successWebUserRegister: "§a새 사용자 (${0})를 성공적으로 추가했습니다!"
+        webUserList: "  §2${0} §7: §f${1}"
+        webPermissionLevels: ">\§70: 모든 페이지에 액세스 \§71: '/players'및 모든 플레이어 페이지에 액세스 \§72: 웹 사용자와 동일한 사용자 이름으로 플레이어 페이지에 액세스 \§73+: 권한 없음"
+        pluginDisabled: "§a이제 Plan 시스템이 비활성화됩니다. reload를 사용하여 플러그인을 다시 시작할 수 있습니다."
+        notifyWebUserRegister: "등록된 신규 유저: '${0}' Perm level: ${1}"
+        noAddress: "§e사용가능한 주소가 없습니다. - localhost 로 사용합니다. 'Alternative_IP' 항목을 통해 설정하십시오."
+    link:
+        network: "네트워크 페이지: "
+        noNetwork: "서버가 네트워크에 연결되어 있지 않습니다. 링크는 서버 페이지로 리디렉션됩니다."
+        player: "플레이어 페이지: "
+        register: "가입 페이지: "
+        players: "플레이어 목록 페이지: "
+        clickMe: "클릭"
+        link: "링크"
+        playerJson: "플레이어 json: "
+        server: "서버 페이지: "
     ingame:
-      inDepth: 'Displays some information about the player in game.'
-      description: '게임에서 플레이어 정보를 열람합니다.'
-    network:
-      inDepth: 'Obtain a link to the /network page, only does so on networks.'
-      description: '네트워크 정보를 확인합니다.'
+        geolocation: "  §2§f${0}에서 로그인"
+        longestSession: "  §2가장 긴 세션: §f${0}"
+        mobKills: "  §2몬스터 킬수: §f${0}"
+        playtime: "  §2플레이 시간: §f${0}"
+        afkPlaytime: "  §2AFK 시간: §f${0}"
+        registered: "  §2최초 접속: §f${0}"
+        deaths: "  §2죽은 횟수: §f${0}"
+        timesKicked: "  §2추방 횟수: §f${0}"
+        playerKills: "  §2플레이어 킬수: §f${0}"
+        activePlaytime: "  §2플레이한 시간: §f${0}"
+        lastSeen: "  §2마지막으로 본 : §f${0}"
+        activityIndex: "  §2활동 정보: §f${0} | ${1}"
+    header:
+        servers: "> §2서버 목록"
+        info: "> §2플레이어 분석"
+        network: "> §2네트워크 페이지"
+        search: "> §2${0} Results for §f${1}§2:"
+        inspect: "> §2플레이어: §f${0}"
+        help: "> §2/${0} Help"
+        serverList: "id::name::uuid"
+        webUserList: "username::linked to::permission level"
+        webUsers: "> §2${0} 웹 사용자"
+        players: "> §2플레이어 수"
+        analysis: "> §2분석 결과"
+    footer:
+        help: "§7명령어 또는 인수에 마우스 커서로 올리거나 '/${0} ?' 사용해서 자세히 확인바랍니다."
+html:
+    title:
+        playerOverview: "플레이어 개요"
+        trends30days: "30일 동안의 트렌드"
+        disk: "디스크 공간"
+        network: "네트워크"
+        weekComparison: "주 비교"
+        joinAddresses: "Join Addresses"
+        now: "현재"
+        graph:
+            hourByHour: "Hour by Hour"
+            networkOnlineActivity: "네트워크 온라인 활동"
+            dayByDay: "Day by Day"
+        currentPlayerbase: "현재 플레이어 베이스"
+        averagePing: "평균 Ping"
+        insights30days: "30일 동안의 인사이트"
+        worstPing: "Worst Ping"
+        playersOnlineOverview: "온라인 활동 개요"
+        networkAsNumbers: "네트워크 숫자"
+        length: " 길이"
+        bestPing: "최고 Ping"
+        server: "서버"
+        serverAsNumberse: "서버 번호"
+        mostPlayedWorld: "가장 많이 플레이 한 맵"
+        punchcard: "펀치 카드"
+        performanceAsNumbers: "성능 통계"
+        thirtyDaysAgo: "30일 전"
+        last30days: "지난 30일"
+        serverPlaytime: "서버 플레이 타임"
+        seenNicknames: "본 별명"
+        recentSessions: "최근 세션"
+        world: "월드 로드"
+        country: "국가"
+        themeSelect: "테마 선택"
+        cpuRam: "CPU & RAM"
+        recentPvpKills: "최근 PvP 처치"
+        recentKills: "최근 킬"
+        last24hours: "지난 24시간"
+        player: "플레이어"
+        onlineActivity: "온라인 활동"
+        playerbaseDevelopment: "Playerbase 개발"
+        tps: "TPS"
+        serverPlaytime30days: "서버 플레이 타임 - 최근 30일"
+        allTime: "모든 시간"
+        last7days: "지난 7일"
+        connectionInfo: "연결 정보"
+        serverOverview: "서버 개요"
+        trend: "트렌드"
+        ping: "Ping"
+        asNumbers: "숫자로"
+        pvpPveAsNumbers: "PvP & PvE 통계"
+        thirtyDays: "30일"
+        sessionStart: "세션 시작"
+        worldPlaytime: "맵 플레이 타임"
+        onlineActivityAsNumbers: "온라인 활동 숫자"
+        recentPvpDeaths: "최근 PvP 사망"
+        calendar: " 달력"
+        punchcard30days: "30일 동안의 펀치 카드"
+        all: "모두"
+    label:
+        new: "신규"
+        lastPeak: "마지막 피크"
+        firstSessionLength: "최초 접속 시간"
+        loneNewbieJoins: "최근 신규 접속(Lone New Joins)"
+        serverDowntime: "서버 다운타임"
+        deaths: "죽은 횟수"
+        longestSession: "가장 긴 접속 시간"
+        averageTps: "평균 TPS"
+        averageActivePlaytime: "Average Active Playtime"
+        afkTime: "AFK 시간"
+        nickname: "닉네임"
+        playerKills: "플레이어 킬수"
+        regular: "신규"
+        averageKdr: "평균 사망 횟수(KDR)"
+        loadedChunks: "로드된 청크"
+        activityIndex: "활동 색인"
+        serverAnalysis: "서버 분석"
+        averageEntities: "Average Entities"
+        sessionMedian: "세션 중앙값"
+        newPlayers: "신규 플레이어수"
+        diskSpace: "여유 디스크 공간"
+        totalPlaytime: "총 플레이타임"
+        averageAfkTime: "Average AFK Time"
+        maxFreeDisk: "최대 여유 디스크용량"
+        currentUptime: "Current Uptime"
+        thirdDeadliestWeapon: "3rd PvP 무기"
+        average: "평균"
+        bestPeak: "최고의 피크"
+        mobKdr: "몬스터 KDR"
+        secondDeadliestWeapon: "2nd PvP 무기"
+        minFreeDisk: "최소 여유 디스크용량"
+        mobDeaths: "몬스터한테 죽은 횟수"
+        newPlayerRetention: "신규 플레이어 유지"
+        mostActiveGamemode: "가장 활동적인 게임모드"
+        perRegularPlayer: "/ 일반 플레이어"
+        lastSeen: "마지막으로 본"
+        dayOfweek: "요일"
+        loadedEntities: "로드된 엔티티"
+        favoriteServer: "즐겨찾는 서버"
+        afk: "AFK"
+        activePlaytime: "Active Playtime"
+        quickView: "퀵 뷰"
+        serverOccupied: "점유된 서버"
+        inactive: "비활성"
+        active: "활동적인"
+        veryActive: "매우 활성화된"
+        playersOnline: "접속중인 플레이어"
+        perPlayer: "/ 플레이어"
+        downtime: "다운타임"
+        duringLowTps: "낮은 TPS 스파이크 동안:"
+        comparing7days: "지난 7일 비교"
+        name: "이름"
+        averageSessions: "Average Sessions"
+        totalPlayersOld: "총 플레이어"
+        averageSessionLength: "평균 접속 시간(세션 길이)"
+        entities: "엔티티"
+        deadliestWeapon: "치명적인 PvP 무기"
+        loneJoins: "최근 접속(Lone Joins)"
+        uniquePlayers: "기존 플레이어"
+        banned: "Banned"
+        perDay: "/ Day"
+        totalAfk: "총 AFK 시간"
+        lowTpsSpikes: "낮은 TPS 스파이크"
+        indexInactive: "비활성"
+        sessionEnded: " 종료"
+        regularPlayers: "신규 플레이어"
+        timesKicked: "접속종료한 시간"
+        registeredPlayers: "신규 플레이어"
+        playerDeaths: "플레이어에 의한 죽은 횟수"
+        operator: "관리자(OP)"
+        totalActive: "총 활성화 시간"
+        players: "플레이어들"
+        mobKills: "몬스터 킬수"
+        session: "세션"
+        firstSession: "첫 번째 세션"
+        killed: "Killed"
+        relativeJoinActivity: "상대 조인 활동"
+        averageMobKdr: "평균 몬스터 사망 횟수(Mob KDR)"
+        indexRegular: "규칙적인"
+        averageChunks: "Average Chunks"
+        onlineOnFirstJoin: "처음 참가할 때 온라인 플레이어"
+        weekdays: "'월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'"
+        totalPlayers: "총 플레이어수"
+        irregular: "불규칙한"
+        lastConnected: "마지막 연결"
+        averagePlaytime: "평균 플레이 타임"
+        playtime: "플레이타임"
+        registered: "신규"
+    query:
+        label:
+            to: ">to</label>"
+            from: ">from</label>"
+            view: "Show a view"
+            makeAnother: "Make another query"
+        filter:
+            title:
+                activityGroup: "Current activity group"
+            operators: "Operators"
+            joinAddress:
+                text: "joined with address"
+            pluginGroup:
+                name: "Group: "
+                text: "are in ${plugin}'s ${group} Groups"
+            generic:
+                and: "and "
+                allPlayers: "All players"
+                start: "of Players who "
+            activity:
+                text: "are in Activity Groups"
+            country:
+                text: "have joined from country"
+            view: "  View:"
+            registeredBetween:
+                text: "Registered between"
+            nonOperators: "Non operators"
+            notBanned: "Not banned"
+            banStatus:
+                name: "Ban status"
+            operatorStatus:
+                name: "Operator status"
+            banned: "Banned"
+            playedBetween:
+                text: "Played between"
+        performQuery: "Perform Query!"
+        title:
+            text: "Query<"
+            activity: "Activity of matched players"
+            activityOnDate: 'Activity on <span id="activity-date"></span>'
+            sessionsWithinView: "Sessions within view"
+        generic:
+            are: "`are`"
+        results:
+            title: "Query Results"
+            match: "matched ${resultCount} players"
+            none: "Query produced 0 results"
+        filters:
+            loading: "Loading filters.."
+            add: "Add a filter.."
+    error:
+        auth:
+            generic: "오류로 인해 인증에 실패했습니다."
+            emptyForm: "사용자 및 암호가 지정되지 않았습니다."
+            loginFailed: "사용자와 비밀번호가 일치하지 않습니다"
+            dbClosed: "데이터베이스가 열려 있지 않습니다. /plan info 로 데이터베이스 상태를 확인하십시오."
+            userNotFound: "사용자가 존재하지 않습니다"
+            noCookie: "사용자 쿠키가 없습니다."
+            registrationFailed: "등록 실패, 다시 시도 (코드는 15분 후에 만료 됨)"
+            expiredCookie: "사용자 쿠키가 만료되었습니다."
+        authFailedTips: "- Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register."
+        playerNotSeen: "Plan has not seen this player. 404"
+        authFailed: "Authentication Failed. 401"
+        noServersOnline: "No Servers online to perform the request. 404"
+        403Forbidden: "Forbidden 403"
+        404NotFound: "Not Found 404"
+        401Unauthorized: "Unauthorized 401"
+        UUIDNotFound: "Player UUID was not found in the database. 404"
+        404UnknownPage: "Make sure you're accessing a link given by a command, Examples:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>"
+        404PageNotFound: "Page does not exist. 404"
+    value:
+        offline: " 오프라인"
+        localMachine: "로컬 머신"
+        with: "<th>With"
+        online: " 온라인"
+        noKills: "살인 없음"
     register:
-      description: 'Plan 웹 사이트에 사용자 등록'
-      inDepth: 'Use without arguments to get link to register page. Use --code [code] after registration to get a user.'
-  database:
-    failDbNotOpen: '§c데이터베이스는 ${0} - 입니다. 잠시 후 다시 시도하십시오.'
-    creatingBackup: '${1} 내용으로 백업 파일 '${0}.db'만들기'
-    manage:
-      progress: '${0} / ${1} 처리 중..'
-      fail: '> §c문제가 발생했습니다: ${0}'
-      success: '> §a성공!'
-      failSameServer: '이 서버를 제거된 것으로 표시할 수 없습니다.(현재 사용 중입니다.)'
-      confirmOverwrite: 'Data in ${0} will be overwritten!'
-      failIncorrectDB: '> §c'${0}' 지원되는 데이터베이스가 아닙니다.'
-      start: '> §2데이터 처리 중..'
-      failSameDB: '> §c동일한 데이터베이스에서 작업할 수 없습니다!'
-      failNoServer: '주어진 매개 변수를 가진 서버가 없습니다.'
-      confirmRemoval: 'Data in ${0} will be removed!'
-      hotswap: '§e새 데이터베이스 (/plan db hotswap ${0})로 교체하고 플러그인을 다시 로드해야합니다.'
-      confirm: '> §cAdd '-a' argument to confirm execution: ${0}'
-      importers: 'Importers: '
-      failFileNotFound: '> §c${0}에 파일이 없습니다.'
-    playerRemoval: '${1}에서 ${0}의 데이터를 제거하는 중 ..'
-    warnDbNotOpen: '§e${0}데이터베이스가 예상보다 오래 걸릴 수 있습니다 ..'
-    unregister: ''${0}'등록 취소 ..'
-    write: '쓰기 ${0}..'
-    serverUninstalled: '§a서버가 여전히 설치되어 있으면 자동으로 데이터베이스에 설치된 것으로 설정됩니다.'
-    removal: '${0}에서 Plan 데이터를 제거하는 중 ..'
-  fail:
-    playerNotFound: '플레이어 '${0}' 찾을 수 없으며 UUID가 없습니다.'
-    webUserNotFound: '§c사용자가 없습니다!'
-    invalidArguments: '다음을 수락합니다. ${0}: ${1}'
-    missingLink: '사용자가 귀하의 계정에 연결되어 있지 않으며 다른 사용자의 계정을 제거 할 권한이 없습니다.'
-    invalidUsername: '§c사용자에게 UUID가 없습니다.'
-    playerNotInDatabase: '플레이어 '${0}' 데이터베이스에서 찾을 수 없습니다.'
-    tooManyArguments: '§c단일 인수가 필요합니다. ${1}'
-    onAccept: '실행시 오류가 발생한 수락 된 작업: ${0}'
-    serverNotFound: '서버 '${0}' 데이터베이스에서 찾을 수 없습니다.'
-    webUserExists: '§c사용자가 이미 존재합니다!'
-    noPermission: '§c필요한 권한이 없습니다.'
-    seeConfig: 'config.yml의 '${0}'참조'
-    missingArguments: '§c필수 인수 (${0}) ${1}'
-    onDeny: '실행시 오류가 발생한 거부 된 작업: ${0}'
-    missingFeature: '§e비활성화 할 기능을 정의하십시오! (현재 ${0})'
-    emptyString: '검색 문자열은 비워 둘 수 없습니다.'
-    unknownUsername: '§c이 서버에 사용자가 표시되지 않았습니다.'
-  general:
-    reloadComplete: '§a구성파일 불러오기 완료했습니다.'
-    noWebuser: '웹 사용자가 없을 수 있습니다. /plan register <password>를 사용하십시오.'
-    failNoExporter: '§eExporter '${0}' doesn't exist'
-    webUserList: '  §2${0} §7: §f${1}'
-    successWebUserRegister: '§a새 사용자 (${0})를 성공적으로 추가했습니다!'
-    notifyWebUserRegister: '등록된 신규 유저: '${0}' Perm level: ${1}'
-    failNoImporter: '§eImporter '${0}' doesn't exist'
-    noAddress: '§e사용가능한 주소가 없습니다. - localhost 로 사용합니다. 'Alternative_IP' 항목을 통해 설정하십시오.'
-    webPermissionLevels: '>\§70: 모든 페이지에 액세스 \§71: '/players'및 모든 플레이어 페이지에 액세스 \§72:
-                                                      웹 사용자와 동일한 사용자 이름으로 플레이어 페이지에 액세스 \§73+: 권한 없음'
-    featureDisabled: '§a다음 플러그인을 다시 로드할 때까지 일시적으로 '${0}'을 (를) 비활성화했습니다.'
-    reloadFailed: '§c플러그인 리로드 도중 에러 발생했습니다.'
-    pluginDisabled: '§a이제 Plan 시스템이 비활성화됩니다. reload를 사용하여 플러그인을 다시 시작할 수 있습니다.'
-  confirmation:
-    cancelNoUnregister: '취소되었습니다. '${0}' 이(가) 등록되지 않았습니다.'
-    dbClear: '${0} 에 대한 모든 데이터를 삭제하려고 합니다.'
-    dbOverwrite: 'Plan의 데이터를 덮어 쓰려고합니다. ${0} 데이터 포함 ${1}'
-    dbRemovePlayer: '${1}에서 ${0}의 데이터를 제거하려고합니다.'
-    cancelNoChanges: '취소되었습니다. 데이터가 변경되지 않았습니다.'
-    accept: 동의하기
-    unregister: '${1}에 연결된 '${0}'의 등록을 취소하려고합니다.'
-    deny: 취소
-    expired: '확인이 만료되었습니다. 명령을 다시 사용하십시오.'
-    confirm: '확인: '
-  argument:
-    dbTypeMoveFrom:
-      description: '데이터를 이동할 데이터베이스 유형입니다.'
-    username: '사용자 이름'
-      description: '다른 사용자의 사용자 이름입니다. 지정되지 않은 경우 플레이어 연결 사용자가 사용됩니다.'
-    nameOrUUID: name/uuid
-      removeDescription: '현재 데이터베이스에서 삭제할 플레이어 식별자입니다.'
-      description: 'Name or UUID of a player'
-    code:
-      name: ${code}
-      description: '등록을 완료하는데에 사용되는 코드입니다.'
-    server: 서버
-      description: 'Name, ID or UUID of a server'
-    backupFile: '백업 파일'
-      description: '백업 파일 이름(대소문자 구분)'
-    dbTypeRemove:
-      description: '모든 데이터를 제거할 데이터베이스 유형입니다.'
-    dbTypeHotswap:
-      description: '사용 시작할 데이터베이스 유형입니다.'
-    subcommand: '하위 명령'
-      description: '도움말을 보려면 하위 명령어 없이 명령어를 사용하십시오.'
-    dbTypeMoveTo:
-      description: '데이터를 이동할 데이터베이스 유형입니다.'
-    feature: 기능
-      description: '비활성화할 기능의 이름: ${0}'
-    dbBackup:
-      description: '백업할 데이터베이스 유형입니다. 지정하지 않으면 현재 데이터베이스로 사용됩니다.'
-    exportKind: '추출 종류'
-    dbRestore:
-      description: '복원할 데이터베이스의 유형입니다. 지정하지 않으면 현재 사용 중인 데이터베이스로 진행됩니다.'
-    importKind: '로드 종류'
-  link:
-    noNetwork: '서버가 네트워크에 연결되어 있지 않습니다. 링크는 서버 페이지로 리디렉션됩니다.'
-    server: '서버 페이지: '
-    link: 링크
-    player: '플레이어 페이지: '
-    playerJson: '플레이어 json: '
-    register: '가입 페이지: '
-    players: '플레이어 목록 페이지: '
-    network: '네트워크 페이지: '
-    clickMe: 클릭
-  header:
-    serverList: id::name::uuid
-    inspect: '> §2플레이어: §f${0}'
-    analysis: '> §2분석 결과'
-    webUsers: '> §2${0} 웹 사용자'
-    players: '> §2플레이어 수'
-    search: '> §2${0} Results for §f${1}§2:'
-    webUserList: 'username::linked to::permission level'
-    servers: '> §2서버 목록'
-    help: '> §2/${0} Help'
-    network: '> §2네트워크 페이지'
-    info: '> §2플레이어 분석'
-  ingame:
-    playerKills: '  §2플레이어 킬수: §f${0}'
-    activityIndex: '  §2활동 정보: §f${0} | ${1}'
-    geolocation: '  §2§f${0}에서 로그인'
-    registered: '  §2최초 접속: §f${0}'
-    deaths: '  §2죽은 횟수: §f${0}'
-    afkPlaytime: '  §2AFK 시간: §f${0}'
-    lastSeen: '  §2마지막으로 본 : §f${0}'
-    activePlaytime: '  §2플레이한 시간: §f${0}'
-    timesKicked: '  §2추방 횟수: §f${0}'
-    longestSession: '  §2가장 긴 세션: §f${0}'
-    playtime: '  §2플레이 시간: §f${0}'
-    mobKills: '  §2몬스터 킬수: §f${0}'
-  subcommand:
-    info:
-      proxy: '  §2프록시에 연결됨: §f${0}'
-      version: '  §2버전: §f${0}'
-      database: '  §2현재 데이터베이스: §f${0}'
-      update: '  §2최신 버전: §f${0}'
-  footer:
-    help: '§7명령어 또는 인수에 마우스 커서로 올리거나 '/${0} ?' 사용해서 자세히 확인바랍니다.'
+        error:
+            usernameLength: "Username can be up to 50 characters, yours is "
+            checkFailed: "Checking registration status failed: "
+            failed: "Registration failed: "
+            noPassword: "You need to specify a Password"
+            noUsername: "You need to specify a Username"
+        completion2: "Code expires in 15 minutes"
+        completion: "Complete Registration"
+        passwordTip: "Password should be more than 8 characters, but there are no limitations."
+        createNewUser: "Create a new user"
+        completion4: "Or using console:"
+        completion3: "Use the following command in game to finish registration:"
+        usernameTip: "Username can be up to 50 characters."
+        completion1: "You can now finish registering the user."
+        register: "Register"
+        login: "Already have an account? Login!"
+    modal:
+        info:
+            text: "플러그인에 대한 정보"
+            contributors:
+                text: '또한 다음 <span class="col-plan">멋진 사람들</span>이 기여했습니다.'
+                code: "코드 기여자"
+                donate: "금전적으로 개발을 지원 해주신 분들께 특별히 감사드립니다."
+                bugreporters: "& Bug reporters!"
+                translator: "번역"
+            metrics: "bStats 메트릭"
+            discord: "디스코드로 기술지원"
+            wiki: "Plan 위키, 튜토리얼 & 문서"
+            bugs: "문제 보고"
+            license: "플레이어 분석 개발 및 라이센스하에 있습니다"
+            developer: "에 의해 개발되었습니다"
+        version:
+            dev: "이 버전은 DEV 릴리스입니다."
+            available: "사용할 수 있습니다"
+            text: "새 버전이 출시되었으며 이제 다운로드 할 수 있습니다."
+            title: "버전"
+            changelog: "변경 로그 보기"
+            download: "다운로드"
+    version:
+        updateButton: "Update"
+        changelog: "View Changelog"
+        current: "You have version ${0}"
+        updateModal:
+            title: "Version ${0} is Available!"
+            text: "A new version has been released and is now available for download."
+        download: "Download Plan-${0}.jar"
+        isDev: "This version is a DEV release."
+    login:
+        forgotPassword1: "Forgot password? Unregister and register again."
+        register: "Create an Account!"
+        username: '"Username"'
+        logout: "Logout"
+        failed: "Login failed: "
+        forgotPassword4: "After using the command, "
+        password: '"Password"'
+        forgotPassword3: "Or using console:"
+        forgotPassword: "Forgot Password?"
+        forgotPassword2: "Use the following command in game to remove your current user:"
+        login: "Login"
+    sidebar:
+        playerPage: "플레이어 페이지"
+        plugins: "플러그인 목록"
+        playerbaseOverview: "플레이어 기반 개요"
+        playerList: "플레이어 목록"
+        servers: "서버 목록"
+        serverPage: "서버 페이지"
+        links: "LINKS"
+        geolocations: "지리적 위치"
+        serversTitle: "서버 목록"
+        playerbase: "플레이어 기반"
+        networkOverview: "네트워크 개요"
+        overview: "개요"
+        networkPage: "네트워크 페이지"
+        sessions: "세션 목록"
+        toMainPage: "메인 페이지로"
+        performance: "성능"
+        query: "Make a query"
+        pvpPve: "PvP & PvE"
+        information: "정보"
+    side:
+        plugins: "플러그인"
+    description:
+        newPlayerRetention: "This value is a prediction based on previous players."
+        noServers: "데이터베이스에 서버가 없습니다."
+        noServerOnlinActivity: "온라인 활동을 표시 할 서버가 없습니다."
+        noGameServers: "Some data requires Plan to be installed on game servers."
+        noGeolocations: "Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."
+        noSpongeChunks: "Chunks unavailable on Sponge"
+        predictedNewPlayerRetention: "이 값은 기존 플레이어를 기반으로 한 예측입니다."
+        noServersLong: 'It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.'
+    text:
+        noExtensionData: "확장 데이터 없음"
+        noLowTps: "낮은 tps 스파이크 없음"
+        comparing30daysAgo: "지난 30일 비교"
+        comparing15days: "지난 15일 비교"
+        clickToExpand: "확장하려면 클릭"
+    button:
+        nightMode: "야간 모드"
+    calendar:
+        unique: "Unique:"
+        new: "New:"
+    generic:
+        none: "None"
+    unit:
+        chunks: "청크 수"
+        players: "플레이어"
+        entities: "엔티티 수"
+403AccessDenied: "Access Denied 403"
 generic:
-  noData: '데이터가 존재하지 않습니다.'
-403AccessDenied: 'Access Denied 403'
+    noData: "데이터가 존재하지 않습니다."

@@ -1,620 +1,624 @@
-html:
-  text:
-    noLowTps: 'Düşük tps artışları yok'
-    clickToExpand: 'Genişletmek için tıklayın'
-    comparing15days: '15 gün karşılaştırılıyor'
-    comparing30daysAgo: '30 gün öncesiyle şimdi karşılaştırılıyor.'
-    noExtensionData: 'Uzantı Verisi Yok'
-  label:
-    comparing7days: '7 gün karşılaştırılıyor'
-    averageKdr: 'Ortalama KDR'
-    perDay: '/ Gün'
-    averageEntities: 'Ortalama Yaratıklar'
-    averageSessions: 'Ortalama Oturumlar'
-    playersOnline: 'Oyuncu Çevrimiçi'
-    secondDeadliestWeapon: '2. PvP Silahı'
-    totalAfk: 'Toplam AFKlık'
-    favoriteServer: 'Favori Sunucu'
-    mostActiveGamemode: 'En Aktif Oyun Modu'
-    afkTime: 'AFK Süresi'
-    lastConnected: 'Son bağlantı'
-    regular: Düzenli
-    downtime: 'Arıza Süresi'
-    perRegularPlayer: '/ Regular Player'
-    minFreeDisk: 'Minimum Boş Disk'
-    deadliestWeapon: 'En Ölümcül PvP Silahı'
-    registered: Kayıtlı
-    currentUptime: 'Current Uptime'
-    averageChunks: 'Ortalama Chunks'
-    averageMobKdr: 'Ortalama Mob KDR'
-    lastSeen: 'Son Görülme'
-    killed: Öldürülen
-    sessionEnded: ' Oturum Sona Erdi'
-    uniquePlayers: 'Sunucuya İlk Defa Girenler'
-    weekdays: ''Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar''
-    firstSession: 'İlk seans'
-    mobKdr: 'Mob İstatistiği'
-    averageSessionLength: 'Ortalama Oturum Uzunluğu'
-    duringLowTps: 'Düşük TPS Artışları Sırasında:'
-    afk: AFK
-    loadedEntities: 'Yüklenmiş Varlıklar'
-    playerKills: 'Oyuncu Öldürüldü'
-    active: Aktivite
-    totalPlaytime: 'Toplam Oyun Süresi'
-    newPlayers: 'Yeni Oyuncular'
-    averagePlaytime: 'Ortalama Oyun Süresi'
-    indexInactive: Etkisiz
-    maxFreeDisk: 'Maksimum Boş Disk'
-    totalPlayers: 'Toplam Oyuncu'
-    averageTps: 'Ortalama TPS'
-    longestSession: 'En Uzun Oturum'
-    nickname: 'Takma ad'
-    operator: Yetkililer
-    indexRegular: Düzenli
-    regularPlayers: 'Normal Oyuncular'
-    mobDeaths: 'Yaratık Yüzünden ölümler'
-    thirdDeadliestWeapon: '3. PvP Silahı'
-    serverOccupied: 'Sunucu işgal edildi'
-    activityIndex: 'Aktivite göstergesi'
-    irregular: Düzensiz
-    loneJoins: 'Lone joins'
-    serverAnalysis: 'Sunucu analizi'
-    playerDeaths: 'Oyuncu ölüme sebep oldu'
-    averageAfkTime: 'Ortalama AFK Süresi'
-    totalPlayersOld: 'Toplam Oyuncular'
-    activePlaytime: 'Aktif Oyun Süresi'
-    totalActive: 'Toplam Aktiflik'
-    sessionMedian: 'Session Median'
-    newPlayerRetention: 'Yeni Oyuncu Elde Tutma'
-    onlineOnFirstJoin: 'İlk katılımda çevrimiçi oyuncular'
-    new: Yeni
-    serverDowntime: 'Sunucu Kapalı Kalma Süresi'
-    session: Oturum
-    banned: Yasaklanmış
-    lowTpsSpikes: 'Low TPS Spikes'
-    averageActivePlaytime: 'Ortalama Aktif Oyun Süresi'
-    playtime: 'Oyun Süresi'
-    inactive: 'Etkin değil'
-    entities: Varlıklar
-    mobKills: 'Öldürülen Mob'
-    name: İsim
-    lastPeak: 'Son Zirve'
-    quickView: 'Hızlı Görünüm'
-    relativeJoinActivity: 'Göreli Birleştirme Etkinliği'
-    deaths: Ölümler
-    timesKicked: 'Kere Atılmış'
-    loneNewbieJoins: 'Yalnız acemi katılıyor'
-    loadedChunks: 'Yüklenmiş Chunks lar'
-    dayOfweek: 'Day of the Week'
-    firstSessionLength: 'İlk Oturum Uzunluğu'
-    perPlayer: '/ Player'
-    players: Oyuncular
-    diskSpace: 'Boş Disk Alanı'
-    bestPeak: 'Tüm Zamanların Zirvesi'
-    veryActive: 'Çok Aktif'
-    average: Ortalama
-    registeredPlayers: 'Kayıtlı Oyuncular'
-  sidebar:
-    networkOverview: 'Ağ Görünümü'
-    pvpPve: 'PvP & PvE'
-    overview: 'Genel Bakış'
-    links: BAĞLANTILAR
-    serverPage: 'Sunucu sayfası'
-    sessions: Oturumlar
-    playerbaseOverview: 'Playerbase'e Genel Bakış'
-    playerbase: 'Oyuncu tabanı'
-    plugins: PLUGINLER
-    query: 'Sorgu yap'
-    geolocations: 'Coğrafi Konumlar'
-    networkPage: 'Ağ sayfası'
-    playerList: 'Oyuncu Listesi'
-    toMainPage: 'Ana Sayfaya'
-    serversTitle: SUNUCULAR
-    performance: Performans
-    playerPage: 'Oyuncu Sayfası'
-    servers: Sunucular
-    information: DANIŞMA
-  version:
-    updateButton: Güncelleme
-    changelog: 'Değişim günlüğünü incele'
-    updateModal:
-      title: 'Version ${0} is Available!'
-      text: 'Yeni bir sürüm yayınlandı ve artık indirilebilir.'
-    isDev: 'Bu sürüm bir DEV sürümüdür.'
-    download: 'Download Plan-${0}.jar'
-    current: 'You have version ${0}'
-  error:
-    auth:
-      registrationFailed: 'Kayıt başarısız oldu, tekrar deneyin (Kodun süresi 15 dakika sonra dolar)'
-      expiredCookie: 'Kullanıcı çerezinin süresi doldu'
-      noCookie: 'Kullanıcı çerezi mevcut değil'
-      userNotFound: 'Böyle Bir Kullanıcı Yok'
-      loginFailed: 'Kullanıcı adı ve şifre uyuşmuyor'
-      dbClosed: 'Veritabanı açık değil, / plan bilgisi ile db durumunu kontrol edin'
-      generic: 'Kimlik doğrulama hata nedeniyle başarısız oldu'
-      emptyForm: 'Kullanıcı ve Şifre belirtilmedi'
-    404NotFound: Bulunamadı
-    404UnknownPage: 'Bir komutla verilen bağlantıya eriştiğinizden emin olun, Örnekler: </p> <p> / player / {uuid / name} <br> / server / {uuid / name / id} </p>'
-    playerNotSeen: 'Oyuncu bu sunucuda hiç oynamadı.'
-    authFailedTips: '- Bir kullanıcıyı <b>/plan register</b><br>- ile kayıt ettiğinize emin olun ismin ve şifrenin doğru olup olmadığını kontol edin <br>- Kullanıcı adı ve şifre büyük / küçük harf duyarlıdır<br><br>Eğer şifreni unuttuysan, Yetkiliden sizi tekrar kayıt etmesini isteyin.'
-    UUIDNotFound: 'Oyuncunun UUID si veritabanında bulunamadı.'
-    404PageNotFound: 'Böyle bir sayfa mevcut değil.'
-    401Unauthorized: Yetkisiz
-    noServersOnline: 'İsteği gerçekleştirecek çevrimiçi sunucu yok.'
-    403Forbidden: Yasaklanmış.
-    authFailed: 'Kimlik doğrulama başarısız oldu.'
-  title:
-    graph:
-      hourByHour: 'Saat saat'
-      dayByDay: 'Gün gün'
-      networkOnlineActivity: 'Ağ Çevrimiçi Etkinliği'
-    recentSessions: 'En Son Oturumlar'
-    trends30days: '30 günlük trendler'
-    thirtyDaysAgo: '30 gün önce'
-    allTime: 'Tüm zamanlar'
-    tps: TPS
-    themeSelect: 'Tema Seçimi'
-    connectionInfo: 'Bağlantı Bilgisi'
-    country: Ülke
-    last30days: 'Son 30 gün'
-    asNumbers: 'Sayılar olarak'
-    worstPing: 'En kötü Ping'
-    now: Şimdi
-    worldPlaytime: 'Dünya Oyun Süresi'
-    networkAsNumbers: 'Sayılarla Ağ'
-    disk: 'Disk Alanı'
-    sessionStart: 'Oturum Başladı'
-    player: Oyuncu
-    serverPlaytime: 'Sunucu Oynatma Süresi'
-    calendar: ' Takvim'
-    playerOverview: 'Oyuncuya Genel Bakış'
-    serverAsNumberse: 'Server as Numbers'
-    thirtyDays: '30 gün'
-    last7days: 'Son 7 gün'
-    network: Ağ
-    trend: Trend
-    weekComparison: 'Hafta Karşılaştırması'
-    recentPvpKills: 'Son PvP Öldürmeleri'
-    performanceAsNumbers: 'Rakamlarla Performans'
-    recentKills: 'Son Öldürmeler'
-    last24hours: 'Son 24 saat'
-    currentPlayerbase: 'Şuanki Oyuncu Tabanı'
-    server: Sunucu
-    length: ' Uzunluk'
-    punchcard: Punchcard
-    punchcard30days: '30 günlük Punchcard'
-    onlineActivity: 'Çevrimiçi Aktivite'
-    world: 'Dünya Yükle'
-    pvpPveAsNumbers: 'Sayılarla PvP & PvE'
-    serverOverview: 'Sunucuya Genel Bakış'
-    playerbaseDevelopment: 'Oyuncu Etkinlik Grafiği'
-    onlineActivityAsNumbers: 'Sayılarla Çevrimiçi Etkinlik'
-    joinAddresses: 'Adreslere Katıl'
-    ping: Ping
-    recentPvpDeaths: 'Son PvP Ölümleri'
-    seenNicknames: 'Görülen takma adlar'
-    averagePing: 'Ortalama Ping'
-    cpuRam: 'CPU & RAM'
-    bestPing: 'En iyi Ping'
-    insights30days: '30 günlük bilgiler'
-    playersOnlineOverview: 'Çevrimiçi Etkinliğe Genel Bakış'
-    mostPlayedWorld: 'En çok oynanan Dünya'
-    serverPlaytime30days: '30 günlük Sunucu Oynatma Süresi'
-    all: Tamamı
-  modal:
-    version:
-      available: müsait
-      title: Versiyon
-      changelog: 'Değişim günlüğünü incele'
-      text: 'Yeni bir sürüm yayınlandı ve şimdi indirilebilir.'
-      download: İndir
-      dev: 'Bu sürüm bir DEV sürümüdür.'
-    info:
-      developer: 'tarafından geliştirilmiştir'
-      contributors: 'Gelişimi parasal olarak destekleyenlere ekstra özel teşekkürler.'
-        code: 'kod katkıda bulunan'
-        bugreporters: '& Bug reporters!'
-        text: 'Ayrıca <span class="col-plan"> harika insanları </span> takip ederek katkıda bulundu:'
-        translator: çevirmen
-      license: 'Player Analytics, altında geliştirilir ve lisanslanır'
-      metrics: 'bStats Metrics'
-      text: 'Eklenti hakkında bilgiler'
-      bugs: 'Sorunları Bildir'
-      discord: 'Discord'da Genel Destek'
-      wiki: 'Plan Wiki, Öğreticiler ve Belgeler'
-  register:
-    register: 'Kayıt ol'
-    error:
-      usernameLength: 'Kullanıcı adı 50 karaktere kadar olabilir, sizinki'
-      checkFailed: 'Kayıt durumu kontrol edilemedi:'
-      noPassword: 'Bir Parola belirlemeniz gerekiyor'
-      failed: 'Kayıt başarısız:'
-      noUsername: 'Kullanıcı adı belirlemeniz gerekiyor'
-    completion4: 'Veya konsol kullanarak:'
-    createNewUser: 'Yeni bir kullanıcı oluşturun'
-    passwordTip: 'Parola 8 karakterden fazla olmalıdır, ancak herhangi bir sınırlama yoktur.'
-    login: 'Zaten hesabınız var mı?  Oturum aç!'
-    usernameTip: 'Kullanıcı adı 50 karaktere kadar olabilir.'
-    completion2: 'Kod 15 dakika içinde sona eriyor'
-    completion1: 'Artık kullanıcıyı kaydetmeyi bitirebilirsiniz.'
-    completion: 'Kaydı Tamamla'
-    completion3: 'Kaydı bitirmek için oyunda aşağıdaki komutu kullanın:'
-  description:
-    noGameServers: 'Bazı veriler, Plan'ın oyun sunucularına yüklenmesini gerektirir.'
-    newPlayerRetention: 'Bu değer, önceki oyunculara dayalı bir tahmindir.'
-    noServers: 'Veritabanında sunucu bulunamadı'
-    noGeolocations: 'Konum belirleme toplama yapılandırmada etkinleştirilmelidir (GeoLite2 EULA'yı Kabul Et).'
-    noServerOnlinActivity: 'Çevrimiçi etkinliği gösterecek sunucu yok'
-    predictedNewPlayerRetention: 'Bu değer, önceki oyunculara dayalı bir tahmindir'
-    noSpongeChunks: 'Chunklar Spongeda mevcut değil'
-    noServersLong: 'Plan'ın herhangi bir oyun sunucusuna yüklenmediği veya aynı veritabanına bağlı olmadığı anlaşılıyor.  Ağ eğitimi için <a href="https://github.com/plan-player-analytics/Plan/wiki"> wiki </a> 'ye bakın.'
-  query:
-    filter:
-      country:
-        text: 'have joined from country'
-      operators: Operators
-      activity:
-        text: 'Etkinlik Gruplarında'
-      generic:
-        and: ve
-        allPlayers: 'Tüm oyuncular'
-        start: Oyuncuların
-      title:
-        activityGroup: 'Mevcut aktivite grubu'
-      nonOperators: 'Operatör olmayanlar'
-      pluginGroup:
-        text: '${plugin} adlı kişinin ${group} Grubunda'
-        name: 'Grup: '
-      banned: Yasaklandı
-      registeredBetween:
-        text: 'Arasında kayıtlı'
-      notBanned: 'Yasaklı değil'
-      playedBetween:
-        text: 'Arasında oynanan'
-      joinAddress:
-        text: 'adresle katıldı'
-      banStatus:
-        name: 'Yasaklama durumu'
-      operatorStatus:
-        name: 'Yetkili durumu'
-      view: '  Görünüm:'
-    label:
-      view: 'Bir görünüm göster'
-      makeAnother: 'Başka bir sorgu yap'
-      to: >a</label>
-      from: >dan</label>
-    performQuery: 'Sorgu Gerçekleştirin!'
-    title: Sorgu<
-      sessionsWithinView: 'Görünüm içindeki oturumlar'
-      activity: 'Eşleşen oyuncuların etkinliği'
-      activityOnDate: '<span id="activity-date"></span> tarihindeki etkinlik'
-    results:
-      title: 'Sorgu Sonuçları'
-      match: '${resultCount} oyuncuyla eşleşti'
-      none: 'Sorgu 0 sonuç üretti'
-    filters:
-      loading: 'Filtreler yükleniyor..'
-      add: 'Filtre ekle'
-    generic:
-      are: `vardır`
-  generic:
-    none: Yok
-  login:
-    forgotPassword4: 'Komutu kullandıktan sonra, '
-    forgotPassword2: 'Mevcut kullanıcınızı kaldırmak için oyunda aşağıdaki komutu kullanın:'
-    forgotPassword: 'Parolanızı mı unuttunuz?'
-    forgotPassword1: 'Parolanızı mı unuttunuz?  Kaydı iptal edin ve tekrar kaydolun.'
-    logout: 'Çıkış Yap'
-    username: '"Kullanıcı adı"'
-    failed: 'Giriş başarısız:'
-    register: 'Hesap oluştur!'
-    password: '"Parola"'
-    login: 'Oturum aç'
-    forgotPassword3: 'Veya konsol kullanarak:'
-  calendar:
-    unique:
-      Benzersiz:
-    new:
-      Yeni:
-  value:
-    noKills: 'Öldürmesi yok'
-    online: ' Çevrimiçi'
-    with: <th>Birlikte
-    localMachine: 'Yerel makine'
-    offline: ' Çevrimdışı'
-  button:
-    nightMode: 'Gece modu'
-  unit:
-    chunks: Chunks
-    entities: Yaratıklar
-    players: Oyuncular
-  side:
-    plugins: Pluginler
 plugin:
-  webserver:
-    fail:
-      portInUse: 'Web Sunucusu başarıyla başlatılmadı. Bu (${0}) port mu kullanılıyor ?'
-      SSLContext: 'WebServer: SSL İçeriği Başlatma Başarısız Oldu.'
-      certStoreLoad: 'WebServer: SSL Sertifikası yüklenirken sorun oluştu.'
-      certFileEOF: 'WebServer: EOF when reading Certificate file. (Dosyanın boş olmadığını kontrol edin.)'
-    notify:
-      reverseProxy: 'WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Address points to the Proxy'
-      ipWhitelistBlock: 'Webserver: ${0} was denied access to '${1}'. (not whitelisted)'
-      authDisabledNoHTTPS: 'WebServer: Kullanıcı Yetkisi Devre Dışı! (HTTP Güvenli değil)'
-      noCertFile: 'WebServer: Setrifikası Dosyası Bulunamadı: ${0}'
-      authDisabledConfig: 'WebServer: Kullanıcı Yetkilendirmesi Devre Dışı! (Yapılandırmada devre dışı bırakıldı)'
-      ipWhitelist: 'Webserver: IP Whitelist etkinleştirildi..'
-      http: 'WebServer: Sertifika yok -> Görüntülemek için HTTP-server kullanılıyor.'
-  version:
-    checkFail: 'En yeni sürüm numarası kontrol edilemedi'
-    isDev: ' Bu bir GELİŞTİRİCİ sürümüdür.'
-    updateAvailableSpigot: 'Yeni sürüm ${0}'
-    updateAvailable: 'Yeni sürüm (${0}) mevcut ${1}'
-    checkFailGithub: 'Sürüm bilgileri Github/versions.txt kısmından indirilemedi'
-    isLatest: 'En son sürümü kullanıyorsunuz.'
-  generic:
-    unavailable: 'Kullanım dışı'
-    loadingServerInfo: 'Loading server identifying information'
-    dbFaultyLaunchOptions: 'Başlatma seçenekleri hatalı, varsayılan olarak kullanın (${0})'
-    yesterday: "'Dün'"
-    dbNotifyClean: '${0} oyuncunun verileri kaldırıldı.'
-    dbNotifySQLiteWAL: 'SQLite WAL modu bu sunucu versiyonunda desteklenmiyor, varsayılanı kullanın. Bu performansınızı etkiliye bilir veya etkilemezde.'
-    unknown: Bilinmeyen
-    yes: Evet
-    no: Hayır
-    today: "'Bugün'"
-    dbPatchesAlreadyApplied: 'Veritabanlarına yama zaten uygulanmış.'
-    dbApplyingPatch: 'Yama uygulanıyor: ${0}..'
-    dbPatchesApplied: 'Yama tüm veritabanlarına başarıyla uygulandı.'
-  disable:
-    webserver: 'Websunucusu kapatıldı.'
-    savingSessionsTimeout: 'Zaman aşımı isabeti, bunun yerine bir sonraki etkinleştirmede bitmemiş oturumları depolar.'
-    savingSessions: 'Bitmemiş oturumlar kaydediliyor ..'
-    waitingDbComplete: 'Kapalı SQLite bağlantısı.'
-    disabled: 'Oyuncu analizi kapatıldı.'
-    processingComplete: 'İşlenme tamamlandı.'
-    waitingDb: 'SQLite'ın JVM'nin çökmesini önlemek için sorguların bitmesi bekleniyor ..'
-    waitingTransactions: 'Veri kaybını önlemek için tamamlanmamış işlemler bekleniyor ..'
-    waitingTransactionsComplete: 'İşlem kuyruğu kapatıldı.'
-    database: 'Önceden işlenmemiş kritik görevler işleniyor. (${0})'
-  enable:
-    notify:
-      storeSessions: 'Önceki kapatmadan önce korunan oturumları saklama.'
-      webserverDisabled: 'WebServer başlatılmadı. (WebServer.DisableWebServer: true)'
-      geoInternetRequired: 'Plan GeoLite2 Geolocation veritabanını indirmek için ilk çalıştırmada internet erişimi gerektir.'
-      geoDisabled: 'Coğrafi konum toplama etkin değil. (Data.Geolocations: false)'
-      badIP: '0.0.0.0 geçerli bir adres değil, Alternatif_IP ayarlarını yapın. Yanlış bağlantılar verilebilir!'
-      emptyIP: 'server.properties IP adresi kısmı boş & AlternatifIP kullanılmıyor. Bu yüzden yanlış linkler verilecektir!'
-    fail:
-      geoDBWrite: 'İndirilen GeoLite2 Geolocation veritabanını kaydederken bir şeyler ters gitti.'
-      database: '${0}-Veritabanı bağlantısı başarısız: ${1}'
-      webServer: 'WebServer başlatılmadı!'
-      databaseType: '${0} Desteklenmeyen bir veritabanı'
-      databasePatch: 'VeriTabanı yaması başarısız, plugin devre dışı bırakılmış olmalı. Lütfen bu sorunu bildirin.'
-    webserver: 'Webserver Bu port üzerinden çalışıyor ${0} ( ${1} )'
-    database: '${0}- Veritabanı bağlantısı kurulmuş.'
-    enabled: 'Oyuncu analizi aktif edildi.'
-  apiCSSAdded: 'SayfaUzantısı: ${0} stil sayfası(ları) eklendi ${1}, ${2}'
-  apiJSAdded: 'SayfaUzantısı: ${0} javascript(leri) eklendi${1}, ${2}'
-command:
-  help:
-    dbClear:
-      inDepth: 'Süreçteki tüm Plan verilerini kaldırarak tüm Plan tablolarını temizler.'
-      description: 'Veritabanından TÜM Plan verilerini kaldırın'
-    dbHotswap:
-      inDepth: 'Eklentiyi diğer veritabanıyla yeniden yükler ve eşleşecek şekilde yapılandırmayı değiştirir.'
-      description: 'Veritabının hızlıca değiştirir'
-    dbUninstalled:
-      description: 'Veritabanında bir sunucuyu kaldırılmış olarak ayarlayın.'
-      inDepth: 'Plan veritabanındaki bir sunucuyu, sunucu sorgularında görünmemesi için kaldırıldı olarak işaretler.'
-    info:
-      inDepth: 'Eklentinin mevcut durumunu görüntüleyin.'
-      description: 'Eklenti hakkında bilgiler'
-    dbBackup:
-      description: 'Bir veritabanının verilerini bir dosyaya yedekleyin'
-      inDepth: 'Hedef veritabanını bir dosyaya yedeklemek için SQLite kullanır.'
-    server:
-      inDepth: 'Belirli bir sunucunun /server sayfasına veya herhangi bir bağımsız değişken verilmemişse geçerli sunucuya bir bağlantı edinin.'
-      description: 'Sunucu Sayfasını gösterir'
-    unregister:
-      description: 'Plan web sitesinin bir kullanıcısının kaydını iptal edin'
-      inDepth: 'Oyuncu bağlantılı kullanıcının kaydını silmek için bağımsız değişken olmadan veya başka bir kullanıcının kaydını silmek için kullanıcı adı bağımsız değişkeniyle kullanın.'
-    reload:
-      inDepth: 'Yapılandırmadaki değişiklikleri yeniden yüklemek için eklentiyi devre dışı bırakın ve etkinleştirin.'
-      description: 'Plugini yeniden başlatır'
-    player:
-      description: 'Oyunucunun sayfasını gösterir'
-      inDepth: 'Belirli bir oyuncunun veya mevcut oyuncunun /player sayfasına bir bağlantı edinin.'
-    import:
-      description: 'Verileri içe aktar'
-      inDepth: 'Veritabanına veri yüklemek için bir içe aktarma gerçekleştirir.'
-    logout:
-      description: 'Paneldeki diğer kullanıcıların oturumunu kapatın'
-      inDepth: 'Panelden başka bir kullanıcının oturumunu kapatmak için kullanıcı adı bağımsız değişkeni verin, herkesi kapatmak için bağımsız değişken olarak * verin.'
-    servers:
-      description: 'Sunucun tüm veritabanını listeler'
-      inDepth: 'Veritabanındaki sunucuların kimliklerini, adlarını ve kullanıcılarını listeleyin.'
-    dbRestore:
-      description: 'Bir dosyadaki verileri bir veritabanına geri yükleyin'
-      inDepth: 'SQLite yedekleme dosyasını kullanır ve hedef veritabanının içeriğinin üzerine yazar.'
-    export:
-      inDepth: 'Yapılandırmada tanımlanan dışa aktarma için bir dışa aktarma gerçekleştirir.'
-      description: 'Html veya json dosyalarını manuel olarak dışa aktarın'
+    version:
+        checkFail: "En yeni sürüm numarası kontrol edilemedi"
+        checkFailGithub: "Sürüm bilgileri Github/versions.txt kısmından indirilemedi"
+        isLatest: "En son sürümü kullanıyorsunuz."
+        isDev: " Bu bir GELİŞTİRİCİ sürümüdür."
+        updateAvailableSpigot: "Yeni sürüm ${0}"
+        updateAvailable: "Yeni sürüm (${0}) mevcut ${1}"
     disable:
-      description: 'Eklentiyi veya bir kısmını devre dışı bırakın'
-      inDepth: 'Bir sonraki yeniden yüklemeye / yeniden başlatmaya kadar eklentiyi veya bir kısmını devre dışı bırakın.'
-    dbMove:
-      inDepth: 'Diğer veritabanındaki içeriklerin üzerine başka bir veritabanındaki içeriklerin üzerine yazar.'
-      description: 'Veriyi Veritabanları arasında taşır'
-    dbRemove:
-      inDepth: 'Bir oyuncuyu bağlı tüm verileri Geçerli veritabanından kaldırır.'
-      description: 'Oyuncunun verilerini Mevcut veritabanından kaldır'
-    users:
-      inDepth: 'Web kullanıcılarını tablo olarak listeler.'
-      description: 'Tüm web kullanıcılarını listeleyin'
-    search:
-      inDepth: 'Bir adın belirli bir kısmıyla eşleşen tüm oyuncu adlarını listeleyin.'
-      description: 'Bir oyuncu adı arar'
-    json:
-      description: 'Player'ın ham verilerinin json'unu görüntüleyin.'
-      inDepth: 'Bir oyuncunun verilerini json formatında indirmenize izin verir. Hepsi.'
-    players:
-      description: 'Oyuncu sayfasını görüntüler'
-      inDepth: 'Oyuncuların bir listesini görmek için /players sayfasına bir bağlantı edinin.'
+        savingSessionsTimeout: "Zaman aşımı isabeti, bunun yerine bir sonraki etkinleştirmede bitmemiş oturumları depolar."
+        disabled: "Oyuncu analizi kapatıldı."
+        webserver: "Websunucusu kapatıldı."
+        waitingTransactions: "Veri kaybını önlemek için tamamlanmamış işlemler bekleniyor .."
+        waitingDbComplete: "Kapalı SQLite bağlantısı."
+        database: "Önceden işlenmemiş kritik görevler işleniyor. (${0})"
+        waitingTransactionsComplete: "İşlem kuyruğu kapatıldı."
+        waitingDb: "SQLite'ın JVM'nin çökmesini önlemek için sorguların bitmesi bekleniyor .."
+        processingComplete: "İşlenme tamamlandı."
+        savingSessions: "Bitmemiş oturumlar kaydediliyor .."
+    generic:
+        dbApplyingPatch: "Yama uygulanıyor: ${0}.."
+        dbNotifySQLiteWAL: "SQLite WAL modu bu sunucu versiyonunda desteklenmiyor, varsayılanı kullanın. Bu performansınızı etkiliye bilir veya etkilemezde."
+        dbPatchesAlreadyApplied: "Veritabanlarına yama zaten uygulanmış."
+        unavailable: "Kullanım dışı"
+        dbFaultyLaunchOptions: "Başlatma seçenekleri hatalı, varsayılan olarak kullanın (${0})"
+        dbNotifyClean: "${0} oyuncunun verileri kaldırıldı."
+        today: "'Bugün'"
+        yes: "Evet"
+        dbPatchesApplied: "Yama tüm veritabanlarına başarıyla uygulandı."
+        loadingServerInfo: "Loading server identifying information"
+        unknown: "Bilinmeyen"
+        no: "Hayır"
+        yesterday: "'Dün'"
+    enable:
+        enabled: "Oyuncu analizi aktif edildi."
+        notify:
+            geoInternetRequired: "Plan GeoLite2 Geolocation veritabanını indirmek için ilk çalıştırmada internet erişimi gerektir."
+            webserverDisabled: "WebServer başlatılmadı. (WebServer.DisableWebServer: true)"
+            geoDisabled: "Coğrafi konum toplama etkin değil. (Data.Geolocations: false)"
+            emptyIP: "server.properties IP adresi kısmı boş & AlternatifIP kullanılmıyor. Bu yüzden yanlış linkler verilecektir!"
+            badIP: "0.0.0.0 geçerli bir adres değil, Alternatif_IP ayarlarını yapın. Yanlış bağlantılar verilebilir!"
+            storeSessions: "Önceki kapatmadan önce korunan oturumları saklama."
+        database: "${0}- Veritabanı bağlantısı kurulmuş."
+        fail:
+            geoDBWrite: "İndirilen GeoLite2 Geolocation veritabanını kaydederken bir şeyler ters gitti."
+            database: "${0}-Veritabanı bağlantısı başarısız: ${1}"
+            databasePatch: "VeriTabanı yaması başarısız, plugin devre dışı bırakılmış olmalı. Lütfen bu sorunu bildirin."
+            webServer: "WebServer başlatılmadı!"
+            databaseType: "${0} Desteklenmeyen bir veritabanı"
+        webserver: "Webserver Bu port üzerinden çalışıyor ${0} ( ${1} )"
+    webserver:
+        fail:
+            SSLContext: "WebServer: SSL İçeriği Başlatma Başarısız Oldu."
+            certStoreLoad: "WebServer: SSL Sertifikası yüklenirken sorun oluştu."
+            portInUse: "Web Sunucusu başarıyla başlatılmadı. Bu (${0}) port mu kullanılıyor ?"
+            certFileEOF: "WebServer: EOF when reading Certificate file. (Dosyanın boş olmadığını kontrol edin.)"
+        notify:
+            authDisabledNoHTTPS: "WebServer: Kullanıcı Yetkisi Devre Dışı! (HTTP Güvenli değil)"
+            ipWhitelistBlock: "Webserver: ${0} was denied access to '${1}'. (not whitelisted)"
+            noCertFile: "WebServer: Setrifikası Dosyası Bulunamadı: ${0}"
+            ipWhitelist: "Webserver: IP Whitelist etkinleştirildi.."
+            http: "WebServer: Sertifika yok -> Görüntülemek için HTTP-server kullanılıyor."
+            reverseProxy: "WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Address points to the Proxy"
+            authDisabledConfig: "WebServer: Kullanıcı Yetkilendirmesi Devre Dışı! (Yapılandırmada devre dışı bırakıldı)"
+    apiCSSAdded: "SayfaUzantısı: ${0} stil sayfası(ları) eklendi ${1}, ${2}"
+    apiJSAdded: "SayfaUzantısı: ${0} javascript(leri) eklendi${1}, ${2}"
+command:
+    help:
+        player:
+            inDepth: "Belirli bir oyuncunun veya mevcut oyuncunun /player sayfasına bir bağlantı edinin."
+            description: "Oyunucunun sayfasını gösterir"
+        dbMove:
+            inDepth: "Diğer veritabanındaki içeriklerin üzerine başka bir veritabanındaki içeriklerin üzerine yazar."
+            description: "Veriyi Veritabanları arasında taşır"
+        disable:
+            inDepth: "Bir sonraki yeniden yüklemeye / yeniden başlatmaya kadar eklentiyi veya bir kısmını devre dışı bırakın."
+            description: "Eklentiyi veya bir kısmını devre dışı bırakın"
+        dbRemove:
+            description: "Oyuncunun verilerini Mevcut veritabanından kaldır"
+            inDepth: "Bir oyuncuyu bağlı tüm verileri Geçerli veritabanından kaldırır."
+        dbUninstalled:
+            inDepth: "Plan veritabanındaki bir sunucuyu, sunucu sorgularında görünmemesi için kaldırıldı olarak işaretler."
+            description: "Veritabanında bir sunucuyu kaldırılmış olarak ayarlayın."
+        network:
+            inDepth: "/network sayfasına bir bağlantı edinin, bunu yalnızca ağlarda yapar."
+            description: "Ağ sayfasını görüntüler"
+        export:
+            description: "Html veya json dosyalarını manuel olarak dışa aktarın"
+            inDepth: "Yapılandırmada tanımlanan dışa aktarma için bir dışa aktarma gerçekleştirir."
+        users:
+            description: "Tüm web kullanıcılarını listeleyin"
+            inDepth: "Web kullanıcılarını tablo olarak listeler."
+        dbClear:
+            inDepth: "Süreçteki tüm Plan verilerini kaldırarak tüm Plan tablolarını temizler."
+            description: "Veritabanından TÜM Plan verilerini kaldırın"
+        database:
+            description: "Plan veritabanını yönet"
+            inDepth: "Verileri bir şekilde değiştirmek için farklı veritabanı alt komutları kullanın"
+        dbHotswap:
+            inDepth: "Eklentiyi diğer veritabanıyla yeniden yükler ve eşleşecek şekilde yapılandırmayı değiştirir."
+            description: "Veritabının hızlıca değiştirir"
+        import:
+            inDepth: "Veritabanına veri yüklemek için bir içe aktarma gerçekleştirir."
+            description: "Verileri içe aktar"
+        dbRestore:
+            description: "Bir dosyadaki verileri bir veritabanına geri yükleyin"
+            inDepth: "SQLite yedekleme dosyasını kullanır ve hedef veritabanının içeriğinin üzerine yazar."
+        server:
+            inDepth: "Belirli bir sunucunun /server sayfasına veya herhangi bir bağımsız değişken verilmemişse geçerli sunucuya bir bağlantı edinin."
+            description: "Sunucu Sayfasını gösterir"
+        logout:
+            inDepth: "Panelden başka bir kullanıcının oturumunu kapatmak için kullanıcı adı bağımsız değişkeni verin, herkesi kapatmak için bağımsız değişken olarak * verin."
+            description: "Paneldeki diğer kullanıcıların oturumunu kapatın"
+        json:
+            inDepth: "Bir oyuncunun verilerini json formatında indirmenize izin verir. Hepsi."
+            description: "Player'ın ham verilerinin json'unu görüntüleyin."
+        ingame:
+            inDepth: "Oyun içindeyken oyuncu hakkında bilgi verir."
+            description: "Oyuncu bilgilerini oyun içi gösterir"
+        reload:
+            inDepth: "Yapılandırmadaki değişiklikleri yeniden yüklemek için eklentiyi devre dışı bırakın ve etkinleştirin."
+            description: "Plugini yeniden başlatır"
+        servers:
+            description: "Sunucun tüm veritabanını listeler"
+            inDepth: "Veritabanındaki sunucuların kimliklerini, adlarını ve kullanıcılarını listeleyin."
+        unregister:
+            inDepth: "Oyuncu bağlantılı kullanıcının kaydını silmek için bağımsız değişken olmadan veya başka bir kullanıcının kaydını silmek için kullanıcı adı bağımsız değişkeniyle kullanın."
+            description: "Plan web sitesinin bir kullanıcısının kaydını iptal edin"
+        players:
+            inDepth: "Oyuncuların bir listesini görmek için /players sayfasına bir bağlantı edinin."
+            description: "Oyuncu sayfasını görüntüler"
+        register:
+            description: "Web kullanıcısna kayıt yapar"
+            inDepth: "Kayıt sayfasına bağlantı almak için bağımsız değişken olmadan kullanın.  Kullanıcı edinmek için kayıttan sonra --code [kod] kullanın."
+        info:
+            description: "Eklenti hakkında bilgiler"
+            inDepth: "Eklentinin mevcut durumunu görüntüleyin."
+        dbBackup:
+            inDepth: "Hedef veritabanını bir dosyaya yedeklemek için SQLite kullanır."
+            description: "Bir veritabanının verilerini bir dosyaya yedekleyin"
+        search:
+            inDepth: "Bir adın belirli bir kısmıyla eşleşen tüm oyuncu adlarını listeleyin."
+            description: "Bir oyuncu adı arar"
+    subcommand:
+        info:
+            proxy: "  §2Bungee ye bağlan: §f${0}"
+            version: "  §2Versiyon: §f${0}"
+            database: "  §2Mevcut veritabanı: §f${0}"
+            update: "  §2Güncelleme mevcut: §f${0}"
+    fail:
+        invalidArguments: "Aşağıdakileri ${0} olarak kabul eder: ${1}"
+        missingLink: "Kullanıcı hesabınıza bağlı değil ve diğer kullanıcının hesaplarını kaldırma izniniz yok."
+        missingFeature: "§eDevre dışı bırakılacak özelliği seçin! (Şuanda desteklenen ${0})"
+        tooManyArguments: "§cTek Argüman gerekli ${1}"
+        noPermission: "§cBunu gerekli izne sahip değilsin."
+        onDeny: "Reddedilen eylem yürütme sırasında hata verdi: ${0}"
+        serverNotFound: "Veritabanında '${0}' sunucusu bulunamadı."
+        seeConfig: "'${0}' ı config.yml de gör"
+        webUserExists: "§cBöyle bir kullanıcı zaten var!"
+        playerNotFound: "Oyuncu '${0}' bulunamadı, UUID'leri yok."
+        onAccept: "Kabul edilen işlem yürütme sırasında hata verdi: ${0}"
+        missingArguments: "§cArgümanlar Gerekli: (${0}) ${1}"
+        invalidUsername: "§cKullanıcının Bir UUID si yok."
+        emptyString: "Arama dizesi boş olamaz."
+        unknownUsername: "§cKullanıcı bu sunucuda hiç görülmemiş"
+        playerNotInDatabase: "Oyuncu '${0}' veritabanında bulunamadı."
+        webUserNotFound: "§cBöyle bir kullanıcı yok!"
+    confirmation:
+        accept: "Kabul et"
+        cancelNoChanges: "İptal edildi. Hiçbir veri değiştirilmedi."
+        unregister: "${1} ile bağlantılı '${0}' kaydını iptal etmek üzeresiniz"
+        deny: "İptal et"
+        dbRemovePlayer: "${0} verilerini ${1} hesabından kaldırmak üzeresiniz"
+        dbOverwrite: "${1} verileriyle ${0} Planındaki verilerin üzerine yazmak üzeresiniz"
+        confirm: "Onayla:"
+        dbClear: "${0} konumundaki tüm Plan verilerini kaldırmak üzeresiniz"
+        expired: "Onay süresi doldu, komutu tekrar kullanın"
+        cancelNoUnregister: "İptal Edildi. '${0}' kayıt edilmemii"
+    argument:
+        server:
+            name: "sunucu"
+            description: "Sunucunun UUID, ID veya ismi"
+        username:
+            name: "kullanıcı adı"
+            description: "Başka bir kullanıcının kullanıcı adı. Belirtilmemişse, oyuncu bağlantılı kullanıcı kullanılır."
+        dbRestore:
+            description: "Geri yüklenecek veritabanının türü. Belirtilmezse mevcut veritabanı kullanılır."
+        code:
+            name: "${code}"
+            description: "Kaydı tamamlamak için kullanılan kod."
+        backupFile:
+            description: "Yedekleme dosyasının adı (büyük/küçük harfe duyarlıdır.)"
+            name: "yedek dosya"
+        dbTypeMoveFrom:
+            description: "Verilerin taşınacağı veritabanının türü."
+        dbTypeHotswap:
+            description: "Kullanılmaya başlanacak veritabanının türü."
+        feature:
+            description: "Devre dışı bırakılacak özelliğin adı: ${0}"
+            name: "özellik"
+        nameOrUUID:
+            description: "Bir oyuncunun adı veya UUID'si"
+            name: "isim/uuid"
+            removeDescription: "Identifier for a player that will be removed from current database."
+        subcommand:
+            description: "Yardımı görmek için komutu alt komut olmadan kullanın."
+            name: "altkomut"
+        importKind: "türü içe aktar"
+        dbTypeMoveTo:
+            description: "Verilerin taşınacağı veritabanının türü. Öncekiyle aynı olamaz."
+        dbTypeRemove:
+            description: "Tüm verilerin kaldırılacağı veritabanının türü."
+        dbBackup:
+            description: "Yedeklenecek veritabanının türü. Belirtilmezse mevcut veritabanı kullanılır."
+        exportKind: "türü dışa aktar"
     database:
-      inDepth: 'Verileri bir şekilde değiştirmek için farklı veritabanı alt komutları kullanın'
-      description: 'Plan veritabanını yönet'
+        manage:
+            failIncorrectDB: "> §c'${0}' Desteklenmeyen bir VeriTabanı."
+            confirmRemoval: "${0} İçindeki Veri Silinecek!"
+            success: "> §aBaşarılı!"
+            failNoServer: "Verilen parametrelere sahip sunucu bulunamadı."
+            start: "> §2Veri işleniyor.."
+            hotswap: "§eYeni veritabanına geçmeyi (/plan db hotswap ${0}) ve eklentiyi yeniden yüklemeyi unutmayın."
+            importers: "İçe aktarıcılar:"
+            confirm: "> §cKomutu onaylamak için '-a' komuta ekle: ${0}"
+            confirmOverwrite: "${0} içindeki verilen üzerinden yazılacak!"
+            failSameServer: "Bu sunucuyu kaldırılmış olarak işaretleyemezsiniz (Siz buradasınız)"
+            failFileNotFound: "> §cBurada bir dosya bulunamadı ${0}"
+            fail: "> §cBirşey yanlış gidiyor: ${0}"
+            progress: "${0} / ${1} işlendi.."
+            failSameDB: "> §cAynı veritabanında veya benzerinde çalışamaz!"
+        unregister: "'${0}' kaydı iptal ediliyor.."
+        write: "${0}'a yazılıyor..."
+        playerRemoval: "${0} verileri ${1} 'dan kaldırılıyor .."
+        removal: "${0} dan Plan verileri siliniyor..."
+        serverUninstalled: "§aSunucu hala kuruluysa, kendisini otomatik olarak veritabanında kurulu olarak ayarlayacaktır."
+        failDbNotOpen: "§cVeritabanı ${0} - Lütfen bir süre sonra tekrar deneyin."
+        warnDbNotOpen: "§eVeritabanı ${0} - Bu, beklenenden daha uzun sürebilir .."
+        creatingBackup: "${1} içeriğine sahip bir yedek dosyası '${0} .db' oluşturma"
+    general:
+        featureDisabled: "§aKapatıldı '${0}' Plugin yeniden başlatılana kadar."
+        failNoImporter: "§eAlıcı '${0}' yok"
+        failNoExporter: '§e"${0}" dışa aktarıcısı mevcut değil'
+        noWebuser: "Belki Web kullanıcısı değilsinizdir, Kayıt olmak için /plan register <password>"
+        reloadComplete: "§aYeniden başlatma tamamlandı"
+        reloadFailed: "§cPlugini yeniden başlatırken bir şeyler ters gitti,yeniden başlatmanız tavsiye edilir."
+        successWebUserRegister: "§aYeni kullanıcı (${0}) başarıyla eklendi!"
+        webUserList: "  §2${0} §7: §f${1}"
+        webPermissionLevels: ">\§70: Tüm sayfalara erişin \ §71: '/ oyuncular' ve tüm oynatıcı sayfalarına erişin \ §72: Web kullanıcısı ile aynı kullanıcı adına sahip oynatıcı sayfasına erişin \ §73 +: İzin yok"
+        pluginDisabled: "§aPlan sistemi şuanda kapandı. Plugini yeniden başlatmak için reload komutunu kullanabilirsin."
+        notifyWebUserRegister: "Yeni bir kullanıcı kayıt oldu: '${0}' Yetki seviyesi: ${1}"
+        noAddress: '§eKullanılabilir adres yok - yedek olarak localhost kullanılıyor.  "Alternative_IP" ayarlarını yapın.'
+    link:
+        network: "Ağ sayfası: "
+        noNetwork: "Sunucu bir ağa bağlı değil.  Bağlantı, sunucu sayfasına yönlendirir."
+        player: "Oyuncu sayfası: "
+        register: "Kayıt sayfası: "
+        players: "Oyuncular sayfası: "
+        clickMe: "Tıkla bana"
+        link: "Link"
+        playerJson: "Oyuncu json: "
+        server: "Sunucu sayfası: "
     ingame:
-      inDepth: 'Oyun içindeyken oyuncu hakkında bilgi verir.'
-      description: 'Oyuncu bilgilerini oyun içi gösterir'
-    network:
-      inDepth: '/network sayfasına bir bağlantı edinin, bunu yalnızca ağlarda yapar.'
-      description: 'Ağ sayfasını görüntüler'
+        geolocation: "  §2Bölgesinden giriş yapıldı: §f${0}"
+        longestSession: "  §2En uzun giriş: §f${0}"
+        mobKills: "  §2Öldürülen canlılar: §f${0}"
+        playtime: "  §2Oynama süresi: §f${0}"
+        afkPlaytime: "  §2AFK Saati: §f${0}"
+        registered: "  §2Kayıtlı: §f${0} "
+        deaths: "  §2Ölümler: §f${0}"
+        timesKicked: "  §2Atılma sayısı: §f${0}"
+        playerKills: "  §2Oyuncu öldürme: §f${0}"
+        activePlaytime: "  §2Aktif Oyun Süresi: §f${0}"
+        lastSeen: "  §2En son görülme: §f${0}"
+        activityIndex: "  §2Aktivite göstergesi: §f${0} | ${1}"
+    header:
+        servers: "> §2Sunucular"
+        info: "> §2Oyuncu Analizi"
+        network: "> §2Ağ Sayfası"
+        search: "> §2${0} §f${1} §2için sonuçlar:"
+        inspect: "> §2Oyuncu: §f${0}"
+        help: "> §2/${0} Help"
+        serverList: "id::isim::uuid"
+        webUserList: "kullanıcı::bağlandı::yetki seviyesi"
+        webUsers: "> §2${0} Web kullanıcıları"
+        players: "> §2Oyuncular"
+        analysis: "> §2Analiz sonuçları"
+    footer:
+        help: "§7Bağımsız değişkenler komutunun üzerine gelin veya '/${0}?'  onlar hakkında daha fazla bilgi edinmek için."
+html:
+    title:
+        playerOverview: "Oyuncuya Genel Bakış"
+        trends30days: "30 günlük trendler"
+        disk: "Disk Alanı"
+        network: "Ağ"
+        weekComparison: "Hafta Karşılaştırması"
+        joinAddresses: "Adreslere Katıl"
+        now: "Şimdi"
+        graph:
+            hourByHour: "Saat saat"
+            networkOnlineActivity: "Ağ Çevrimiçi Etkinliği"
+            dayByDay: "Gün gün"
+        currentPlayerbase: "Şuanki Oyuncu Tabanı"
+        averagePing: "Ortalama Ping"
+        insights30days: "30 günlük bilgiler"
+        worstPing: "En kötü Ping"
+        playersOnlineOverview: "Çevrimiçi Etkinliğe Genel Bakış"
+        networkAsNumbers: "Sayılarla Ağ"
+        length: " Uzunluk"
+        bestPing: "En iyi Ping"
+        server: "Sunucu"
+        serverAsNumberse: "Server as Numbers"
+        mostPlayedWorld: "En çok oynanan Dünya"
+        punchcard: "Punchcard"
+        performanceAsNumbers: "Rakamlarla Performans"
+        thirtyDaysAgo: "30 gün önce"
+        last30days: "Son 30 gün"
+        serverPlaytime: "Sunucu Oynatma Süresi"
+        seenNicknames: "Görülen takma adlar"
+        recentSessions: "En Son Oturumlar"
+        world: "Dünya Yükle"
+        country: "Ülke"
+        themeSelect: "Tema Seçimi"
+        cpuRam: "CPU & RAM"
+        recentPvpKills: "Son PvP Öldürmeleri"
+        recentKills: "Son Öldürmeler"
+        last24hours: "Son 24 saat"
+        player: "Oyuncu"
+        onlineActivity: "Çevrimiçi Aktivite"
+        playerbaseDevelopment: "Oyuncu Etkinlik Grafiği"
+        tps: "TPS"
+        serverPlaytime30days: "30 günlük Sunucu Oynatma Süresi"
+        allTime: "Tüm zamanlar"
+        last7days: "Son 7 gün"
+        connectionInfo: "Bağlantı Bilgisi"
+        serverOverview: "Sunucuya Genel Bakış"
+        trend: "Trend"
+        ping: "Ping"
+        asNumbers: "Sayılar olarak"
+        pvpPveAsNumbers: "Sayılarla PvP & PvE"
+        thirtyDays: "30 gün"
+        sessionStart: "Oturum Başladı"
+        worldPlaytime: "Dünya Oyun Süresi"
+        onlineActivityAsNumbers: "Sayılarla Çevrimiçi Etkinlik"
+        recentPvpDeaths: "Son PvP Ölümleri"
+        calendar: " Takvim"
+        punchcard30days: "30 günlük Punchcard"
+        all: "Tamamı"
+    label:
+        new: "Yeni"
+        lastPeak: "Son Zirve"
+        firstSessionLength: "İlk Oturum Uzunluğu"
+        loneNewbieJoins: "Yalnız acemi katılıyor"
+        serverDowntime: "Sunucu Kapalı Kalma Süresi"
+        deaths: "Ölümler"
+        longestSession: "En Uzun Oturum"
+        averageTps: "Ortalama TPS"
+        averageActivePlaytime: "Ortalama Aktif Oyun Süresi"
+        afkTime: "AFK Süresi"
+        nickname: "Takma ad"
+        playerKills: "Oyuncu Öldürüldü"
+        regular: "Düzenli"
+        averageKdr: "Ortalama KDR"
+        loadedChunks: "Yüklenmiş Chunks lar"
+        activityIndex: "Aktivite göstergesi"
+        serverAnalysis: "Sunucu analizi"
+        averageEntities: "Ortalama Yaratıklar"
+        sessionMedian: "Session Median"
+        newPlayers: "Yeni Oyuncular"
+        diskSpace: "Boş Disk Alanı"
+        totalPlaytime: "Toplam Oyun Süresi"
+        averageAfkTime: "Ortalama AFK Süresi"
+        maxFreeDisk: "Maksimum Boş Disk"
+        currentUptime: "Current Uptime"
+        thirdDeadliestWeapon: "3. PvP Silahı"
+        average: "Ortalama"
+        bestPeak: "Tüm Zamanların Zirvesi"
+        mobKdr: "Mob İstatistiği"
+        secondDeadliestWeapon: "2. PvP Silahı"
+        minFreeDisk: "Minimum Boş Disk"
+        mobDeaths: "Yaratık Yüzünden ölümler"
+        newPlayerRetention: "Yeni Oyuncu Elde Tutma"
+        mostActiveGamemode: "En Aktif Oyun Modu"
+        perRegularPlayer: "/ Regular Player"
+        lastSeen: "Son Görülme"
+        dayOfweek: "Day of the Week"
+        loadedEntities: "Yüklenmiş Varlıklar"
+        favoriteServer: "Favori Sunucu"
+        afk: "AFK"
+        activePlaytime: "Aktif Oyun Süresi"
+        quickView: "Hızlı Görünüm"
+        serverOccupied: "Sunucu işgal edildi"
+        inactive: "Etkin değil"
+        active: "Aktivite"
+        veryActive: "Çok Aktif"
+        playersOnline: "Oyuncu Çevrimiçi"
+        perPlayer: "/ Player"
+        downtime: "Arıza Süresi"
+        duringLowTps: "Düşük TPS Artışları Sırasında:"
+        comparing7days: "7 gün karşılaştırılıyor"
+        name: "İsim"
+        averageSessions: "Ortalama Oturumlar"
+        totalPlayersOld: "Toplam Oyuncular"
+        averageSessionLength: "Ortalama Oturum Uzunluğu"
+        entities: "Varlıklar"
+        deadliestWeapon: "En Ölümcül PvP Silahı"
+        loneJoins: "Lone joins"
+        uniquePlayers: "Sunucuya İlk Defa Girenler"
+        banned: "Yasaklanmış"
+        perDay: "/ Gün"
+        totalAfk: "Toplam AFKlık"
+        lowTpsSpikes: "Low TPS Spikes"
+        indexInactive: "Etkisiz"
+        sessionEnded: " Oturum Sona Erdi"
+        regularPlayers: "Normal Oyuncular"
+        timesKicked: "Kere Atılmış"
+        registeredPlayers: "Kayıtlı Oyuncular"
+        playerDeaths: "Oyuncu ölüme sebep oldu"
+        operator: "Yetkililer"
+        totalActive: "Toplam Aktiflik"
+        players: "Oyuncular"
+        mobKills: "Öldürülen Mob"
+        session: "Oturum"
+        firstSession: "İlk seans"
+        killed: "Öldürülen"
+        relativeJoinActivity: "Göreli Birleştirme Etkinliği"
+        averageMobKdr: "Ortalama Mob KDR"
+        indexRegular: "Düzenli"
+        averageChunks: "Ortalama Chunks"
+        onlineOnFirstJoin: "İlk katılımda çevrimiçi oyuncular"
+        weekdays: "'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'"
+        totalPlayers: "Toplam Oyuncu"
+        irregular: "Düzensiz"
+        lastConnected: "Son bağlantı"
+        averagePlaytime: "Ortalama Oyun Süresi"
+        playtime: "Oyun Süresi"
+        registered: "Kayıtlı"
+    query:
+        label:
+            to: ">a</label>"
+            from: ">dan</label>"
+            view: "Bir görünüm göster"
+            makeAnother: "Başka bir sorgu yap"
+        filter:
+            title:
+                activityGroup: "Mevcut aktivite grubu"
+            operators: "Operators"
+            joinAddress:
+                text: "adresle katıldı"
+            pluginGroup:
+                name: "Grup: "
+                text: "${plugin} adlı kişinin ${group} Grubunda"
+            generic:
+                and: "ve"
+                allPlayers: "Tüm oyuncular"
+                start: "Oyuncuların"
+            activity:
+                text: "Etkinlik Gruplarında"
+            country:
+                text: "have joined from country"
+            view: "  Görünüm:"
+            registeredBetween:
+                text: "Arasında kayıtlı"
+            nonOperators: "Operatör olmayanlar"
+            notBanned: "Yasaklı değil"
+            banStatus:
+                name: "Yasaklama durumu"
+            operatorStatus:
+                name: "Yetkili durumu"
+            banned: "Yasaklandı"
+            playedBetween:
+                text: "Arasında oynanan"
+        performQuery: "Sorgu Gerçekleştirin!"
+        title:
+            text: "Sorgu<"
+            activity: "Eşleşen oyuncuların etkinliği"
+            activityOnDate: '<span id="activity-date"></span> tarihindeki etkinlik'
+            sessionsWithinView: "Görünüm içindeki oturumlar"
+        generic:
+            are: "`vardır`"
+        results:
+            title: "Sorgu Sonuçları"
+            match: "${resultCount} oyuncuyla eşleşti"
+            none: "Sorgu 0 sonuç üretti"
+        filters:
+            loading: "Filtreler yükleniyor.."
+            add: "Filtre ekle"
+    error:
+        auth:
+            generic: "Kimlik doğrulama hata nedeniyle başarısız oldu"
+            emptyForm: "Kullanıcı ve Şifre belirtilmedi"
+            loginFailed: "Kullanıcı adı ve şifre uyuşmuyor"
+            dbClosed: "Veritabanı açık değil, / plan bilgisi ile db durumunu kontrol edin"
+            userNotFound: "Böyle Bir Kullanıcı Yok"
+            noCookie: "Kullanıcı çerezi mevcut değil"
+            registrationFailed: "Kayıt başarısız oldu, tekrar deneyin (Kodun süresi 15 dakika sonra dolar)"
+            expiredCookie: "Kullanıcı çerezinin süresi doldu"
+        authFailedTips: "- Bir kullanıcıyı <b>/plan register</b><br>- ile kayıt ettiğinize emin olun ismin ve şifrenin doğru olup olmadığını kontol edin <br>- Kullanıcı adı ve şifre büyük / küçük harf duyarlıdır<br><br>Eğer şifreni unuttuysan, Yetkiliden sizi tekrar kayıt etmesini isteyin."
+        playerNotSeen: "Oyuncu bu sunucuda hiç oynamadı."
+        authFailed: "Kimlik doğrulama başarısız oldu."
+        noServersOnline: "İsteği gerçekleştirecek çevrimiçi sunucu yok."
+        403Forbidden: "Yasaklanmış."
+        404NotFound: "Bulunamadı"
+        401Unauthorized: "Yetkisiz"
+        UUIDNotFound: "Oyuncunun UUID si veritabanında bulunamadı."
+        404UnknownPage: "Bir komutla verilen bağlantıya eriştiğinizden emin olun, Örnekler: </p> <p> / player / {uuid / name} <br> / server / {uuid / name / id} </p>"
+        404PageNotFound: "Böyle bir sayfa mevcut değil."
+    value:
+        offline: " Çevrimdışı"
+        localMachine: "Yerel makine"
+        with: "<th>Birlikte"
+        online: " Çevrimiçi"
+        noKills: "Öldürmesi yok"
     register:
-      description: 'Web kullanıcısna kayıt yapar'
-      inDepth: 'Kayıt sayfasına bağlantı almak için bağımsız değişken olmadan kullanın.  Kullanıcı edinmek için kayıttan sonra --code [kod] kullanın.'
-  database:
-    failDbNotOpen: '§cVeritabanı ${0} - Lütfen bir süre sonra tekrar deneyin.'
-    creatingBackup: '${1} içeriğine sahip bir yedek dosyası '${0} .db' oluşturma'
-    manage:
-      progress: '${0} / ${1} işlendi..'
-      fail: '> §cBirşey yanlış gidiyor: ${0}'
-      success: '> §aBaşarılı!'
-      failSameServer: 'Bu sunucuyu kaldırılmış olarak işaretleyemezsiniz (Siz buradasınız)'
-      confirmOverwrite: '${0} içindeki verilen üzerinden yazılacak!'
-      failIncorrectDB: '> §c'${0}' Desteklenmeyen bir VeriTabanı.'
-      start: '> §2Veri işleniyor..'
-      failSameDB: '> §cAynı veritabanında veya benzerinde çalışamaz!'
-      failNoServer: 'Verilen parametrelere sahip sunucu bulunamadı.'
-      confirmRemoval: '${0} İçindeki Veri Silinecek!'
-      hotswap: '§eYeni veritabanına geçmeyi (/plan db hotswap ${0}) ve eklentiyi yeniden yüklemeyi unutmayın.'
-      confirm: '> §cKomutu onaylamak için '-a' komuta ekle: ${0}'
-      importers: 'İçe aktarıcılar:'
-      failFileNotFound: '> §cBurada bir dosya bulunamadı ${0}'
-    playerRemoval: '${0} verileri ${1} 'dan kaldırılıyor ..'
-    warnDbNotOpen: '§eVeritabanı ${0} - Bu, beklenenden daha uzun sürebilir ..'
-    unregister: ''${0}' kaydı iptal ediliyor..'
-    write: '${0}'a yazılıyor...'
-    serverUninstalled: '§aSunucu hala kuruluysa, kendisini otomatik olarak veritabanında kurulu olarak ayarlayacaktır.'
-    removal: '${0} dan Plan verileri siliniyor...'
-  fail:
-    playerNotFound: 'Oyuncu '${0}' bulunamadı, UUID'leri yok.'
-    webUserNotFound: '§cBöyle bir kullanıcı yok!'
-    invalidArguments: 'Aşağıdakileri ${0} olarak kabul eder: ${1}'
-    missingLink: 'Kullanıcı hesabınıza bağlı değil ve diğer kullanıcının hesaplarını kaldırma izniniz yok.'
-    invalidUsername: '§cKullanıcının Bir UUID si yok.'
-    playerNotInDatabase: 'Oyuncu '${0}' veritabanında bulunamadı.'
-    tooManyArguments: '§cTek Argüman gerekli ${1}'
-    onAccept: 'Kabul edilen işlem yürütme sırasında hata verdi: ${0}'
-    serverNotFound: 'Veritabanında '${0}' sunucusu bulunamadı.'
-    webUserExists: '§cBöyle bir kullanıcı zaten var!'
-    noPermission: '§cBunu gerekli izne sahip değilsin.'
-    seeConfig: ''${0}' ı config.yml de gör'
-    missingArguments: '§cArgümanlar Gerekli: (${0}) ${1}'
-    onDeny: 'Reddedilen eylem yürütme sırasında hata verdi: ${0}'
-    missingFeature: '§eDevre dışı bırakılacak özelliği seçin! (Şuanda desteklenen ${0})'
-    emptyString: 'Arama dizesi boş olamaz.'
-    unknownUsername: '§cKullanıcı bu sunucuda hiç görülmemiş'
-  general:
-    reloadComplete: '§aYeniden başlatma tamamlandı'
-    noWebuser: 'Belki Web kullanıcısı değilsinizdir, Kayıt olmak için /plan register <password>'
-    failNoExporter: '§e"${0}" dışa aktarıcısı mevcut değil'
-    webUserList: '  §2${0} §7: §f${1}'
-    successWebUserRegister: '§aYeni kullanıcı (${0}) başarıyla eklendi!'
-    notifyWebUserRegister: 'Yeni bir kullanıcı kayıt oldu: '${0}' Yetki seviyesi: ${1}'
-    failNoImporter: '§eAlıcı '${0}' yok'
-    noAddress: '§eKullanılabilir adres yok - yedek olarak localhost kullanılıyor.  "Alternative_IP" ayarlarını yapın.'
-    webPermissionLevels: '>\§70: Tüm sayfalara erişin \ §71: '/ oyuncular' ve tüm oynatıcı sayfalarına erişin \ §72:
-                                                                Web kullanıcısı ile aynı kullanıcı adına sahip oynatıcı sayfasına erişin \ §73 +: İzin yok'
-    featureDisabled: '§aKapatıldı '${0}' Plugin yeniden başlatılana kadar.'
-    reloadFailed: '§cPlugini yeniden başlatırken bir şeyler ters gitti,yeniden başlatmanız tavsiye edilir.'
-    pluginDisabled: '§aPlan sistemi şuanda kapandı. Plugini yeniden başlatmak için reload komutunu kullanabilirsin.'
-  confirmation:
-    cancelNoUnregister: 'İptal Edildi. '${0}' kayıt edilmemii'
-    dbClear: '${0} konumundaki tüm Plan verilerini kaldırmak üzeresiniz'
-    dbOverwrite: '${1} verileriyle ${0} Planındaki verilerin üzerine yazmak üzeresiniz'
-    dbRemovePlayer: '${0} verilerini ${1} hesabından kaldırmak üzeresiniz'
-    cancelNoChanges: 'İptal edildi. Hiçbir veri değiştirilmedi.'
-    accept: 'Kabul et'
-    unregister: '${1} ile bağlantılı '${0}' kaydını iptal etmek üzeresiniz'
-    deny: 'İptal et'
-    expired: 'Onay süresi doldu, komutu tekrar kullanın'
-    confirm:
-      Onayla:
-  argument:
-    dbTypeMoveFrom:
-      description: 'Verilerin taşınacağı veritabanının türü.'
-    username: 'kullanıcı adı'
-      description: 'Başka bir kullanıcının kullanıcı adı. Belirtilmemişse, oyuncu bağlantılı kullanıcı kullanılır.'
-    nameOrUUID: isim/uuid
-      removeDescription: 'Identifier for a player that will be removed from current database.'
-      description: 'Bir oyuncunun adı veya UUID'si'
-    code:
-      name: ${code}
-      description: 'Kaydı tamamlamak için kullanılan kod.'
-    server: sunucu
-      description: 'Sunucunun UUID, ID veya ismi'
-    backupFile: 'yedek dosya'
-      description: 'Yedekleme dosyasının adı (büyük/küçük harfe duyarlıdır.)'
-    dbTypeRemove:
-      description: 'Tüm verilerin kaldırılacağı veritabanının türü.'
-    dbTypeHotswap:
-      description: 'Kullanılmaya başlanacak veritabanının türü.'
-    subcommand: altkomut
-      description: 'Yardımı görmek için komutu alt komut olmadan kullanın.'
-    dbTypeMoveTo:
-      description: 'Verilerin taşınacağı veritabanının türü. Öncekiyle aynı olamaz.'
-    feature: özellik
-      description: 'Devre dışı bırakılacak özelliğin adı: ${0}'
-    dbBackup:
-      description: 'Yedeklenecek veritabanının türü. Belirtilmezse mevcut veritabanı kullanılır.'
-    exportKind: 'türü dışa aktar'
-    dbRestore:
-      description: 'Geri yüklenecek veritabanının türü. Belirtilmezse mevcut veritabanı kullanılır.'
-    importKind: 'türü içe aktar'
-  link:
-    noNetwork: 'Sunucu bir ağa bağlı değil.  Bağlantı, sunucu sayfasına yönlendirir.'
-    server: 'Sunucu sayfası: '
-    link: Link
-    player: 'Oyuncu sayfası: '
-    playerJson: 'Oyuncu json: '
-    register: 'Kayıt sayfası: '
-    players: 'Oyuncular sayfası: '
-    network: 'Ağ sayfası: '
-    clickMe: 'Tıkla bana'
-  header:
-    serverList: id::isim::uuid
-    inspect: '> §2Oyuncu: §f${0}'
-    analysis: '> §2Analiz sonuçları'
-    webUsers: '> §2${0} Web kullanıcıları'
-    players: '> §2Oyuncular'
-    search: '> §2${0} §f${1} §2için sonuçlar:'
-    webUserList: 'kullanıcı::bağlandı::yetki seviyesi'
-    servers: '> §2Sunucular'
-    help: '> §2/${0} Help'
-    network: '> §2Ağ Sayfası'
-    info: '> §2Oyuncu Analizi'
-  ingame:
-    playerKills: '  §2Oyuncu öldürme: §f${0}'
-    activityIndex: '  §2Aktivite göstergesi: §f${0} | ${1}'
-    geolocation: '  §2Bölgesinden giriş yapıldı: §f${0}'
-    registered: '  §2Kayıtlı: §f${0} '
-    deaths: '  §2Ölümler: §f${0}'
-    afkPlaytime: '  §2AFK Saati: §f${0}'
-    lastSeen: '  §2En son görülme: §f${0}'
-    activePlaytime: '  §2Aktif Oyun Süresi: §f${0}'
-    timesKicked: '  §2Atılma sayısı: §f${0}'
-    longestSession: '  §2En uzun giriş: §f${0}'
-    playtime: '  §2Oynama süresi: §f${0}'
-    mobKills: '  §2Öldürülen canlılar: §f${0}'
-  subcommand:
-    info:
-      proxy: '  §2Bungee ye bağlan: §f${0}'
-      version: '  §2Versiyon: §f${0}'
-      database: '  §2Mevcut veritabanı: §f${0}'
-      update: '  §2Güncelleme mevcut: §f${0}'
-  footer:
-    help: '§7Bağımsız değişkenler komutunun üzerine gelin veya '/${0}?'  onlar hakkında daha fazla bilgi edinmek için.'
+        error:
+            usernameLength: "Kullanıcı adı 50 karaktere kadar olabilir, sizinki"
+            checkFailed: "Kayıt durumu kontrol edilemedi:"
+            failed: "Kayıt başarısız:"
+            noPassword: "Bir Parola belirlemeniz gerekiyor"
+            noUsername: "Kullanıcı adı belirlemeniz gerekiyor"
+        completion2: "Kod 15 dakika içinde sona eriyor"
+        completion: "Kaydı Tamamla"
+        passwordTip: "Parola 8 karakterden fazla olmalıdır, ancak herhangi bir sınırlama yoktur."
+        createNewUser: "Yeni bir kullanıcı oluşturun"
+        completion4: "Veya konsol kullanarak:"
+        completion3: "Kaydı bitirmek için oyunda aşağıdaki komutu kullanın:"
+        usernameTip: "Kullanıcı adı 50 karaktere kadar olabilir."
+        completion1: "Artık kullanıcıyı kaydetmeyi bitirebilirsiniz."
+        register: "Kayıt ol"
+        login: "Zaten hesabınız var mı?  Oturum aç!"
+    modal:
+        info:
+            text: "Eklenti hakkında bilgiler"
+            contributors:
+                text: 'Ayrıca <span class="col-plan"> harika insanları </span> takip ederek katkıda bulundu:'
+                code: "kod katkıda bulunan"
+                donate: "Gelişimi parasal olarak destekleyenlere ekstra özel teşekkürler."
+                bugreporters: "& Bug reporters!"
+                translator: "çevirmen"
+            metrics: "bStats Metrics"
+            discord: "Discord'da Genel Destek"
+            wiki: "Plan Wiki, Öğreticiler ve Belgeler"
+            bugs: "Sorunları Bildir"
+            license: "Player Analytics, altında geliştirilir ve lisanslanır"
+            developer: "tarafından geliştirilmiştir"
+        version:
+            dev: "Bu sürüm bir DEV sürümüdür."
+            available: "müsait"
+            text: "Yeni bir sürüm yayınlandı ve şimdi indirilebilir."
+            title: "Versiyon"
+            changelog: "Değişim günlüğünü incele"
+            download: "İndir"
+    version:
+        updateButton: "Güncelleme"
+        changelog: "Değişim günlüğünü incele"
+        current: "You have version ${0}"
+        updateModal:
+            title: "Version ${0} is Available!"
+            text: "Yeni bir sürüm yayınlandı ve artık indirilebilir."
+        download: "Download Plan-${0}.jar"
+        isDev: "Bu sürüm bir DEV sürümüdür."
+    login:
+        forgotPassword1: "Parolanızı mı unuttunuz?  Kaydı iptal edin ve tekrar kaydolun."
+        register: "Hesap oluştur!"
+        username: '"Kullanıcı adı"'
+        logout: "Çıkış Yap"
+        failed: "Giriş başarısız:"
+        forgotPassword4: "Komutu kullandıktan sonra, "
+        password: '"Parola"'
+        forgotPassword3: "Veya konsol kullanarak:"
+        forgotPassword: "Parolanızı mı unuttunuz?"
+        forgotPassword2: "Mevcut kullanıcınızı kaldırmak için oyunda aşağıdaki komutu kullanın:"
+        login: "Oturum aç"
+    sidebar:
+        playerPage: "Oyuncu Sayfası"
+        plugins: "PLUGINLER"
+        playerbaseOverview: "Playerbase'e Genel Bakış"
+        playerList: "Oyuncu Listesi"
+        servers: "Sunucular"
+        serverPage: "Sunucu sayfası"
+        links: "BAĞLANTILAR"
+        geolocations: "Coğrafi Konumlar"
+        serversTitle: "SUNUCULAR"
+        playerbase: "Oyuncu tabanı"
+        networkOverview: "Ağ Görünümü"
+        overview: "Genel Bakış"
+        networkPage: "Ağ sayfası"
+        sessions: "Oturumlar"
+        toMainPage: "Ana Sayfaya"
+        performance: "Performans"
+        query: "Sorgu yap"
+        pvpPve: "PvP & PvE"
+        information: "DANIŞMA"
+    side:
+        plugins: "Pluginler"
+    description:
+        newPlayerRetention: "Bu değer, önceki oyunculara dayalı bir tahmindir."
+        noServers: "Veritabanında sunucu bulunamadı"
+        noServerOnlinActivity: "Çevrimiçi etkinliği gösterecek sunucu yok"
+        noGameServers: "Bazı veriler, Plan'ın oyun sunucularına yüklenmesini gerektirir."
+        noGeolocations: "Konum belirleme toplama yapılandırmada etkinleştirilmelidir (GeoLite2 EULA'yı Kabul Et)."
+        noSpongeChunks: "Chunklar Spongeda mevcut değil"
+        predictedNewPlayerRetention: "Bu değer, önceki oyunculara dayalı bir tahmindir"
+        noServersLong: 'Plan'ın herhangi bir oyun sunucusuna yüklenmediği veya aynı veritabanına bağlı olmadığı anlaşılıyor.  Ağ eğitimi için <a href="https://github.com/plan-player-analytics/Plan/wiki"> wiki </a> 'ye bakın.'
+    text:
+        noExtensionData: "Uzantı Verisi Yok"
+        noLowTps: "Düşük tps artışları yok"
+        comparing30daysAgo: "30 gün öncesiyle şimdi karşılaştırılıyor."
+        comparing15days: "15 gün karşılaştırılıyor"
+        clickToExpand: "Genişletmek için tıklayın"
+    button:
+        nightMode: "Gece modu"
+    calendar:
+        unique: "Benzersiz:"
+        new: "Yeni:"
+    generic:
+        none: "Yok"
+    unit:
+        chunks: "Chunks"
+        players: "Oyuncular"
+        entities: "Yaratıklar"
+403AccessDenied: "Giriş reddedildi"
 generic:
-  noData: 'Veri yok'
-403AccessDenied: 'Giriş reddedildi'
+    noData: "Veri yok"

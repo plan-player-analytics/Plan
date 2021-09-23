@@ -1,620 +1,624 @@
-html:
-    text:
-        noLowTps: 'No low tps spikes'
-        clickToExpand: 'Click to expand'
-        comparing15days: 'Comparing 15 days'
-        comparing30daysAgo: 'Comparing 30d ago to Now'
-        noExtensionData: 'No Extension Data'
-    label:
-        comparing7days: 'Comparing 7 days'
-        averageKdr: 'Average KDR'
-        perDay: '/ Day'
-        averageEntities: 'Average Entities'
-        averageSessions: 'Average Sessions'
-        playersOnline: 'Players Online'
-        secondDeadliestWeapon: '2nd PvP Weapon'
-        totalAfk: 'Total AFK'
-        favoriteServer: 'Favorite Server'
-        mostActiveGamemode: 'Most Active Gamemode'
-        afkTime: 'AFK Time'
-        lastConnected: 'Last Connected'
-        regular: Regular
-        downtime: Downtime
-        perRegularPlayer: '/ Regular Player'
-        minFreeDisk: 'Min Free Disk'
-        deadliestWeapon: 'Deadliest PvP Weapon'
-        registered: Registered
-        currentUptime: 'Current Uptime'
-        averageChunks: 'Average Chunks'
-        averageMobKdr: 'Average Mob KDR'
-        lastSeen: 'Last Seen'
-        killed: Killed
-        sessionEnded: ' Ended'
-        uniquePlayers: 'Unique Players'
-        weekdays: ''Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday''
-        firstSession: 'First session'
-        mobKdr: 'Mob KDR'
-        averageSessionLength: 'Average Session Length'
-        duringLowTps: 'During Low TPS Spikes:'
-        afk: AFK
-        loadedEntities: 'Loaded Entities'
-        playerKills: 'Player Kills'
-        active: Active
-        totalPlaytime: 'Total Playtime'
-        newPlayers: 'New Players'
-        averagePlaytime: 'Average Playtime'
-        indexInactive: Inactive
-        maxFreeDisk: 'Max Free Disk'
-        totalPlayers: 'Total Players'
-        averageTps: 'Average TPS'
-        longestSession: 'Longest Session'
-        nickname: Nickname
-        operator: Operator
-        indexRegular: Regular
-        regularPlayers: 'Regular Players'
-        mobDeaths: 'Mob caused Deaths'
-        thirdDeadliestWeapon: '3rd PvP Weapon'
-        serverOccupied: 'Server occupied'
-        activityIndex: 'Activity Index'
-        irregular: Irregular
-        loneJoins: 'Lone joins'
-        serverAnalysis: 'Server Analysis'
-        playerDeaths: 'Player caused Deaths'
-        averageAfkTime: 'Average AFK Time'
-        totalPlayersOld: 'Total Players'
-        activePlaytime: 'Active Playtime'
-        totalActive: 'Total Active'
-        sessionMedian: 'Session Median'
-        newPlayerRetention: 'New Player Retention'
-        onlineOnFirstJoin: 'Players online on first join'
-        new: New
-        serverDowntime: 'Server Downtime'
-        session: Session
-        banned: Banned
-        lowTpsSpikes: 'Low TPS Spikes'
-        averageActivePlaytime: 'Average Active Playtime'
-        playtime: Playtime
-        inactive: Inactive
-        entities: Entities
-        mobKills: 'Mob Kills'
-        name: Name
-        lastPeak: 'Last Peak'
-        quickView: 'Quick view'
-        relativeJoinActivity: 'Relative Join Activity'
-        deaths: Deaths
-        timesKicked: 'Times Kicked'
-        loneNewbieJoins: 'Lone newbie joins'
-        loadedChunks: 'Loaded Chunks'
-        dayOfweek: 'Day of the Week'
-        firstSessionLength: 'First session length'
-        perPlayer: '/ Player'
-        players: Players
-        diskSpace: 'Free Disk Space'
-        bestPeak: 'All Time Peak'
-        veryActive: 'Very Active'
-        average: Average
-        registeredPlayers: 'Registered Players'
-    sidebar:
-        networkOverview: 'Network Overview'
-        pvpPve: 'PvP & PvE'
-        overview: Overview
-        links: LINKS
-        serverPage: 'Server page'
-        sessions: Sessions
-        playerbaseOverview: 'Playerbase Overview'
-        playerbase: Playerbase
-        plugins: PLUGINS
-        query: 'Make a query'
-        geolocations: Geolocations
-        networkPage: 'Network page'
-        playerList: 'Player List'
-        toMainPage: 'to main page'
-        serversTitle: SERVERS
-        performance: Performance
-        playerPage: 'Player Page'
-        servers: Servers
-        information: INFORMATION
-    version:
-        updateButton: Update
-        changelog: 'View Changelog'
-        updateModal:
-            title: 'Version ${0} is Available!'
-            text: 'A new version has been released and is now available for download.'
-        isDev: 'This version is a DEV release.'
-        download: 'Download Plan-${0}.jar'
-        current: 'You have version ${0}'
-    error:
-        auth:
-            registrationFailed: 'Registration failed, try again (The code expires after 15 minutes)'
-            expiredCookie: 'User cookie has expired'
-            noCookie: 'User cookie not present'
-            userNotFound: 'User does not exist'
-            loginFailed: 'User and Password did not match'
-            dbClosed: 'Database is not open, check db status with /plan info'
-            generic: 'Authentication failed due to error'
-            emptyForm: 'User and Password not specified'
-        404NotFound: 'Not Found'
-        404UnknownPage: 'Make sure you're accessing a link given by a command, Examples:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>'
-        playerNotSeen: 'Plan has not seen this player.'
-        authFailedTips: '- Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register.'
-        UUIDNotFound: 'Player UUID was not found in the database.'
-        404PageNotFound: 'Page does not exist.'
-        401Unauthorized: Unauthorized
-        noServersOnline: 'No Servers online to perform the request.'
-        403Forbidden: Forbidden
-        authFailed: 'Authentication Failed.'
-    title:
-        graph:
-            hourByHour: 'Hour by Hour'
-            dayByDay: 'Day by Day'
-            networkOnlineActivity: 'Network Online Activity'
-        recentSessions: 'Recent Sessions'
-        trends30days: 'Trends for 30 days'
-        thirtyDaysAgo: '30 days ago'
-        allTime: 'All Time'
-        tps: TPS
-        themeSelect: 'Theme Select'
-        connectionInfo: 'Connection Information'
-        country: Country
-        last30days: 'Last 30 days'
-        asNumbers: 'as Numbers'
-        worstPing: 'Worst Ping'
-        now: Now
-        worldPlaytime: 'World Playtime'
-        networkAsNumbers: 'Network as Numbers'
-        disk: 'Disk space'
-        sessionStart: 'Session Started'
-        player: Player
-        serverPlaytime: 'Server Playtime'
-        calendar: ' Calendar'
-        playerOverview: 'Player Overview'
-        serverAsNumberse: 'Server as Numbers'
-        thirtyDays: '30 days'
-        last7days: 'Last 7 days'
-        network: Network
-        trend: Trend
-        weekComparison: 'Week Comparison'
-        recentPvpKills: 'Recent PvP Kills'
-        performanceAsNumbers: 'Performance as Numbers'
-        recentKills: 'Recent Kills'
-        last24hours: 'Last 24 hours'
-        currentPlayerbase: 'Current Playerbase'
-        server: Server
-        length: ' Length'
-        punchcard: Punchcard
-        punchcard30days: 'Punchcard for 30 days'
-        onlineActivity: 'Online Activity'
-        world: 'World Load'
-        pvpPveAsNumbers: 'PvP & PvE as Numbers'
-        serverOverview: 'Server Overview'
-        playerbaseDevelopment: 'Playerbase Development'
-        onlineActivityAsNumbers: 'Online Activity as Numbers'
-        joinAddresses: 'Join Addresses'
-        ping: Ping
-        recentPvpDeaths: 'Recent PvP Deaths'
-        seenNicknames: 'Seen Nicknames'
-        averagePing: 'Average Ping'
-        cpuRam: 'CPU & RAM'
-        bestPing: 'Best Ping'
-        insights30days: 'Insights for 30 days'
-        playersOnlineOverview: 'Online Activity Overview'
-        mostPlayedWorld: 'Most played World'
-        serverPlaytime30days: 'Server Playtime for 30 days'
-        all: All
-    modal:
-        version:
-            available: 'is Available'
-            title: Version
-            changelog: 'View Changelog'
-            text: 'A new version has been released and is now available for download.'
-            download: Download
-            dev: 'This version is a DEV release.'
-        info:
-            developer: 'is developed by'
-            contributors: 'Extra special thanks to those who have monetarily supported the development.'
-                code: 'code contributor'
-                bugreporters: '& Bug reporters!'
-                text: 'In addition following <span class="col-plan">awesome people</span> have contributed:'
-                translator: translator
-            license: 'Player Analytics is developed and licensed under'
-            metrics: 'bStats Metrics'
-            text: 'Information about the plugin'
-            bugs: 'Report Issues'
-            discord: 'General Support on Discord'
-            wiki: 'Plan Wiki, Tutorials & Documentation'
-    register:
-        register: Register
-        error:
-            usernameLength: 'Username can be up to 50 characters, yours is '
-            checkFailed: 'Checking registration status failed: '
-            noPassword: 'You need to specify a Password'
-            failed: 'Registration failed: '
-            noUsername: 'You need to specify a Username'
-        completion4: 'Or using console:'
-        createNewUser: 'Create a new user'
-        passwordTip: 'Password should be more than 8 characters, but there are no limitations.'
-        login: 'Already have an account? Login!'
-        usernameTip: 'Username can be up to 50 characters.'
-        completion2: 'Code expires in 15 minutes'
-        completion1: 'You can now finish registering the user.'
-        completion: 'Complete Registration'
-        completion3: 'Use the following command in game to finish registration:'
-    description:
-        noGameServers: 'Some data requires Plan to be installed on game servers.'
-        newPlayerRetention: 'This value is a prediction based on previous players.'
-        noServers: 'No servers found in the database'
-        noGeolocations: 'Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA).'
-        noServerOnlinActivity: 'No server to display online activity for'
-        predictedNewPlayerRetention: 'This value is a prediction based on previous players'
-        noSpongeChunks: 'Chunks unavailable on Sponge'
-        noServersLong: 'It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.'
-    query:
-        filter:
-            country:
-                text: 'have joined from country'
-            operators: Operators
-            activity:
-                text: 'are in Activity Groups'
-            generic:
-                and: 'and '
-                allPlayers: 'All players'
-                start: 'of Players who '
-            title:
-                activityGroup: 'Current activity group'
-            nonOperators: 'Non operators'
-            pluginGroup:
-                text: 'are in ${plugin}'s ${group} Groups'
-                name: 'Group: '
-            banned: Banned
-            registeredBetween:
-                text: 'Registered between'
-            notBanned: 'Not banned'
-            playedBetween:
-                text: 'Played between'
-            joinAddress:
-                text: 'joined with address'
-            banStatus:
-                name: 'Ban status'
-            operatorStatus:
-                name: 'Operator status'
-            view: '  View:'
-        label:
-            view: 'Show a view'
-            makeAnother: 'Make another query'
-            to: >to</label>
-            from: >from</label>
-        performQuery: 'Perform Query!'
-        title: Query<
-            sessionsWithinView: 'Sessions within view'
-            activity: 'Activity of matched players'
-            activityOnDate: 'Activity on <span id="activity-date"></span>'
-        results:
-            title: 'Query Results'
-            match: 'matched ${resultCount} players'
-            none: 'Query produced 0 results'
-        filters:
-            loading: 'Loading filters..'
-            add: 'Add a filter..'
-        generic:
-            are: `are`
-    generic:
-        none: None
-    login:
-        forgotPassword4: 'After using the command, '
-        forgotPassword2: 'Use the following command in game to remove your current user:'
-        forgotPassword: 'Forgot Password?'
-        forgotPassword1: 'Forgot password? Unregister and register again.'
-        logout: Logout
-        username: '"Username"'
-        failed: 'Login failed: '
-        register: 'Create an Account!'
-        password: '"Password"'
-        login: Login
-        forgotPassword3: 'Or using console:'
-    calendar:
-        unique:
-            Unique:
-        new:
-            New:
-    value:
-        noKills: 'No Kills'
-        online: ' Online'
-        with: <th>With
-        localMachine: 'Local Machine'
-        offline: ' Offline'
-    button:
-        nightMode: 'Night Mode'
-    unit:
-        chunks: Chunks
-        entities: Entities
-        players: Players
-    side:
-        plugins: Plugins
 plugin:
+    version:
+        checkFail: "Failed to check newest version number"
+        checkFailGithub: "Version information could not be loaded from Github/versions.txt"
+        isLatest: "You're using the latest version."
+        isDev: " This is a DEV release."
+        updateAvailableSpigot: "New Version is available at ${0}"
+        updateAvailable: "New Release (${0}) is available ${1}"
+    disable:
+        savingSessionsTimeout: "Timeout hit, storing the unfinished sessions on next enable instead."
+        disabled: "Player Analytics Disabled."
+        webserver: "Webserver has been disabled."
+        waitingTransactions: "Waiting for unfinished transactions to avoid data loss.."
+        waitingDbComplete: "Closed SQLite connection."
+        database: "Processing critical unprocessed tasks. (${0})"
+        waitingTransactionsComplete: "Transaction queue closed."
+        waitingDb: "Waiting queries to finish to avoid SQLite crashing JVM.."
+        processingComplete: "Processing complete."
+        savingSessions: "Saving unfinished sessions.."
+    generic:
+        dbApplyingPatch: "Applying Patch: ${0}.."
+        dbNotifySQLiteWAL: "SQLite WAL mode not supported on this server version, using default. This may or may not affect performance."
+        dbPatchesAlreadyApplied: "All database patches already applied."
+        unavailable: "Unavailable"
+        dbFaultyLaunchOptions: "Launch Options were faulty, using default (${0})"
+        dbNotifyClean: "Removed data of ${0} players."
+        today: "'Today'"
+        yes: "Yes"
+        dbPatchesApplied: "All database patches applied successfully."
+        loadingServerInfo: "Loading server identifying information"
+        unknown: "Unknown"
+        no: "No"
+        yesterday: "'Yesterday'"
+    enable:
+        enabled: "Player Analytics Enabled."
+        notify:
+            geoInternetRequired: "Plan Requires internet access on first run to download GeoLite2 Geolocation database."
+            webserverDisabled: "WebServer was not initialized. (WebServer.DisableWebServer: true)"
+            geoDisabled: "Geolocation gathering is not active. (Data.Geolocations: false)"
+            emptyIP: "IP in server.properties is empty & Alternative_IP is not in use. Incorrect links might be given!"
+            badIP: "0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!"
+            storeSessions: "Storing sessions that were preserved before previous shutdown."
+        database: "${0}-database connection established."
+        fail:
+            geoDBWrite: "Something went wrong saving the downloaded GeoLite2 Geolocation database"
+            database: "${0}-Database Connection failed: ${1}"
+            databasePatch: "Database Patching failed, plugin has to be disabled. Please report this issue"
+            webServer: "WebServer did not initialize!"
+            databaseType: "${0} is not a supported Database"
+        webserver: "Webserver running on PORT ${0} ( ${1} )"
     webserver:
         fail:
-            portInUse: 'WebServer was not initialized successfully. Is the port (${0}) in use?'
-            SSLContext: 'WebServer: SSL Context Initialization Failed.'
-            certStoreLoad: 'WebServer: SSL Certificate loading Failed.'
-            certFileEOF: 'WebServer: EOF when reading Certificate file. (Check that the file is not empty)'
+            SSLContext: "WebServer: SSL Context Initialization Failed."
+            certStoreLoad: "WebServer: SSL Certificate loading Failed."
+            portInUse: "WebServer was not initialized successfully. Is the port (${0}) in use?"
+            certFileEOF: "WebServer: EOF when reading Certificate file. (Check that the file is not empty)"
         notify:
-            reverseProxy: 'WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Address points to the Proxy'
-            ipWhitelistBlock: 'Webserver: ${0} was denied access to '${1}'. (not whitelisted)'
-            authDisabledNoHTTPS: 'WebServer: User Authorization Disabled! (Not secure over HTTP)'
-            noCertFile: 'WebServer: Certificate KeyStore File not Found: ${0}'
-            authDisabledConfig: 'WebServer: User Authorization Disabled! (Disabled in config)'
-            ipWhitelist: 'Webserver: IP Whitelist is enabled.'
-            http: 'WebServer: No Certificate -> Using HTTP-server for Visualization.'
-    version:
-        checkFail: 'Failed to check newest version number'
-        isDev: ' This is a DEV release.'
-        updateAvailableSpigot: 'New Version is available at ${0}'
-        updateAvailable: 'New Release (${0}) is available ${1}'
-        checkFailGithub: 'Version information could not be loaded from Github/versions.txt'
-        isLatest: 'You're using the latest version.'
-    generic:
-        unavailable: Unavailable
-        loadingServerInfo: 'Loading server identifying information'
-        dbFaultyLaunchOptions: 'Launch Options were faulty, using default (${0})'
-        yesterday: "'Yesterday'"
-        dbNotifyClean: 'Removed data of ${0} players.'
-        dbNotifySQLiteWAL: 'SQLite WAL mode not supported on this server version, using default. This may or may not affect performance.'
-        unknown: Unknown
-        yes: Yes
-        no: No
-        today: "'Today'"
-        dbPatchesAlreadyApplied: 'All database patches already applied.'
-        dbApplyingPatch: 'Applying Patch: ${0}..'
-        dbPatchesApplied: 'All database patches applied successfully.'
-    disable:
-        webserver: 'Webserver has been disabled.'
-        savingSessionsTimeout: 'Timeout hit, storing the unfinished sessions on next enable instead.'
-        savingSessions: 'Saving unfinished sessions..'
-        waitingDbComplete: 'Closed SQLite connection.'
-        disabled: 'Player Analytics Disabled.'
-        processingComplete: 'Processing complete.'
-        waitingDb: 'Waiting queries to finish to avoid SQLite crashing JVM..'
-        waitingTransactions: 'Waiting for unfinished transactions to avoid data loss..'
-        waitingTransactionsComplete: 'Transaction queue closed.'
-        database: 'Processing critical unprocessed tasks. (${0})'
-    enable:
-        notify:
-            storeSessions: 'Storing sessions that were preserved before previous shutdown.'
-            webserverDisabled: 'WebServer was not initialized. (WebServer.DisableWebServer: true)'
-            geoInternetRequired: 'Plan Requires internet access on first run to download GeoLite2 Geolocation database.'
-            geoDisabled: 'Geolocation gathering is not active. (Data.Geolocations: false)'
-            badIP: '0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!'
-            emptyIP: 'IP in server.properties is empty & Alternative_IP is not in use. Incorrect links might be given!'
-        fail:
-            geoDBWrite: 'Something went wrong saving the downloaded GeoLite2 Geolocation database'
-            database: '${0}-Database Connection failed: ${1}'
-            webServer: 'WebServer did not initialize!'
-            databaseType: '${0} is not a supported Database'
-            databasePatch: 'Database Patching failed, plugin has to be disabled. Please report this issue'
-        webserver: 'Webserver running on PORT ${0} ( ${1} )'
-        database: '${0}-database connection established.'
-        enabled: 'Player Analytics Enabled.'
-    apiCSSAdded: 'PageExtension: ${0} added stylesheet(s) to ${1}, ${2}'
-    apiJSAdded: 'PageExtension: ${0} added javascript(s) to ${1}, ${2}'
+            authDisabledNoHTTPS: "WebServer: User Authorization Disabled! (Not secure over HTTP)"
+            ipWhitelistBlock: "Webserver: ${0} was denied access to '${1}'. (not whitelisted)"
+            noCertFile: "WebServer: Certificate KeyStore File not Found: ${0}"
+            ipWhitelist: "Webserver: IP Whitelist is enabled."
+            http: "WebServer: No Certificate -> Using HTTP-server for Visualization."
+            reverseProxy: "WebServer: Proxy-mode HTTPS enabled, make sure that your reverse-proxy is routing using HTTPS and Plan Alternative_IP.Address points to the Proxy"
+            authDisabledConfig: "WebServer: User Authorization Disabled! (Disabled in config)"
+    apiCSSAdded: "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"
+    apiJSAdded: "PageExtension: ${0} added javascript(s) to ${1}, ${2}"
 command:
     help:
-        dbClear:
-            inDepth: 'Clears all Plan tables, removing all Plan-data in the process.'
-            description: 'Remove ALL Plan data from a database'
-        dbHotswap:
-            inDepth: 'Reloads the plugin with the other database and changes the config to match.'
-            description: 'Change Database quickly'
-        dbUninstalled:
-            description: 'Set a server as uninstalled in the database.'
-            inDepth: 'Marks a server in Plan database as uninstalled so that it will not show up in server queries.'
-        info:
-            inDepth: 'Display the current status of the plugin.'
-            description: 'Information about the plugin'
-        dbBackup:
-            description: 'Backup data of a database to a file'
-            inDepth: 'Uses SQLite to backup the target database to a file.'
-        server:
-            inDepth: 'Obtain a link to the /server page of a specific server, or the current server if no arguments are given.'
-            description: 'View the Server Page'
-        unregister:
-            description: 'Unregister a user of Plan website'
-            inDepth: 'Use without arguments to unregister player linked user, or with username argument to unregister another user.'
-        reload:
-            inDepth: 'Disable and enable the plugin to reload any changes in config.'
-            description: 'Restart Plan'
         player:
-            description: 'View a Player Page'
-            inDepth: 'Obtain a link to the /player page of a specific player, or the current player.'
-        import:
-            description: 'Import data'
-            inDepth: 'Performs an import to load data into the database.'
-        logout:
-            description: 'Log out other users from the panel.'
-            inDepth: 'Give username argument to log out another user from the panel, give * as argument to log out everyone.'
-        servers:
-            description: 'List servers in Database'
-            inDepth: 'List ids, names and uuids of servers in the database.'
-        dbRestore:
-            description: 'Restore data from a file to a database'
-            inDepth: 'Uses SQLite backup file and overwrites contents of the target database.'
-        export:
-            inDepth: 'Performs an export to export location defined in the config.'
-            description: 'Export html or json files manually'
-        disable:
-            description: 'Disable the plugin or part of it'
-            inDepth: 'Disable the plugin or part of it until next reload/restart.'
+            inDepth: "Obtain a link to the /player page of a specific player, or the current player."
+            description: "View a Player Page"
         dbMove:
-            inDepth: 'Overwrites contents in the other database with the contents in another.'
-            description: 'Move data between Databases'
+            inDepth: "Overwrites contents in the other database with the contents in another."
+            description: "Move data between Databases"
+        disable:
+            inDepth: "Disable the plugin or part of it until next reload/restart."
+            description: "Disable the plugin or part of it"
         dbRemove:
-            inDepth: 'Removes all data linked to a player from the Current database.'
-            description: 'Remove player's data from Current database'
-        users:
-            inDepth: 'Lists web users as a table.'
-            description: 'List all web users'
-        search:
-            inDepth: 'List all matching player names to given part of a name.'
-            description: 'Search for a player name'
-        json:
-            description: 'View json of Player's raw data.'
-            inDepth: 'Allows you to download a player's data in json format. All of it.'
-        players:
-            description: 'View the Players Page'
-            inDepth: 'Obtain a link to the /players page to see a list of players.'
-        database:
-            inDepth: 'Use different database subcommands to change the data in some way'
-            description: 'Manage Plan database'
-        ingame:
-            inDepth: 'Displays some information about the player in game.'
-            description: 'View Player info in game'
+            description: "Remove player's data from Current database"
+            inDepth: "Removes all data linked to a player from the Current database."
+        dbUninstalled:
+            inDepth: "Marks a server in Plan database as uninstalled so that it will not show up in server queries."
+            description: "Set a server as uninstalled in the database."
         network:
-            inDepth: 'Obtain a link to the /network page, only does so on networks.'
-            description: 'View the Network Page'
-        register:
-            description: 'Register a Web User'
-            inDepth: 'Use without arguments to get link to register page. Use --code [code] after registration to get a user.'
-    database:
-        failDbNotOpen: '§cDatabase is ${0} - Please try again a bit later.'
-        creatingBackup: 'Creating a backup file '${0}.db' with contents of ${1}'
-        manage:
-            progress: '${0} / ${1} processed..'
-            fail: '> §cSomething went wrong: ${0}'
-            success: '> §aSuccess!'
-            failSameServer: 'Can not mark this server as uninstalled (You are on it)'
-            confirmOverwrite: 'Data in ${0} will be overwritten!'
-            failIncorrectDB: '> §c'${0}' is not a supported database.'
-            start: '> §2Processing data..'
-            failSameDB: '> §cCan not operate on to and from the same database!'
-            failNoServer: 'No server found with given parameters.'
-            confirmRemoval: 'Data in ${0} will be removed!'
-            hotswap: '§eRemember to swap to the new database (/plan db hotswap ${0}) & reload the plugin.'
-            confirm: '> §cAdd '-a' argument to confirm execution: ${0}'
-            importers:
-                Importers:
-            failFileNotFound: '> §cNo File found at ${0}'
-        playerRemoval: 'Removing data of ${0} from ${1}..'
-        warnDbNotOpen: '§eDatabase is ${0} - This might take longer than expected..'
-        unregister: 'Unregistering '${0}'..'
-        write: 'Writing to ${0}..'
-        serverUninstalled: '§aIf the server is still installed, it will automatically set itself as installed in the database.'
-        removal: 'Removing Plan-data from ${0}..'
-    fail:
-        playerNotFound: 'Player '${0}' was not found, they have no UUID.'
-        webUserNotFound: '§cUser does not exists!'
-        invalidArguments: 'Accepts following as ${0}: ${1}'
-        missingLink: 'User is not linked to your account and you don't have permission to remove other user's accounts.'
-        invalidUsername: '§cUser does not have an UUID.'
-        playerNotInDatabase: 'Player '${0}' was not found in the database.'
-        tooManyArguments: '§cSingle Argument required ${1}'
-        onAccept: 'The accepted action errored upon execution: ${0}'
-        serverNotFound: 'Server '${0}' was not found from the database.'
-        webUserExists: '§cUser already exists!'
-        noPermission: '§cYou do not have the required permission.'
-        seeConfig: 'see '${0}' in config.yml'
-        missingArguments: '§cArguments required (${0}) ${1}'
-        onDeny: 'The denied action errored upon execution: ${0}'
-        missingFeature: '§eDefine a feature to disable! (currently supports ${0})'
-        emptyString: 'The search string can not be empty'
-        unknownUsername: '§cUser has not been seen on this server'
-    general:
-        reloadComplete: '§aReload Complete'
-        noWebuser: 'You might not have a web user, use /plan register <password>'
-        failNoExporter: '§eExporter '${0}' doesn't exist'
-        webUserList: '  §2${0} §7: §f${1}'
-        successWebUserRegister: '§aAdded a new user (${0}) successfully!'
-        notifyWebUserRegister: 'Registered new user: '${0}' Perm level: ${1}'
-        failNoImporter: '§eImporter '${0}' doesn't exist'
-        noAddress: '§eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings.'
-        webPermissionLevels: '>\§70: Access all pages\§71: Access '/players' and all player pages\§72:
-                                                                       Access player page with the same username as the webuser\§73+: No permissions'
-        featureDisabled: '§aDisabled '${0}' temporarily until next plugin reload.'
-        reloadFailed: '§cSomething went wrong during reload of the plugin, a restart is recommended.'
-        pluginDisabled: '§aPlan systems are now disabled. You can still use reload to restart the plugin.'
-    confirmation:
-        cancelNoUnregister: 'Cancelled. '${0}' was not unregistered'
-        dbClear: 'You are about to remove all Plan-data in ${0}'
-        dbOverwrite: 'You are about to overwrite data in Plan ${0} with data in ${1}'
-        dbRemovePlayer: 'You are about to remove data of ${0} from ${1}'
-        cancelNoChanges: 'Cancelled. No data was changed.'
-        accept: Accept
-        unregister: 'You are about to unregister '${0}' linked to ${1}'
-        deny: Cancel
-        expired: 'Confirmation expired, use the command again'
-        confirm: 'Confirm: '
-    argument:
-        dbTypeMoveFrom:
-            description: 'Type of the database to move data from.'
-        username: username
-            description: 'Username of another user. If not specified player linked user is used.'
-        nameOrUUID: name/uuid
-            removeDescription: 'Identifier for a player that will be removed from current database.'
-            description: 'Name or UUID of a player'
-        code:
-            name: ${code}
-            description: 'Code used to finalize registration.'
-        server: server
-            description: 'Name, ID or UUID of a server'
-        backupFile: backup-file
-            description: 'Name of the backup file (case sensitive)'
-        dbTypeRemove:
-            description: 'Type of the database to remove all data from.'
-        dbTypeHotswap:
-            description: 'Type of the database to start using.'
-        subcommand: subcommand
-            description: 'Use the command without subcommand to see help.'
-        dbTypeMoveTo:
-            description: 'Type of the database to move data to. Can not be same as previous.'
-        feature: feature
-            description: 'Name of the feature to disable: ${0}'
-        dbBackup:
-            description: 'Type of the database to backup. Current database is used if not specified.'
-        exportKind: 'export kind'
+            inDepth: "Obtain a link to the /network page, only does so on networks."
+            description: "View the Network Page"
+        export:
+            description: "Export html or json files manually"
+            inDepth: "Performs an export to export location defined in the config."
+        users:
+            description: "List all web users"
+            inDepth: "Lists web users as a table."
+        dbClear:
+            inDepth: "Clears all Plan tables, removing all Plan-data in the process."
+            description: "Remove ALL Plan data from a database"
+        database:
+            description: "Manage Plan database"
+            inDepth: "Use different database subcommands to change the data in some way"
+        dbHotswap:
+            inDepth: "Reloads the plugin with the other database and changes the config to match."
+            description: "Change Database quickly"
+        import:
+            inDepth: "Performs an import to load data into the database."
+            description: "Import data"
         dbRestore:
-            description: 'Type of the database to restore to. Current database is used if not specified.'
-        importKind: 'import kind'
-    link:
-        noNetwork: 'Server is not connected to a network. The link redirects to server page.'
-        server: 'Server page: '
-        link: Link
-        player: 'Player page: '
-        playerJson: 'Player json: '
-        register: 'Register page: '
-        players: 'Players page: '
-        network: 'Network page: '
-        clickMe: 'Click me'
-    header:
-        serverList: id::name::uuid
-        inspect: '> §2Player: §f${0}'
-        analysis: '> §2Analysis Results'
-        webUsers: '> §2${0} Web Users'
-        players: '> §2Players'
-        search: '> §2${0} Results for §f${1}§2:'
-        webUserList: 'username::linked to::permission level'
-        servers: '> §2Servers'
-        help: '> §2/${0} Help'
-        network: '> §2Network Page'
-        info: '> §2Player Analytics'
-    ingame:
-        playerKills: '  §2Player Kills: §f${0}'
-        activityIndex: '  §2Activity Index: §f${0} | ${1}'
-        geolocation: '  §2Logged in from: §f${0}'
-        registered: '  §2Registered: §f${0}'
-        deaths: '  §2Deaths: §f${0}'
-        afkPlaytime: '  §2AFK Time: §f${0}'
-        lastSeen: '  §2Last Seen: §f${0}'
-        activePlaytime: '  §2Active Playtime: §f${0}'
-        timesKicked: '  §2Times Kicked: §f${0}'
-        longestSession: '  §2Longest Session: §f${0}'
-        playtime: '  §2Playtime: §f${0}'
-        mobKills: '  §2Mob Kills: §f${0}'
+            description: "Restore data from a file to a database"
+            inDepth: "Uses SQLite backup file and overwrites contents of the target database."
+        server:
+            inDepth: "Obtain a link to the /server page of a specific server, or the current server if no arguments are given."
+            description: "View the Server Page"
+        logout:
+            inDepth: "Give username argument to log out another user from the panel, give * as argument to log out everyone."
+            description: "Log out other users from the panel."
+        json:
+            inDepth: "Allows you to download a player's data in json format. All of it."
+            description: "View json of Player's raw data."
+        ingame:
+            inDepth: "Displays some information about the player in game."
+            description: "View Player info in game"
+        reload:
+            inDepth: "Disable and enable the plugin to reload any changes in config."
+            description: "Restart Plan"
+        servers:
+            description: "List servers in Database"
+            inDepth: "List ids, names and uuids of servers in the database."
+        unregister:
+            inDepth: "Use without arguments to unregister player linked user, or with username argument to unregister another user."
+            description: "Unregister a user of Plan website"
+        players:
+            inDepth: "Obtain a link to the /players page to see a list of players."
+            description: "View the Players Page"
+        register:
+            description: "Register a Web User"
+            inDepth: "Use without arguments to get link to register page. Use --code [code] after registration to get a user."
+        info:
+            description: "Information about the plugin"
+            inDepth: "Display the current status of the plugin."
+        dbBackup:
+            inDepth: "Uses SQLite to backup the target database to a file."
+            description: "Backup data of a database to a file"
+        search:
+            inDepth: "List all matching player names to given part of a name."
+            description: "Search for a player name"
     subcommand:
         info:
-            proxy: '  §2Connected to Proxy: §f${0}'
-            version: '  §2Version: §f${0}'
-            database: '  §2Current Database: §f${0}'
-            update: '  §2Update Available: §f${0}'
+            proxy: "  §2Connected to Proxy: §f${0}"
+            version: "  §2Version: §f${0}"
+            database: "  §2Current Database: §f${0}"
+            update: "  §2Update Available: §f${0}"
+    fail:
+        invalidArguments: "Accepts following as ${0}: ${1}"
+        missingLink: "User is not linked to your account and you don't have permission to remove other user's accounts."
+        missingFeature: "§eDefine a feature to disable! (currently supports ${0})"
+        tooManyArguments: "§cSingle Argument required ${1}"
+        noPermission: "§cYou do not have the required permission."
+        onDeny: "The denied action errored upon execution: ${0}"
+        serverNotFound: "Server '${0}' was not found from the database."
+        seeConfig: "see '${0}' in config.yml"
+        webUserExists: "§cUser already exists!"
+        playerNotFound: "Player '${0}' was not found, they have no UUID."
+        onAccept: "The accepted action errored upon execution: ${0}"
+        missingArguments: "§cArguments required (${0}) ${1}"
+        invalidUsername: "§cUser does not have an UUID."
+        emptyString: "The search string can not be empty"
+        unknownUsername: "§cUser has not been seen on this server"
+        playerNotInDatabase: "Player '${0}' was not found in the database."
+        webUserNotFound: "§cUser does not exists!"
+    confirmation:
+        accept: "Accept"
+        cancelNoChanges: "Cancelled. No data was changed."
+        unregister: "You are about to unregister '${0}' linked to ${1}"
+        deny: "Cancel"
+        dbRemovePlayer: "You are about to remove data of ${0} from ${1}"
+        dbOverwrite: "You are about to overwrite data in Plan ${0} with data in ${1}"
+        confirm: "Confirm: "
+        dbClear: "You are about to remove all Plan-data in ${0}"
+        expired: "Confirmation expired, use the command again"
+        cancelNoUnregister: "Cancelled. '${0}' was not unregistered"
+    argument:
+        server:
+            name: "server"
+            description: "Name, ID or UUID of a server"
+        username:
+            name: "username"
+            description: "Username of another user. If not specified player linked user is used."
+        dbRestore:
+            description: "Type of the database to restore to. Current database is used if not specified."
+        code:
+            name: "${code}"
+            description: "Code used to finalize registration."
+        backupFile:
+            description: "Name of the backup file (case sensitive)"
+            name: "backup-file"
+        dbTypeMoveFrom:
+            description: "Type of the database to move data from."
+        dbTypeHotswap:
+            description: "Type of the database to start using."
+        feature:
+            description: "Name of the feature to disable: ${0}"
+            name: "feature"
+        nameOrUUID:
+            description: "Name or UUID of a player"
+            name: "name/uuid"
+            removeDescription: "Identifier for a player that will be removed from current database."
+        subcommand:
+            description: "Use the command without subcommand to see help."
+            name: "subcommand"
+        importKind: "import kind"
+        dbTypeMoveTo:
+            description: "Type of the database to move data to. Can not be same as previous."
+        dbTypeRemove:
+            description: "Type of the database to remove all data from."
+        dbBackup:
+            description: "Type of the database to backup. Current database is used if not specified."
+        exportKind: "export kind"
+    database:
+        manage:
+            failIncorrectDB: "> §c'${0}' is not a supported database."
+            confirmRemoval: "Data in ${0} will be removed!"
+            success: "> §aSuccess!"
+            failNoServer: "No server found with given parameters."
+            start: "> §2Processing data.."
+            hotswap: "§eRemember to swap to the new database (/plan db hotswap ${0}) & reload the plugin."
+            importers: "Importers:"
+            confirm: "> §cAdd '-a' argument to confirm execution: ${0}"
+            confirmOverwrite: "Data in ${0} will be overwritten!"
+            failSameServer: "Can not mark this server as uninstalled (You are on it)"
+            failFileNotFound: "> §cNo File found at ${0}"
+            fail: "> §cSomething went wrong: ${0}"
+            progress: "${0} / ${1} processed.."
+            failSameDB: "> §cCan not operate on to and from the same database!"
+        unregister: "Unregistering '${0}'.."
+        write: "Writing to ${0}.."
+        playerRemoval: "Removing data of ${0} from ${1}.."
+        removal: "Removing Plan-data from ${0}.."
+        serverUninstalled: "§aIf the server is still installed, it will automatically set itself as installed in the database."
+        failDbNotOpen: "§cDatabase is ${0} - Please try again a bit later."
+        warnDbNotOpen: "§eDatabase is ${0} - This might take longer than expected.."
+        creatingBackup: "Creating a backup file '${0}.db' with contents of ${1}"
+    general:
+        featureDisabled: "§aDisabled '${0}' temporarily until next plugin reload."
+        failNoImporter: "§eImporter '${0}' doesn't exist"
+        failNoExporter: "§eExporter '${0}' doesn't exist"
+        noWebuser: "You might not have a web user, use /plan register <password>"
+        reloadComplete: "§aReload Complete"
+        reloadFailed: "§cSomething went wrong during reload of the plugin, a restart is recommended."
+        successWebUserRegister: "§aAdded a new user (${0}) successfully!"
+        webUserList: "  §2${0} §7: §f${1}"
+        webPermissionLevels: ">\§70: Access all pages\§71: Access '/players' and all player pages\§72: Access player page with the same username as the webuser\§73+: No permissions"
+        pluginDisabled: "§aPlan systems are now disabled. You can still use reload to restart the plugin."
+        notifyWebUserRegister: "Registered new user: '${0}' Perm level: ${1}"
+        noAddress: "§eNo address was available - using localhost as fallback. Set up 'Alternative_IP' settings."
+    link:
+        network: "Network page: "
+        noNetwork: "Server is not connected to a network. The link redirects to server page."
+        player: "Player page: "
+        register: "Register page: "
+        players: "Players page: "
+        clickMe: "Click me"
+        link: "Link"
+        playerJson: "Player json: "
+        server: "Server page: "
+    ingame:
+        geolocation: "  §2Logged in from: §f${0}"
+        longestSession: "  §2Longest Session: §f${0}"
+        mobKills: "  §2Mob Kills: §f${0}"
+        playtime: "  §2Playtime: §f${0}"
+        afkPlaytime: "  §2AFK Time: §f${0}"
+        registered: "  §2Registered: §f${0}"
+        deaths: "  §2Deaths: §f${0}"
+        timesKicked: "  §2Times Kicked: §f${0}"
+        playerKills: "  §2Player Kills: §f${0}"
+        activePlaytime: "  §2Active Playtime: §f${0}"
+        lastSeen: "  §2Last Seen: §f${0}"
+        activityIndex: "  §2Activity Index: §f${0} | ${1}"
+    header:
+        servers: "> §2Servers"
+        info: "> §2Player Analytics"
+        network: "> §2Network Page"
+        search: "> §2${0} Results for §f${1}§2:"
+        inspect: "> §2Player: §f${0}"
+        help: "> §2/${0} Help"
+        serverList: "id::name::uuid"
+        webUserList: "username::linked to::permission level"
+        webUsers: "> §2${0} Web Users"
+        players: "> §2Players"
+        analysis: "> §2Analysis Results"
     footer:
-        help: '§7Hover over command or arguments or use '/${0} ?' to learn more about them.'
+        help: "§7Hover over command or arguments or use '/${0} ?' to learn more about them."
+html:
+    title:
+        playerOverview: "Player Overview"
+        trends30days: "Trends for 30 days"
+        disk: "Disk space"
+        network: "Network"
+        weekComparison: "Week Comparison"
+        joinAddresses: "Join Addresses"
+        now: "Now"
+        graph:
+            hourByHour: "Hour by Hour"
+            networkOnlineActivity: "Network Online Activity"
+            dayByDay: "Day by Day"
+        currentPlayerbase: "Current Playerbase"
+        averagePing: "Average Ping"
+        insights30days: "Insights for 30 days"
+        worstPing: "Worst Ping"
+        playersOnlineOverview: "Online Activity Overview"
+        networkAsNumbers: "Network as Numbers"
+        length: " Length"
+        bestPing: "Best Ping"
+        server: "Server"
+        serverAsNumberse: "Server as Numbers"
+        mostPlayedWorld: "Most played World"
+        punchcard: "Punchcard"
+        performanceAsNumbers: "Performance as Numbers"
+        thirtyDaysAgo: "30 days ago"
+        last30days: "Last 30 days"
+        serverPlaytime: "Server Playtime"
+        seenNicknames: "Seen Nicknames"
+        recentSessions: "Recent Sessions"
+        world: "World Load"
+        country: "Country"
+        themeSelect: "Theme Select"
+        cpuRam: "CPU & RAM"
+        recentPvpKills: "Recent PvP Kills"
+        recentKills: "Recent Kills"
+        last24hours: "Last 24 hours"
+        player: "Player"
+        onlineActivity: "Online Activity"
+        playerbaseDevelopment: "Playerbase Development"
+        tps: "TPS"
+        serverPlaytime30days: "Server Playtime for 30 days"
+        allTime: "All Time"
+        last7days: "Last 7 days"
+        connectionInfo: "Connection Information"
+        serverOverview: "Server Overview"
+        trend: "Trend"
+        ping: "Ping"
+        asNumbers: "as Numbers"
+        pvpPveAsNumbers: "PvP & PvE as Numbers"
+        thirtyDays: "30 days"
+        sessionStart: "Session Started"
+        worldPlaytime: "World Playtime"
+        onlineActivityAsNumbers: "Online Activity as Numbers"
+        recentPvpDeaths: "Recent PvP Deaths"
+        calendar: " Calendar"
+        punchcard30days: "Punchcard for 30 days"
+        all: "All"
+    label:
+        new: "New"
+        lastPeak: "Last Peak"
+        firstSessionLength: "First session length"
+        loneNewbieJoins: "Lone newbie joins"
+        serverDowntime: "Server Downtime"
+        deaths: "Deaths"
+        longestSession: "Longest Session"
+        averageTps: "Average TPS"
+        averageActivePlaytime: "Average Active Playtime"
+        afkTime: "AFK Time"
+        nickname: "Nickname"
+        playerKills: "Player Kills"
+        regular: "Regular"
+        averageKdr: "Average KDR"
+        loadedChunks: "Loaded Chunks"
+        activityIndex: "Activity Index"
+        serverAnalysis: "Server Analysis"
+        averageEntities: "Average Entities"
+        sessionMedian: "Session Median"
+        newPlayers: "New Players"
+        diskSpace: "Free Disk Space"
+        totalPlaytime: "Total Playtime"
+        averageAfkTime: "Average AFK Time"
+        maxFreeDisk: "Max Free Disk"
+        currentUptime: "Current Uptime"
+        thirdDeadliestWeapon: "3rd PvP Weapon"
+        average: "Average"
+        bestPeak: "All Time Peak"
+        mobKdr: "Mob KDR"
+        secondDeadliestWeapon: "2nd PvP Weapon"
+        minFreeDisk: "Min Free Disk"
+        mobDeaths: "Mob caused Deaths"
+        newPlayerRetention: "New Player Retention"
+        mostActiveGamemode: "Most Active Gamemode"
+        perRegularPlayer: "/ Regular Player"
+        lastSeen: "Last Seen"
+        dayOfweek: "Day of the Week"
+        loadedEntities: "Loaded Entities"
+        favoriteServer: "Favorite Server"
+        afk: "AFK"
+        activePlaytime: "Active Playtime"
+        quickView: "Quick view"
+        serverOccupied: "Server occupied"
+        inactive: "Inactive"
+        active: "Active"
+        veryActive: "Very Active"
+        playersOnline: "Players Online"
+        perPlayer: "/ Player"
+        downtime: "Downtime"
+        duringLowTps: "During Low TPS Spikes:"
+        comparing7days: "Comparing 7 days"
+        name: "Name"
+        averageSessions: "Average Sessions"
+        totalPlayersOld: "Total Players"
+        averageSessionLength: "Average Session Length"
+        entities: "Entities"
+        deadliestWeapon: "Deadliest PvP Weapon"
+        loneJoins: "Lone joins"
+        uniquePlayers: "Unique Players"
+        banned: "Banned"
+        perDay: "/ Day"
+        totalAfk: "Total AFK"
+        lowTpsSpikes: "Low TPS Spikes"
+        indexInactive: "Inactive"
+        sessionEnded: " Ended"
+        regularPlayers: "Regular Players"
+        timesKicked: "Times Kicked"
+        registeredPlayers: "Registered Players"
+        playerDeaths: "Player caused Deaths"
+        operator: "Operator"
+        totalActive: "Total Active"
+        players: "Players"
+        mobKills: "Mob Kills"
+        session: "Session"
+        firstSession: "First session"
+        killed: "Killed"
+        relativeJoinActivity: "Relative Join Activity"
+        averageMobKdr: "Average Mob KDR"
+        indexRegular: "Regular"
+        averageChunks: "Average Chunks"
+        onlineOnFirstJoin: "Players online on first join"
+        weekdays: "'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'"
+        totalPlayers: "Total Players"
+        irregular: "Irregular"
+        lastConnected: "Last Connected"
+        averagePlaytime: "Average Playtime"
+        playtime: "Playtime"
+        registered: "Registered"
+    query:
+        label:
+            to: ">to</label>"
+            from: ">from</label>"
+            view: "Show a view"
+            makeAnother: "Make another query"
+        filter:
+            title:
+                activityGroup: "Current activity group"
+            operators: "Operators"
+            joinAddress:
+                text: "joined with address"
+            pluginGroup:
+                name: "Group: "
+                text: "are in ${plugin}'s ${group} Groups"
+            generic:
+                and: "and "
+                allPlayers: "All players"
+                start: "of Players who "
+            activity:
+                text: "are in Activity Groups"
+            country:
+                text: "have joined from country"
+            view: "  View:"
+            registeredBetween:
+                text: "Registered between"
+            nonOperators: "Non operators"
+            notBanned: "Not banned"
+            banStatus:
+                name: "Ban status"
+            operatorStatus:
+                name: "Operator status"
+            banned: "Banned"
+            playedBetween:
+                text: "Played between"
+        performQuery: "Perform Query!"
+        title:
+            text: "Query<"
+            activity: "Activity of matched players"
+            activityOnDate: 'Activity on <span id="activity-date"></span>'
+            sessionsWithinView: "Sessions within view"
+        generic:
+            are: "`are`"
+        results:
+            title: "Query Results"
+            match: "matched ${resultCount} players"
+            none: "Query produced 0 results"
+        filters:
+            loading: "Loading filters.."
+            add: "Add a filter.."
+    error:
+        auth:
+            generic: "Authentication failed due to error"
+            emptyForm: "User and Password not specified"
+            loginFailed: "User and Password did not match"
+            dbClosed: "Database is not open, check db status with /plan info"
+            userNotFound: "User does not exist"
+            noCookie: "User cookie not present"
+            registrationFailed: "Registration failed, try again (The code expires after 15 minutes)"
+            expiredCookie: "User cookie has expired"
+        authFailedTips: "- Ensure you have registered a user with <b>/plan register</b><br>- Check that the username and password are correct<br>- Username and password are case-sensitive<br><br>If you have forgotten your password, ask a staff member to delete your old user and re-register."
+        playerNotSeen: "Plan has not seen this player."
+        authFailed: "Authentication Failed."
+        noServersOnline: "No Servers online to perform the request."
+        403Forbidden: "Forbidden"
+        404NotFound: "Not Found"
+        401Unauthorized: "Unauthorized"
+        UUIDNotFound: "Player UUID was not found in the database."
+        404UnknownPage: "Make sure you're accessing a link given by a command, Examples:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>"
+        404PageNotFound: "Page does not exist."
+    value:
+        offline: " Offline"
+        localMachine: "Local Machine"
+        with: "<th>With"
+        online: " Online"
+        noKills: "No Kills"
+    register:
+        error:
+            usernameLength: "Username can be up to 50 characters, yours is "
+            checkFailed: "Checking registration status failed: "
+            failed: "Registration failed: "
+            noPassword: "You need to specify a Password"
+            noUsername: "You need to specify a Username"
+        completion2: "Code expires in 15 minutes"
+        completion: "Complete Registration"
+        passwordTip: "Password should be more than 8 characters, but there are no limitations."
+        createNewUser: "Create a new user"
+        completion4: "Or using console:"
+        completion3: "Use the following command in game to finish registration:"
+        usernameTip: "Username can be up to 50 characters."
+        completion1: "You can now finish registering the user."
+        register: "Register"
+        login: "Already have an account? Login!"
+    modal:
+        info:
+            text: "Information about the plugin"
+            contributors:
+                text: 'In addition following <span class="col-plan">awesome people</span> have contributed:'
+                code: "code contributor"
+                donate: "Extra special thanks to those who have monetarily supported the development."
+                bugreporters: "& Bug reporters!"
+                translator: "translator"
+            metrics: "bStats Metrics"
+            discord: "General Support on Discord"
+            wiki: "Plan Wiki, Tutorials & Documentation"
+            bugs: "Report Issues"
+            license: "Player Analytics is developed and licensed under"
+            developer: "is developed by"
+        version:
+            dev: "This version is a DEV release."
+            available: "is Available"
+            text: "A new version has been released and is now available for download."
+            title: "Version"
+            changelog: "View Changelog"
+            download: "Download"
+    version:
+        updateButton: "Update"
+        changelog: "View Changelog"
+        current: "You have version ${0}"
+        updateModal:
+            title: "Version ${0} is Available!"
+            text: "A new version has been released and is now available for download."
+        download: "Download Plan-${0}.jar"
+        isDev: "This version is a DEV release."
+    login:
+        forgotPassword1: "Forgot password? Unregister and register again."
+        register: "Create an Account!"
+        username: '"Username"'
+        logout: "Logout"
+        failed: "Login failed: "
+        forgotPassword4: "After using the command, "
+        password: '"Password"'
+        forgotPassword3: "Or using console:"
+        forgotPassword: "Forgot Password?"
+        forgotPassword2: "Use the following command in game to remove your current user:"
+        login: "Login"
+    sidebar:
+        playerPage: "Player Page"
+        plugins: "PLUGINS"
+        playerbaseOverview: "Playerbase Overview"
+        playerList: "Player List"
+        servers: "Servers"
+        serverPage: "Server page"
+        links: "LINKS"
+        geolocations: "Geolocations"
+        serversTitle: "SERVERS"
+        playerbase: "Playerbase"
+        networkOverview: "Network Overview"
+        overview: "Overview"
+        networkPage: "Network page"
+        sessions: "Sessions"
+        toMainPage: "to main page"
+        performance: "Performance"
+        query: "Make a query"
+        pvpPve: "PvP & PvE"
+        information: "INFORMATION"
+    side:
+        plugins: "Plugins"
+    description:
+        newPlayerRetention: "This value is a prediction based on previous players."
+        noServers: "No servers found in the database"
+        noServerOnlinActivity: "No server to display online activity for"
+        noGameServers: "Some data requires Plan to be installed on game servers."
+        noGeolocations: "Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."
+        noSpongeChunks: "Chunks unavailable on Sponge"
+        predictedNewPlayerRetention: "This value is a prediction based on previous players"
+        noServersLong: 'It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.'
+    text:
+        noExtensionData: "No Extension Data"
+        noLowTps: "No low tps spikes"
+        comparing30daysAgo: "Comparing 30d ago to Now"
+        comparing15days: "Comparing 15 days"
+        clickToExpand: "Click to expand"
+    button:
+        nightMode: "Night Mode"
+    calendar:
+        unique: "Unique:"
+        new: "New:"
+    generic:
+        none: "None"
+    unit:
+        chunks: "Chunks"
+        players: "Players"
+        entities: "Entities"
+403AccessDenied: "Access Denied"
 generic:
-    noData: 'No Data'
-403AccessDenied: 'Access Denied'
+    noData: "No Data"

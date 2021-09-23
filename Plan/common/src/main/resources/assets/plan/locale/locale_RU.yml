@@ -1,620 +1,624 @@
-html:
-  text:
-    noLowTps: 'Нет низких TPS'
-    clickToExpand: 'Нажмите, чтобы развернуть'
-    comparing15days: 'Сравнение 15 дней'
-    comparing30daysAgo: 'Сравнение 30 дней назад и сейчас'
-    noExtensionData: 'Нет данных об расширениях'
-  label:
-    comparing7days: 'Сравнение 7 дней'
-    averageKdr: 'Сред. KDR'
-    perDay: '/ День'
-    averageEntities: 'Сред. Существ'
-    averageSessions: 'Средняя сессия'
-    playersOnline: 'Игроки онлайн'
-    secondDeadliestWeapon: '2-е PvP оружие'
-    totalAfk: 'Всего AFK'
-    favoriteServer: 'Любимый сервер'
-    mostActiveGamemode: 'Самый активный игровой режим'
-    afkTime: 'Время AFK'
-    lastConnected: 'Последнее подключение'
-    regular: Постоянный
-    downtime: 'Время простоя'
-    perRegularPlayer: '/ Постоянный игрок'
-    minFreeDisk: 'Мин. свободный диск'
-    deadliestWeapon: 'Самое смертоносное оружие в PvP'
-    registered: Зарегистрирован
-    currentUptime: 'Current Uptime'
-    averageChunks: 'Сред. Чанков'
-    averageMobKdr: 'Сред. моб KDR'
-    lastSeen: 'Последнее посещение'
-    killed: Убит
-    sessionEnded: 'Конец сессии'
-    uniquePlayers: 'Уникальные игроки'
-    weekdays: ''Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье''
-    firstSession: 'Первая сессия'
-    mobKdr: 'Моб KDR'
-    averageSessionLength: 'Средняя продолжительность сессии'
-    duringLowTps: 'Во время низкого TPS:'
-    afk: AFK
-    loadedEntities: 'Загруженные объекты'
-    playerKills: 'Убито игроков'
-    active: Активный
-    totalPlaytime: 'Общее время игры'
-    newPlayers: 'Новые игроки'
-    averagePlaytime: 'Среднее время игры'
-    indexInactive: Неактивный
-    maxFreeDisk: 'Макс. свободный диск'
-    totalPlayers: 'Всего игроков'
-    averageTps: 'Средний TPS'
-    longestSession: 'Самая длинная сессия'
-    nickname: Никнейм
-    operator: Оператор
-    indexRegular: Регулярный
-    regularPlayers: 'Постоянные игроки'
-    mobDeaths: 'Смерть из-за мобов'
-    thirdDeadliestWeapon: '3-е PvP оружие'
-    serverOccupied: 'Сервер занят'
-    activityIndex: 'Индекс активности'
-    irregular: Нерегулярный
-    loneJoins: 'Одиночка присоеденился'
-    serverAnalysis: 'Анализ сервера'
-    playerDeaths: 'Смерть из-за игроков'
-    averageAfkTime: 'Среднее время AFK'
-    totalPlayersOld: 'Всего игроков'
-    activePlaytime: 'Активное время игры'
-    totalActive: 'Общая активность'
-    sessionMedian: 'Средняя сессия'
-    newPlayerRetention: 'Сохранение нового игрока'
-    onlineOnFirstJoin: 'Кол-во игроков онлайн при первом присоединении'
-    new: Новый
-    serverDowntime: 'Время простоя сервера'
-    session: Сессия
-    banned: Забанен
-    lowTpsSpikes: 'Низкий TPS'
-    averageActivePlaytime: 'Среднее время активной игры'
-    playtime: 'Время игры'
-    inactive: Неактивный
-    entities: Объекты
-    mobKills: 'Убийства мобов'
-    name: Имя
-    lastPeak: 'Последний Пик'
-    quickView: 'Быстрый просмотр'
-    relativeJoinActivity: 'Сравнительная активность присоединения'
-    deaths: Смерти
-    timesKicked: 'Кол-во киков'
-    loneNewbieJoins: 'Одинокий новичок присоединяется'
-    loadedChunks: 'Загруженные чанки'
-    dayOfweek: 'День недели'
-    firstSessionLength: 'Продолжительность первого сеанса'
-    perPlayer: '/ Игрок'
-    players: Игроки
-    diskSpace: 'Свободное дисковое пространство'
-    bestPeak: 'Максимальный Пик'
-    veryActive: 'Очень активный'
-    average: Сред.
-    registeredPlayers: 'Зарегистрированные игроки'
-  sidebar:
-    networkOverview: 'Обзор сети'
-    pvpPve: 'PvP & PvE'
-    overview: Обзор
-    links: ССЫЛКИ
-    serverPage: 'Страница сервера'
-    sessions: Сессии
-    playerbaseOverview: 'Обзор базы игроков'
-    playerbase: 'База игроков'
-    plugins: ПЛАГИНЫ
-    query: 'Сделать запрос'
-    geolocations: Геолокация
-    networkPage: 'Сетевая страница'
-    playerList: 'Список игроков'
-    toMainPage: 'На главную страницу'
-    serversTitle: СЕРВЕРЫ
-    performance: Производительность
-    playerPage: 'Страница игрока'
-    servers: Серверы
-    information: ИНФОРМАЦИЯ
-  version:
-    updateButton: Обновить
-    changelog: 'Посмотреть журнал изменений'
-    updateModal:
-      title: 'Версия ${0} доступна!'
-      text: 'Вышла новая версия, и теперь она доступна для скачивания..'
-    isDev: 'Эта версия DEV релиз.'
-    download: 'Скачать Plan-${0}.jar'
-    current: 'У вас версия ${0}'
-  error:
-    auth:
-      registrationFailed: 'Регистрация не удалась, попробуйте еще раз (Срок действия кода истекает спустя 15 минут)'
-      expiredCookie: 'Срок действия файла cookie пользователя истек'
-      noCookie: 'Пользовательский файл cookie отсутствует'
-      userNotFound: 'Пользователь не существует'
-      loginFailed: 'Пользователь и пароль не совпадают'
-      dbClosed: 'База данных не открыта, проверьте статус БД с помощью /plan info'
-      generic: 'Неуспешная авторизация из-за ошибки'
-      emptyForm: 'Имя пользователя и пароль не указаны'
-    404NotFound: 'Не обнаружена'
-    404UnknownPage: 'Убедитесь, что вы получаете доступ к ссылке, заданной командой, Примеры:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>'
-    playerNotSeen: 'Plan еще не видел этого игрока.'
-    authFailedTips: '- Убедитесь, что вы зарегистрировали пользователя с помощью <b>/plan register</b><br>- Проверьте правильность имени пользователя и пароля<br>- Имя пользователя и пароль чувствительны к регистру<br><br>Если вы забыли ваш пароль, попросите сотрудника удалить вашего старого пользователя и перерегистрировать вас.'
-    UUIDNotFound: 'UUID игрока не найден в базе данных.'
-    404PageNotFound: 'Страница не существует.'
-    401Unauthorized: 'Не авторизован'
-    noServersOnline: 'Нет серверов в сети для выполнения запроса.'
-    403Forbidden: Запрещено
-    authFailed: 'Ошибка аутентификации.'
-  title:
-    graph:
-      hourByHour: 'Статистика по часам'
-      dayByDay: 'Статистика по дням'
-      networkOnlineActivity: 'Сетевая активность'
-    recentSessions: 'Недавние сессии'
-    trends30days: 'тенденция за 30 дней'
-    thirtyDaysAgo: '30 дней назад'
-    allTime: 'Все время'
-    tps: TPS
-    themeSelect: 'Выбор темы'
-    connectionInfo: 'Информация о соединении'
-    country: Страна
-    last30days: 'Последние 30 дней'
-    asNumbers: 'В числах'
-    worstPing: 'Наихудший пинг'
-    now: Сейчас
-    worldPlaytime: 'Время игры в мире'
-    networkAsNumbers: 'Сеть в числах'
-    disk: 'Дисковое пространство'
-    sessionStart: 'Сессия началась'
-    player: Игрок
-    serverPlaytime: 'Время игры на сервере'
-    calendar: ' Календарь'
-    playerOverview: 'Обзор игрока'
-    serverAsNumberse: 'Сервер в числах'
-    thirtyDays: '30 дней'
-    last7days: 'Последние 7 дней'
-    network: Сеть
-    trend: Тенденция
-    weekComparison: 'Сравнение за неделю'
-    recentPvpKills: 'Недавние PvP убийства'
-    performanceAsNumbers: 'Производительность в числах'
-    recentKills: 'Недавние убийства'
-    last24hours: 'Последние 24 часа'
-    currentPlayerbase: 'Текущая база игроков'
-    server: Сервер
-    length: ' Длина'
-    punchcard: Перфокарты
-    punchcard30days: 'Перфокарта на 30 дней'
-    onlineActivity: 'Сетевая активность'
-    world: 'Загрузка мира'
-    pvpPveAsNumbers: 'PvP & PvE в числах'
-    serverOverview: 'Обзор сервера'
-    playerbaseDevelopment: 'Развитие базы игроков'
-    onlineActivityAsNumbers: 'Сетевая активность в числах'
-    joinAddresses: 'Адресы Входа'
-    ping: Пинг
-    recentPvpDeaths: 'Недавние PvP смерти'
-    seenNicknames: 'Увиденные никнеймы'
-    averagePing: 'Средний пинг'
-    cpuRam: 'ЦПУ & ОЗУ'
-    bestPing: 'Наилучший пинг'
-    insights30days: 'Статистика за 30 дней'
-    playersOnlineOverview: 'Обзор сетевой активности'
-    mostPlayedWorld: 'Самый популярный мир'
-    serverPlaytime30days: 'Время игры на сервере за 30 дней'
-    all: Все
-  modal:
-    version:
-      available: доступен
-      title: Версия
-      changelog: 'Просмотр журнала изменений'
-      text: 'Новая версия была выпущена и теперь доступна для скачивания.'
-      download: Скачать
-      dev: 'Эта версия является DEV релизом.'
-    info:
-      developer: разработан
-      contributors: 'Особая благодарность тем, кто оказал финансовую поддержку развитию.'
-        code: 'автор кода'
-        bugreporters: '& Баг репортеры!'
-        text: 'Кроме того, данные <span class="col-plan">замечательные люди</span> внесли свой вклад:'
-        translator: переводчик
-      license: 'Player Analytics разработан и лицензирован под'
-      metrics: 'bStats Metrics'
-      text: 'Информация о плагине'
-      bugs: 'Сообщить о проблемах'
-      discord: 'Общая поддержка в Discord'
-      wiki: 'Plan Вики, туториалы и документация'
-  register:
-    register: Регистрация
-    error:
-      usernameLength: 'Макс. длинна Имени Пользователя 50 символов, у вас '
-      checkFailed: 'Не удалось проверить статус регистрации: '
-      noPassword: 'Вам нужно указать Пароль'
-      failed: 'Регистрация не удалась: '
-      noUsername: 'Вам нужно указать Имя Пользователя'
-    completion4: 'Или используйте консоль:'
-    createNewUser: 'Создаем нового пользователя'
-    passwordTip: 'Пароль должен быть более 8 символов, макс. длинна без ограничений.'
-    login: 'Уже есть акаунт? Войти!'
-    usernameTip: 'Макс. длинна Имени Пользователя 50 символов.'
-    completion2: 'Код будет не действительным через 15 минут'
-    completion1: 'Вы теперь можете закончить регистрацию пользователя.'
-    completion: 'Регистрация завершена'
-    completion3: 'Используйте следующую команду для заканчивания регистрации:'
-  description:
-    noGameServers: 'Для некоторых данных требуется установка Plan на игровые сервера.'
-    newPlayerRetention: 'Это значение является прогнозом, основанным на предыдущих игроках..'
-    noServers: 'В базе данных не найдено ни одного сервера'
-    noGeolocations: 'Сбор геолокации должен быть включен в конфигурации (Приймите GeoLite2 EULA).'
-    noServerOnlinActivity: 'Нет сервера для отображения онлайн активности'
-    predictedNewPlayerRetention: 'Это значение является прогнозом на основе предыдущих игроков'
-    noSpongeChunks: 'Чанки не доступны на Sponge'
-    noServersLong: 'Похоже, что Plan не установлен ни на одном игровом сервере или не подключен к той же базе данных. Смотрите <a href="https://github.com/plan-player-analytics/Plan/wiki">вики</a> для помощи.'
-  query:
-    filter:
-      country:
-        text: 'присоединился с страны'
-      operators: Операторы
-      activity:
-        text: 'в Активных Группах'
-      generic:
-        and: 'добавить '
-        allPlayers: 'Все игроки'
-        start: 'с Игроков кто '
-      title:
-        activityGroup: 'Группа текущей деятельности'
-      nonOperators: 'Нету операторов'
-      pluginGroup:
-        text: 'в ${plugin} ${group} Группах'
-        name: 'Группа: '
-      banned: Забанен
-      registeredBetween:
-        text: 'Зарегистрировался между'
-      notBanned: 'Нету забаненых'
-      playedBetween:
-        text: 'Играл между'
-      joinAddress:
-        text: 'зашел по адресом'
-      banStatus:
-        name: 'Бан статус'
-      operatorStatus:
-        name: Оп-статус
-      view: '  Просмотр:'
-    label:
-      view: 'Показывать результат'
-      makeAnother: 'Сделать другой запрос'
-      to: >в</label>
-      from: >с</label>
-    performQuery: 'Выполнить Запрос!'
-    title: Запрос<
-      sessionsWithinView: 'Сеансы в пределах видимости'
-      activity: 'Активность выбраных игроков'
-      activityOnDate: 'Активность на <span id="activity-date"></span>'
-    results:
-      title: 'Результаты Запроса'
-      match: 'найдено ${resultCount} игроков'
-      none: 'Результал дал 0 результатов'
-    filters:
-      loading: 'Загрузка фильтров..'
-      add: 'Добавить фильтр..'
-    generic:
-      are: ``
-  generic:
-    none: Никто
-  login:
-    forgotPassword4: 'После использования команды, '
-    forgotPassword2: 'Используйте следующую команду в игре, чтобы удалить текущего пользователя:'
-    forgotPassword: 'Забыли пароль?'
-    forgotPassword1: 'Забыли пароль? Разрегистрируйтесь и зарегистрируйтесь заново.'
-    logout: Выход
-    username: '"Имя пользователя"'
-    failed: 'Логин не удачен: '
-    register: 'Создайте аккаунт!'
-    password: '"Пароль"'
-    login: Вход
-    forgotPassword3: 'Или используйте консоль:'
-  calendar:
-    unique:
-      Уникальных:
-    new:
-      Новое:
-  value:
-    noKills: 'Нет убийств'
-    online: ' В сети'
-    with: <th>С
-    localMachine: 'Локальная машина'
-    offline: ' Не в сети'
-  button:
-    nightMode: 'Ночной режим'
-  unit:
-    chunks: Чанки
-    entities: Объекты
-    players: Игроки
-  side:
-    plugins: Плагины
 plugin:
-  webserver:
-    fail:
-      portInUse: 'Веб-сервер не был успешно инициализирован. Порт (${0}) используется?'
-      SSLContext: 'Веб-сервер: сбой инициализации контекста SSL.'
-      certStoreLoad: 'Веб-сервер: сбой загрузки сертификата SSL.'
-      certFileEOF: 'Веб-сервер: EOF при чтении файла сертификата. (Убедитесь, что файл не пустой)'
-    notify:
-      reverseProxy: 'Веб-сервер: HTTPS в режиме прокси включен, убедитесь, что ваш обратный прокси-сервер выполняет маршрутизацию с использованием HTTPS, и Plan Alternative_IP.Address указывает на прокси'
-      ipWhitelistBlock: 'Веб-сервер: ${0} было отказано в доступе к '${1}'. (не в белом списке)'
-      authDisabledNoHTTPS: 'Веб-сервер: авторизация пользователя отключена! (Не защищен через HTTP)'
-      noCertFile: 'Веб-сервер: файл хранилища ключей сертификата не найден: ${0}'
-      authDisabledConfig: 'Веб-сервер: авторизация пользователя отключена! (Отключено в конфиге)'
-      ipWhitelist: 'Веб-сервер: Белый список IP адресов включён.'
-      http: 'Веб-сервер: Нет сертификата -> Использование HTTP-сервера для визуализации.'
-  version:
-    checkFail: 'Не удалось проверить номер последней версии'
-    isDev: ' Это DEV релиз.'
-    updateAvailableSpigot: 'Новая версия доступна на ${0}'
-    updateAvailable: 'Новый релиз (${0}) доступен ${1}'
-    checkFailGithub: 'Информация о версии не может быть загружена из Github/versions.txt'
-    isLatest: 'Вы используете последнюю версию.'
-  generic:
-    unavailable: Недоступен
-    loadingServerInfo: 'Загрузка идентификационной информации сервера'
-    dbFaultyLaunchOptions: 'Параметры запуска были ошибочными, используются стандартные (${0})'
-    yesterday: "'Вчера'"
-    dbNotifyClean: 'Удалены данные ${0} игроков.'
-    dbNotifySQLiteWAL: 'Режим SQLite WAL не поддерживается на этой версии сервера, используется стандартный. Это может или не может повлиять на производительность.'
-    unknown: Неизвестный
-    yes: Да
-    no: Нет
-    today: "'Сегодня'"
-    dbPatchesAlreadyApplied: 'Все исправления базы данных уже применены.'
-    dbApplyingPatch: 'Применение исправлений: ${0}..'
-    dbPatchesApplied: 'Все исправления базы данных успешно применены.'
-  disable:
-    webserver: 'Веб-сервер был отключен.'
-    savingSessionsTimeout: 'Превышен тайм-аут, вместо этого незавершенные сеансы сохраняются при следующем включении.'
-    savingSessions: 'Сохранение незавершенных сессий..'
-    waitingDbComplete: 'Закрыто SQLite соединение.'
-    disabled: 'Аналитика игрока отключена.'
-    processingComplete: 'Обработка завершена.'
-    waitingDb: 'Ждем окончания запросов чтобы SQLite не крашнул JVM..'
-    waitingTransactions: 'Ожидание незавершенных транзакций, чтобы избежать потери данных..'
-    waitingTransactionsComplete: 'Запросы транзакций закрыты.'
-    database: 'Обработка критических необработанных задач. (${0})'
-  enable:
-    notify:
-      storeSessions: 'Хранение сеансов, которые были сохранены до предыдущего выключения.'
-      webserverDisabled: 'Веб-сервер не был инициализирован. (WebServer.DisableWebServer: true)'
-      geoInternetRequired: 'Plan'у Требуется доступ в Интернет при первом запуске, чтобы загрузить базу геолокации GeoLite2.'
-      geoDisabled: 'Геолокационный сбор не активен. (Data.Geolocations: false)'
-      badIP: '0.0.0.0 не является допустимым адресом, настройте параметры Alternative_IP. Могут быть даны неверные ссылки!'
-      emptyIP: 'IP в server.properties пуст, а Alternative_IP не используется. Могут быть даны неверные ссылки!'
-    fail:
-      geoDBWrite: 'Что-то пошло не так при сохранении загруженной базы геолокации GeoLite2'
-      database: '${0}-Ошибка подключения к базе данных: ${1}'
-      webServer: 'Веб-сервер не инициализирован!'
-      databaseType: '${0} неподдерживаемая база данных'
-      databasePatch: 'Ошибка обновления базы данных, плагин должен быть отключен. Пожалуйста, сообщите об этой проблеме'
-    webserver: 'Веб-сервер работает на порте ${0} ( ${1} )'
-    database: '${0}-соединение с базой данных установлено.'
-    enabled: 'Аналитика игрока включена.'
-  apiCSSAdded: 'PageExtension: ${0} добавил таблицы стилей в ${1}, ${2}'
-  apiJSAdded: 'PageExtension: ${0} добавил JavaScript(ы) к ${1}, ${2}'
-command:
-  help:
-    dbClear:
-      inDepth: 'Очищает все таблицы Plan, удаляя все данные Plan в процессе.'
-      description: 'Удалить ALL Plan дату с датабазы'
-    dbHotswap:
-      inDepth: 'Перезагружает плагин с другой базой данных и изменяет конфигурацию в соответствии.'
-      description: 'Быстрое изменение базы данных'
-    dbUninstalled:
-      description: 'Установить сервер как не установленный.'
-      inDepth: 'Помечает сервер в базе данных Plan как удаленный, чтобы он не отображался в запросах сервера..'
-    info:
-      inDepth: 'Показать текущий статус плагина.'
-      description: 'Информация о плагине'
-    dbBackup:
-      description: 'Сделать бекап датабазы в файл'
-      inDepth: 'Использует SQLite для бекапа нужной датабазы в файл.'
-    server:
-      inDepth: 'Получите ссылку на страницу /server, определенного сервера или на текущий сервер, если не указаны аргументы.'
-      description: 'Просмотр страницы сервера'
-    unregister:
-      description: 'Разрегистрировать веб-пользователя'
-      inDepth: 'Используйте без аргументов, чтобы отменить регистрацию пользователя связанного с игроком, или с чтобы отменить регистрацию другого пользователя.'
-    reload:
-      inDepth: 'Отключите и включите плагин, чтобы перезагрузить любые изменения в конфигурации.'
-      description: 'Перезапустить Plan'
-    player:
-      description: 'Просмотр страницы игрока'
-      inDepth: 'Получите ссылку на страницу /player определенного игрока или текущего игрока.'
-    import:
-      description: 'Импортировать дату'
-      inDepth: 'Выполняет импорт для загрузки данных в дата базу.'
-    logout:
-      description: 'Разлогинить других пользователей панели.'
-      inDepth: 'Укажите аргумент имени пользователя для его выхода из панели, или укажите аргумент * для выхода всех.'
-    servers:
-      description: 'Список серверов в базе данных'
-      inDepth: 'Список айди, нкиов и uuid серверов в датабазе.'
-    dbRestore:
-      description: 'Востановить информацию с файла в датабазу'
-      inDepth: 'Использует файл резервной копии SQLite и перезаписывает содержимое целевой базы данных.'
-    export:
-      inDepth: 'Выполняет экспорт в место экспорта, указанное в конфигурации.'
-      description: 'Экспортировать html или json файлы самостоятельно'
+    version:
+        checkFail: "Не удалось проверить номер последней версии"
+        checkFailGithub: "Информация о версии не может быть загружена из Github/versions.txt"
+        isLatest: "Вы используете последнюю версию."
+        isDev: " Это DEV релиз."
+        updateAvailableSpigot: "Новая версия доступна на ${0}"
+        updateAvailable: "Новый релиз (${0}) доступен ${1}"
     disable:
-      description: 'Отключить плагин или его часть'
-      inDepth: 'Отключите плагин или его часть до следующей перезагрузки/перезапуска.'
-    dbMove:
-      inDepth: 'Перезаписывает содержимое другой базы данных содержимым другой базы данных.'
-      description: 'Перемещение данных между базами данных'
-    dbRemove:
-      inDepth: 'Удаляет все данные, связанные с игроком, из текущей базы данных.'
-      description: 'Удалить игроков с Текущей датабазы'
-    users:
-      inDepth: 'Список веб-пользователей как таблица.'
-      description: 'Список всех веб-пользователей'
-    search:
-      inDepth: 'Перечислите все имена игроков, соответствующие заданной части имени.'
-      description: 'Поиск по имени игрока'
-    json:
-      description: 'Посмотреть сырую json дату игрока.'
-      inDepth: 'Позволяет загружать данные плеера в формате json. На этом все.'
-    players:
-      description: 'Посмотреть страницу с игроками'
-      inDepth: 'Получите ссылку на страницу /players, чтобы увидеть список игроков.'
+        savingSessionsTimeout: "Превышен тайм-аут, вместо этого незавершенные сеансы сохраняются при следующем включении."
+        disabled: "Аналитика игрока отключена."
+        webserver: "Веб-сервер был отключен."
+        waitingTransactions: "Ожидание незавершенных транзакций, чтобы избежать потери данных.."
+        waitingDbComplete: "Закрыто SQLite соединение."
+        database: "Обработка критических необработанных задач. (${0})"
+        waitingTransactionsComplete: "Запросы транзакций закрыты."
+        waitingDb: "Ждем окончания запросов чтобы SQLite не крашнул JVM.."
+        processingComplete: "Обработка завершена."
+        savingSessions: "Сохранение незавершенных сессий.."
+    generic:
+        dbApplyingPatch: "Применение исправлений: ${0}.."
+        dbNotifySQLiteWAL: "Режим SQLite WAL не поддерживается на этой версии сервера, используется стандартный. Это может или не может повлиять на производительность."
+        dbPatchesAlreadyApplied: "Все исправления базы данных уже применены."
+        unavailable: "Недоступен"
+        dbFaultyLaunchOptions: "Параметры запуска были ошибочными, используются стандартные (${0})"
+        dbNotifyClean: "Удалены данные ${0} игроков."
+        today: "'Сегодня'"
+        yes: "Да"
+        dbPatchesApplied: "Все исправления базы данных успешно применены."
+        loadingServerInfo: "Загрузка идентификационной информации сервера"
+        unknown: "Неизвестный"
+        no: "Нет"
+        yesterday: "'Вчера'"
+    enable:
+        enabled: "Аналитика игрока включена."
+        notify:
+            geoInternetRequired: "Plan'у Требуется доступ в Интернет при первом запуске, чтобы загрузить базу геолокации GeoLite2."
+            webserverDisabled: "Веб-сервер не был инициализирован. (WebServer.DisableWebServer: true)"
+            geoDisabled: "Геолокационный сбор не активен. (Data.Geolocations: false)"
+            emptyIP: "IP в server.properties пуст, а Alternative_IP не используется. Могут быть даны неверные ссылки!"
+            badIP: "0.0.0.0 не является допустимым адресом, настройте параметры Alternative_IP. Могут быть даны неверные ссылки!"
+            storeSessions: "Хранение сеансов, которые были сохранены до предыдущего выключения."
+        database: "${0}-соединение с базой данных установлено."
+        fail:
+            geoDBWrite: "Что-то пошло не так при сохранении загруженной базы геолокации GeoLite2"
+            database: "${0}-Ошибка подключения к базе данных: ${1}"
+            databasePatch: "Ошибка обновления базы данных, плагин должен быть отключен. Пожалуйста, сообщите об этой проблеме"
+            webServer: "Веб-сервер не инициализирован!"
+            databaseType: "${0} неподдерживаемая база данных"
+        webserver: "Веб-сервер работает на порте ${0} ( ${1} )"
+    webserver:
+        fail:
+            SSLContext: "Веб-сервер: сбой инициализации контекста SSL."
+            certStoreLoad: "Веб-сервер: сбой загрузки сертификата SSL."
+            portInUse: "Веб-сервер не был успешно инициализирован. Порт (${0}) используется?"
+            certFileEOF: "Веб-сервер: EOF при чтении файла сертификата. (Убедитесь, что файл не пустой)"
+        notify:
+            authDisabledNoHTTPS: "Веб-сервер: авторизация пользователя отключена! (Не защищен через HTTP)"
+            ipWhitelistBlock: "Веб-сервер: ${0} было отказано в доступе к '${1}'. (не в белом списке)"
+            noCertFile: "Веб-сервер: файл хранилища ключей сертификата не найден: ${0}"
+            ipWhitelist: "Веб-сервер: Белый список IP адресов включён."
+            http: "Веб-сервер: Нет сертификата -> Использование HTTP-сервера для визуализации."
+            reverseProxy: "Веб-сервер: HTTPS в режиме прокси включен, убедитесь, что ваш обратный прокси-сервер выполняет маршрутизацию с использованием HTTPS, и Plan Alternative_IP.Address указывает на прокси"
+            authDisabledConfig: "Веб-сервер: авторизация пользователя отключена! (Отключено в конфиге)"
+    apiCSSAdded: "PageExtension: ${0} добавил таблицы стилей в ${1}, ${2}"
+    apiJSAdded: "PageExtension: ${0} добавил JavaScript(ы) к ${1}, ${2}"
+command:
+    help:
+        player:
+            inDepth: "Получите ссылку на страницу /player определенного игрока или текущего игрока."
+            description: "Просмотр страницы игрока"
+        dbMove:
+            inDepth: "Перезаписывает содержимое другой базы данных содержимым другой базы данных."
+            description: "Перемещение данных между базами данных"
+        disable:
+            inDepth: "Отключите плагин или его часть до следующей перезагрузки/перезапуска."
+            description: "Отключить плагин или его часть"
+        dbRemove:
+            description: "Удалить игроков с Текущей датабазы"
+            inDepth: "Удаляет все данные, связанные с игроком, из текущей базы данных."
+        dbUninstalled:
+            inDepth: "Помечает сервер в базе данных Plan как удаленный, чтобы он не отображался в запросах сервера.."
+            description: "Установить сервер как не установленный."
+        network:
+            inDepth: "Получить ссылку на страницу /network, только в сетях."
+            description: "Просмотр веб-страницы"
+        export:
+            description: "Экспортировать html или json файлы самостоятельно"
+            inDepth: "Выполняет экспорт в место экспорта, указанное в конфигурации."
+        users:
+            description: "Список всех веб-пользователей"
+            inDepth: "Список веб-пользователей как таблица."
+        dbClear:
+            inDepth: "Очищает все таблицы Plan, удаляя все данные Plan в процессе."
+            description: "Удалить ALL Plan дату с датабазы"
+        database:
+            description: "Управление датабазой Plan"
+            inDepth: "Используйте разные аргументы чтобы изменить датабазу в нужную вам сторону"
+        dbHotswap:
+            inDepth: "Перезагружает плагин с другой базой данных и изменяет конфигурацию в соответствии."
+            description: "Быстрое изменение базы данных"
+        import:
+            inDepth: "Выполняет импорт для загрузки данных в дата базу."
+            description: "Импортировать дату"
+        dbRestore:
+            description: "Востановить информацию с файла в датабазу"
+            inDepth: "Использует файл резервной копии SQLite и перезаписывает содержимое целевой базы данных."
+        server:
+            inDepth: "Получите ссылку на страницу /server, определенного сервера или на текущий сервер, если не указаны аргументы."
+            description: "Просмотр страницы сервера"
+        logout:
+            inDepth: "Укажите аргумент имени пользователя для его выхода из панели, или укажите аргумент * для выхода всех."
+            description: "Разлогинить других пользователей панели."
+        json:
+            inDepth: "Позволяет загружать данные плеера в формате json. На этом все."
+            description: "Посмотреть сырую json дату игрока."
+        ingame:
+            inDepth: "Отображает некоторую информацию о игроке в игре."
+            description: "Просмотр информации об игроке в игре"
+        reload:
+            inDepth: "Отключите и включите плагин, чтобы перезагрузить любые изменения в конфигурации."
+            description: "Перезапустить Plan"
+        servers:
+            description: "Список серверов в базе данных"
+            inDepth: "Список айди, нкиов и uuid серверов в датабазе."
+        unregister:
+            inDepth: "Используйте без аргументов, чтобы отменить регистрацию пользователя связанного с игроком, или с чтобы отменить регистрацию другого пользователя."
+            description: "Разрегистрировать веб-пользователя"
+        players:
+            inDepth: "Получите ссылку на страницу /players, чтобы увидеть список игроков."
+            description: "Посмотреть страницу с игроками"
+        register:
+            description: "Зарегистрировать веб-пользователя"
+            inDepth: "Используйте без аргументов, чтобы получить ссылку на страницу регистрации. Используйте --code [код] после регистрации, чтобы получить пользователя."
+        info:
+            description: "Информация о плагине"
+            inDepth: "Показать текущий статус плагина."
+        dbBackup:
+            inDepth: "Использует SQLite для бекапа нужной датабазы в файл."
+            description: "Сделать бекап датабазы в файл"
+        search:
+            inDepth: "Перечислите все имена игроков, соответствующие заданной части имени."
+            description: "Поиск по имени игрока"
+    subcommand:
+        info:
+            proxy: "  §2Подключен к прокси: §f${0}"
+            version: "  §2Версия: §f${0}"
+            database: "  §2Текущая база данных: §f${0}"
+            update: "  §2Доступно обновление: §f${0}"
+    fail:
+        invalidArguments: "Принимает следующее как ${0}: ${1}"
+        missingLink: "Пользователь не связан с вашей учетной записью, и у вас нет прав на удаление учетных записей других пользователей."
+        missingFeature: "§eОпределите функцию для отключения! (в настоящее время поддерживает ${0})"
+        tooManyArguments: "§cТребуется только один аргумент ${1}"
+        noPermission: "§cУ вас нет необходимых прав."
+        onDeny: "Во время выполнения отмененного действия возникла ошибка: ${0}"
+        serverNotFound: "Сервер '${0}' не был найден в датабазе."
+        seeConfig: "смотрите '${0}' в config.yml"
+        webUserExists: "§cПользователь уже существует!"
+        playerNotFound: "Игрок '${0}' не был найден, он не имеет UUID."
+        onAccept: "Во время выполнения подтвержденного действия возникла ошибка: ${0}"
+        missingArguments: "§cТребуется аргумент (${0}) ${1}"
+        invalidUsername: "§cПользователь не имеет UUID."
+        emptyString: "Строка для поиска не может быть пустой"
+        unknownUsername: "§cПользователь не был замечен на этом сервере"
+        playerNotInDatabase: "Игрок '${0}' не был найден в датабазе."
+        webUserNotFound: "§cПользователь не существует!"
+    confirmation:
+        accept: "Принять"
+        cancelNoChanges: "Отменено. Ничего не было изменено."
+        unregister: "Вы точно хотите разрегестрировать '${0}' привязаного к ${1}"
+        deny: "Отменить"
+        dbRemovePlayer: "Вы точно хотите удалить игрока ${0} с ${1}"
+        dbOverwrite: "Вы точно хотите переписать всю информацию ${0} на ${1}"
+        confirm: "Подтвердить: "
+        dbClear: "Вы точно хотите удалить всю Plan-дату в ${0}"
+        expired: "Срок подтверждения истек, используйте команду заново"
+        cancelNoUnregister: "Отменено. '${0}' не был разрегистрирован"
+    argument:
+        server:
+            name: "сервер"
+            description: "Ник, ID или UUID сервера"
+        username:
+            name: "ник"
+            description: "Ник другого игрока. Если не указан игрок, используется связанный пользователь."
+        dbRestore:
+            description: "Тип датабазы для востановления. Текущая база данных, если не указано."
+        code:
+            name: "${code}"
+            description: "Код, использованный для завершения регистрации."
+        backupFile:
+            description: "Имя бекап файла (чуствительно к регистру)"
+            name: "бекап-файл"
+        dbTypeMoveFrom:
+            description: "Тип датабазы для переместить информацию с."
+        dbTypeHotswap:
+            description: "Тип датабазы для начала использования."
+        feature:
+            description: "Тип датабазы для отключения: ${0}"
+            name: "функция"
+        nameOrUUID:
+            description: "Ник или UUID игрока"
+            name: "ник/uuid"
+            removeDescription: "Идентификатор игрока, который будет удален из текущей базы данных."
+        subcommand:
+            description: "Используйте команду без аргументов, для помощи."
+            name: "под-команда"
+        importKind: "вид импорта"
+        dbTypeMoveTo:
+            description: "Тип датабазы для переместить информацию в. Может быть не одинаковой с предидущей."
+        dbTypeRemove:
+            description: "Тип датабазы для удаления всех данных."
+        dbBackup:
+            description: "Тип датабазы для бекапа. Текущая база данных, если не указано."
+        exportKind: "вид экспорта"
     database:
-      inDepth: 'Используйте разные аргументы чтобы изменить датабазу в нужную вам сторону'
-      description: 'Управление датабазой Plan'
+        manage:
+            failIncorrectDB: "> §c'${0}' неподдерживаемая база данных."
+            confirmRemoval: "Данные в ${0} будут удалены!"
+            success: "> §aУспех!"
+            failNoServer: "Сервер с данными параметрами не найден."
+            start: "> §2Обработка данных.."
+            hotswap: "§eНе забудьте поменять на новую базу данных (/plan db hotswap ${0}) и перезагрузить плагин."
+            importers: "Импортеры:"
+            confirm: "> §cДобавьте аргумент '-a' для подтверждения выполнения: ${0}"
+            confirmOverwrite: "Данные в ${0} будут перезаписаны!"
+            failSameServer: "Невозможно пометить этот сервер как удаленный (Вы на нем)"
+            failFileNotFound: "> §cФайл не найден в ${0}"
+            fail: "> §cЧто-то пошло не так: ${0}"
+            progress: "${0} / ${1} сделано.."
+            failSameDB: "> §cНельзя работать с одной и той же базой данных!"
+        unregister: "Разрегистрируем '${0}'.."
+        write: "Записываем в ${0}.."
+        playerRemoval: "Удаляем игрока ${0} с ${1}.."
+        removal: "Удаляем дату с ${0}.."
+        serverUninstalled: "§aЕсли сервер все еще установлен, он автоматически добавится как установленный в базе данных."
+        failDbNotOpen: "§cБаза данных ${0} - Пожалуйста попробуйте снова немного позже."
+        warnDbNotOpen: "§eБаза данных ${0} - Это может занять больше времени, чем ожидалось."
+        creatingBackup: "Создаем бекап файл '${0}.db' с данными о ${1}"
+    general:
+        featureDisabled: "§aВременно отключено '${0}' до следующей перезагрузки плагина."
+        failNoImporter: "§eИмпортер '${0}' не существует"
+        failNoExporter: "§eЭкспортер '${0}' не существует"
+        noWebuser: "Возможно, вы не имеете веб-пользователя, используйте /plan register <пароль>"
+        reloadComplete: "§aПерезагрузка завершена"
+        reloadFailed: "§cЧто-то пошло не так во время перезагрузки плагина, рекомендуется перезапуск сервера."
+        successWebUserRegister: "§aНовый пользователь (${0}) успешно добавлен!"
+        webUserList: "  §2${0} §7: §f${1}"
+        webPermissionLevels: ">\§70: Доступ ко всем страницам\§71: Доступ к '/players' и всем страницам игроков\§72: Доступ к странице игрока с тем же именем пользователя, что и для веб-пользователя\§73+: Нет прав"
+        pluginDisabled: "§aPlan сейчас отключен. Вы всё еще можете использовать reload для перезагрузки плагина."
+        notifyWebUserRegister: "Зарегистрирован новый пользователь: '${0}' Уровень прав: ${1}"
+        noAddress: "§eАдрес недоступен - используется localhost в качестве запасного айпи. Настройте 'Alternative_IP'."
+    link:
+        network: "Страница сети: "
+        noNetwork: "Сервер не подключен к сети. Ссылка переадресовывает на главную страницу."
+        player: "Траница игрока: "
+        register: "Регистриционная страница: "
+        players: "Страница игроков: "
+        clickMe: "Нажми на меня"
+        link: "Ссылка"
+        playerJson: "JSON Страница игрока: "
+        server: "Страница серверов: "
     ingame:
-      inDepth: 'Отображает некоторую информацию о игроке в игре.'
-      description: 'Просмотр информации об игроке в игре'
-    network:
-      inDepth: 'Получить ссылку на страницу /network, только в сетях.'
-      description: 'Просмотр веб-страницы'
+        geolocation: "  §2Присоединился из: §f${0}"
+        longestSession: "  §2Самая длинная сессия: §f${0}"
+        mobKills: "  §2Убито мобов: §f${0}"
+        playtime: "  §2Время игры: §f${0}"
+        afkPlaytime: "  §2Время AFK: §f${0}"
+        registered: "  §2Зарегистрировался: §f${0}"
+        deaths: "  §2Смерти: §f${0}"
+        timesKicked: "  §2Кол-во киков: §f${0}"
+        playerKills: "  §2Убито игроков: §f${0}"
+        activePlaytime: "  §2Активное время игры: §f${0}"
+        lastSeen: "  §2Последнее посещение: §f${0}"
+        activityIndex: "  §2Индекс активности: §f${0} | ${1}"
+    header:
+        servers: "> §2Серверы"
+        info: "> §2Аналитика игрока"
+        network: "> §2Сетевая страница"
+        search: "> §2${0} Результаты для §f${1}§2:"
+        inspect: "> §2Игрок: §f${0}"
+        help: "> §2/${0} Помощь"
+        serverList: "id::name::uuid"
+        webUserList: "username::linked to::permission level"
+        webUsers: "> §2${0} Веб-пользователи"
+        players: "> §2Игроки"
+        analysis: "> §2Результаты анализа"
+    footer:
+        help: "§7Наведите указатель мыши на команду или аргументы, или используйте '/${0} ?' для помощи о них."
+html:
+    title:
+        playerOverview: "Обзор игрока"
+        trends30days: "тенденция за 30 дней"
+        disk: "Дисковое пространство"
+        network: "Сеть"
+        weekComparison: "Сравнение за неделю"
+        joinAddresses: "Адресы Входа"
+        now: "Сейчас"
+        graph:
+            hourByHour: "Статистика по часам"
+            networkOnlineActivity: "Сетевая активность"
+            dayByDay: "Статистика по дням"
+        currentPlayerbase: "Текущая база игроков"
+        averagePing: "Средний пинг"
+        insights30days: "Статистика за 30 дней"
+        worstPing: "Наихудший пинг"
+        playersOnlineOverview: "Обзор сетевой активности"
+        networkAsNumbers: "Сеть в числах"
+        length: " Длина"
+        bestPing: "Наилучший пинг"
+        server: "Сервер"
+        serverAsNumberse: "Сервер в числах"
+        mostPlayedWorld: "Самый популярный мир"
+        punchcard: "Перфокарты"
+        performanceAsNumbers: "Производительность в числах"
+        thirtyDaysAgo: "30 дней назад"
+        last30days: "Последние 30 дней"
+        serverPlaytime: "Время игры на сервере"
+        seenNicknames: "Увиденные никнеймы"
+        recentSessions: "Недавние сессии"
+        world: "Загрузка мира"
+        country: "Страна"
+        themeSelect: "Выбор темы"
+        cpuRam: "ЦПУ & ОЗУ"
+        recentPvpKills: "Недавние PvP убийства"
+        recentKills: "Недавние убийства"
+        last24hours: "Последние 24 часа"
+        player: "Игрок"
+        onlineActivity: "Сетевая активность"
+        playerbaseDevelopment: "Развитие базы игроков"
+        tps: "TPS"
+        serverPlaytime30days: "Время игры на сервере за 30 дней"
+        allTime: "Все время"
+        last7days: "Последние 7 дней"
+        connectionInfo: "Информация о соединении"
+        serverOverview: "Обзор сервера"
+        trend: "Тенденция"
+        ping: "Пинг"
+        asNumbers: "В числах"
+        pvpPveAsNumbers: "PvP & PvE в числах"
+        thirtyDays: "30 дней"
+        sessionStart: "Сессия началась"
+        worldPlaytime: "Время игры в мире"
+        onlineActivityAsNumbers: "Сетевая активность в числах"
+        recentPvpDeaths: "Недавние PvP смерти"
+        calendar: " Календарь"
+        punchcard30days: "Перфокарта на 30 дней"
+        all: "Все"
+    label:
+        new: "Новый"
+        lastPeak: "Последний Пик"
+        firstSessionLength: "Продолжительность первого сеанса"
+        loneNewbieJoins: "Одинокий новичок присоединяется"
+        serverDowntime: "Время простоя сервера"
+        deaths: "Смерти"
+        longestSession: "Самая длинная сессия"
+        averageTps: "Средний TPS"
+        averageActivePlaytime: "Среднее время активной игры"
+        afkTime: "Время AFK"
+        nickname: "Никнейм"
+        playerKills: "Убито игроков"
+        regular: "Постоянный"
+        averageKdr: "Сред. KDR"
+        loadedChunks: "Загруженные чанки"
+        activityIndex: "Индекс активности"
+        serverAnalysis: "Анализ сервера"
+        averageEntities: "Сред. Существ"
+        sessionMedian: "Средняя сессия"
+        newPlayers: "Новые игроки"
+        diskSpace: "Свободное дисковое пространство"
+        totalPlaytime: "Общее время игры"
+        averageAfkTime: "Среднее время AFK"
+        maxFreeDisk: "Макс. свободный диск"
+        currentUptime: "Current Uptime"
+        thirdDeadliestWeapon: "3-е PvP оружие"
+        average: "Сред."
+        bestPeak: "Максимальный Пик"
+        mobKdr: "Моб KDR"
+        secondDeadliestWeapon: "2-е PvP оружие"
+        minFreeDisk: "Мин. свободный диск"
+        mobDeaths: "Смерть из-за мобов"
+        newPlayerRetention: "Сохранение нового игрока"
+        mostActiveGamemode: "Самый активный игровой режим"
+        perRegularPlayer: "/ Постоянный игрок"
+        lastSeen: "Последнее посещение"
+        dayOfweek: "День недели"
+        loadedEntities: "Загруженные объекты"
+        favoriteServer: "Любимый сервер"
+        afk: "AFK"
+        activePlaytime: "Активное время игры"
+        quickView: "Быстрый просмотр"
+        serverOccupied: "Сервер занят"
+        inactive: "Неактивный"
+        active: "Активный"
+        veryActive: "Очень активный"
+        playersOnline: "Игроки онлайн"
+        perPlayer: "/ Игрок"
+        downtime: "Время простоя"
+        duringLowTps: "Во время низкого TPS:"
+        comparing7days: "Сравнение 7 дней"
+        name: "Имя"
+        averageSessions: "Средняя сессия"
+        totalPlayersOld: "Всего игроков"
+        averageSessionLength: "Средняя продолжительность сессии"
+        entities: "Объекты"
+        deadliestWeapon: "Самое смертоносное оружие в PvP"
+        loneJoins: "Одиночка присоеденился"
+        uniquePlayers: "Уникальные игроки"
+        banned: "Забанен"
+        perDay: "/ День"
+        totalAfk: "Всего AFK"
+        lowTpsSpikes: "Низкий TPS"
+        indexInactive: "Неактивный"
+        sessionEnded: "Конец сессии"
+        regularPlayers: "Постоянные игроки"
+        timesKicked: "Кол-во киков"
+        registeredPlayers: "Зарегистрированные игроки"
+        playerDeaths: "Смерть из-за игроков"
+        operator: "Оператор"
+        totalActive: "Общая активность"
+        players: "Игроки"
+        mobKills: "Убийства мобов"
+        session: "Сессия"
+        firstSession: "Первая сессия"
+        killed: "Убит"
+        relativeJoinActivity: "Сравнительная активность присоединения"
+        averageMobKdr: "Сред. моб KDR"
+        indexRegular: "Регулярный"
+        averageChunks: "Сред. Чанков"
+        onlineOnFirstJoin: "Кол-во игроков онлайн при первом присоединении"
+        weekdays: "'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'"
+        totalPlayers: "Всего игроков"
+        irregular: "Нерегулярный"
+        lastConnected: "Последнее подключение"
+        averagePlaytime: "Среднее время игры"
+        playtime: "Время игры"
+        registered: "Зарегистрирован"
+    query:
+        label:
+            to: ">в</label>"
+            from: ">с</label>"
+            view: "Показывать результат"
+            makeAnother: "Сделать другой запрос"
+        filter:
+            title:
+                activityGroup: "Группа текущей деятельности"
+            operators: "Операторы"
+            joinAddress:
+                text: "зашел по адресом"
+            pluginGroup:
+                name: "Группа: "
+                text: "в ${plugin} ${group} Группах"
+            generic:
+                and: "добавить "
+                allPlayers: "Все игроки"
+                start: "с Игроков кто "
+            activity:
+                text: "в Активных Группах"
+            country:
+                text: "присоединился с страны"
+            view: "  Просмотр:"
+            registeredBetween:
+                text: "Зарегистрировался между"
+            nonOperators: "Нету операторов"
+            notBanned: "Нету забаненых"
+            banStatus:
+                name: "Бан статус"
+            operatorStatus:
+                name: "Оп-статус"
+            banned: "Забанен"
+            playedBetween:
+                text: "Играл между"
+        performQuery: "Выполнить Запрос!"
+        title:
+            text: "Запрос<"
+            activity: "Активность выбраных игроков"
+            activityOnDate: 'Активность на <span id="activity-date"></span>'
+            sessionsWithinView: "Сеансы в пределах видимости"
+        generic:
+            are: "``"
+        results:
+            title: "Результаты Запроса"
+            match: "найдено ${resultCount} игроков"
+            none: "Результал дал 0 результатов"
+        filters:
+            loading: "Загрузка фильтров.."
+            add: "Добавить фильтр.."
+    error:
+        auth:
+            generic: "Неуспешная авторизация из-за ошибки"
+            emptyForm: "Имя пользователя и пароль не указаны"
+            loginFailed: "Пользователь и пароль не совпадают"
+            dbClosed: "База данных не открыта, проверьте статус БД с помощью /plan info"
+            userNotFound: "Пользователь не существует"
+            noCookie: "Пользовательский файл cookie отсутствует"
+            registrationFailed: "Регистрация не удалась, попробуйте еще раз (Срок действия кода истекает спустя 15 минут)"
+            expiredCookie: "Срок действия файла cookie пользователя истек"
+        authFailedTips: "- Убедитесь, что вы зарегистрировали пользователя с помощью <b>/plan register</b><br>- Проверьте правильность имени пользователя и пароля<br>- Имя пользователя и пароль чувствительны к регистру<br><br>Если вы забыли ваш пароль, попросите сотрудника удалить вашего старого пользователя и перерегистрировать вас."
+        playerNotSeen: "Plan еще не видел этого игрока."
+        authFailed: "Ошибка аутентификации."
+        noServersOnline: "Нет серверов в сети для выполнения запроса."
+        403Forbidden: "Запрещено"
+        404NotFound: "Не обнаружена"
+        401Unauthorized: "Не авторизован"
+        UUIDNotFound: "UUID игрока не найден в базе данных."
+        404UnknownPage: "Убедитесь, что вы получаете доступ к ссылке, заданной командой, Примеры:</p><p>/player/{uuid/name}<br>/server/{uuid/name/id}</p>"
+        404PageNotFound: "Страница не существует."
+    value:
+        offline: " Не в сети"
+        localMachine: "Локальная машина"
+        with: "<th>С"
+        online: " В сети"
+        noKills: "Нет убийств"
     register:
-      description: 'Зарегистрировать веб-пользователя'
-      inDepth: 'Используйте без аргументов, чтобы получить ссылку на страницу регистрации. Используйте --code [код] после регистрации, чтобы получить пользователя.'
-  database:
-    failDbNotOpen: '§cБаза данных ${0} - Пожалуйста попробуйте снова немного позже.'
-    creatingBackup: 'Создаем бекап файл '${0}.db' с данными о ${1}'
-    manage:
-      progress: '${0} / ${1} сделано..'
-      fail: '> §cЧто-то пошло не так: ${0}'
-      success: '> §aУспех!'
-      failSameServer: 'Невозможно пометить этот сервер как удаленный (Вы на нем)'
-      confirmOverwrite: 'Данные в ${0} будут перезаписаны!'
-      failIncorrectDB: '> §c'${0}' неподдерживаемая база данных.'
-      start: '> §2Обработка данных..'
-      failSameDB: '> §cНельзя работать с одной и той же базой данных!'
-      failNoServer: 'Сервер с данными параметрами не найден.'
-      confirmRemoval: 'Данные в ${0} будут удалены!'
-      hotswap: '§eНе забудьте поменять на новую базу данных (/plan db hotswap ${0}) и перезагрузить плагин.'
-      confirm: '> §cДобавьте аргумент '-a' для подтверждения выполнения: ${0}'
-      importers:
-        Импортеры:
-      failFileNotFound: '> §cФайл не найден в ${0}'
-    playerRemoval: 'Удаляем игрока ${0} с ${1}..'
-    warnDbNotOpen: '§eБаза данных ${0} - Это может занять больше времени, чем ожидалось.'
-    unregister: 'Разрегистрируем '${0}'..'
-    write: 'Записываем в ${0}..'
-    serverUninstalled: '§aЕсли сервер все еще установлен, он автоматически добавится как установленный в базе данных.'
-    removal: 'Удаляем дату с ${0}..'
-  fail:
-    playerNotFound: 'Игрок '${0}' не был найден, он не имеет UUID.'
-    webUserNotFound: '§cПользователь не существует!'
-    invalidArguments: 'Принимает следующее как ${0}: ${1}'
-    missingLink: 'Пользователь не связан с вашей учетной записью, и у вас нет прав на удаление учетных записей других пользователей.'
-    invalidUsername: '§cПользователь не имеет UUID.'
-    playerNotInDatabase: 'Игрок '${0}' не был найден в датабазе.'
-    tooManyArguments: '§cТребуется только один аргумент ${1}'
-    onAccept: 'Во время выполнения подтвержденного действия возникла ошибка: ${0}'
-    serverNotFound: 'Сервер '${0}' не был найден в датабазе.'
-    webUserExists: '§cПользователь уже существует!'
-    noPermission: '§cУ вас нет необходимых прав.'
-    seeConfig: 'смотрите '${0}' в config.yml'
-    missingArguments: '§cТребуется аргумент (${0}) ${1}'
-    onDeny: 'Во время выполнения отмененного действия возникла ошибка: ${0}'
-    missingFeature: '§eОпределите функцию для отключения! (в настоящее время поддерживает ${0})'
-    emptyString: 'Строка для поиска не может быть пустой'
-    unknownUsername: '§cПользователь не был замечен на этом сервере'
-  general:
-    reloadComplete: '§aПерезагрузка завершена'
-    noWebuser: 'Возможно, вы не имеете веб-пользователя, используйте /plan register <пароль>'
-    failNoExporter: '§eЭкспортер '${0}' не существует'
-    webUserList: '  §2${0} §7: §f${1}'
-    successWebUserRegister: '§aНовый пользователь (${0}) успешно добавлен!'
-    notifyWebUserRegister: 'Зарегистрирован новый пользователь: '${0}' Уровень прав: ${1}'
-    failNoImporter: '§eИмпортер '${0}' не существует'
-    noAddress: '§eАдрес недоступен - используется localhost в качестве запасного айпи. Настройте 'Alternative_IP'.'
-    webPermissionLevels: '>\§70: Доступ ко всем страницам\§71: Доступ к '/players' и всем страницам игроков\§72:
-                                                                           Доступ к странице игрока с тем же именем пользователя, что и для веб-пользователя\§73+: Нет прав'
-    featureDisabled: '§aВременно отключено '${0}' до следующей перезагрузки плагина.'
-    reloadFailed: '§cЧто-то пошло не так во время перезагрузки плагина, рекомендуется перезапуск сервера.'
-    pluginDisabled: '§aPlan сейчас отключен. Вы всё еще можете использовать reload для перезагрузки плагина.'
-  confirmation:
-    cancelNoUnregister: 'Отменено. '${0}' не был разрегистрирован'
-    dbClear: 'Вы точно хотите удалить всю Plan-дату в ${0}'
-    dbOverwrite: 'Вы точно хотите переписать всю информацию ${0} на ${1}'
-    dbRemovePlayer: 'Вы точно хотите удалить игрока ${0} с ${1}'
-    cancelNoChanges: 'Отменено. Ничего не было изменено.'
-    accept: Принять
-    unregister: 'Вы точно хотите разрегестрировать '${0}' привязаного к ${1}'
-    deny: Отменить
-    expired: 'Срок подтверждения истек, используйте команду заново'
-    confirm: 'Подтвердить: '
-  argument:
-    dbTypeMoveFrom:
-      description: 'Тип датабазы для переместить информацию с.'
-    username: ник
-      description: 'Ник другого игрока. Если не указан игрок, используется связанный пользователь.'
-    nameOrUUID: ник/uuid
-      removeDescription: 'Идентификатор игрока, который будет удален из текущей базы данных.'
-      description: 'Ник или UUID игрока'
-    code:
-      name: ${code}
-      description: 'Код, использованный для завершения регистрации.'
-    server: сервер
-      description: 'Ник, ID или UUID сервера'
-    backupFile: бекап-файл
-      description: 'Имя бекап файла (чуствительно к регистру)'
-    dbTypeRemove:
-      description: 'Тип датабазы для удаления всех данных.'
-    dbTypeHotswap:
-      description: 'Тип датабазы для начала использования.'
-    subcommand: под-команда
-      description: 'Используйте команду без аргументов, для помощи.'
-    dbTypeMoveTo:
-      description: 'Тип датабазы для переместить информацию в. Может быть не одинаковой с предидущей.'
-    feature: функция
-      description: 'Тип датабазы для отключения: ${0}'
-    dbBackup:
-      description: 'Тип датабазы для бекапа. Текущая база данных, если не указано.'
-    exportKind: 'вид экспорта'
-    dbRestore:
-      description: 'Тип датабазы для востановления. Текущая база данных, если не указано.'
-    importKind: 'вид импорта'
-  link:
-    noNetwork: 'Сервер не подключен к сети. Ссылка переадресовывает на главную страницу.'
-    server: 'Страница серверов: '
-    link: Ссылка
-    player: 'Траница игрока: '
-    playerJson: 'JSON Страница игрока: '
-    register: 'Регистриционная страница: '
-    players: 'Страница игроков: '
-    network: 'Страница сети: '
-    clickMe: 'Нажми на меня'
-  header:
-    serverList: id::name::uuid
-    inspect: '> §2Игрок: §f${0}'
-    analysis: '> §2Результаты анализа'
-    webUsers: '> §2${0} Веб-пользователи'
-    players: '> §2Игроки'
-    search: '> §2${0} Результаты для §f${1}§2:'
-    webUserList: 'username::linked to::permission level'
-    servers: '> §2Серверы'
-    help: '> §2/${0} Помощь'
-    network: '> §2Сетевая страница'
-    info: '> §2Аналитика игрока'
-  ingame:
-    playerKills: '  §2Убито игроков: §f${0}'
-    activityIndex: '  §2Индекс активности: §f${0} | ${1}'
-    geolocation: '  §2Присоединился из: §f${0}'
-    registered: '  §2Зарегистрировался: §f${0}'
-    deaths: '  §2Смерти: §f${0}'
-    afkPlaytime: '  §2Время AFK: §f${0}'
-    lastSeen: '  §2Последнее посещение: §f${0}'
-    activePlaytime: '  §2Активное время игры: §f${0}'
-    timesKicked: '  §2Кол-во киков: §f${0}'
-    longestSession: '  §2Самая длинная сессия: §f${0}'
-    playtime: '  §2Время игры: §f${0}'
-    mobKills: '  §2Убито мобов: §f${0}'
-  subcommand:
-    info:
-      proxy: '  §2Подключен к прокси: §f${0}'
-      version: '  §2Версия: §f${0}'
-      database: '  §2Текущая база данных: §f${0}'
-      update: '  §2Доступно обновление: §f${0}'
-  footer:
-    help: '§7Наведите указатель мыши на команду или аргументы, или используйте '/${0} ?' для помощи о них.'
+        error:
+            usernameLength: "Макс. длинна Имени Пользователя 50 символов, у вас "
+            checkFailed: "Не удалось проверить статус регистрации: "
+            failed: "Регистрация не удалась: "
+            noPassword: "Вам нужно указать Пароль"
+            noUsername: "Вам нужно указать Имя Пользователя"
+        completion2: "Код будет не действительным через 15 минут"
+        completion: "Регистрация завершена"
+        passwordTip: "Пароль должен быть более 8 символов, макс. длинна без ограничений."
+        createNewUser: "Создаем нового пользователя"
+        completion4: "Или используйте консоль:"
+        completion3: "Используйте следующую команду для заканчивания регистрации:"
+        usernameTip: "Макс. длинна Имени Пользователя 50 символов."
+        completion1: "Вы теперь можете закончить регистрацию пользователя."
+        register: "Регистрация"
+        login: "Уже есть акаунт? Войти!"
+    modal:
+        info:
+            text: "Информация о плагине"
+            contributors:
+                text: 'Кроме того, данные <span class="col-plan">замечательные люди</span> внесли свой вклад:'
+                code: "автор кода"
+                donate: "Особая благодарность тем, кто оказал финансовую поддержку развитию."
+                bugreporters: "& Баг репортеры!"
+                translator: "переводчик"
+            metrics: "bStats Metrics"
+            discord: "Общая поддержка в Discord"
+            wiki: "Plan Вики, туториалы и документация"
+            bugs: "Сообщить о проблемах"
+            license: "Player Analytics разработан и лицензирован под"
+            developer: "разработан"
+        version:
+            dev: "Эта версия является DEV релизом."
+            available: "доступен"
+            text: "Новая версия была выпущена и теперь доступна для скачивания."
+            title: "Версия"
+            changelog: "Просмотр журнала изменений"
+            download: "Скачать"
+    version:
+        updateButton: "Обновить"
+        changelog: "Посмотреть журнал изменений"
+        current: "У вас версия ${0}"
+        updateModal:
+            title: "Версия ${0} доступна!"
+            text: "Вышла новая версия, и теперь она доступна для скачивания.."
+        download: "Скачать Plan-${0}.jar"
+        isDev: "Эта версия DEV релиз."
+    login:
+        forgotPassword1: "Забыли пароль? Разрегистрируйтесь и зарегистрируйтесь заново."
+        register: "Создайте аккаунт!"
+        username: '"Имя пользователя"'
+        logout: "Выход"
+        failed: "Логин не удачен: "
+        forgotPassword4: "После использования команды, "
+        password: '"Пароль"'
+        forgotPassword3: "Или используйте консоль:"
+        forgotPassword: "Забыли пароль?"
+        forgotPassword2: "Используйте следующую команду в игре, чтобы удалить текущего пользователя:"
+        login: "Вход"
+    sidebar:
+        playerPage: "Страница игрока"
+        plugins: "ПЛАГИНЫ"
+        playerbaseOverview: "Обзор базы игроков"
+        playerList: "Список игроков"
+        servers: "Серверы"
+        serverPage: "Страница сервера"
+        links: "ССЫЛКИ"
+        geolocations: "Геолокация"
+        serversTitle: "СЕРВЕРЫ"
+        playerbase: "База игроков"
+        networkOverview: "Обзор сети"
+        overview: "Обзор"
+        networkPage: "Сетевая страница"
+        sessions: "Сессии"
+        toMainPage: "На главную страницу"
+        performance: "Производительность"
+        query: "Сделать запрос"
+        pvpPve: "PvP & PvE"
+        information: "ИНФОРМАЦИЯ"
+    side:
+        plugins: "Плагины"
+    description:
+        newPlayerRetention: "Это значение является прогнозом, основанным на предыдущих игроках.."
+        noServers: "В базе данных не найдено ни одного сервера"
+        noServerOnlinActivity: "Нет сервера для отображения онлайн активности"
+        noGameServers: "Для некоторых данных требуется установка Plan на игровые сервера."
+        noGeolocations: "Сбор геолокации должен быть включен в конфигурации (Приймите GeoLite2 EULA)."
+        noSpongeChunks: "Чанки не доступны на Sponge"
+        predictedNewPlayerRetention: "Это значение является прогнозом на основе предыдущих игроков"
+        noServersLong: 'Похоже, что Plan не установлен ни на одном игровом сервере или не подключен к той же базе данных. Смотрите <a href="https://github.com/plan-player-analytics/Plan/wiki">вики</a> для помощи.'
+    text:
+        noExtensionData: "Нет данных об расширениях"
+        noLowTps: "Нет низких TPS"
+        comparing30daysAgo: "Сравнение 30 дней назад и сейчас"
+        comparing15days: "Сравнение 15 дней"
+        clickToExpand: "Нажмите, чтобы развернуть"
+    button:
+        nightMode: "Ночной режим"
+    calendar:
+        unique: "Уникальных:"
+        new: "Новое:"
+    generic:
+        none: "Никто"
+    unit:
+        chunks: "Чанки"
+        players: "Игроки"
+        entities: "Объекты"
+403AccessDenied: "Доступ закрыт"
 generic:
-  noData: 'Нет данных'
-403AccessDenied: 'Доступ закрыт'
+    noData: "Нет данных"
