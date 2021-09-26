@@ -75,7 +75,7 @@ public class LocaleJSONResolver implements NoAuthResolver {
             String address = addresses.getMainAddress().orElse(addresses.getFallbackLocalhostAddress());
             return builder.setStatus(404)
                     .setJSONContent("{\n" +
-                            "  \"message\": \"Language code not found, see" + address + "/v1/language for available codes.\"\n" +
+                            "  \"message\": \"Language code not found, see " + address + "/v1/language for available codes.\"\n" +
                             "}")
                     .build();
         }
@@ -83,24 +83,25 @@ public class LocaleJSONResolver implements NoAuthResolver {
 
     private Map<String, Object> getLocaleJSON(String langCode) throws NotFoundException {
         Map<String, Object> map = new TreeMap<>();
+        Config loadedLocale;
 
         if ("default".equals(langCode)) {
             LangCode currentLang = locale.getLangCode();
-            Config loadedLocale;
+
             if (LangCode.CUSTOM.equals(currentLang)) {
                 loadedLocale = loadLocale(new FileResource("locale.yml", files.getFileFromPluginFolder("locale.yml")));
             } else {
                 loadedLocale = loadLocale(files.getResourceFromJar("locale/" + currentLang.getFileName()));
             }
-            return dfs(loadedLocale, map);
         } else {
             try {
                 LangCode code = LangCode.valueOf(langCode.toUpperCase());
+                loadedLocale = loadLocale(files.getResourceFromJar("locale/" + code.getFileName()));
             } catch (IllegalArgumentException e) {
                 throw new NotFoundException("Language code not found");
             }
         }
-        return map;
+        return dfs(loadedLocale, map);
     }
 
     private Config loadLocale(Resource resource) {
