@@ -18,6 +18,9 @@ package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -42,13 +45,17 @@ public class PlanFiles implements SubSystem {
     private final File dataFolder;
     private final File configFile;
 
+    private final Lazy<PlanConfig> config;
+
     @Inject
     public PlanFiles(
             @Named("dataFolder") File dataFolder,
-            JarResource.StreamFunction getResourceStream
+            JarResource.StreamFunction getResourceStream,
+            Lazy<PlanConfig> config
     ) {
         this.dataFolder = dataFolder;
         this.getResourceStream = getResourceStream;
+        this.config = config;
         this.configFile = getFileFromPluginFolder("config.yml");
     }
 
@@ -60,8 +67,9 @@ public class PlanFiles implements SubSystem {
         return dataFolder.toPath();
     }
 
+    @Deprecated
     public Path getCustomizationDirectory() {
-        return getDataDirectory().resolve("web");
+        return config.get().getResourceSettings().getCustomizationDirectory();
     }
 
     public File getLogsFolder() {
@@ -129,16 +137,28 @@ public class PlanFiles implements SubSystem {
         return new FileResource(resourceName, getFileFromPluginFolder(resourceName));
     }
 
+    // TODO Customized file logic should be moved to another class so the circular dependency on config can be removed.
     public Optional<Resource> getCustomizableResource(String resourceName) {
-        return Optional.ofNullable(ResourceCache.getOrCache(resourceName,
-                () -> attemptToFind(resourceName)
-                        .map(found -> new FileResource(resourceName, found))
-                        .orElse(null)
-        ));
+        return Optional.ofNullable(findCustomized(resourceName));
+    }
+
+    private Resource findCustomized(String resourceName) {
+        if (config.get().isTrue(CustomizedFileSettings.WEB_DEV_MODE)) {
+            // Bypass cache in web developer mode.
+            return getFileResource(resourceName);
+        } else {
+            return ResourceCache.getOrCache(resourceName, () -> getFileResource(resourceName));
+        }
+    }
+
+    private FileResource getFileResource(String resourceName) {
+        return attemptToFind(resourceName)
+                .map(found -> new FileResource(resourceName, found))
+                .orElse(null);
     }
 
     public Optional<File> attemptToFind(String resourceName) {
-        Path dir = getCustomizationDirectory();
+        Path dir = config.get().getResourceSettings().getCustomizationDirectory();
         if (dir.toFile().exists() && dir.toFile().isDirectory()) {
             Path asPath = dir.resolve(resourceName);
             File found = asPath.toFile();

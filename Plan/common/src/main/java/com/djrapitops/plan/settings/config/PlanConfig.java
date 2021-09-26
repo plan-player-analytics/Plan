@@ -67,7 +67,7 @@ public class PlanConfig extends Config {
 
         this.files = files;
         this.extensionSettings = new ExtensionSettings(this);
-        this.resourceSettings = new ResourceSettings(this);
+        this.resourceSettings = new ResourceSettings(files, this);
         this.worldAliasSettings = worldAliasSettings;
         this.logger = logger;
     }
@@ -123,7 +123,7 @@ public class PlanConfig extends Config {
 
     public Path getPageExportPath() {
         Path exportDirectory = Paths.get(get(ExportSettings.HTML_EXPORT_PATH));
-        Path customizationDirectory = files.getCustomizationDirectory();
+        Path customizationDirectory = resourceSettings.getCustomizationDirectory();
 
         if (exportDirectory.toAbsolutePath().equals(customizationDirectory.toAbsolutePath())) {
             logger.warn("'" + ExportSettings.HTML_EXPORT_PATH.getPath() + "' can not be '/Plan/web/' directory, using '/Plan/Analysis Results' as fallback.");

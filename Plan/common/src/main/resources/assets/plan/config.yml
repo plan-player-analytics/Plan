@@ -228,3 +228,7 @@ Plugins:
   Towny:
     HideTowns:
       - ExampleTown
+Customized_files:
+  Path: "web"
+  # Web dev mode enables all customized files and disables webserver resource cache for instant changes on browser refresh.
+  Enable_web_dev_mode: false
