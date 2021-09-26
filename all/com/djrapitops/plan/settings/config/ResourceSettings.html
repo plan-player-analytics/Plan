@@ -92,7 +92,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig)">ResourceSettings</a></span>&#8203;(<a href="PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config)</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig)">ResourceSettings</a></span>&#8203;(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+ <a href="PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -111,10 +112,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="ConfigNode.html" title="class in com.djrapitops.plan.settings.config">ConfigNode</a></code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCustomizationConfigNode()">getCustomizationConfigNode</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#shouldBeCustomized(java.lang.String,java.lang.String)">shouldBeCustomized</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;plugin,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName)</code></div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCustomizationDirectory()">getCustomizationDirectory</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#shouldBeCustomized(java.lang.String,java.lang.String)">shouldBeCustomized</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;plugin,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -133,9 +137,10 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig)">
 <h3>ResourceSettings</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ResourceSettings</span>&#8203;<span class="parameters">(<a href="PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ResourceSettings</span>&#8203;<span class="parameters">(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+ <a href="PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config)</span></div>
 </section>
 </li>
 </ul>
@@ -157,6 +162,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getCustomizationConfigNode()">
 <h3>getCustomizationConfigNode</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ConfigNode.html" title="class in com.djrapitops.plan.settings.config">ConfigNode</a></span>&nbsp;<span class="element-name">getCustomizationConfigNode</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getCustomizationDirectory()">
+<h3>getCustomizationDirectory</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">getCustomizationDirectory</span>()</div>
 </section>
 </li>
 </ul>

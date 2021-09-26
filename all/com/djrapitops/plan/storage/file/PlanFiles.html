@@ -118,8 +118,9 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.io.File,com.djrapitops.plan.storage.file.JarResource.StreamFunction)">PlanFiles</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;dataFolder,
- <a href="JarResource.StreamFunction.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a>&nbsp;getResourceStream)</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.io.File,com.djrapitops.plan.storage.file.JarResource.StreamFunction,dagger.Lazy)">PlanFiles</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;dataFolder,
+ <a href="JarResource.StreamFunction.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a>&nbsp;getResourceStream,
+ dagger.Lazy&lt;<a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&gt;&nbsp;config)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -129,7 +130,7 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <section class="method-summary" id="method.summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
@@ -154,9 +155,11 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCustomizableResource(java.lang.String)">getCustomizableResource</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCustomizationDirectory()">getCustomizationDirectory</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCustomizationDirectory()">getCustomizationDirectory</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab6 method-summary-table-tab4 method-summary-table">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getDataDirectory()">getDataDirectory</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
@@ -220,12 +223,13 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.io.File,com.djrapitops.plan.storage.file.JarResource.StreamFunction)">
+<section class="detail" id="&lt;init&gt;(java.io.File,com.djrapitops.plan.storage.file.JarResource.StreamFunction,dagger.Lazy)">
 <h3>PlanFiles</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">PlanFiles</span>&#8203;<span class="parameters">(@Named("dataFolder")
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;dataFolder,
- <a href="JarResource.StreamFunction.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a>&nbsp;getResourceStream)</span></div>
+ <a href="JarResource.StreamFunction.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a>&nbsp;getResourceStream,
+ dagger.Lazy&lt;<a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&gt;&nbsp;config)</span></div>
 </section>
 </li>
 </ul>
@@ -251,7 +255,9 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <li>
 <section class="detail" id="getCustomizationDirectory()">
 <h3>getCustomizationDirectory</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">getCustomizationDirectory</span>()</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a></span>&nbsp;<span class="element-name">getCustomizationDirectory</span>()</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 </section>
 </li>
 <li>
