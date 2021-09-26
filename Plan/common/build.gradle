@@ -43,8 +43,9 @@ task determineWebAssetModifications {
                 commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
                 standardOutput = gitModified
             }
+            def gitModifiedAsString = gitModified.toString().strip()
             // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
-            def modified = Long.parseLong(gitModified.toString().strip()) * 1000
+            def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
                     "%s: %s\n", relativePath.toString().replace('.', ','), modified

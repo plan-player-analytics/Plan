@@ -17,6 +17,8 @@
 package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import dagger.Lazy;
 import org.spongepowered.api.Sponge;
 
 import javax.inject.Inject;
@@ -38,9 +40,10 @@ public class SpongePlanFiles extends PlanFiles {
     public SpongePlanFiles(
             @Named("dataFolder") File dataFolder,
             JarResource.StreamFunction getResourceStream,
-            PlanPlugin plugin
+            PlanPlugin plugin,
+            Lazy<PlanConfig> config
     ) {
-        super(dataFolder, getResourceStream);
+        super(dataFolder, getResourceStream, config);
         this.plugin = plugin;
     }
 

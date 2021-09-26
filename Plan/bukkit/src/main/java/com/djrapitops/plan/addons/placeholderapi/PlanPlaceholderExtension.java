@@ -119,9 +119,14 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
     }
 
     private List<String> parseParameters(String params) {
-        List<String> parameters = Arrays.asList(params.split(":"));
-        if (!parameters.isEmpty()) {
-            parameters.remove(0);
+        List<String> parameters = new ArrayList<>();
+        boolean first = true;
+        for (String parameter : params.split(":")) {
+            if (first) {
+                first = false;
+            } else {
+                parameters.add(parameter);
+            }
         }
         return parameters;
     }
