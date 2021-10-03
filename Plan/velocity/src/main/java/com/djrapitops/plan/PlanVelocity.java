@@ -123,6 +123,7 @@ public class PlanVelocity implements PlanPlugin {
         onDisable();
     }
 
+    @Override
     public void onEnable() {
         PlanVelocityComponent component = DaggerPlanVelocityComponent.builder()
                 .plan(this)
@@ -162,6 +163,7 @@ public class PlanVelocity implements PlanPlugin {
         }
     }
 
+    @Override
     public void onDisable() {
         runnableFactory.cancelAllKnownTasks();
         if (system != null) system.disable();
