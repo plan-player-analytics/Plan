@@ -24,15 +24,33 @@ import java.util.UUID;
 
 public class BukkitCMDSender implements CMDSender {
 
+    private static Boolean hasChatAPI = null;
+
     final CommandSender sender;
 
     public BukkitCMDSender(CommandSender sender) {
         this.sender = sender;
     }
 
+    protected static synchronized boolean hasBungeeChatAPI() {
+        if (hasChatAPI == null) {
+            try {
+                Class.forName("net.md_5.bungee.api.chat.ComponentBuilder");
+                hasChatAPI = true;
+            } catch (ClassNotFoundException e) {
+                hasChatAPI = false;
+            }
+        }
+        return hasChatAPI;
+    }
+
     @Override
     public MessageBuilder buildMessage() {
-        return new BukkitPartBuilder(this);
+        if (hasBungeeChatAPI()) {
+            return new BukkitPartBuilder(this);
+        } else {
+            return new ConsoleMessageBuilder(sender::sendMessage);
+        }
     }
 
     @Override
