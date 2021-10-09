@@ -27,7 +27,6 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.entity.living.humanoid.ChangeGameModeEvent;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -56,34 +55,36 @@ public class SpongeGMChangeListener {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.errorLogger = errorLogger;
+        System.out.println("GMChange registered");
     }
 
-    @Listener(order = Order.POST)
-    public void onGMChange(ChangeGameModeEvent.TargetPlayer event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
-        try {
-            actOnGMChangeEvent(event);
-        } catch (Exception e) {
-            errorLogger.error(e, ErrorContext.builder().related(event, event.getGameMode()).build());
-        }
-    }
-
-    private void actOnGMChangeEvent(ChangeGameModeEvent.TargetPlayer event) {
-        Player player = event.getTargetEntity();
-        UUID uuid = player.getUniqueId();
-        long time = System.currentTimeMillis();
-
-        String gameMode = event.getGameMode().getName().toUpperCase();
-        String worldName = player.getWorld().getName();
-
-        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
-        worldAliasSettings.addWorld(worldName);
-
-        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(uuid);
-        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
-    }
+    // TODO(vankka)
+//    @Listener(order = Order.POST)
+//    public void onGMChange(ServerPlayer event) {
+//        if (event.isCancelled()) {
+//            return;
+//        }
+//
+//        try {
+//            actOnGMChangeEvent(event);
+//        } catch (Exception e) {
+//            errorLogger.error(e, ErrorContext.builder().related(event, event.getGameMode()).build());
+//        }
+//    }
+//
+//    private void actOnGMChangeEvent(ChangeGameModeEvent.TargetPlayer event) {
+//        Player player = event.getTargetEntity();
+//        UUID uuid = player.getUniqueId();
+//        long time = System.currentTimeMillis();
+//
+//        String gameMode = event.getGameMode().getName().toUpperCase();
+//        String worldName = player.getWorld().getName();
+//
+//        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
+//        worldAliasSettings.addWorld(worldName);
+//
+//        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(uuid);
+//        cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
+//    }
 
 }

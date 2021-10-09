@@ -7,7 +7,7 @@ dependencies {
     implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     compileOnly "mysql:mysql-connector-java:$mysqlVersion"
-    compileOnly "org.xerial:sqlite-jdbc:$sqliteVersion"
+    implementation "org.xerial:sqlite-jdbc:$sqliteVersion" // TODO(vankka): revert back to compileOnly
     implementation "com.zaxxer:HikariCP:$hikariVersion"
     implementation "org.slf4j:slf4j-nop:$slf4jVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"

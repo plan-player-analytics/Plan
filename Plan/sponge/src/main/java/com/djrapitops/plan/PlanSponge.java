@@ -31,57 +31,41 @@ import net.playeranalytics.plugin.SpongePlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.bstats.sponge.Metrics;
-import org.slf4j.Logger;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandManager;
-import org.spongepowered.api.command.CommandMapping;
+import org.spongepowered.api.command.Command;
+import org.spongepowered.api.command.manager.CommandMapping;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
-import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
-import org.spongepowered.api.plugin.Dependency;
-import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.event.lifecycle.*;
+import org.spongepowered.plugin.PluginContainer;
+import org.spongepowered.plugin.builtin.jvm.Plugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
-@Plugin(
-        id = "plan",
-        name = "Plan",
-        version = "@version@",
-        description = "Player Analytics Plugin by AuroraLS3",
-        authors = {"AuroraLS3"},
-        dependencies = {
-                @Dependency(id = "griefprevention", optional = true),
-                @Dependency(id = "luckperms", optional = true),
-                @Dependency(id = "nucleus", optional = true),
-                @Dependency(id = "redprotect", optional = true),
-                @Dependency(id = "nuvotifier", optional = true)
-        }
-)
+@Plugin("plan")
 public class PlanSponge implements PlanPlugin {
 
     private final Metrics metrics;
-    private final Logger slf4jLogger;
+    private final PluginContainer plugin;
     private final File dataFolder;
 
+    private PlanSpongeComponent component;
     private PlanSystem system;
     private Locale locale;
     private ServerShutdownSave serverShutdownSave;
@@ -91,61 +75,61 @@ public class PlanSponge implements PlanPlugin {
 
     @com.google.inject.Inject
     public PlanSponge(
-            Logger slf4jLogger,
-            @ConfigDir(sharedRoot = false) File dataFolder,
-            Metrics.Factory metrics
+            @ConfigDir(sharedRoot = false) Path dataFolder,
+            PluginContainer plugin/*,
+            Metrics.Factory metrics*/
     ) {
-        this.slf4jLogger = slf4jLogger;
-        this.dataFolder = dataFolder;
+        this.dataFolder = dataFolder.toFile();
+        this.plugin = plugin;
 
+        // Metrics commented out due to not being compatible with Sponge API 8 (yet!)
         int pluginId = 3086;
-        this.metrics = metrics.make(pluginId);
+        this.metrics = null;//metrics.make(pluginId);
     }
 
-    private final Map<String, CommandMapping> commands = new HashMap<>();
-
     @Listener
-    public void onServerLoad(GamePreInitializationEvent event) {
+    public void onServerLoad(ConstructPluginEvent event) {
         onLoad();
     }
 
     @Listener
-    public void onServerStart(GameStartedServerEvent event) {
+    public void onServerStart(StartingEngineEvent<Server> event) {
         onEnable();
     }
 
     @Listener
-    public void onServerStop(GameStoppingServerEvent event) {
+    public void onServerStop(StoppingEngineEvent<Server> event) {
         onDisable();
     }
 
     private void onLoad() {
-        abstractionLayer = new SpongePlatformLayer(this, dataFolder, slf4jLogger);
+        abstractionLayer = new SpongePlatformLayer(plugin, dataFolder);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
 
-        logger.info("Loading dependencies, this might take a while...");
-        try {
-            ApplicationBuilder.appending("Plan")
-                    .logger((message, args) -> java.util.logging.Logger.getGlobal().log(Level.INFO, message, args))
-                    // Use paper repository for downloading slimjar dependencies
-                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
-                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
-                    .build();
-        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
-            String version = abstractionLayer.getPluginInformation().getVersion();
-            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-            logger.error("Plan failed to load its dependencies correctly!");
-            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-            onDisable();
-        }
+        // TODO: incompatible with Sponge's environment
+//        logger.info("Loading dependencies, this might take a while...");
+//        try {
+//            ApplicationBuilder.appending("Plan")
+//                    .logger((message, args) -> java.util.logging.Logger.getGlobal().log(Level.INFO, message, args))
+//                    // Use paper repository for downloading slimjar dependencies
+//                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
+//                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
+//                    .build();
+//        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
+//            String version = abstractionLayer.getPluginInformation().getVersion();
+//            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+//            logger.error("Plan failed to load its dependencies correctly!");
+//            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+//            onDisable();
+//        }
     }
 
     public void onEnable() {
         PlanSpongeComponent component = DaggerPlanSpongeComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
-                .game(Sponge.getGame())
+                .game(Sponge.game())
                 .build();
         try {
             system = component.system();
@@ -206,9 +190,6 @@ public class PlanSponge implements PlanPlugin {
 
     public void cancelAllTasks() {
         runnableFactory.cancelAllKnownTasks();
-        for (Task task : Sponge.getScheduler().getScheduledTasks(this)) {
-            task.cancel();
-        }
     }
 
     @Override
@@ -223,21 +204,15 @@ public class PlanSponge implements PlanPlugin {
 
     @Override
     public void registerCommand(Subcommand command) {
-        if (command == null) {
-            logger.warn("Attempted to register a null command!");
-            return;
-        }
-        for (String name : command.getAliases()) {
-            CommandManager commandManager = Sponge.getCommandManager();
+        // NOOP: Sponge commands are registered via the event below
+    }
 
-            CommandMapping registered = commands.get(name);
-            if (registered != null) {
-                commandManager.removeMapping(registered);
-            }
-
-            Optional<CommandMapping> register = commandManager.register(this, new SpongeCommand(runnableFactory, system.getErrorLogger(), command), name);
-            register.ifPresent(commandMapping -> commands.put(name, commandMapping));
-        }
+    @Listener
+    public void onRegisterCommand(RegisterCommandEvent<Command.Raw> event) {
+        // TODO(vankka): component not available here, yet
+//        Subcommand command = component.planCommand().build();
+//        List<String> aliases = new ArrayList<>(command.getAliases());
+//        event.register(plugin, new SpongeCommand(runnableFactory, system.getErrorLogger(), command), aliases.remove(0), aliases.toArray(new String[0]));
     }
 
     @Override
@@ -246,7 +221,11 @@ public class PlanSponge implements PlanPlugin {
     }
 
     public Game getGame() {
-        return Sponge.getGame();
+        return Sponge.game();
+    }
+
+    public PluginContainer getPlugin() {
+        return plugin;
     }
 
     @Override

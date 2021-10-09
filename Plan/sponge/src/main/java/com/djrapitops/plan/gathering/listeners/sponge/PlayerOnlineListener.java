@@ -38,16 +38,18 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.entity.living.humanoid.player.KickPlayerEvent;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.event.entity.living.player.KickPlayerEvent;
+import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 import org.spongepowered.api.profile.GameProfile;
-import org.spongepowered.api.service.ProviderRegistration;
+import org.spongepowered.api.registry.RegistryTypes;
+import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.BanService;
 
 import javax.inject.Inject;
@@ -102,7 +104,7 @@ public class PlayerOnlineListener {
     }
 
     @Listener(order = Order.POST)
-    public void onLogin(ClientConnectionEvent.Login event) {
+    public void onLogin(ServerSideConnectionEvent.Login event) {
         try {
             actOnLoginEvent(event);
         } catch (Exception e) {
@@ -110,9 +112,9 @@ public class PlayerOnlineListener {
         }
     }
 
-    private void actOnLoginEvent(ClientConnectionEvent.Login event) {
-        GameProfile profile = event.getProfile();
-        UUID playerUUID = profile.getUniqueId();
+    private void actOnLoginEvent(ServerSideConnectionEvent.Login event) {
+        GameProfile profile = event.profile();
+        UUID playerUUID = profile.uniqueId();
         ServerUUID serverUUID = serverInfo.getServerUUID();
         dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(profile)));
     }
@@ -120,7 +122,7 @@ public class PlayerOnlineListener {
     @Listener(order = Order.POST)
     public void onKick(KickPlayerEvent event) {
         try {
-            UUID playerUUID = event.getTargetEntity().getUniqueId();
+            UUID playerUUID = event.player().uniqueId();
             if (status.areKicksNotCounted() || SpongeAFKListener.afkTracker.isAfk(playerUUID)) {
                 return;
             }
@@ -131,16 +133,13 @@ public class PlayerOnlineListener {
     }
 
     private boolean isBanned(GameProfile profile) {
-        Optional<ProviderRegistration<BanService>> banService = Sponge.getServiceManager().getRegistration(BanService.class);
-        boolean banned = false;
-        if (banService.isPresent()) {
-            banned = banService.get().getProvider().isBanned(profile);
-        }
-        return banned;
+        BanService banService = Sponge.server().serviceProvider().banService();
+        Optional<Ban.Profile> ban = banService.find(profile).join();
+        return ban.isPresent();
     }
 
     @Listener(order = Order.POST)
-    public void onJoin(ClientConnectionEvent.Join event) {
+    public void onJoin(ServerSideConnectionEvent.Join event) {
         try {
             actOnJoinEvent(event);
         } catch (Exception e) {
@@ -148,27 +147,27 @@ public class PlayerOnlineListener {
         }
     }
 
-    private void actOnJoinEvent(ClientConnectionEvent.Join event) {
-        Player player = event.getTargetEntity();
+    private void actOnJoinEvent(ServerSideConnectionEvent.Join event) {
+        ServerPlayer player = event.player();
 
-        UUID playerUUID = player.getUniqueId();
+        UUID playerUUID = player.uniqueId();
         ServerUUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
 
         SpongeAFKListener.afkTracker.performedAction(playerUUID, time);
 
-        String world = player.getWorld().getName();
-        Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
-        String gm = gameMode.map(mode -> mode.getName().toUpperCase()).orElse("ADVENTURE");
+        String world = player.world().key().asString(); // TODO(vankka): check that this is the right thing (also PlayerWorldChangeListener)
+        GameMode gameMode = player.gameMode().get();
+        String gm = gameMode.key(RegistryTypes.GAME_MODE).asString().toUpperCase(); // TODO(vankka): check that this is the right thing (also PlayerWorldChangeListener)
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
-        InetAddress address = player.getConnection().getAddress().getAddress();
-        Supplier<String> getHostName = () -> player.getConnection().getVirtualHost().getHostString();
+        InetAddress address = player.connection().address().getAddress();
+        Supplier<String> getHostName = () -> player.connection().virtualHost().getHostString();
 
-        String playerName = player.getName();
-        String displayName = player.getDisplayNameData().displayName().get().toPlain();
+        String playerName = player.name();
+        String displayName = LegacyComponentSerializer.legacyAmpersand().serialize(player.displayName().get());
 
         boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
         if (gatheringGeolocations) {
@@ -197,15 +196,15 @@ public class PlayerOnlineListener {
     }
 
     @Listener(order = Order.DEFAULT)
-    public void beforeQuit(ClientConnectionEvent.Disconnect event) {
-        Player player = event.getTargetEntity();
-        UUID playerUUID = player.getUniqueId();
-        String playerName = player.getName();
+    public void beforeQuit(ServerSideConnectionEvent.Disconnect event) {
+        Player player = event.player();
+        UUID playerUUID = player.uniqueId();
+        String playerName = player.name();
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_LEAVE));
     }
 
     @Listener(order = Order.POST)
-    public void onQuit(ClientConnectionEvent.Disconnect event) {
+    public void onQuit(ServerSideConnectionEvent.Disconnect event) {
         try {
             actOnQuitEvent(event);
         } catch (Exception e) {
@@ -213,18 +212,18 @@ public class PlayerOnlineListener {
         }
     }
 
-    private void actOnQuitEvent(ClientConnectionEvent.Disconnect event) {
+    private void actOnQuitEvent(ServerSideConnectionEvent.Disconnect event) {
         long time = System.currentTimeMillis();
-        Player player = event.getTargetEntity();
-        String playerName = player.getName();
-        UUID playerUUID = player.getUniqueId();
+        Player player = event.player();
+        String playerName = player.name();
+        UUID playerUUID = player.uniqueId();
         ServerUUID serverUUID = serverInfo.getServerUUID();
 
         SpongeAFKListener.afkTracker.loggedOut(playerUUID, time);
 
         nicknameCache.removeDisplayName(playerUUID);
 
-        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(player.getProfile())));
+        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(player.profile())));
 
         sessionCache.endSession(playerUUID, time)
                 .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));

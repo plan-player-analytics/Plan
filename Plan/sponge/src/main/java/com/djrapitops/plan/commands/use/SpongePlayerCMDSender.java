@@ -16,27 +16,32 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.entity.living.player.Player;
+import net.kyori.adventure.audience.Audience;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.service.permission.Subject;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public class SpongePlayerCMDSender extends SpongeCMDSender {
 
-    public SpongePlayerCMDSender(CommandSource source) {
-        super(source);
+    public <T extends Subject & Audience> SpongePlayerCMDSender(T source) {
+        this(source, source);
+    }
+
+    public SpongePlayerCMDSender(Subject subject, Audience audience) {
+        super(subject, audience);
     }
 
     @Override
     public Optional<String> getPlayerName() {
-        return source.getFriendlyIdentifier();
+        return subject.friendlyIdentifier();
     }
 
     @Override
     public Optional<UUID> getUUID() {
-        if (source instanceof Player) {
-            return Optional.of(((Player) source).getUniqueId());
+        if (subject instanceof ServerPlayer) {
+            return Optional.of(((ServerPlayer) subject).uniqueId());
         }
         return Optional.empty();
     }

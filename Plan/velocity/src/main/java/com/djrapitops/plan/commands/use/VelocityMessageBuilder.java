@@ -24,6 +24,9 @@ import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Collection;
 
+/**
+ * Duplicate of the SpongeMessageBuilder.
+ */
 public class VelocityMessageBuilder implements MessageBuilder {
 
     private final VelocityCMDSender sender;

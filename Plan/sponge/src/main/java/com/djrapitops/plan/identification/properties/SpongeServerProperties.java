@@ -34,13 +34,13 @@ public class SpongeServerProperties extends ServerProperties {
     public SpongeServerProperties(Game game) {
         super(
                 "Sponge",
-                game.getServer().getBoundAddress().orElseGet(() -> new InetSocketAddress(25565)).getPort(),
-                game.getPlatform().getMinecraftVersion().getName(),
-                game.getPlatform().getMinecraftVersion().getName(),
-                () -> game.getServer().getBoundAddress()
+                game.server().boundAddress().orElseGet(() -> new InetSocketAddress(25565)).getPort(),
+                game.platform().minecraftVersion().name(),
+                game.platform().minecraftVersion().name(),
+                () -> game.server().boundAddress()
                         .orElseGet(() -> new InetSocketAddress(25565))
                         .getAddress().getHostAddress(),
-                game.getServer().getMaxPlayers()
+                game.server().maxPlayers()
         );
     }
 }

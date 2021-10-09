@@ -18,22 +18,27 @@ package com.djrapitops.plan.commands.use;
 
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
-import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.Command;
+import org.spongepowered.api.command.CommandCause;
+import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.command.source.RconSource;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.command.exception.CommandException;
+import org.spongepowered.api.command.parameter.ArgumentReader;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.network.RconConnection;
+import org.spongepowered.api.service.permission.Subject;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public class SpongeCommand implements CommandCallable {
+public class SpongeCommand implements Command.Raw {
 
     private final RunnableFactory runnableFactory;
     private final ErrorLogger errorLogger;
@@ -48,14 +53,30 @@ public class SpongeCommand implements CommandCallable {
         this.command = command;
     }
 
+    private CMDSender getSender(CommandCause cause) {
+        return getSender(cause.subject(), cause.audience());
+    }
+
+    private CMDSender getSender(Subject subject, Audience audience) {
+        if (subject instanceof ServerPlayer || subject instanceof RconConnection) {
+            return new SpongePlayerCMDSender(subject, audience);
+        } else {
+            return new SpongeCMDSender(subject, audience);
+        }
+    }
+
+    private Component convertLegacy(String legacy) {
+        return LegacyComponentSerializer.legacySection().deserialize(legacy);
+    }
+
     @Override
-    public CommandResult process(CommandSource source, String arguments) {
+    public CommandResult process(CommandCause cause, ArgumentReader.Mutable arguments) throws CommandException {
         runnableFactory.create(() -> {
             try {
-                command.getExecutor().accept(getSender(source), new Arguments(arguments));
+                command.getExecutor().accept(getSender(cause), new Arguments(arguments.input()));
             } catch (Exception e) {
                 errorLogger.error(e, ErrorContext.builder()
-                        .related(source.getClass())
+                        .related(cause.subject().getClass())
                         .related(arguments)
                         .build());
             }
@@ -63,22 +84,17 @@ public class SpongeCommand implements CommandCallable {
         return CommandResult.success();
     }
 
-    private CMDSender getSender(CommandSource source) {
-        if (source instanceof Player || source instanceof RconSource) {
-            return new SpongePlayerCMDSender(source);
-        } else {
-            return new SpongeCMDSender(source);
-        }
-    }
-
     @Override
-    public List<String> getSuggestions(CommandSource source, String arguments, @Nullable Location<World> targetPosition) {
+    public List<CommandCompletion> complete(CommandCause cause, ArgumentReader.Mutable arguments) {
         try {
             return command.getArgumentResolver()
-                    .apply(getSender(source), new Arguments(arguments));
+                    .apply(getSender(cause), new Arguments(arguments.input()))
+                    .stream()
+                    .map(CommandCompletion::of)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder()
-                    .related(source.getClass())
+                    .related(cause.subject().getClass())
                     .related("tab completion")
                     .related(arguments)
                     .build());
@@ -87,9 +103,9 @@ public class SpongeCommand implements CommandCallable {
     }
 
     @Override
-    public boolean testPermission(CommandSource source) {
+    public boolean canExecute(CommandCause cause) {
         for (String requiredPermission : command.getRequiredPermissions()) {
-            if (!source.hasPermission(requiredPermission)) {
+            if (!cause.subject().hasPermission(requiredPermission)) {
                 return false;
             }
         }
@@ -97,17 +113,26 @@ public class SpongeCommand implements CommandCallable {
     }
 
     @Override
-    public Optional<Text> getShortDescription(CommandSource source) {
-        return Optional.ofNullable(command.getDescription()).map(Text::of);
+    public Optional<Component> shortDescription(CommandCause cause) {
+        return Optional.ofNullable(command.getDescription()).map(this::convertLegacy);
     }
 
     @Override
-    public Optional<Text> getHelp(CommandSource source) {
-        return Optional.ofNullable(command.getDescription()).map(Text::of);
+    public Optional<Component> extendedDescription(CommandCause cause) {
+        return Optional.ofNullable(command.getDescription()).map(this::convertLegacy);
     }
 
     @Override
-    public Text getUsage(CommandSource source) {
-        return Text.of(command.getInDepthDescription());
+    public Component usage(CommandCause cause) {
+        TextComponent.Builder builder = Component.text();
+        List<String> lines = command.getInDepthDescription();
+        for (int i = 0; i < lines.size(); i++) {
+            String line = lines.get(i);
+            builder.append(convertLegacy(line));
+            if (i < lines.size() - 1) {
+                builder.append(Component.newline());
+            }
+        }
+        return builder.build();
     }
 }

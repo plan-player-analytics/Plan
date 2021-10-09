@@ -17,9 +17,11 @@
 package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.PlanPlugin;
+import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import dagger.Lazy;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.plugin.PluginContainer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -50,7 +52,8 @@ public class SpongePlanFiles extends PlanFiles {
     @Override
     public Resource getResourceFromJar(String resourceName) {
         try {
-            return new SpongeAssetResource(resourceName, Sponge.getAssetManager().getAsset(plugin, resourceName).orElse(null));
+            PluginContainer container = plugin instanceof PlanSponge ? ((PlanSponge) plugin).getPlugin() : null;
+            return new SpongeAssetResource(resourceName, Sponge.assetManager().asset(container, resourceName).orElse(null));
         } catch (IllegalStateException spongeNotEnabled) {
             return super.getResourceFromJar(resourceName);
         }

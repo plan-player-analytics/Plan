@@ -16,98 +16,105 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.apache.commons.text.TextStringBuilder;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.action.TextActions;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
 
+/**
+ * Duplicate of the VelocityMessageBuilder.
+ */
 public class SpongeMessageBuilder implements MessageBuilder {
 
     private final SpongeCMDSender sender;
-    private final Text.Builder builder;
-    private final SpongeMessageBuilder previous;
+    private final TextComponent.Builder builder;
+
+    // Store reference to previous component to properly add hover & click events
+    private Component previousComponent;
 
     public SpongeMessageBuilder(SpongeCMDSender sender) {
-        this(sender, null);
-    }
-
-    SpongeMessageBuilder(SpongeCMDSender sender, SpongeMessageBuilder previous) {
         this.sender = sender;
-        this.builder = Text.builder();
-        this.previous = previous;
+        builder = Component.text();
     }
 
     @Override
-    public MessageBuilder addPart(String s) {
-        SpongeMessageBuilder newBuilder = new SpongeMessageBuilder(sender, this);
-        newBuilder.builder.append(Text.of(s));
-        return newBuilder;
+    public MessageBuilder addPart(String content) {
+        if (previousComponent != null) {
+            builder.append(previousComponent);
+        }
+        previousComponent = Component.text(content);
+        return this;
     }
 
     @Override
     public MessageBuilder newLine() {
-        builder.append(Text.of('\n'));
+        if (previousComponent != null) {
+            builder.append(previousComponent);
+        }
+        previousComponent = Component.text("\n");
         return this;
     }
 
     @Override
     public MessageBuilder link(String url) {
-        try {
-            builder.onClick(TextActions.openUrl(new URL(url)));
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("'" + url + "' is not a valid URL");
-        }
+        previousComponent = previousComponent.clickEvent(ClickEvent.openUrl(url));
         return this;
     }
 
     @Override
     public MessageBuilder command(String command) {
-        builder.onClick(TextActions.runCommand(command.charAt(0) == '/' ? command : '/' + command));
+        previousComponent = previousComponent.clickEvent(ClickEvent.runCommand(command));
         return this;
     }
 
     @Override
-    public MessageBuilder hover(String message) {
-        builder.onHover(TextActions.showText(Text.of(message)));
+    public MessageBuilder hover(String s) {
+        previousComponent = previousComponent.hoverEvent(HoverEvent.showText(Component.text(s)));
         return this;
     }
 
     @Override
-    public MessageBuilder hover(String... lines) {
-        builder.onHover(TextActions.showText(Text.of(new TextStringBuilder().appendWithSeparators(lines, "\n"))));
+    public MessageBuilder hover(String... strings) {
+        TextComponent.Builder hoverText = Component.text();
+        for (String string : strings) {
+            hoverText.append(Component.text(string));
+        }
+        previousComponent = previousComponent.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder hover(Collection<String> lines) {
-        builder.onHover(TextActions.showText(Text.of(new TextStringBuilder().appendWithSeparators(lines, "\n"))));
+        TextComponent.Builder hoverText = Component.text();
+        hoverText.append(Component.text(new TextStringBuilder().appendWithSeparators(lines, "\n").build()));
+        previousComponent = previousComponent.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }
 
     @Override
     public MessageBuilder indent(int amount) {
         for (int i = 0; i < amount; i++) {
-            builder.append(Text.of(' '));
+            if (previousComponent != null) {
+                builder.append(previousComponent);
+            }
+            previousComponent = Component.text(" ");
         }
         return this;
     }
 
     @Override
     public MessageBuilder tabular(CharSequence charSequence) {
-        addPart(sender.getFormatter().table(charSequence.toString(), ":"));
-        return this;
+        return addPart(sender.getFormatter().table(charSequence.toString(), ":"));
     }
 
     @Override
     public void send() {
-        if (previous == null) {
-            sender.source.sendMessage(builder.build());
-        } else {
-            previous.builder.append(builder.build());
-            previous.send();
+        if (previousComponent != null) {
+            builder.append(previousComponent);
         }
+        sender.audience.sendMessage(builder.build());
     }
 }

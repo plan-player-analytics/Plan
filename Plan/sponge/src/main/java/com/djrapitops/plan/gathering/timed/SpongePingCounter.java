@@ -36,8 +36,9 @@ import net.playeranalytics.plugin.scheduling.TimeAmount;
 import net.playeranalytics.plugin.server.Listeners;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -83,7 +84,7 @@ public class SpongePingCounter extends TaskSystem.Task {
             Map.Entry<UUID, List<DateObj<Integer>>> entry = iterator.next();
             UUID uuid = entry.getKey();
             List<DateObj<Integer>> history = entry.getValue();
-            Optional<Player> player = Sponge.getServer().getPlayer(uuid);
+            Optional<ServerPlayer> player = Sponge.server().player(uuid);
             if (player.isPresent()) {
                 int ping = getPing(player.get());
                 if (ping <= -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
@@ -115,20 +116,20 @@ public class SpongePingCounter extends TaskSystem.Task {
     }
 
     public void addPlayer(Player player) {
-        playerHistory.put(player.getUniqueId(), new ArrayList<>());
+        playerHistory.put(player.uniqueId(), new ArrayList<>());
     }
 
     public void removePlayer(Player player) {
-        playerHistory.remove(player.getUniqueId());
+        playerHistory.remove(player.uniqueId());
     }
 
-    private int getPing(Player player) {
-        return player.getConnection().getLatency();
+    private int getPing(ServerPlayer player) {
+        return player.connection().latency();
     }
 
     @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Join joinEvent) {
-        Player player = joinEvent.getTargetEntity();
+    public void onPlayerJoin(ServerSideConnectionEvent.Join joinEvent) {
+        ServerPlayer player = joinEvent.player();
         Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
         if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
             return;
@@ -141,8 +142,8 @@ public class SpongePingCounter extends TaskSystem.Task {
     }
 
     @Listener
-    public void onPlayerQuit(ClientConnectionEvent.Disconnect quitEvent) {
-        removePlayer(quitEvent.getTargetEntity());
+    public void onPlayerQuit(ServerSideConnectionEvent.Disconnect quitEvent) {
+        removePlayer(quitEvent.player());
     }
 
     public void clear() {

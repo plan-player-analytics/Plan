@@ -21,16 +21,16 @@ import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.Event;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.command.SendCommandEvent;
+import org.spongepowered.api.event.command.ExecuteCommandEvent;
 import org.spongepowered.api.event.entity.MoveEntityEvent;
-import org.spongepowered.api.event.entity.living.humanoid.player.PlayerChangeClientSettingsEvent;
-import org.spongepowered.api.event.entity.living.humanoid.player.TargetPlayerEvent;
+import org.spongepowered.api.event.entity.living.player.PlayerChangeClientSettingsEvent;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.message.MessageChannelEvent;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.event.message.PlayerChatEvent;
+import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -67,26 +67,26 @@ public class SpongeAFKListener {
         }
     }
 
-    private void event(TargetPlayerEvent event) {
+    private void event(Event event, ServerPlayer player) {
         try {
-            performedAction(event.getTargetEntity());
+            performedAction(player);
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event).build());
         }
     }
 
     @Listener(order = Order.POST)
-    public void onMove(MoveEntityEvent event, @First Player player) {
+    public void onMove(MoveEntityEvent event, @First ServerPlayer player) {
         performedAction(player);
     }
 
     @Listener(order = Order.POST)
-    public void onPlayerChat(MessageChannelEvent.Chat event, @First Player player) {
+    public void onPlayerChat(PlayerChatEvent event, @First ServerPlayer player) {
         performedAction(player);
     }
 
-    private void performedAction(Player player) {
-        UUID uuid = player.getUniqueId();
+    private void performedAction(ServerPlayer player) {
+        UUID uuid = player.uniqueId();
         long time = System.currentTimeMillis();
 
         boolean ignored = ignorePermissionInfo.computeIfAbsent(uuid, keyUUID -> player.hasPermission(Permissions.IGNORE_AFK.getPermission()));
@@ -102,22 +102,22 @@ public class SpongeAFKListener {
     }
 
     @Listener(order = Order.POST)
-    public void onPlayerCommand(SendCommandEvent event, @First Player player) {
+    public void onPlayerCommand(ExecuteCommandEvent event, @First ServerPlayer player) {
         performedAction(player);
 
-        boolean isAfkCommand = event.getCommand().toLowerCase().startsWith("afk");
+        boolean isAfkCommand = event.command().toLowerCase().startsWith("afk");
         if (isAfkCommand) {
-            afkTracker.usedAfkCommand(player.getUniqueId(), System.currentTimeMillis());
+            afkTracker.usedAfkCommand(player.uniqueId(), System.currentTimeMillis());
         }
     }
 
     @Listener(order = Order.POST)
     public void onSettingsChange(PlayerChangeClientSettingsEvent event) {
-        event(event);
+        event(event, event.player());
     }
 
     @Listener(order = Order.POST)
-    public void onLeave(ClientConnectionEvent.Disconnect event) {
-        ignorePermissionInfo.remove(event.getTargetEntity().getUniqueId());
+    public void onLeave(ServerSideConnectionEvent.Disconnect event) {
+        ignorePermissionInfo.remove(event.player().uniqueId());
     }
 }
