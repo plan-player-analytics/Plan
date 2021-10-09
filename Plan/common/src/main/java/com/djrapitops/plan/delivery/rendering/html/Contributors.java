@@ -90,7 +90,8 @@ public class Contributors {
             new Contributor("DrexHD", CODE),
             new Contributor("zisunny104", LANG),
             new Contributor("SkipM4", LANG),
-            new Contributor("ahdg6", CODE)
+            new Contributor("ahdg6", CODE),
+            new Contributor("BratishkaErik", LANG)
     };
 
     private Contributors() {
