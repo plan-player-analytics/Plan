@@ -137,7 +137,7 @@ public class QueryJSONResolver implements Resolver {
             long timestamp = System.currentTimeMillis();
             Map<String, Object> json = Maps.builder(String.class, Object.class)
                     .put("path", resultPath)
-                    .put("view", new Gson().fromJson(view, FiltersJSONResolver.ViewJSON.class))
+                    .put("view", new Gson().fromJson(view, FiltersJSONResolver.ViewDto.class))
                     .put("timestamp", timestamp)
                     .build();
             if (!result.isEmpty()) {
@@ -156,10 +156,10 @@ public class QueryJSONResolver implements Resolver {
     }
 
     private Map<String, Object> getDataFor(Set<UUID> playerUUIDs, String view) throws ParseException {
-        FiltersJSONResolver.ViewJSON viewJSON = new Gson().fromJson(view, FiltersJSONResolver.ViewJSON.class);
+        FiltersJSONResolver.ViewDto viewDto = new Gson().fromJson(view, FiltersJSONResolver.ViewDto.class);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy kk:mm");
-        long after = dateFormat.parse(viewJSON.afterDate + " " + viewJSON.afterTime).getTime();
-        long before = dateFormat.parse(viewJSON.beforeDate + " " + viewJSON.beforeTime).getTime();
+        long after = dateFormat.parse(viewDto.afterDate + " " + viewDto.afterTime).getTime();
+        long before = dateFormat.parse(viewDto.beforeDate + " " + viewDto.beforeTime).getTime();
 
         return Maps.builder(String.class, Object.class)
                 .put("players", getPlayersTableData(playerUUIDs, after, before))
