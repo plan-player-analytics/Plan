@@ -125,7 +125,6 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + SessionsTable.USER_UUID + "=act." + UserInfoTable.USER_UUID +
                 WHERE + "u." + UserInfoTable.USER_UUID +
                 uuidsInSet +
-                (serverUUIDs.isEmpty() ? "" : AND + "u." + UserInfoTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')") +
                 ORDER_BY + "ses.last_seen DESC";
 
         return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {

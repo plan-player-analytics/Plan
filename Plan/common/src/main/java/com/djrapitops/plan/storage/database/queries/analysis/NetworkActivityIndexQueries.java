@@ -75,6 +75,10 @@ public class NetworkActivityIndexQueries {
     }
 
     public static String selectActivityIndexSQL() {
+        return selectActivityIndexSQL(Collections.emptyList());
+    }
+
+    public static String selectActivityIndexSQL(Collection<ServerUUID> onServers) {
         String selectActivePlaytimeSQL = SELECT +
                 "ux." + UsersTable.USER_UUID + ",COALESCE(active_playtime,0) AS active_playtime" +
                 FROM + UsersTable.TABLE_NAME + " ux" +
@@ -83,6 +87,7 @@ public class NetworkActivityIndexQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
+                (onServers.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(onServers, "','") + "')") +
                 GROUP_BY + SessionsTable.USER_UUID +
                 ") sx on sx.uuid=ux.uuid";
 
@@ -165,15 +170,14 @@ public class NetworkActivityIndexQueries {
     }
 
     public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs, List<ServerUUID> serverUUIDs) {
-        String selectActivityIndex = selectActivityIndexSQL();
+        String selectActivityIndex = selectActivityIndexSQL(serverUUIDs);
 
         String selectIndexes = SELECT + "activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?" +
                 AND + "u." + UsersTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
-                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
 
         return new QueryStatement<Map<String, Integer>>(selectIndexes) {
             @Override

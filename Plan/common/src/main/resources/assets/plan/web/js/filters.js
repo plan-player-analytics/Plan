@@ -211,7 +211,7 @@ class RegisteredBetweenFilter extends BetweenDateFilter {
 
 class PlayedOnServerFilter extends MultipleChoiceFilter {
     constructor(id, options) {
-        super(id, "playedOnServer", "Has played on server", options);
+        super(id, "playedOnServer", "have played on at least one of", options);
     }
 }
 
