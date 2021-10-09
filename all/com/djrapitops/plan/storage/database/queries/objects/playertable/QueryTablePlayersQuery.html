@@ -98,7 +98,8 @@ implements <a href="../../Query.html" title="interface in com.djrapitops.plan.st
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,long,long,long)">QueryTablePlayersQuery</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&nbsp;playerUUIDs,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.Collection,java.util.List,long,long,long)">QueryTablePlayersQuery</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&nbsp;playerUUIDs,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
  long&nbsp;afterDate,
  long&nbsp;beforeDate,
  long&nbsp;activeMsThreshold)</code></div>
@@ -140,9 +141,10 @@ implements <a href="../../Query.html" title="interface in com.djrapitops.plan.st
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.Collection,long,long,long)">
+<section class="detail" id="&lt;init&gt;(java.util.Collection,java.util.List,long,long,long)">
 <h3>QueryTablePlayersQuery</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">QueryTablePlayersQuery</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&nbsp;playerUUIDs,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
  long&nbsp;afterDate,
  long&nbsp;beforeDate,
  long&nbsp;activeMsThreshold)</span></div>
@@ -150,8 +152,9 @@ implements <a href="../../Query.html" title="interface in com.djrapitops.plan.st
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>playerUUIDs</code> - UUIDs of the players in the query</dd>
-<dd><code>beforeDate</code> - View data before this epoch ms</dd>
+<dd><code>serverUUIDs</code> - View data for these Server UUIDs</dd>
 <dd><code>afterDate</code> - View data after this epoch ms</dd>
+<dd><code>beforeDate</code> - View data before this epoch ms</dd>
 <dd><code>activeMsThreshold</code> - Playtime threshold for Activity Index calculation</dd>
 </dl>
 </section>
