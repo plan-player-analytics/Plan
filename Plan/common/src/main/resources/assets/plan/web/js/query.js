@@ -49,8 +49,9 @@ function loadView(json) {
     if (json.view.servers.length >= 2) {
         let options = ``;
         for (let server of json.view.servers) {
+            if (server.proxy) continue;
             serverMap[server.serverUUID] = server;
-            options += `<option${server.proxy ? ' selected' : ''} data-plan-server-uuid="${server.serverUUID}">${server.serverName}</option>`
+            options += `<option data-plan-server-uuid="${server.serverUUID}">${server.serverName}</option>`
         }
         const serverSelector = document.getElementById("server-selector");
         serverSelector.innerHTML = options;
