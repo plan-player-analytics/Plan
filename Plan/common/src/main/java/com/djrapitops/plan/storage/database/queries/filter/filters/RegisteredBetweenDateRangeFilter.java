@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 
 import javax.inject.Inject;
@@ -42,7 +42,7 @@ public class RegisteredBetweenDateRangeFilter extends DateRangeFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
+    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
         long after = getAfter(query);
         long before = getBefore(query);
         return dbSystem.getDatabase().query(BaseUserQueries.uuidsOfRegisteredBetween(after, before));

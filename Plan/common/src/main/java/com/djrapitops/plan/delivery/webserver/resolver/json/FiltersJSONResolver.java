@@ -17,8 +17,8 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
-import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
-import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.domain.datatransfer.FilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.ViewDto;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
@@ -38,7 +38,6 @@ import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -111,67 +110,6 @@ public class FiltersJSONResolver implements Resolver {
         );
         return graphs.line().lineGraph(Lists.map(data, Point::fromDateObj), gapStrategy).getPoints()
                 .stream().map(Point::toArray).collect(Collectors.toList());
-    }
-
-    /**
-     * JSON serialization class.
-     */
-    static class FilterDto implements Comparable<FilterDto> {
-        final String kind;
-        final Map<String, Object> options;
-        final String[] expectedParameters;
-
-        public FilterDto(String kind, Filter filter) {
-            this.kind = kind;
-            this.options = filter.getOptions();
-            this.expectedParameters = filter.getExpectedParameters();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            FilterDto that = (FilterDto) o;
-            return Objects.equals(kind, that.kind) && Objects.equals(options, that.options) && Arrays.equals(expectedParameters, that.expectedParameters);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = Objects.hash(kind, options);
-            result = 31 * result + Arrays.hashCode(expectedParameters);
-            return result;
-        }
-
-        @Override
-        public int compareTo(FilterDto o) {
-            return String.CASE_INSENSITIVE_ORDER.compare(this.kind, o.kind);
-        }
-    }
-
-    /**
-     * JSON serialization class.
-     */
-    static class ViewDto {
-        final String afterDate;
-        final String afterTime;
-        final String beforeDate;
-        final String beforeTime;
-        final List<ServerDto> servers;
-
-        public ViewDto(Formatters formatters, List<ServerDto> servers) {
-            this.servers = servers;
-            long now = System.currentTimeMillis();
-            long monthAgo = now - TimeUnit.DAYS.toMillis(30);
-
-            Formatter<Long> formatter = formatters.javascriptDateFormatterLong();
-            String[] after = StringUtils.split(formatter.apply(monthAgo), " ");
-            String[] before = StringUtils.split(formatter.apply(now), " ");
-
-            this.afterDate = after[0];
-            this.afterTime = after[1];
-            this.beforeDate = before[0];
-            this.beforeTime = before[1];
-        }
     }
 
     /**

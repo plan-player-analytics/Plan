@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.analysis;
 
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
@@ -163,7 +164,7 @@ public class NetworkActivityIndexQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs) {
+    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs, List<ServerUUID> serverUUIDs) {
         String selectActivityIndex = selectActivityIndexSQL();
 
         String selectIndexes = SELECT + "activity_index" +
@@ -171,7 +172,8 @@ public class NetworkActivityIndexQueries {
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?" +
                 AND + "u." + UsersTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
+                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
 
         return new QueryStatement<Map<String, Integer>>(selectIndexes) {
             @Override

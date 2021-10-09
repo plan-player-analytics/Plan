@@ -37,6 +37,18 @@ public class ServerDto {
         return new ServerDto(server.getUuid().toString(), server.getIdentifiableName(), server.isProxy());
     }
 
+    public String getServerUUID() {
+        return serverUUID;
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public boolean isProxy() {
+        return proxy;
+    }
+
     @Override
     public String toString() {
         return "ServerDto{" +

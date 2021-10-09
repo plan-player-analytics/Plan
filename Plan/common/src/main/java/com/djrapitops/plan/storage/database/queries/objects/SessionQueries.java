@@ -869,7 +869,7 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Map<String, Long>> summaryOfPlayers(Set<UUID> playerUUIDs, long after, long before) {
+    public static Query<Map<String, Long>> summaryOfPlayers(Set<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long after, long before) {
         String selectAggregates = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime," +
@@ -878,7 +878,8 @@ public class SessionQueries {
                 WHERE + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
                 AND + SessionsTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
+                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
 
         return new QueryStatement<Map<String, Long>>(selectAggregates) {
             @Override
