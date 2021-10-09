@@ -30,6 +30,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -262,5 +263,15 @@ public class ServerQueries {
 
     public static Query<Map<String, ServerUUID>> fetchServerNamesToUUIDs() {
         return db -> Maps.reverse(db.query(fetchServerNames()));
+    }
+
+    public static Query<List<ServerUUID>> fetchServersMatchingIdentifiers(List<String> serverNames) {
+        return db -> {
+            Map<String, ServerUUID> nameToUUIDMap = db.query(ServerQueries.fetchServerNamesToUUIDs());
+            return serverNames.stream()
+                    .map(nameToUUIDMap::get)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        };
     }
 }

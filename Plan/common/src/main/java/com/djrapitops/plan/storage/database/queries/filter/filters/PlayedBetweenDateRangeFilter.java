@@ -17,13 +17,15 @@
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
+import com.google.gson.Gson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Singleton
 public class PlayedBetweenDateRangeFilter extends DateRangeFilter {
@@ -45,6 +47,15 @@ public class PlayedBetweenDateRangeFilter extends DateRangeFilter {
     public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
         long after = getAfter(query);
         long before = getBefore(query);
-        return dbSystem.getDatabase().query(SessionQueries.uuidsOfPlayedBetween(after, before));
+        List<String> serverNames = getServerNames(query);
+        List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
+        return dbSystem.getDatabase().query(SessionQueries.uuidsOfPlayedBetween(after, before, serverUUIDs));
+    }
+
+    private List<String> getServerNames(InputFilterDto query) {
+        return query.get("servers")
+                .map(serversList -> new Gson().fromJson(serversList, String[].class))
+                .map(Arrays::asList)
+                .orElseGet(Collections::emptyList);
     }
 }

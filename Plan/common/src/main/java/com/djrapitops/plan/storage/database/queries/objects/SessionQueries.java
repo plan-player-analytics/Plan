@@ -846,11 +846,12 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Set<UUID>> uuidsOfPlayedBetween(long after, long before) {
+    public static Query<Set<UUID>> uuidsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT + DISTINCT + SessionsTable.USER_UUID +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
+                AND + SessionsTable.SESSION_START + "<=?" +
+                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
         return new QueryStatement<Set<UUID>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
