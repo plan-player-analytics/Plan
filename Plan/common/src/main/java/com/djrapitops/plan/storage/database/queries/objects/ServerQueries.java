@@ -173,9 +173,27 @@ public class ServerQueries {
         };
     }
 
+    public static Query<List<String>> fetchGameServerNames() {
+        String sql = Select.from(ServerTable.TABLE_NAME,
+                        ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                .where(ServerTable.PROXY + "=0")
+                .toString();
+
+        return new QueryAllStatement<List<String>>(sql) {
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> names = new ArrayList<>();
+                while (set.next()) {
+                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.SERVER_ID)));
+                }
+                return names;
+            }
+        };
+    }
+
     public static Query<Map<ServerUUID, String>> fetchServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                        ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
                 .toString();
 
         return new QueryAllStatement<Map<ServerUUID, String>>(sql) {

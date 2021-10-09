@@ -47,7 +47,7 @@ public class PlayedOnServerFilter extends MultiOptionFilter {
     }
 
     private List<String> getSelectionOptions() {
-        return new ArrayList<>(dbSystem.getDatabase().query(ServerQueries.fetchServerNames()).values());
+        return dbSystem.getDatabase().query(ServerQueries.fetchGameServerNames());
     }
 
     @Override
