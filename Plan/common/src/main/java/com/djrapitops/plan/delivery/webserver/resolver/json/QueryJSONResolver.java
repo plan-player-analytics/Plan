@@ -131,11 +131,11 @@ public class QueryJSONResolver implements Resolver {
         String q = request.getQuery().get("q").orElseThrow(() -> new BadRequestException("'q' parameter not set (expecting json array)"));
         try {
             String query = URLDecoder.decode(q, "UTF-8");
-            List<InputFilterDto> filters = InputFilterDto.parse(query, gson);
+            List<InputFilterDto> queryFilters = InputFilterDto.parse(query, gson);
             ViewDto view = request.getQuery().get("view")
                     .map(viewJson -> gson.fromJson(viewJson, ViewDto.class))
                     .orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
-            return new InputQueryDto(view, filters);
+            return new InputQueryDto(view, queryFilters);
         } catch (IOException e) {
             throw new BadRequestException("Failed to decode json: '" + q + "', " + e.getMessage());
         }

@@ -32,7 +32,8 @@ import java.util.stream.Collectors;
  * Represents query page view that the user wants to see data for.
  */
 public class ViewDto {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy kk:mm");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy kk:mm");
+
     private final String afterDate;
     private final String afterTime;
     private final String beforeDate;
@@ -55,11 +56,11 @@ public class ViewDto {
     }
 
     public long getAfterEpochMs() throws ParseException {
-        return DATE_FORMAT.parse(afterDate + " " + afterTime).getTime();
+        return dateFormat.parse(afterDate + " " + afterTime).getTime();
     }
 
     public long getBeforeEpochMs() throws ParseException {
-        return DATE_FORMAT.parse(beforeDate + " " + beforeTime).getTime();
+        return dateFormat.parse(beforeDate + " " + beforeTime).getTime();
     }
 
     public List<ServerUUID> getServerUUIDs() {

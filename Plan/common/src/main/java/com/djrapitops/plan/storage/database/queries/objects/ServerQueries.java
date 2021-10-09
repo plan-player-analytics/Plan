@@ -286,8 +286,6 @@ public class ServerQueries {
     public static Query<List<ServerUUID>> fetchServersMatchingIdentifiers(List<String> serverNames) {
         return db -> {
             Map<String, ServerUUID> nameToUUIDMap = db.query(ServerQueries.fetchServerNamesToUUIDs());
-            System.out.println(serverNames);
-            System.out.println(nameToUUIDMap);
             return serverNames.stream()
                     .map(nameToUUIDMap::get)
                     .filter(Objects::nonNull)
