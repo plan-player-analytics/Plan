@@ -18,26 +18,38 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.nio.charset.StandardCharsets;
 
 public class RequestBodyConverter {
 
-  private RequestBodyConverter() {
-    /* Static utility class */
-  }
-
-  /**
-   * Get the body of a request as an url-encoded form.
-   *
-   * @return {@link URIQuery}.
-   */
-  public static URIQuery formBody(Request request) {
-    if (
-            "POST".equalsIgnoreCase(request.getMethod()) &&
-                    "application/x-www-form-urlencoded".equalsIgnoreCase(request.getHeader("Content-type").orElse(""))
-    ) {
-      return new URIQuery(new String(request.getRequestBody()));
-    } else {
-      return new URIQuery("");
+    private RequestBodyConverter() {
+        /* Static utility class */
     }
-  }
+
+    /**
+     * Get the body of a request as an url-encoded form.
+     *
+     * @return {@link URIQuery}.
+     */
+    public static URIQuery formBody(Request request) {
+        if (
+                "POST".equalsIgnoreCase(request.getMethod()) &&
+                        "application/x-www-form-urlencoded".equalsIgnoreCase(request.getHeader("Content-type").orElse(""))
+        ) {
+            return new URIQuery(new String(request.getRequestBody(), StandardCharsets.UTF_8));
+        } else {
+            return new URIQuery("");
+        }
+    }
+
+    public static <T> T bodyJson(Request request, Gson gson, Class<T> ofType) {
+        return gson.fromJson(new String(request.getRequestBody(), StandardCharsets.UTF_8), ofType);
+    }
+
+    public static <T> T bodyJson(Request request, Gson gson, TypeToken<T> ofType) {
+        return gson.fromJson(new String(request.getRequestBody(), StandardCharsets.UTF_8), ofType.getType());
+    }
 }

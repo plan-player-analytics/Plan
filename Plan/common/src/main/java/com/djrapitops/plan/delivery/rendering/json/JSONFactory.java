@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.domain.mutators.PlayerKillMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
@@ -266,16 +267,10 @@ public class JSONFactory {
         return tableEntries;
     }
 
-    public Map<String, Object> listServers() {
+    public Map<String, List<ServerDto>> listServers() {
         Collection<Server> servers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection());
-        return Maps.builder(String.class, Object.class)
-                .put("servers", servers.stream()
-                        .map(server -> Maps.builder(String.class, Object.class)
-                                .put("serverUUID", server.getUuid().toString())
-                                .put("serverName", server.getIdentifiableName())
-                                .put("proxy", server.isProxy())
-                                .build())
-                        .collect(Collectors.toList()))
-                .build();
+        return Collections.singletonMap("servers", servers.stream()
+                .map(ServerDto::fromServer)
+                .collect(Collectors.toList()));
     }
 }

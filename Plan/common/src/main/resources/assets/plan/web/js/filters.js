@@ -209,6 +209,12 @@ class RegisteredBetweenFilter extends BetweenDateFilter {
     }
 }
 
+class PlayedOnServerFilter extends MultipleChoiceFilter {
+    constructor(id, options) {
+        super(id, "playedOnServer", "have played on at least one of", options);
+    }
+}
+
 function createFilter(filter, id) {
     if (filter.kind.startsWith("pluginGroups-")) {
         return new PluginGroupsFilter(id, filter.kind, filter.options);
@@ -230,6 +236,8 @@ function createFilter(filter, id) {
             return new RegisteredBetweenFilter(id, filter.options);
         case "pluginsBooleanGroups":
             return new PluginBooleanGroupsFilter(id, filter.options);
+        case "playedOnServer":
+            return new PlayedOnServerFilter(id, filter.options);
         default:
             throw new Error("Unsupported filter kind: '" + filter.kind + "'");
     }
@@ -258,6 +266,8 @@ function getReadableFilterName(filter) {
             return "Registered between";
         case "pluginsBooleanGroups":
             return "Has plugin boolean value";
+        case "playedOnServer":
+            return "Has played on one of servers";
         default:
             return filter.kind;
     }

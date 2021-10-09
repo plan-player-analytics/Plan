@@ -846,11 +846,12 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Set<UUID>> uuidsOfPlayedBetween(long after, long before) {
+    public static Query<Set<UUID>> uuidsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT + DISTINCT + SessionsTable.USER_UUID +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
+                AND + SessionsTable.SESSION_START + "<=?" +
+                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
         return new QueryStatement<Set<UUID>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -869,7 +870,7 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Map<String, Long>> summaryOfPlayers(Set<UUID> playerUUIDs, long after, long before) {
+    public static Query<Map<String, Long>> summaryOfPlayers(Set<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long after, long before) {
         String selectAggregates = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime," +
@@ -878,7 +879,8 @@ public class SessionQueries {
                 WHERE + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
                 AND + SessionsTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
+                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
 
         return new QueryStatement<Map<String, Long>>(selectAggregates) {
             @Override

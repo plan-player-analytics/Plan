@@ -30,6 +30,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -172,9 +173,27 @@ public class ServerQueries {
         };
     }
 
+    public static Query<List<String>> fetchGameServerNames() {
+        String sql = Select.from(ServerTable.TABLE_NAME,
+                        ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                .where(ServerTable.PROXY + "=0")
+                .toString();
+
+        return new QueryAllStatement<List<String>>(sql) {
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> names = new ArrayList<>();
+                while (set.next()) {
+                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.SERVER_ID)));
+                }
+                return names;
+            }
+        };
+    }
+
     public static Query<Map<ServerUUID, String>> fetchServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                        ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
                 .toString();
 
         return new QueryAllStatement<Map<ServerUUID, String>>(sql) {
@@ -262,5 +281,15 @@ public class ServerQueries {
 
     public static Query<Map<String, ServerUUID>> fetchServerNamesToUUIDs() {
         return db -> Maps.reverse(db.query(fetchServerNames()));
+    }
+
+    public static Query<List<ServerUUID>> fetchServersMatchingIdentifiers(List<String> serverNames) {
+        return db -> {
+            Map<String, ServerUUID> nameToUUIDMap = db.query(ServerQueries.fetchServerNamesToUUIDs());
+            return serverNames.stream()
+                    .map(nameToUUIDMap::get)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        };
     }
 }

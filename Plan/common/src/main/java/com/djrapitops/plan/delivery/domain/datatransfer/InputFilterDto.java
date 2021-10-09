@@ -14,8 +14,9 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.queries.filter;
+package com.djrapitops.plan.delivery.domain.datatransfer;
 
+import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -27,18 +28,18 @@ import java.util.*;
  *
  * @author AuroraLS3
  */
-public class SpecifiedFilterInformation {
+public class InputFilterDto {
 
     private final String kind;
     private final Map<String, String> parameters;
 
-    public SpecifiedFilterInformation(String kind, Map<String, String> parameters) {
+    public InputFilterDto(String kind, Map<String, String> parameters) {
         this.kind = kind;
         this.parameters = parameters;
     }
 
-    public static List<SpecifiedFilterInformation> parse(String json) throws IOException {
-        return new Gson().getAdapter(new TypeToken<List<SpecifiedFilterInformation>>() {}).fromJson(json);
+    public static List<InputFilterDto> parse(String json, Gson gson) throws IOException {
+        return gson.getAdapter(new TypeToken<List<InputFilterDto>>() {}).fromJson(json);
     }
 
     public String getKind() {
