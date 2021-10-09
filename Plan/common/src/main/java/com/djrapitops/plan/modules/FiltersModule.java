@@ -57,4 +57,8 @@ public interface FiltersModule {
     @IntoSet
     Filter filter8(PluginBooleanGroupFilter filter);
 
+    @Binds
+    @IntoSet
+    Filter filter9(PlayedOnServerFilter filter);
+
 }
