@@ -24,6 +24,7 @@ slimJar {
 shadowJar {
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
+        exclude 'org/apache/maven/**' // This needs to be unrelocated for Sponge
     }
     relocate 'dagger', 'plan.dagger'
     // Don't relocate SQLite since the org.sqlite.NativeDB class calls are not relocated properly
