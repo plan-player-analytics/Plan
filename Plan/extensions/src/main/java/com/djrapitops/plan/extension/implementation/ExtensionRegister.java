@@ -86,7 +86,7 @@ public class ExtensionRegister {
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension, McMMOExtensionFactory::registerExpansion);
         registerMany(new MinigameLibExtensionFactory(), MinigameLibExtensionFactory::createExtensions);
         register(new MyPetExtensionFactory(), MyPetExtensionFactory::createExtension);
-        register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
+        //register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension); // TODO: update for Sponge API 8
         register(new NuVotifierExtensionFactory(), NuVotifierExtensionFactory::createExtension);
         register(new PlaceholderAPIExtensionFactory(), PlaceholderAPIExtensionFactory::createExtension);
         register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);
