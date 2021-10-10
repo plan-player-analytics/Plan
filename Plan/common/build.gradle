@@ -13,6 +13,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
+    implementation "org.eclipse.jetty:jetty-server:$jettyVersion"
     implementation slimjar("1.2.5")
 
     testImplementation project(":api")
