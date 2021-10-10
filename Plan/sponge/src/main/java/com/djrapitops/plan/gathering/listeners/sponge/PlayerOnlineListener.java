@@ -156,9 +156,10 @@ public class PlayerOnlineListener {
 
         SpongeAFKListener.afkTracker.performedAction(playerUUID, time);
 
-        String world = player.world().key().asString(); // TODO(vankka): check that this is the right thing (also PlayerWorldChangeListener)
+        String world = Sponge.game().server().worldManager().worldDirectory(player.world().key())
+                .map(path -> path.getFileName().toString()).orElse("Unknown");
         GameMode gameMode = player.gameMode().get();
-        String gm = gameMode.key(RegistryTypes.GAME_MODE).asString().toUpperCase(); // TODO(vankka): check that this is the right thing (also PlayerWorldChangeListener)
+        String gm = gameMode.key(RegistryTypes.GAME_MODE).value().toUpperCase();
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));

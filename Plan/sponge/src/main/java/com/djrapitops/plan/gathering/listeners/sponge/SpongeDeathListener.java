@@ -133,8 +133,7 @@ public class SpongeDeathListener {
 
             Optional<ResourceKey> entityType = killerEntity.type().findKey(RegistryTypes.ENTITY_TYPE);
             if (entityType.isPresent()) {
-                // TODO(vankka): check that this is the right thing
-                return new EntityNameFormatter().apply(entityType.get().asString());
+                return new EntityNameFormatter().apply(entityType.get().value());
             }
         }
         return "Unknown";
@@ -144,7 +143,7 @@ public class SpongeDeathListener {
         ItemStack inMainHand = killer.itemInHand(HandTypes.MAIN_HAND);
         ItemStack inHand = inMainHand.isEmpty() ? killer.itemInHand(HandTypes.OFF_HAND) : inMainHand;
         ItemType type = inHand.isEmpty() ? ItemTypes.AIR.get() : inHand.type();
-        return new ItemNameFormatter().apply(type.key(RegistryTypes.ITEM_TYPE).asString()); // TODO(vankka): check that this is the right thing
+        return new ItemNameFormatter().apply(type.key(RegistryTypes.ITEM_TYPE).value());
     }
 
     private Optional<Player> getShooter(Projectile projectile) {

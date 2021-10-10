@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
@@ -75,7 +76,8 @@ public class SpongeWorldChangeListener {
 
         UUID uuid = player.uniqueId();
 
-        String worldName = event.destinationWorld().key().asString(); // TODO(vankka): check that this is the right thing (also PlayerOnlineListener)
+        String worldName = Sponge.game().server().worldManager().worldDirectory(event.destinationWorld().key())
+                .map(path -> path.getFileName().toString()).orElse("Unknown");
         String gameMode = getGameMode(player);
 
         dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
@@ -87,7 +89,7 @@ public class SpongeWorldChangeListener {
 
     private String getGameMode(ServerPlayer player) {
         GameMode gameMode = player.gameMode().get();
-        return gameMode.key(RegistryTypes.GAME_MODE).asString().toUpperCase(); // TODO(vankka): check that this is the right thing (also PlayerOnlineListener)
+        return gameMode.key(RegistryTypes.GAME_MODE).value().toUpperCase();
     }
 
 }
