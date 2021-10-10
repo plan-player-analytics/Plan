@@ -22,7 +22,10 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.delivery.webserver.*;
+import com.djrapitops.plan.delivery.webserver.Addresses;
+import com.djrapitops.plan.delivery.webserver.PassBruteForceGuard;
+import com.djrapitops.plan.delivery.webserver.ResponseFactory;
+import com.djrapitops.plan.delivery.webserver.ResponseResolver;
 import com.djrapitops.plan.delivery.webserver.auth.*;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -103,7 +106,7 @@ public class SunRequestHandler implements HttpHandler {
             response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
             response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
             response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
-            ResponseSender sender = new ResponseSender(addresses, exchange, response);
+            SunResponseSender sender = new SunResponseSender(addresses, exchange, response);
             sender.send();
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {

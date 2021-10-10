@@ -14,9 +14,10 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver;
+package com.djrapitops.plan.delivery.webserver.http;
 
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -31,13 +32,13 @@ import java.util.zip.GZIPOutputStream;
  *
  * @author AuroraLS3
  */
-public class ResponseSender {
+public class SunResponseSender {
 
     private final Addresses addresses;
     private final HttpExchange exchange;
     private final Response response;
 
-    public ResponseSender(Addresses addresses, HttpExchange exchange, Response response) {
+    public SunResponseSender(Addresses addresses, HttpExchange exchange, Response response) {
         this.addresses = addresses;
         this.exchange = exchange;
         this.response = response;
