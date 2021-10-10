@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.settings.config.PlanConfig;

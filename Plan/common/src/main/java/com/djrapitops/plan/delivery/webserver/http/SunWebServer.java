@@ -14,9 +14,9 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver;
+package com.djrapitops.plan.delivery.webserver.http;
 
-import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -49,14 +49,14 @@ import java.util.concurrent.*;
  * @author AuroraLS3
  */
 @Singleton
-public class WebServer implements SubSystem {
+public class SunWebServer implements WebServer {
 
     private final Locale locale;
     private final PlanFiles files;
     private final PlanConfig config;
 
     private final Addresses addresses;
-    private final RequestHandler requestHandler;
+    private final SunRequestHandler requestHandler;
 
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
@@ -68,14 +68,14 @@ public class WebServer implements SubSystem {
     private boolean usingHttps = false;
 
     @Inject
-    public WebServer(
+    public SunWebServer(
             Locale locale,
             PlanFiles files,
             PlanConfig config,
             Addresses addresses,
             PluginLogger logger,
             ErrorLogger errorLogger,
-            RequestHandler requestHandler
+            SunRequestHandler requestHandler
     ) {
         this.locale = locale;
         this.files = files;
@@ -258,6 +258,7 @@ public class WebServer implements SubSystem {
     /**
      * @return if the WebServer is enabled
      */
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -291,18 +292,22 @@ public class WebServer implements SubSystem {
         }
     }
 
+    @Override
     public String getProtocol() {
         return usingHttps ? "https" : "http";
     }
 
+    @Override
     public boolean isUsingHTTPS() {
         return usingHttps;
     }
 
+    @Override
     public boolean isAuthRequired() {
         return isUsingHTTPS() && config.isFalse(WebserverSettings.DISABLED_AUTHENTICATION);
     }
 
+    @Override
     public int getPort() {
         return port;
     }

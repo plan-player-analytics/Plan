@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver;
+package com.djrapitops.plan.delivery.webserver.http;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.*;
 import com.djrapitops.plan.delivery.webserver.auth.*;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -52,7 +53,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author AuroraLS3
  */
 @Singleton
-public class RequestHandler implements HttpHandler {
+public class SunRequestHandler implements HttpHandler {
 
     private final Locale locale;
     private final PlanConfig config;
@@ -70,7 +71,7 @@ public class RequestHandler implements HttpHandler {
     private final AtomicBoolean warnedAboutXForwardedSecurityIssue = new AtomicBoolean(false);
 
     @Inject
-    RequestHandler(
+    SunRequestHandler(
             Locale locale,
             PlanConfig config,
             DBSystem dbSystem,

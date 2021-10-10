@@ -26,6 +26,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
 import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
