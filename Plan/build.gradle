@@ -104,6 +104,7 @@ subprojects {
     }
 
     dependencies {
+        implementation "io.github.slimjar:slimjar:1.2.6"
         // Dependency Injection used across the project
         implementation "com.google.dagger:dagger:$daggerVersion"
         annotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
