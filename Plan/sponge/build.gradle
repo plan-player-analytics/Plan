@@ -4,17 +4,13 @@ plugins {
     id 'org.spongepowered.gradle.plugin' version '2.0.0'
 }
 
-repositories {
-    // TODO(vankka): remove
-    mavenLocal()
-}
-
 dependencies {
     compileOnly project(":common")
     implementation project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
+    // TODO: remove -sponge from version once sponge api 8 is merged to the mainstream PAL
+    implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion-sponge"
     implementation "org.bstats:bstats-sponge:$bstatsVersion"
 
     //compileOnly "org.spongepowered:spongeapi:$spongeVersion"
