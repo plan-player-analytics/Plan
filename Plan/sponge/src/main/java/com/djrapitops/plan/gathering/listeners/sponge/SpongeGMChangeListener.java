@@ -55,7 +55,6 @@ public class SpongeGMChangeListener {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.errorLogger = errorLogger;
-        System.out.println("GMChange registered");
     }
 
     // TODO(vankka)
