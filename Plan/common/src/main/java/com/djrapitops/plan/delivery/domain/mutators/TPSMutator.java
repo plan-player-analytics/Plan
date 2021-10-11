@@ -63,7 +63,7 @@ public class TPSMutator {
         return filterBy(tps -> tps.getDate() >= after && tps.getDate() <= before);
     }
 
-    public TPSMutator filterTPSBetween(int above, int below) {
+    public TPSMutator filterTPSBetween(double above, double below) {
         return filterBy(tps -> tps.getTicksPerSecond() > above && tps.getTicksPerSecond() < below);
     }
 
@@ -164,7 +164,7 @@ public class TPSMutator {
         return count * 1.0 / tpsData.size();
     }
 
-    public int lowTpsSpikeCount(int threshold) {
+    public int lowTpsSpikeCount(double threshold) {
         boolean wasLow = false;
         int spikeCount = 0;
 

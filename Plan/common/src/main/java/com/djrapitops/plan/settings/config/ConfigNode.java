@@ -275,6 +275,11 @@ public class ConfigNode {
                 : new ConfigValueParser.StringParser().compose(value);
     }
 
+    public Double getDouble() {
+        return value == null ? null
+            : new ConfigValueParser.DoubleParser().compose(value);
+    }
+
     public boolean getBoolean() {
         return new ConfigValueParser.BooleanParser().compose(value);
     }
@@ -308,6 +313,10 @@ public class ConfigNode {
 
     public boolean getBoolean(String path) {
         return getNode(path).map(ConfigNode::getBoolean).orElse(false);
+    }
+
+    public Double getDouble(String path) {
+        return getNode(path).map(ConfigNode::getDouble).orElse(null);
     }
 
     public void copyMissing(ConfigNode from) {
