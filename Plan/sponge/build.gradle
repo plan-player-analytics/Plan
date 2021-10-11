@@ -13,9 +13,7 @@ dependencies {
     implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion-sponge"
     implementation "org.bstats:bstats-sponge:$bstatsVersion"
 
-    //compileOnly "org.spongepowered:spongeapi:$spongeVersion"
     testImplementation "org.spongepowered:spongeapi:$spongeVersion"
-
     annotationProcessor "org.spongepowered:spongeapi:$spongeVersion"
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
@@ -38,6 +36,7 @@ sponge {
         }
 
         // Dependencies
+        // version is a *required* property (empty string works fine)
         dependency("griefprevention") {
             optional(true)
             version("")
