@@ -54,20 +54,7 @@ public final class CompositeResolver implements Resolver {
         return target.getPart(0).flatMap(this::findResolver);
     }
 
-    private Optional<Resolver> getAccessCheck(URIPath target) {
-        return target.getPart(0).flatMap(this::findAccessCheck);
-    }
-
     private Optional<Resolver> findResolver(String prefix) {
-        for (int i = 0; i < prefixes.size(); i++) {
-            if (prefixes.get(i).equals(prefix)) {
-                return Optional.of(resolvers.get(i));
-            }
-        }
-        return Optional.empty();
-    }
-
-    private Optional<Resolver> findAccessCheck(String prefix) {
         for (int i = 0; i < prefixes.size(); i++) {
             if (prefixes.get(i).equals(prefix)) {
                 return Optional.of(resolvers.get(i));
@@ -96,7 +83,7 @@ public final class CompositeResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         Request forThis = request.omitFirstInPath();
-        return getAccessCheck(forThis.getPath())
+        return getResolver(forThis.getPath())
                 .map(resolver -> resolver.canAccess(forThis))
                 .orElse(true);
     }
