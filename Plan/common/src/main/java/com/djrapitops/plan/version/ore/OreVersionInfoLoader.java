@@ -90,9 +90,8 @@ public class OreVersionInfoLoader {
         connection.setRequestMethod("POST");
         connection.connect();
         InputStream in = connection.getInputStream();
-        OreSessionDto session = new Gson().fromJson(readInputFully(in), OreSessionDto.class);
 
-        return session.getSession();
+        return JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("session").getAsString();
     }
 
     // I want Java 9 already...
