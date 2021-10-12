@@ -24,6 +24,8 @@ import com.djrapitops.plan.identification.ServerServerInfo;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.FabricConfigSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.version.FabricVersionChecker;
+import com.djrapitops.plan.version.VersionChecker;
 import dagger.Binds;
 import dagger.Module;
 import net.minecraft.server.world.ServerWorld;
@@ -60,4 +62,7 @@ public interface FabricSuperClassBindingModule {
 
     @Binds
     ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerWorld> sensor);
+
+    @Binds
+    VersionChecker bindVersionChecker(FabricVersionChecker versionChecker);
 }
