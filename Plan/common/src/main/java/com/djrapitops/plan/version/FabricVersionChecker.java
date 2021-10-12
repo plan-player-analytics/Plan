@@ -28,9 +28,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * System for checking if new Version is available when the System initializes.
- *
- * @author AuroraLS3
+ * System for checking if new Version is available when the System initializes, altering the link for Fabric.
  */
 @Singleton
 public class FabricVersionChecker extends VersionChecker {
