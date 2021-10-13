@@ -75,11 +75,15 @@ public class OreVersionInfoLoader {
         connection.setDoOutput(true);
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", String.format("OreApi session=\"%s\"", session));
-        connection.connect();
-        InputStream in = connection.getInputStream();
-        JsonArray versions = JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
+        try {
+            connection.connect();
+            InputStream in = connection.getInputStream();
+            JsonArray versions = JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
 
-        return new Gson().getAdapter(new TypeToken<List<OreVersionDto>>() {}).fromJsonTree(versions);
+            return new Gson().getAdapter(new TypeToken<List<OreVersionDto>>() {}).fromJsonTree(versions);
+        } finally {
+            connection.disconnect();
+        }
     }
 
     private static String newOreSession() throws IOException {
@@ -88,10 +92,14 @@ public class OreVersionInfoLoader {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
-        connection.connect();
-        InputStream in = connection.getInputStream();
-
-        return JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("session").getAsString();
+        try {
+            connection.connect();
+            InputStream in = connection.getInputStream();
+    
+            return JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("session").getAsString();
+        } finally {
+            connection.disconnect();
+        }
     }
 
     // I want Java 9 already...
