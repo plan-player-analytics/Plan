@@ -14,11 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.version;
+package net.playeranalytics.plan.version;
 
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plan.version.VersionChecker;
+import com.djrapitops.plan.version.VersionInfo;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
 

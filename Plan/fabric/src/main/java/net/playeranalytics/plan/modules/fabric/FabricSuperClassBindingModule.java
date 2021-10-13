@@ -24,7 +24,6 @@ import com.djrapitops.plan.identification.ServerServerInfo;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.FabricConfigSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.version.FabricVersionChecker;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Binds;
 import dagger.Module;
@@ -33,6 +32,7 @@ import net.playeranalytics.plan.FabricServerShutdownSave;
 import net.playeranalytics.plan.gathering.FabricSensor;
 import net.playeranalytics.plan.gathering.listeners.FabricListenerSystem;
 import net.playeranalytics.plan.storage.database.FabricDBSystem;
+import net.playeranalytics.plan.version.FabricVersionChecker;
 
 /**
  * Module for binding Fabric-specific classes as interface implementations.
