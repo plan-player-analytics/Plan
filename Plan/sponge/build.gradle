@@ -13,7 +13,6 @@ dependencies {
     compileOnly project(":api")
 
     implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
-    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     implementation "org.bstats:bstats-sponge:$bstatsVersion"
 
     compileOnly "org.spongepowered:spongeapi:$spongeVersion"
