@@ -30,6 +30,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.SpongeDBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.SpongePlanFiles;
+import com.djrapitops.plan.version.SpongeVersionChecker;
+import com.djrapitops.plan.version.VersionChecker;
 import dagger.Binds;
 import dagger.Module;
 import org.spongepowered.api.world.World;
@@ -65,4 +67,7 @@ public interface SpongeSuperClassBindingModule {
 
     @Binds
     ServerSensor<?> bindGenericsServerSensor(ServerSensor<World> sensor);
+
+    @Binds
+    VersionChecker bindVersionChecker(SpongeVersionChecker versionChecker);
 }
