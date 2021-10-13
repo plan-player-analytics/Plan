@@ -129,6 +129,7 @@ com.djrapitops.plan.utilities.html.icon
 com.djrapitops.plan.utilities.java
 com.djrapitops.plan.utilities.logging
 com.djrapitops.plan.version
+com.djrapitops.plan.version.ore
 net.playeranalytics.plan
 net.playeranalytics.plan.commands
 net.playeranalytics.plan.commands.use
@@ -141,6 +142,7 @@ net.playeranalytics.plan.gathering.timed
 net.playeranalytics.plan.identification.properties
 net.playeranalytics.plan.modules.fabric
 net.playeranalytics.plan.storage.database
+net.playeranalytics.plan.version
 net.playeranalytics.plugin
 net.playeranalytics.plugin.scheduling
 net.playeranalytics.plugin.server

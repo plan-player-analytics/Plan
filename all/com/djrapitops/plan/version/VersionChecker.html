@@ -46,13 +46,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li>Field&nbsp;|&nbsp;</li>
+<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -82,6 +82,10 @@ loadScripts(document, 'script');</script>
 <dt>All Implemented Interfaces:</dt>
 <dd><code><a href="../SubSystem.html" title="interface in com.djrapitops.plan">SubSystem</a></code></dd>
 </dl>
+<dl class="notes">
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="../../../../net/playeranalytics/plan/version/FabricVersionChecker.html" title="class in net.playeranalytics.plan.version">FabricVersionChecker</a></code>, <code><a href="SpongeVersionChecker.html" title="class in com.djrapitops.plan.version">SpongeVersionChecker</a></code></dd>
+</dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">VersionChecker</span>
@@ -91,6 +95,39 @@ implements <a href="../SubSystem.html" title="interface in com.djrapitops.plan">
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field.summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected <a href="../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#config">config</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="VersionNumber.html" title="class in com.djrapitops.plan.version">VersionNumber</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#currentVersion">currentVersion</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#errorLogger">errorLogger</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#locale">locale</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected net.playeranalytics.plugin.server.PluginLogger</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#logger">logger</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="VersionInfo.html" title="class in com.djrapitops.plan.version">VersionInfo</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#newVersionAvailable">newVersionAvailable</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected net.playeranalytics.plugin.scheduling.RunnableFactory</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#runnableFactory">runnableFactory</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor.summary">
@@ -148,6 +185,9 @@ implements <a href="../SubSystem.html" title="interface in com.djrapitops.plan">
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#isNewVersionAvailable()">isNewVersionAvailable</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="VersionInfo.html" title="class in com.djrapitops.plan.version">VersionInfo</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#loadVersionInfo()">loadVersionInfo</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -160,6 +200,56 @@ implements <a href="../SubSystem.html" title="interface in com.djrapitops.plan">
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field.detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="currentVersion">
+<h3>currentVersion</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="VersionNumber.html" title="class in com.djrapitops.plan.version">VersionNumber</a></span>&nbsp;<span class="element-name">currentVersion</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="locale">
+<h3>locale</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></span>&nbsp;<span class="element-name">locale</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="config">
+<h3>config</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a></span>&nbsp;<span class="element-name">config</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="logger">
+<h3>logger</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">net.playeranalytics.plugin.server.PluginLogger</span>&nbsp;<span class="element-name">logger</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="runnableFactory">
+<h3>runnableFactory</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">net.playeranalytics.plugin.scheduling.RunnableFactory</span>&nbsp;<span class="element-name">runnableFactory</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="errorLogger">
+<h3>errorLogger</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a></span>&nbsp;<span class="element-name">errorLogger</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="newVersionAvailable">
+<h3>newVersionAvailable</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="VersionInfo.html" title="class in com.djrapitops.plan.version">VersionInfo</a></span>&nbsp;<span class="element-name">newVersionAvailable</span></div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor.detail">
@@ -190,6 +280,12 @@ implements <a href="../SubSystem.html" title="interface in com.djrapitops.plan">
 <section class="detail" id="isNewVersionAvailable()">
 <h3>isNewVersionAvailable</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isNewVersionAvailable</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="loadVersionInfo()">
+<h3>loadVersionInfo</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="VersionInfo.html" title="class in com.djrapitops.plan.version">VersionInfo</a>&gt;&gt;</span>&nbsp;<span class="element-name">loadVersionInfo</span>()</div>
 </section>
 </li>
 <li>
