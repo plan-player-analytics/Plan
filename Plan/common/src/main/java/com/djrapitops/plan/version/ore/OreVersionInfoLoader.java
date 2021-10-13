@@ -72,15 +72,16 @@ public class OreVersionInfoLoader {
         URL url = new URL(ORE_VERSIONS_URL);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Authorization", String.format("OreApi session=\"%s\"", session));
         try {
+            connection.setDoOutput(true);
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Authorization", String.format("OreApi session=\"%s\"", session));
             connection.connect();
-            InputStream in = connection.getInputStream();
-            JsonArray versions = JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
+            try (InputStream in = connection.getInputStream()) {
+                JsonArray versions = JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
 
-            return new Gson().getAdapter(new TypeToken<List<OreVersionDto>>() {}).fromJsonTree(versions);
+                return new Gson().getAdapter(new TypeToken<List<OreVersionDto>>() {}).fromJsonTree(versions);
+            }
         } finally {
             connection.disconnect();
         }
@@ -90,13 +91,13 @@ public class OreVersionInfoLoader {
         URL url = new URL(ORE_AUTHENTICATE_URL);
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
         try {
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
             connection.connect();
-            InputStream in = connection.getInputStream();
-    
-            return JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("session").getAsString();
+            try (InputStream in = connection.getInputStream()) {
+                return JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("session").getAsString();
+            }
         } finally {
             connection.disconnect();
         }
@@ -104,11 +105,12 @@ public class OreVersionInfoLoader {
 
     // I want Java 9 already...
     private static String readInputFully(InputStream in) throws IOException {
-        ByteArrayOutputStream buf = new ByteArrayOutputStream(512);
-        int b;
-        while ((b = in.read()) != -1) {
-            buf.write((byte) b);
+        try (ByteArrayOutputStream buf = new ByteArrayOutputStream(512)) {
+            int b;
+            while ((b = in.read()) != -1) {
+                buf.write((byte) b);
+            }
+            return buf.toString();
         }
-        return buf.toString();
     }
 }
