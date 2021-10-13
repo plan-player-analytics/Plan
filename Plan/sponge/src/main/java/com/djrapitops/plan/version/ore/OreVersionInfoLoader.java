@@ -78,7 +78,7 @@ public class OreVersionInfoLoader {
             connection.setRequestProperty("Authorization", String.format("OreApi session=\"%s\"", session));
             connection.connect();
             try (InputStream in = connection.getInputStream()) {
-                JsonArray versions = JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
+                JsonArray versions = new JsonParser().parse(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
 
                 return new Gson().getAdapter(new TypeToken<List<OreVersionDto>>() {}).fromJsonTree(versions);
             }
@@ -96,7 +96,7 @@ public class OreVersionInfoLoader {
             connection.setRequestMethod("POST");
             connection.connect();
             try (InputStream in = connection.getInputStream()) {
-                return JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("session").getAsString();
+                return new JsonParser().parse(readInputFully(in)).getAsJsonObject().get("session").getAsString();
             }
         } finally {
             connection.disconnect();
