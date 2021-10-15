@@ -39,7 +39,7 @@ dependencies {
     implementation 'com.djrapitops:Extension-Quests:4.0.5-R0.1'
     implementation 'com.djrapitops:Extension-React:6.651-R0.1'
     implementation 'com.djrapitops:Extension-RedProtect:7.7.3-R0.1'
-    implementation 'com.djrapitops:Extension-Sponge-Economy:7.1.0-R0.3'
+    implementation 'com.djrapitops:Extension-Sponge-Economy:8.0.0-R0.3'
     implementation 'com.djrapitops:Extension-SuperbVote:0.5.4-R0.1'
     implementation 'com.djrapitops:Extension-Tebex:R1.3'
     implementation 'com.djrapitops:Extension-Towny:0.96.7.4-R0.2'

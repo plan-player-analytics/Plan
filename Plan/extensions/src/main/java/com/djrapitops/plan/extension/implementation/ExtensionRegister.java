@@ -95,7 +95,7 @@ public class ExtensionRegister {
         register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension);
         register(new ReactExtensionFactory(), ReactExtensionFactory::createExtension);
         register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
-        //register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension); // TODO: update for Sponge API 8
+        register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
         register(new SuperbVoteExtensionFactory(), SuperbVoteExtensionFactory::createExtension);
         register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);
         registerMany(new VaultExtensionFactory(), VaultExtensionFactory::createExtensions);
