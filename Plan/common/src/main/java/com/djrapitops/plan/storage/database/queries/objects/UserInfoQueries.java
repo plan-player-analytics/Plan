@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -335,6 +336,30 @@ public class UserInfoQueries {
             @Override
             public Set<UUID> processResults(ResultSet set) throws SQLException {
                 return extractUUIDs(set);
+            }
+        };
+    }
+
+    public static Query<Set<UUID>> uuidsOfRegisteredBetween(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + DISTINCT + UserInfoTable.USER_UUID +
+                FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.REGISTERED + ">=?" +
+                AND + UserInfoTable.REGISTERED + "<=?" +
+                AND + UserInfoTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
+        return new QueryStatement<Set<UUID>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> uuids = new HashSet<>();
+                while (set.next()) {
+                    uuids.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
+                }
+                return uuids;
             }
         };
     }

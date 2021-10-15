@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.analysis;
 
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
@@ -74,6 +75,10 @@ public class NetworkActivityIndexQueries {
     }
 
     public static String selectActivityIndexSQL() {
+        return selectActivityIndexSQL(Collections.emptyList());
+    }
+
+    public static String selectActivityIndexSQL(Collection<ServerUUID> onServers) {
         String selectActivePlaytimeSQL = SELECT +
                 "ux." + UsersTable.USER_UUID + ",COALESCE(active_playtime,0) AS active_playtime" +
                 FROM + UsersTable.TABLE_NAME + " ux" +
@@ -82,6 +87,7 @@ public class NetworkActivityIndexQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
+                (onServers.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(onServers, "','") + "')") +
                 GROUP_BY + SessionsTable.USER_UUID +
                 ") sx on sx.uuid=ux.uuid";
 
@@ -163,8 +169,8 @@ public class NetworkActivityIndexQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs) {
-        String selectActivityIndex = selectActivityIndexSQL();
+    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs, List<ServerUUID> serverUUIDs) {
+        String selectActivityIndex = selectActivityIndexSQL(serverUUIDs);
 
         String selectIndexes = SELECT + "activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +

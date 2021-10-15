@@ -7,8 +7,8 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0" apply false
-    id "io.github.slimjar" version "1.2.2" apply false
+    id "com.github.johnrengelman.shadow" version "7.1.0" apply false
+    id "io.github.slimjar" version "1.3.0" apply false
     id "java"
     id "jacoco"
     id "checkstyle"
@@ -62,8 +62,8 @@ subprojects {
     }
 
     ext {
-        daggerVersion = "2.38.1"
-        daggerCompilerVersion = "2.38.1"
+        daggerVersion = "2.39.1"
+        daggerCompilerVersion = "2.39.1"
 
         palVersion = "5.0.0"
 
@@ -100,11 +100,11 @@ subprojects {
         maven { url = "https://repo.md-5.net/content/repositories/snapshots/" } // RedisBungee
         maven { url = "https://repo.velocitypowered.com/snapshots/" } // Velocity
         maven { url = "https://repo.playeranalytics.net/releases" } // Plan
-        maven { url = " https://repo.vshnv.tech/"} // slimjar
     }
 
     dependencies {
         // Dependency Injection used across the project
+        implementation "io.github.slimjar:slimjar:1.2.6" // Runtime dependency injection
         implementation "com.google.dagger:dagger:$daggerVersion"
         annotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
@@ -113,7 +113,7 @@ subprojects {
         testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'      // JUnit 5
         testImplementation "org.mockito:mockito-core:3.12.4"                // Mockito Core
         testImplementation "org.mockito:mockito-junit-jupiter:3.12.4"       // Mockito JUnit 5 Extension
-        testImplementation "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
+        testImplementation "org.seleniumhq.selenium:selenium-java:4.0.0" // Selenium (Browser tests)
         testImplementation "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan

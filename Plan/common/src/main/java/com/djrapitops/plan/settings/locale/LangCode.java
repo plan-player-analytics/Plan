@@ -35,7 +35,7 @@ public enum LangCode {
     JA("Japanese", "yukieji"),
     KO("Korean", "Guinness_Akihiko"),
     NL("Dutch", "Sander0542"),
-    RU("Russian", "Saph1s & Perhun_Pak"),
+    RU("Russian", "Saph1s, Perhun_Pak & BratishkaErik"),
     TR("Turkish", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
     PT_BR("Portuguese (Brazil)", "jvmuller"),
     ZH_TW("Traditional Chinese", "\u6d1b\u4f0a & zisunny104");

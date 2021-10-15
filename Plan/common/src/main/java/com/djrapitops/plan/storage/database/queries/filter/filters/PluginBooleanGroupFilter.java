@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -23,7 +24,6 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
@@ -164,7 +164,7 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
+    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
         Map<PluginBooleanOption, SelectedBoolean> selectedBooleanOptions = new HashMap<>();
         for (String selected : getSelected(query)) {
             String[] optionAndBoolean = StringUtils.split(selected, ":", 2);

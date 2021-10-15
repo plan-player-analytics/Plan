@@ -6,7 +6,7 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 [![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=coverage)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 
-[API, Documentation & Tutorials](https://github.com/Rsl1122/Plan-PlayerAnalytics/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [Issues & Suggestions](https://github.com/Rsl1122/Plan-PlayerAnalytics/issues)
+[API, Documentation & Tutorials](https://github.com/plan-player-analytics/Plan/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [Issues & Suggestions](https://github.com/plan-player-analytics/Plan/issues)
 
 Player Analytics is a fully fledged solution for the analytics needs of your minecraft server. A built in webserver displays insights into different aspects on the server such as Online activity, Playerbase and how these change over time.
 
@@ -17,7 +17,7 @@ Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivat
 
 ## Building
 
-You can build the project by running the following in the repository root
+You can build the project by running the following in the repository root:
 ```
 cd Plan
 ./gradlew build
@@ -28,16 +28,17 @@ cd Plan
 ## Used Libraries
 
 - **[SBAdmin 2 Template](https://github.com/BlackrockDigital/startbootstrap-sb-admin-2)** | [MIT License](https://opensource.org/licenses/MIT)
-  - **[Bootstrap](https://v4-alpha.getbootstrap.com/)** | [MIT License](https://v4-alpha.getbootstrap.com/about/license/)
+- **[Bootstrap](https://getbootstrap.com/)** | [MIT License](https://v4-alpha.getbootstrap.com/about/license/)
 - **[HighCharts](https://www.highcharts.com/)** | [Free for non-commercial](https://www.highcharts.com/products/highcharts/#non-commercial)
 - **[jQuery Datatables](https://datatables.net/)** | [MIT License](https://datatables.net/license/mit)
 - **[FullCalendar](https://github.com/fullcalendar/fullcalendar)** | [MIT License](https://datatables.net/license/mit)
 - **[Font Awesome Icons](http://fontawesome.io/icons/)** | [SIL Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
-- **[MaxMind GeoIP2](https://www.maxmind.com/en/geoip-demo)** | [Creative Commons Attribution-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-sa/4.0/)
-- **[H2 Database](http://www.h2database.com)** | [MPL 2.0](http://www.h2database.com/html/license.html#mpl2) or [EPL 1.0](http://www.h2database.com/html/license.html#eclipse_license)
+- **[MaxMind GeoIP2 Country](https://www.maxmind.com/en/geoip2-country-database)** | [MaxMind End User License Agreement (EULA)](https://www.maxmind.com/en/end-user-license-agreement)
+- **[Slimjar](https://github.com/SlimJar/slimjar)**| [MIT License](https://github.com/slimjar/slimjar/blob/master/LICENSE)
+- **[Dagger](https://dagger.dev/)**| [Apache-2.0 License](https://github.com/google/dagger/blob/master/LICENSE.txt)
 
 ## License
 
 Player Analytics is licensed under LGPL-3 (GNU Lesser General Public License)
 
-- [License](https://github.com/Rsl1122/Plan-PlayerAnalytics/blob/master/LICENSE)
+- [License](https://github.com/plan-player-analytics/Plan/blob/master/LICENSE)

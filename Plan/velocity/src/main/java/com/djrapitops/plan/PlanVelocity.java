@@ -78,6 +78,7 @@ public class PlanVelocity implements PlanPlugin {
     private Locale locale;
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
 
     @com.google.inject.Inject
     public PlanVelocity(
@@ -94,23 +95,14 @@ public class PlanVelocity implements PlanPlugin {
 
     @Subscribe
     public void onProxyStart(ProxyInitializeEvent event) {
-        onEnable();
-    }
-
-    @Subscribe
-    public void onProxyShutdown(ProxyShutdownEvent event) {
-        onDisable();
-    }
-
-    public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
+        abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
 
         logger.info("Loading dependencies, this might take a while...");
         try {
-            ApplicationBuilder.appending("Plan")
-                    .logger((message, args) -> java.util.logging.Logger.getGlobal().log(Level.INFO, message, args))
+            ApplicationBuilder.injecting("Plan", new VelocityInjectable(this, proxy, logger))
+                    .logger((message, args) -> slf4jLogger.info(fixMsgParams(message), args))
                     // Use paper repository for downloading slimjar dependencies
                     .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
                     .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
@@ -123,6 +115,16 @@ public class PlanVelocity implements PlanPlugin {
             onDisable();
         }
 
+        onEnable();
+    }
+
+    @Subscribe
+    public void onProxyShutdown(ProxyShutdownEvent event) {
+        onDisable();
+    }
+
+    @Override
+    public void onEnable() {
         PlanVelocityComponent component = DaggerPlanVelocityComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
@@ -161,6 +163,7 @@ public class PlanVelocity implements PlanPlugin {
         }
     }
 
+    @Override
     public void onDisable() {
         runnableFactory.cancelAllKnownTasks();
         if (system != null) system.disable();
@@ -210,5 +213,9 @@ public class PlanVelocity implements PlanPlugin {
     @Override
     public File getDataFolder() {
         return dataFolderPath.toFile();
+    }
+
+    private String fixMsgParams(String message) {
+        return message.replaceAll("\\{\\d+}", "{}");
     }
 }

@@ -57,13 +57,15 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     private final Formatter<Long> timeAmount;
     private final Formatter<Double> percentage;
     private final Formatter<Double> byteSize;
+    private final Gson gson;
 
     @Inject
     public NetworkPerformanceJSONResolver(
             PlanConfig config,
             Locale locale,
             DBSystem dbSystem,
-            Formatters formatters
+            Formatters formatters,
+            Gson gson
     ) {
         this.config = config;
         this.locale = locale;
@@ -73,6 +75,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
         percentage = formatters.percentage();
         timeAmount = formatters.timeAmount();
         byteSize = formatters.byteSize();
+        this.gson = gson;
     }
 
     @Override
@@ -93,7 +96,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     }
 
     private List<UUID> getUUIDList(String jsonString) {
-        return new Gson().fromJson(jsonString, new TypeToken<List<UUID>>() {}.getType());
+        return gson.fromJson(jsonString, new TypeToken<List<UUID>>() {}.getType());
     }
 
     public Map<String, Object> createJSONAsMap(Collection<ServerUUID> serverUUIDs) {
@@ -130,7 +133,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
             mutatorsOfServersDay.put(entry.getKey(), mutator.filterDataBetween(dayAgo, now));
         }
 
-        Integer tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
+        Double tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
         numbers.put("low_tps_spikes_30d", tpsDataMonth.lowTpsSpikeCount(tpsThreshold));
         numbers.put("low_tps_spikes_7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
         numbers.put("low_tps_spikes_24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));

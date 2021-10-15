@@ -143,6 +143,23 @@ public interface ConfigValueParser<T> {
         }
     }
 
+    class DoubleParser implements ConfigValueParser<Double> {
+        @Override
+        public Double compose(String fromValue) {
+            try {
+                return Double.parseDouble(fromValue);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        @Override
+        public String decompose(Double ofValue) {
+            if (ofValue == null) throw nullInvalidException();
+            return Double.toString(ofValue);
+        }
+    }
+
     class BooleanParser implements ConfigValueParser<Boolean> {
         @Override
         public Boolean compose(String fromValue) {

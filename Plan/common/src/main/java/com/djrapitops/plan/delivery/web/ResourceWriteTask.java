@@ -20,10 +20,14 @@ import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.FileNotFoundException;
+import java.io.UncheckedIOException;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -37,11 +41,13 @@ public class ResourceWriteTask extends TaskSystem.Task {
 
     private final PlanConfig config;
     private final PlanFiles files;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public ResourceWriteTask(PlanConfig config, PlanFiles files) {
+    public ResourceWriteTask(PlanConfig config, PlanFiles files, ErrorLogger errorLogger) {
         this.config = config;
         this.files = files;
+        this.errorLogger = errorLogger;
     }
 
     @Override
@@ -57,7 +63,15 @@ public class ResourceWriteTask extends TaskSystem.Task {
             for (ConfigNode child : planCustomizationNode.get().getChildren()) {
                 if (child.getBoolean()) {
                     String resource = child.getKey(false).replace(',', '.');
-                    resourceService.getResource("Plan", resource, () -> files.getResourceFromJar("web/" + resource).asWebResource());
+                    try {
+                        resourceService.getResource("Plan", resource, () -> files.getResourceFromJar("web/" + resource).asWebResource());
+                    } catch (UncheckedIOException resourceNoLongerFound) {
+                        if (!(resourceNoLongerFound.getCause() instanceof FileNotFoundException)) {
+                            errorLogger.error(resourceNoLongerFound, ErrorContext.builder()
+                                    .whatToDo("A resource could not be read from the jar: " + resource + ", try restarting the server. Report this if error still occurs afterwards: " + resourceNoLongerFound.getMessage())
+                                    .build());
+                        }
+                    }
                 }
             }
         }
