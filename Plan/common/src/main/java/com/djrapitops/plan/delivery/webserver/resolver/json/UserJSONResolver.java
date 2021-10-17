@@ -21,6 +21,8 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.WebServer;
+import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -62,7 +64,7 @@ public class UserJSONResolver implements Resolver {
                     .build();
         }
 
-        WebUser user = request.getUser().orElse(new WebUser(""));
+        WebUser user = request.getUser().orElseThrow(() -> new WebUserAuthException(FailReason.NO_USER_PRESENT));
         Map<String, Object> json = new HashMap<>();
 
         json.put("username", user.getUsername());
