@@ -16,12 +16,10 @@
  */
 package com.djrapitops.plan.delivery.webserver.http;
 
-import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor;
 import com.djrapitops.plan.delivery.webserver.auth.Cookie;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
@@ -30,7 +28,10 @@ import org.apache.commons.text.TextStringBuilder;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SunInternalRequest implements InternalRequest {
 
@@ -45,25 +46,12 @@ public class SunInternalRequest implements InternalRequest {
     }
 
     @Override
-    public String getAccessAddress() {
-        AccessAddressPolicy accessAddressPolicy = webserverConfiguration.getAccessAddressPolicy();
-        if (accessAddressPolicy == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
-            String fromHeader = getAccessAddressFromHeader();
-            if (fromHeader == null) {
-                webserverConfiguration.getInvalidConfigurationWarnings().warnAboutXForwardedForSecurityIssue();
-                return getAccessAddressFromSocketIp();
-            } else {
-                return fromHeader;
-            }
-        }
-        return getAccessAddressFromSocketIp();
-    }
-
-    private String getAccessAddressFromSocketIp() {
+    public String getAccessAddressFromSocketIp() {
         return exchange.getRemoteAddress().getAddress().getHostAddress();
     }
 
-    private String getAccessAddressFromHeader() {
+    @Override
+    public String getAccessAddressFromHeader() {
         return exchange.getRequestHeaders().getFirst("X-Forwarded-For");
     }
 
@@ -82,7 +70,7 @@ public class SunInternalRequest implements InternalRequest {
         URIPath path = new URIPath(exchange.getRequestURI().getPath());
         URIQuery query = new URIQuery(exchange.getRequestURI().getRawQuery());
         byte[] requestBody = readRequestBody(exchange);
-        WebUser user = getWebUser();
+        WebUser user = getWebUser(webserverConfiguration, authenticationExtractor);
         Map<String, String> headers = getRequestHeaders(exchange);
         return new Request(requestMethod, path, query, user, headers, requestBody);
     }
@@ -98,13 +86,6 @@ public class SunInternalRequest implements InternalRequest {
             // requestBody stays empty
             return new byte[0];
         }
-    }
-
-    private WebUser getWebUser() {
-        return getAuthentication()
-                .map(Authentication::getUser) // Can throw WebUserAuthException
-                .map(User::toWebUser)
-                .orElse(null);
     }
 
     private Map<String, String> getRequestHeaders(HttpExchange exchange) {
@@ -127,12 +108,5 @@ public class SunInternalRequest implements InternalRequest {
             }
         }
         return cookies;
-    }
-
-    private Optional<Authentication> getAuthentication() {
-        if (webserverConfiguration.isAuthenticationDisabled()) {
-            return Optional.empty();
-        }
-        return authenticationExtractor.extractAuthentication(this);
     }
 }

@@ -48,7 +48,7 @@ public class RequestHandler {
     }
 
     public Response getResponse(InternalRequest internalRequest) {
-        String accessAddress = internalRequest.getAccessAddress();
+        String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
 
         if (bruteForceGuard.shouldPreventRequest(accessAddress)) {
             return responseFactory.failedLoginAttempts403();
@@ -71,7 +71,7 @@ public class RequestHandler {
     }
 
     private Response attemptToResolve(InternalRequest internalRequest) {
-        String accessAddress = internalRequest.getAccessAddress();
+        String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
         try {
             Request request = internalRequest.toRequest();
             Response response = responseResolver.getResponse(request);

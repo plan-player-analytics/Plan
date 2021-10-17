@@ -16,10 +16,16 @@
  */
 package com.djrapitops.plan.delivery.webserver.http;
 
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.auth.Authentication;
+import com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor;
 import com.djrapitops.plan.delivery.webserver.auth.Cookie;
+import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents a HTTP request.
@@ -28,11 +34,41 @@ import java.util.List;
  */
 public interface InternalRequest {
 
-    String getAccessAddress();
+    default String getAccessAddress(WebserverConfiguration webserverConfiguration) {
+        AccessAddressPolicy accessAddressPolicy = webserverConfiguration.getAccessAddressPolicy();
+        if (accessAddressPolicy == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
+            String fromHeader = getAccessAddressFromHeader();
+            if (fromHeader == null) {
+                webserverConfiguration.getInvalidConfigurationWarnings().warnAboutXForwardedForSecurityIssue();
+                return getAccessAddressFromSocketIp();
+            } else {
+                return fromHeader;
+            }
+        }
+        return getAccessAddressFromSocketIp();
+    }
 
     Request toRequest();
 
     List<Cookie> getCookies();
 
+    String getAccessAddressFromSocketIp();
+
+    String getAccessAddressFromHeader();
+
     String getRequestedURIString();
+
+    default WebUser getWebUser(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor) {
+        return getAuthentication(webserverConfiguration, authenticationExtractor)
+                .map(Authentication::getUser) // Can throw WebUserAuthException
+                .map(User::toWebUser)
+                .orElse(null);
+    }
+
+    default Optional<Authentication> getAuthentication(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor) {
+        if (webserverConfiguration.isAuthenticationDisabled()) {
+            return Optional.empty();
+        }
+        return authenticationExtractor.extractAuthentication(this);
+    }
 }

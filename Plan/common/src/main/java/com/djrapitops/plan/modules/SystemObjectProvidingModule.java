@@ -21,7 +21,7 @@ import com.djrapitops.plan.DataSvc;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.delivery.webserver.cache.JSONMemoryStorageShim;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
-import com.djrapitops.plan.delivery.webserver.http.SunWebServer;
+import com.djrapitops.plan.delivery.webserver.http.JettyWebserver;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
@@ -54,7 +54,7 @@ public class SystemObjectProvidingModule {
 
     @Provides
     @Singleton
-    WebServer provideWebserver(SunWebServer webServer) {
+    WebServer provideWebserver(JettyWebserver webServer) {
         return webServer;
     }
 
