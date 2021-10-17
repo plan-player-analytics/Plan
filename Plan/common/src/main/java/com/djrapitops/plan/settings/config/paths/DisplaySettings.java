@@ -18,6 +18,7 @@ package com.djrapitops.plan.settings.config.paths;
 
 import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.paths.key.BooleanSetting;
+import com.djrapitops.plan.settings.config.paths.key.DoubleSetting;
 import com.djrapitops.plan.settings.config.paths.key.IntegerSetting;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.settings.config.paths.key.StringSetting;
@@ -36,8 +37,8 @@ public class DisplaySettings {
     public static final Setting<Integer> PLAYERS_PER_PLAYERS_PAGE = new IntegerSetting("Display_options.Players_table.Show_on_players_page");
     public static final Setting<Boolean> OPEN_PLAYER_LINKS_IN_NEW_TAB = new BooleanSetting("Display_options.Open_player_links_in_new_tab");
     public static final Setting<Boolean> GAPS_IN_GRAPH_DATA = new BooleanSetting("Display_options.Graphs.Show_gaps_in_data");
-    public static final Setting<Integer> GRAPH_TPS_THRESHOLD_HIGH = new IntegerSetting("Display_options.Graphs.TPS.High_threshold");
-    public static final Setting<Integer> GRAPH_TPS_THRESHOLD_MED = new IntegerSetting("Display_options.Graphs.TPS.Medium_threshold");
+    public static final Setting<Double> GRAPH_TPS_THRESHOLD_HIGH = new DoubleSetting("Display_options.Graphs.TPS.High_threshold");
+    public static final Setting<Double> GRAPH_TPS_THRESHOLD_MED = new DoubleSetting("Display_options.Graphs.TPS.Medium_threshold");
     public static final Setting<Integer> GRAPH_DISK_THRESHOLD_HIGH = new IntegerSetting("Display_options.Graphs.Disk_space.High_threshold");
     public static final Setting<Integer> GRAPH_DISK_THRESHOLD_MED = new IntegerSetting("Display_options.Graphs.Disk_space.Medium_threshold");
     public static final Setting<String> CMD_COLOR_MAIN = new StringSetting("Display_options.Command_colors.Main");

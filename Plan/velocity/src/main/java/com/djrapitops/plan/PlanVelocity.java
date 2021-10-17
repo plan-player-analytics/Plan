@@ -101,7 +101,7 @@ public class PlanVelocity implements PlanPlugin {
 
         logger.info("Loading dependencies, this might take a while...");
         try {
-            ApplicationBuilder.appending("Plan")
+            ApplicationBuilder.injecting("Plan", new VelocityInjectable(this, proxy, logger))
                     .logger((message, args) -> slf4jLogger.info(fixMsgParams(message), args))
                     // Use paper repository for downloading slimjar dependencies
                     .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
