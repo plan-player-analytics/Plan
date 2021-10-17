@@ -33,4 +33,6 @@ public interface InternalRequest {
     Request toRequest();
 
     List<Cookie> getCookies();
+
+    String getRequestedURIString();
 }

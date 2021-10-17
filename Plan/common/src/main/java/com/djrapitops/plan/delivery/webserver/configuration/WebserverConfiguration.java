@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.configuration;
 
+import com.djrapitops.plan.delivery.webserver.auth.AllowedIpList;
 import com.djrapitops.plan.delivery.webserver.http.AccessAddressPolicy;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -27,16 +28,18 @@ import javax.inject.Singleton;
 public class WebserverConfiguration {
 
     private final PlanConfig config;
-    private final InvalidConfigurationWarnings invalidConfigurationWarnings;
+    private final AllowedIpList allowedIpList;
+    private final WebserverConfigurationWarnings webserverConfigurationWarnings;
 
     @Inject
-    public WebserverConfiguration(PlanConfig config, InvalidConfigurationWarnings invalidConfigurationWarnings) {
+    public WebserverConfiguration(PlanConfig config, AllowedIpList allowedIpList, WebserverConfigurationWarnings webserverConfigurationWarnings) {
         this.config = config;
-        this.invalidConfigurationWarnings = invalidConfigurationWarnings;
+        this.allowedIpList = allowedIpList;
+        this.webserverConfigurationWarnings = webserverConfigurationWarnings;
     }
 
-    public InvalidConfigurationWarnings getInvalidConfigurationWarnings() {
-        return invalidConfigurationWarnings;
+    public WebserverConfigurationWarnings getInvalidConfigurationWarnings() {
+        return webserverConfigurationWarnings;
     }
 
     public boolean isAuthenticationDisabled() {
@@ -44,8 +47,16 @@ public class WebserverConfiguration {
     }
 
     public AccessAddressPolicy getAccessAddressPolicy() {
-        return config.isTrue(WebserverSettings.IP_WHITELIST_X_FORWARDED)
+        return config.isTrue(WebserverSettings.IP_USE_X_FORWARDED_FOR)
                 ? AccessAddressPolicy.X_FORWARDED_FOR_HEADER
                 : AccessAddressPolicy.SOCKET_IP;
+    }
+
+    public AllowedIpList getAllowedIpList() {
+        return allowedIpList;
+    }
+
+    public String getAllowedCorsOrigin() {
+        return config.get(WebserverSettings.CORS_ALLOW_ORIGIN);
     }
 }

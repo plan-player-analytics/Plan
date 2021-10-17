@@ -17,31 +17,20 @@
 package com.djrapitops.plan.delivery.webserver.http;
 
 import com.djrapitops.plan.delivery.web.resolver.Response;
-import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.Addresses;
-import com.djrapitops.plan.delivery.webserver.PassBruteForceGuard;
-import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.ResponseResolver;
 import com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor;
-import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
-import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import net.playeranalytics.plugin.server.PluginLogger;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * HttpHandler for WebServer request management.
@@ -51,54 +40,42 @@ import java.util.List;
 @Singleton
 public class SunRequestHandler implements HttpHandler {
 
-    private final Locale locale;
     private final PlanConfig config;
     private final Addresses addresses;
     private final WebserverConfiguration webserverConfiguration;
     private final AuthenticationExtractor authenticationExtractor;
     private final ResponseResolver responseResolver;
-    private final ResponseFactory responseFactory;
+    private final RequestHandler requestHandler;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
-    private final PassBruteForceGuard bruteForceGuard;
-    private List<String> ipWhitelist = null;
-
     @Inject
-    SunRequestHandler(
-            Locale locale,
+    public SunRequestHandler(
             PlanConfig config,
             Addresses addresses,
             WebserverConfiguration webserverConfiguration,
             AuthenticationExtractor authenticationExtractor,
             ResponseResolver responseResolver,
-            ResponseFactory responseFactory,
+            RequestHandler requestHandler,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
-        this.locale = locale;
         this.config = config;
         this.addresses = addresses;
         this.webserverConfiguration = webserverConfiguration;
         this.authenticationExtractor = authenticationExtractor;
         this.responseResolver = responseResolver;
-        this.responseFactory = responseFactory;
+        this.requestHandler = requestHandler;
         this.logger = logger;
         this.errorLogger = errorLogger;
-
-        bruteForceGuard = new PassBruteForceGuard();
     }
 
     @Override
     public void handle(HttpExchange exchange) {
         try {
-            Response response = getResponse(exchange);
-            response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", config.get(WebserverSettings.CORS_ALLOW_ORIGIN));
-            response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
-            response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
-            response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
-            SunResponseSender sender = new SunResponseSender(addresses, exchange, response);
-            sender.send();
+            InternalRequest internalRequest = new SunInternalRequest(exchange, webserverConfiguration, authenticationExtractor);
+            Response response = requestHandler.getResponse(internalRequest);
+            new SunResponseSender(addresses, exchange, response).send();
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
@@ -110,56 +87,6 @@ public class SunRequestHandler implements HttpHandler {
         } finally {
             exchange.close();
         }
-    }
-
-    public Response getResponse(HttpExchange exchange) {
-        if (ipWhitelist == null) {
-            ipWhitelist = config.isTrue(WebserverSettings.IP_WHITELIST)
-                    ? config.get(WebserverSettings.WHITELIST)
-                    : Collections.emptyList();
-        }
-
-        SunInternalRequest internalRequest = new SunInternalRequest(exchange, webserverConfiguration, authenticationExtractor);
-
-        String accessor = internalRequest.getAccessAddress();
-        Request request = null;
-        Response response;
-        try {
-            request = internalRequest.toRequest();
-
-            if (bruteForceGuard.shouldPreventRequest(accessor)) {
-                response = responseFactory.failedLoginAttempts403();
-            } else if (!ipWhitelist.isEmpty() && !ipWhitelist.contains(accessor)) {
-                response = responseFactory.ipWhitelist403(accessor);
-                logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_IP_WHITELIST_BLOCK, accessor, exchange.getRequestURI().toString()));
-            } else {
-                response = responseResolver.getResponse(request);
-            }
-        } catch (WebUserAuthException thrownByAuthentication) {
-            FailReason failReason = thrownByAuthentication.getFailReason();
-            if (failReason == FailReason.USER_PASS_MISMATCH) {
-                bruteForceGuard.increaseAttemptCountOnFailedLogin(accessor);
-                response = responseFactory.badRequest(failReason.getReason(), "/auth/login");
-            } else {
-                String from = exchange.getRequestURI().toASCIIString();
-                String directTo = StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from;
-                response = Response.builder()
-                        .redirectTo(directTo)
-                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1; SameSite=Lax; Secure;")
-                        .build();
-            }
-        }
-
-        if (bruteForceGuard.shouldPreventRequest(accessor)) {
-            response = responseFactory.failedLoginAttempts403();
-        }
-        if (response.getCode() != 401 // Not failed
-                && response.getCode() != 403 // Not blocked
-                && request != null && request.getUser().isPresent() // Logged in
-        ) {
-            bruteForceGuard.resetAttemptCount(accessor);
-        }
-        return response;
     }
 
     public ResponseResolver getResponseResolver() {

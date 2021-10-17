@@ -68,6 +68,11 @@ public class SunInternalRequest implements InternalRequest {
     }
 
     @Override
+    public String getRequestedURIString() {
+        return exchange.getRequestURI().toASCIIString();
+    }
+
+    @Override
     public Request toRequest() {
         return buildRequest(exchange);
     }

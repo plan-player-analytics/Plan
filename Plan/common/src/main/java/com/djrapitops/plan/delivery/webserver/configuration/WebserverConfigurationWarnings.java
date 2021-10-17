@@ -17,6 +17,8 @@
 package com.djrapitops.plan.delivery.webserver.configuration;
 
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
@@ -25,25 +27,30 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Singleton
-public class InvalidConfigurationWarnings {
+public class WebserverConfigurationWarnings {
 
     private final PluginLogger logger;
+    private final Locale locale;
 
     private final AtomicLong warnedAboutXForwardedSecurityIssue = new AtomicLong(0L);
 
     @Inject
-    public InvalidConfigurationWarnings(PluginLogger logger) {
+    public WebserverConfigurationWarnings(PluginLogger logger, Locale locale) {
         this.logger = logger;
+        this.locale = locale;
     }
 
     public void warnAboutXForwardedForSecurityIssue() {
         if (System.currentTimeMillis() - warnedAboutXForwardedSecurityIssue.get() > TimeUnit.MINUTES.toMillis(2L)) {
             logger.warn("Security Vulnerability due to misconfiguration: X-Forwarded-For header was not present in a request & '" +
-                    WebserverSettings.IP_WHITELIST_X_FORWARDED.getPath() + "' is 'true'!");
+                    WebserverSettings.IP_USE_X_FORWARDED_FOR.getPath() + "' is 'true'!");
             logger.warn("This could mean non-reverse-proxy access is not blocked & someone can use IP Spoofing to bypass security!");
             logger.warn("Make sure you can only access Plan panel from your reverse-proxy or disable this setting.");
             warnedAboutXForwardedSecurityIssue.set(System.currentTimeMillis());
         }
     }
 
+    public void warnAboutWhitelistBlock(String accessAddress, String requestedURIString) {
+        logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_IP_WHITELIST_BLOCK, accessAddress, requestedURIString));
+    }
 }
