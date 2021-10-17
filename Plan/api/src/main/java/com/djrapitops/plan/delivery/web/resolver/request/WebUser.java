@@ -60,6 +60,10 @@ public final class WebUser {
         return username;
     }
 
+    public Set<String> getPermissions() {
+        return permissions;
+    }
+
     @Override
     public String toString() {
         return "WebUser{" +
