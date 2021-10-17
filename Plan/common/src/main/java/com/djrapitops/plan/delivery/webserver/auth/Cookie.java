@@ -14,24 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver.http;
+package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.SubSystem;
+import org.apache.commons.lang3.StringUtils;
 
-public interface WebServer extends SubSystem {
-    @Override
-    void enable();
+public class Cookie {
 
-    boolean isEnabled();
+    private final String name;
+    private final String value;
 
-    @Override
-    void disable();
+    public Cookie(String rawRepresentation) {
+        String[] split = StringUtils.split(rawRepresentation, "=", 2);
+        name = split[0];
+        value = split[1];
+    }
 
-    String getProtocol();
+    public Cookie(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
 
-    boolean isUsingHTTPS();
+    public String getName() {
+        return name;
+    }
 
-    boolean isAuthRequired();
-
-    int getPort();
+    public String getValue() {
+        return value;
+    }
 }

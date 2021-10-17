@@ -16,22 +16,9 @@
  */
 package com.djrapitops.plan.delivery.webserver.http;
 
-import com.djrapitops.plan.SubSystem;
+public enum AccessAddressPolicy {
 
-public interface WebServer extends SubSystem {
-    @Override
-    void enable();
+    SOCKET_IP,
+    X_FORWARDED_FOR_HEADER
 
-    boolean isEnabled();
-
-    @Override
-    void disable();
-
-    String getProtocol();
-
-    boolean isUsingHTTPS();
-
-    boolean isAuthRequired();
-
-    int getPort();
 }

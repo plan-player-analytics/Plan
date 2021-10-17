@@ -16,22 +16,21 @@
  */
 package com.djrapitops.plan.delivery.webserver.http;
 
-import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.webserver.auth.Cookie;
 
-public interface WebServer extends SubSystem {
-    @Override
-    void enable();
+import java.util.List;
 
-    boolean isEnabled();
+/**
+ * Represents a HTTP request.
+ *
+ * @see com.djrapitops.plan.delivery.web.resolver.request.Request for API based request, as this interface is for internal use.
+ */
+public interface InternalRequest {
 
-    @Override
-    void disable();
+    String getAccessAddress();
 
-    String getProtocol();
+    Request toRequest();
 
-    boolean isUsingHTTPS();
-
-    boolean isAuthRequired();
-
-    int getPort();
+    List<Cookie> getCookies();
 }
