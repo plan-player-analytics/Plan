@@ -29,17 +29,17 @@ public class WebserverConfiguration {
 
     private final PlanConfig config;
     private final AllowedIpList allowedIpList;
-    private final WebserverConfigurationWarnings webserverConfigurationWarnings;
+    private final WebserverLogMessages webserverLogMessages;
 
     @Inject
-    public WebserverConfiguration(PlanConfig config, AllowedIpList allowedIpList, WebserverConfigurationWarnings webserverConfigurationWarnings) {
+    public WebserverConfiguration(PlanConfig config, AllowedIpList allowedIpList, WebserverLogMessages webserverLogMessages) {
         this.config = config;
         this.allowedIpList = allowedIpList;
-        this.webserverConfigurationWarnings = webserverConfigurationWarnings;
+        this.webserverLogMessages = webserverLogMessages;
     }
 
-    public WebserverConfigurationWarnings getInvalidConfigurationWarnings() {
-        return webserverConfigurationWarnings;
+    public WebserverLogMessages getWebserverLogMessages() {
+        return webserverLogMessages;
     }
 
     public boolean isAuthenticationDisabled() {
@@ -58,5 +58,13 @@ public class WebserverConfiguration {
 
     public String getAllowedCorsOrigin() {
         return config.get(WebserverSettings.CORS_ALLOW_ORIGIN);
+    }
+
+    public int getPort() {
+        return config.get(WebserverSettings.PORT);
+    }
+
+    public boolean isWebserverDisabled() {
+        return config.isTrue(WebserverSettings.DISABLED);
     }
 }

@@ -1,5 +1,8 @@
 package com.djrapitops.plan.delivery.webserver.http;
 
+import com.djrapitops.plan.delivery.webserver.ResponseResolver;
+import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
+import com.djrapitops.plan.delivery.webserver.configuration.WebserverLogMessages;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -17,14 +20,21 @@ import javax.inject.Singleton;
 public class JettyWebserver implements WebServer {
 
     private final PlanConfig config;
+    private final WebserverConfiguration webserverConfiguration;
     private final Server webserver;
     private final JettyRequestHandler jettyRequestHandler;
+    private final ResponseResolver responseResolver;
+    private final WebserverLogMessages webserverLogMessages;
+
     private int port;
 
     @Inject
-    public JettyWebserver(PlanConfig config, JettyRequestHandler jettyRequestHandler) {
+    public JettyWebserver(PlanConfig config, WebserverConfiguration webserverConfiguration, JettyRequestHandler jettyRequestHandler, ResponseResolver responseResolver) {
         this.config = config;
+        this.webserverConfiguration = webserverConfiguration;
+        webserverLogMessages = webserverConfiguration.getWebserverLogMessages();
         this.jettyRequestHandler = jettyRequestHandler;
+        this.responseResolver = responseResolver;
 
         webserver = new Server();
     }
@@ -33,7 +43,11 @@ public class JettyWebserver implements WebServer {
     public void enable() {
         if (isEnabled()) return;
 
-        this.port = config.get(WebserverSettings.PORT);
+        if (webserverConfiguration.isWebserverDisabled()) {
+            webserverLogMessages.warnWebserverDisabledByConfig();
+        }
+
+        this.port = webserverConfiguration.getPort();
 
         HttpConfiguration configuration = new HttpConfiguration();
 
@@ -52,6 +66,10 @@ public class JettyWebserver implements WebServer {
         } catch (Exception e) {
             throw new EnableException("Failed to start Jetty webserver: " + e.toString());
         }
+
+        webserverLogMessages.infoWebserverEnabled(getPort());
+
+        responseResolver.registerPages();
     }
 
     @Override

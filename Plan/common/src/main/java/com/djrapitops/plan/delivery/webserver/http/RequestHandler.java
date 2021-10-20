@@ -55,7 +55,7 @@ public class RequestHandler {
         }
 
         if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
-            webserverConfiguration.getInvalidConfigurationWarnings()
+            webserverConfiguration.getWebserverLogMessages()
                     .warnAboutWhitelistBlock(accessAddress, internalRequest.getRequestedURIString());
             return responseFactory.ipWhitelist403(accessAddress);
         }

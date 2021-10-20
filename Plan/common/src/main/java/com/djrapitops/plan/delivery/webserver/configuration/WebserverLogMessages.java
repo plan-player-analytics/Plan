@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.configuration;
 
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
@@ -27,17 +28,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Singleton
-public class WebserverConfigurationWarnings {
+public class WebserverLogMessages {
 
     private final PluginLogger logger;
     private final Locale locale;
+    private final Addresses addresses;
 
     private final AtomicLong warnedAboutXForwardedSecurityIssue = new AtomicLong(0L);
 
     @Inject
-    public WebserverConfigurationWarnings(PluginLogger logger, Locale locale) {
+    public WebserverLogMessages(PluginLogger logger, Locale locale, Addresses addresses) {
         this.logger = logger;
         this.locale = locale;
+        this.addresses = addresses;
     }
 
     public void warnAboutXForwardedForSecurityIssue() {
@@ -52,5 +55,14 @@ public class WebserverConfigurationWarnings {
 
     public void warnAboutWhitelistBlock(String accessAddress, String requestedURIString) {
         logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_IP_WHITELIST_BLOCK, accessAddress, requestedURIString));
+    }
+
+    public void infoWebserverEnabled(int port) {
+        String address = addresses.getAccessAddress().orElse(addresses.getFallbackLocalhostAddress());
+        logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, port, address));
+    }
+
+    public void warnWebserverDisabledByConfig() {
+        logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
     }
 }

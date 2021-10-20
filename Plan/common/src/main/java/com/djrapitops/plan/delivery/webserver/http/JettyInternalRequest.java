@@ -50,8 +50,8 @@ public class JettyInternalRequest implements InternalRequest {
     @Override
     public com.djrapitops.plan.delivery.web.resolver.request.Request toRequest() {
         String requestMethod = baseRequest.getMethod();
-        URIPath path = new URIPath(baseRequest.getHttpURI().toURI().getPath());
-        URIQuery query = new URIQuery(baseRequest.getHttpURI().toURI().getRawQuery());
+        URIPath path = new URIPath(baseRequest.getHttpURI().getDecodedPath());
+        URIQuery query = new URIQuery(baseRequest.getHttpURI().getQuery());
         byte[] requestBody = readRequestBody();
         WebUser user = getWebUser(webserverConfiguration, authenticationExtractor);
         Map<String, String> headers = getRequestHeaders();

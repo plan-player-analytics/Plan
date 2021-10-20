@@ -39,7 +39,7 @@ public interface InternalRequest {
         if (accessAddressPolicy == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
             String fromHeader = getAccessAddressFromHeader();
             if (fromHeader == null) {
-                webserverConfiguration.getInvalidConfigurationWarnings().warnAboutXForwardedForSecurityIssue();
+                webserverConfiguration.getWebserverLogMessages().warnAboutXForwardedForSecurityIssue();
                 return getAccessAddressFromSocketIp();
             } else {
                 return fromHeader;

@@ -98,4 +98,6 @@ shadowJar {
     exclude "org/jayway/**/*"
     exclude "google/protobuf/**/*"
     exclude "jargs/gnu/**/*"
+
+    mergeServiceFiles()
 }
