@@ -6,8 +6,7 @@ import com.djrapitops.plan.delivery.webserver.configuration.WebserverLogMessages
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import org.eclipse.jetty.http2.api.server.ServerSessionListener;
-import org.eclipse.jetty.http2.server.RawHTTP2ServerConnectionFactory;
+import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
@@ -52,7 +51,7 @@ public class JettyWebserver implements WebServer {
         HttpConfiguration configuration = new HttpConfiguration();
 
         HttpConnectionFactory httpConnector = new HttpConnectionFactory(configuration);
-        RawHTTP2ServerConnectionFactory http2Connector = new RawHTTP2ServerConnectionFactory(configuration, new ServerSessionListener.Adapter());
+        HTTP2CServerConnectionFactory http2Connector = new HTTP2CServerConnectionFactory(configuration);
         http2Connector.setConnectProtocolEnabled(true);
 
         ServerConnector connector = new ServerConnector(webserver, httpConnector, http2Connector);
