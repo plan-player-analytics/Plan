@@ -31,8 +31,6 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import io.github.slimjar.app.builder.ApplicationBuilder;
-import io.github.slimjar.resolver.data.Repository;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.VelocityPlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -41,14 +39,8 @@ import org.bstats.velocity.Metrics;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.logging.Level;
 
 /**
@@ -99,21 +91,21 @@ public class PlanVelocity implements PlanPlugin {
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
 
-        logger.info("Loading dependencies, this might take a while...");
-        try {
-            ApplicationBuilder.injecting("Plan", new VelocityInjectable(this, proxy, logger))
-                    .logger((message, args) -> slf4jLogger.info(fixMsgParams(message), args))
-                    // Use paper repository for downloading slimjar dependencies
-                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
-                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
-                    .build();
-        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
-            String version = abstractionLayer.getPluginInformation().getVersion();
-            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-            logger.error("Plan failed to load its dependencies correctly!");
-            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-            onDisable();
-        }
+//        logger.info("Loading dependencies, this might take a while...");
+//        try {
+//            ApplicationBuilder.injecting("Plan", new VelocityInjectable(this, proxy, logger))
+//                    .logger((message, args) -> slf4jLogger.info(fixMsgParams(message), args))
+//                    // Use paper repository for downloading slimjar dependencies
+//                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
+//                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
+//                    .build();
+//        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
+//            String version = abstractionLayer.getPluginInformation().getVersion();
+//            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
+//            logger.error("Plan failed to load its dependencies correctly!");
+//            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
+//            onDisable();
+//        }
 
         onEnable();
     }

@@ -30,8 +30,8 @@ dependencies {
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
 
-    slim "mysql:mysql-connector-java:$mysqlVersion"
-    slim "org.xerial:sqlite-jdbc:$sqliteVersion"
+    shadow "mysql:mysql-connector-java:$mysqlVersion"
+    shadow "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
 compileJava {
@@ -52,10 +52,10 @@ processResources {
     from 'build/sources/resources'
 }
 
-slimJar {
-    relocate 'com.mysql', 'plan.com.mysql'
-    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
-}
+//slimJar {
+//    relocate 'com.mysql', 'plan.com.mysql'
+//    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
+//}
 
 shadowJar {
     configurations = [project.configurations.shadow]
@@ -70,6 +70,9 @@ shadowJar {
     // relocate 'org.sqlite', 'plan.org.sqlite'
     relocate 'javax.inject', 'plan.javax.inject'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
+
+    relocate 'com.mysql', 'plan.com.mysql'
+    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
 }
 
 remapJar {

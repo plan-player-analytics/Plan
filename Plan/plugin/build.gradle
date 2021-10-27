@@ -12,14 +12,14 @@ dependencies {
     testImplementation project(path: ":bungeecord", configuration: 'testArtifacts')
     testImplementation project(path: ":velocity", configuration: 'testArtifacts')
 
-    slim "mysql:mysql-connector-java:$mysqlVersion"
-    slim "org.xerial:sqlite-jdbc:$sqliteVersion"
+    shadow "mysql:mysql-connector-java:$mysqlVersion"
+    shadow "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
-slimJar {
-    relocate 'com.mysql', 'plan.com.mysql'
-    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
-}
+//slimJar {
+//    relocate 'com.mysql', 'plan.com.mysql'
+//    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
+//}
 
 shadowJar {
     relocate('org.apache', 'plan.org.apache') {
@@ -30,6 +30,8 @@ shadowJar {
     // relocate 'org.sqlite', 'plan.org.sqlite'
     relocate 'javax.inject', 'plan.javax.inject'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
+    relocate 'com.mysql', 'plan.com.mysql'
+    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
 
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set('Plan')
