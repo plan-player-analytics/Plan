@@ -8,7 +8,7 @@ buildscript {
 
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.0" apply false
-    id "io.github.slimjar" version "1.3.0" apply false
+//    id "io.github.slimjar" version "1.3.0" apply false
     id "java"
     id "jacoco"
     id "checkstyle"
@@ -49,7 +49,7 @@ logger.lifecycle("Building artifact for version $fullVersion")
 subprojects {
     // Build plugins
     apply plugin: "com.github.johnrengelman.shadow"
-    apply plugin: "io.github.slimjar"
+//    apply plugin: "io.github.slimjar"
     apply plugin: "java"
     apply plugin: "maven-publish"
 
@@ -79,7 +79,7 @@ subprojects {
         commonsTextVersion = "1.9"
         commonsCompressVersion = "1.21"
         caffeineVersion = "2.9.2"
-        mysqlVersion = "8.0.26"
+        mysqlVersion = "8.0.27"
         sqliteVersion = "3.36.0.3"
         hikariVersion = "4.0.3"
         slf4jVersion = "1.7.32"
@@ -104,15 +104,15 @@ subprojects {
 
     dependencies {
         // Dependency Injection used across the project
-        implementation "io.github.slimjar:slimjar:1.2.6" // Runtime dependency injection
+//        implementation "io.github.slimjar:slimjar:1.2.6" // Runtime dependency injection
         implementation "com.google.dagger:dagger:$daggerVersion"
         annotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
         testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'      // JUnit 5
-        testImplementation "org.mockito:mockito-core:3.12.4"                // Mockito Core
-        testImplementation "org.mockito:mockito-junit-jupiter:3.12.4"       // Mockito JUnit 5 Extension
+        testImplementation "org.mockito:mockito-core:4.0.0"                // Mockito Core
+        testImplementation "org.mockito:mockito-junit-jupiter:4.0.0"       // Mockito JUnit 5 Extension
         testImplementation "org.seleniumhq.selenium:selenium-java:4.0.0" // Selenium (Browser tests)
         testImplementation "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
