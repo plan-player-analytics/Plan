@@ -69,6 +69,7 @@ public class UserJSONResolver implements Resolver {
 
         json.put("username", user.getUsername());
         json.put("linkedTo", user.getName());
+        json.put("linkedToUUID", user.getUUID().isPresent() ? user.getUUID().get().toString() : "");
         json.put("permissions", user.getPermissions());
 
         return Response.builder().setJSONContent(json).build();
