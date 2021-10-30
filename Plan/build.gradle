@@ -84,7 +84,7 @@ subprojects {
         hikariVersion = "4.0.3"
         slf4jVersion = "1.7.32"
         geoIpVersion = "2.15.0"
-        gsonVersion = "2.8.8"
+        gsonVersion = "2.8.9"
         bstatsVersion = "2.2.1"
         placeholderapiVersion = "2.10.10"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
