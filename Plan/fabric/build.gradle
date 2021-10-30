@@ -29,9 +29,6 @@ dependencies {
     }
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
-
-    shadow "mysql:mysql-connector-java:$mysqlVersion"
-    shadow "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
 compileJava {

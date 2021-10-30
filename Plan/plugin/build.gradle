@@ -11,9 +11,6 @@ dependencies {
     testImplementation project(path: ":sponge", configuration: 'testArtifacts')
     testImplementation project(path: ":bungeecord", configuration: 'testArtifacts')
     testImplementation project(path: ":velocity", configuration: 'testArtifacts')
-
-    shadow "mysql:mysql-connector-java:$mysqlVersion"
-    shadow "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
 //slimJar {
