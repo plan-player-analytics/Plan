@@ -92,6 +92,7 @@ function loadView(json) {
         },
         series: [playersOnlineSeries],
         xAxis: {
+            ordinal: false,
             events: {
                 afterSetExtremes: function (event) {
                     if (this) {
