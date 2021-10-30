@@ -49,11 +49,6 @@ processResources {
     from 'build/sources/resources'
 }
 
-//slimJar {
-//    relocate 'com.mysql', 'plan.com.mysql'
-//    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
-//}
-
 shadowJar {
     configurations = [project.configurations.shadow]
     exclude('net.fabricmc:*')
