@@ -55,9 +55,9 @@ public class SpongeVersionChecker extends VersionChecker {
             return Optional.of(OreVersionInfoLoader.load());
         } catch (IOException e) {
             errorLogger.warn(e, ErrorContext.builder()
-                .related(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS))
-                .whatToDo("Allow Plan to check for updates from Ore or disable update check.")
-                .build());
+                    .related(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS))
+                    .whatToDo("Allow Plan to check for updates from Ore (" + e.getMessage() + ") or disable update check from Plan config.")
+                    .build());
             return Optional.empty();
         }
     }
