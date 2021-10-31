@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -46,21 +47,33 @@ public class ServerUptimeCalculator {
         if (serverUUID.equals(serverInfo.getServerUUID())) {
             return Optional.of(System.currentTimeMillis() - PlanSystem.getServerEnableTime());
         } else {
-            long dataGapThreshold = TimeUnit.MINUTES.toMillis(3);
-            Database database = dbSystem.getDatabase();
-            Optional<Long> latestDataDate = database.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID)).map(TPS::getDate);
-            Optional<Long> dataBlockStartDate = database.query(TPSQueries.fetchLatestServerStartTime(serverUUID, dataGapThreshold));
-
-            if (!latestDataDate.isPresent() || !dataBlockStartDate.isPresent()) {
-                return Optional.empty();
-            }
-
-            if (System.currentTimeMillis() - latestDataDate.get() > dataGapThreshold) {
-                return Optional.empty();
-            }
-
-            return Optional.of(System.currentTimeMillis() - dataBlockStartDate.get());
+            return getServerUptimeMillisFromDatabase(serverUUID);
         }
+    }
+
+    private Optional<Long> getServerUptimeMillisFromDatabase(ServerUUID serverUUID) {
+        try {
+            return tryToGetServerUptimeMillisFromDatabase(serverUUID);
+        } catch (DBOpException windowFunctionsNotSupported) {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<Long> tryToGetServerUptimeMillisFromDatabase(ServerUUID serverUUID) {
+        long dataGapThreshold = TimeUnit.MINUTES.toMillis(3);
+        Database database = dbSystem.getDatabase();
+        Optional<Long> latestDataDate = database.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID)).map(TPS::getDate);
+        Optional<Long> dataBlockStartDate = database.query(TPSQueries.fetchLatestServerStartTime(serverUUID, dataGapThreshold));
+
+        if (!latestDataDate.isPresent() || !dataBlockStartDate.isPresent()) {
+            return Optional.empty();
+        }
+
+        if (System.currentTimeMillis() - latestDataDate.get() > dataGapThreshold) {
+            return Optional.empty();
+        }
+
+        return Optional.of(System.currentTimeMillis() - dataBlockStartDate.get());
     }
 
 }
