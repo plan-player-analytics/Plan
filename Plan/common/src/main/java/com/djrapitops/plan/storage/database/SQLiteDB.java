@@ -111,36 +111,42 @@ public class SQLiteDB extends SQLDB {
     }
 
     private Connection getConnectionFor(String dbFilePath) throws SQLException {
-        if (connectionConstructor == null) {
-            try {
-                Class<?> connectionClass = driverClassLoader.loadClass("org.sqlite.jdbc4.JDBC4Connection");
-                connectionConstructor = connectionClass.getConstructor(String.class, String.class, Properties.class);
-            } catch (ClassNotFoundException | NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
+        ensureConstructorIsAvailable();
+        return tryToConnect(dbFilePath, true);
+    }
+
+    private void ensureConstructorIsAvailable() {
+        if (connectionConstructor != null) {
+            return;
         }
 
         try {
-            try {
-                Properties properties = new Properties();
-                properties.put("journal_mode", "WAL");
-                return (Connection) connectionConstructor.newInstance("jdbc:sqlite:" + dbFilePath, dbFilePath, properties);
-            } catch (InvocationTargetException e) {
-                if (!(e.getCause() instanceof SQLException)) {
-                    throw new RuntimeException(e);
-                }
+            Class<?> connectionClass = driverClassLoader.loadClass("org.sqlite.jdbc4.JDBC4Connection");
+            connectionConstructor = connectionClass.getConstructor(String.class, String.class, Properties.class);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            throw new DBInitException("Failed to initialize SQLite Driver", e);
+        }
+    }
 
-                logger.info(locale.getString(PluginLang.DB_NOTIFY_SQLITE_WAL));
-                return (Connection) connectionConstructor.newInstance("jdbc:sqlite:" + dbFilePath, dbFilePath, new Properties());
-            }
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+    private Connection tryToConnect(String dbFilePath, boolean withWAL) throws SQLException {
+        try {
+            Properties properties = new Properties();
+            if (withWAL) properties.put("journal_mode", "WAL");
+
+            return (Connection) connectionConstructor.newInstance("jdbc:sqlite:" + dbFilePath, dbFilePath, properties);
         } catch (InvocationTargetException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof SQLException) {
+            if (!withWAL && cause instanceof SQLException) {
                 throw (SQLException) cause;
+            } else if (!(cause instanceof SQLException)) {
+                throw new DBInitException("Failed to initialize SQLite Driver", cause);
             }
-            throw new RuntimeException(cause);
+
+            // Run the method again with withWAL set to false, if it fails again, an exception will be thrown above
+            logger.info(locale.getString(PluginLang.DB_NOTIFY_SQLITE_WAL));
+            return tryToConnect(dbFilePath, false);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new DBInitException("Failed to initialize SQLite Driver", e);
         }
     }
 
