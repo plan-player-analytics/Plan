@@ -48,10 +48,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -63,8 +60,9 @@ import java.util.function.Supplier;
  */
 public abstract class SQLDB extends AbstractDatabase {
 
-    private static final List<Repository> DRIVER_REPOSITORIES = Collections.singletonList(
-            new StandardRepository("https://papermc.io/repo/repository/maven-public/")
+    private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
+            new StandardRepository("https://papermc.io/repo/repository/maven-public/"),
+            new StandardRepository("https://repo1.maven.org/maven2/")
     );
 
     private final Supplier<ServerUUID> serverUUIDSupplier;
