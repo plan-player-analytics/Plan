@@ -55,7 +55,7 @@ public class LocaleFileReader {
     }
 
     /**
-     * @deprecated Used to migrate old files to new format
+     * Used to migrate old files to new format.
      */
     public Locale loadLegacy(LangCode code) throws IOException {
         final List<String> lines = resource.asLines();

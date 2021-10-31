@@ -67,17 +67,13 @@ public class LocaleSystem implements SubSystem {
     }
 
     public static Map<String, Lang> getIdentifiers() {
-        Lang[][] lang = getValuesArray();
-
-        return Arrays.stream(lang)
+        return Arrays.stream(getValuesArray())
                 .flatMap(Arrays::stream)
                 .collect(Collectors.toMap(Lang::getIdentifier, Function.identity()));
     }
 
     public static Map<String, Lang> getKeys() {
-        Lang[][] lang = getValuesArray();
-
-        return Arrays.stream(lang)
+        return Arrays.stream(getValuesArray())
                 .flatMap(Arrays::stream)
                 .collect(Collectors.toMap(Lang::getKey, Function.identity()));
     }
