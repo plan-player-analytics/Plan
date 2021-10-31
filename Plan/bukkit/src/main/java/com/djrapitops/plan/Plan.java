@@ -61,22 +61,6 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         abstractionLayer = new BukkitPlatformLayer(this);
         pluginLogger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
-
-//        getLogger().log(Level.INFO, "Loading dependencies, this might take a while...");
-//        try {
-//            ApplicationBuilder.appending("Plan")
-//                    .logger((message, args) -> getLogger().log(Level.INFO, message, args))
-//                    // Use paper repository for downloading slimjar dependencies
-//                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
-//                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
-//                    .build();
-//        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
-//            String version = abstractionLayer.getPluginInformation().getVersion();
-//            getLogger().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-//            getLogger().log(Level.SEVERE, "Plan failed to load its dependencies correctly!");
-//            getLogger().log(Level.SEVERE, "This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-//            onDisable();
-//        }
     }
 
     @Override
