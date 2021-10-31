@@ -117,7 +117,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="fields.inherited.from.class.com.djrapitops.plan.storage.database.SQLDB">Fields inherited from class&nbsp;com.djrapitops.plan.storage.database.<a href="SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></h3>
-<code><a href="SQLDB.html#config">config</a>, <a href="SQLDB.html#errorLogger">errorLogger</a>, <a href="SQLDB.html#locale">locale</a>, <a href="SQLDB.html#logger">logger</a>, <a href="SQLDB.html#runnableFactory">runnableFactory</a></code></div>
+<code><a href="SQLDB.html#config">config</a>, <a href="SQLDB.html#driverClassLoader">driverClassLoader</a>, <a href="SQLDB.html#errorLogger">errorLogger</a>, <a href="SQLDB.html#files">files</a>, <a href="SQLDB.html#locale">locale</a>, <a href="SQLDB.html#logger">logger</a>, <a href="SQLDB.html#runnableFactory">runnableFactory</a></code></div>
 <div class="inherited-list">
 <h3 id="fields.inherited.from.class.com.djrapitops.plan.storage.database.AbstractDatabase">Fields inherited from class&nbsp;com.djrapitops.plan.storage.database.<a href="AbstractDatabase.html" title="class in com.djrapitops.plan.storage.database">AbstractDatabase</a></h3>
 <code><a href="AbstractDatabase.html#accessLock">accessLock</a></code></div>
@@ -131,8 +131,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">MySQLDB</a></span>&#8203;(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">MySQLDB</a></span>&#8203;(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+ <a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  dagger.Lazy&lt;<a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&gt;&nbsp;serverInfo,
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;pluginLogger,
@@ -161,20 +162,23 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a></code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getConnection()">getConnection</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="DBType.html" title="enum class in com.djrapitops.plan.storage.database">DBType</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getType()">getType</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getDependencyResource()">getDependencyResource</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="DBType.html" title="enum class in com.djrapitops.plan.storage.database">DBType</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getType()">getType</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Used to get the <code>DBType</code> of the Database</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashCode()">hashCode</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#returnToPool(java.sql.Connection)">returnToPool</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a>&nbsp;connection)</code></div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#hashCode()">hashCode</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setupDataSource()">setupDataSource</a></span>()</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#returnToPool(java.sql.Connection)">returnToPool</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a>&nbsp;connection)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#setupDataSource()">setupDataSource</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Setups the <code>HikariDataSource</code></div>
 </div>
 </div>
@@ -182,7 +186,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.djrapitops.plan.storage.database.SQLDB">Methods inherited from class&nbsp;com.djrapitops.plan.storage.database.<a href="SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></h3>
-<code><a href="SQLDB.html#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)">executeTransaction</a>, <a href="SQLDB.html#getLogger()">getLogger</a>, <a href="SQLDB.html#getRunnableFactory()">getRunnableFactory</a>, <a href="SQLDB.html#getServerUUIDSupplier()">getServerUUIDSupplier</a>, <a href="SQLDB.html#init()">init</a>, <a href="SQLDB.html#query(com.djrapitops.plan.storage.database.queries.Query)">query</a>, <a href="SQLDB.html#setTransactionExecutorServiceProvider(java.util.function.Supplier)">setTransactionExecutorServiceProvider</a></code></div>
+<code><a href="SQLDB.html#downloadDriver()">downloadDriver</a>, <a href="SQLDB.html#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)">executeTransaction</a>, <a href="SQLDB.html#getLogger()">getLogger</a>, <a href="SQLDB.html#getRunnableFactory()">getRunnableFactory</a>, <a href="SQLDB.html#getServerUUIDSupplier()">getServerUUIDSupplier</a>, <a href="SQLDB.html#init()">init</a>, <a href="SQLDB.html#query(com.djrapitops.plan.storage.database.queries.Query)">query</a>, <a href="SQLDB.html#setTransactionExecutorServiceProvider(java.util.function.Supplier)">setTransactionExecutorServiceProvider</a></code></div>
 <div class="inherited-list">
 <h3 id="methods.inherited.from.class.com.djrapitops.plan.storage.database.AbstractDatabase">Methods inherited from class&nbsp;com.djrapitops.plan.storage.database.<a href="AbstractDatabase.html" title="class in com.djrapitops.plan.storage.database">AbstractDatabase</a></h3>
 <code><a href="AbstractDatabase.html#assumeNoMoreHeavyLoad()">assumeNoMoreHeavyLoad</a>, <a href="AbstractDatabase.html#getHeavyLoadDelayMs()">getHeavyLoadDelayMs</a>, <a href="AbstractDatabase.html#getState()">getState</a>, <a href="AbstractDatabase.html#increaseHeavyLoadDelay()">increaseHeavyLoadDelay</a>, <a href="AbstractDatabase.html#isUnderHeavyLoad()">isUnderHeavyLoad</a>, <a href="AbstractDatabase.html#setState(com.djrapitops.plan.storage.database.Database.State)">setState</a></code></div>
@@ -218,11 +222,12 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>MySQLDB</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">MySQLDB</span>&#8203;<span class="parameters">(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+ <a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  dagger.Lazy&lt;<a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&gt;&nbsp;serverInfo,
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;pluginLogger,
@@ -248,6 +253,16 @@ loadScripts(document, 'script');</script>
 <dd>the <code>DBType</code></dd>
 <dt>See Also:</dt>
 <dd><a href="DBType.html" title="enum class in com.djrapitops.plan.storage.database"><code>DBType</code></a></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getDependencyResource()">
+<h3>getDependencyResource</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getDependencyResource</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="SQLDB.html#getDependencyResource()">getDependencyResource</a></code>&nbsp;in class&nbsp;<code><a href="SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></code></dd>
 </dl>
 </section>
 </li>

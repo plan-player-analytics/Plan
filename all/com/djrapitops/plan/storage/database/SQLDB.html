@@ -116,8 +116,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>protected <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a></code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#config">config</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#errorLogger">errorLogger</a></span></code></div>
+<div class="col-first odd-row-color"><code>protected dev.vankka.dependencydownload.classloader.IsolatedClassLoader</code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#driverClassLoader">driverClassLoader</a></span></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#errorLogger">errorLogger</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a></code></div>
+<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#files">files</a></span></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>protected <a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></code></div>
 <div class="col-second even-row-color"><code><span class="member-name-link"><a href="#locale">locale</a></span></code></div>
@@ -144,9 +150,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">SQLDB</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDSupplier,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">SQLDB</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDSupplier,
  <a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+ <a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
@@ -168,16 +175,22 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#close()">close</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#downloadDriver()">downloadDriver</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/concurrent/Future.html" title="class or interface in java.util.concurrent" class="external-link">Future</a>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)">executeTransaction</a></span>&#8203;(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#equals(java.lang.Object)">equals</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/concurrent/Future.html" title="class or interface in java.util.concurrent" class="external-link">Future</a>&lt;?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)">executeTransaction</a></span>&#8203;(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Execute an SQL Transaction.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>abstract <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#getConnection()">getConnection</a></span>()</code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>abstract <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#getConnection()">getConnection</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>protected abstract <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#getDependencyResource()">getDependencyResource</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>net.playeranalytics.plugin.server.PluginLogger</code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getLogger()">getLogger</a></span>()</code></div>
@@ -248,6 +261,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="files">
+<h3>files</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a></span>&nbsp;<span class="element-name">files</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="runnableFactory">
 <h3>runnableFactory</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">net.playeranalytics.plugin.scheduling.RunnableFactory</span>&nbsp;<span class="element-name">runnableFactory</span></div>
@@ -265,6 +284,12 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a></span>&nbsp;<span class="element-name">errorLogger</span></div>
 </section>
 </li>
+<li>
+<section class="detail" id="driverClassLoader">
+<h3>driverClassLoader</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">dev.vankka.dependencydownload.classloader.IsolatedClassLoader</span>&nbsp;<span class="element-name">driverClassLoader</span></div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -274,11 +299,12 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>SQLDB</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">SQLDB</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDSupplier,
  <a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+ <a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
@@ -292,6 +318,18 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getDependencyResource()">
+<h3>getDependencyResource</h3>
+<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getDependencyResource</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="downloadDriver()">
+<h3>downloadDriver</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">downloadDriver</span>()</div>
+</section>
+</li>
 <li>
 <section class="detail" id="init()">
 <h3>init</h3>
