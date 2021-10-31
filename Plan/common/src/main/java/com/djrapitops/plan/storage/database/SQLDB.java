@@ -32,9 +32,14 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransa
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveIncorrectTebexPackageDataPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.*;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import dev.vankka.dependencydownload.DependencyManager;
+import dev.vankka.dependencydownload.classloader.IsolatedClassLoader;
+import dev.vankka.dependencydownload.repository.Repository;
+import dev.vankka.dependencydownload.repository.StandardRepository;
 import net.playeranalytics.plugin.scheduling.PluginRunnable;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -43,10 +48,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -58,13 +60,21 @@ import java.util.function.Supplier;
  */
 public abstract class SQLDB extends AbstractDatabase {
 
+    private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
+            new StandardRepository("https://papermc.io/repo/repository/maven-public/"),
+            new StandardRepository("https://repo1.maven.org/maven2/")
+    );
+
     private final Supplier<ServerUUID> serverUUIDSupplier;
 
     protected final Locale locale;
     protected final PlanConfig config;
+    protected final PlanFiles files;
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
+
+    protected IsolatedClassLoader driverClassLoader;
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
@@ -73,6 +83,7 @@ public abstract class SQLDB extends AbstractDatabase {
             Supplier<ServerUUID> serverUUIDSupplier,
             Locale locale,
             PlanConfig config,
+            PlanFiles files,
             RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorLogger errorLogger
@@ -80,6 +91,7 @@ public abstract class SQLDB extends AbstractDatabase {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
         this.config = config;
+        this.files = files;
         this.runnableFactory = runnableFactory;
         this.logger = logger;
         this.errorLogger = errorLogger;
@@ -96,6 +108,18 @@ public abstract class SQLDB extends AbstractDatabase {
                         }
                     }).build());
         };
+    }
+
+    protected abstract List<String> getDependencyResource();
+
+    public void downloadDriver() {
+        DependencyManager dependencyManager = new DependencyManager(files.getDataDirectory().resolve("libraries"));
+        dependencyManager.loadFromResource(getDependencyResource());
+        dependencyManager.download(null, DRIVER_REPOSITORIES);
+
+        IsolatedClassLoader classLoader = new IsolatedClassLoader();
+        dependencyManager.load(null, classLoader);
+        this.driverClassLoader = classLoader;
     }
 
     @Override

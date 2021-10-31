@@ -17,15 +17,12 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.use.ColorScheme;
-import com.djrapitops.plan.commands.use.SpongeCommand;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
-import io.github.slimjar.app.builder.ApplicationBuilder;
-import io.github.slimjar.resolver.data.Repository;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.SpongePlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -35,27 +32,23 @@ import org.spongepowered.api.Game;
 import org.spongepowered.api.Server;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.Command;
-import org.spongepowered.api.command.manager.CommandMapping;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.lifecycle.*;
+import org.spongepowered.api.event.lifecycle.ConstructPluginEvent;
+import org.spongepowered.api.event.lifecycle.RegisterCommandEvent;
+import org.spongepowered.api.event.lifecycle.StartingEngineEvent;
+import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
 @Plugin("plan")
@@ -106,23 +99,6 @@ public class PlanSponge implements PlanPlugin {
         abstractionLayer = new SpongePlatformLayer(plugin, dataFolder);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
-
-        // TODO: incompatible with Sponge's environment
-//        logger.info("Loading dependencies, this might take a while...");
-//        try {
-//            ApplicationBuilder.appending("Plan")
-//                    .logger((message, args) -> java.util.logging.Logger.getGlobal().log(Level.INFO, message, args))
-//                    // Use paper repository for downloading slimjar dependencies
-//                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
-//                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
-//                    .build();
-//        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
-//            String version = abstractionLayer.getPluginInformation().getVersion();
-//            java.util.logging.Logger.getGlobal().log(Level.SEVERE, e, () -> this.getClass().getSimpleName() + "-v" + version);
-//            logger.error("Plan failed to load its dependencies correctly!");
-//            logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-//            onDisable();
-//        }
     }
 
     public void onEnable() {

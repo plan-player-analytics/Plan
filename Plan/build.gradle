@@ -7,8 +7,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0" apply false
-    id "io.github.slimjar" version "1.2.2" apply false
+    id "com.github.johnrengelman.shadow" version "7.1.0" apply false
     id "java"
     id "jacoco"
     id "checkstyle"
@@ -49,7 +48,6 @@ logger.lifecycle("Building artifact for version $fullVersion")
 subprojects {
     // Build plugins
     apply plugin: "com.github.johnrengelman.shadow"
-    apply plugin: "io.github.slimjar"
     apply plugin: "java"
     apply plugin: "maven-publish"
 
@@ -62,8 +60,8 @@ subprojects {
     }
 
     ext {
-        daggerVersion = "2.39"
-        daggerCompilerVersion = "2.39"
+        daggerVersion = "2.40"
+        daggerCompilerVersion = "2.40"
 
         palVersion = "5.0.0"
 
@@ -79,12 +77,12 @@ subprojects {
         commonsTextVersion = "1.9"
         commonsCompressVersion = "1.21"
         caffeineVersion = "2.9.2"
-        mysqlVersion = "8.0.26"
+        mysqlVersion = "8.0.27"
         sqliteVersion = "3.36.0.3"
         hikariVersion = "4.0.3"
         slf4jVersion = "1.7.32"
         geoIpVersion = "2.15.0"
-        gsonVersion = "2.8.8"
+        gsonVersion = "2.8.9"
         bstatsVersion = "2.2.1"
         placeholderapiVersion = "2.10.10"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
@@ -100,7 +98,6 @@ subprojects {
         maven { url = "https://repo.md-5.net/content/repositories/snapshots/" } // RedisBungee
         maven { url = "https://repo.velocitypowered.com/snapshots/" } // Velocity
         maven { url = "https://repo.playeranalytics.net/releases" } // Plan
-        maven { url = " https://repo.vshnv.tech/"} // slimjar
     }
 
     dependencies {
@@ -111,9 +108,9 @@ subprojects {
 
         // Test Tooling Dependencies
         testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'      // JUnit 5
-        testImplementation "org.mockito:mockito-core:3.12.4"                // Mockito Core
-        testImplementation "org.mockito:mockito-junit-jupiter:3.12.4"       // Mockito JUnit 5 Extension
-        testImplementation "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
+        testImplementation "org.mockito:mockito-core:4.0.0"                // Mockito Core
+        testImplementation "org.mockito:mockito-junit-jupiter:4.0.0"       // Mockito JUnit 5 Extension
+        testImplementation "org.seleniumhq.selenium:selenium-java:4.0.0" // Selenium (Browser tests)
         testImplementation "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan

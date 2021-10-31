@@ -89,6 +89,7 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
             if (!outdated.isEmpty()) {
                 logger.warn("You have customized files which are out of date due to recent updates!");
                 logger.warn("Plan may not work properly until these files are updated to include the new modifications.");
+                logger.warn("See https://github.com/plan-player-analytics/Plan/commits/html to compare changes");
             }
             for (AssetInfo asset : outdated) {
                 logger.warn(String.format("- %s was modified %s, but the plugin contains a version from %s",

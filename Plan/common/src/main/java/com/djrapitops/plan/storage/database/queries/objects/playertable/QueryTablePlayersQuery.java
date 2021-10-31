@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects.playertable;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -46,6 +47,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
     private final Collection<UUID> playerUUIDs;
+    private final List<ServerUUID> serverUUIDs;
     private final long afterDate;
     private final long beforeDate;
     private final long activeMsThreshold;
@@ -54,12 +56,14 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
      * Create a new query.
      *
      * @param playerUUIDs       UUIDs of the players in the query
-     * @param beforeDate        View data before this epoch ms
+     * @param serverUUIDs       View data for these Server UUIDs
      * @param afterDate         View data after this epoch ms
+     * @param beforeDate        View data before this epoch ms
      * @param activeMsThreshold Playtime threshold for Activity Index calculation
      */
-    public QueryTablePlayersQuery(Collection<UUID> playerUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {
+    public QueryTablePlayersQuery(Collection<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {
         this.playerUUIDs = playerUUIDs;
+        this.serverUUIDs = serverUUIDs;
         this.afterDate = afterDate;
         this.beforeDate = beforeDate;
         this.activeMsThreshold = activeMsThreshold;
@@ -95,12 +99,14 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 AND + "s." + SessionsTable.SESSION_END + "<=?" +
                 AND + "s." + SessionsTable.USER_UUID +
                 uuidsInSet +
+                (serverUUIDs.isEmpty() ? "" : AND + "s." + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')") +
                 GROUP_BY + "s." + SessionsTable.USER_UUID;
 
         String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?" +
-                AND + UserInfoTable.USER_UUID + uuidsInSet;
+                AND + UserInfoTable.USER_UUID + uuidsInSet +
+                (serverUUIDs.isEmpty() ? "" : AND + UserInfoTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
 
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +

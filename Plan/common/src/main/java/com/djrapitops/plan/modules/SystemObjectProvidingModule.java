@@ -29,6 +29,7 @@ import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.file.JarResource;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
+import com.google.gson.Gson;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.ElementsIntoSet;
@@ -48,6 +49,12 @@ import java.util.function.Predicate;
  */
 @Module
 public class SystemObjectProvidingModule {
+
+    @Provides
+    @Singleton
+    Gson provideGson() {
+        return new Gson();
+    }
 
     @Provides
     @ElementsIntoSet

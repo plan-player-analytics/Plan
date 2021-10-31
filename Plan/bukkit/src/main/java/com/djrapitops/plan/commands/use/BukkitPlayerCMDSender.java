@@ -53,7 +53,7 @@ public class BukkitPlayerCMDSender extends BukkitCMDSender {
 
     @Override
     public boolean supportsChatEvents() {
-        return true;
+        return hasBungeeChatAPI();
     }
 
     @Override

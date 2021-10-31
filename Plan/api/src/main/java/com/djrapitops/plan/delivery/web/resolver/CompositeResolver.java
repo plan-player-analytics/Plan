@@ -39,40 +39,25 @@ import java.util.function.Predicate;
 public final class CompositeResolver implements Resolver {
 
     private final List<String> prefixes;
-    private final List<Function<Request, Optional<Response>>> resolvers;
-    private final List<Predicate<Request>> canAccess;
+    private final List<Resolver> resolvers;
 
     CompositeResolver() {
         this.prefixes = new ArrayList<>();
         this.resolvers = new ArrayList<>();
-        this.canAccess = new ArrayList<>();
     }
 
     public static CompositeResolver.Builder builder() {
         return new Builder();
     }
 
-    private Optional<Function<Request, Optional<Response>>> getResolver(URIPath target) {
+    private Optional<Resolver> getResolver(URIPath target) {
         return target.getPart(0).flatMap(this::findResolver);
     }
 
-    private Optional<Predicate<Request>> getAccessCheck(URIPath target) {
-        return target.getPart(0).flatMap(this::findAccessCheck);
-    }
-
-    private Optional<Function<Request, Optional<Response>>> findResolver(String prefix) {
+    private Optional<Resolver> findResolver(String prefix) {
         for (int i = 0; i < prefixes.size(); i++) {
             if (prefixes.get(i).equals(prefix)) {
                 return Optional.of(resolvers.get(i));
-            }
-        }
-        return Optional.empty();
-    }
-
-    private Optional<Predicate<Request>> findAccessCheck(String prefix) {
-        for (int i = 0; i < prefixes.size(); i++) {
-            if (prefixes.get(i).equals(prefix)) {
-                return Optional.of(canAccess.get(i));
             }
         }
         return Optional.empty();
@@ -82,8 +67,7 @@ public final class CompositeResolver implements Resolver {
         if (prefix == null) throw new IllegalArgumentException("Prefix can not be null");
         if (resolver == null) throw new IllegalArgumentException("Resolver can not be null");
         prefixes.add(prefix);
-        resolvers.add(resolver::resolve);
-        canAccess.add(resolver::canAccess);
+        resolvers.add(resolver);
     }
 
     void add(String prefix, Function<Request, Response> resolver, Predicate<Request> accessCheck) {
@@ -93,22 +77,27 @@ public final class CompositeResolver implements Resolver {
         }
         if (accessCheck == null) throw new IllegalArgumentException("Predicate<Request> accessCheck can not be null");
         prefixes.add(prefix);
-        resolvers.add(request -> Optional.ofNullable(resolver.apply(request)));
-        canAccess.add(accessCheck);
+        resolvers.add(new FunctionalResolverWrapper(request -> Optional.ofNullable(resolver.apply(request)), accessCheck));
     }
 
     @Override
     public boolean canAccess(Request request) {
         Request forThis = request.omitFirstInPath();
-        return getAccessCheck(forThis.getPath())
-                .map(resolver -> resolver.test(forThis))
+        return getResolver(forThis.getPath())
+                .map(resolver -> resolver.canAccess(forThis))
                 .orElse(true);
     }
 
     @Override
     public Optional<Response> resolve(Request request) {
         Request forThis = request.omitFirstInPath();
-        return getResolver(forThis.getPath()).flatMap(resolver -> resolver.apply(forThis));
+        return getResolver(forThis.getPath()).flatMap(resolver -> resolver.resolve(forThis));
+    }
+
+    @Override
+    public boolean requiresAuth(Request request) {
+        Request forThis = request.omitFirstInPath();
+        return getResolver(forThis.getPath()).map(resolver -> resolver.requiresAuth(forThis)).orElse(true);
     }
 
     public static class Builder {

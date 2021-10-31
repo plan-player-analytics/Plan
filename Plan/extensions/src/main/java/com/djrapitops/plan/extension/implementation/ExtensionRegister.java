@@ -79,6 +79,7 @@ public class ExtensionRegister {
         register(new KingdomsXExtensionFactory(), KingdomsXExtensionFactory::createExtension);
         register(new JobsExtensionFactory(), JobsExtensionFactory::createExtension);
         register(new LandsExtensionFactory(), LandsExtensionFactory::createExtension);
+        register(new LibertyBansExtensionFactory(), LibertyBansExtensionFactory::createExtension, LibertyBansExtensionFactory::registerListener);
         register(new LitebansExtensionFactory(), LitebansExtensionFactory::createExtension, LitebansExtensionFactory::registerEvents);
         register(new LogBlockExtensionFactory(), LogBlockExtensionFactory::createExtension);
         register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension);

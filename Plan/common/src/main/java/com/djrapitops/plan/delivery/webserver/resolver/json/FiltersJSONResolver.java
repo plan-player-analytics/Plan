@@ -17,8 +17,10 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
-import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.domain.datatransfer.FilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.ViewDto;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
@@ -36,7 +38,6 @@ import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -50,6 +51,7 @@ public class FiltersJSONResolver implements Resolver {
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final QueryFilters filters;
+    private final JSONFactory jsonFactory;
     private final Graphs graphs;
     private final Formatters formatters;
     private final ErrorLogger errorLogger;
@@ -59,6 +61,7 @@ public class FiltersJSONResolver implements Resolver {
             ServerInfo serverInfo,
             DBSystem dbSystem,
             QueryFilters filters,
+            JSONFactory jsonFactory,
             Graphs graphs,
             Formatters formatters,
             ErrorLogger errorLogger
@@ -66,6 +69,7 @@ public class FiltersJSONResolver implements Resolver {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.filters = filters;
+        this.jsonFactory = jsonFactory;
         this.graphs = graphs;
         this.formatters = formatters;
         this.errorLogger = errorLogger;
@@ -85,9 +89,9 @@ public class FiltersJSONResolver implements Resolver {
     private Response getResponse() {
         return Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(new FilterResponseJSON(
+                .setJSONContent(new FilterResponseDto(
                         filters.getFilters(),
-                        new ViewJSON(formatters),
+                        new ViewDto(formatters, jsonFactory.listServers().get("servers")),
                         fetchViewGraphPoints()
                 )).build();
     }
@@ -111,17 +115,17 @@ public class FiltersJSONResolver implements Resolver {
     /**
      * JSON serialization class.
      */
-    class FilterResponseJSON {
-        final List<FilterJSON> filters;
-        final ViewJSON view;
+    class FilterResponseDto {
+        final List<FilterDto> filters;
+        final ViewDto view;
         final List<Double[]> viewPoints;
 
-        public FilterResponseJSON(Map<String, Filter> filtersByKind, ViewJSON view, List<Double[]> viewPoints) {
+        public FilterResponseDto(Map<String, Filter> filtersByKind, ViewDto view, List<Double[]> viewPoints) {
             this.viewPoints = viewPoints;
             this.filters = new ArrayList<>();
             for (Map.Entry<String, Filter> entry : filtersByKind.entrySet()) {
                 try {
-                    filters.add(new FilterJSON(entry.getKey(), entry.getValue()));
+                    filters.add(new FilterDto(entry.getKey(), entry.getValue()));
                 } catch (Exception e) {
                     errorLogger.error(e, ErrorContext.builder()
                             .whatToDo("Report this, filter '" + entry.getKey() + "' has implementation error.")
@@ -131,65 +135,6 @@ public class FiltersJSONResolver implements Resolver {
             }
             Collections.sort(filters);
             this.view = view;
-        }
-    }
-
-    /**
-     * JSON serialization class.
-     */
-    static class FilterJSON implements Comparable<FilterJSON> {
-        final String kind;
-        final Map<String, Object> options;
-        final String[] expectedParameters;
-
-        public FilterJSON(String kind, Filter filter) {
-            this.kind = kind;
-            this.options = filter.getOptions();
-            this.expectedParameters = filter.getExpectedParameters();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            FilterJSON that = (FilterJSON) o;
-            return Objects.equals(kind, that.kind) && Objects.equals(options, that.options) && Arrays.equals(expectedParameters, that.expectedParameters);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = Objects.hash(kind, options);
-            result = 31 * result + Arrays.hashCode(expectedParameters);
-            return result;
-        }
-
-        @Override
-        public int compareTo(FilterJSON o) {
-            return String.CASE_INSENSITIVE_ORDER.compare(this.kind, o.kind);
-        }
-    }
-
-    /**
-     * JSON serialization class.
-     */
-    static class ViewJSON {
-        final String afterDate;
-        final String afterTime;
-        final String beforeDate;
-        final String beforeTime;
-
-        public ViewJSON(Formatters formatters) {
-            long now = System.currentTimeMillis();
-            long monthAgo = now - TimeUnit.DAYS.toMillis(30);
-
-            Formatter<Long> formatter = formatters.javascriptDateFormatterLong();
-            String[] after = StringUtils.split(formatter.apply(monthAgo), " ");
-            String[] before = StringUtils.split(formatter.apply(now), " ");
-
-            this.afterDate = after[0];
-            this.afterTime = after[1];
-            this.beforeDate = before[0];
-            this.beforeTime = before[1];
         }
     }
 }

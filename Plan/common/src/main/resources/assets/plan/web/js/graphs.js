@@ -63,6 +63,9 @@ function diskChart(id, series) {
             softMax: 2,
             softMin: 0
         },
+        xAxis: {
+            ordinal: false
+        },
         title: {text: ''},
         legend: {
             enabled: true
@@ -83,7 +86,8 @@ function horizontalBarChart(id, categories, series, text) {
             categories: categories,
             title: {
                 text: null
-            }
+            },
+            ordinal: false
         },
         yAxis: {
             min: 0,
@@ -122,6 +126,9 @@ function lineChart(id, series) {
             softMax: 2,
             softMin: 0
         },
+        xAxis: {
+            ordinal: false
+        },
         title: {text: ''},
         legend: {
             enabled: true
@@ -139,6 +146,9 @@ function dayByDay(id, series) {
         yAxis: {
             softMax: 2,
             softMin: 0
+        },
+        xAxis: {
+            ordinal: false
         },
         title: {text: ''},
         legend: {
@@ -266,6 +276,9 @@ function performanceChart(id, playersOnlineSeries, tpsSeries, cpuSeries, ramSeri
                 }
             }
         }],
+        xAxis: {
+            ordinal: false
+        },
         legend: {
             enabled: true
         },
@@ -373,6 +386,9 @@ function playersChart(id, playersOnlineSeries, sel) {
             softMax: 2,
             softMin: 0
         },
+        xAxis: {
+            ordinal: false
+        },
         /* Average online players graph Disabled
         xAxis: {
             events: {
@@ -403,6 +419,9 @@ function playersChartNoNav(id, playersOnlineSeries) {
             softMax: 2,
             softMin: 0
         },
+        xAxis: {
+            ordinal: false
+        },
         title: {text: ''},
         plotOptions: {
             areaspline: {
@@ -426,7 +445,8 @@ function punchCard(id, punchcardSeries) {
                 hour: '%I %P',
                 day: '%I %P'
             },
-            tickInterval: 3600000
+            tickInterval: 3600000,
+            ordinal: false
         },
         time: {
             timezoneOffset: 0
@@ -480,6 +500,9 @@ function resourceChart(id, cpuSeries, ramSeries, playersOnlineSeries) {
                 }
             }
         }],
+        xAxis: {
+            ordinal: false
+        },
         legend: {
             enabled: true
         },
@@ -632,7 +655,8 @@ function stackChart(id, categories, series, label) {
             tickmarkPlacement: 'on',
             title: {
                 enabled: false
-            }
+            },
+            ordinal: false
         },
         yAxis: {
             title: {
@@ -689,6 +713,9 @@ function tpsChart(id, tpsSeries, playersOnlineSeries) {
                 }
             }
         }],
+        xAxis: {
+            ordinal: false
+        },
         legend: {
             enabled: true
         },
@@ -731,6 +758,9 @@ function worldChart(id, entitySeries, chunkSeries, playersOnlineSeries) {
                 }
             }
         }],
+        xAxis: {
+            ordinal: false
+        },
         legend: {
             enabled: true
         },

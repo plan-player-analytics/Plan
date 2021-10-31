@@ -42,16 +42,16 @@ import java.util.Optional;
 @Singleton
 public class VersionChecker implements SubSystem {
 
-    private final VersionNumber currentVersion;
-    private final Locale locale;
-    private final PlanConfig config;
-    private final PluginLogger logger;
-    private final RunnableFactory runnableFactory;
-    private final ErrorLogger errorLogger;
+    protected final VersionNumber currentVersion;
+    protected final Locale locale;
+    protected final PlanConfig config;
+    protected final PluginLogger logger;
+    protected final RunnableFactory runnableFactory;
+    protected final ErrorLogger errorLogger;
 
     private static final String DOWNLOAD_ICON_HTML = "<i class=\"fa fa-fw fa-download\"></i> ";
 
-    private VersionInfo newVersionAvailable;
+    protected VersionInfo newVersionAvailable;
 
     @Inject
     public VersionChecker(
@@ -74,9 +74,20 @@ public class VersionChecker implements SubSystem {
         return newVersionAvailable != null;
     }
 
-    private void checkForUpdates() {
+    protected Optional<List<VersionInfo>> loadVersionInfo() {
         try {
-            List<VersionInfo> versions = VersionInfoLoader.load();
+            return Optional.of(VersionInfoLoader.load());
+        } catch (IOException e) {
+            errorLogger.warn(e, ErrorContext.builder()
+                .related(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS))
+                .whatToDo("Allow Plan to check for updates from Github/versions.txt or disable update check.")
+                .build());
+            return Optional.empty();
+        }
+    }
+
+    private void checkForUpdates() {
+        loadVersionInfo().ifPresent(versions -> {
             if (config.isFalse(PluginSettings.NOTIFY_ABOUT_DEV_RELEASES)) {
                 versions = Lists.filter(versions, VersionInfo::isRelease);
             }
@@ -84,9 +95,9 @@ public class VersionChecker implements SubSystem {
             if (newestVersion.getVersion().isNewerThan(currentVersion)) {
                 newVersionAvailable = newestVersion;
                 String notification = locale.getString(
-                        PluginLang.VERSION_AVAILABLE,
-                        newestVersion.getVersion().asString(),
-                        newestVersion.getChangeLogUrl()
+                    PluginLang.VERSION_AVAILABLE,
+                    newestVersion.getVersion().asString(),
+                    newestVersion.getChangeLogUrl()
                 ) + (newestVersion.isRelease() ? "" : locale.getString(PluginLang.VERSION_AVAILABLE_DEV));
                 logger.info("§a----------------------------------------");
                 logger.info("§a" + notification);
@@ -94,13 +105,9 @@ public class VersionChecker implements SubSystem {
             } else {
                 logger.info(locale.getString(PluginLang.VERSION_NEWEST));
             }
-        } catch (IOException e) {
-            errorLogger.warn(e, ErrorContext.builder()
-                    .related(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS))
-                    .whatToDo("Allow Plan to check for updates from Github/versions.txt or disable update check.")
-                    .build());
-        }
+        });
     }
+
 
     @Override
     public void enable() {

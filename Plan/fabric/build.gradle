@@ -29,9 +29,6 @@ dependencies {
     }
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
-
-    slim "mysql:mysql-connector-java:$mysqlVersion"
-    slim "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
 compileJava {
@@ -52,11 +49,6 @@ processResources {
     from 'build/sources/resources'
 }
 
-slimJar {
-    relocate 'com.mysql', 'plan.com.mysql'
-    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
-}
-
 shadowJar {
     configurations = [project.configurations.shadow]
     exclude('net.fabricmc:*')
@@ -66,10 +58,13 @@ shadowJar {
         exclude 'org/apache/logging/**'
     }
     relocate 'dagger', 'plan.dagger'
-    // Don't relocate SQLite since the org.sqlite.NativeDB class calls are not relocated properly
+    // Don't relocate MySQL or SQLite since they are loaded with a isolated class loader
     // relocate 'org.sqlite', 'plan.org.sqlite'
+    // relocate 'com.mysql', 'plan.com.mysql'
+    // relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
     relocate 'javax.inject', 'plan.javax.inject'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
+    relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
 }
 
 remapJar {

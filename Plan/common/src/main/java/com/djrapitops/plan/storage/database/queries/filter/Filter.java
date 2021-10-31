@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+
 import java.util.*;
 
 /**
@@ -40,9 +42,9 @@ public interface Filter {
      * @return Set of UUIDs this filter applies to
      * @throws IllegalArgumentException If the arguments are not valid.
      */
-    Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query);
+    Set<UUID> getMatchingUUIDs(InputFilterDto query);
 
-    default Result apply(SpecifiedFilterInformation query) {
+    default Result apply(InputFilterDto query) {
         try {
             return new Result(null, getKind(), getMatchingUUIDs(query));
         } catch (CompleteSetException allMatch) {
@@ -64,7 +66,7 @@ public interface Filter {
             this.currentUUIDs = currentUUIDs;
         }
 
-        public Result apply(Filter filter, SpecifiedFilterInformation query) {
+        public Result apply(Filter filter, InputFilterDto query) {
             try {
                 Set<UUID> got = filter.getMatchingUUIDs(query);
                 currentUUIDs.retainAll(got);
