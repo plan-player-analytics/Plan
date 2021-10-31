@@ -79,7 +79,7 @@ subprojects {
         caffeineVersion = "2.9.2"
         mysqlVersion = "8.0.27"
         sqliteVersion = "3.36.0.3"
-        hikariVersion = "4.0.3"
+        hikariVersion = "5.0.0"
         slf4jVersion = "1.7.32"
         geoIpVersion = "2.15.0"
         gsonVersion = "2.8.9"
