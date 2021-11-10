@@ -27,6 +27,7 @@ import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -54,6 +55,9 @@ import java.util.logging.Level;
         name = "Plan",
         version = "@version@",
         description = "Player Analytics Plugin by AuroraLS3",
+        dependencies = {
+                @Dependency(id = "viaversion", optional = true)
+        },
         authors = {"AuroraLS3"}
 )
 public class PlanVelocity implements PlanPlugin {
@@ -66,6 +70,7 @@ public class PlanVelocity implements PlanPlugin {
     private Locale locale;
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
 
     @com.google.inject.Inject
     public PlanVelocity(
@@ -82,6 +87,10 @@ public class PlanVelocity implements PlanPlugin {
 
     @Subscribe
     public void onProxyStart(ProxyInitializeEvent event) {
+        abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
         onEnable();
     }
 
@@ -90,11 +99,8 @@ public class PlanVelocity implements PlanPlugin {
         onDisable();
     }
 
+    @Override
     public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
-        logger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
-
         PlanVelocityComponent component = DaggerPlanVelocityComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
@@ -133,6 +139,7 @@ public class PlanVelocity implements PlanPlugin {
         }
     }
 
+    @Override
     public void onDisable() {
         runnableFactory.cancelAllKnownTasks();
         if (system != null) system.disable();
@@ -182,5 +189,9 @@ public class PlanVelocity implements PlanPlugin {
     @Override
     public File getDataFolder() {
         return dataFolderPath.toFile();
+    }
+
+    private String fixMsgParams(String message) {
+        return message.replaceAll("\\{\\d+}", "{}");
     }
 }

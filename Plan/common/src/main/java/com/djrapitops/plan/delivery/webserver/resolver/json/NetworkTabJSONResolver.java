@@ -24,7 +24,9 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.utilities.java.Maps;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -60,9 +62,19 @@ public class NetworkTabJSONResolver<T> implements Resolver {
     }
 
     private Response getResponse(Request request) {
+        JSONStorage.StoredJSON json = asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, jsonCreator);
+        if (json == null) {
+            return Response.builder()
+                    .setMimeType(MimeType.JSON)
+                    .setJSONContent(Maps.builder(String.class, String.class)
+                            .put("error", "Json failed to generate for some reason, see /Plan/logs for errors")
+                            .build())
+                    .build();
+        }
+
         return Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, jsonCreator).json)
+                .setJSONContent(json.json)
                 .build();
     }
 }

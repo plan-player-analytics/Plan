@@ -57,6 +57,37 @@ public interface ConfigChange {
         }
     }
 
+    class MoveLevelDown implements ConfigChange {
+
+        final String oldPath;
+        final String newPath;
+
+        public MoveLevelDown(String oldPath, String newPath) {
+            this.oldPath = oldPath;
+            this.newPath = newPath;
+        }
+
+        @Override
+        public boolean hasBeenApplied(Config config) {
+            return !config.getNode(oldPath).isPresent() || config.getNode(newPath).isPresent();
+        }
+
+        @Override
+        public synchronized void apply(Config config) {
+            if (!config.moveChild(oldPath, "Temp." + oldPath)) {
+                throw new IllegalStateException("Failed to move config node from '" + oldPath + "' to 'Temp." + oldPath + "' while moving to '" + newPath + "'");
+            }
+            if (!config.moveChild("Temp." + oldPath, newPath)) {
+                throw new IllegalStateException("Failed to move config node from 'Temp." + oldPath + "' to '" + newPath + "' while moving from '" + oldPath + "'");
+            }
+        }
+
+        @Override
+        public String getAppliedMessage() {
+            return "Moved " + oldPath + " to " + newPath;
+        }
+    }
+
     class Copied extends Removed {
 
         final String newPath;

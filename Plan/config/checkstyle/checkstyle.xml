@@ -69,8 +69,8 @@
 
         <!-- Metrics -->
         <module name="ClassFanOutComplexity">
-            <!-- This value is high. Notable: SQLDB: 61 -->
-            <property name="max" value="65"/>
+            <!-- This value is high. Notable: SQLDB: 66 -->
+            <property name="max" value="70"/>
         </module>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ThemeConfig: 16 -->

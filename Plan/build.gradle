@@ -7,13 +7,11 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.github.johnrengelman.shadow" version "7.1.0" apply false
     id "java"
     id "jacoco"
     id "checkstyle"
     id "org.sonarqube" version "3.3"
-    // id "net.ltgt.apt" version "0.21"
-    // id "net.ltgt.apt-idea" version "0.21"
 }
 
 apply plugin: 'nebula-aggregate-javadocs'
@@ -30,7 +28,6 @@ def determineBuildVersion = {
 def buildVersion = determineBuildVersion()
 
 allprojects {
-    wrapper.gradleVersion = "7.0.2"
 
     group "com.djrapitops"
     version "5.4-SNAPSHOT"
@@ -58,12 +55,13 @@ subprojects {
     apply plugin: "checkstyle"
     apply plugin: "jacoco"
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    compileJava {
+        options.release = 8
+    }
 
     ext {
-        daggerVersion = "2.37"
-        daggerCompilerVersion = "2.37"
+        daggerVersion = "2.40"
+        daggerCompilerVersion = "2.40"
 
         palVersion = "5.0.0"
 
@@ -74,33 +72,31 @@ subprojects {
         nukkitVersion = "1.0-SNAPSHOT"
         bungeeVersion = "1.16-R0.4"
         velocityVersion = "3.0.0-SNAPSHOT"
-        redisBungeeVersion = "0.6.3"
+        redisBungeeVersion = "0.3.8-SNAPSHOT"
 
         commonsTextVersion = "1.9"
-        commonsCompressVersion = "1.20"
+        commonsCompressVersion = "1.21"
         caffeineVersion = "2.9.2"
-        mysqlVersion = "8.0.25"
-        sqliteVersion = "3.36.0.1"
+        mysqlVersion = "8.0.27"
+        sqliteVersion = "3.36.0.3"
         hikariVersion = "4.0.3"
-        slf4jVersion = "1.7.31"
+        slf4jVersion = "1.7.32"
         geoIpVersion = "2.15.0"
-        gsonVersion = "2.8.7"
+        gsonVersion = "2.8.9"
         bstatsVersion = "2.2.1"
-        placeholderapiVersion = "2.10.9"
+        placeholderapiVersion = "2.10.10"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
     }
 
     repositories {
         mavenCentral()
+        google()
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" } // Spigot
         maven { url = "https://papermc.io/repo/repository/maven-public/" } // Paper
         maven { url = "https://repo.spongepowered.org/repository/maven-public/" } // Sponge
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots" } // BungeeCord
         maven { url = "https://repo.md-5.net/content/repositories/snapshots/" } // RedisBungee
         maven { url = "https://repo.velocitypowered.com/snapshots/" } // Velocity
-        maven { url = "https://repo.opencollab.dev/maven-snapshots/" } // Nukkit snapshot
-        maven { url = "https://repo.opencollab.dev/maven-releases/" } // Nukkit release
-        maven { url = "https://repo.codemc.org/repository/maven-public" } // bStats
         maven { url = "https://repo.playeranalytics.net/releases" } // Plan
     }
 
@@ -111,10 +107,10 @@ subprojects {
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'      // JUnit 5
-        testImplementation "org.mockito:mockito-core:3.11.2"                // Mockito Core
-        testImplementation "org.mockito:mockito-junit-jupiter:3.11.2"       // Mockito JUnit 5 Extension
-        testImplementation "org.seleniumhq.selenium:selenium-java:3.141.59" // Selenium (Browser tests)
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'      // JUnit 5
+        testImplementation "org.mockito:mockito-core:4.0.0"                // Mockito Core
+        testImplementation "org.mockito:mockito-junit-jupiter:4.0.0"       // Mockito JUnit 5 Extension
+        testImplementation "org.seleniumhq.selenium:selenium-java:4.0.0" // Selenium (Browser tests)
         testImplementation "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
@@ -143,13 +139,13 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion "8.33"
+        toolVersion "8.44"
         getConfigDirectory().set file("$rootProject.projectDir/config/checkstyle")
     }
 
     jacocoTestReport {
         reports {
-            xml.enabled true
+            xml.required = true
             // xml.destination file("${buildDir}/jacoco/report.xml")
         }
     }

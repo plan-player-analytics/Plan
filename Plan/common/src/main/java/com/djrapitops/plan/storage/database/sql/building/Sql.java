@@ -48,6 +48,8 @@ public abstract class Sql {
     public static final String OR = " OR ";
     public static final String IS_NULL = " IS NULL";
     public static final String IS_NOT_NULL = " IS NOT NULL";
+    public static final String LIMIT = " LIMIT ";
+    public static final String OFFSET = " OFFSET ";
 
     private static final String FLOOR = "FLOOR(";
     private static final String MIN = "MIN(";

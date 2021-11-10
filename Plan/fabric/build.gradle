@@ -1,0 +1,81 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'fabric-loom' version '0.9.+'
+}
+
+dependencies {
+    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    implementation project(path: ":common", configuration: 'shadow')
+    shadow project(path: ":common", configuration: 'shadow')
+    compileOnly project(":api")
+    modImplementation('me.lucko:fabric-permissions-api:0.1-SNAPSHOT')
+
+    minecraft "com.mojang:minecraft:1.17.1"
+    mappings "net.fabricmc:yarn:1.17.1+build.35:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.11.6"
+
+    // Fabric API
+    Set<String> apiModules = [
+            'fabric-api-base',
+            'fabric-command-api-v1',
+            'fabric-entity-events-v1',
+            'fabric-lifecycle-events-v1',
+            'fabric-networking-api-v1'
+    ]
+
+    apiModules.forEach {
+        modImplementation(fabricApi.module(it, "0.37.1+1.17"))
+    }
+
+    testImplementation project(path: ":common", configuration: 'testArtifacts')
+}
+
+compileJava {
+    options.release = 16
+}
+
+tasks.register('updateVersion', Copy) {
+    from('src/main/resources') {
+        include 'fabric.mod.json'
+    }
+    into 'build/sources/resources/'
+    filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+}
+
+processResources {
+    dependsOn updateVersion
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from 'build/sources/resources'
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    exclude('net.fabricmc:*')
+    exclude('/mappings/')
+
+    relocate('org.apache', 'plan.org.apache') {
+        exclude 'org/apache/logging/**'
+    }
+    relocate 'dagger', 'plan.dagger'
+    // Don't relocate MySQL or SQLite since they are loaded with a isolated class loader
+    // relocate 'org.sqlite', 'plan.org.sqlite'
+    // relocate 'com.mysql', 'plan.com.mysql'
+    // relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
+    relocate 'javax.inject', 'plan.javax.inject'
+    relocate 'com.github.benmanes', 'plan.com.github.benmanes'
+    relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
+}
+
+remapJar {
+    dependsOn tasks.shadowJar
+    mustRunAfter tasks.shadowJar
+    input = shadowJar.archiveFile.get()
+    addNestedDependencies = true
+
+    destinationDirectory.set(file("$rootDir/builds/"))
+    archiveBaseName.set('PlanFabric')
+    archiveClassifier.set('')
+}
+
+shadowJar.finalizedBy(remapJar)

@@ -34,29 +34,29 @@ public final class Request {
     private final URIQuery query;
     private final WebUser user;
     private final Map<String, String> headers;
-    private final byte[] body;
+    private final byte[] requestBody;
 
     /**
      * Constructor.
      *
-     * @param method  HTTP method, GET, PUT, POST, etc
-     * @param path    Requested path /example/target
-     * @param query   Request parameters ?param=value etc
-     * @param user    Web user doing the request (if authenticated)
-     * @param headers Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
-     * @param body    Raw body as bytes, if present
+     * @param method      HTTP method, GET, PUT, POST, etc
+     * @param path        Requested path /example/target
+     * @param query       Request parameters ?param=value etc
+     * @param user        Web user doing the request (if authenticated)
+     * @param headers     Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+     * @param requestBody Raw body as bytes, if present
      */
-    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, byte[] body) {
+    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, byte[] requestBody) {
         this.method = method;
         this.path = path;
         this.query = query;
         this.user = user;
         this.headers = headers;
-        this.body = body;
+        this.requestBody = requestBody;
     }
 
     /**
-     * Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no form body.
+     * Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no request body.
      */
     public Request(String method, String target, WebUser user, Map<String, String> headers) {
         this.method = method;
@@ -70,7 +70,7 @@ public final class Request {
         }
         this.user = user;
         this.headers = headers;
-        this.body = new byte[0];
+        this.requestBody = new byte[0];
     }
 
     /**
@@ -106,7 +106,7 @@ public final class Request {
      * @return byte[].
      */
     public byte[] getRequestBody() {
-        return body;
+        return requestBody;
     }
 
     /**
@@ -129,7 +129,7 @@ public final class Request {
     }
 
     public Request omitFirstInPath() {
-        return new Request(method, path.omitFirst(), query, user, headers, body);
+        return new Request(method, path.omitFirst(), query, user, headers, requestBody);
     }
 
     @Override
@@ -140,7 +140,7 @@ public final class Request {
                 ", query=" + query +
                 ", user=" + user +
                 ", headers=" + headers +
-                ", body=" + body.length +
+                ", body=" + requestBody.length +
                 '}';
     }
 }

@@ -16,13 +16,13 @@
  */
 package com.djrapitops.plan.processing.processors.player;
 
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.processing.CriticalRunnable;
 
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Processor Class for KillEvent information when the killer is a
@@ -34,34 +34,28 @@ import java.util.UUID;
  */
 public class PlayerKillProcessor implements CriticalRunnable {
 
-    private final UUID killer;
-    private final UUID victim;
+    private final PlayerKill.Killer killer;
+    private final PlayerKill.Victim victim;
+    private final ServerIdentifier server;
     private final String weaponName;
     private final long time;
 
-    /**
-     * Constructor.
-     *
-     * @param killer       UUID of the killer.
-     * @param time       Epoch ms the event occurred.
-     * @param victim       Dead entity (Mob or Player)
-     * @param weaponName Weapon used.
-     */
-    public PlayerKillProcessor(UUID killer, long time, UUID victim, String weaponName) {
+    public PlayerKillProcessor(PlayerKill.Killer killer, PlayerKill.Victim victim, ServerIdentifier server, String weaponName, long time) {
         this.killer = killer;
-        this.time = time;
         this.victim = victim;
+        this.server = server;
         this.weaponName = weaponName;
+        this.time = time;
     }
 
     @Override
     public void run() {
-        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(killer);
+        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(killer.getUuid());
         if (!cachedSession.isPresent()) {
             return;
         }
         ActiveSession session = cachedSession.get();
 
-        session.addPlayerKill(new PlayerKill(killer, victim, weaponName, time));
+        session.addPlayerKill(new PlayerKill(killer, victim, server, weaponName, time));
     }
 }

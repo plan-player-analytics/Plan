@@ -17,11 +17,14 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import net.playeranalytics.plugin.scheduling.PluginRunnable;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 
@@ -37,10 +40,11 @@ import java.util.concurrent.TimeUnit;
  * @author AuroraLS3
  */
 @Singleton
-public class ExportScheduler {
+public class ExportScheduler extends PluginRunnable {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
 
     private final RunnableFactory runnableFactory;
     private final Exporter exporter;
@@ -50,18 +54,31 @@ public class ExportScheduler {
     public ExportScheduler(
             PlanConfig config,
             DBSystem dbSystem,
+            ServerInfo serverInfo,
             RunnableFactory runnableFactory,
             Exporter exporter,
             ErrorLogger errorLogger
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
         this.runnableFactory = runnableFactory;
         this.exporter = exporter;
         this.errorLogger = errorLogger;
     }
 
-    public void scheduleExport() {
+    @Override
+    public void run() {
+        scheduleExport();
+    }
+
+    private void scheduleExport() {
+        Database database = dbSystem.getDatabase();
+        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
+        if (serverInfo.getServer().isNotProxy() && hasProxy) {
+            return;
+        }
+
         scheduleServerPageExport();
         schedulePlayersPageExport();
     }

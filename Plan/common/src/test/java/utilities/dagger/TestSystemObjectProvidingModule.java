@@ -22,6 +22,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.file.JarResource;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.google.gson.Gson;
 import dagger.Module;
 import dagger.Provides;
 import utilities.TestErrorLogger;
@@ -36,6 +37,12 @@ import java.util.function.Predicate;
 
 @Module
 public class TestSystemObjectProvidingModule {
+
+    @Provides
+    @Singleton
+    Gson provideGson() {
+        return new Gson();
+    }
 
     @Provides
     @Singleton

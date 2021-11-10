@@ -1,3 +1,32 @@
+import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
+
+plugins {
+    id "dev.vankka.dependencydownload.plugin" version "1.1.4"
+}
+
+configurations {
+    mysqlDriver
+    sqliteDriver
+    testImplementation.extendsFrom mysqlDriver, sqliteDriver
+    compileOnly.extendsFrom mysqlDriver, sqliteDriver
+}
+
+task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.mysqlDriver
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
+
+task generateResourceForSQLiteDriver(type: GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.sqliteDriver
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
+
 dependencies {
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     implementation project(":api")
@@ -6,13 +35,18 @@ dependencies {
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    implementation "mysql:mysql-connector-java:$mysqlVersion"
-    implementation "org.xerial:sqlite-jdbc:$sqliteVersion"
     implementation "com.zaxxer:HikariCP:$hikariVersion"
     implementation "org.slf4j:slf4j-nop:$slf4jVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
+
+    implementation("dev.vankka.dependencydownload:runtime:1.1.4") {
+        // Effectively disables relocating
+        exclude module: "jar-relocator"
+    }
+    mysqlDriver "mysql:mysql-connector-java:$mysqlVersion"
+    sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
@@ -24,11 +58,37 @@ task updateVersion(type: Copy) {
         include 'plugin.yml'
         include 'bungee.yml'
         include 'nukkit.yml'
+        include 'fabric.mod.json'
     }
     into 'build/sources/resources/'
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
 }
+
+task determineWebAssetModifications {
+    doLast {
+        mkdir "build/resources/main/assets/plan"
+        def versionFile = file("build/resources/main/assets/plan/WebAssetVersion.yml")
+        versionFile.text = "" // Clear previous build
+        ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
+        tree.forEach { File f ->
+            def gitModified = new ByteArrayOutputStream()
+            exec {
+                commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
+                standardOutput = gitModified
+            }
+            def gitModifiedAsString = gitModified.toString().strip()
+            // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
+            def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
+            def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
+            versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
+                    "%s: %s\n", relativePath.toString().replace('.', ','), modified
+            )
+        }
+    }
+}
+
 processResources {
+    dependsOn determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
     from 'build/sources/resources'
@@ -50,8 +110,6 @@ shadowJar {
     // Exclude unnecessary SQLite drivers
     exclude '**/Linux/android-arm/libsqlitejdbc.so'
     exclude '**/DragonFlyBSD/**/libsqlitejdbc.so'
-
-    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
 
     relocate 'com.maxmind', 'plan.com.maxmind'
     relocate 'com.fasterxml', 'plan.com.fasterxml'

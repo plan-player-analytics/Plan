@@ -55,6 +55,8 @@ import javax.inject.Singleton;
 @Singleton
 public class PlanSystem implements SubSystem {
 
+    private static final long SERVER_ENABLE_TIME = System.currentTimeMillis();
+
     private boolean enabled = false;
 
     private final PlanFiles files;
@@ -140,6 +142,16 @@ public class PlanSystem implements SubSystem {
         logger.info("§2  ██▌██▌██▌██▌  §2Player Analytics");
         logger.info("§2  ██▌██▌██▌██▌  §fv" + versionChecker.getCurrentVersion());
         logger.info("");
+
+        if ("1.8".equals(System.getProperty("java.specification.version"))
+                || "9".equals(System.getProperty("java.specification.version"))
+                || "10".equals(System.getProperty("java.specification.version"))
+        ) {
+            logger.warn("! ------- Deprecation warning ------- !");
+            logger.warn("Plan version 5.5 will require Java 11 or newer,");
+            logger.warn("consider updating your JVM as soon as possible.");
+            logger.warn("! ----------------------------------- !");
+        }
     }
 
     @Deprecated
@@ -297,5 +309,9 @@ public class PlanSystem implements SubSystem {
     @Deprecated
     public ErrorLogger getErrorLogger() {
         return errorLogger;
+    }
+
+    public static long getServerEnableTime() {
+        return SERVER_ENABLE_TIME;
     }
 }

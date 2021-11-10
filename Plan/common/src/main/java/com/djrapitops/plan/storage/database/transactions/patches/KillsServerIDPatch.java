@@ -41,7 +41,7 @@ public class KillsServerIDPatch extends Patch {
 
         // KillsOptimizationPatch makes this patch incompatible with newer patch versions.
         return hasColumn(tableName, KillsTable.SERVER_UUID)
-                || (hasColumn(tableName, columnName) && allValuesHaveValueZero(tableName, columnName));
+                || hasColumn(tableName, columnName) && allValuesHaveValueZero(tableName, columnName);
     }
 
     @Override

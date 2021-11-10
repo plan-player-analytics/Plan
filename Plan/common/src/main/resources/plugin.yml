@@ -39,6 +39,7 @@ softdepend:
   - Towny
   - Vault
   - ViaVersion
+  - Votifier
 
 commands:
   plan:

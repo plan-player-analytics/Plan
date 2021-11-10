@@ -56,6 +56,7 @@ public class Contributors {
             new Contributor("Malachiel", LANG),
             new Contributor("Miclebrick", CODE),
             new Contributor("Morsmorse", LANG),
+            new Contributor("MAXOUXAX", CODE),
             new Contributor("Nogapra", LANG),
             new Contributor("Sander0542", LANG),
             new Contributor("Saph1s", LANG),
@@ -84,7 +85,14 @@ public class Contributors {
             new Contributor("portlek", CODE),
             new Contributor("mbax", CODE),
             new Contributor("KairuByte", CODE),
-            new Contributor("rymiel", CODE)
+            new Contributor("rymiel", CODE),
+            new Contributor("Perchun_Pak", LANG),
+            new Contributor("HexedHero", CODE),
+            new Contributor("DrexHD", CODE),
+            new Contributor("zisunny104", LANG),
+            new Contributor("SkipM4", LANG),
+            new Contributor("ahdg6", CODE),
+            new Contributor("BratishkaErik", LANG)
     };
 
     private Contributors() {

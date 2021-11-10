@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.playeranalytics.plan.gathering.listeners.events.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "EntityMixin",
+    "KickCommandMixin",
+    "PlayerEntityMixin",
+    "PlayerManagerMixin",
+    "ServerCommandSourceMixin",
+    "ServerPlayerEntityMixin",
+    "ServerPlayNetworkHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

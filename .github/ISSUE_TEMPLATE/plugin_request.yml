@@ -1,0 +1,20 @@
+name: Plugin Suggestion
+description: Suggest data from another plugin for Plan
+labels: [New Data, DataExtensions, Help Wanted]
+body:
+- type: textarea
+  attributes:
+    label: Data to display
+    description: List any data you would like to see from the plugin 
+  validations:
+      required: true
+- type: input
+  attributes:
+    label: Link to API or Source Code
+  validations:
+      required: true
+- type: input
+  attributes:
+    label: Link to Project page or Downloads
+  validations:
+      required: true

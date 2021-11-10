@@ -8,14 +8,14 @@ function createErrorAccordionTitle(i, errorLog) {
     let style = 'bg-amber-outline';
     const tagLine = errorLog.contents[0];
     return `<tr id="error_h_${i}" aria-controls="error_t_${i}" aria-expanded="false" 
-                class="clickable collapsed ${style}" data-target="#error_t_${i}" data-toggle="collapse">
+                class="clickable collapsed ${style}" data-bs-target="#error_t_${i}" data-bs-toggle="collapse">
                 <td>${errorLog.fileName}</td>
                 <td>${tagLine}</td>
             </tr>`
 }
 
 function createErrorAccordionBody(i, errorLog) {
-    return `<tr class="collapse" data-parent="#tableAccordion" id="error_t_${i}">
+    return `<tr class="collapse" data-bs-parent="#tableAccordion" id="error_t_${i}">
                 <td colspan="2">
                     <pre class="pre-scrollable" style="overflow-x: scroll">${errorLog.contents.join('\n')}</pre>
                 </td>

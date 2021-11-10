@@ -3,8 +3,9 @@ Plan.iml
 PlanPluginBridge.iml
 .sonar/
 builds/
-# Nukkit creates server.log during tests for some reason.
+# Nukkit & Fabric create log files during tests for some reason.
 server.log
+/Plan/fabric/logs/
 
 *.db
 

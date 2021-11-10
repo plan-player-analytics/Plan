@@ -16,24 +16,34 @@
  */
 package com.djrapitops.plan.settings.config;
 
+import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 
 public class ResourceSettings {
 
+    private final PlanFiles files;
     private final PlanConfig config;
 
     public ResourceSettings(
-            PlanConfig config
+            PlanFiles files, PlanConfig config
     ) {
+        this.files = files;
         this.config = config;
     }
 
     public boolean shouldBeCustomized(String plugin, String fileName) {
-        ConfigNode fileCustomization = config.getNode("Customized_files").orElseGet(() -> config.addNode("Customized_files"));
+        if (config.isTrue(CustomizedFileSettings.WEB_DEV_MODE)) {
+            return true;
+        }
+
+        ConfigNode fileCustomization = getCustomizationConfigNode();
         fileCustomization.setComment(Collections.singletonList("The files are placed in /Plan/web/ if the setting is 'true' when accessed."));
 
         ConfigNode pluginCustomization = fileCustomization.getNode(plugin).orElseGet(() -> fileCustomization.addNode(plugin));
@@ -53,4 +63,14 @@ public class ResourceSettings {
         }
     }
 
+    public ConfigNode getCustomizationConfigNode() {
+        return config.getNode("Customized_files").orElseGet(() -> config.addNode("Customized_files"));
+    }
+
+    public Path getCustomizationDirectory() {
+        Path exportDirectory = Paths.get(config.get(CustomizedFileSettings.PATH));
+        return exportDirectory.isAbsolute()
+                ? exportDirectory
+                : files.getDataDirectory().resolve(exportDirectory);
+    }
 }

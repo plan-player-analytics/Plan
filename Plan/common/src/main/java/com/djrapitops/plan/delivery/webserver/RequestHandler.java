@@ -156,7 +156,7 @@ public class RequestHandler implements HttpHandler {
         }
         if (response.getCode() != 401 // Not failed
                 && response.getCode() != 403 // Not blocked
-                && (request != null && request.getUser().isPresent()) // Logged in
+                && request != null && request.getUser().isPresent() // Logged in
         ) {
             bruteForceGuard.resetAttemptCount(accessor);
         }
@@ -189,20 +189,23 @@ public class RequestHandler implements HttpHandler {
         String requestMethod = exchange.getRequestMethod();
         URIPath path = new URIPath(exchange.getRequestURI().getPath());
         URIQuery query = new URIQuery(exchange.getRequestURI().getRawQuery());
-        byte[] requestBody = new byte[0];
+        byte[] requestBody = readRequestBody(exchange);
+        WebUser user = getWebUser(exchange);
+        Map<String, String> headers = getRequestHeaders(exchange);
+        return new Request(requestMethod, path, query, user, headers, requestBody);
+    }
+
+    private byte[] readRequestBody(HttpExchange exchange) {
         try (ByteArrayOutputStream buf = new ByteArrayOutputStream(512)) {
             int b;
             while ((b = exchange.getRequestBody().read()) != -1) {
                 buf.write((byte) b);
             }
-
-            requestBody = buf.toByteArray();
+            return buf.toByteArray();
         } catch (IOException ignored) {
             // requestBody stays empty
+            return new byte[0];
         }
-        WebUser user = getWebUser(exchange);
-        Map<String, String> headers = getRequestHeaders(exchange);
-        return new Request(requestMethod, path, query, user, headers, requestBody);
     }
 
     private WebUser getWebUser(HttpExchange exchange) {

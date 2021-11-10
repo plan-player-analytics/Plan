@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
+import com.djrapitops.plan.delivery.domain.mutators.PlayerKillMutator;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -44,6 +45,10 @@ public class PlayerKills {
 
     public List<PlayerKill> asList() {
         return kills;
+    }
+
+    public PlayerKillMutator asMutator() {
+        return new PlayerKillMutator(asList());
     }
 
     public void addAll(Collection<PlayerKill> randomKills) {

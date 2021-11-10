@@ -65,7 +65,7 @@ public class PlayersMutator {
                         .map(sessions -> sessions.stream().anyMatch(session -> {
                             long start = session.getStart();
                             long end = session.getEnd();
-                            return (after <= start && start <= before) || (after <= end && end <= before);
+                            return after <= start && start <= before || after <= end && end <= before;
                         })).orElse(false)
         );
     }

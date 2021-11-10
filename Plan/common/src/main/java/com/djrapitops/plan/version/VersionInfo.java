@@ -75,4 +75,14 @@ public class VersionInfo implements Comparable<VersionInfo> {
     public int compareTo(VersionInfo o) {
         return this.version.compareTo(o.version);
     }
+
+    @Override
+    public String toString() {
+        return "VersionInfo{" +
+               "release=" + release +
+               ", version=" + version +
+               ", downloadUrl='" + downloadUrl + '\'' +
+               ", changeLogUrl='" + changeLogUrl + '\'' +
+               '}';
+    }
 }

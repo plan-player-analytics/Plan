@@ -75,9 +75,9 @@ function createAccordionTitle(i, session) {
 }
 
 function createAccordionBody(i, session) {
-    return `<tr class="collapse" data-parent="#tableAccordion" id="session_t_${i}">
+    return `<tr class="collapse" data-bs-parent="#tableAccordion" id="session_t_${i}">
                 <td colspan="4">
-                    <div class="collapse row" data-parent="#tableAccordion" id="session_t_${i}">
+                    <div class="collapse row" data-bs-parent="#tableAccordion" id="session_t_${i}">
                         <div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">
                             <p><i class="col-teal far fa-fw fa-clock"></i> Ended<span class="float-end"><b>${session.end}</b></span></p>
                             <p><i class="col-green far fa-fw fa-clock"></i> Length<span class="float-end"><b>${session.length}</b></span></p>
@@ -109,18 +109,19 @@ function createKillsTable(player_kills) {
     let table = '<table class="table mb-0"><tbody>';
 
     if (!player_kills.length) {
-        table += `<tr><td>None</td><td>-</td><td>-</td></tr>`
+        table += `<tr><td>None</td><td>-</td><td>-</td><td>-</td></tr>`
     }
 
     for (const kill of player_kills) {
         table += `<tr>
                     <td>${kill.date}</td>
-                    <td>${kill.killer} ${
-            kill.killer === kill.victim
+                    <td>${kill.killerName} ${
+            kill.killerUUID === kill.victimUUID
                 ? '<i class="fa fa-fw fa-skull-crossbones col-red"></i>'
                 : '<i class="fa fa-fw fa-angle-right col-red"></i>'
-        } ${kill.victim}</td>
+        } ${kill.victimName}</td>
                     <td>${kill.weapon}</td>
+                    <td>${kill.serverName}</td>
                 </tr>`
     }
 

@@ -1,3 +1,8 @@
+repositories {
+    maven { url = "https://repo.opencollab.dev/maven-snapshots/" } // Nukkit snapshot
+    maven { url = "https://repo.opencollab.dev/maven-releases/" } // Nukkit release
+}
+
 dependencies {
     compileOnly project(":common")
     implementation project(path: ":common", configuration: 'shadow')

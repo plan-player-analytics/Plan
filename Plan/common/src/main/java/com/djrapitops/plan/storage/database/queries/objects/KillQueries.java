@@ -16,14 +16,13 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
-import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
-import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
-import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,14 +49,18 @@ public class KillQueries {
         String sql = SELECT +
                 KillsTable.KILLER_UUID + ", " +
                 KillsTable.VICTIM_UUID + ", " +
+                KillsTable.SERVER_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
-                KillsTable.WEAPON +
-                FROM + KillsTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=" + KillsTable.VICTIM_UUID +
-                INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=" + KillsTable.KILLER_UUID +
-                WHERE + KillsTable.TABLE_NAME + '.' + KillsTable.SERVER_UUID + "=?" +
+                KillsTable.WEAPON + ", " +
+                "server." + ServerTable.NAME + " as server_name," +
+                "server." + ServerTable.SERVER_ID + " as server_id" +
+                FROM + KillsTable.TABLE_NAME + " ki" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.SERVER_UUID + "=ki." + KillsTable.SERVER_UUID +
+                WHERE + "ki." + KillsTable.SERVER_UUID + "=?" +
                 ORDER_BY + KillsTable.DATE + " DESC LIMIT ?";
 
         return new QueryStatement<List<PlayerKill>>(sql, limit) {
@@ -82,14 +85,18 @@ public class KillQueries {
         String sql = SELECT +
                 KillsTable.KILLER_UUID + ", " +
                 KillsTable.VICTIM_UUID + ", " +
+                KillsTable.SERVER_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
-                KillsTable.WEAPON +
-                FROM + KillsTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=" + KillsTable.VICTIM_UUID +
-                INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=" + KillsTable.KILLER_UUID +
-                WHERE + KillsTable.TABLE_NAME + '.' + KillsTable.KILLER_UUID + "=?" +
+                KillsTable.WEAPON + ", " +
+                "server." + ServerTable.NAME + " as server_name," +
+                "server." + ServerTable.SERVER_ID + " as server_id" +
+                FROM + KillsTable.TABLE_NAME + " ki" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.SERVER_UUID + "=ki." + KillsTable.SERVER_UUID +
+                WHERE + "ki." + KillsTable.KILLER_UUID + "=?" +
                 ORDER_BY + KillsTable.DATE + " DESC";
 
         return new QueryStatement<List<PlayerKill>>(sql, 100) {
@@ -113,14 +120,18 @@ public class KillQueries {
         String sql = SELECT +
                 KillsTable.KILLER_UUID + ", " +
                 KillsTable.VICTIM_UUID + ", " +
+                KillsTable.SERVER_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
-                KillsTable.WEAPON +
-                FROM + KillsTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=" + KillsTable.VICTIM_UUID +
-                INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=" + KillsTable.KILLER_UUID +
-                WHERE + KillsTable.TABLE_NAME + '.' + KillsTable.VICTIM_UUID + "=?" +
+                KillsTable.WEAPON + ", " +
+                "server." + ServerTable.NAME + " as server_name," +
+                "server." + ServerTable.SERVER_ID + " as server_id" +
+                FROM + KillsTable.TABLE_NAME + " ki" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.SERVER_UUID + "=ki." + KillsTable.SERVER_UUID +
+                WHERE + "ki." + KillsTable.VICTIM_UUID + "=?" +
                 ORDER_BY + KillsTable.DATE + " DESC";
 
         return new QueryStatement<List<PlayerKill>>(sql, 100) {
@@ -148,7 +159,13 @@ public class KillQueries {
             UUID victim = UUID.fromString(set.getString(KillsTable.VICTIM_UUID));
             long date = set.getLong(KillsTable.DATE);
             String weapon = set.getString(KillsTable.WEAPON);
-            return Optional.of(new PlayerKill(killer, victim, weapon, date, victimName, killerName));
+            return Optional.of(new PlayerKill(
+                    new PlayerKill.Killer(killer, killerName),
+                    new PlayerKill.Victim(victim, victimName),
+                    new ServerIdentifier(ServerUUID.fromString(set.getString(KillsTable.SERVER_UUID)),
+                            Server.getIdentifiableName(set.getString("server_name"), set.getInt("server_id"))
+                    ), weapon, date
+            ));
         }
         return Optional.empty();
     }

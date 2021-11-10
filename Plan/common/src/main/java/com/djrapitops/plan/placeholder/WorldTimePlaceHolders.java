@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.placeholder;
 
-import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -53,29 +52,22 @@ public class WorldTimePlaceHolders implements Placeholders {
     public void register(
             PlanPlaceholders placeholders
     ) {
-        Formatter<Long> timeAmount = formatters.timeAmount();
-
         placeholders.registerRaw("worlds_playtime_total_", (input, p) -> {
             // get world total play time
             // e.g. "plan_worlds_playtime_total_%worldname%"
             // where %worldname% is "world_nether"
             String worldName = input.substring("worlds_playtime_total_".length());
 
-            WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverInfo.getServerUUID()));
-
-            return timeAmount.apply(worldTimes.getWorldPlaytime(worldName));
+            return getWorldPlaytime(worldName);
         });
 
-        placeholders.registerStatic("worlds_playtime_total", params -> {
-            if (params.isEmpty()) {
-                return null;
-            }
+        placeholders.registerStatic("worlds_playtime_total", params ->
+                params.get(0).map(this::getWorldPlaytime).orElse("-"));
+    }
 
-            String worldName = params.get(0);
+    private String getWorldPlaytime(String worldName) {
+        WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverInfo.getServerUUID()));
 
-            WorldTimes worldTimes = dbSystem.getDatabase().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverInfo.getServerUUID()));
-
-            return timeAmount.apply(worldTimes.getWorldPlaytime(worldName));
-        });
+        return formatters.timeAmount().apply(worldTimes.getWorldPlaytime(worldName));
     }
 }

@@ -20,14 +20,15 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -44,7 +45,7 @@ public class AsyncJSONResolverService {
     private final JSONStorage jsonStorage;
     private final Map<String, Future<JSONStorage.StoredJSON>> currentlyProcessing;
     private final Map<String, Long> previousUpdates;
-    private final UnitSemaphoreAccessLock accessLock; // Access lock prevents double processing same resource
+    private final ReentrantLock accessLock; // Access lock prevents double processing same resource
 
     @Inject
     public AsyncJSONResolverService(
@@ -58,11 +59,11 @@ public class AsyncJSONResolverService {
 
         currentlyProcessing = new ConcurrentHashMap<>();
         previousUpdates = new ConcurrentHashMap<>();
-        accessLock = new UnitSemaphoreAccessLock();
+        accessLock = new ReentrantLock();
     }
 
     public <T> JSONStorage.StoredJSON resolve(
-            long newerThanTimestamp, DataID dataID, ServerUUID serverUUID, Function<ServerUUID, T> creator
+            Optional<Long> newerThanTimestamp, DataID dataID, ServerUUID serverUUID, Function<ServerUUID, T> creator
     ) {
         String identifier = dataID.of(serverUUID);
         Supplier<T> jsonCreator = () -> creator.apply(serverUUID);
@@ -71,24 +72,29 @@ public class AsyncJSONResolverService {
 
 
     public <T> JSONStorage.StoredJSON resolve(
-            long newerThanTimestamp, DataID dataID, Supplier<T> jsonCreator
+            Optional<Long> newerThanTimestamp, DataID dataID, Supplier<T> jsonCreator
     ) {
         String identifier = dataID.name();
         return getStoredOrCreateJSON(newerThanTimestamp, identifier, jsonCreator);
     }
 
     private <T> JSONStorage.StoredJSON getStoredOrCreateJSON(
-            long timestamp, String identifier, Supplier<T> jsonCreator
+            Optional<Long> givenTimestamp, String identifier, Supplier<T> jsonCreator
     ) {
-        JSONStorage.StoredJSON storedJSON = getNewFromCache(timestamp, identifier);
-        if (storedJSON != null) return storedJSON;
+        JSONStorage.StoredJSON storedJSON = null;
+        Future<JSONStorage.StoredJSON> updatedJSON = null;
+        if (givenTimestamp.isPresent()) {
+            long timestamp = givenTimestamp.get();
+            storedJSON = getNewFromCache(timestamp, identifier);
+            if (storedJSON != null) return storedJSON;
 
-        // No new enough version, let's refresh and send old version of the file
-        Future<JSONStorage.StoredJSON> updatedJSON = scheduleJSONForUpdate(timestamp, identifier, jsonCreator);
+            // No new enough version, let's refresh and send old version of the file
+            updatedJSON = scheduleJSONForUpdate(timestamp, identifier, jsonCreator);
+            storedJSON = getOldFromCache(timestamp, identifier).orElse(null);
+        }
 
-        storedJSON = getOldFromCache(timestamp, identifier);
         if (storedJSON != null) {
-            return storedJSON;
+            return storedJSON; // Found old from cache
         } else {
             // Update not performed if the last update was recent and the file is deleted before next update
             // Fall back to waiting for the updated file if old version of the file doesn't exist.
@@ -111,8 +117,8 @@ public class AsyncJSONResolverService {
         }
     }
 
-    private JSONStorage.StoredJSON getOldFromCache(long newerThanTimestamp, String identifier) {
-        return jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp).orElse(null);
+    private Optional<JSONStorage.StoredJSON> getOldFromCache(long newerThanTimestamp, String identifier) {
+        return jsonStorage.fetchJsonMadeBefore(identifier, newerThanTimestamp);
     }
 
     private JSONStorage.StoredJSON getNewFromCache(long newerThanTimestamp, String identifier) {
@@ -125,7 +131,7 @@ public class AsyncJSONResolverService {
         long updateThreshold = config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);
 
         Future<JSONStorage.StoredJSON> updatedJSON;
-        accessLock.enter();
+        accessLock.lock();
         try {
             // Check if the json is already being created
             updatedJSON = currentlyProcessing.get(identifier);
@@ -135,7 +141,7 @@ public class AsyncJSONResolverService {
                 currentlyProcessing.put(identifier, updatedJSON);
             }
         } finally {
-            accessLock.exit();
+            accessLock.unlock();
         }
         return updatedJSON;
     }

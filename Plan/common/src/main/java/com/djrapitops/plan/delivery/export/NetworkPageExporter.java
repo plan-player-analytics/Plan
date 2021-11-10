@@ -98,8 +98,8 @@ public class NetworkPageExporter extends FileExporter {
 
         // Fixes refreshingJsonRequest ignoring old data of export
         String html = StringUtils.replaceEach(page.toHtml(),
-                new String[]{"loadPlayersOnlineGraph, 'network-overview', true);"},
-                new String[]{"loadPlayersOnlineGraph, 'network-overview');"});
+                new String[]{"loadPlayersOnlineGraph, 'network-overview', true);", "&middot; Performance"},
+                new String[]{"loadPlayersOnlineGraph, 'network-overview');", "&middot; Performance (Unavailable with Export)"});
 
         export(to, exportPaths.resolveExportPaths(html));
     }
@@ -168,7 +168,7 @@ public class NetworkPageExporter extends FileExporter {
             return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap()));
         } catch (WebException e) {
             // The rest of the exceptions should not be thrown
-            throw new IllegalStateException("Unexpected exception thrown: " + e.toString(), e);
+            throw new IllegalStateException("Unexpected exception thrown: " + e, e);
         }
     }
 
@@ -179,12 +179,12 @@ public class NetworkPageExporter extends FileExporter {
                 "./css/style.css",
                 "./vendor/datatables/datatables.min.js",
                 "./vendor/datatables/datatables.min.css",
-                "./vendor/highcharts/highstock.js",
-                "./vendor/highcharts/map.js",
-                "./vendor/highcharts/world.js",
-                "./vendor/highcharts/drilldown.js",
-                "./vendor/highcharts/highcharts-more.js",
-                "./vendor/highcharts/no-data-to-display.js",
+                "./vendor/highcharts/modules/stock.js",
+                "./vendor/highcharts/modules/map.js",
+                "./vendor/highcharts/mapdata/world.js",
+                "./vendor/highcharts/modules/drilldown.js",
+                "./vendor/highcharts/highcharts.js",
+                "./vendor/highcharts/modules/no-data-to-display.js",
                 "./vendor/masonry/masonry.pkgd.min.js",
                 "./vendor/fontawesome-free/css/all.min.css",
                 "./vendor/fontawesome-free/webfonts/fa-brands-400.eot",

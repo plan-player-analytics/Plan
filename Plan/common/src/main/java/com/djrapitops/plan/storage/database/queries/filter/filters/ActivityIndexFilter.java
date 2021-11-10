@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -23,7 +24,6 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -63,7 +63,7 @@ public class ActivityIndexFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
+    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
         List<String> selected = getSelected(query);
         String[] options = getOptionsArray();
 

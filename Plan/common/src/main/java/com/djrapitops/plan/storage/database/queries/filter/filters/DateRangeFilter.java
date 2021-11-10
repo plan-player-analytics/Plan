@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -61,15 +61,15 @@ public abstract class DateRangeFilter implements Filter {
                 .build();
     }
 
-    protected long getAfter(SpecifiedFilterInformation query) {
+    protected long getAfter(InputFilterDto query) {
         return getTime(query, "afterDate", "afterTime");
     }
 
-    protected long getBefore(SpecifiedFilterInformation query) {
+    protected long getBefore(InputFilterDto query) {
         return getTime(query, "beforeDate", "beforeTime");
     }
 
-    private long getTime(SpecifiedFilterInformation query, String dateKey, String timeKey) {
+    private long getTime(InputFilterDto query, String dateKey, String timeKey) {
         String date = query.get(dateKey).orElseThrow(() -> new BadRequestException("'" + dateKey + "' not specified in parameters for " + getKind()));
         String time = query.get(timeKey).orElseThrow(() -> new BadRequestException("'" + timeKey + "' not specified in parameters for " + getKind()));
 

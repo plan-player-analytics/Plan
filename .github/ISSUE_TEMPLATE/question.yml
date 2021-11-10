@@ -1,0 +1,20 @@
+name: Question
+description: Ask a Question about the plugin
+labels: [Question]
+body:
+- type: markdown
+  attributes:
+    value: |
+      > Before opening a question:
+      > - See if [the wiki](https://github.com/plan-player-analytics/Plan/wiki#tutorials) has an answer to your question
+      > - See if [the question has been answered](https://github.com/plan-player-analytics/Plan/projects/4)
+- type: textarea
+  attributes:
+    label: Question
+    description: Write your question here
+  validations:
+      required: true
+- type: textarea
+  attributes:
+    label: Additional context
+    description: Any additional information to understand the question better

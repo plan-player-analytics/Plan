@@ -105,16 +105,16 @@ public class Identifiers {
         return uuidUtility.getUUIDOf(name);
     }
 
-    public static long getTimestamp(Request request) {
+    public static Optional<Long> getTimestamp(Request request) {
         try {
             long currentTime = System.currentTimeMillis();
             long timestamp = request.getQuery().get("timestamp")
                     .map(Long::parseLong)
                     .orElse(currentTime);
             if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
-                return currentTime;
+                return Optional.empty();
             }
-            return timestamp;
+            return Optional.of(timestamp);
         } catch (NumberFormatException nonNumberTimestamp) {
             throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
         }
