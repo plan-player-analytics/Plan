@@ -8,6 +8,7 @@ softdepend:
   - ASkyBlock
   - AdvancedAchievements
   - AdvancedBan
+  - AuthMe
   - BanManager
   - BentoBox
   - CoreProtect
