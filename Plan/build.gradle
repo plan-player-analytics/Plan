@@ -81,7 +81,7 @@ subprojects {
         sqliteVersion = "3.36.0.3"
         hikariVersion = "4.0.3"
         slf4jVersion = "1.7.32"
-        geoIpVersion = "2.15.0"
+        geoIpVersion = "2.16.1"
         gsonVersion = "2.8.9"
         bstatsVersion = "2.2.1"
         placeholderapiVersion = "2.10.10"
