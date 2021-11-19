@@ -166,7 +166,7 @@ public class PlayerOnlineListener implements Listener {
         BukkitAFKListener.afkTracker.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
-        String gm = Optional.of(player.getGameMode()).map(gameMode -> gameMode.name()).orElse("Unknown");
+        String gm = Optional.ofNullable(player.getGameMode()).map(gameMode -> gameMode.name()).orElse("Unknown");
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
