@@ -51,7 +51,7 @@ import javax.inject.Inject;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
