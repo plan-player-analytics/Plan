@@ -110,41 +110,56 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#pull(java.lang.Class)">pull</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type)</code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
+A,&#8203;
+B&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;B&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#map(K,A,java.lang.Class)">map</a></span>&#8203;(K&nbsp;identifier,
+ A&nbsp;value,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;toType)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
 T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#pull(java.lang.Class,K)">pull</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
  K&nbsp;identifier)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;K,&#8203;
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#pullWithoutId(java.lang.Class)">pullWithoutId</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;K,&#8203;
 T&gt;&nbsp;void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#push(K,T)">push</a></span>&#8203;(K&nbsp;identifier,
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#push(K,T)">push</a></span>&#8203;(K&nbsp;identifier,
  T&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
 T&gt;&nbsp;void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#push(K,T,java.lang.Class)">push</a></span>&#8203;(K&nbsp;identifier,
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#push(K,T,java.lang.Class)">push</a></span>&#8203;(K&nbsp;identifier,
  T&nbsp;value,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
 T&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerDatabasePullSource(java.lang.Class,java.lang.Class,java.util.function.Function)">registerDatabasePullSource</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerDatabasePullSource(java.lang.Class,java.lang.Class,java.util.function.Function)">registerDatabasePullSource</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,&#8203;<a href="storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&gt;&nbsp;source)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;T&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerDatabasePullSource(java.lang.Class,java.util.function.Supplier)">registerDatabasePullSource</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&gt;&nbsp;source)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;T&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerDatabasePullSource(java.lang.Class,java.util.function.Supplier)">registerDatabasePullSource</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&gt;&nbsp;source)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
 T&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerDatabaseSink(java.lang.Class,java.lang.Class,java.util.function.BiFunction)">registerDatabaseSink</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerDatabaseSink(java.lang.Class,java.lang.Class,java.util.function.BiFunction)">registerDatabaseSink</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;K,&#8203;T,&#8203;<a href="storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&gt;&nbsp;consumer)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;K,&#8203;
+A,&#8203;
+B&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#registerDataServiceMapper(java.lang.Class,java.lang.Class,java.lang.Class,java.util.function.BiFunction)">registerDataServiceMapper</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;A&gt;&nbsp;from,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;to,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a>,&#8203;A,&#8203;B&gt;&nbsp;mapper)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
 A,&#8203;
 B&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
@@ -161,16 +176,30 @@ B&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">D
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;to,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;A,&#8203;B&gt;&nbsp;mapper)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K1,&#8203;
-K2,&#8203;
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
+Y,&#8203;
 A,&#8203;
-B&gt;<br><a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerMapper(java.lang.Class,java.lang.Class,java.lang.Class,java.lang.Class,com.djrapitops.plan.utilities.java.TriConsumer)">registerMapper</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K1&gt;&nbsp;fromIdentifier,
+B&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerMapper(java.lang.Class,java.lang.Class,java.lang.Class,java.lang.Class,com.djrapitops.plan.utilities.java.TriConsumer)">registerMapper</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;fromIdentifier,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;A&gt;&nbsp;from,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K2&gt;&nbsp;toIdentifier,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;Y&gt;&nbsp;toIdentifier,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;to,
- <a href="utilities/java/TriConsumer.html" title="interface in com.djrapitops.plan.utilities.java">TriConsumer</a>&lt;K1,&#8203;A,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;K2,&#8203;B&gt;&gt;&nbsp;mapper)</code></div>
+ <a href="utilities/java/TriConsumer.html" title="interface in com.djrapitops.plan.utilities.java">TriConsumer</a>&lt;K,&#8203;A,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;Y,&#8203;B&gt;&gt;&nbsp;mapper)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;K,&#8203;
+A,&#8203;
+B&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#registerOptionalMapper(java.lang.Class,java.lang.Class,java.lang.Class,java.util.function.BiFunction)">registerOptionalMapper</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;A&gt;&nbsp;from,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;to,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;K,&#8203;A,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;B&gt;&gt;&nbsp;mapper)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;K,&#8203;
+T&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#registerOptionalPullSource(java.lang.Class,java.lang.Class,java.util.function.Function)">registerOptionalPullSource</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;&gt;&nbsp;source)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code>&lt;K,&#8203;
 T&gt;&nbsp;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3"><code><span class="member-name-link"><a href="#registerPullSource(java.lang.Class,java.lang.Class,java.util.function.Function)">registerPullSource</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
@@ -219,6 +248,17 @@ T&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="elemen
 </section>
 </li>
 <li>
+<section class="detail" id="registerOptionalMapper(java.lang.Class,java.lang.Class,java.lang.Class,java.util.function.BiFunction)">
+<h3>registerOptionalMapper</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;K,&#8203;
+A,&#8203;
+B&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></span>&nbsp;<span class="element-name">registerOptionalMapper</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;A&gt;&nbsp;from,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;to,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;K,&#8203;A,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;B&gt;&gt;&nbsp;mapper)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="registerMapper(java.lang.Class,java.lang.Class,java.lang.Class,java.util.function.BiFunction)">
 <h3>registerMapper</h3>
 <div class="member-signature"><span class="type-parameters">&lt;K,&#8203;
@@ -241,16 +281,27 @@ B&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="in
 </section>
 </li>
 <li>
+<section class="detail" id="registerDataServiceMapper(java.lang.Class,java.lang.Class,java.lang.Class,java.util.function.BiFunction)">
+<h3>registerDataServiceMapper</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;K,&#8203;
+A,&#8203;
+B&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></span>&nbsp;<span class="element-name">registerDataServiceMapper</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;A&gt;&nbsp;from,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;to,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiFunction.html" title="class or interface in java.util.function" class="external-link">BiFunction</a>&lt;<a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a>,&#8203;A,&#8203;B&gt;&nbsp;mapper)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="registerMapper(java.lang.Class,java.lang.Class,java.lang.Class,java.lang.Class,com.djrapitops.plan.utilities.java.TriConsumer)">
 <h3>registerMapper</h3>
-<div class="member-signature"><span class="type-parameters">&lt;K1,&#8203;
-K2,&#8203;
+<div class="member-signature"><span class="type-parameters">&lt;K,&#8203;
+Y,&#8203;
 A,&#8203;
-B&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></span>&nbsp;<span class="element-name">registerMapper</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K1&gt;&nbsp;fromIdentifier,
+B&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></span>&nbsp;<span class="element-name">registerMapper</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;fromIdentifier,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;A&gt;&nbsp;from,
- <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K2&gt;&nbsp;toIdentifier,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;Y&gt;&nbsp;toIdentifier,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;to,
- <a href="utilities/java/TriConsumer.html" title="interface in com.djrapitops.plan.utilities.java">TriConsumer</a>&lt;K1,&#8203;A,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;K2,&#8203;B&gt;&gt;&nbsp;mapper)</span></div>
+ <a href="utilities/java/TriConsumer.html" title="interface in com.djrapitops.plan.utilities.java">TriConsumer</a>&lt;K,&#8203;A,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;Y,&#8203;B&gt;&gt;&nbsp;mapper)</span></div>
 </section>
 </li>
 <li>
@@ -280,9 +331,9 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/
 </section>
 </li>
 <li>
-<section class="detail" id="pull(java.lang.Class)">
-<h3>pull</h3>
-<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</span>&nbsp;<span class="element-name">pull</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type)</span></div>
+<section class="detail" id="pullWithoutId(java.lang.Class)">
+<h3>pullWithoutId</h3>
+<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</span>&nbsp;<span class="element-name">pullWithoutId</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type)</span></div>
 </section>
 </li>
 <li>
@@ -292,6 +343,15 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/
 T&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></span>&nbsp;<span class="element-name">registerPullSource</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,&#8203;T&gt;&nbsp;source)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="registerOptionalPullSource(java.lang.Class,java.lang.Class,java.util.function.Function)">
+<h3>registerOptionalPullSource</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;K,&#8203;
+T&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></span>&nbsp;<span class="element-name">registerOptionalPullSource</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;K&gt;&nbsp;identifierType,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;&gt;&nbsp;source)</span></div>
 </section>
 </li>
 <li>
@@ -315,6 +375,16 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="in
 <h3>registerDatabasePullSource</h3>
 <div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="DataService.html" title="interface in com.djrapitops.plan">DataService</a></span>&nbsp;<span class="element-name">registerDatabasePullSource</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="storage/database/queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&gt;&nbsp;source)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="map(K,A,java.lang.Class)">
+<h3 id="map(java.lang.Object,java.lang.Object,java.lang.Class)">map</h3>
+<div class="member-signature"><span class="type-parameters">&lt;K,&#8203;
+A,&#8203;
+B&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;B&gt;</span>&nbsp;<span class="element-name">map</span>&#8203;<span class="parameters">(K&nbsp;identifier,
+ A&nbsp;value,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;B&gt;&nbsp;toType)</span></div>
 </section>
 </li>
 </ul>
