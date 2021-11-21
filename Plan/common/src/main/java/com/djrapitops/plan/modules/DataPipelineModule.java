@@ -17,6 +17,7 @@
 package com.djrapitops.plan.modules;
 
 import com.djrapitops.plan.DataService;
+import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
 import dagger.Module;
@@ -24,15 +25,18 @@ import dagger.Provides;
 import dagger.multibindings.IntoSet;
 
 import javax.inject.Singleton;
+import java.util.UUID;
 
-@Module
-public class GatheringDataModule {
+@Module // NOTE: not yet in use
+public class DataPipelineModule {
 
     @Provides
     @Singleton
     @IntoSet
-    DataService.Mapping playerJoinToSession() {
-        return service -> service.registerMapper(PlayerJoin.class, ActiveSession.class, ActiveSession::fromPlayerJoin);
+    DataService.Pipeline playerJoinToSession(SessionCache sessionCache) {
+        return service -> service
+                .registerMapper(UUID.class, PlayerJoin.class, ActiveSession.class, ActiveSession::fromPlayerJoin)
+                .registerSink(UUID.class, ActiveSession.class, sessionCache::cacheSession);
     }
 
 }
