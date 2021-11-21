@@ -62,9 +62,20 @@ public class DataSvc implements DataService {
         }
 
         for (Mapper mapper : mappers.get(classPair)) {
-            Class convertingTo = mapper.typeB;
-            push(identifier, mapper.func.apply(identifier, value), convertingTo);
+            push(identifier, mapper.func.apply(identifier, value), mapper.typeB);
         }
+    }
+
+    @Override
+    public <K, A, B> Optional<B> map(K identifier, A value, Class<B> toType) {
+        ClassPair<K, A> classPair = new ClassPair<>((Class<K>) identifier.getClass(), (Class<A>) value.getClass());
+
+        List<Mapper> candidates = this.mappers.get(classPair);
+        return candidates
+                .stream()
+                .filter(mapper -> Objects.equals(mapper.typeB, toType))
+                .findAny()
+                .map(mapper -> toType.cast(mapper.func.apply(identifier, value)));
     }
 
     @Override
@@ -80,8 +91,8 @@ public class DataSvc implements DataService {
     }
 
     @Override
-    public <K1, K2, A, B> DataService registerMapper(Class<K1> fromIdentifier, Class<A> from, Class<K2> toIdentifier, Class<B> to, TriConsumer<K1, A, BiConsumer<K2, B>> mapper) {
-        ClassPair<K1, A> classPair = new ClassPair<>(fromIdentifier, from);
+    public <K, Y, A, B> DataService registerMapper(Class<K> fromIdentifier, Class<A> from, Class<Y> toIdentifier, Class<B> to, TriConsumer<K, A, BiConsumer<Y, B>> mapper) {
+        ClassPair<K, A> classPair = new ClassPair<>(fromIdentifier, from);
         sinks.putOne(classPair, (id, value) -> mapper.accept(fromIdentifier.cast(id), from.cast(value), this::push));
         return this;
     }
@@ -107,7 +118,7 @@ public class DataSvc implements DataService {
     }
 
     @Override
-    public <T> Optional<T> pull(Class<T> type) {
+    public <T> Optional<T> pullWithoutId(Class<T> type) {
         return Optional.ofNullable(noIdentifierPullSources.get(type))
                 .map(Supplier::get)
                 .map(type::cast);

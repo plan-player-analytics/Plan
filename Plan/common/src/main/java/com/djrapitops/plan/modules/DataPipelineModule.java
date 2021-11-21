@@ -17,9 +17,14 @@
 package com.djrapitops.plan.modules;
 
 import com.djrapitops.plan.DataService;
+import com.djrapitops.plan.gathering.cache.JoinAddressCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
+import com.djrapitops.plan.gathering.domain.event.MobKill;
 import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
+import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
+import com.djrapitops.plan.storage.database.transactions.events.SessionEndTransaction;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
@@ -37,6 +42,56 @@ public class DataPipelineModule {
         return service -> service
                 .registerMapper(UUID.class, PlayerJoin.class, ActiveSession.class, ActiveSession::fromPlayerJoin)
                 .registerSink(UUID.class, ActiveSession.class, sessionCache::cacheSession);
+    }
+
+    @Provides
+    @Singleton
+    @IntoSet
+    DataService.Pipeline joinAddress(JoinAddressCache joinAddressCache) {
+        return service -> service
+                .registerSink(UUID.class, JoinAddress.class, joinAddressCache::put)
+                .registerOptionalPullSource(UUID.class, JoinAddress.class, joinAddressCache::get)
+                .registerSink(UUID.class, PlayerLeave.class, joinAddressCache::remove);
+    }
+
+    @Provides
+    @Singleton
+    @IntoSet
+    DataService.Pipeline duringSession() {
+        return service -> service
+                .registerOptionalPullSource(UUID.class, ActiveSession.class, SessionCache::getCachedSession)
+                .registerOptionalPullSource(UUID.class, WorldTimes.class, uuid ->
+                        service.pull(ActiveSession.class, uuid)
+                                .map(ActiveSession::getExtraData)
+                                .flatMap(extra -> extra.get(WorldTimes.class)))
+                .registerOptionalPullSource(UUID.class, MobKillCounter.class, uuid ->
+                        service.pull(ActiveSession.class, uuid)
+                                .map(ActiveSession::getExtraData)
+                                .flatMap(extra -> extra.get(MobKillCounter.class)))
+                .registerOptionalPullSource(UUID.class, DeathCounter.class, uuid ->
+                        service.pull(ActiveSession.class, uuid)
+                                .map(ActiveSession::getExtraData)
+                                .flatMap(extra -> extra.get(DeathCounter.class)))
+                .registerOptionalPullSource(UUID.class, PlayerKills.class, uuid ->
+                        service.pull(ActiveSession.class, uuid)
+                                .map(ActiveSession::getExtraData)
+                                .flatMap(extra -> extra.get(PlayerKills.class)))
+                .registerSink(UUID.class, MobKill.class, (uuid, kill) -> {
+                    service.pull(MobKillCounter.class, uuid).ifPresent(Counter::add);
+                })
+                .registerSink(UUID.class, PlayerKill.class, (uuid, kill) -> {
+                    service.pull(PlayerKills.class, kill.getKiller().getUuid()).ifPresent(playerKills -> playerKills.add(kill));
+                    service.pull(DeathCounter.class, kill.getVictim().getUuid()).ifPresent(Counter::add);
+                });
+    }
+
+    @Provides
+    @Singleton
+    @IntoSet
+    DataService.Pipeline playerLeaveToSession(SessionCache sessionCache) {
+        return service -> service
+                .registerOptionalMapper(UUID.class, PlayerLeave.class, FinishedSession.class, sessionCache::endSession)
+                .registerDatabaseSink(UUID.class, FinishedSession.class, SessionEndTransaction::new);
     }
 
 }

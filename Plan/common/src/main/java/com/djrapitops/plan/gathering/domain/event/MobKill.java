@@ -17,22 +17,19 @@
 package com.djrapitops.plan.gathering.domain.event;
 
 import com.djrapitops.plan.gathering.domain.PlayerMetadata;
-import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.UUID;
 
-public class PlayerJoin {
-
+public class MobKill {
     private final UUID playerUUID;
-    private final ServerUUID serverUUID;
     private final PlayerMetadata playerMetadata;
-
+    private final String mobType;
     private final long time;
 
-    public PlayerJoin(UUID playerUUID, ServerUUID serverUUID, PlayerMetadata playerMetadata, long time) {
+    public MobKill(UUID playerUUID, PlayerMetadata playerMetadata, String mobType, long time) {
         this.playerUUID = playerUUID;
-        this.serverUUID = serverUUID;
         this.playerMetadata = playerMetadata;
+        this.mobType = mobType;
         this.time = time;
     }
 
@@ -44,35 +41,31 @@ public class PlayerJoin {
         return playerUUID;
     }
 
-    public ServerUUID getServerUUID() {
-        return serverUUID;
-    }
-
     public PlayerMetadata getPlayerMetadata() {
         return playerMetadata;
+    }
+
+    public String getMobType() {
+        return mobType;
     }
 
     public long getTime() {
         return time;
     }
 
+
     public static final class Builder {
         private UUID playerUUID;
-        private ServerUUID serverUUID;
         private PlayerMetadata playerMetadata;
+        private String mobType;
         private long time;
 
         private Builder() {}
 
-        public static Builder aPlayerJoin() {return new Builder();}
+        public static Builder aMobKill() {return new Builder();}
 
         public Builder playerUUID(UUID playerUUID) {
             this.playerUUID = playerUUID;
-            return this;
-        }
-
-        public Builder serverUUID(ServerUUID serverUUID) {
-            this.serverUUID = serverUUID;
             return this;
         }
 
@@ -81,11 +74,16 @@ public class PlayerJoin {
             return this;
         }
 
+        public Builder mobType(String mobType) {
+            this.mobType = mobType;
+            return this;
+        }
+
         public Builder time(long time) {
             this.time = time;
             return this;
         }
 
-        public PlayerJoin build() {return new PlayerJoin(playerUUID, serverUUID, playerMetadata, time);}
+        public MobKill build() {return new MobKill(playerUUID, playerMetadata, mobType, time);}
     }
 }
