@@ -108,7 +108,7 @@ subprojects {
 
         // Test Tooling Dependencies
         testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'      // JUnit 5
-        testImplementation "org.mockito:mockito-core:4.0.0"                // Mockito Core
+        testImplementation "org.mockito:mockito-core:4.1.0"                // Mockito Core
         testImplementation "org.mockito:mockito-junit-jupiter:4.0.0"       // Mockito JUnit 5 Extension
         testImplementation "org.seleniumhq.selenium:selenium-java:4.0.0" // Selenium (Browser tests)
         testImplementation "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
