@@ -25,6 +25,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
@@ -70,6 +71,54 @@ public class ServerPlaceHolders implements Placeholders {
         Formatter<Double> percentage = formatters.percentage();
 
         Database database = dbSystem.getDatabase();
+
+        placeholders.registerStatic("server_players_registered_total",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(0, now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_registered_day",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(dayAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_registered_week",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(weekAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_registered_month",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(monthAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("network_players_registered_total",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(0, now())));
+
+        placeholders.registerStatic("network_players_registered_day",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(dayAgo(), now())));
+
+        placeholders.registerStatic("network_players_registered_week",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(weekAgo(), now())));
+
+        placeholders.registerStatic("network_players_registered_month",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(monthAgo(), now())));
+
+        placeholders.registerStatic("server_players_unique_total",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(0, now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_unique_day",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_unique_week",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_unique_month",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(monthAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("network_players_unique_total",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(0, now())));
+
+        placeholders.registerStatic("network_players_unique_day",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now())));
+
+        placeholders.registerStatic("network_players_unique_week",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now())));
+
+        placeholders.registerStatic("network_players_unique_month",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(monthAgo(), now())));
 
         placeholders.registerStatic("server_tps_day",
                 parameters -> decimals.apply(database.query(TPSQueries.averageTPS(dayAgo(), now(), getServerUUID(parameters)))));
