@@ -1,3 +1,4 @@
+DEV|5.4 build 1526|https://github.com/plan-player-analytics/Plan/releases/download/5.4.1526/Plan-5.4-dev-build-1526.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.4.1526
 REL|5.4 build 1516|https://github.com/plan-player-analytics/Plan/releases/download/5.4.1516/Plan-5.4-build-1516.jar|https://github.com/plan-player-analytics/Plan/releases
 REL|5.4 build 1494|https://github.com/plan-player-analytics/Plan/releases/download/5.4.1494/Plan-5.4-build-1494.jar|https://github.com/plan-player-analytics/Plan/releases
 REL|5.4 build 1485|https://github.com/plan-player-analytics/Plan/releases/download/5.4.1485/Plan-5.4-build-1485.jar|https://github.com/plan-player-analytics/Plan/releases
