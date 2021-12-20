@@ -84,7 +84,7 @@ subprojects {
         geoIpVersion = "2.16.1"
         gsonVersion = "2.8.9"
         bstatsVersion = "2.2.1"
-        placeholderapiVersion = "2.10.10"
+        placeholderapiVersion = "2.11.0"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
     }
 
