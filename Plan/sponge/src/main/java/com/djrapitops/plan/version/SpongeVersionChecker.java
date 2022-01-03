@@ -18,8 +18,6 @@ package com.djrapitops.plan.version;
 
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.ore.OreVersionInfoLoader;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -54,10 +52,7 @@ public class SpongeVersionChecker extends VersionChecker {
         try {
             return Optional.of(OreVersionInfoLoader.load());
         } catch (IOException e) {
-            errorLogger.warn(e, ErrorContext.builder()
-                    .related(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS))
-                    .whatToDo("Allow Plan to check for updates from Ore (" + e.getMessage() + ") or disable update check from Plan config.")
-                    .build());
+            logger.warn("Failed to check updates from Ore (" + e.getMessage() + "), allow connection or disable update check from Plan config");
             return Optional.empty();
         }
     }
