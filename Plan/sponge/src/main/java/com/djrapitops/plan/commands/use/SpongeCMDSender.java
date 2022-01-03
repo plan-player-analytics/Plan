@@ -41,7 +41,7 @@ public class SpongeCMDSender implements CMDSender {
 
     @Override
     public MessageBuilder buildMessage() {
-        return new SpongeMessageBuilder(this);
+        return new AdventureMessageBuilder(this, audience);
     }
 
     @Override

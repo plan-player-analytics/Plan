@@ -40,6 +40,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
+    compileOnly "net.kyori:adventure-api:4.9.3"
 
     implementation("dev.vankka.dependencydownload:runtime:1.1.4") {
         // Effectively disables relocating
