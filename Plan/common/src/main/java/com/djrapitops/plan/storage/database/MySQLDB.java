@@ -153,7 +153,9 @@ public class MySQLDB extends SQLDB {
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();
-            if ("com.mysql.cj.jdbc.Driver".equals(driver.getClass().getName())) {
+            Class<?> driverClass = driver.getClass();
+            // Checks that it's from our class loader to avoid unloading another plugin's/the server's driver
+            if ("com.mysql.cj.jdbc.Driver".equals(driverClass.getName()) && driverClass.getClassLoader() == driverClassLoader) {
                 try {
                     DriverManager.deregisterDriver(driver);
                 } catch (SQLException e) {

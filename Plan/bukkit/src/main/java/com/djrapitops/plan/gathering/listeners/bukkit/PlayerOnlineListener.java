@@ -51,6 +51,7 @@ import javax.inject.Inject;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -165,7 +166,7 @@ public class PlayerOnlineListener implements Listener {
         BukkitAFKListener.afkTracker.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
-        String gm = player.getGameMode().name();
+        String gm = Optional.ofNullable(player.getGameMode()).map(gameMode -> gameMode.name()).orElse("Unknown");
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));

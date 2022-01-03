@@ -21,7 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.UUID;
 
-public class PlayerJoin {
+public class PlayerLeave {
 
     private final UUID playerUUID;
     private final ServerUUID serverUUID;
@@ -29,7 +29,7 @@ public class PlayerJoin {
 
     private final long time;
 
-    public PlayerJoin(UUID playerUUID, ServerUUID serverUUID, PlayerMetadata playerMetadata, long time) {
+    public PlayerLeave(UUID playerUUID, ServerUUID serverUUID, PlayerMetadata playerMetadata, long time) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
         this.playerMetadata = playerMetadata;
@@ -64,7 +64,7 @@ public class PlayerJoin {
 
         private Builder() {}
 
-        public static Builder aPlayerJoin() {return new Builder();}
+        public static Builder aPlayerLeave() {return new Builder();}
 
         public Builder playerUUID(UUID playerUUID) {
             this.playerUUID = playerUUID;
@@ -86,6 +86,6 @@ public class PlayerJoin {
             return this;
         }
 
-        public PlayerJoin build() {return new PlayerJoin(playerUUID, serverUUID, playerMetadata, time);}
+        public PlayerLeave build() {return new PlayerLeave(playerUUID, serverUUID, playerMetadata, time);}
     }
 }

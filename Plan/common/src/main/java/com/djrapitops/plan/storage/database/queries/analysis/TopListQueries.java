@@ -44,6 +44,7 @@ public class TopListQueries {
                 AND + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
                 ORDER_BY + "playtime DESC" +
+                GROUP_BY + "name" +
                 LIMIT + "10" +
                 OFFSET + "?";
 
@@ -76,6 +77,7 @@ public class TopListQueries {
                 AND + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
                 ORDER_BY + "active_playtime DESC" +
+                GROUP_BY + "name" +
                 LIMIT + "10" +
                 OFFSET + "?";
 

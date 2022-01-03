@@ -145,7 +145,6 @@ public class PlayerPageExporter extends FileExporter {
                 "../css/style.css",
                 "../vendor/datatables/datatables.min.js",
                 "../vendor/datatables/datatables.min.css",
-                "../vendor/highcharts/modules/stock.js",
                 "../vendor/highcharts/modules/map.js",
                 "../vendor/highcharts/mapdata/world.js",
                 "../vendor/highcharts/modules/drilldown.js",

@@ -20,6 +20,8 @@ import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
+import java.util.UUID;
+
 /**
  * Transaction for storing a session after a session has ended.
  *
@@ -28,6 +30,10 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 public class SessionEndTransaction extends Transaction {
 
     private final FinishedSession session;
+
+    public SessionEndTransaction(UUID playerUUID, FinishedSession session) {
+        this(session);
+    }
 
     public SessionEndTransaction(FinishedSession session) {
         this.session = session;

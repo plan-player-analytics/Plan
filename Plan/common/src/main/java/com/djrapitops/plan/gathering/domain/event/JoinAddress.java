@@ -14,25 +14,23 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.modules;
+package com.djrapitops.plan.gathering.domain.event;
 
-import com.djrapitops.plan.DataService;
-import com.djrapitops.plan.gathering.domain.ActiveSession;
-import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
-import dagger.Module;
-import dagger.Provides;
-import dagger.multibindings.IntoSet;
+public class JoinAddress {
+    private final String address;
 
-import javax.inject.Singleton;
-
-@Module
-public class GatheringDataModule {
-
-    @Provides
-    @Singleton
-    @IntoSet
-    DataService.Mapping playerJoinToSession() {
-        return service -> service.registerMapper(PlayerJoin.class, ActiveSession.class, ActiveSession::fromPlayerJoin);
+    public JoinAddress(String address) {
+        this.address = address;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    @Override
+    public String toString() {
+        return "JoinAddress{" +
+                "address='" + address + '\'' +
+                '}';
+    }
 }

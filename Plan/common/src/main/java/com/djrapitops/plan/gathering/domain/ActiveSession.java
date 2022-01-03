@@ -46,7 +46,9 @@ public class ActiveSession {
     }
 
     public static ActiveSession fromPlayerJoin(PlayerJoin join) {
-        return new ActiveSession(join.getPlayerUUID(), join.getServerUUID(), join.getTime(), join.getWorld(), join.getGameMode());
+        return new ActiveSession(join.getPlayerUUID(), join.getServerUUID(), join.getTime(),
+                join.getPlayerMetadata().getWorld().orElse("Unspecified"),
+                join.getPlayerMetadata().getGameMode().orElse("Unknown"));
     }
 
     public FinishedSession toFinishedSessionFromStillActive() {
