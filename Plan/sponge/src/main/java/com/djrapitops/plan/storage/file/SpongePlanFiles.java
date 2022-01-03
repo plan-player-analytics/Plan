@@ -21,12 +21,14 @@ import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import dagger.Lazy;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.resource.ResourcePath;
 import org.spongepowered.plugin.PluginContainer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Implements jar resource fetching with Sponge Asset API.
@@ -52,10 +54,25 @@ public class SpongePlanFiles extends PlanFiles {
     @Override
     public Resource getResourceFromJar(String resourceName) {
         try {
-            PluginContainer container = plugin instanceof PlanSponge ? ((PlanSponge) plugin).getPlugin() : null;
-            return new SpongeAssetResource(resourceName, Sponge.assetManager().asset(container, resourceName).orElse(null));
-        } catch (IllegalStateException spongeNotEnabled) {
+            if (!(plugin instanceof PlanSponge)) {
+                throw new IllegalStateException("Not a Sponge plugin");
+            }
+            PluginContainer container = ((PlanSponge) plugin).getPlugin();
+            ResourcePath resourcePath = ResourcePath.of(container, resourceName);
+            org.spongepowered.api.resource.Resource resource = Sponge.server().resourceManager().load(resourcePath);
+
+            return asStringResource(resource, resourceName);
+        } catch (IllegalStateException | IOException ignored) {
             return super.getResourceFromJar(resourceName);
+        }
+    }
+
+    private Resource asStringResource(org.spongepowered.api.resource.Resource resource, String resourceName) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.inputStream(), StandardCharsets.UTF_8))) {
+            try (StringWriter writer = new StringWriter()) {
+                reader.transferTo(writer);
+                return new StringResource(resourceName, writer.toString());
+            }
         }
     }
 }
