@@ -125,16 +125,15 @@ public class PluginErrorLogger implements ErrorLogger {
 
     private void logExisting(Path errorLog, Throwable throwable, ErrorContext context, String hash) {
         // Read existing
-        List<String> lines;
         try (Stream<String> read = Files.lines(errorLog)) {
-            lines = read.collect(Collectors.toList());
-        } catch (IOException e) {
+            List<String> lines = read.collect(Collectors.toList());
+
+            int occurrences = getOccurrences(lines) + 1;
+            List<String> newLines = buildNewLines(context, lines, occurrences, hash);
+            overwrite(errorLog, throwable, newLines);
+        } catch (IOException | IndexOutOfBoundsException e) {
             logAfterReadError(errorLog, throwable, context, hash);
-            return;
         }
-        int occurrences = getOccurrences(lines) + 1;
-        List<String> newLines = buildNewLines(context, lines, occurrences, hash);
-        overwrite(errorLog, throwable, newLines);
     }
 
     private void overwrite(Path errorLog, Throwable throwable, List<String> newLines) {
@@ -184,6 +183,8 @@ public class PluginErrorLogger implements ErrorLogger {
     }
 
     private int getOccurrences(List<String> lines) {
+        if (lines.isEmpty()) return 0;
+
         String occurLine = lines.get(0);
         return Integer.parseInt(StringUtils.splitByWholeSeparator(occurLine, ": ")[2].trim());
     }
