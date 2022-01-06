@@ -46,7 +46,7 @@ class ActiveCookieStoreTest {
         when(dbSystem.getDatabase()).thenReturn(db);
 
         underTest = new ActiveCookieStore(
-                Mockito.mock(PlanConfig.class),
+                activeCookieExpiryCleanupTask, Mockito.mock(PlanConfig.class),
                 dbSystem,
                 new TestRunnableFactory(),
                 Mockito.mock(Processing.class)

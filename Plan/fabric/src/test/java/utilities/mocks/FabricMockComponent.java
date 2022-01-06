@@ -18,6 +18,7 @@ package utilities.mocks;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.storage.database.SQLDB;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.playeranalytics.plan.DaggerPlanFabricComponent;
 import net.playeranalytics.plan.PlanFabricComponent;
@@ -43,6 +44,7 @@ public class FabricMockComponent {
 
     public FabricMockComponent(Path tempDir) {
         this.tempDir = tempDir;
+        SQLDB.setDownloadDriver(false);
     }
 
     public PlanPlugin getPlanMock() {

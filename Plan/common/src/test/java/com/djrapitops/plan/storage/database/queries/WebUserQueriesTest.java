@@ -78,7 +78,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = new ActiveCookieStore(activeCookieExpiryCleanupTask, Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
 
         String cookie = cookieStore.generateNewCookie(user);
 
@@ -92,7 +92,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = new ActiveCookieStore(activeCookieExpiryCleanupTask, Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
 
         String cookie = cookieStore.generateNewCookie(user);
 
@@ -106,7 +106,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = new ActiveCookieStore(activeCookieExpiryCleanupTask, Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
 
         String cookie = cookieStore.generateNewCookie(user);
 
