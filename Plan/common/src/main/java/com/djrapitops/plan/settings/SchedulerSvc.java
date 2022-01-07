@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.settings;
 
-import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import com.djrapitops.plan.processing.Processing;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,16 +24,16 @@ import javax.inject.Singleton;
 @Singleton
 public class SchedulerSvc implements SchedulerService {
 
-    private final RunnableFactory runnableFactory;
+    private final Processing processing;
 
     @Inject
-    public SchedulerSvc(RunnableFactory runnableFactory) {
-        this.runnableFactory = runnableFactory;
+    public SchedulerSvc(Processing processing) {
+        this.processing = processing;
     }
 
     @Override
     public void runAsync(Runnable runnable) {
-        runnableFactory.create(runnable).runTaskAsynchronously();
+        processing.submitNonCritical(runnable);
     }
 
     public void register() {

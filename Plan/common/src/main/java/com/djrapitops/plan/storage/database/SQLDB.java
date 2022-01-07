@@ -46,6 +46,7 @@ import net.playeranalytics.plugin.scheduling.TimeAmount;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -59,6 +60,8 @@ import java.util.function.Supplier;
  * @author AuroraLS3
  */
 public abstract class SQLDB extends AbstractDatabase {
+
+    private static boolean downloadDriver = true;
 
     private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
             new StandardRepository("https://papermc.io/repo/repository/maven-public/"),
@@ -74,7 +77,7 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
 
-    protected IsolatedClassLoader driverClassLoader;
+    protected ClassLoader driverClassLoader;
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
@@ -110,16 +113,24 @@ public abstract class SQLDB extends AbstractDatabase {
         };
     }
 
+    public static void setDownloadDriver(boolean downloadDriver) {
+        SQLDB.downloadDriver = downloadDriver;
+    }
+
     protected abstract List<String> getDependencyResource();
 
     public void downloadDriver() {
-        DependencyManager dependencyManager = new DependencyManager(files.getDataDirectory().resolve("libraries"));
-        dependencyManager.loadFromResource(getDependencyResource());
-        dependencyManager.download(null, DRIVER_REPOSITORIES);
+        if (downloadDriver) {
+            DependencyManager dependencyManager = new DependencyManager(files.getDataDirectory().resolve("libraries"));
+            dependencyManager.loadFromResource(getDependencyResource());
+            dependencyManager.download(null, DRIVER_REPOSITORIES);
 
-        IsolatedClassLoader classLoader = new IsolatedClassLoader();
-        dependencyManager.load(null, classLoader);
-        this.driverClassLoader = classLoader;
+            IsolatedClassLoader classLoader = new IsolatedClassLoader();
+            dependencyManager.load(null, classLoader);
+            this.driverClassLoader = classLoader;
+        } else {
+            this.driverClassLoader = getClass().getClassLoader();
+        }
     }
 
     @Override
@@ -262,7 +273,19 @@ public abstract class SQLDB extends AbstractDatabase {
     public void close() {
         if (getState() == State.OPEN) setState(State.CLOSING);
         closeTransactionExecutor(transactionExecutor);
+        unloadDriverClassloader();
         setState(State.CLOSED);
+    }
+
+    private void unloadDriverClassloader() {
+        try {
+            if (driverClassLoader != null && driverClassLoader instanceof IsolatedClassLoader) {
+                ((IsolatedClassLoader) driverClassLoader).close();
+            }
+            driverClassLoader = null;
+        } catch (IOException e) {
+            errorLogger.error(e, ErrorContext.builder().build());
+        }
     }
 
     public abstract Connection getConnection() throws SQLException;

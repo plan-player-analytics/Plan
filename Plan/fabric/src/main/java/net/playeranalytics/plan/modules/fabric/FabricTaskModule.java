@@ -18,6 +18,7 @@ package net.playeranalytics.plan.modules.fabric;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.web.ResourceWriteTask;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.ShutdownDataPreservation;
@@ -88,4 +89,8 @@ public interface FabricTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindResourceWriteTask(ResourceWriteTask resourceWriteTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindActiveCookieStoreExpiryTask(ActiveCookieExpiryCleanupTask activeCookieExpiryCleanupTask);
 }

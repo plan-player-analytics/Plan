@@ -44,6 +44,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,13 +64,13 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
     //https://github.com/bergerkiller/CraftSource/blob/master/net.minecraft.server/PlayerConnection.java#L178
 
 
+    private final Map<UUID, Long> startRecording;
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final Listeners listeners;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final RunnableFactory runnableFactory;
 
     private final boolean pingMethodAvailable;
     private PingMethod pingMethod;
@@ -79,14 +80,13 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
             Listeners listeners,
             PlanConfig config,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            RunnableFactory runnableFactory
+            ServerInfo serverInfo
     ) {
         this.listeners = listeners;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.runnableFactory = runnableFactory;
+        startRecording = new ConcurrentHashMap<>();
         playerHistory = new HashMap<>();
 
         Optional<PingMethod> pingMethod = loadPingMethod();
@@ -138,6 +138,16 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
     @Override
     public void run() {
         long time = System.currentTimeMillis();
+
+        Iterator<Map.Entry<UUID, Long>> starts = startRecording.entrySet().iterator();
+        while (starts.hasNext()) {
+            Map.Entry<UUID, Long> start = starts.next();
+            if (time >= start.getValue()) {
+                addPlayer(start.getKey());
+                starts.remove();
+            }
+        }
+
         Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
 
         while (iterator.hasNext()) {
@@ -164,11 +174,12 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
         }
     }
 
-    public void addPlayer(Player player) {
-        playerHistory.put(player.getUniqueId(), new ArrayList<>());
+    public void addPlayer(UUID uuid) {
+        playerHistory.put(uuid, new ArrayList<>());
     }
 
     public void removePlayer(Player player) {
+        startRecording.remove(player.getUniqueId());
         playerHistory.remove(player.getUniqueId());
     }
 
@@ -182,15 +193,11 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
-        Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
-        if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
+        Long pingDelayMs = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
+        if (pingDelayMs >= TimeUnit.HOURS.toMillis(2L)) {
             return;
         }
-        runnableFactory.create(() -> {
-            if (player.isOnline()) {
-                addPlayer(player);
-            }
-        }).runTaskLater(TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS));
+        startRecording.put(player.getUniqueId(), System.currentTimeMillis() + pingDelayMs);
     }
 
     @EventHandler

@@ -18,6 +18,7 @@ package utilities.mocks;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import utilities.dagger.DaggerPlanPluginComponent;
@@ -40,6 +41,7 @@ public class PluginMockComponent {
 
     public PluginMockComponent(Path tempDir) {
         this.tempDir = tempDir;
+        SQLDB.setDownloadDriver(false);
     }
 
     public PlanPlugin getPlanMock() throws Exception {

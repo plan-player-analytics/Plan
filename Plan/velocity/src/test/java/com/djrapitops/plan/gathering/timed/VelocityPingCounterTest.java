@@ -58,10 +58,10 @@ class VelocityPingCounterTest {
 
     @Test
     void offlinePlayerIsRemovedFromPlayerHistory() {
-        VelocityPingCounter counter = new VelocityPingCounter(Mockito.mock(Listeners.class), plugin, null, null, null, null);
+        VelocityPingCounter counter = new VelocityPingCounter(Mockito.mock(Listeners.class), plugin, null, null, null);
 
         assertTrue(counter.playerHistory.isEmpty());
-        counter.addPlayer(player);
+        counter.addPlayer(player.getUniqueId());
         assertFalse(counter.playerHistory.isEmpty());
 
         counter.run();

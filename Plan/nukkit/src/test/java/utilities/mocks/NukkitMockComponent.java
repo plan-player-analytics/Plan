@@ -20,6 +20,7 @@ import com.djrapitops.plan.DaggerPlanNukkitComponent;
 import com.djrapitops.plan.PlanNukkit;
 import com.djrapitops.plan.PlanNukkitComponent;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.storage.database.SQLDB;
 
 import java.nio.file.Path;
 
@@ -37,6 +38,7 @@ public class NukkitMockComponent {
 
     public NukkitMockComponent(Path tempDir) {
         this.tempDir = tempDir;
+        SQLDB.setDownloadDriver(false);
     }
 
     public PlanNukkit getPlanMock() throws Exception {
