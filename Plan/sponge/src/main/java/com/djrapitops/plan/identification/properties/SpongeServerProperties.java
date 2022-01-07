@@ -32,15 +32,16 @@ public class SpongeServerProperties extends ServerProperties {
 
     @Inject
     public SpongeServerProperties(Game game) {
+        // Port and max players cannot be provided as Game#server will fail when this is called (ConstructPluginEvent)
         super(
                 "Sponge",
-                game.server().boundAddress().orElseGet(() -> new InetSocketAddress(25565)).getPort(),
+                -1, //game.server().boundAddress().orElseGet(() -> new InetSocketAddress(25565)).getPort(),
                 game.platform().minecraftVersion().name(),
                 game.platform().minecraftVersion().name(),
                 () -> game.server().boundAddress()
                         .orElseGet(() -> new InetSocketAddress(25565))
                         .getAddress().getHostAddress(),
-                game.server().maxPlayers()
+                -1 //game.server().maxPlayers()
         );
     }
 }

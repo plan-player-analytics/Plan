@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.use.ColorScheme;
+import com.djrapitops.plan.commands.use.SpongeCommand;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
@@ -44,6 +45,8 @@ import org.spongepowered.plugin.builtin.jvm.Plugin;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -99,25 +102,63 @@ public class PlanSponge implements PlanPlugin {
         abstractionLayer = new SpongePlatformLayer(plugin, dataFolder);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
+
+        catchStartupErrors(() -> {
+            component = makeComponent();
+            system = component.system();
+            system.enableForCommands();
+        });
     }
 
     public void onEnable() {
-        PlanSpongeComponent component = DaggerPlanSpongeComponent.builder()
-                .plan(this)
-                .abstractionLayer(abstractionLayer)
-                .game(Sponge.game())
-                .build();
-        try {
-            system = component.system();
+        catchStartupErrors(() -> {
+            boolean firstBoot = component != null;
+            if (firstBoot && system == null) {
+                // Already failed to load. Prevent throwing any more errors than necessary
+                return;
+            }
+
+            if (!firstBoot) {
+                // Reinitialize component & system
+                component = makeComponent();
+                system = component.system();
+            }
+
             serverShutdownSave = component.serverShutdownSave();
             locale = system.getLocaleSystem().getLocale();
-            system.enable();
+
+            if (firstBoot) {
+                // First boot, only enable what isn't already enabled
+                system.enableOtherThanCommands();
+            } else {
+                // Not first boot, enable everything normally
+                system.enable();
+            }
 
             new BStatsSponge(
                     metrics, system.getDatabaseSystem().getDatabase()
             ).registerMetrics();
 
             logger.info(locale.getString(PluginLang.ENABLED));
+        });
+
+        // Registering command is done through onRegisterCommand
+        if (system != null) {
+            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
+        }
+    }
+
+    private PlanSpongeComponent makeComponent() {
+        return DaggerPlanSpongeComponent.builder()
+                .plan(this)
+                .abstractionLayer(abstractionLayer)
+                .game(Sponge.game())
+                .build();
+    }
+
+    private void catchStartupErrors(Runnable task) {
+        try {
+            task.run();
         } catch (AbstractMethodError e) {
             logger.error("Plugin ran into AbstractMethodError - Server restart is required. Likely cause is updating the jar without a restart.");
         } catch (EnableException e) {
@@ -133,13 +174,10 @@ public class PlanSponge implements PlanPlugin {
             logger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
-        registerCommand(component.planCommand().build());
-        if (system != null) {
-            system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
-        }
     }
 
     public void onDisable() {
+        component = null;
         storeSessionsOnShutdown();
         cancelAllTasks();
         if (system != null) system.disable();
@@ -185,10 +223,9 @@ public class PlanSponge implements PlanPlugin {
 
     @Listener
     public void onRegisterCommand(RegisterCommandEvent<Command.Raw> event) {
-        // TODO(vankka): component not available here, yet
-//        Subcommand command = component.planCommand().build();
-//        List<String> aliases = new ArrayList<>(command.getAliases());
-//        event.register(plugin, new SpongeCommand(runnableFactory, system.getErrorLogger(), command), aliases.remove(0), aliases.toArray(new String[0]));
+        Subcommand command = component.planCommand().build();
+        List<String> aliases = new ArrayList<>(command.getAliases());
+        event.register(plugin, new SpongeCommand(runnableFactory, system.getErrorLogger(), command), aliases.remove(0), aliases.toArray(new String[0]));
     }
 
     @Override
