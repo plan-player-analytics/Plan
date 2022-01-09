@@ -23,7 +23,8 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.storage.database.queries.*;
+import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
+import com.djrapitops.plan.storage.database.queries.QueriesTestAggregate;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
@@ -52,18 +53,7 @@ import static org.mockito.Mockito.when;
  * @see ExtensionsDatabaseTest
  */
 @ExtendWith(MockitoExtension.class)
-public class SQLiteTest implements DatabaseTest,
-        DatabaseBackupTest,
-        ExtensionsDatabaseTest,
-        ActivityIndexQueriesTest,
-        GeolocationQueriesTest,
-        NicknameQueriesTest,
-        PingQueriesTest,
-        SessionQueriesTest,
-        ServerQueriesTest,
-        TPSQueriesTest,
-        UserInfoQueriesTest,
-        WebUserQueriesTest {
+public class SQLiteTest implements DatabaseTest, QueriesTestAggregate {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 

@@ -43,8 +43,8 @@ public class TopListQueries {
                 WHERE + SessionsTable.SERVER_UUID + "=?" +
                 AND + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
-                ORDER_BY + "playtime DESC" +
                 GROUP_BY + "name" +
+                ORDER_BY + "playtime DESC" +
                 LIMIT + "10" +
                 OFFSET + "?";
 
@@ -54,7 +54,7 @@ public class TopListQueries {
                 statement.setString(1, serverUUID.toString());
                 statement.setLong(2, after);
                 statement.setLong(3, before);
-                statement.setInt(4, n);
+                statement.setInt(4, n - 1);
             }
 
             @Override
@@ -76,8 +76,8 @@ public class TopListQueries {
                 WHERE + SessionsTable.SERVER_UUID + "=?" +
                 AND + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
-                ORDER_BY + "active_playtime DESC" +
                 GROUP_BY + "name" +
+                ORDER_BY + "active_playtime DESC" +
                 LIMIT + "10" +
                 OFFSET + "?";
 
@@ -87,7 +87,7 @@ public class TopListQueries {
                 statement.setString(1, serverUUID.toString());
                 statement.setLong(2, after);
                 statement.setLong(3, before);
-                statement.setInt(4, n);
+                statement.setInt(4, n - 1);
             }
 
             @Override
