@@ -1,0 +1,4003 @@
+{
+  "kill_data": {
+    "deaths_7d": 0,
+    "mob_deaths_7d": 0,
+    "mob_kills_total": 39,
+    "player_kdr_30d": "0",
+    "player_kills_7d": 0,
+    "player_deaths_total": 0,
+    "deaths_30d": 0,
+    "deaths_total": 2,
+    "player_kills_total": 0,
+    "mob_deaths_30d": 0,
+    "player_deaths_30d": 0,
+    "mob_kdr_30d": "0",
+    "player_kdr_total": "0",
+    "weapon_3rd": "-",
+    "mob_kdr_7d": "0",
+    "player_kdr_7d": "0",
+    "player_kills_30d": 0,
+    "weapon_2nd": "-",
+    "player_deaths_7d": 0,
+    "mob_deaths_total": 2,
+    "mob_kills_7d": 0,
+    "mob_kdr_total": "19,5",
+    "weapon_1st": "-",
+    "mob_kills_30d": 0
+  },
+  "sessions": [
+    {
+      "server_name": "Server 1",
+      "start": "Jan 9 2022, 13:00",
+      "length": "20s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              20157
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Jan 9 2022, 13:00",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 20157,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Jan 9 2022, 12:47",
+      "length": "15s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              15065
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Jan 9 2022, 12:47",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 15065,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Jul 24 2021, 15:21",
+      "length": "13s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              13595
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Jul 24 2021, 15:21",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 13595,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Jul 24 2021, 15:19",
+      "length": "21s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              21878
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Jul 24 2021, 15:19",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 21878,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Jul 17 2021, 16:00",
+      "length": "3s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              3621
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Jul 17 2021, 16:00",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 3621,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Jul 17 2021, 15:49",
+      "length": "7s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              7582
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Jul 17 2021, 15:49",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 7582,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Jul 2 2021, 17:57",
+      "length": "9s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              9898
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Jul 2 2021, 17:58",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 9898,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Jul 2 2021, 17:41",
+      "length": "12s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              12040
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Jul 2 2021, 17:41",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 12040,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 28 2021, 10:52",
+      "length": "26s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              26638
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 28 2021, 10:52",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 26638,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 28 2021, 10:48",
+      "length": "7s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              7877
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 28 2021, 10:48",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 7877,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 28 2021, 10:47",
+      "length": "6s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              6019
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 28 2021, 10:47",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 6019,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 28 2021, 10:45",
+      "length": "56s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              56430
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 28 2021, 10:46",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 56430,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 28 2021, 10:38",
+      "length": "22s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              22824
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 28 2021, 10:39",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 22824,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 28 2021, 10:34",
+      "length": "2m 31s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              151559
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 28 2021, 10:37",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 151559,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 25 2021, 11:18",
+      "length": "14s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              14600
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 25 2021, 11:19",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 14600,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 25 2021, 10:42",
+      "length": "4m 4s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              244891
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "4m 1s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 25 2021, 10:46",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 244891,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 25 2021, 10:23",
+      "length": "17s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              17193
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_nether (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 25 2021, 10:23",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_nether",
+          "y": 17193,
+          "color": "#0099C6",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 26 2021, 09:30",
+      "length": "28s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              24556
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        },
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              3695
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (86,92%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 26 2021, 09:31",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 24556,
+          "color": "#0099C6",
+          "drilldown": "world"
+        },
+        {
+          "name": "world_nether",
+          "y": 3695,
+          "color": "#66AA00",
+          "drilldown": "world_nether"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 26 2021, 09:30",
+      "length": "11s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              7500
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              4018
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 26 2021, 09:30",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 11518,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 26 2021, 09:21",
+      "length": "8m 25s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              505199
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_the_end",
+          "id": "world_the_end"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_the_end (100%)",
+      "first_session": false,
+      "mob_kills": 1,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 26 2021, 09:29",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_the_end",
+          "y": 505199,
+          "color": "#0099C6",
+          "drilldown": "world_the_end"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 1
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 26 2021, 09:21",
+      "length": "7s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              7138
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_the_end",
+          "id": "world_the_end"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_the_end (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 26 2021, 09:21",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_the_end",
+          "y": 7138,
+          "color": "#0099C6",
+          "drilldown": "world_the_end"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 26 2021, 09:16",
+      "length": "32s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              4266
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              22205
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_the_end",
+          "id": "world_the_end"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world_the_end (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 26 2021, 09:17",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world_the_end",
+          "y": 26471,
+          "color": "#0099C6",
+          "drilldown": "world_the_end"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 26 2021, 09:15",
+      "length": "21s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_the_end",
+          "id": "world_the_end"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "- (−0%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 26 2021, 09:15",
+      "player_name": "AuroraLS3",
+      "world_series": [],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 26 2021, 09:00",
+      "length": "13m 41s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              803350
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        },
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_the_end",
+          "id": "world_the_end"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 26 2021, 09:14",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 803350,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 19 2021, 16:54",
+      "length": "2s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "- (−0%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 19 2021, 16:54",
+      "player_name": "AuroraLS3",
+      "world_series": [],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 19 2021, 16:52",
+      "length": "2m 5s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "- (−0%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 19 2021, 16:54",
+      "player_name": "AuroraLS3",
+      "world_series": [],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 15 2021, 13:44",
+      "length": "4s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "- (−0%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 15 2021, 13:44",
+      "player_name": "AuroraLS3",
+      "world_series": [],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 13 2021, 10:09",
+      "length": "13s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              13975
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 13 2021, 10:10",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 13975,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 13 2021, 09:34",
+      "length": "17s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              17131
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 13 2021, 09:34",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 17131,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 13 2021, 09:22",
+      "length": "17s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              17993
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 1,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 13 2021, 09:22",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 17993,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Mar 11 2021, 10:43",
+      "length": "31s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              31238
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 5,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Mar 11 2021, 10:43",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 31238,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 23 2021, 08:26",
+      "length": "1m 25s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              85903
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 5,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 23 2021, 08:27",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 85903,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 22 2021, 15:14",
+      "length": "29m 11s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              64776
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              1686456
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "12m 23s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 22 2021, 15:43",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 1751232,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 22 2021, 14:56",
+      "length": "11m 59s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              719374
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 22 2021, 15:08",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 719374,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 22 2021, 14:42",
+      "length": "3m 59s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              239206
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 22 2021, 14:46",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 239206,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 22 2021, 14:39",
+      "length": "2m 29s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              149408
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 22 2021, 14:42",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 149408,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 22 2021, 14:28",
+      "length": "10m 49s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              649106
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 1,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 22 2021, 14:39",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 649106,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 22 2021, 14:24",
+      "length": "3m 19s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              11624
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              187410
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 1,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 22 2021, 14:28",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 199034,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 22 2021, 14:14",
+      "length": "9m 47s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              396488
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              191365
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 25,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 22 2021, 14:23",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 587853,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 1
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Feb 19 2021, 08:39",
+      "length": "4m 17s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              257095
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "42a0eb41-028a-3c42-b87f-b5aeb2e72339",
+      "most_used_world": "world (100%)",
+      "first_session": true,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Feb 19 2021, 08:44",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 257095,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "9f1f9747-8019-41a5-9d0d-21efbbaa7ba9",
+      "deaths": 0
+    }
+  ],
+  "calendar_series": [
+    {
+      "title": "Registered: Feb 19 2021, 08:39",
+      "start": 1613716789654,
+      "color": "#8BC34A"
+    },
+    {
+      "title": "Playtime: 4m 31s",
+      "start": "2021-04-28",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 6",
+      "start": "2021-04-28"
+    },
+    {
+      "title": "Playtime: 4s",
+      "start": "2021-03-15",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 1",
+      "start": "2021-03-15"
+    },
+    {
+      "title": "Playtime: 23m 47s",
+      "start": "2021-03-26",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 7",
+      "start": "2021-03-26"
+    },
+    {
+      "title": "Playtime: 1m 25s",
+      "start": "2021-02-23",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 1",
+      "start": "2021-02-23"
+    },
+    {
+      "title": "Playtime: 35s",
+      "start": "2022-01-09",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 2",
+      "start": "2022-01-09"
+    },
+    {
+      "title": "Playtime: 49s",
+      "start": "2021-03-13",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 3",
+      "start": "2021-03-13"
+    },
+    {
+      "title": "Playtime: 4m 36s",
+      "start": "2021-04-25",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 3",
+      "start": "2021-04-25"
+    },
+    {
+      "title": "Playtime: 1h 11m 35s",
+      "start": "2021-02-22",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 7",
+      "start": "2021-02-22"
+    },
+    {
+      "title": "Playtime: 31s",
+      "start": "2021-03-11",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 1",
+      "start": "2021-03-11"
+    },
+    {
+      "title": "Playtime: 21s",
+      "start": "2021-07-02",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 2",
+      "start": "2021-07-02"
+    },
+    {
+      "title": "Playtime: 35s",
+      "start": "2021-07-24",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 2",
+      "start": "2021-07-24"
+    },
+    {
+      "title": "Playtime: 4m 17s",
+      "start": "2021-02-19",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 1",
+      "start": "2021-02-19"
+    },
+    {
+      "title": "Playtime: 2m 7s",
+      "start": "2021-03-19",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 2",
+      "start": "2021-03-19"
+    },
+    {
+      "title": "Playtime: 11s",
+      "start": "2021-07-17",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 2",
+      "start": "2021-07-17"
+    },
+    {
+      "title": "Session: 20s",
+      "start": 1641733237714,
+      "end": 1641733257871
+    },
+    {
+      "title": "Session: 15s",
+      "start": 1641732437607,
+      "end": 1641732452672
+    },
+    {
+      "title": "Session: 13s",
+      "start": 1627140073160,
+      "end": 1627140086755
+    },
+    {
+      "title": "Session: 21s",
+      "start": 1627139969571,
+      "end": 1627139991449
+    },
+    {
+      "title": "Session: 3s",
+      "start": 1626537640423,
+      "end": 1626537644044
+    },
+    {
+      "title": "Session: 7s",
+      "start": 1626536968214,
+      "end": 1626536975796
+    },
+    {
+      "title": "Session: 9s",
+      "start": 1625248670459,
+      "end": 1625248680357
+    },
+    {
+      "title": "Session: 12s",
+      "start": 1625247672796,
+      "end": 1625247684836
+    },
+    {
+      "title": "Session: 26s",
+      "start": 1619607124691,
+      "end": 1619607151329
+    },
+    {
+      "title": "Session: 7s",
+      "start": 1619606927753,
+      "end": 1619606935630
+    },
+    {
+      "title": "Session: 6s",
+      "start": 1619606844393,
+      "end": 1619606850412
+    },
+    {
+      "title": "Session: 56s",
+      "start": 1619606750625,
+      "end": 1619606807055
+    },
+    {
+      "title": "Session: 22s",
+      "start": 1619606331714,
+      "end": 1619606354538
+    },
+    {
+      "title": "Session: 2m 31s",
+      "start": 1619606075604,
+      "end": 1619606227163
+    },
+    {
+      "title": "Session: 14s",
+      "start": 1619349535773,
+      "end": 1619349550373
+    },
+    {
+      "title": "Session: 4m 4s",
+      "start": 1619347373075,
+      "end": 1619347617966
+    },
+    {
+      "title": "Session: 17s",
+      "start": 1619346205223,
+      "end": 1619346222416
+    },
+    {
+      "title": "Session: 28s",
+      "start": 1616751041794,
+      "end": 1616751070045
+    },
+    {
+      "title": "Session: 11s",
+      "start": 1616751028478,
+      "end": 1616751039996
+    },
+    {
+      "title": "Session: 8m 25s",
+      "start": 1616750488344,
+      "end": 1616750993543
+    },
+    {
+      "title": "Session: 7s",
+      "start": 1616750470357,
+      "end": 1616750477495
+    },
+    {
+      "title": "Session: 32s",
+      "start": 1616750209980,
+      "end": 1616750242377
+    },
+    {
+      "title": "Session: 21s",
+      "start": 1616750101469,
+      "end": 1616750123379
+    },
+    {
+      "title": "Session: 13m 41s",
+      "start": 1616749253684,
+      "end": 1616750074980
+    },
+    {
+      "title": "Session: 2s",
+      "start": 1616172895030,
+      "end": 1616172897428
+    },
+    {
+      "title": "Session: 2m 5s",
+      "start": 1616172768159,
+      "end": 1616172893529
+    },
+    {
+      "title": "Session: 4s",
+      "start": 1615815875746,
+      "end": 1615815880697
+    },
+    {
+      "title": "Session: 13s",
+      "start": 1615630195297,
+      "end": 1615630209272
+    },
+    {
+      "title": "Session: 17s",
+      "start": 1615628055418,
+      "end": 1615628072550
+    },
+    {
+      "title": "Session: 17s",
+      "start": 1615627333746,
+      "end": 1615627351739
+    },
+    {
+      "title": "Session: 31s",
+      "start": 1615459399417,
+      "end": 1615459430655
+    },
+    {
+      "title": "Session: 1m 25s",
+      "start": 1614068793946,
+      "end": 1614068879849
+    },
+    {
+      "title": "Session: 29m 11s",
+      "start": 1614006855860,
+      "end": 1614008607090
+    },
+    {
+      "title": "Session: 11m 59s",
+      "start": 1614005765006,
+      "end": 1614006484380
+    },
+    {
+      "title": "Session: 3m 59s",
+      "start": 1614004973534,
+      "end": 1614005212740
+    },
+    {
+      "title": "Session: 2m 29s",
+      "start": 1614004797185,
+      "end": 1614004946593
+    },
+    {
+      "title": "Session: 10m 49s",
+      "start": 1614004118239,
+      "end": 1614004767345
+    },
+    {
+      "title": "Session: 3m 19s",
+      "start": 1614003883236,
+      "end": 1614004082268
+    },
+    {
+      "title": "Session: 9m 47s",
+      "start": 1614003251774,
+      "end": 1614003839625
+    },
+    {
+      "title": "Session: 4m 17s",
+      "start": 1613723989686,
+      "end": 1613724246781
+    }
+  ],
+  "player_deaths": [],
+  "gm_series": [
+    {
+      "data": [
+        [
+          "SURVIVAL",
+          1409950
+        ],
+        [
+          "SPECTATOR",
+          0
+        ],
+        [
+          "CREATIVE",
+          6970544
+        ],
+        [
+          "ADVENTURE",
+          0
+        ]
+      ],
+      "name": "world",
+      "id": "world"
+    },
+    {
+      "data": [
+        [
+          "SURVIVAL",
+          4266
+        ],
+        [
+          "SPECTATOR",
+          0
+        ],
+        [
+          "CREATIVE",
+          534542
+        ],
+        [
+          "ADVENTURE",
+          0
+        ]
+      ],
+      "name": "world_the_end",
+      "id": "world_the_end"
+    },
+    {
+      "data": [
+        [
+          "SURVIVAL",
+          0
+        ],
+        [
+          "SPECTATOR",
+          0
+        ],
+        [
+          "CREATIVE",
+          655562
+        ],
+        [
+          "ADVENTURE",
+          0
+        ]
+      ],
+      "name": "world_nether",
+      "id": "world_nether"
+    }
+  ],
+  "world_pie_series": [
+    {
+      "name": "world",
+      "y": 8380494,
+      "color": "#0099C6",
+      "drilldown": "world"
+    },
+    {
+      "name": "world_nether",
+      "y": 655562,
+      "color": "#66AA00",
+      "drilldown": "world_nether"
+    },
+    {
+      "name": "world_the_end",
+      "y": 538808,
+      "color": "#316395",
+      "drilldown": "world_the_end"
+    }
+  ],
+  "server_pie_colors": [
+    "#0099C6",
+    "#66AA00",
+    "#316395",
+    "#994499",
+    "#22AA99",
+    "#AAAA11",
+    "#6633CC",
+    "#E67300",
+    "#329262",
+    "#5574A6"
+  ],
+  "servers": [
+    {
+      "server_name": "Server 1",
+      "last_seen": "Jan 9 2022, 13:00",
+      "registered": "Feb 19 2021, 08:39",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              1409950
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              6970544
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        },
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              4266
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              534542
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_the_end",
+          "id": "world_the_end"
+        },
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              0
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              655562
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world_nether",
+          "id": "world_nether"
+        }
+      ],
+      "playtime": "1h 55m 30s",
+      "session_median": "22s",
+      "world_pie_series": [
+        {
+          "name": "world",
+          "y": 8380494,
+          "color": "#0099C6",
+          "drilldown": "world"
+        },
+        {
+          "name": "world_nether",
+          "y": 655562,
+          "color": "#66AA00",
+          "drilldown": "world_nether"
+        },
+        {
+          "name": "world_the_end",
+          "y": 538808,
+          "color": "#316395",
+          "drilldown": "world_the_end"
+        }
+      ],
+      "operator": false,
+      "mob_kills": 39,
+      "afk_time": "16m 25s",
+      "session_count": 40,
+      "player_kills": 0,
+      "longest_session_length": "29m 11s",
+      "banned": false,
+      "deaths": 2
+    }
+  ],
+  "server_pie_series": [
+    {
+      "name": "Server 1",
+      "y": 9574864
+    }
+  ],
+  "online_activity": {
+    "session_count_30d": 2,
+    "session_count_7d": 0,
+    "afk_time_7d": "0s",
+    "mob_kill_count_30d": 0,
+    "active_playtime_7d": "0s",
+    "mob_kill_count_7d": 0,
+    "afk_time_30d": "0s",
+    "average_session_length_30d": "17s",
+    "death_count_30d": 0,
+    "active_playtime_30d": "35s",
+    "average_session_length_7d": "0s",
+    "median_session_length_7d": "-",
+    "median_session_length_30d": "17s",
+    "playtime_30d": "35s",
+    "player_kill_count_30d": 0,
+    "death_count_7d": 0,
+    "playtime_7d": "0s",
+    "player_kill_count_7d": 0
+  },
+  "player_kills": [],
+  "sessions_per_page": 50,
+  "punchcard_series": [
+    {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 0,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 0,
+      "z": 12,
+      "marker": {
+        "radius": 12
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 0,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 1,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 2,
+      "z": 12,
+      "marker": {
+        "radius": 12
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 3,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 4,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 4,
+      "z": 14,
+      "marker": {
+        "radius": 14
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 4,
+      "z": 6,
+      "marker": {
+        "radius": 6
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 4,
+      "z": 6,
+      "marker": {
+        "radius": 6
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 5,
+      "z": 6,
+      "marker": {
+        "radius": 6
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 5,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 5,
+      "z": 8,
+      "marker": {
+        "radius": 8
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 5,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 6,
+      "z": 6,
+      "marker": {
+        "radius": 6
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 6,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 6,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 6,
+      "z": 5,
+      "marker": {
+        "radius": 5
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    }
+  ],
+  "nicknames": [
+    {
+      "nickname": "AuroraLS3",
+      "server": "Server 1",
+      "date": "Mar 23 2021, 12:13"
+    }
+  ],
+  "connections": [
+    {
+      "geolocation": "Local Machine",
+      "date": "Jan 9 2022, 13:00"
+    }
+  ],
+  "info": {
+    "kick_count": 2,
+    "last_seen": "Jan 9 2022, 13:00",
+    "favorite_server": "Server 1",
+    "mob_kill_count": 39,
+    "player_kill_count": 0,
+    "registered": "Feb 19 2021, 08:39",
+    "name": "AuroraLS3",
+    "activity_index_group": "Inactive",
+    "playtime": "1h 55m 30s",
+    "session_median": "22s",
+    "active_playtime": "1h 39m 5s",
+    "operator": false,
+    "afk_time": "16m 25s",
+    "death_count": 2,
+    "worst_ping": "Unavailable",
+    "session_count": 40,
+    "online": false,
+    "longest_session_length": "29m 11s",
+    "best_ping": "Unavailable",
+    "banned": false,
+    "activity_index": "0,05",
+    "average_ping": "Unavailable"
+  },
+  "first_day": 1
+}

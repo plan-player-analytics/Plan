@@ -166,6 +166,8 @@ public class PlayerJSONCreator {
 
         Map<String, Object> info = new HashMap<>();
 
+        info.put("name", player.getValue(PlayerKeys.NAME).orElse(player.getUnsafe(PlayerKeys.UUID).toString()));
+        info.put("uuid", player.getUnsafe(PlayerKeys.UUID).toString());
         info.put("online", SessionCache.getCachedSession(player.getUnsafe(PlayerKeys.UUID)).isPresent());
         info.put("operator", player.getValue(PlayerKeys.OPERATOR).orElse(false));
         info.put("banned", player.getValue(PlayerKeys.BANNED).orElse(false));
