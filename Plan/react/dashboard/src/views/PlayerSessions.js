@@ -1,10 +1,13 @@
 import React from "react";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCalendar, faCalendarAlt, faHandPointer} from "@fortawesome/free-regular-svg-icons";
+import {faCalendar, faCalendarAlt, faClock, faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import PlayerSessionCalendar from "../components/calendar/PlayerSessionCalendar";
 import Scrollable from "../components/Scrollable";
 import SessionAccordion from "../components/accordion/SessionAccordion";
+import WorldPie from "../components/graphs/WorldPie";
+import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
+import ServerPie from "../components/graphs/ServerPie";
 
 const Header = ({player}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -41,6 +44,37 @@ const RecentSessionsCard = ({player}) => (
     </Card>
 )
 
+const WorldPieCard = ({player}) => (
+    <Card>
+        <Card.Header>
+            <h6 className="col-black" style={{width: '100%'}}>
+                <Fa icon={faClock} className="col-teal"/> World Playtime
+            </h6>
+        </Card.Header>
+        <WorldPie
+            id="world-pie"
+            gmColors={[]}
+            worldSeries={player.world_pie_series}
+            gmSeries={player.gm_series}
+        />
+    </Card>
+)
+
+const ServerPieCard = ({player}) => (
+    <Card>
+        <Card.Header>
+            <h6 className="col-black" style={{width: '100%'}}>
+                <Fa icon={faNetworkWired} className="col-teal"/> Server Playtime
+            </h6>
+        </Card.Header>
+        <ServerPie
+            colors={player.server_pie_colors}
+            series={player.server_pie_series}
+        />
+    </Card>
+)
+
+
 const PlayerSessions = ({player}) => {
     return (
         <section className="player_sessions">
@@ -49,6 +83,10 @@ const PlayerSessions = ({player}) => {
                 <Col lg={8}>
                     <SessionCalendarCard player={player}/>
                     <RecentSessionsCard player={player}/>
+                </Col>
+                <Col lg={4}>
+                    <WorldPieCard player={player}/>
+                    <ServerPieCard player={player}/>
                 </Col>
             </Row>
         </section>

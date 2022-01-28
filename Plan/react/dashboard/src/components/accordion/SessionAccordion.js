@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCrosshairs, faServer, faSignal, faSkull} from "@fortawesome/free-solid-svg-icons";
+import {faCrosshairs, faServer, faSignal, faSkull, faUser} from "@fortawesome/free-solid-svg-icons";
 import {faCalendarPlus, faClock, faMap} from "@fortawesome/free-regular-svg-icons";
 import Datapoint from "../Datapoint";
 import {Col, Row} from "react-bootstrap-v5";
+import WorldPie from "../graphs/WorldPie";
+import KillsTable from "../table/KillsTable";
 
 // TODO Fix animations
-// TODO World pie
-// TODO Kills table
 
 const SessionHeader = ({session, onClick}) => {
     let style = session.start.includes("Online") ? 'bg-teal' : 'bg-teal-outline';
@@ -25,7 +25,9 @@ const SessionHeader = ({session, onClick}) => {
     )
 }
 
-const SessionBody = ({session, open}) => {
+const SessionBody = ({i, session, open}) => {
+    if (!open) return <tr/>
+
     return (
         <tr className={"collapse" + (open ? ' show' : '')} data-bs-parent="#tableAccordion" id="session_t_${i}">
             <td colSpan="4">
@@ -65,16 +67,21 @@ const SessionBody = ({session, open}) => {
                             name="Deaths" value={session.deaths} bold
                         />
                         <hr/>
+                        <KillsTable kills={session.player_kills}/>
                     </Col>
-                    <div className="col-xs-12  col-sm-12 col-md-6 col-lg-6">
-                        <div id="worldpie_${i}" className="chart-pie"></div>
-                        <a href="${session.network_server ? `./player/` : `../player/`}${session.player_uuid}"
+                    <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                        <WorldPie id={"worldpie_" + i}
+                                  worldSeries={session.world_series}
+                                  gmColors={[]}
+                                  gmSeries={session.gm_series}/>
+                        <a href={session.network_server ? `./player/` : `../player/` + session.player_uuid}
                            className="float-end btn bg-blue">
-                            <i className="fa fa-user"></i><span> Player Page</span>
+                            <Fa icon={faUser}/> Player Page
                         </a>
-                        {session.network_server ? `<a href="./server/${session.server_url_name}" class="float-end btn bg-light-green me-2">
-                                <i class="fa fa-server"></i><span> Server Analysis</span>
-                            </a>` : ``}
+                        {session.network_server ? <a href={"./server/" + session.server_url_name}
+                                                     className="float-end btn bg-light-green me-2">
+                            <Fa icon={faServer}/> Server Analysis
+                        </a> : ''}
                     </div>
                 </Row>
             </td>
@@ -82,15 +89,11 @@ const SessionBody = ({session, open}) => {
     )
 }
 
-const Session = (
-    {
-        session, open, onClick
-    }
-) => {
+const Session = ({i, session, open, onClick}) => {
     return (
         <>
             <SessionHeader session={session} onClick={onClick}/>
-            <SessionBody session={session} open={open}/>
+            <SessionBody i={i} session={session} open={open}/>
         </>
     )
 }
@@ -117,7 +120,7 @@ const SessionAccordion = (
             </tr>
             </thead>
             <tbody>
-            {sessions.map((session, i) => <Session key={'session-' + i} session={session}
+            {sessions.map((session, i) => <Session key={'session-' + i} i={i} session={session}
                                                    open={openSession === i}
                                                    onClick={() => toggleSession(i)}/>)}
             </tbody>

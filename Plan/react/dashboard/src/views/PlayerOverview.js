@@ -21,6 +21,7 @@ import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import Scrollable from "../components/Scrollable";
 import PunchCard from "../components/graphs/PunchCard";
 import Datapoint from "../components/Datapoint";
+import AsNumbersTable, {TableRow} from "../components/table/AsNumbersTable";
 
 const Header = ({player}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -200,56 +201,24 @@ const OnlineActivityCard = ({player}) => (
                 <Fa icon={faBookOpen}/> Online Activity
             </h6>
         </Card.Header>
-        <table className="table" id="data_online_activity">
-            <thead>
-            <th/>
-            <th>Last 30 days</th>
-            <th>Last 7 days</th>
-            </thead>
-            <tbody>
-            <tr>
-                <td><Fa icon={faClock} className="col-green"/> Playtime</td>
-                <td>{player.online_activity.playtime_30d}</td>
-                <td>{player.online_activity.playtime_7d}</td>
-            </tr>
-            <tr>
-                <td><Fa icon={faClock} className="col-green"/> Active Playtime</td>
-                <td>{player.online_activity.active_playtime_30d}</td>
-                <td>{player.online_activity.active_playtime_7d}</td>
-            </tr>
-            <tr>
-                <td><Fa icon={faClock} className="col-grey"/> AFK Time</td>
-                <td>{player.online_activity.afk_time_30d}</td>
-                <td>{player.online_activity.afk_time_7d}</td>
-            </tr>
-            <tr>
-
-                <td><Fa icon={faClock} className="col-teal"/> Median Session Length</td>
-                <td>{player.online_activity.median_session_length_30d}</td>
-                <td>{player.online_activity.median_session_length_7d}</td>
-            </tr>
-            <tr>
-                <td><Fa icon={faCalendarCheck} className="col-teal"/> Sessions</td>
-                <td>{player.online_activity.session_count_30d}</td>
-                <td>{player.online_activity.session_count_7d}</td>
-            </tr>
-            <tr>
-                <td><Fa icon={faCrosshairs} className="col-red"/> Player Kills</td>
-                <td>{player.online_activity.player_kill_count_30d}</td>
-                <td>{player.online_activity.player_kill_count_7d}</td>
-            </tr>
-            <tr>
-                <td><Fa icon={faCrosshairs} className="col-green"/> Mob Kills</td>
-                <td>{player.online_activity.mob_kill_count_30d}</td>
-                <td>{player.online_activity.mob_kill_count_7d}</td>
-            </tr>
-            <tr>
-                <td><Fa icon={faSkull} className="col-black"/> Deaths</td>
-                <td>{player.online_activity.death_count_30d}</td>
-                <td>{player.online_activity.death_count_7d}</td>
-            </tr>
-            </tbody>
-        </table>
+        <AsNumbersTable headers={['Last 30 days', 'Last 7 days']}>
+            <TableRow icon={faClock} color="green" text="Playtime"
+                      values={[player.online_activity.playtime_30d, player.online_activity.playtime_7d]}/>
+            <TableRow icon={faClock} color="green" text="Active Playtime"
+                      values={[player.online_activity.active_playtime_30d, player.online_activity.active_playtime_7d]}/>
+            <TableRow icon={faClock} color="gray" text="AFK Time"
+                      values={[player.online_activity.afk_time_30d, player.online_activity.afk_time_7d]}/>
+            <TableRow icon={faClock} color="teal" text="Median Session Length"
+                      values={[player.online_activity.median_session_length_30d, player.online_activity.median_session_length_7d]}/>
+            <TableRow icon={faCalendarCheck} color="teal" text="Sessions"
+                      values={[player.online_activity.session_count_30d, player.online_activity.session_count_7d]}/>
+            <TableRow icon={faCrosshairs} color="red" text="Player Kills"
+                      values={[player.online_activity.player_kill_count_30d, player.online_activity.player_kill_count_7d]}/>
+            <TableRow icon={faCrosshairs} color="green" text="Mob Kills"
+                      values={[player.online_activity.mob_kill_count_30d, player.online_activity.mob_kill_count_7d]}/>
+            <TableRow icon={faSkull} color="black" text="Deaths"
+                      values={[player.online_activity.death_count_30d, player.online_activity.death_count_7d]}/>
+        </AsNumbersTable>
     </Card>
 )
 
