@@ -2410,7 +2410,7 @@ a.text-dark:hover, a.text-dark:focus {
     display: block;
 }
 
-.sidebar .nav-item.active .nav-link {
+.sidebar .nav-item .nav-link.active {
     font-weight: 700;
 }
 
@@ -2747,11 +2747,11 @@ a.text-dark:hover, a.text-dark:focus {
     color: #b7b9cc;
 }
 
-.sidebar-light .nav-item.active .nav-link {
+.sidebar-light .nav-item .nav-link.active {
     color: #6e707e;
 }
 
-.sidebar-light .nav-item.active .nav-link i {
+.sidebar-light .nav-item .nav-link.active i {
     color: #6e707e;
 }
 
@@ -2799,11 +2799,11 @@ a.text-dark:hover, a.text-dark:focus {
     color: rgba(255, 255, 255, 0.5);
 }
 
-.sidebar-dark .nav-item.active .nav-link {
+.sidebar-dark .nav-item .nav-link.active {
     color: #fff;
 }
 
-.sidebar-dark .nav-item.active .nav-link i {
+.sidebar-dark .nav-item .nav-link.active i {
     color: #fff;
 }
 

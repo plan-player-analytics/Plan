@@ -10,6 +10,7 @@ import {
     faPalette,
     faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
+import {NavLink, useParams} from "react-router-dom";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center">
@@ -21,11 +22,11 @@ const Divider = () => (
     <hr className="sidebar-divider my-0"/>
 )
 
-const Item = ({active, href, icon, name}) => (
-    <li className={"nav-item nav-button" + (active ? ' active' : '')}>
-        <a className="nav-link" href={href}>
+const Item = ({href, icon, name}) => (
+    <li className={"nav-item nav-button"}>
+        <NavLink to={href} className={({isActive}) => isActive ? "nav-link active" : "nav-link"}>
             <Fa icon={icon}/> <span>{name}</span>
-        </a>
+        </NavLink>
     </li>
 )
 
@@ -52,14 +53,16 @@ const FooterButtons = () => (
 )
 
 const Sidebar = ({}) => {
+    let {identifier} = useParams();
+
     return (
         <ul className="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
             <Logo/>
             <Divider/>
-            <Item active={true} href={"#tab-player-overview"} icon={faInfoCircle} name="Player Overview"/>
-            <Item active={false} href={"#tab-player-overview"} icon={faCalendar} name="Sessions"/>
-            <Item active={false} href={"#tab-player-overview"} icon={faCampground} name="PvP & PvE"/>
-            <Item active={false} href={"#tab-player-overview"} icon={faNetworkWired} name="Servers Overview"/>
+            <Item active={true} href={"overview"} icon={faInfoCircle} name="Player Overview"/>
+            <Item active={false} href={"sessions"} icon={faCalendar} name="Sessions"/>
+            <Item active={false} href={"pvppve"} icon={faCampground} name="PvP & PvE"/>
+            <Item active={false} href={"servers"} icon={faNetworkWired} name="Servers Overview"/>
             <Divider/>
             <FooterButtons/>
         </ul>
