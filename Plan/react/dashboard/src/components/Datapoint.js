@@ -8,7 +8,7 @@ const End = ({children}) => (
 const Datapoint = ({icon, color, name, value, valueLabel, bold, boldTitle}) => (
     <p>
         <Fa icon={icon} className={"col-" + color}/> {boldTitle ? <b>{name}</b> : name}
-        <End>{bold ? <b>{value}</b> : value} {valueLabel ? ` (${valueLabel})` : ''}</End>
+        {value ? <End>{bold ? <b>{value}</b> : value} {valueLabel ? ` (${valueLabel})` : ''}</End> : ''}
     </p>
 )
 

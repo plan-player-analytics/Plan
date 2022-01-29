@@ -8,7 +8,7 @@ import WorldPie from "../graphs/WorldPie";
 import KillsTable from "../table/KillsTable";
 import Accordion from "./Accordion";
 
-const SessionHeader = ({session, onClick}) => {
+const SessionHeader = ({session}) => {
     return (
         <>
             <td>{session.name}{session.first_session ?

@@ -7,6 +7,7 @@ import './style/main.sass';
 import './style/sb-admin-2.css'
 import './style/style.css';
 import PlayerPvpPve from "./views/PlayerPvpPve";
+import PlayerServers from "./views/PlayerServers";
 
 function App() {
     return (
@@ -16,6 +17,7 @@ function App() {
                     <PlayerOverview player={player}/>
                     <PlayerSessions player={player}/>
                     <PlayerPvpPve player={player}/>
+                    <PlayerServers player={player}/>
                 </div>
             </div>
         </div>

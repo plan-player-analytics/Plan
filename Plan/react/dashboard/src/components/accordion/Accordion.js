@@ -33,8 +33,16 @@ const Slice = ({i, slice, open, onClick, width}) => (
     </>
 )
 
-const Accordion = ({headers, slices}) => {
-    const [openSlice, setOpenSlice] = useState(0);
+const NoDataRow = ({width}) => {
+    const nLengthArray = Array.from(Array(width - 1).keys());
+    return (<tr>
+        <td>No Data</td>
+        {nLengthArray.map(i => <td key={i}>-</td>)}
+    </tr>);
+}
+
+const Accordion = ({headers, slices, open}) => {
+    const [openSlice, setOpenSlice] = useState(open ? 0 : -1);
 
     const toggleSlice = (i) => {
         console.log('click', i);
@@ -51,11 +59,11 @@ const Accordion = ({headers, slices}) => {
             </tr>
             </thead>
             <tbody>
-            {slices.map((slice, i) => (
+            {slices.length ? slices.map((slice, i) => (
                 <Slice key={'slice-' + i} i={i} slice={slice} width={width}
                        open={openSlice === i} onClick={() => toggleSlice(i)}
                 />
-            ))}
+            )) : <NoDataRow width={width}/>}
             </tbody>
         </table>
     )

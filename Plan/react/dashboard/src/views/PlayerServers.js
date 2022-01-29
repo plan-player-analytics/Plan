@@ -1,32 +1,21 @@
 import React from "react";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCalendar, faCalendarAlt, faClock, faHandPointer} from "@fortawesome/free-regular-svg-icons";
-import PlayerSessionCalendar from "../components/calendar/PlayerSessionCalendar";
+import {faCalendar, faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import Scrollable from "../components/Scrollable";
-import SessionAccordion from "../components/accordion/SessionAccordion";
-import WorldPie from "../components/graphs/WorldPie";
+import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
+import ServerPie from "../components/graphs/ServerPie";
+import ServerAccordion from "../components/accordion/ServerAccordion";
 
 const Header = ({player}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 className="h3 mb-0 text-gray-800">
-            {player.info.name} &middot; Sessions
+            {player.info.name} &middot; Servers Overview
         </h1>
     </div>
 )
 
-const SessionCalendarCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black">
-                <Fa icon={faCalendarAlt} className="col-teal"/> Session Calendar
-            </h6>
-        </Card.Header>
-        <PlayerSessionCalendar series={player.calendar_series} firstDay={player.first_day}/>
-    </Card>
-)
-
-const RecentSessionsCard = ({player}) => (
+const ServersCard = ({player}) => (
     <Card>
         <Card.Header>
             <h6 className="col-black" style={{width: '100%'}}>
@@ -37,26 +26,25 @@ const RecentSessionsCard = ({player}) => (
             </h6>
         </Card.Header>
         <Scrollable>
-            <SessionAccordion sessions={player.sessions}/>
+            <ServerAccordion servers={player.servers}/>
         </Scrollable>
     </Card>
 )
 
-const WorldPieCard = ({player}) => (
+const ServerPieCard = ({player}) => (
     <Card>
         <Card.Header>
             <h6 className="col-black" style={{width: '100%'}}>
-                <Fa icon={faClock} className="col-teal"/> World Playtime
+                <Fa icon={faNetworkWired} className="col-teal"/> Server Playtime
             </h6>
         </Card.Header>
-        <WorldPie
-            id="world-pie"
-            gmColors={[]}
-            worldSeries={player.world_pie_series}
-            gmSeries={player.gm_series}
+        <ServerPie
+            colors={player.server_pie_colors}
+            series={player.server_pie_series}
         />
     </Card>
 )
+
 
 const PlayerSessions = ({player}) => {
     return (
@@ -64,11 +52,10 @@ const PlayerSessions = ({player}) => {
             <Header player={player}/>
             <Row>
                 <Col lg={8}>
-                    <SessionCalendarCard player={player}/>
-                    <RecentSessionsCard player={player}/>
+                    <ServersCard player={player}/>
                 </Col>
                 <Col lg={4}>
-                    <WorldPieCard player={player}/>
+                    <ServerPieCard player={player}/>
                 </Col>
             </Row>
         </section>
