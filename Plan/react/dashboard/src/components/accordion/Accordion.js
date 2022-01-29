@@ -1,0 +1,64 @@
+import React, {useState} from "react";
+
+// TODO Fix animations
+
+const SliceHeader = ({i, open, onClick, slice}) => {
+    let style = 'bg-' + slice.color + (slice.outline ? '-outline' : '');
+    return (
+        <tr id={"slice_h_" + i} aria-controls={"slice_t_" + i} aria-expanded={open ? "true" : "false"}
+            className={"clickable collapsed " + style} data-bs-target={"#slice_t_" + i} data-bs-toggle="collapse"
+            onClick={onClick}
+        >
+            {slice.header}
+        </tr>
+    )
+}
+
+const SliceBody = ({i, open, slice, width}) => {
+    if (!open) return <tr className={open ? 'open' : 'closed'}/>
+
+    return (
+        <tr className={"collapse" + (open ? ' show' : '')} data-bs-parent="#tableAccordion" id={"slice_t_" + i}>
+            <td colSpan={width}>
+                {slice.body}
+            </td>
+        </tr>
+    )
+}
+
+const Slice = ({i, slice, open, onClick, width}) => (
+    <>
+        <SliceHeader i={i} open={open} onClick={onClick} slice={slice}/>
+        <SliceBody i={i} open={open} slice={slice} width={width}/>
+    </>
+)
+
+const Accordion = ({headers, slices}) => {
+    const [openSlice, setOpenSlice] = useState(0);
+
+    const toggleSlice = (i) => {
+        console.log('click', i);
+        setOpenSlice(openSlice === i ? -1 : i);
+    }
+
+    const width = headers.length;
+
+    return (
+        <table className="table accordion-striped" id="tableAccordion">
+            <thead>
+            <tr>
+                {headers.map((header, i) => <th key={i}>{header}</th>)}
+            </tr>
+            </thead>
+            <tbody>
+            {slices.map((slice, i) => (
+                <Slice key={'slice-' + i} i={i} slice={slice} width={width}
+                       open={openSlice === i} onClick={() => toggleSlice(i)}
+                />
+            ))}
+            </tbody>
+        </table>
+    )
+}
+
+export default Accordion;
