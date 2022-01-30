@@ -48,6 +48,7 @@ public class PerServerContainer extends HashMap<ServerUUID, DataContainer> {
         putToContainerOfServer(serverUUID, PerServerKeys.REGISTERED, userInfo.getRegistered());
         putToContainerOfServer(serverUUID, PerServerKeys.BANNED, userInfo.isBanned());
         putToContainerOfServer(serverUUID, PerServerKeys.OPERATOR, userInfo.isOperator());
+        putToContainerOfServer(serverUUID, PerServerKeys.JOIN_ADDRESS, userInfo.getJoinAddress());
     }
 
     public void putUserInfo(Collection<UserInfo> userInformation) {

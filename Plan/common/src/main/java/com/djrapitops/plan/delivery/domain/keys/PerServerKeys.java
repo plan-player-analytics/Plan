@@ -55,5 +55,6 @@ public class PerServerKeys {
 
     public static final Key<Boolean> BANNED = CommonKeys.BANNED;
     public static final Key<Boolean> OPERATOR = CommonKeys.OPERATOR;
+    public static final Key<String> JOIN_ADDRESS = CommonKeys.JOIN_ADDRESS;
 
 }
