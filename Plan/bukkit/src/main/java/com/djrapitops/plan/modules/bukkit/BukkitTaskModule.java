@@ -29,6 +29,7 @@ import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
+import com.djrapitops.plan.storage.upkeep.ExtensionDisableOnGameServerTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
 import dagger.Binds;
@@ -98,4 +99,8 @@ public interface BukkitTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindActiveCookieStoreExpiryTask(ActiveCookieExpiryCleanupTask activeCookieExpiryCleanupTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindExtensionDisableOnGameServerTask(ExtensionDisableOnGameServerTask extensionDisableOnGameServerTask);
 }
