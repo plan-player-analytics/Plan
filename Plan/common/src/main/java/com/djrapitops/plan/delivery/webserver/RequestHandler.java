@@ -146,7 +146,7 @@ public class RequestHandler implements HttpHandler {
                 String directTo = StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from;
                 response = Response.builder()
                         .redirectTo(directTo)
-                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=1; SameSite=Lax; Secure;")
+                        .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=0; SameSite=Lax; Secure;")
                         .build();
             }
         }

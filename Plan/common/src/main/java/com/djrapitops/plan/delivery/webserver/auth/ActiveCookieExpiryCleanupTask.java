@@ -17,9 +17,12 @@
 package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import dagger.Lazy;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,13 +35,17 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class ActiveCookieExpiryCleanupTask extends TaskSystem.Task {
 
+    private final PlanConfig config;
     private final Lazy<ActiveCookieStore> activeCookieStore;
+    private final PluginLogger logger;
 
     private final Map<String, Long> expiryDates;
 
     @Inject
-    public ActiveCookieExpiryCleanupTask(Lazy<ActiveCookieStore> activeCookieStore) {
+    public ActiveCookieExpiryCleanupTask(PlanConfig config, Lazy<ActiveCookieStore> activeCookieStore, PluginLogger logger) {
+        this.config = config;
         this.activeCookieStore = activeCookieStore;
+        this.logger = logger;
         this.expiryDates = new ConcurrentHashMap<>();
     }
 
@@ -56,14 +63,21 @@ public class ActiveCookieExpiryCleanupTask extends TaskSystem.Task {
         Set<String> removed = new HashSet<>();
         for (Map.Entry<String, Long> entry : expiryDates.entrySet()) {
             Long expiryTime = entry.getValue();
-            if (expiryTime >= time) {
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
+                logger.info("Cookie " + entry.getKey() + " will expire " + expiryTime);
+            }
+            if (expiryTime <= time) {
                 String cookie = entry.getKey();
                 activeCookieStore.get().removeCookie(cookie);
+                removed.add(cookie);
             }
         }
 
         for (String removedCookie : removed) {
             expiryDates.remove(removedCookie);
+            if (config.isTrue(PluginSettings.DEV_MODE)) {
+                logger.info("Cookie " + removedCookie + " has expired: " + time);
+            }
         }
     }
 
