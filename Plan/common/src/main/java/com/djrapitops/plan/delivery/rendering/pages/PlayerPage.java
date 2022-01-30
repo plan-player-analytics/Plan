@@ -100,6 +100,7 @@ public class PlayerPage implements Page {
 
         String playerName = player.getValue(PlayerKeys.NAME).orElse(playerUUID.toString());
         placeholders.put("playerName", playerName);
+        placeholders.put("playerUUID", playerUUID);
 
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));

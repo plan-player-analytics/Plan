@@ -60,28 +60,29 @@ public class ActiveCookieExpiryCleanupTask extends TaskSystem.Task {
     @Override
     public void run() {
         long time = System.currentTimeMillis();
-        Set<String> removed = new HashSet<>();
+
+        Set<String> cookiesToRemove = new HashSet<>();
         for (Map.Entry<String, Long> entry : expiryDates.entrySet()) {
             Long expiryTime = entry.getValue();
-            if (config.isTrue(PluginSettings.DEV_MODE)) {
-                logger.info("Cookie " + entry.getKey() + " will expire " + expiryTime);
-            }
             if (expiryTime <= time) {
                 String cookie = entry.getKey();
-                activeCookieStore.get().removeCookie(cookie);
-                removed.add(cookie);
+                cookiesToRemove.add(cookie);
             }
         }
 
-        for (String removedCookie : removed) {
-            expiryDates.remove(removedCookie);
+        for (String cookie : cookiesToRemove) {
+            activeCookieStore.get().removeCookie(cookie);
+            expiryDates.remove(cookie);
             if (config.isTrue(PluginSettings.DEV_MODE)) {
-                logger.info("Cookie " + removedCookie + " has expired: " + time);
+                logger.info("Cookie " + cookie + " has expired: " + time);
             }
         }
     }
 
     public void addExpiry(String cookie, Long time) {
         expiryDates.put(cookie, time);
+        if (config.isTrue(PluginSettings.DEV_MODE)) {
+            logger.info("Cookie " + cookie + " will expire " + time);
+        }
     }
 }

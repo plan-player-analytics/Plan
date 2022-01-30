@@ -121,7 +121,7 @@ public class PlayerPageExporter extends FileExporter {
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve(jsonResourceName), found.get().getBytes());
-        exportPaths.put("../v1/player?player=${encodeURIComponent(playerName)}", "./" + jsonResourceName);
+        exportPaths.put("../v1/player?player=${encodeURIComponent(playerUUID)}", "./" + jsonResourceName);
     }
 
     private String toJSONResourceName(String resource) {
