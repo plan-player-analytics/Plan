@@ -35,7 +35,7 @@ public class TopListQueries {
         // Static query generation class
     }
 
-    public static Query<Optional<String>> fetchNthTop10PlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
+    public static Query<Optional<TopListEntry<Long>>> fetchNthTop10PlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
         String sql = SELECT + UsersTable.USER_NAME + ", " +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
@@ -48,7 +48,7 @@ public class TopListQueries {
                 LIMIT + "10" +
                 OFFSET + "?";
 
-        return new QueryStatement<Optional<String>>(sql, 10) {
+        return new QueryStatement<Optional<TopListEntry<Long>>>(sql, 10) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -58,9 +58,11 @@ public class TopListQueries {
             }
 
             @Override
-            public Optional<String> processResults(ResultSet set) throws SQLException {
+            public Optional<TopListEntry<Long>> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getString(UsersTable.USER_NAME));
+                    return Optional.of(
+                            new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("playtime"))
+                    );
                 }
                 return Optional.empty();
             }
@@ -68,7 +70,7 @@ public class TopListQueries {
 
     }
 
-    public static Query<Optional<String>> fetchNthTop10ActivePlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
+    public static Query<Optional<TopListEntry<Long>>> fetchNthTop10ActivePlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
         String sql = SELECT + UsersTable.USER_NAME + ", " +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
@@ -81,7 +83,7 @@ public class TopListQueries {
                 LIMIT + "10" +
                 OFFSET + "?";
 
-        return new QueryStatement<Optional<String>>(sql, 10) {
+        return new QueryStatement<Optional<TopListEntry<Long>>>(sql, 10) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -91,12 +93,32 @@ public class TopListQueries {
             }
 
             @Override
-            public Optional<String> processResults(ResultSet set) throws SQLException {
+            public Optional<TopListEntry<Long>> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(set.getString(UsersTable.USER_NAME));
+                    return Optional.of(
+                            new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("active_playtime"))
+                    );
                 }
                 return Optional.empty();
             }
         };
+    }
+
+    public static class TopListEntry<T> {
+        private final String playerName;
+        private final T value;
+
+        public TopListEntry(String playerName, T value) {
+            this.playerName = playerName;
+            this.value = value;
+        }
+
+        public String getPlayerName() {
+            return playerName;
+        }
+
+        public T getValue() {
+            return value;
+        }
     }
 }

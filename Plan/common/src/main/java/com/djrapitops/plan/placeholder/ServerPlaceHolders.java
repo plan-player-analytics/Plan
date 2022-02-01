@@ -211,39 +211,46 @@ public class ServerPlaceHolders implements Placeholders {
     }
 
     private void registerDynamicCategoryPlaceholders(PlanPlaceholders placeholders, Database database) {
-        List<TopCategoryQuery> queries = new ArrayList<>();
+        List<TopCategoryQuery<Long>> queries = new ArrayList<>();
         queries.addAll(createCategoryQueriesForAllTimespans("playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
         queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
 
         for (int i = 0; i < 10; i++) {
-            for (TopCategoryQuery query : queries) {
+            for (TopCategoryQuery<Long> query : queries) {
                 final int nth = i;
                 placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth),
-                        parameters -> database.query(query.getQuery(nth, parameters)).orElse("-"));
+                        parameters -> database.query(query.getQuery(nth, parameters))
+                                .map(TopListQueries.TopListEntry::getPlayerName)
+                                .orElse("-"));
+                placeholders.registerStatic(String.format("top_%s_%s_%s_value", query.getCategory(), query.getTimeSpan(), nth),
+                        parameters -> database.query(query.getQuery(nth, parameters))
+                                .map(TopListQueries.TopListEntry::getValue)
+                                .map(formatters.timeAmount())
+                                .orElse("-"));
             }
         }
     }
 
-    private List<TopCategoryQuery> createCategoryQueriesForAllTimespans(String category, QueryCreator queryCreator) {
+    private <T> List<TopCategoryQuery<T>> createCategoryQueriesForAllTimespans(String category, QueryCreator<T> queryCreator) {
         return Arrays.asList(
-                new TopCategoryQuery(category, queryCreator, "month", TimeUnit.DAYS.toMillis(30)),
-                new TopCategoryQuery(category, queryCreator, "week", TimeUnit.DAYS.toMillis(7)),
-                new TopCategoryQuery(category, queryCreator, "day", TimeUnit.DAYS.toMillis(1)),
-                new TopCategoryQuery(category, queryCreator, "total", System.currentTimeMillis())
+                new TopCategoryQuery<>(category, queryCreator, "month", TimeUnit.DAYS.toMillis(30)),
+                new TopCategoryQuery<>(category, queryCreator, "week", TimeUnit.DAYS.toMillis(7)),
+                new TopCategoryQuery<>(category, queryCreator, "day", TimeUnit.DAYS.toMillis(1)),
+                new TopCategoryQuery<>(category, queryCreator, "total", System.currentTimeMillis())
         );
     }
 
-    interface QueryCreator {
-        Query<Optional<String>> apply(Integer number, Long timespan, Arguments parameters);
+    interface QueryCreator<T> {
+        Query<Optional<TopListQueries.TopListEntry<T>>> apply(Integer number, Long timespan, Arguments parameters);
     }
 
-    public static class TopCategoryQuery {
+    public static class TopCategoryQuery<T> {
         private final String category;
-        private final QueryCreator queryCreator;
+        private final QueryCreator<T> queryCreator;
         private final String timeSpan;
         private final long timeSpanMillis;
 
-        public TopCategoryQuery(String category, QueryCreator queryCreator, String timeSpan, long timespan) {
+        public TopCategoryQuery(String category, QueryCreator<T> queryCreator, String timeSpan, long timespan) {
             this.category = category;
             this.queryCreator = queryCreator;
             this.timeSpan = timeSpan;
@@ -258,7 +265,7 @@ public class ServerPlaceHolders implements Placeholders {
             return timeSpan;
         }
 
-        public Query<Optional<String>> getQuery(int i, Arguments parameters) {
+        public Query<Optional<TopListQueries.TopListEntry<T>>> getQuery(int i, Arguments parameters) {
             return queryCreator.apply(i, timeSpanMillis, parameters);
         }
     }
