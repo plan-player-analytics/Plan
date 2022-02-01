@@ -30,6 +30,7 @@ function loadPlayerOverviewValues(json, error) {
     $(element).find("#data_activity_index").text(data.activity_index);
     $(element).find("#data_activity_index_group").text(data.activity_index_group);
     $(element).find("#data_favorite_server").text(data.favorite_server);
+    $(element).find("#data_latest_join_address").text(data.latest_join_address);
     $(element).find("#data_average_ping").text(data.average_ping);
     $(element).find("#data_best_ping").text(data.best_ping);
     $(element).find("#data_worst_ping").text(data.worst_ping);
@@ -222,6 +223,8 @@ function createserverAccordionBody(i, server) {
         `<p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span class="float-end"><b>` + server.afk_time + `</b></span></p>` +
         `<p><i class="col-teal far fa-fw fa-clock"></i> Longest Session<span class="float-end"><b>` + server.longest_session_length + `</b></span></p>` +
         `<p><i class="col-teal far fa-fw fa-clock"></i> Session Median<span class="float-end"><b>` + server.session_median + `</b></span></p>` +
+        `<br>` +
+        `<p><i class="col-amber fa fa-fw fa-location-arrow"></i> Join Address<span class="float-end">` + server.join_address + `</span></p>` +
         `<br>` +
         `<p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span class="float-end"><b>` + server.player_kills + `</b></span></p>` +
         `<p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span class="float-end"><b>` + server.mob_kills + `</b></span></p>` +

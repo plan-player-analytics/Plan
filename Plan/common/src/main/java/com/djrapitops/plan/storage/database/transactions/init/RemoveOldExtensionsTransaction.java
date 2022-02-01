@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.init;
 
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.*;
@@ -38,10 +39,12 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
 
+    private final ExtensionSettings extensionSettings;
     private final long deleteOlder;
     private final ServerUUID serverUUID;
 
-    public RemoveOldExtensionsTransaction(long deleteAfterMs, ServerUUID serverUUID) {
+    public RemoveOldExtensionsTransaction(ExtensionSettings extensionSettings, long deleteAfterMs, ServerUUID serverUUID) {
+        this.extensionSettings = extensionSettings;
         deleteOlder = System.currentTimeMillis() - deleteAfterMs;
         this.serverUUID = serverUUID;
     }
@@ -120,23 +123,27 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
     }
 
     private Query<Collection<Integer>> inactiveProviderIDsQuery() {
-        String sql = SELECT + "pr." + ExtensionProviderTable.ID +
+        String sql = SELECT + "pr." + ExtensionProviderTable.ID + ',' +
+                "pl." + ExtensionPluginTable.LAST_UPDATED + ',' +
+                "pl." + ExtensionPluginTable.PLUGIN_NAME +
                 FROM + ExtensionProviderTable.TABLE_NAME + " pr" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl on pl." + ExtensionPluginTable.ID + "=pr." + ExtensionProviderTable.PLUGIN_ID +
-                WHERE + ExtensionPluginTable.LAST_UPDATED + "<?" +
-                AND + ExtensionPluginTable.SERVER_UUID + "=?";
+                WHERE + ExtensionPluginTable.SERVER_UUID + "=?";
         return new QueryStatement<Collection<Integer>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, deleteOlder);
-                statement.setString(2, serverUUID.toString());
+                statement.setString(1, serverUUID.toString());
             }
 
             @Override
             public Collection<Integer> processResults(ResultSet set) throws SQLException {
                 Collection<Integer> providerIds = new HashSet<>();
                 while (set.next()) {
-                    providerIds.add(set.getInt(ExtensionProviderTable.ID));
+                    boolean manuallyDisabled = !extensionSettings.isEnabled(set.getString(ExtensionPluginTable.PLUGIN_NAME));
+                    boolean dataIsOld = set.getLong(ExtensionPluginTable.LAST_UPDATED) < deleteOlder;
+                    if (manuallyDisabled || dataIsOld) {
+                        providerIds.add(set.getInt(ExtensionProviderTable.ID));
+                    }
                 }
                 return providerIds;
             }

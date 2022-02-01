@@ -114,4 +114,18 @@ public class PerServerMutator {
         }
         return false;
     }
+
+    public Optional<String> latestJoinAddress() {
+        long latest = Long.MIN_VALUE;
+        String latestJoinAddress = null;
+        for (DataContainer value : data.values()) {
+            long registerDate = value.getValue(PerServerKeys.REGISTERED).orElse(Long.MIN_VALUE);
+            Optional<String> joinAddress = value.getValue(PerServerKeys.JOIN_ADDRESS);
+            if (registerDate > latest && joinAddress.isPresent()) {
+                latest = registerDate;
+                latestJoinAddress = joinAddress.get();
+            }
+        }
+        return Optional.ofNullable(latestJoinAddress);
+    }
 }

@@ -17,10 +17,14 @@
 package com.djrapitops.plan.gathering.afk;
 
 import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Keeps track how long player has been afk during a session
@@ -29,15 +33,15 @@ import java.util.*;
  */
 public class AFKTracker {
 
+    public static final long IGNORES_AFK = -1L;
+
     private final Set<UUID> usedAFKCommand;
-    private final Map<UUID, Long> lastMovement;
     private final PlanConfig config;
     private Long afkThresholdMs;
 
     public AFKTracker(PlanConfig config) {
         this.config = config;
         usedAFKCommand = new HashSet<>();
-        lastMovement = new HashMap<>();
     }
 
     public long getAfkThreshold() {
@@ -47,26 +51,41 @@ public class AFKTracker {
         return afkThresholdMs;
     }
 
-    public void hasIgnorePermission(UUID uuid) {
-        lastMovement.put(uuid, -1L);
+    public void hasIgnorePermission(UUID playerUUID) {
+        storeLastMovement(playerUUID, IGNORES_AFK);
     }
 
-    public void usedAfkCommand(UUID uuid, long time) {
-        Long lastMoved = lastMovement.getOrDefault(uuid, time);
-        if (lastMoved == -1) {
+    private void storeLastMovement(UUID playerUUID, long time) {
+        SessionCache.getCachedSession(playerUUID)
+                .ifPresent(activeSession -> activeSession.setLastMovementForAfkCalculation(time));
+    }
+
+    private long getLastMovement(UUID playerUUID, long time) {
+        return getLastMovement(playerUUID)
+                .orElse(time);
+    }
+
+    private Optional<Long> getLastMovement(UUID playerUUID) {
+        return SessionCache.getCachedSession(playerUUID)
+                .map(ActiveSession::getLastMovementForAfkCalculation);
+    }
+
+    public void usedAfkCommand(UUID playerUUID, long time) {
+        long lastMoved = getLastMovement(playerUUID, time);
+        if (lastMoved == IGNORES_AFK) {
             return;
         }
-        usedAFKCommand.add(uuid);
-        lastMovement.put(uuid, time - getAfkThreshold());
+        usedAFKCommand.add(playerUUID);
+        storeLastMovement(playerUUID, time - getAfkThreshold());
     }
 
-    public long performedAction(UUID uuid, long time) {
-        Long lastMoved = lastMovement.getOrDefault(uuid, time);
+    public long performedAction(UUID playerUUID, long time) {
+        long lastMoved = getLastMovement(playerUUID, time);
         // Ignore afk permission
-        if (lastMoved == -1) {
+        if (lastMoved == IGNORES_AFK) {
             return 0L;
         }
-        lastMovement.put(uuid, time);
+        storeLastMovement(playerUUID, time);
 
         try {
             if (time - lastMoved < getAfkThreshold()) {
@@ -74,31 +93,30 @@ public class AFKTracker {
                 return 0L;
             }
 
-            long removeAfkCommandEffect = usedAFKCommand.contains(uuid) ? getAfkThreshold() : 0;
+            long removeAfkCommandEffect = usedAFKCommand.contains(playerUUID) ? getAfkThreshold() : 0;
             long timeAFK = time - lastMoved - removeAfkCommandEffect;
 
-            SessionCache.getCachedSession(uuid)
+            SessionCache.getCachedSession(playerUUID)
                     .ifPresent(session -> session.addAfkTime(timeAFK));
             return timeAFK;
         } finally {
-            usedAFKCommand.remove(uuid);
+            usedAFKCommand.remove(playerUUID);
         }
     }
 
     public long loggedOut(UUID uuid, long time) {
         long timeAFK = performedAction(uuid, time);
-        lastMovement.remove(uuid);
         usedAFKCommand.remove(uuid);
         return timeAFK;
     }
 
-    public boolean isAfk(UUID uuid) {
+    public boolean isAfk(UUID playerUUID) {
         long time = System.currentTimeMillis();
 
-        Long lastMoved = lastMovement.get(uuid);
-        if (lastMoved == null || lastMoved == -1) {
+        Optional<Long> lastMoved = getLastMovement(playerUUID);
+        if (!lastMoved.isPresent() || lastMoved.get() == IGNORES_AFK) {
             return false;
         }
-        return time - lastMoved > getAfkThreshold();
+        return time - lastMoved.get() > getAfkThreshold();
     }
 }

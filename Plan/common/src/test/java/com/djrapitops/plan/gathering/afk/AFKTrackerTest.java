@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.gathering.afk;
 
+import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +42,8 @@ class AFKTrackerTest {
         PlanConfig config = Mockito.mock(PlanConfig.class);
         afkThreshold = TimeUnit.MINUTES.toMillis(1L);
         when(config.get(TimeSettings.AFK_THRESHOLD)).thenReturn(afkThreshold);
+
+        new SessionCache().cacheSession(playerUUID, new ActiveSession(playerUUID, null, 0, null, null));
 
         underTest = new AFKTracker(config);
     }
@@ -72,7 +76,7 @@ class AFKTrackerTest {
 
     @Test
     void someOneIsNotEvenOnline() {
-        assertFalse(underTest.isAfk(playerUUID));
+        assertFalse(underTest.isAfk(TestConstants.PLAYER_TWO_UUID));
     }
 
     @Test

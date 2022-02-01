@@ -111,12 +111,14 @@ public class ServerPageExporter extends FileExporter {
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance', true);",
                         "loadServerCalendar, 'online-activity-overview', true);",
-                        "}, 'playerlist', true);"
+                        "}, 'playerlist', true);",
+                        "<head>"
                 },
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance');",
                         "loadServerCalendar, 'online-activity-overview');",
-                        "}, 'playerlist');"
+                        "}, 'playerlist');",
+                        "<head><style>.refresh-element {display: none;}</style>"
                 });
 
         export(to, exportPaths.resolveExportPaths(html));

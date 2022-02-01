@@ -96,8 +96,14 @@ public class PlayersPageExporter extends FileExporter {
 
         // Fixes refreshingJsonRequest ignoring old data of export
         String html = StringUtils.replaceEach(page.toHtml(),
-                new String[]{"}, 'playerlist', true);"},
-                new String[]{"}, 'playerlist');"});
+                new String[]{
+                        "}, 'playerlist', true);",
+                        "<head>"
+                },
+                new String[]{
+                        "}, 'playerlist');",
+                        "<head><style>.refresh-element {display: none;}</style>"
+                });
 
         export(to, exportPaths.resolveExportPaths(html));
     }

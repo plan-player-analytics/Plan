@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 
+import com.djrapitops.plan.utilities.java.Maps;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -46,7 +47,13 @@ class WorldMapTest {
                 new WorldMap.Entry("DNK", 2),
                 new WorldMap.Entry("FIN", 1)
         );
-        List<WorldMap.Entry> result = new WorldMap(geolocations).getEntries();
+        Map<String, String> geoCodes = Maps.builder(String.class, String.class)
+                .put("finland", "FIN")
+                .put("sweden", "SWE")
+                .put("denmark", "DNK")
+                .build();
+
+        List<WorldMap.Entry> result = new WorldMap(geoCodes, geolocations).getEntries();
         assertEquals(expected, result);
     }
 

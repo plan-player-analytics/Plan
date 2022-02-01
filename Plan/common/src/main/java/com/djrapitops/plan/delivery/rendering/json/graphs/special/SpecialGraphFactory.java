@@ -19,9 +19,16 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,12 +40,19 @@ import java.util.Map;
 @Singleton
 public class SpecialGraphFactory {
 
+    private final PlanFiles files;
     private final PlanConfig config;
+    private final Gson gson;
+    private final ErrorLogger errorLogger;
+
+    private Map<String, String> geoCodes = null;
 
     @Inject
-    public SpecialGraphFactory(PlanConfig config) {
-        // Inject Constructor.
+    public SpecialGraphFactory(PlanFiles files, PlanConfig config, Gson gson, ErrorLogger errorLogger) {
+        this.files = files;
         this.config = config;
+        this.gson = gson;
+        this.errorLogger = errorLogger;
     }
 
     public PunchCard punchCard(List<FinishedSession> sessions) {
@@ -50,7 +64,18 @@ public class SpecialGraphFactory {
     }
 
     public WorldMap worldMap(Map<String, Integer> geolocationCounts) {
-        return new WorldMap(geolocationCounts);
+        if (geoCodes == null) prepareGeocodes();
+        return new WorldMap(geoCodes, geolocationCounts);
+    }
+
+    private void prepareGeocodes() {
+        try {
+            geoCodes = files.getResourceFromJar("geocodes.json")
+                    .asParsed(gson, new TypeToken<Map<String, String>>() {});
+        } catch (IOException e) {
+            geoCodes = new HashMap<>();
+            errorLogger.error(e, ErrorContext.builder().whatToDo("Failed to read geocodes.json from jar. Try restarting the server.").build());
+        }
     }
 
 }
