@@ -72,15 +72,14 @@ public class PlanSponge implements PlanPlugin {
     @com.google.inject.Inject
     public PlanSponge(
             @ConfigDir(sharedRoot = false) Path dataFolder,
-            PluginContainer plugin/*,
-            Metrics.Factory metrics*/
+            PluginContainer plugin,
+            Metrics.Factory metrics
     ) {
         this.dataFolder = dataFolder.toFile();
         this.plugin = plugin;
 
-        // Metrics commented out due to not being compatible with Sponge API 8 (yet!)
         int pluginId = 3086;
-        this.metrics = null;//metrics.make(pluginId);
+        this.metrics = metrics.make(pluginId);
     }
 
     @Listener
