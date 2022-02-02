@@ -17,6 +17,7 @@
 package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.addons.placeholderapi.PlaceholderCacheRefreshTask;
 import com.djrapitops.plan.delivery.web.ResourceWriteTask;
 import com.djrapitops.plan.delivery.web.WebAssetVersionCheckTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
@@ -103,4 +104,8 @@ public interface BukkitTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindExtensionDisableOnGameServerTask(ExtensionDisableOnGameServerTask extensionDisableOnGameServerTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindPlaceholderWarmupTask(PlaceholderCacheRefreshTask placeholderCacheRefreshTask);
 }

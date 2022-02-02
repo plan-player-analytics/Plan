@@ -33,7 +33,7 @@ dependencies {
     implementation 'com.djrapitops:Extension-MyPet:3.10-R0.2'
     implementation 'com.djrapitops:Extension-Nucleus:2.3.0-R0.1'
     implementation 'com.djrapitops:Extension-nuVotifier:2.3.4-R0.3'
-    implementation 'com.djrapitops:Extension-PlaceholderAPI:2.10.9-R0.4'
+    implementation 'com.djrapitops:Extension-PlaceholderAPI:2.10.9-R0.5'
     implementation 'com.djrapitops:Extension-PlotSquared:5.13.11-R0.2'
     implementation 'com.djrapitops:Extension-ProtectionStones:2.8.2-R0.2'
     implementation 'com.djrapitops:Extension-ProtocolSupport:1.16.4-R0.1'
