@@ -132,7 +132,8 @@ Display_options:
   # More information about Themes:
   # https://github.com/plan-player-analytics/Plan/wiki/Themes
   Theme: default
-  Player_head_image_url: "https://cravatar.eu/helmavatar/${playerName}/120.png"
+  # Can use ${playerName} or ${playerUUID}
+  Player_head_image_url: "https://cravatar.eu/helmavatar/${playerUUID}/120.png"
   Sessions:
     Show_on_page: 50
     # By Default World playtime pie is ordered alphabetically.
