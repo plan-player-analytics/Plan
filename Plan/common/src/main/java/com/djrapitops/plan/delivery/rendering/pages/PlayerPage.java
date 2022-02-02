@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
@@ -101,6 +102,7 @@ public class PlayerPage implements Page {
         String playerName = player.getValue(PlayerKeys.NAME).orElse(playerUUID.toString());
         placeholders.put("playerName", playerName);
         placeholders.put("playerUUID", playerUUID);
+        placeholders.put("playerHeadUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL));
 
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));

@@ -94,6 +94,7 @@ public class DBSystem implements SubSystem {
         } catch (DBInitException e) {
             Throwable cause = e.getCause();
             String message = cause == null ? e.getMessage() : cause.getMessage();
+            if (message == null) e.printStackTrace();
             throw new EnableException(db.getType().getName() + " init failure: " + message, cause);
         }
     }
