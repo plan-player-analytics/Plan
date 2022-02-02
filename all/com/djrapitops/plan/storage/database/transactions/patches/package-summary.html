@@ -86,114 +86,118 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Patch to add 'show_in_players_table' to 'plan_extension_providers'</div>
 </div>
-<div class="col-first even-row-color"><a href="ExtensionTableProviderValuesForPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ExtensionTableProviderValuesForPatch</a></div>
+<div class="col-first even-row-color"><a href="ExtensionTableProviderFormattersPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ExtensionTableProviderFormattersPatch</a></div>
 <div class="col-last even-row-color">
+<div class="block">Adds format_1 to _5 fields to plan_extension_tables table.</div>
+</div>
+<div class="col-first odd-row-color"><a href="ExtensionTableProviderValuesForPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ExtensionTableProviderValuesForPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Adds values_for field to plan_extension_tables</div>
 </div>
-<div class="col-first odd-row-color"><a href="ExtensionTableRowValueLengthPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ExtensionTableRowValueLengthPatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="ExtensionTableRowValueLengthPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ExtensionTableRowValueLengthPatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Increases the length of Strings in extension tables to 250 to avoid cutoffs and exceptions.</div>
 </div>
-<div class="col-first even-row-color"><a href="GeoInfoLastUsedPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">GeoInfoLastUsedPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="GeoInfoLastUsedPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">GeoInfoLastUsedPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Adds last_used field to the geolocation table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="GeoInfoOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">GeoInfoOptimizationPatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="GeoInfoOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">GeoInfoOptimizationPatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Replaces user_id foreign keys with user_uuid fields in geolocation table.</div>
 </div>
-<div class="col-first even-row-color"><a href="KillsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsOptimizationPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="KillsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsOptimizationPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Replaces killer_id, victim_id and server_id foreign keys with respective uuid fields in kills table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="KillsServerIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsServerIDPatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="KillsServerIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsServerIDPatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Adds server_id field to kills table.</div>
 </div>
-<div class="col-first even-row-color"><a href="LinkedToSecurityTablePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LinkedToSecurityTablePatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="LinkedToSecurityTablePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LinkedToSecurityTablePatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Adds linked_to_uuid field to plan_security table that stores web users.</div>
 </div>
-<div class="col-first odd-row-color"><a href="LinkUsersToPlayersSecurityTablePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LinkUsersToPlayersSecurityTablePatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="LinkUsersToPlayersSecurityTablePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LinkUsersToPlayersSecurityTablePatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Populates new linked_to_uuid field with the uuid of a username (same as minecraft name) or 'console'.</div>
 </div>
-<div class="col-first even-row-color"><a href="LitebansTableHeaderPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LitebansTableHeaderPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="LitebansTableHeaderPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">LitebansTableHeaderPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Removes invalid data caused by https://github.com/plan-player-analytics/Plan/issues/1355.</div>
 </div>
-<div class="col-first odd-row-color"><a href="NicknameLastSeenPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">NicknameLastSeenPatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="NicknameLastSeenPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">NicknameLastSeenPatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Adds last_seen to nickname table by populating it with the data in actions table, and removes the actions table.</div>
 </div>
-<div class="col-first even-row-color"><a href="NicknamesOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">NicknamesOptimizationPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="NicknamesOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">NicknamesOptimizationPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in nickname table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Patch</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="PingOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">PingOptimizationPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first even-row-color"><a href="Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Patch</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><a href="PingOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">PingOptimizationPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in ping table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="PlayerTableRowPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">PlayerTableRowPatch</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="RegisterDateMinimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">RegisterDateMinimizationPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first even-row-color"><a href="PlayerTableRowPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">PlayerTableRowPatch</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><a href="RegisterDateMinimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">RegisterDateMinimizationPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Changes register dates on networks to the smallest number found in the database.</div>
 </div>
-<div class="col-first odd-row-color"><a href="ServerIsProxyPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ServerIsProxyPatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="ServerIsProxyPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ServerIsProxyPatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Adds a is_proxy field to remove technical debt assuming name field "BungeeCord" being the proxy.</div>
 </div>
-<div class="col-first even-row-color"><a href="ServerTableRowPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ServerTableRowPatch</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="SessionAFKTimePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionAFKTimePatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><a href="ServerTableRowPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">ServerTableRowPatch</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="SessionAFKTimePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionAFKTimePatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Adds afk_time field to sessions table.</div>
 </div>
-<div class="col-first even-row-color"><a href="SessionsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionsOptimizationPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="SessionsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionsOptimizationPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in sessions table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="TransferTableRemovalPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">TransferTableRemovalPatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="TransferTableRemovalPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">TransferTableRemovalPatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Removes plan_transfer table, used for transferring html in the database.</div>
 </div>
-<div class="col-first even-row-color"><a href="UserInfoHostnameAllowNullPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoHostnameAllowNullPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="UserInfoHostnameAllowNullPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoHostnameAllowNullPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Make sure hostname can be null.</div>
 </div>
-<div class="col-first odd-row-color"><a href="UserInfoHostnamePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoHostnamePatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="UserInfoHostnamePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoHostnamePatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Patch to add 'hostname' to 'plan_user_info'</div>
 </div>
-<div class="col-first even-row-color"><a href="UserInfoOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoOptimizationPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="UserInfoOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">UserInfoOptimizationPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in user info table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="Version10Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Version10Patch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="Version10Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Version10Patch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Table schema change patch for version 4.0.0 to support BungeeCord servers.</div>
 </div>
-<div class="col-first even-row-color"><a href="VersionTableRemovalPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">VersionTableRemovalPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="VersionTableRemovalPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">VersionTableRemovalPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Removes the table schema versioning table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="WorldsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldsOptimizationPatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="WorldsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldsOptimizationPatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Replaces server_id foreign keys with server_uuid field in world table.</div>
 </div>
-<div class="col-first even-row-color"><a href="WorldsServerIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldsServerIDPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="WorldsServerIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldsServerIDPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Adds server_id field to worlds table.</div>
 </div>
-<div class="col-first odd-row-color"><a href="WorldTimesOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldTimesOptimizationPatch</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="WorldTimesOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldTimesOptimizationPatch</a></div>
+<div class="col-last even-row-color">
 <div class="block">Replaces server_id foreign keys with server_uuid field in world times table.</div>
 </div>
-<div class="col-first even-row-color"><a href="WorldTimesSeverIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldTimesSeverIDPatch</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="WorldTimesSeverIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">WorldTimesSeverIDPatch</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Adds server_id field to world times table.</div>
 </div>
 </div>
