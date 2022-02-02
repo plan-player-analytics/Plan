@@ -218,7 +218,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new ServerTableRowPatch(),
                 new PlayerTableRowPatch(),
                 new ExtensionTableProviderValuesForPatch(),
-                new RemoveIncorrectTebexPackageDataPatch()
+                new RemoveIncorrectTebexPackageDataPatch(),
+                new ExtensionTableProviderFormattersPatch()
         };
     }
 
@@ -279,7 +280,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private void unloadDriverClassloader() {
         try {
-            if (driverClassLoader != null && driverClassLoader instanceof IsolatedClassLoader) {
+            if (driverClassLoader instanceof IsolatedClassLoader) {
                 ((IsolatedClassLoader) driverClassLoader).close();
             }
             driverClassLoader = null;

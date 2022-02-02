@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.implementation.MethodType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
@@ -77,6 +78,7 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
     private Executable updateProvider() {
         String[] columns = table.getColumns();
         Icon[] icons = table.getIcons();
+        TableColumnFormat[] formats = table.getTableColumnFormats();
 
         String sql = "UPDATE " + TABLE_NAME + " SET " +
                 COLOR + "=?," +
@@ -92,6 +94,11 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ICON_3_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ICON_4_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ICON_5_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                FORMAT_1 + "=?," +
+                FORMAT_2 + "=?," +
+                FORMAT_3 + "=?," +
+                FORMAT_4 + "=?," +
+                FORMAT_5 + "=?," +
                 VALUES_FOR + "=?" +
                 WHERE + PROVIDER_NAME + "=?" +
                 AND + PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
@@ -112,9 +119,14 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[2]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[3]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[4]);
-                statement.setInt(26, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
-                statement.setString(27, information.getName());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 28, information.getPluginName(), serverUUID);
+                setStringOrNull(statement, 26, formats[0] == TableColumnFormat.NONE ? null : formats[0].name());
+                setStringOrNull(statement, 27, formats[1] == TableColumnFormat.NONE ? null : formats[1].name());
+                setStringOrNull(statement, 28, formats[2] == TableColumnFormat.NONE ? null : formats[2].name());
+                setStringOrNull(statement, 29, formats[3] == TableColumnFormat.NONE ? null : formats[3].name());
+                setStringOrNull(statement, 30, formats[4] == TableColumnFormat.NONE ? null : formats[4].name());
+                statement.setInt(31, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
+                statement.setString(32, information.getName());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 33, information.getPluginName(), serverUUID);
             }
         };
     }
@@ -122,6 +134,7 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
     private Executable insertProvider() {
         String[] columns = table.getColumns();
         Icon[] icons = table.getIcons();
+        TableColumnFormat[] formats = table.getTableColumnFormats();
 
         String sql = "INSERT INTO " + TABLE_NAME + '(' +
                 PROVIDER_NAME + ',' +
@@ -139,6 +152,11 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ICON_3_ID + ',' +
                 ICON_4_ID + ',' +
                 ICON_5_ID + ',' +
+                FORMAT_1 + ',' +
+                FORMAT_2 + ',' +
+                FORMAT_3 + ',' +
+                FORMAT_4 + ',' +
+                FORMAT_5 + ',' +
                 VALUES_FOR +
                 ") VALUES (?,?,?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
@@ -148,6 +166,7 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
                 ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                "?,?,?,?,?," +
                 "?)";
 
         return new ExecStatement(sql) {
@@ -168,7 +187,12 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[2]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[3]);
                 ExtensionIconTable.set3IconValuesToStatement(statement, 26, icons[4]);
-                statement.setInt(29, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
+                setStringOrNull(statement, 29, formats[0] == TableColumnFormat.NONE ? null : formats[0].name());
+                setStringOrNull(statement, 30, formats[1] == TableColumnFormat.NONE ? null : formats[1].name());
+                setStringOrNull(statement, 31, formats[2] == TableColumnFormat.NONE ? null : formats[2].name());
+                setStringOrNull(statement, 32, formats[3] == TableColumnFormat.NONE ? null : formats[3].name());
+                setStringOrNull(statement, 33, formats[4] == TableColumnFormat.NONE ? null : formats[4].name());
+                statement.setInt(34, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
             }
         };
     }

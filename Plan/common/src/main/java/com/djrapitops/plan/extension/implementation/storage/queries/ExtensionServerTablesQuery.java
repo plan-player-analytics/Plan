@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableAccessor;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -123,6 +124,11 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
                 ExtensionTableProviderTable.COL_3 + ',' +
                 ExtensionTableProviderTable.COL_4 + ',' +
                 ExtensionTableProviderTable.COL_5 + ',' +
+                ExtensionTableProviderTable.FORMAT_1 + ',' +
+                ExtensionTableProviderTable.FORMAT_2 + ',' +
+                ExtensionTableProviderTable.FORMAT_3 + ',' +
+                ExtensionTableProviderTable.FORMAT_4 + ',' +
+                ExtensionTableProviderTable.FORMAT_5 + ',' +
                 "t1." + ExtensionTabTable.TAB_NAME + " as tab_name," +
                 "t1." + ExtensionTabTable.TAB_PRIORITY + " as tab_priority," +
                 "t1." + ExtensionTabTable.ELEMENT_ORDER + " as element_order," +
@@ -197,22 +203,36 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
         String col1 = set.getString(ExtensionTableProviderTable.COL_1);
         if (col1 != null) {
             table.columnOne(col1, extractIcon(set, "i1"));
+            table.columnOneFormat(extractFormat(set, ExtensionTableProviderTable.FORMAT_1));
         }
         String col2 = set.getString(ExtensionTableProviderTable.COL_2);
         if (col2 != null) {
             table.columnTwo(col2, extractIcon(set, "i2"));
+            table.columnTwoFormat(extractFormat(set, ExtensionTableProviderTable.FORMAT_2));
         }
         String col3 = set.getString(ExtensionTableProviderTable.COL_3);
         if (col3 != null) {
             table.columnThree(col3, extractIcon(set, "i3"));
+            table.columnThreeFormat(extractFormat(set, ExtensionTableProviderTable.FORMAT_3));
         }
         String col4 = set.getString(ExtensionTableProviderTable.COL_4);
         if (col4 != null) {
             table.columnFour(col4, extractIcon(set, "i4"));
+            table.columnFourFormat(extractFormat(set, ExtensionTableProviderTable.FORMAT_4));
         }
         String col5 = set.getString(ExtensionTableProviderTable.COL_5);
         if (col5 != null) {
             table.columnFive(col5, extractIcon(set, "i5"));
+            table.columnFiveFormat(extractFormat(set, ExtensionTableProviderTable.FORMAT_5));
+        }
+    }
+
+    private TableColumnFormat extractFormat(ResultSet set, String columnName) throws SQLException {
+        String formatName = set.getString(columnName);
+        try {
+            return formatName == null ? TableColumnFormat.NONE : TableColumnFormat.valueOf(formatName);
+        } catch (IllegalArgumentException e) {
+            return TableColumnFormat.NONE;
         }
     }
 

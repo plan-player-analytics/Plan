@@ -33,7 +33,7 @@ public class HtmlTableWithColoredHeader implements HtmlTable {
     }
 
     public HtmlTableWithColoredHeader(Table table, Color headerColor) {
-        this(HtmlTable.mapToHeaders(table), headerColor, table.getRows());
+        this(HtmlTable.mapToHeaders(table), headerColor, HtmlTable.mapToRows(table.getRows(), table.getTableColumnFormats()));
     }
 
     @Override
