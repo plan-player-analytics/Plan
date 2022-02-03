@@ -112,7 +112,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 break;
             case 13:
                 context.related("Disk or temporary directory is full.")
-                        .whatToDo("Disk or temporary directory is full, attempt to clear space in the temporary directory. See https://sqlite.org/rescode.html#full");
+                        .whatToDo("Disk or temporary directory is full, attempt to clear space in the temporary directory. See https://sqlite.org/rescode.html#full. If you use the Pterodactyl panel, increase the \"tmpfs_size\" config setting. See https://pterodactyl.io/wings/1.0/configuration.html#other-values");
                 break;
             case 1104:
                 context.whatToDo("MySQL has too small query limits for the query. SET SQL_BIG_SELECTS=1 or SET MAX_JOIN_SIZE=# (higher number)");
