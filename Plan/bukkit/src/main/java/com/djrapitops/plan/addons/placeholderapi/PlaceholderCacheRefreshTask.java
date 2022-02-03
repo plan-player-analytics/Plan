@@ -54,7 +54,7 @@ public class PlaceholderCacheRefreshTask extends TaskSystem.Task {
             return;
         }
         List<String> placeholders = config.getStringList("Plugins.PlaceholderAPI.Load_these_placeholders_on_join");
-        if (placeholders.isEmpty() || (placeholders.size() == 1 && placeholders.contains("%plan_server_uuid%"))) {
+        if (placeholders.isEmpty() || placeholders.size() == 1 && placeholders.contains("%plan_server_uuid%")) {
             // Don't do anything if using default settings or placeholder api is not installed
             return;
         }
