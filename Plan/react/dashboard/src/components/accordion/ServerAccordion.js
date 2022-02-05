@@ -1,6 +1,6 @@
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCrosshairs, faGavel, faServer, faSkull} from "@fortawesome/free-solid-svg-icons";
+import {faCrosshairs, faGavel, faLocationArrow, faServer, faSkull} from "@fortawesome/free-solid-svg-icons";
 import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";
 import Datapoint from "../Datapoint";
 import {Col, Row} from "react-bootstrap-v5";
@@ -51,6 +51,11 @@ const ServerBody = ({i, server}) => {
                 />
                 <br/>
                 <Datapoint
+                    icon={faLocationArrow} color={"amber"}
+                    name="Join Address" value={server.join_address}
+                />
+                <br/>
+                <Datapoint
                     icon={faCrosshairs} color="red"
                     name="Player Kills" value={server.player_kills} bold
                 />
@@ -74,7 +79,7 @@ const ServerBody = ({i, server}) => {
     )
 }
 
-const SessionAccordion = ({servers}) => {
+const ServerAccordion = ({servers}) => {
     return (
         <Accordion headers={[
             <><Fa icon={faServer}/> Server</>,
@@ -92,4 +97,4 @@ const SessionAccordion = ({servers}) => {
     )
 }
 
-export default SessionAccordion
+export default ServerAccordion

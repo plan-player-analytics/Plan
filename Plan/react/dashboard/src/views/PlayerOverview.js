@@ -9,6 +9,7 @@ import {
     faCrosshairs,
     faGavel,
     faGlobe,
+    faLocationArrow,
     faServer,
     faSignal,
     faSignature,
@@ -104,7 +105,10 @@ const PlayerOverviewCard = ({player}) => (
                         icon={faServer} color="light-green"
                         name="Favorite server" value={player.info.favorite_server}
                     />
-                    <p>&nbsp;</p>
+                    <Datapoint
+                        icon={faLocationArrow} color="amber"
+                        name="Join Address" value={player.info.latest_join_address}
+                    />
                     <hr/>
                     <Datapoint
                         icon={faSignal} color="amber"
