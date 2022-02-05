@@ -112,12 +112,12 @@ public class ServerQueries {
 
     public static Query<Optional<Server>> fetchServerMatchingIdentifier(String identifier) {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
-                " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
+                WHERE + "(LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
                 OR + ServerTable.SERVER_ID + "=?" +
                 OR + ServerTable.SERVER_ID + "=?)" +
                 AND + ServerTable.INSTALLED + "=?" +
-                " LIMIT 1";
+                LIMIT + '1';
         return new QueryStatement<Optional<Server>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -149,7 +149,7 @@ public class ServerQueries {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?" +
                 AND + ServerTable.PROXY + "=?" +
-                " LIMIT 1";
+                LIMIT + '1';
         return new QueryStatement<Optional<Server>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -213,12 +213,12 @@ public class ServerQueries {
         if (identifier.isEmpty()) return db -> Collections.emptyList();
 
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
-                " WHERE (LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
+                WHERE + "(LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
                 OR + ServerTable.SERVER_ID + "=?" +
                 OR + ServerTable.SERVER_ID + "=?)" +
                 AND + ServerTable.INSTALLED + "=?" +
-                " LIMIT 1";
+                LIMIT + '1';
         return new QueryStatement<List<Server>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

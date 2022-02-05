@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -82,7 +83,7 @@ public class SQLiteDB extends SQLDB {
         try {
             return files.getResourceFromJar("dependencies/sqliteDriver.txt").asLines();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get SQLite dependency information", e);
+            throw new DBInitException("Failed to get SQLite dependency information: " + e.getMessage(), e);
         }
     }
 
@@ -93,7 +94,7 @@ public class SQLiteDB extends SQLDB {
 
             connection = getNewConnection(databaseFile);
         } catch (SQLException e) {
-            throw new DBInitException(e.getMessage(), e);
+            throw new DBInitException(e.toString(), e);
         }
         startConnectionPingTask();
     }
@@ -147,6 +148,16 @@ public class SQLiteDB extends SQLDB {
             return tryToConnect(dbFilePath, false);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new DBInitException("Failed to initialize SQLite Driver", e);
+        } finally {
+            new URLConnection(null) {
+                @Override
+                public void connect() {
+                    // Hack for fixing a class loading crash (https://github.com/plan-player-analytics/Plan/issues/2202)
+                    // Caused by https://github.com/xerial/sqlite-jdbc/issues/656
+                    // Where setDefaultUseCaches is set to false
+                    // TODO Remove after the underlying issue has been fixed in SQLite
+                }
+            }.setDefaultUseCaches(true);
         }
     }
 

@@ -124,7 +124,7 @@ public class DBCleanTask extends TaskSystem.Task {
                 // This is needed since the last updated number is updated at reload and it would lead to all data
                 // for plugins being deleted all the time.
                 if (System.currentTimeMillis() - lastReload <= deleteExtensionDataAfter) {
-                    database.executeTransaction(new RemoveOldExtensionsTransaction(deleteExtensionDataAfter, serverInfo.getServerUUID()));
+                    database.executeTransaction(new RemoveOldExtensionsTransaction(config.getExtensionSettings(), deleteExtensionDataAfter, serverInfo.getServerUUID()));
                 }
             }
         } catch (DBOpException e) {

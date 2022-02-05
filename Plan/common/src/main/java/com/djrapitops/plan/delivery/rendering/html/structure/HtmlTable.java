@@ -16,11 +16,16 @@
  */
 package com.djrapitops.plan.delivery.rendering.html.structure;
 
+import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Color;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public interface HtmlTable {
 
@@ -50,6 +55,43 @@ public interface HtmlTable {
         }
 
         return headers.toArray(new Header[0]);
+    }
+
+    static List<Object[]> mapToRows(List<Object[]> rows, TableColumnFormat[] tableColumnFormats) {
+        return rows.stream()
+                .map(row -> {
+                    List<Object> mapped = new ArrayList<>(row.length);
+                    for (int i = 0; i < row.length; i++) {
+                        Object value = row[i];
+                        if (value == null) {
+                            mapped.add(null);
+                        } else {
+                            TableColumnFormat format = tableColumnFormats[i];
+                            mapped.add(applyFormat(format, value));
+                        }
+                    }
+                    return mapped.toArray();
+                })
+                .collect(Collectors.toList());
+    }
+
+    static Object applyFormat(TableColumnFormat format, Object value) {
+        try {
+            switch (format) {
+                case TIME_MILLISECONDS:
+                    return Formatters.getInstance().timeAmount().apply(Long.parseLong(value.toString()));
+                case DATE_YEAR:
+                    return Formatters.getInstance().yearLong().apply(Long.parseLong(value.toString()));
+                case DATE_SECOND:
+                    return Formatters.getInstance().secondLong().apply(Long.parseLong(value.toString()));
+                case PLAYER_NAME:
+                    return Html.LINK.create("../player/" + Html.encodeToURL(Html.swapColorCodesToSpan(value.toString())));
+                default:
+                    return Html.swapColorCodesToSpan(value.toString());
+            }
+        } catch (Exception e) {
+            return value;
+        }
     }
 
     String toHtml();

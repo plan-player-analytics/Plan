@@ -53,6 +53,14 @@ class HtmlTest {
     }
 
     @Test
+    void colorsToSpanSupportsHex() {
+        String testString = "§x§0§f§e§e§d§2Hello, §aPerson§r - How Are you?";
+        String expected = "<span style=\"color: #0feed2;\">" + "Hello, " + Html.COLOR_A.create() + "Person</span></span> - How Are you?";
+        String result = Html.swapColorCodesToSpan(testString);
+        assertEquals(expected, result);
+    }
+
+    @Test
     void colorsToSpanSwapsEscapedHtmlColors() {
         String testString = "§fHello, §aPerson§r - How Are you?";
         String expected = Html.COLOR_F.create() + "Hello, " + Html.COLOR_A.create() + "Person</span></span> - How Are you?";

@@ -53,6 +53,7 @@ public class ServerFileLoader extends Config implements ServerLoader {
     }
 
     public void prepare() throws IOException {
+        read();
         try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("DefaultServerInfoFile.yml").asInputStream())) {
             copyMissing(reader.read());
         }

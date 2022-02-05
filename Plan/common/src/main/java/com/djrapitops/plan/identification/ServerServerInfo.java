@@ -100,6 +100,7 @@ public class ServerServerInfo extends ServerInfo {
 
     private Server registerNew(ServerUUID serverUUID) {
         Server server = createServerObject(serverUUID);
+        logger.info("Registering a new server in database with UUID " + serverUUID);
         fromDatabase.save(server);
 
         Server stored = fromDatabase.load(serverUUID)

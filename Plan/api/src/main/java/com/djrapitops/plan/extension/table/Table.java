@@ -48,6 +48,7 @@ public final class Table {
 
     private final String[] columns;
     private final Icon[] icons;
+    private final TableColumnFormat[] tableColumnFormats;
 
     private final List<Object[]> rows;
 
@@ -56,6 +57,10 @@ public final class Table {
 
         columns = new String[5];
         icons = new Icon[5];
+        tableColumnFormats = new TableColumnFormat[]{
+                TableColumnFormat.NONE, TableColumnFormat.NONE, TableColumnFormat.NONE,
+                TableColumnFormat.NONE, TableColumnFormat.NONE
+        };
         rows = new ArrayList<>();
     }
 
@@ -89,6 +94,10 @@ public final class Table {
 
     public List<Object[]> getRows() {
         return rows;
+    }
+
+    public TableColumnFormat[] getTableColumnFormats() {
+        return tableColumnFormats;
     }
 
     /**
@@ -169,6 +178,31 @@ public final class Table {
          */
         public Factory columnFive(String columnName, Icon icon) {
             return column(4, columnName, icon);
+        }
+
+        private Factory columnFormat(int index, TableColumnFormat tableColumnFormat) {
+            building.tableColumnFormats[index] = tableColumnFormat;
+            return this;
+        }
+
+        public Factory columnOneFormat(TableColumnFormat tableColumnFormat) {
+            return columnFormat(0, tableColumnFormat);
+        }
+
+        public Factory columnTwoFormat(TableColumnFormat tableColumnFormat) {
+            return columnFormat(1, tableColumnFormat);
+        }
+
+        public Factory columnThreeFormat(TableColumnFormat tableColumnFormat) {
+            return columnFormat(2, tableColumnFormat);
+        }
+
+        public Factory columnFourFormat(TableColumnFormat tableColumnFormat) {
+            return columnFormat(3, tableColumnFormat);
+        }
+
+        public Factory columnFiveFormat(TableColumnFormat tableColumnFormat) {
+            return columnFormat(4, tableColumnFormat);
         }
 
         /**

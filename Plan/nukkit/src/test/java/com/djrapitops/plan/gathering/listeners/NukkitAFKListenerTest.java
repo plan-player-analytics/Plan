@@ -18,6 +18,8 @@ package com.djrapitops.plan.gathering.listeners;
 
 import cn.nukkit.Player;
 import cn.nukkit.event.player.PlayerMoveEvent;
+import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.listeners.nukkit.NukkitAFKListener;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -51,11 +53,15 @@ class NukkitAFKListenerTest {
         when(config.get(TimeSettings.AFK_THRESHOLD)).thenReturn(TimeUnit.MINUTES.toMillis(3));
         errorLogger = Mockito.mock(ErrorLogger.class);
         underTest = new NukkitAFKListener(config, errorLogger);
+
+        new SessionCache().cacheSession(TestConstants.PLAYER_ONE_UUID, new ActiveSession(null, null, 0, null, null));
+        new SessionCache().cacheSession(TestConstants.PLAYER_TWO_UUID, new ActiveSession(null, null, 0, null, null));
     }
 
     @AfterEach
     void ensureNoErrors() {
         verifyNoInteractions(errorLogger);
+        SessionCache.clear();
     }
 
     @Test

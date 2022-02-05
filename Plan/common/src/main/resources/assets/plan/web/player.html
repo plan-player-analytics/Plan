@@ -144,8 +144,8 @@
                                                     id="data_kick_count"></span></p>
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <img class="rounded mx-auto d-block"
-                                                 src="https://cravatar.eu/helmavatar/${playerName}/120.png">
+                                            <img class="rounded mx-auto d-block" src="${playerHeadUrl}"
+                                                 style="width: 120px;">
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                             <p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span
@@ -184,7 +184,8 @@
                                                     id="data_activity_index_group"></span>)</span></p>
                                             <p><i class="col-green fa fa-fw fa-server"></i> Favorite Server <span
                                                     class="float-end" id="data_favorite_server"></span></p>
-                                            <p>&nbsp; </p>
+                                            <p><i class="col-amber fa fa-fw fa-location-arrow"></i> Join Address<span
+                                                    class="float-end" id="data_latest_join_address"></span></p>
                                             <hr>
                                             <p><i class="col-amber fa fa-fw fa-signal"></i> Average Ping <span
                                                     class="float-end" id="data_average_ping"></span></p>
@@ -717,9 +718,9 @@
         Highcharts.setOptions({
             lang: {noData: "No Data to Display"}, time: {timezoneOffset: ${timeZone} * 60}
         });
-        const playerName = '${playerName}';
+        const playerUUID = '${playerUUID}';
         setLoadingText('Loading player values..');
-        jsonRequest(`../v1/player?player=${encodeURIComponent(playerName)}`, function (json, error) {
+        jsonRequest(`../v1/player?player=${encodeURIComponent(playerUUID)}`, function (json, error) {
             loadPlayerOverviewValues(json, error);
             loadSessionAccordion(json, error);
             loadserverAccordion(json, error);

@@ -78,7 +78,12 @@ public enum Html {
      * @return String with span elements.
      */
     public static String swapColorCodesToSpan(String string) {
+        return swapColorCodesToSpan(string, string.contains("&sect;") ? "&sect;" : "§");
+    }
+
+    private static String swapColorCodesToSpan(String string, String splitWith) {
         if (string == null) return null;
+        if (!string.contains(splitWith)) return string;
 
         Html[] replacer = new Html[]{
                 Html.COLOR_0, Html.COLOR_1, Html.COLOR_2, Html.COLOR_3,
@@ -87,8 +92,6 @@ public enum Html {
                 Html.COLOR_C, Html.COLOR_D, Html.COLOR_E, Html.COLOR_F
         };
         Map<Character, String> colorMap = new HashMap<>();
-
-        String splitWith = string.contains("&sect;") ? "&sect;" : "§";
 
         for (Html html : replacer) {
             colorMap.put(Character.toLowerCase(html.name().charAt(6)), html.create());
@@ -105,6 +108,8 @@ public enum Html {
         boolean skipFirst = !string.startsWith(splitWith);
 
         int placedSpans = 0;
+        int hexNumbersLeft = 0;
+
         for (String part : split) {
             if (part.isEmpty()) {
                 continue;
@@ -116,10 +121,29 @@ public enum Html {
             }
 
             char colorChar = part.charAt(0);
+            // Deal with hex colors
+            if (hexNumbersLeft > 1) {
+                result.append(colorChar);
+                hexNumbersLeft--;
+                continue;
+            } else if (hexNumbersLeft == 1) {
+                result.append(colorChar).append(";\">").append(part.substring(1));
+                hexNumbersLeft--;
+                continue;
+            }
+
             if (colorChar == 'r') {
                 appendEndTags(result, placedSpans);
                 placedSpans = 0; // Colors were reset
                 result.append(part.substring(1));
+                continue;
+            }
+
+            // Deal with hex colors
+            if (colorChar == 'x') {
+                result.append("<span style=\"color: #");
+                hexNumbersLeft = 6;
+                placedSpans++;
                 continue;
             }
 

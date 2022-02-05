@@ -46,7 +46,8 @@ public interface TopListQueriesTest extends DatabaseTestPreparer {
 
         String expected = TestConstants.PLAYER_ONE_NAME;
         String result = db().query(TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(serverUUID(), 1, 0, System.currentTimeMillis()))
-                .orElseThrow(AssertionError::new);
+                .orElseThrow(AssertionError::new)
+                .getPlayerName();
         assertEquals(expected, result);
     }
 
@@ -56,7 +57,8 @@ public interface TopListQueriesTest extends DatabaseTestPreparer {
 
         String expected = TestConstants.PLAYER_ONE_NAME;
         String result = db().query(TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(serverUUID(), 1, 0, System.currentTimeMillis()))
-                .orElseThrow(AssertionError::new);
+                .orElseThrow(AssertionError::new)
+                .getPlayerName();
         assertEquals(expected, result);
     }
 

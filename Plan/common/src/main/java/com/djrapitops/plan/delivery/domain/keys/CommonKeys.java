@@ -55,6 +55,7 @@ public class CommonKeys {
 
     public static final Key<Boolean> BANNED = new Key<>(Boolean.class, "banned");
     public static final Key<Boolean> OPERATOR = new Key<>(Boolean.class, "operator");
+    public static final Key<String> JOIN_ADDRESS = new Key<>(String.class, "join_address");
 
     public static final Key<SessionsMutator> SESSIONS_MUTATOR = new Key<>(SessionsMutator.class, "SESSIONS_MUTATOR");
     public static final Key<TPSMutator> TPS_MUTATOR = new Key<>(TPSMutator.class, "TPS_MUTATOR");

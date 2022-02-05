@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.placeholder;
 
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.PerServerMutator;
 import com.djrapitops.plan.delivery.domain.mutators.PingMutator;
@@ -23,6 +24,9 @@ import com.djrapitops.plan.delivery.domain.mutators.PlayerVersusMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
+import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -70,6 +74,9 @@ public class PlayerPlaceHolders implements Placeholders {
         Formatter<Double> decimals = formatters.decimals();
         Formatter<Long> year = formatters.yearLong();
         Formatter<Long> time = formatters.timeAmount();
+
+        placeholders.register("player_is_afk", this::isAfk);
+        placeholders.register("player_is_afk_badge", player -> isAfk(player) ? "AFK" : "");
 
         placeholders.register("player_banned",
                 player -> player.getValue(PlayerKeys.BANNED)
@@ -159,10 +166,18 @@ public class PlayerPlaceHolders implements Placeholders {
                 ).getGroup()
         );
 
-        registerKillPlaceholders(placeholders, time);
+        registerKillPlaceholders(placeholders);
     }
 
-    private void registerKillPlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+    private boolean isAfk(PlayerContainer player) {
+        return SessionCache.getCachedSession(player.getUnsafe(PlayerKeys.UUID))
+                .map(ActiveSession::getLastMovementForAfkCalculation)
+                .filter(lastMovement -> lastMovement != AFKTracker.IGNORES_AFK
+                        && now() - lastMovement > config.get(TimeSettings.AFK_THRESHOLD))
+                .isPresent();
+    }
+
+    private void registerKillPlaceholders(PlanPlaceholders placeholders) {
         placeholders.register("player_player_caused_deaths",
                 player -> PlayerVersusMutator.forContainer(player).toPlayerDeathCount()
         );

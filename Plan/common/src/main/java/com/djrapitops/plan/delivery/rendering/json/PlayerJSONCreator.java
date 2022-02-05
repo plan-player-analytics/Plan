@@ -184,6 +184,7 @@ public class PlayerJSONCreator {
         info.put("activity_index", decimals.apply(activityIndex.getValue()));
         info.put("activity_index_group", activityIndex.getGroup());
         info.put("favorite_server", perServer.favoriteServer().map(favoriteServer -> serverNames.getOrDefault(favoriteServer, favoriteServer.toString())).orElse(locale.getString(GenericLang.UNKNOWN)));
+        info.put("latest_join_address", perServer.latestJoinAddress().orElse("-"));
         double averagePing = ping.average();
         int worstPing = ping.max();
         int bestPing = ping.min();
