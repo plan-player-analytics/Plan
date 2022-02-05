@@ -61,6 +61,7 @@ class BukkitAFKListenerTest {
     @AfterEach
     void ensureNoErrors() {
         verifyNoInteractions(errorLogger);
+        SessionCache.clear();
     }
 
     @Test

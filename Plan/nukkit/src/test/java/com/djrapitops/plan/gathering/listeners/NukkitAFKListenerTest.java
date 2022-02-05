@@ -61,6 +61,7 @@ class NukkitAFKListenerTest {
     @AfterEach
     void ensureNoErrors() {
         verifyNoInteractions(errorLogger);
+        SessionCache.clear();
     }
 
     @Test
