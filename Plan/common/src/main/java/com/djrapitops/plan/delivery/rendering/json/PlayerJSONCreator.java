@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.datatransfer.ExtensionDataDto;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.*;
 import com.djrapitops.plan.delivery.formatting.Formatter;
@@ -24,10 +25,13 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
@@ -123,6 +127,7 @@ public class PlayerJSONCreator {
         data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
         data.put("server_pie_colors", pieColors);
         data.put("first_day", 1); // Monday
+        data.put("extension_data", playerExtensionData(playerUUID));
         return data;
     }
 
@@ -269,6 +274,24 @@ public class PlayerJSONCreator {
 
     private <T> Optional<T> getWeapon(List<T> list, int index) {
         return list.size() <= index ? Optional.empty() : Optional.of(list.get(index));
+    }
+
+
+    public List<ExtensionDataDto> playerExtensionData(UUID playerUUID) {
+        Database database = dbSystem.getDatabase();
+        Map<ServerUUID, List<ExtensionData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
+        Map<ServerUUID, Server> servers = database.query(ServerQueries.fetchPlanServerInformation());
+
+        List<ExtensionDataDto> playerData = new ArrayList<>();
+        for (Map.Entry<ServerUUID, Server> entry : servers.entrySet()) {
+            ServerUUID serverUUID = entry.getKey();
+            playerData.add(new ExtensionDataDto(
+                    playerUUID.toString(), serverUUID.toString(),
+                    entry.getValue().getIdentifiableName(),
+                    extensionPlayerData.get(serverUUID)
+            ));
+        }
+        return playerData;
     }
 
     public static class Nickname {
