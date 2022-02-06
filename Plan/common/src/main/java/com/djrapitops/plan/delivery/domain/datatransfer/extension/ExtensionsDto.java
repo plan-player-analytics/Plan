@@ -14,25 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.domain.datatransfer;
+package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class ExtensionDataDto {
+public class ExtensionsDto {
 
     private final String playerUUID;
     private final String serverUUID;
     private final String serverName;
-    private final List<ExtensionData> extensionData;
+    private final List<ExtensionDataDto> extensionData;
 
-    public ExtensionDataDto(String playerUUID, String serverUUID, String serverName, List<ExtensionData> extensionData) {
+    public ExtensionsDto(String playerUUID, String serverUUID, String serverName, List<ExtensionData> extensionData) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
         this.serverName = serverName;
-        this.extensionData = extensionData;
+        this.extensionData = extensionData.stream().map(ExtensionDataDto::new).collect(Collectors.toList());
     }
 
     public String getServerUUID() {
@@ -43,7 +44,7 @@ public class ExtensionDataDto {
         return serverName;
     }
 
-    public List<ExtensionData> getExtensionData() {
+    public List<ExtensionDataDto> getExtensionData() {
         return extensionData;
     }
 
@@ -55,7 +56,7 @@ public class ExtensionDataDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ExtensionDataDto that = (ExtensionDataDto) o;
+        ExtensionsDto that = (ExtensionsDto) o;
         return Objects.equals(getPlayerUUID(), that.getPlayerUUID()) && Objects.equals(getServerUUID(), that.getServerUUID()) && Objects.equals(getServerName(), that.getServerName()) && Objects.equals(getExtensionData(), that.getExtensionData());
     }
 
@@ -66,7 +67,7 @@ public class ExtensionDataDto {
 
     @Override
     public String toString() {
-        return "ExtensionDataDto{" +
+        return "ExtensionsDto{" +
                 "playerUUID='" + playerUUID + '\'' +
                 ", serverUUID='" + serverUUID + '\'' +
                 ", serverName='" + serverName + '\'' +

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.delivery.domain.datatransfer.ExtensionDataDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionsDto;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.*;
 import com.djrapitops.plan.delivery.formatting.Formatter;
@@ -127,7 +127,7 @@ public class PlayerJSONCreator {
         data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
         data.put("server_pie_colors", pieColors);
         data.put("first_day", 1); // Monday
-        data.put("extension_data", playerExtensionData(playerUUID));
+        data.put("extensions", playerExtensionData(playerUUID));
         return data;
     }
 
@@ -277,15 +277,15 @@ public class PlayerJSONCreator {
     }
 
 
-    public List<ExtensionDataDto> playerExtensionData(UUID playerUUID) {
+    public List<ExtensionsDto> playerExtensionData(UUID playerUUID) {
         Database database = dbSystem.getDatabase();
         Map<ServerUUID, List<ExtensionData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
         Map<ServerUUID, Server> servers = database.query(ServerQueries.fetchPlanServerInformation());
 
-        List<ExtensionDataDto> playerData = new ArrayList<>();
+        List<ExtensionsDto> playerData = new ArrayList<>();
         for (Map.Entry<ServerUUID, Server> entry : servers.entrySet()) {
             ServerUUID serverUUID = entry.getKey();
-            playerData.add(new ExtensionDataDto(
+            playerData.add(new ExtensionsDto(
                     playerUUID.toString(), serverUUID.toString(),
                     entry.getValue().getIdentifiableName(),
                     extensionPlayerData.get(serverUUID)
