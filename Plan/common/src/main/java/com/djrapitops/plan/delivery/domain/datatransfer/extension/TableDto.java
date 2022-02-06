@@ -42,15 +42,16 @@ public class TableDto {
                 .collect(Collectors.toList());
 
         rows = HtmlTable.mapToRows(table.getRows(), table.getTableColumnFormats()).stream()
-                .map(row -> constructRow(table.getColumns(), row))
+                .map(row -> constructRow(columns, row))
                 .collect(Collectors.toList());
     }
 
-    private List<Object> constructRow(String[] columns, Object[] row) {
+    private List<Object> constructRow(List<String> columns, Object[] row) {
         List<Object> constructedRow = new ArrayList<>();
 
         int headerLength = row.length - 1;
-        for (int i = 0; i < columns.length; i++) {
+        int columnCount = columns.size();
+        for (int i = 0; i < columnCount; i++) {
             if (i > headerLength) {
                 constructedRow.add("-");
             } else {

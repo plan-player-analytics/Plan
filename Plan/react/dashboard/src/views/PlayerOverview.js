@@ -41,7 +41,7 @@ const PlayerOverviewCard = ({player}) => (
         </Card.Header>
         <Card.Body>
             <Row>
-                <Col lg={4}>
+                <Col sm={4}>
                     <p>
                         <Fa icon={faCircle} className={player.info.online ? "col-green" : "col-red"}/>
                         {player.info.online ? ' Online' : ' Offline'}
@@ -49,12 +49,12 @@ const PlayerOverviewCard = ({player}) => (
                     {player.info.operator ? <p><Fa icon={faSuperpowers} className="col-blue"/> Operator</p> : ''}
                     <p><Fa icon={faGavel} className="col-brown"/> Times Kicked: {player.info.kick_count}</p>
                 </Col>
-                <Col lg={4}>
+                <Col sm={4}>
                     <img className="rounded mx-auto d-block"
                          alt="player head image"
                          src={`https://cravatar.eu/helmavatar/${player.info.name}/120.png`}/>
                 </Col>
-                <Col lg={4}>
+                <Col sm={4}>
                     <p><Fa icon={faCrosshairs} className="col-red"/> Player Kills: {player.info.player_kill_count}</p>
                     <p><Fa icon={faCrosshairs} className="col-green"/> Mob Kills: {player.info.mob_kill_count}</p>
                     <p><Fa icon={faSkull}/> Deaths: {player.info.death_count}</p>

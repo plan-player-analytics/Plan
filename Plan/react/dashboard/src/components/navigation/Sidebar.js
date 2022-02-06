@@ -4,13 +4,14 @@ import logo from '../../Flaticon_circle.png';
 import {
     faCalendar,
     faCampground,
+    faCubes,
     faDoorOpen,
     faInfoCircle,
     faNetworkWired,
     faPalette,
     faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
-import {NavLink, useParams} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center">
@@ -52,9 +53,7 @@ const FooterButtons = () => (
 
 )
 
-const Sidebar = ({}) => {
-    let {identifier} = useParams();
-
+const Sidebar = () => {
     return (
         <ul className="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
             <Logo/>
@@ -63,6 +62,7 @@ const Sidebar = ({}) => {
             <Item active={false} href={"sessions"} icon={faCalendar} name="Sessions"/>
             <Item active={false} href={"pvppve"} icon={faCampground} name="PvP & PvE"/>
             <Item active={false} href={"servers"} icon={faNetworkWired} name="Servers Overview"/>
+            <Item active={false} href={"plugins/Server 1"} icon={faCubes} name="Plugins (Server 1)"/>
             <Divider/>
             <FooterButtons/>
         </ul>

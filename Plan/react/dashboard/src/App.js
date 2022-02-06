@@ -10,6 +10,7 @@ import player from "./mockdata/player.json";
 import PlayerSessions from "./views/PlayerSessions";
 import PlayerPvpPve from "./views/PlayerPvpPve";
 import PlayerServers from "./views/PlayerServers";
+import PlayerPluginData from "./views/PlayerPluginData";
 
 const PlayerRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -28,6 +29,7 @@ function App() {
                             <Route path="sessions" element={<PlayerSessions player={player}/>}/>
                             <Route path="pvppve" element={<PlayerPvpPve player={player}/>}/>
                             <Route path="servers" element={<PlayerServers player={player}/>}/>
+                            <Route path="plugins/:serverName" element={<PlayerPluginData player={player}/>}/>
                         </Route>
                     </Routes>
                 </BrowserRouter>
