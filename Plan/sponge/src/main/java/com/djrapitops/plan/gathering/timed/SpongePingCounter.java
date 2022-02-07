@@ -41,6 +41,7 @@ import org.spongepowered.api.event.network.ClientConnectionEvent;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,33 +51,42 @@ import java.util.concurrent.TimeUnit;
  */
 public class SpongePingCounter extends TaskSystem.Task {
 
+    private final Map<UUID, Long> startRecording;
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final Listeners listeners;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final RunnableFactory runnableFactory;
 
     @Inject
     public SpongePingCounter(
             Listeners listeners,
             PlanConfig config,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            RunnableFactory runnableFactory
+            ServerInfo serverInfo
     ) {
         this.listeners = listeners;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.runnableFactory = runnableFactory;
         playerHistory = new HashMap<>();
+        startRecording = new ConcurrentHashMap<>();
     }
 
     @Override
     public void run() {
         long time = System.currentTimeMillis();
+
+        Iterator<Map.Entry<UUID, Long>> starts = startRecording.entrySet().iterator();
+        while (starts.hasNext()) {
+            Map.Entry<UUID, Long> start = starts.next();
+            if (time >= start.getValue()) {
+                addPlayer(start.getKey());
+                starts.remove();
+            }
+        }
+
         Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
 
         while (iterator.hasNext()) {
@@ -114,12 +124,13 @@ public class SpongePingCounter extends TaskSystem.Task {
         }
     }
 
-    public void addPlayer(Player player) {
-        playerHistory.put(player.getUniqueId(), new ArrayList<>());
+    public void addPlayer(UUID uuid) {
+        playerHistory.put(uuid, new ArrayList<>());
     }
 
     public void removePlayer(Player player) {
         playerHistory.remove(player.getUniqueId());
+        startRecording.remove(player.getUniqueId());
     }
 
     private int getPing(Player player) {
@@ -129,15 +140,11 @@ public class SpongePingCounter extends TaskSystem.Task {
     @Listener
     public void onPlayerJoin(ClientConnectionEvent.Join joinEvent) {
         Player player = joinEvent.getTargetEntity();
-        Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
-        if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
+        Long pingDelayMs = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
+        if (pingDelayMs >= TimeUnit.HOURS.toMillis(2L)) {
             return;
         }
-        runnableFactory.create(() -> {
-            if (player.isOnline()) {
-                addPlayer(player);
-            }
-        }).runTaskLater(TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS));
+        startRecording.put(player.getUniqueId(), System.currentTimeMillis() + pingDelayMs);
     }
 
     @Listener

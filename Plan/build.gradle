@@ -7,8 +7,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.0" apply false
-//    id "io.github.slimjar" version "1.3.0" apply false
+    id "com.github.johnrengelman.shadow" version "7.1.2" apply false
     id "java"
     id "jacoco"
     id "checkstyle"
@@ -49,7 +48,6 @@ logger.lifecycle("Building artifact for version $fullVersion")
 subprojects {
     // Build plugins
     apply plugin: "com.github.johnrengelman.shadow"
-//    apply plugin: "io.github.slimjar"
     apply plugin: "java"
     apply plugin: "maven-publish"
 
@@ -62,15 +60,15 @@ subprojects {
     }
 
     ext {
-        daggerVersion = "2.39.1"
-        daggerCompilerVersion = "2.39.1"
+        daggerVersion = "2.40.5"
+        daggerCompilerVersion = "2.40.5"
 
         palVersion = "5.0.0"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
         paperVersion = "1.13.2-R0.1-SNAPSHOT"
-        spongeVersion = "7.3.0"
+        spongeVersion = "7.4.0"
         nukkitVersion = "1.0-SNAPSHOT"
         bungeeVersion = "1.16-R0.4"
         velocityVersion = "3.0.0-SNAPSHOT"
@@ -79,14 +77,14 @@ subprojects {
         commonsTextVersion = "1.9"
         commonsCompressVersion = "1.21"
         caffeineVersion = "2.9.2"
-        mysqlVersion = "8.0.27"
+        mysqlVersion = "8.0.28"
         sqliteVersion = "3.36.0.3"
         hikariVersion = "4.0.3"
-        slf4jVersion = "1.7.32"
-        geoIpVersion = "2.15.0"
-        gsonVersion = "2.8.8"
+        slf4jVersion = "1.7.35"
+        geoIpVersion = "2.16.1"
+        gsonVersion = "2.8.9"
         bstatsVersion = "2.2.1"
-        placeholderapiVersion = "2.10.10"
+        placeholderapiVersion = "2.11.1"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
     }
 
@@ -104,16 +102,15 @@ subprojects {
 
     dependencies {
         // Dependency Injection used across the project
-//        implementation "io.github.slimjar:slimjar:1.2.6" // Runtime dependency injection
         implementation "com.google.dagger:dagger:$daggerVersion"
         annotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
 
         // Test Tooling Dependencies
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'      // JUnit 5
-        testImplementation "org.mockito:mockito-core:4.0.0"                // Mockito Core
-        testImplementation "org.mockito:mockito-junit-jupiter:4.0.0"       // Mockito JUnit 5 Extension
-        testImplementation "org.seleniumhq.selenium:selenium-java:4.0.0" // Selenium (Browser tests)
+        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'      // JUnit 5
+        testImplementation "org.mockito:mockito-core:4.3.1"                // Mockito Core
+        testImplementation "org.mockito:mockito-junit-jupiter:4.3.1"       // Mockito JUnit 5 Extension
+        testImplementation "org.seleniumhq.selenium:selenium-java:4.1.2" // Selenium (Browser tests)
         testImplementation "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan

@@ -25,7 +25,6 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.upkeep.DBKeepAliveTask;
 import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.SemaphoreAccessCounter;
-import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -35,10 +34,15 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URLConnection;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 
 /**
  * @author AuroraLS3
@@ -57,18 +61,30 @@ public class SQLiteDB extends SQLDB {
      */
     private final SemaphoreAccessCounter connectionLock = new SemaphoreAccessCounter();
 
+    private Constructor<?> connectionConstructor;
+
     private SQLiteDB(
             File databaseFile,
             Locale locale,
             PlanConfig config,
+            PlanFiles files,
             Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, logger, errorLogger);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, files, runnableFactory, logger, errorLogger);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
+    }
+
+    @Override
+    protected List<String> getDependencyResource() {
+        try {
+            return files.getResourceFromJar("dependencies/sqliteDriver.txt").asLines();
+        } catch (IOException e) {
+            throw new DBInitException("Failed to get SQLite dependency information: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -78,19 +94,16 @@ public class SQLiteDB extends SQLDB {
 
             connection = getNewConnection(databaseFile);
         } catch (SQLException e) {
-            throw new DBInitException(e.getMessage(), e);
+            throw new DBInitException(e.toString(), e);
         }
         startConnectionPingTask();
     }
 
     public Connection getNewConnection(File dbFile) throws SQLException {
-        try {
-            Class.forName("org.sqlite.JDBC");
-        } catch (ClassNotFoundException e) {
-            errorLogger.critical(e, ErrorContext.builder().whatToDo("Install SQLite Driver to the server").build());
-            return null;
+        if (driverClassLoader == null) {
+            logger.info("Downloading SQLite Driver, this may take a while...");
+            downloadDriver();
         }
-
         String dbFilePath = dbFile.getAbsolutePath();
 
         Connection newConnection = getConnectionFor(dbFilePath);
@@ -99,11 +112,52 @@ public class SQLiteDB extends SQLDB {
     }
 
     private Connection getConnectionFor(String dbFilePath) throws SQLException {
+        ensureConstructorIsAvailable();
+        return tryToConnect(dbFilePath, true);
+    }
+
+    private void ensureConstructorIsAvailable() {
+        if (connectionConstructor != null) {
+            return;
+        }
+
         try {
-            return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath + "?journal_mode=WAL");
-        } catch (SQLException ignored) {
+            Class<?> connectionClass = driverClassLoader.loadClass("org.sqlite.jdbc4.JDBC4Connection");
+            connectionConstructor = connectionClass.getConstructor(String.class, String.class, Properties.class);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            throw new DBInitException("Failed to initialize SQLite Driver", e);
+        }
+    }
+
+    private Connection tryToConnect(String dbFilePath, boolean withWAL) throws SQLException {
+        try {
+            Properties properties = new Properties();
+            if (withWAL) properties.put("journal_mode", "WAL");
+
+            return (Connection) connectionConstructor.newInstance("jdbc:sqlite:" + dbFilePath, dbFilePath, properties);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (!withWAL && cause instanceof SQLException) {
+                throw (SQLException) cause;
+            } else if (!(cause instanceof SQLException)) {
+                throw new DBInitException("Failed to initialize SQLite Driver", cause);
+            }
+
+            // Run the method again with withWAL set to false, if it fails again, an exception will be thrown above
             logger.info(locale.getString(PluginLang.DB_NOTIFY_SQLITE_WAL));
-            return DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
+            return tryToConnect(dbFilePath, false);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new DBInitException("Failed to initialize SQLite Driver", e);
+        } finally {
+            new URLConnection(null) {
+                @Override
+                public void connect() {
+                    // Hack for fixing a class loading crash (https://github.com/plan-player-analytics/Plan/issues/2202)
+                    // Caused by https://github.com/xerial/sqlite-jdbc/issues/656
+                    // Where setDefaultUseCaches is set to false
+                    // TODO Remove after the underlying issue has been fixed in SQLite
+                }
+            }.setDefaultUseCaches(true);
         }
     }
 
@@ -216,7 +270,7 @@ public class SQLiteDB extends SQLDB {
 
         public SQLiteDB usingFile(File databaseFile) {
             return new SQLiteDB(databaseFile,
-                    locale, config, serverInfo,
+                    locale, config, files, serverInfo,
                     runnableFactory, logger, errorLogger1
             );
         }

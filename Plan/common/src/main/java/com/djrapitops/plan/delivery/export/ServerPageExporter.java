@@ -111,12 +111,14 @@ public class ServerPageExporter extends FileExporter {
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance', true);",
                         "loadServerCalendar, 'online-activity-overview', true);",
-                        "}, 'playerlist', true);"
+                        "}, 'playerlist', true);",
+                        "<head>"
                 },
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance');",
                         "loadServerCalendar, 'online-activity-overview');",
-                        "}, 'playerlist');"
+                        "}, 'playerlist');",
+                        "<head><style>.refresh-element {display: none;}</style>"
                 });
 
         export(to, exportPaths.resolveExportPaths(html));
@@ -203,7 +205,6 @@ public class ServerPageExporter extends FileExporter {
                 "../css/style.css",
                 "../vendor/datatables/datatables.min.js",
                 "../vendor/datatables/datatables.min.css",
-                "../vendor/highcharts/modules/stock.js",
                 "../vendor/highcharts/modules/map.js",
                 "../vendor/highcharts/mapdata/world.js",
                 "../vendor/highcharts/modules/drilldown.js",

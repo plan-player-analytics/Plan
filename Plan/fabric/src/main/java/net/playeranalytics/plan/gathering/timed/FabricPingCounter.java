@@ -41,6 +41,7 @@ import net.playeranalytics.plugin.server.Listeners;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -51,13 +52,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class FabricPingCounter extends TaskSystem.Task implements FabricListener {
 
+    private final Map<UUID, Long> startRecording;
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final Listeners listeners;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final RunnableFactory runnableFactory;
     private final MinecraftDedicatedServer server;
 
     private boolean isEnabled = false;
@@ -68,15 +69,14 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            RunnableFactory runnableFactory,
             MinecraftDedicatedServer server
     ) {
         this.listeners = listeners;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.runnableFactory = runnableFactory;
         this.server = server;
+        startRecording = new ConcurrentHashMap<>();
         playerHistory = new HashMap<>();
         ServerPlayConnectionEvents.JOIN.register((handler, sender, minecraftServer) -> onPlayerJoin(handler.player));
         ServerPlayConnectionEvents.DISCONNECT.register((handler, minecraftServer) -> onPlayerQuit(handler.player));
@@ -88,6 +88,16 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
             return;
         }
         long time = System.currentTimeMillis();
+
+        Iterator<Map.Entry<UUID, Long>> starts = startRecording.entrySet().iterator();
+        while (starts.hasNext()) {
+            Map.Entry<UUID, Long> start = starts.next();
+            if (time >= start.getValue()) {
+                addPlayer(start.getKey());
+                starts.remove();
+            }
+        }
+
         Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
 
         while (iterator.hasNext()) {
@@ -126,12 +136,13 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
         this.enable();
     }
 
-    public void addPlayer(ServerPlayerEntity player) {
-        playerHistory.put(player.getUuid(), new ArrayList<>());
+    public void addPlayer(UUID uuid) {
+        playerHistory.put(uuid, new ArrayList<>());
     }
 
     public void removePlayer(ServerPlayerEntity player) {
         playerHistory.remove(player.getUuid());
+        startRecording.remove(player.getUuid());
     }
 
     private int getPing(ServerPlayerEntity player) {
@@ -143,15 +154,11 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
             return;
         }
 
-        Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
-        if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
+        Long pingDelayMs = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
+        if (pingDelayMs >= TimeUnit.HOURS.toMillis(2L)) {
             return;
         }
-        runnableFactory.create(() -> {
-            if (server.getPlayerManager().getPlayerList().contains(player)) {
-                addPlayer(player);
-            }
-        }).runTaskLater(TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS));
+        startRecording.put(player.getUuid(), System.currentTimeMillis() + pingDelayMs);
     }
 
     public void onPlayerQuit(ServerPlayerEntity player) {

@@ -20,7 +20,9 @@ import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
+import com.djrapitops.plan.exceptions.ExceptionWithContext;
 import com.djrapitops.plan.version.VersionChecker;
+import org.apache.commons.text.TextStringBuilder;
 
 /**
  * Page to display error stacktrace.
@@ -52,18 +54,29 @@ public class InternalErrorPage implements Page {
         placeholders.put("title", Icon.called("bug") + " 500 Internal Error occurred");
         placeholders.put("titleText", "500 Internal Error occurred");
         placeholders.put("paragraph", createContent());
-        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("versionButton", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("version", versionChecker.getCurrentVersion());
         placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
         return placeholders.apply(template);
     }
 
     private String createContent() {
-        StringBuilder paragraph = new StringBuilder();
+        TextStringBuilder paragraph = new TextStringBuilder();
         paragraph.append("Please report this issue here: ");
         paragraph.append(Html.LINK.create("https://github.com/plan-player-analytics/Plan/issues", "Issues"));
         paragraph.append("<br><br><pre>");
         paragraph.append(error).append(" | ").append(errorMsg);
+
+        if (error instanceof ExceptionWithContext) {
+            ((ExceptionWithContext) error).getContext()
+                    .ifPresent(context -> paragraph.append(context.getWhatToDo()
+                                    .map(whatToDo -> "<br>What to do about it: " + whatToDo)
+                                    .orElse("<br>Error message: " + error.getMessage()))
+                            .append("<br><br>Related things:<br>")
+                            .appendWithSeparators(context.toLines(), "<br>")
+                            .append("<br>"));
+        }
 
         for (StackTraceElement element : error.getStackTrace()) {
             paragraph.append("<br>");
@@ -78,7 +91,7 @@ public class InternalErrorPage implements Page {
         return paragraph.toString();
     }
 
-    private void appendCause(Throwable cause, StringBuilder paragraph) {
+    private void appendCause(Throwable cause, TextStringBuilder paragraph) {
         paragraph.append("<br>Caused by: ").append(cause);
         for (StackTraceElement element : cause.getStackTrace()) {
             paragraph.append("<br>");

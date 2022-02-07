@@ -19,6 +19,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.web.ResolverSvc;
 import com.djrapitops.plan.delivery.web.ResourceSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
@@ -143,9 +144,8 @@ public class PlanSystem implements SubSystem {
         logger.info("§2  ██▌██▌██▌██▌  §fv" + versionChecker.getCurrentVersion());
         logger.info("");
 
-        if ("1.8".equals(System.getProperty("java.specification.version"))
-                || "9".equals(System.getProperty("java.specification.version"))
-                || "10".equals(System.getProperty("java.specification.version"))
+        String javaVersion = System.getProperty("java.specification.version");
+        if ("1.8".equals(javaVersion) || "9".equals(javaVersion) || "10".equals(javaVersion)
         ) {
             logger.warn("! ------- Deprecation warning ------- !");
             logger.warn("Plan version 5.5 will require Java 11 or newer,");
@@ -205,6 +205,7 @@ public class PlanSystem implements SubSystem {
     @Override
     public void disable() {
         enabled = false;
+        Formatters.clearSingleton();
         disableSystems(
                 taskSystem,
                 cacheSystem,

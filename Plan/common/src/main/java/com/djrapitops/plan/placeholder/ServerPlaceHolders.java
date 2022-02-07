@@ -25,6 +25,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
@@ -70,6 +71,54 @@ public class ServerPlaceHolders implements Placeholders {
         Formatter<Double> percentage = formatters.percentage();
 
         Database database = dbSystem.getDatabase();
+
+        placeholders.registerStatic("server_players_registered_total",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(0, now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_registered_day",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(dayAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_registered_week",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(weekAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_registered_month",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(monthAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("network_players_registered_total",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(0, now())));
+
+        placeholders.registerStatic("network_players_registered_day",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(dayAgo(), now())));
+
+        placeholders.registerStatic("network_players_registered_week",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(weekAgo(), now())));
+
+        placeholders.registerStatic("network_players_registered_month",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(monthAgo(), now())));
+
+        placeholders.registerStatic("server_players_unique_total",
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(0, now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_unique_day",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_unique_week",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("server_players_unique_month",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(monthAgo(), now(), getServerUUID(parameters))));
+
+        placeholders.registerStatic("network_players_unique_total",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(0, now())));
+
+        placeholders.registerStatic("network_players_unique_day",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now())));
+
+        placeholders.registerStatic("network_players_unique_week",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now())));
+
+        placeholders.registerStatic("network_players_unique_month",
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(monthAgo(), now())));
 
         placeholders.registerStatic("server_tps_day",
                 parameters -> decimals.apply(database.query(TPSQueries.averageTPS(dayAgo(), now(), getServerUUID(parameters)))));
@@ -162,39 +211,46 @@ public class ServerPlaceHolders implements Placeholders {
     }
 
     private void registerDynamicCategoryPlaceholders(PlanPlaceholders placeholders, Database database) {
-        List<TopCategoryQuery> queries = new ArrayList<>();
+        List<TopCategoryQuery<Long>> queries = new ArrayList<>();
         queries.addAll(createCategoryQueriesForAllTimespans("playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
         queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
 
         for (int i = 0; i < 10; i++) {
-            for (TopCategoryQuery query : queries) {
+            for (TopCategoryQuery<Long> query : queries) {
                 final int nth = i;
                 placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth),
-                        parameters -> database.query(query.getQuery(nth, parameters)).orElse("-"));
+                        parameters -> database.query(query.getQuery(nth, parameters))
+                                .map(TopListQueries.TopListEntry::getPlayerName)
+                                .orElse("-"));
+                placeholders.registerStatic(String.format("top_%s_%s_%s_value", query.getCategory(), query.getTimeSpan(), nth),
+                        parameters -> database.query(query.getQuery(nth, parameters))
+                                .map(TopListQueries.TopListEntry::getValue)
+                                .map(formatters.timeAmount())
+                                .orElse("-"));
             }
         }
     }
 
-    private List<TopCategoryQuery> createCategoryQueriesForAllTimespans(String category, QueryCreator queryCreator) {
+    private <T> List<TopCategoryQuery<T>> createCategoryQueriesForAllTimespans(String category, QueryCreator<T> queryCreator) {
         return Arrays.asList(
-                new TopCategoryQuery(category, queryCreator, "month", TimeUnit.DAYS.toMillis(30)),
-                new TopCategoryQuery(category, queryCreator, "week", TimeUnit.DAYS.toMillis(7)),
-                new TopCategoryQuery(category, queryCreator, "day", TimeUnit.DAYS.toMillis(1)),
-                new TopCategoryQuery(category, queryCreator, "total", System.currentTimeMillis())
+                new TopCategoryQuery<>(category, queryCreator, "month", TimeUnit.DAYS.toMillis(30)),
+                new TopCategoryQuery<>(category, queryCreator, "week", TimeUnit.DAYS.toMillis(7)),
+                new TopCategoryQuery<>(category, queryCreator, "day", TimeUnit.DAYS.toMillis(1)),
+                new TopCategoryQuery<>(category, queryCreator, "total", System.currentTimeMillis())
         );
     }
 
-    interface QueryCreator {
-        Query<Optional<String>> apply(Integer number, Long timespan, Arguments parameters);
+    interface QueryCreator<T> {
+        Query<Optional<TopListQueries.TopListEntry<T>>> apply(Integer number, Long timespan, Arguments parameters);
     }
 
-    public static class TopCategoryQuery {
+    public static class TopCategoryQuery<T> {
         private final String category;
-        private final QueryCreator queryCreator;
+        private final QueryCreator<T> queryCreator;
         private final String timeSpan;
         private final long timeSpanMillis;
 
-        public TopCategoryQuery(String category, QueryCreator queryCreator, String timeSpan, long timespan) {
+        public TopCategoryQuery(String category, QueryCreator<T> queryCreator, String timeSpan, long timespan) {
             this.category = category;
             this.queryCreator = queryCreator;
             this.timeSpan = timeSpan;
@@ -209,7 +265,7 @@ public class ServerPlaceHolders implements Placeholders {
             return timeSpan;
         }
 
-        public Query<Optional<String>> getQuery(int i, Arguments parameters) {
+        public Query<Optional<TopListQueries.TopListEntry<T>>> getQuery(int i, Arguments parameters) {
             return queryCreator.apply(i, timeSpanMillis, parameters);
         }
     }

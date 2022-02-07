@@ -100,7 +100,7 @@ public class WebServer implements SubSystem {
 
         if (!isEnabled()) {
             if (config.isTrue(WebserverSettings.DISABLED)) {
-                logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
+                logger.info(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
             } else {
                 logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
             }

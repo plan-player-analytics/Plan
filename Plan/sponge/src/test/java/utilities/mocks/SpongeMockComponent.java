@@ -20,6 +20,7 @@ import com.djrapitops.plan.DaggerPlanSpongeComponent;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSpongeComponent;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.storage.database.SQLDB;
 import org.mockito.Mockito;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.MinecraftVersion;
@@ -50,6 +51,7 @@ public class SpongeMockComponent {
 
     public SpongeMockComponent(Path tempDir) {
         this.tempDir = tempDir;
+        SQLDB.setDownloadDriver(false);
     }
 
     public PlanPlugin getPlanMock() throws Exception {

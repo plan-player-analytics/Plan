@@ -41,7 +41,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public boolean supportsChatEvents() {
-        return true;
+        return isPlayer();
     }
 
     @Shadow
@@ -68,7 +68,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public Optional<UUID> getUUID() {
-        return Optional.ofNullable(isConsole() ? null : getEntity().getUuid());
+        return getPlayer().map(Entity::getUuid);
     }
 
     @Override
@@ -90,5 +90,18 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
             return Optional.of(player);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public int hashCode() {
+        return Boolean.hashCode(isConsole()) + getUUID().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ServerCommandSourceMixin other)) return false;
+
+        return isConsole() == other.isConsole()
+                && getUUID().equals(other.getUUID());
     }
 }

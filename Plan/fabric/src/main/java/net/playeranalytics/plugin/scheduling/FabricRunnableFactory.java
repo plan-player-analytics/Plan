@@ -24,7 +24,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class FabricRunnableFactory implements RunnableFactory {
 
-    private final ScheduledExecutorService executorService;
+    private ScheduledExecutorService executorService;
     private final Set<FabricTask> tasks;
 
     public FabricRunnableFactory() {
@@ -34,13 +34,21 @@ public class FabricRunnableFactory implements RunnableFactory {
 
     @Override
     public UnscheduledTask create(Runnable runnable) {
-        return new UnscheduledFabricTask(executorService, runnable, task -> {
+        return new UnscheduledFabricTask(getExecutorService(), runnable, task -> {
         });
+    }
+
+    private ScheduledExecutorService getExecutorService() {
+        if (executorService.isShutdown() || executorService.isTerminated()) {
+            // Hacky way of fixing tasks when plugin is disabled, leaks one thread every reload.
+            executorService = Executors.newSingleThreadScheduledExecutor();
+        }
+        return executorService;
     }
 
     @Override
     public UnscheduledTask create(PluginRunnable runnable) {
-        return new UnscheduledFabricTask(executorService, runnable, runnable::setCancellable);
+        return new UnscheduledFabricTask(getExecutorService(), runnable, runnable::setCancellable);
     }
 
     @Override

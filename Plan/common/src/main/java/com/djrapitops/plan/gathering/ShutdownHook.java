@@ -17,7 +17,12 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
+import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.identification.ServerUUID;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import org.apache.commons.text.TextStringBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,10 +34,24 @@ import javax.inject.Singleton;
  *
  * @author AuroraLS3
  */
+@SuppressWarnings("unused")
 @Singleton
 public class ShutdownHook extends Thread {
 
     private static ShutdownHook activated;
+
+    // Static variables to keep these classes loaded until JVM shutdown hook has run.
+    private static final SessionCache sessionCache = new SessionCache();
+    private static final ActiveSession activeSession = new ActiveSession(null, null, 0, null, null);
+    private static final FinishedSession finishedSession = new FinishedSession(null, null, 0, 0, 0, null);
+    private static final DataMap extraData = new DataMap();
+    private static final WorldTimes worldTimes = new WorldTimes();
+    private static final PlayerKills playerKills = new PlayerKills();
+    private static final PlayerKill playerKill = new PlayerKill(null, null, null, null, 0);
+    private static final ServerIdentifier serverIdentifier = new ServerIdentifier(ServerUUID.randomUUID(), (String) null);
+    private static final MobKillCounter mobKillCounter = new MobKillCounter();
+    private static final DeathCounter deathCounter = new DeathCounter();
+    private static final TextStringBuilder textStringBuilder = new TextStringBuilder(0);
 
     private final ShutdownDataPreservation dataPreservation;
 

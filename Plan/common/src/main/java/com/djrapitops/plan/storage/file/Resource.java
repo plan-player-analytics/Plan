@@ -17,6 +17,8 @@
 package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.delivery.web.resource.WebResource;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -63,6 +65,10 @@ public interface Resource {
      * @throws IOException If the resource is unavailable.
      */
     String asString() throws IOException;
+
+    default <T> T asParsed(Gson gson, TypeToken<T> token) throws IOException {
+        return gson.fromJson(asString(), token.getType());
+    }
 
     /**
      * Map to a WebResource used by {@link com.djrapitops.plan.delivery.web.ResourceService} APIs.

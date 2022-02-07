@@ -76,6 +76,7 @@ public class OreVersionInfoLoader {
             connection.setDoOutput(true);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Authorization", String.format("OreApi session=\"%s\"", session));
+            connection.setRequestProperty("User-Agent", "Player Analytics Update Checker");
             connection.connect();
             try (InputStream in = connection.getInputStream()) {
                 JsonArray versions = new JsonParser().parse(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
@@ -94,6 +95,7 @@ public class OreVersionInfoLoader {
         try {
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
+            connection.setRequestProperty("User-Agent", "Player Analytics Update Checker");
             connection.connect();
             try (InputStream in = connection.getInputStream()) {
                 return new JsonParser().parse(readInputFully(in)).getAsJsonObject().get("session").getAsString();

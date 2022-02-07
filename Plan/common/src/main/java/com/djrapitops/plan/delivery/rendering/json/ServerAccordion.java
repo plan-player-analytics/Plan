@@ -83,6 +83,7 @@ public class ServerAccordion {
             server.put("operator", ofServer.getValue(PerServerKeys.OPERATOR).orElse(false));
             server.put("registered", year.apply(ofServer.getValue(PerServerKeys.REGISTERED).orElse(0L)));
             server.put("last_seen", year.apply(sessionsMutator.toLastSeen()));
+            server.put("join_address", ofServer.getValue(PerServerKeys.JOIN_ADDRESS).orElse("-"));
 
             server.put("session_count", sessionsMutator.count());
             server.put("playtime", timeAmount.apply(sessionsMutator.toPlaytime()));

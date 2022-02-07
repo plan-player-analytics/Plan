@@ -158,22 +158,6 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
         pluginLogger = (FabricPluginLogger) abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
 
-//        pluginLogger.info("Loading dependencies, this might take a while...");
-//        try {
-//            ApplicationBuilder.injecting("Plan", new FabricInjectable(pluginLogger))
-//                    .logger((message, args) -> pluginLogger.info(message, args))
-//                    // Use paper repository for downloading slimjar dependencies
-//                    .internalRepositories(Collections.singletonList(new Repository(new URL("https://papermc.io/repo/repository/maven-public/"))))
-//                    .downloadDirectoryPath(Paths.get(getDataFolder().getAbsolutePath()).resolve("libraries"))
-//                    .build();
-//        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
-//            String version = abstractionLayer.getPluginInformation().getVersion();
-//            pluginLogger.error(this.getClass().getSimpleName() + "-v" + version, e);
-//            pluginLogger.error("Plan failed to load its dependencies correctly!");
-//            pluginLogger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
-//            onDisable();
-//        }
-
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             this.server = (MinecraftDedicatedServer) server;
             onEnable();
