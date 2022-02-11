@@ -67,6 +67,10 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(TPSTable.TABLE_NAME, "plan_tps_date_index",
                 TPSTable.DATE
         );
+
+        // Made during optimizing with real data
+        createIndex(PingTable.TABLE_NAME, "plan_ping_player_uuid_index", PingTable.USER_UUID);
+        createIndex(GeoInfoTable.TABLE_NAME, "plan_geolocations_uuid_index", GeoInfoTable.USER_UUID);
     }
 
     private void createIndex(String tableName, String indexName, String... indexedColumns) {

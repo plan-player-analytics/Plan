@@ -243,34 +243,17 @@ public class PingQueries {
     }
 
     public static Query<Map<String, Ping>> fetchPingDataOfNetworkByGeolocation() {
-        String selectPingOfServer = SELECT +
-                PingTable.MAX_PING + ", " +
-                PingTable.MIN_PING + ", " +
-                PingTable.AVG_PING + ", " +
-                PingTable.USER_UUID + ", " +
-                PingTable.SERVER_UUID +
-                FROM + PingTable.TABLE_NAME;
-
-        String selectGeolocations = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED +
-                FROM + GeoInfoTable.TABLE_NAME;
-        String selectLatestGeolocationDate = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
-                FROM + GeoInfoTable.TABLE_NAME +
-                GROUP_BY + GeoInfoTable.USER_UUID;
-
-        String selectPingByGeolocation = SELECT + GeoInfoTable.GEOLOCATION +
+        String selectPingByGeolocation = SELECT + "a." + GeoInfoTable.GEOLOCATION +
                 ", MIN(" + PingTable.MIN_PING + ") as minPing" +
                 ", MAX(" + PingTable.MAX_PING + ") as maxPing" +
                 ", AVG(" + PingTable.AVG_PING + ") as avgPing" +
-                FROM + "(" +
-                "(" + selectGeolocations + ") AS q1" +
-                INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS q2 ON q1.uuid = q2.uuid" +
-                INNER_JOIN + '(' + selectPingOfServer + ") sp on sp." + PingTable.USER_UUID + "=q1.uuid)" +
-                WHERE + GeoInfoTable.LAST_USED + "=m" +
+                FROM + GeoInfoTable.TABLE_NAME + " a" +
+                // Super smart optimization https://stackoverflow.com/a/28090544
+                // Join the last_used column, but only if there's a bigger one.
+                // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
+                LEFT_JOIN + GeoInfoTable.GEOLOCATION + " b ON a.uuid = b.uuid" + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
+                INNER_JOIN + PingTable.TABLE_NAME + " sp on sp." + PingTable.USER_UUID + "=a.uuid)" +
+                WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
                 GROUP_BY + GeoInfoTable.GEOLOCATION;
 
         return new QueryAllStatement<Map<String, Ping>>(selectPingByGeolocation) {
