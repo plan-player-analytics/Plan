@@ -665,12 +665,9 @@
                                         Server selector</h6>
                                 </div>
                                 <select class="form-control" id="performance-server-selector" multiple>
-                                    <option selected>Proxy server</option>
-                                    <option>Server 1</option>
-                                    <option>Skyblock</option>
-                                    <option>Server 3</option>
+                                    <option>Loading..</option>
                                 </select>
-                                <button class="btn bg-plan" onclick="onSelectPerformanceServers()">Apply</button>
+                                <button class="btn bg-plan" onclick="onSelectperformanceservers()">Apply</button>
                             </div>
                         </div>
                     </div>
@@ -1143,7 +1140,7 @@
             responsive: true
         });
 
-        loadPerformanceServerOptions();
+        loadperformanceserverOptions();
 
         setLoadingText('Almost done..');
         openPage();
