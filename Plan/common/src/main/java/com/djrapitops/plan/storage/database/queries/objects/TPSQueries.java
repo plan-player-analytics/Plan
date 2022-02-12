@@ -176,15 +176,15 @@ public class TPSQueries {
         };
     }
 
-    public static Query<Map<ServerUUID, List<TPS>>> fetchTPSDataOfAllServersBut(long after, long before, ServerUUID leaveOut) {
-        String sql = SELECT + '*' +
+    public static Query<Map<Integer, List<TPS>>> fetchTPSDataOfAllServersBut(long after, long before, ServerUUID leaveOut) {
+        String sql = SELECT + DATE + ',' + TPS + ',' + PLAYERS_ONLINE + ',' + SERVER_ID +
                 FROM + TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " on " + ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + '=' + SERVER_ID +
                 WHERE + ServerTable.SERVER_UUID + "!=?" +
                 AND + ServerTable.INSTALLED + "=?" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Map<ServerUUID, List<TPS>>>(sql, 1000) {
+        return new QueryStatement<Map<Integer, List<TPS>>>(sql, 5000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 if (leaveOut != null) {
@@ -198,12 +198,16 @@ public class TPSQueries {
             }
 
             @Override
-            public Map<ServerUUID, List<TPS>> processResults(ResultSet set) throws SQLException {
-                Map<ServerUUID, List<TPS>> byServer = new HashMap<>();
+            public Map<Integer, List<TPS>> processResults(ResultSet set) throws SQLException {
+                Map<Integer, List<TPS>> byServer = new HashMap<>();
                 while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
-                    List<TPS> ofServer = byServer.computeIfAbsent(serverUUID, Lists::create);
-                    ofServer.add(extractTPS(set));
+                    Integer serverUID = set.getInt(SERVER_ID);
+                    List<TPS> ofServer = byServer.computeIfAbsent(serverUID, Lists::create);
+                    ofServer.add(TPSBuilder.get()
+                            .date(set.getLong(DATE))
+                            .tps(set.getDouble(TPS))
+                            .playersOnline(set.getInt(PLAYERS_ONLINE))
+                            .toTPS());
                 }
                 return byServer;
             }

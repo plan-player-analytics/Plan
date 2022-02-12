@@ -190,7 +190,12 @@ public class JSONFactory {
                 .findFirst()
                 .map(Server::getUuid).orElse(null);
 
-        Map<ServerUUID, List<TPS>> tpsData = db.query(
+        Map<ServerUUID, Integer> serverUuidToId = new HashMap<>();
+        for (Server server : serverInformation.values()) {
+            server.getId().ifPresent(serverId -> serverUuidToId.put(server.getUuid(), serverId));
+        }
+
+        Map<Integer, List<TPS>> tpsDataByServerId = db.query(
                 TPSQueries.fetchTPSDataOfAllServersBut(weekAgo, now, proxyUUID)
         );
         Map<ServerUUID, Integer> totalPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(0, now));
@@ -214,7 +219,7 @@ public class JSONFactory {
                     server.put("last_peak_players", recentPeak.map(DateObj::getValue).orElse(0));
                     server.put("best_peak_players", allTimePeak.map(DateObj::getValue).orElse(0));
 
-                    TPSMutator tpsMonth = new TPSMutator(tpsData.getOrDefault(serverUUID, Collections.emptyList()));
+                    TPSMutator tpsMonth = new TPSMutator(tpsDataByServerId.getOrDefault(serverUuidToId.get(serverUUID), Collections.emptyList()));
                     server.put("playersOnline", tpsMonth.all().stream()
                             .map(tps -> new double[]{tps.getDate(), tps.getPlayers()})
                             .toArray(double[][]::new));
