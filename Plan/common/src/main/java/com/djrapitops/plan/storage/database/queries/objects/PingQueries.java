@@ -251,10 +251,10 @@ public class PingQueries {
                 // Super smart optimization https://stackoverflow.com/a/28090544
                 // Join the last_used column, but only if there's a bigger one.
                 // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
-                LEFT_JOIN + GeoInfoTable.GEOLOCATION + " b ON a.uuid = b.uuid" + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
-                INNER_JOIN + PingTable.TABLE_NAME + " sp on sp." + PingTable.USER_UUID + "=a.uuid)" +
+                LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a.uuid = b.uuid" + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
+                INNER_JOIN + PingTable.TABLE_NAME + " sp on sp." + PingTable.USER_UUID + "=a.uuid" +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
-                GROUP_BY + GeoInfoTable.GEOLOCATION;
+                GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryAllStatement<Map<String, Ping>>(selectPingByGeolocation) {
             @Override
