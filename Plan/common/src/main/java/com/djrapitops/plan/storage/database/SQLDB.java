@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
@@ -197,7 +198,6 @@ public abstract class SQLDB extends AbstractDatabase {
                 new WorldTimesOptimizationPatch(),
                 new KillsOptimizationPatch(),
                 new SessionsOptimizationPatch(),
-                new PingOptimizationPatch(),
                 new NicknamesOptimizationPatch(),
                 new UserInfoOptimizationPatch(),
                 new GeoInfoOptimizationPatch(),
@@ -219,7 +219,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new PlayerTableRowPatch(),
                 new ExtensionTableProviderValuesForPatch(),
                 new RemoveIncorrectTebexPackageDataPatch(),
-                new ExtensionTableProviderFormattersPatch()
+                new ExtensionTableProviderFormattersPatch(),
+                new PingOptimizationPatch(),
         };
     }
 

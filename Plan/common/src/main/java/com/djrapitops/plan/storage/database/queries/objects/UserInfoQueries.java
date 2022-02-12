@@ -122,49 +122,6 @@ public class UserInfoQueries {
         };
     }
 
-    /**
-     * Query database for all User information of a specific server.
-     *
-     * @param serverUUID UUID of the Plan server.
-     * @return Map: Player UUID - user information
-     */
-    public static Query<Map<UUID, UserInfo>> fetchUserInformationOfServer(ServerUUID serverUUID) {
-        String sql = SELECT +
-                UserInfoTable.REGISTERED + ',' +
-                UserInfoTable.BANNED + ',' +
-                UserInfoTable.JOIN_ADDRESS + ',' +
-                UserInfoTable.OP + ',' +
-                UserInfoTable.USER_UUID + ',' +
-                UserInfoTable.SERVER_UUID +
-                FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_UUID + "=?";
-
-        return new QueryStatement<Map<UUID, UserInfo>>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
-                Map<UUID, UserInfo> userInformation = new HashMap<>();
-                while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
-                    UUID uuid = UUID.fromString(set.getString(UserInfoTable.USER_UUID));
-
-                    long registered = set.getLong(UserInfoTable.REGISTERED);
-                    boolean banned = set.getBoolean(UserInfoTable.BANNED);
-                    boolean op = set.getBoolean(UserInfoTable.OP);
-
-                    String joinAddress = set.getString(UserInfoTable.JOIN_ADDRESS);
-
-                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, joinAddress, banned));
-                }
-                return userInformation;
-            }
-        };
-    }
-
     public static Query<Map<UUID, Long>> fetchRegisterDates(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
                 UserInfoTable.USER_UUID + ',' +

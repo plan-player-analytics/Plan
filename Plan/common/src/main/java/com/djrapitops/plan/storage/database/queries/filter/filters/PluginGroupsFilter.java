@@ -83,7 +83,7 @@ public class PluginGroupsFilter extends MultiOptionFilter {
             super(SELECT + DISTINCT +
                     "pl." + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
                     "s." + ServerTable.NAME + " as server_name," +
-                    "s." + ServerTable.SERVER_ID + " as server_id," +
+                    "s." + ServerTable.ID + " as server_id," +
                     "pl." + ExtensionPluginTable.SERVER_UUID + " as server_uuid," +
                     "pr." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                     "gr." + ExtensionGroupsTable.GROUP_NAME + " as group_name" +

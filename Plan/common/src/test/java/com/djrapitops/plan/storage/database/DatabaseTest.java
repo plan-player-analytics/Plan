@@ -32,7 +32,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
-import com.djrapitops.plan.storage.database.queries.containers.ServerPlayerContainersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
@@ -47,13 +46,15 @@ import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMin
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import utilities.*;
+import utilities.FieldFetcher;
+import utilities.RandomData;
+import utilities.TestConstants;
+import utilities.TestPluginLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
@@ -143,7 +144,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 null
         ).cleanOldPlayers(db());
 
-        Collection<BaseUser> found = db().query(BaseUserQueries.fetchServerBaseUsers(serverUUID()));
+        Collection<BaseUser> found = db().query(BaseUserQueries.fetchAllBaseUsers());
         assertFalse(found.isEmpty(), "All users were deleted!! D:");
     }
 
@@ -210,23 +211,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         saveUserOne();
 
         Map<ServerUUID, Integer> result = db().query(ServerAggregateQueries.serverUserCounts());
-        assertEquals(expected, result);
-    }
-
-    @Test
-    default void serverPlayerContainersQueryDoesNotReturnDuplicatePlayers() {
-        db().executeTransaction(TestData.storeServers());
-        executeTransactions(TestData.storePlayerOneData());
-        executeTransactions(TestData.storePlayerTwoData());
-
-        List<UUID> expected = Arrays.asList(playerUUID, player2UUID);
-        Collections.sort(expected);
-
-        Collection<UUID> result = db().query(new ServerPlayerContainersQuery(TestConstants.SERVER_UUID))
-                .stream().map(player -> player.getUnsafe(PlayerKeys.UUID))
-                .sorted()
-                .collect(Collectors.toList());
-
         assertEquals(expected, result);
     }
 

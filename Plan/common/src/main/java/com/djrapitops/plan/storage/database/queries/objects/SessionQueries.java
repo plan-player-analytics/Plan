@@ -59,7 +59,7 @@ public class SessionQueries {
             "u." + UsersTable.USER_NAME + " as name," +
             "u_info." + UserInfoTable.REGISTERED + " as registered," +
             "server." + ServerTable.NAME + " as server_name," +
-            "server." + ServerTable.SERVER_ID + " as server_id," +
+            "server." + ServerTable.ID + " as server_id," +
             SessionsTable.SESSION_START + ',' +
             SessionsTable.SESSION_END + ',' +
             SessionsTable.MOB_KILLS + ',' +
@@ -97,33 +97,6 @@ public class SessionQueries {
         String sql = SELECT_SESSIONS_STATEMENT +
                 ORDER_BY_SESSION_START_DESC;
         return new QueryAllStatement<List<FinishedSession>>(sql, 50000) {
-            @Override
-            public List<FinishedSession> processResults(ResultSet set) throws SQLException {
-                return extractDataFromSessionSelectStatement(set);
-            }
-        };
-    }
-
-    /**
-     * Query the database for Session data of a server with kill and world data.
-     *
-     * @param serverUUID UUID of the Plan server.
-     * @return Map: Player UUID - List of sessions on the server.
-     */
-    public static Query<Map<UUID, List<FinishedSession>>> fetchSessionsOfServer(ServerUUID serverUUID) {
-        return db -> SessionsMutator.sortByPlayers(db.query(fetchSessionsOfServerFlat(serverUUID)));
-    }
-
-    public static QueryStatement<List<FinishedSession>> fetchSessionsOfServerFlat(ServerUUID serverUUID) {
-        String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + "s." + SessionsTable.SERVER_UUID + "=?" +
-                ORDER_BY_SESSION_START_DESC;
-        return new QueryStatement<List<FinishedSession>>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
             @Override
             public List<FinishedSession> processResults(ResultSet set) throws SQLException {
                 return extractDataFromSessionSelectStatement(set);
@@ -776,13 +749,13 @@ public class SessionQueries {
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
         String sql = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
-                "s." + ServerTable.SERVER_ID + ',' +
+                "s." + ServerTable.ID + ',' +
                 "s." + ServerTable.NAME +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.SERVER_UUID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + "s." + ServerTable.SERVER_ID;
+                GROUP_BY + "s." + ServerTable.ID;
         return new QueryStatement<Map<String, Long>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -796,7 +769,7 @@ public class SessionQueries {
                 while (set.next()) {
                     String name = Server.getIdentifiableName(
                             set.getString(ServerTable.NAME),
-                            set.getInt(ServerTable.SERVER_ID)
+                            set.getInt(ServerTable.ID)
                     );
                     playtimePerServer.put(name, set.getLong("playtime"));
                 }

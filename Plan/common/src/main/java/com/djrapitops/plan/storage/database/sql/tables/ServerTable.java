@@ -39,7 +39,7 @@ public class ServerTable {
 
     public static final String TABLE_NAME = "plan_servers";
 
-    public static final String SERVER_ID = "id";
+    public static final String ID = "id";
     public static final String SERVER_UUID = "uuid";
     public static final String NAME = "name";
     public static final String WEB_ADDRESS = "web_address";
@@ -53,18 +53,18 @@ public class ServerTable {
             WEB_ADDRESS, INSTALLED, PROXY);
 
     public static final String UPDATE_STATEMENT = Update.values(TABLE_NAME,
-            SERVER_UUID,
-            NAME,
-            WEB_ADDRESS,
-            INSTALLED,
-            PROXY)
+                    SERVER_UUID,
+                    NAME,
+                    WEB_ADDRESS,
+                    INSTALLED,
+                    PROXY)
             .where(SERVER_UUID + "=?")
             .toString();
 
-    public static final String STATEMENT_SELECT_SERVER_ID =
-            '(' + SELECT + TABLE_NAME + '.' + SERVER_ID +
+    public static final String SELECT_SERVER_ID =
+            '(' + SELECT + TABLE_NAME + '.' + ID +
                     FROM + TABLE_NAME +
-                    WHERE + TABLE_NAME + '.' + SERVER_UUID + "=? LIMIT 1)";
+                    WHERE + TABLE_NAME + '.' + SERVER_UUID + "=?" + LIMIT + "1)";
 
     private ServerTable() {
         /* Static information class */
@@ -72,7 +72,7 @@ public class ServerTable {
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
-                .column(SERVER_ID, Sql.INT).primaryKey()
+                .column(ID, Sql.INT).primaryKey()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull().unique()
                 .column(NAME, Sql.varchar(100))
                 .column(WEB_ADDRESS, Sql.varchar(100))
@@ -83,7 +83,7 @@ public class ServerTable {
     }
 
     public static String selectServerIds(Collection<ServerUUID> serverUUIDs) {
-        return '(' + SELECT + TABLE_NAME + '.' + SERVER_ID +
+        return '(' + SELECT + TABLE_NAME + '.' + ID +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_NAME + '.' + SERVER_UUID + " IN ('" +
                 new TextStringBuilder().appendWithSeparators(serverUUIDs, "','").build() +

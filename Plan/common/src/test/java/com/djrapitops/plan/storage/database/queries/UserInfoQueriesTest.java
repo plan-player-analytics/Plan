@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
-import utilities.TestData;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -146,21 +145,6 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         }
         forcePersistenceCheck();
         OptionalAssert.equals(random, db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).map(BaseUser::getTimesKicked));
-    }
-
-    @Test
-    default void baseUsersQueryDoesNotReturnDuplicatePlayers() {
-        db().executeTransaction(TestData.storeServers());
-        executeTransactions(TestData.storePlayerOneData());
-        executeTransactions(TestData.storePlayerTwoData());
-
-        Collection<BaseUser> expected = new HashSet<>(Arrays.asList(TestData.getPlayerBaseUser(), TestData.getPlayer2BaseUser()));
-
-        Collection<BaseUser> server1Result = db().query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_UUID));
-        assertEquals(expected, server1Result);
-
-        Collection<BaseUser> server2Result = db().query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_TWO_UUID));
-        assertEquals(expected, server2Result);
     }
 
     @Test

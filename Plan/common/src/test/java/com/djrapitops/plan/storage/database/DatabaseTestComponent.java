@@ -52,6 +52,8 @@ import java.nio.file.Path;
 public interface DatabaseTestComponent extends DBPreparer.Dependencies {
 
     default void enable() {
+        SQLDB.setDownloadDriver(false);
+
         files().enable();
         configSystem().enable();
         dbSystem().enable();

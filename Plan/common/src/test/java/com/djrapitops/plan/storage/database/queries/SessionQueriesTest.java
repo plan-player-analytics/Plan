@@ -208,20 +208,6 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void serverSessionsAreFetchedByPlayerUUID() {
-        prepareForSessionSave();
-        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        execute(DataStoreQueries.storeSession(session));
-
-        forcePersistenceCheck();
-
-        Map<UUID, List<FinishedSession>> expected = Collections.singletonMap(playerUUID, Collections.singletonList(session));
-        Map<UUID, List<FinishedSession>> fetched = db().query(SessionQueries.fetchSessionsOfServer(serverUUID()));
-
-        assertEquals(expected, fetched);
-    }
-
-    @Test
     default void playerSessionsAreFetchedByServerUUID() {
         prepareForSessionSave();
 

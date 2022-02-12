@@ -58,7 +58,7 @@ public class TPSQueries {
                     max("t." + CHUNKS) + " as " + CHUNKS + ',' +
                     max("t." + FREE_DISK) + " as " + FREE_DISK +
                     FROM + TABLE_NAME + " t" +
-                    WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                    WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     AND + DATE + ">=?" +
                     AND + DATE + "<?" +
                     GROUP_BY + floor(DATE + "/?") +
@@ -100,7 +100,7 @@ public class TPSQueries {
 
     public static Query<List<TPS>> fetchTPSDataOfServer(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "*" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + DATE + ">=?" +
                 AND + DATE + "<=?" +
                 ORDER_BY + DATE;
@@ -129,7 +129,7 @@ public class TPSQueries {
         String sql = SELECT + min(DATE) + " as " + DATE + ',' +
                 max(PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE +
                 FROM + TABLE_NAME +
-                WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + floor(DATE + "/?");
 
         return new QueryStatement<List<DateObj<Integer>>>(sql) {
@@ -151,7 +151,7 @@ public class TPSQueries {
     public static Query<List<DateObj<Integer>>> fetchPlayersOnlineOfServer(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + ServerTable.SERVER_UUID + ',' + DATE + ',' + PLAYERS_ONLINE +
                 FROM + TABLE_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " on " + ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + '=' + SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + ServerTable.TABLE_NAME + '.' + ServerTable.ID + '=' + SERVER_ID +
                 WHERE + ServerTable.SERVER_UUID + "=?" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -179,7 +179,7 @@ public class TPSQueries {
     public static Query<Map<Integer, List<TPS>>> fetchTPSDataOfAllServersBut(long after, long before, ServerUUID leaveOut) {
         String sql = SELECT + DATE + ',' + TPS + ',' + PLAYERS_ONLINE + ',' + SERVER_ID +
                 FROM + TABLE_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " on " + ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID + '=' + SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + ServerTable.TABLE_NAME + '.' + ServerTable.ID + '=' + SERVER_ID +
                 WHERE + ServerTable.SERVER_UUID + "!=?" +
                 AND + ServerTable.INSTALLED + "=?" +
                 AND + DATE + "<?" +
@@ -215,12 +215,12 @@ public class TPSQueries {
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(ServerUUID serverUUID, long afterDate) {
-        String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ')' + FROM + TABLE_NAME + WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+        String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ')' + FROM + TABLE_NAME + WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + DATE + ">= ?)";
         String sql = SELECT +
                 DATE + ',' + PLAYERS_ONLINE +
                 FROM + TABLE_NAME +
-                WHERE + SERVER_ID + "=" + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + DATE + ">= ?" +
                 AND + PLAYERS_ONLINE + "=" + subQuery +
                 ORDER_BY + DATE + " DESC LIMIT 1";
@@ -254,7 +254,7 @@ public class TPSQueries {
     public static Query<Optional<TPS>> fetchLatestTPSEntryForServer(ServerUUID serverUUID) {
         String sql = SELECT + "*" +
                 FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 ORDER_BY + DATE + " DESC LIMIT 1";
 
         return new QueryStatement<Optional<TPS>>(sql) {
@@ -284,7 +284,7 @@ public class TPSQueries {
 
     public static Query<Double> averageTPS(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "AVG(" + TPS + ") as average" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 AND + TPS + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -305,7 +305,7 @@ public class TPSQueries {
 
     public static Query<Double> averageCPU(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "AVG(" + CPU_USAGE + ") as average" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 AND + CPU_USAGE + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -326,7 +326,7 @@ public class TPSQueries {
 
     public static Query<Long> averageRAM(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "AVG(" + RAM_USAGE + ") as average" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 AND + RAM_USAGE + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -347,7 +347,7 @@ public class TPSQueries {
 
     public static Query<Long> averageChunks(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "AVG(" + CHUNKS + ") as average" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 AND + CHUNKS + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -368,7 +368,7 @@ public class TPSQueries {
 
     public static Query<Long> averageEntities(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "AVG(" + ENTITIES + ") as average" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 AND + ENTITIES + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -389,7 +389,7 @@ public class TPSQueries {
 
     public static Query<Long> maxFreeDisk(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "MAX(" + FREE_DISK + ") as free" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 AND + FREE_DISK + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -410,7 +410,7 @@ public class TPSQueries {
 
     public static Query<Long> minFreeDisk(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "MIN(" + FREE_DISK + ") as free" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 AND + FREE_DISK + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -431,7 +431,7 @@ public class TPSQueries {
 
     public static Query<Long> averageFreeDisk(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "AVG(" + FREE_DISK + ") as average" + FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 AND + FREE_DISK + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
@@ -481,17 +481,17 @@ public class TPSQueries {
                 "-1+ROW_NUMBER() over (ORDER BY " + DATE + ") AS previous_rn, " +
                 DATE + " AS d1" +
                 FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 ORDER_BY + "d1 DESC";
         String selectRowNumber = SELECT +
                 "ROW_NUMBER() over (ORDER BY " + DATE + ") AS rn, " +
                 DATE + " AS previous_date" +
                 FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID +
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 ORDER_BY + "previous_date DESC";
         String selectFirstEntryDate = SELECT + "MIN(" + DATE + ") as start_time" +
                 FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID;
         // Finds the start time since difference between d1 and previous date is a gap,
         // so d1 is always first entry after a gap in the data. MAX finds the latest.
         // Union ensures if there are no gaps to use the first date recorded.

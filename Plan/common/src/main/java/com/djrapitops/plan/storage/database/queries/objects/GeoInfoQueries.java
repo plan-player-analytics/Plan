@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -53,8 +54,9 @@ public class GeoInfoQueries {
         String sql = SELECT +
                 GeoInfoTable.GEOLOCATION + ',' +
                 GeoInfoTable.LAST_USED + ',' +
-                GeoInfoTable.USER_UUID +
-                FROM + GeoInfoTable.TABLE_NAME;
+                UsersTable.USER_UUID +
+                FROM + GeoInfoTable.TABLE_NAME + " g" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on g.user_id=u.id";
 
         return new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
             @Override
@@ -67,7 +69,7 @@ public class GeoInfoQueries {
     private static Map<UUID, List<GeoInfo>> extractGeoInformation(ResultSet set) throws SQLException {
         Map<UUID, List<GeoInfo>> geoInformation = new HashMap<>();
         while (set.next()) {
-            UUID uuid = UUID.fromString(set.getString(GeoInfoTable.USER_UUID));
+            UUID uuid = UUID.fromString(set.getString(UsersTable.USER_UUID));
 
             List<GeoInfo> userGeoInfo = geoInformation.computeIfAbsent(uuid, Lists::create);
             GeoInfo geoInfo = new GeoInfo(set.getString(GeoInfoTable.GEOLOCATION), set.getLong(GeoInfoTable.LAST_USED));
@@ -87,7 +89,7 @@ public class GeoInfoQueries {
                 GeoInfoTable.GEOLOCATION +
                 ",MAX(" + GeoInfoTable.LAST_USED + ") as " + GeoInfoTable.LAST_USED +
                 FROM + GeoInfoTable.TABLE_NAME +
-                WHERE + GeoInfoTable.USER_UUID + "=?" +
+                WHERE + GeoInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 GROUP_BY + GeoInfoTable.GEOLOCATION;
 
         return new QueryStatement<List<GeoInfo>>(sql, 100) {
@@ -109,43 +111,17 @@ public class GeoInfoQueries {
         };
     }
 
-    public static Query<Map<UUID, List<GeoInfo>>> fetchServerGeoInformation(ServerUUID serverUUID) {
-        String sql = SELECT + GeoInfoTable.TABLE_NAME + '.' + GeoInfoTable.USER_UUID + ',' +
-                GeoInfoTable.GEOLOCATION + ',' +
-                GeoInfoTable.LAST_USED +
-                FROM + GeoInfoTable.TABLE_NAME +
-                INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
-                GeoInfoTable.TABLE_NAME + '.' + GeoInfoTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
-                WHERE + UserInfoTable.SERVER_UUID + "=?";
-        return new QueryStatement<Map<UUID, List<GeoInfo>>>(sql, 10000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
-                return extractGeoInformation(set);
-            }
-        };
-    }
-
     public static Query<Map<String, Integer>> networkGeolocationCounts() {
-        String subQuery1 = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED +
-                FROM + GeoInfoTable.TABLE_NAME;
-        String subQuery2 = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
-                FROM + GeoInfoTable.TABLE_NAME +
-                GROUP_BY + GeoInfoTable.USER_UUID;
-        String sql = SELECT + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM " +
-                "(" + subQuery1 + ") AS q1" +
-                INNER_JOIN + "(" + subQuery2 + ") AS q2 ON q1.uuid = q2.uuid" +
-                WHERE + GeoInfoTable.LAST_USED + "=m" +
-                GROUP_BY + GeoInfoTable.GEOLOCATION;
+        String sql = SELECT +
+                "a." + GeoInfoTable.GEOLOCATION + ", " +
+                "COUNT(1) as c" +
+                FROM + GeoInfoTable.TABLE_NAME + " a" +
+                // Super smart optimization https://stackoverflow.com/a/28090544
+                // Join the last_used column, but only if there's a bigger one.
+                // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
+                LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
+                WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
+                GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryAllStatement<Map<String, Integer>>(sql) {
             @Override
@@ -160,23 +136,19 @@ public class GeoInfoQueries {
     }
 
     public static Query<Map<String, Integer>> networkGeolocationCounts(Collection<UUID> playerUUIDs) {
-        String subQuery1 = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED +
-                FROM + GeoInfoTable.TABLE_NAME +
-                WHERE + GeoInfoTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
-        String subQuery2 = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
-                FROM + GeoInfoTable.TABLE_NAME +
-                GROUP_BY + GeoInfoTable.USER_UUID;
-        String sql = SELECT + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM " +
-                "(" + subQuery1 + ") AS q1" +
-                INNER_JOIN + "(" + subQuery2 + ") AS q2 ON q1.uuid = q2.uuid" +
-                WHERE + GeoInfoTable.LAST_USED + "=m" +
-                GROUP_BY + GeoInfoTable.GEOLOCATION;
+        String sql = SELECT +
+                "a." + GeoInfoTable.GEOLOCATION + ", " +
+                "COUNT(1) as c" +
+                FROM + GeoInfoTable.TABLE_NAME + " a" +
+                // Super smart optimization https://stackoverflow.com/a/28090544
+                // Join the last_used column, but only if there's a bigger one.
+                // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
+                LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on a." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
+                WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
+                AND + UsersTable.USER_UUID + " IN ('" +
+                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
+                GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryAllStatement<Map<String, Integer>>(sql) {
             @Override
@@ -191,23 +163,19 @@ public class GeoInfoQueries {
     }
 
     public static Query<Map<String, Integer>> serverGeolocationCounts(ServerUUID serverUUID) {
-        String selectGeolocations = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED +
-                FROM + GeoInfoTable.TABLE_NAME;
-        String selectLatestGeolocationDate = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
-                FROM + GeoInfoTable.TABLE_NAME +
-                GROUP_BY + GeoInfoTable.USER_UUID;
-        String sql = SELECT + GeoInfoTable.GEOLOCATION + ", COUNT(1) as c FROM " +
-                "(" + selectGeolocations + ") AS q1" +
-                INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS q2 ON q1.uuid = q2.uuid" +
-                INNER_JOIN + UserInfoTable.TABLE_NAME + " u on u." + UserInfoTable.USER_UUID + "=q1.uuid" +
-                WHERE + GeoInfoTable.LAST_USED + "=m" +
-                AND + "u." + UserInfoTable.SERVER_UUID + "=?" +
-                GROUP_BY + GeoInfoTable.GEOLOCATION;
+        String sql = SELECT +
+                "a." + GeoInfoTable.GEOLOCATION + ", " +
+                "COUNT(1) as c" +
+                FROM + GeoInfoTable.TABLE_NAME + " a" +
+                // Super smart optimization https://stackoverflow.com/a/28090544
+                // Join the last_used column, but only if there's a bigger one.
+                // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
+                LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=a." + GeoInfoTable.USER_ID +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " ui on ui." + UserInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
+                AND + "ui." + UserInfoTable.SERVER_UUID + "=?" +
+                GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryStatement<Map<String, Integer>>(sql) {
             @Override
@@ -240,8 +208,9 @@ public class GeoInfoQueries {
     }
 
     public static Query<Set<UUID>> uuidsOfPlayersWithGeolocations(List<String> selected) {
-        String sql = SELECT + GeoInfoTable.USER_UUID +
-                FROM + GeoInfoTable.TABLE_NAME +
+        String sql = SELECT + UsersTable.USER_UUID +
+                FROM + GeoInfoTable.TABLE_NAME + " g" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=g." + GeoInfoTable.USER_ID +
                 WHERE + GeoInfoTable.GEOLOCATION +
                 " IN ('" +
                 new TextStringBuilder().appendWithSeparators(selected, "','") +
@@ -250,7 +219,7 @@ public class GeoInfoQueries {
             @Override
             public Set<UUID> processResults(ResultSet set) throws SQLException {
                 Set<UUID> geolocations = new HashSet<>();
-                while (set.next()) geolocations.add(UUID.fromString(set.getString(GeoInfoTable.USER_UUID)));
+                while (set.next()) geolocations.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
                 return geolocations;
             }
         };

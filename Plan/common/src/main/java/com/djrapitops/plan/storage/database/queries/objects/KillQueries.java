@@ -55,7 +55,7 @@ public class KillQueries {
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
-                "server." + ServerTable.SERVER_ID + " as server_id" +
+                "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
                 INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +
@@ -91,7 +91,7 @@ public class KillQueries {
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
-                "server." + ServerTable.SERVER_ID + " as server_id" +
+                "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
                 INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +
@@ -126,7 +126,7 @@ public class KillQueries {
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
-                "server." + ServerTable.SERVER_ID + " as server_id" +
+                "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
                 INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +

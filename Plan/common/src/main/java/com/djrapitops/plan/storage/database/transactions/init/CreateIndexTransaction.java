@@ -57,20 +57,15 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(KillsTable.TABLE_NAME, "plan_kills_date_index",
                 KillsTable.DATE
         );
-        createIndex(PingTable.TABLE_NAME, "plan_ping_uuid_index",
-                PingTable.USER_UUID,
-                PingTable.SERVER_UUID
-        );
+        // Replaced with foreign keys.
+        dropIndex(PingTable.TABLE_NAME, "plan_ping_uuid_index");
+
         createIndex(PingTable.TABLE_NAME, "plan_ping_date_index",
                 PingTable.DATE
         );
         createIndex(TPSTable.TABLE_NAME, "plan_tps_date_index",
                 TPSTable.DATE
         );
-
-        // Made during optimizing with real data
-        createIndex(PingTable.TABLE_NAME, "plan_ping_player_uuid_index", PingTable.USER_UUID);
-        createIndex(GeoInfoTable.TABLE_NAME, "plan_geolocations_uuid_index", GeoInfoTable.USER_UUID);
     }
 
     private void createIndex(String tableName, String indexName, String... indexedColumns) {
@@ -95,5 +90,16 @@ public class CreateIndexTransaction extends Transaction {
         sql.append(')');
 
         execute(sql.toString());
+    }
+
+    private void dropIndex(String tableName, String indexName) {
+        boolean isMySQL = dbType == DBType.MYSQL;
+        if (isMySQL) {
+            boolean indexExists = query(MySQLSchemaQueries.doesIndexExist(indexName, tableName));
+            if (!indexExists) return;
+            execute("DROP INDEX " + indexName + " ON " + tableName);
+        } else {
+            execute("DROP INDEX IF EXISTS " + indexName);
+        }
     }
 }

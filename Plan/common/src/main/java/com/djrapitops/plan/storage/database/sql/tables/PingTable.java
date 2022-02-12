@@ -34,21 +34,21 @@ public class PingTable {
     public static final String TABLE_NAME = "plan_ping";
 
     public static final String ID = "id";
-    public static final String USER_UUID = "uuid";
-    public static final String SERVER_UUID = "server_uuid";
+    public static final String USER_ID = "user_id";
+    public static final String SERVER_ID = "server_id";
     public static final String DATE = "date";
     public static final String MAX_PING = "max_ping";
     public static final String AVG_PING = "avg_ping";
     public static final String MIN_PING = "min_ping";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
-            USER_UUID + ',' +
-            SERVER_UUID + ',' +
+            USER_ID + ',' +
+            SERVER_ID + ',' +
             DATE + ',' +
             MIN_PING + ',' +
             MAX_PING + ',' +
             AVG_PING +
-            ") VALUES (?, ?, ?, ?, ?, ?)";
+            ") VALUES (" + UsersTable.SELECT_USER_ID + ',' + ServerTable.SELECT_SERVER_ID + ", ?, ?, ?, ?)";
 
     private PingTable() {
         /* Static information class */
@@ -57,12 +57,14 @@ public class PingTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(USER_UUID, Sql.varchar(36)).notNull()
-                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(USER_ID, Sql.INT).notNull()
+                .column(SERVER_ID, Sql.INT).notNull()
                 .column(DATE, Sql.LONG).notNull()
                 .column(MAX_PING, Sql.INT).notNull()
                 .column(MIN_PING, Sql.INT).notNull()
                 .column(AVG_PING, Sql.DOUBLE).notNull()
+                .foreignKey(USER_ID, UsersTable.TABLE_NAME, UsersTable.ID)
+                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }
 }
