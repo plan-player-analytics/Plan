@@ -17,12 +17,12 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
 import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.extension.icon.IconAccessor;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.DataProvider;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -80,7 +80,7 @@ public class StoreProviderTransaction extends ThrowawayTransaction {
                 DESCRIPTION + "=?," +
                 PRIORITY + "=?," +
                 CONDITION + "=?," +
-                ICON_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                ICON_ID + "=?," +
                 TAB_ID + '=' + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
                 SHOW_IN_PLAYERS_TABLE + "=?," +
                 HIDDEN + "=?," +
@@ -98,19 +98,19 @@ public class StoreProviderTransaction extends ThrowawayTransaction {
                 Sql.setStringOrNull(statement, 2, info.getDescription().orElse(null));
                 statement.setInt(3, info.getPriority());
                 Sql.setStringOrNull(statement, 4, info.getCondition().orElse(null));
-                ExtensionIconTable.set3IconValuesToStatement(statement, 5, info.getIcon());
-                ExtensionTabTable.set3TabValuesToStatement(statement, 8, info.getTab().orElse(null), info.getPluginName(), serverUUID);
-                statement.setBoolean(11, info.isShownInPlayersTable());
+                statement.setInt(5, IconAccessor.getId(info.getIcon()));
+                ExtensionTabTable.set3TabValuesToStatement(statement, 6, info.getTab().orElse(null), info.getPluginName(), serverUUID);
+                statement.setBoolean(9, info.isShownInPlayersTable());
 
                 // Specific provider cases
-                statement.setBoolean(12, info.isHidden());
-                Sql.setStringOrNull(statement, 13, info.getProvidedCondition());
-                Sql.setStringOrNull(statement, 14, info.getFormatType().map(FormatType::name).orElse(null));
-                statement.setBoolean(15, info.isPlayerName());
+                statement.setBoolean(10, info.isHidden());
+                Sql.setStringOrNull(statement, 11, info.getProvidedCondition());
+                Sql.setStringOrNull(statement, 12, info.getFormatType().map(FormatType::name).orElse(null));
+                statement.setBoolean(13, info.isPlayerName());
 
                 // Find appropriate provider
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 16, info.getPluginName(), serverUUID);
-                statement.setString(18, info.getName());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 14, info.getPluginName(), serverUUID);
+                statement.setString(16, info.getName());
             }
         };
     }
@@ -132,7 +132,7 @@ public class StoreProviderTransaction extends ThrowawayTransaction {
                 PLUGIN_ID +
                 ") VALUES (?,?,?,?,?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
-                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                "?," +
                 ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ')';
         return new ExecStatement(sql) {
             @Override
@@ -153,8 +153,8 @@ public class StoreProviderTransaction extends ThrowawayTransaction {
 
                 // Found for all providers
                 ExtensionTabTable.set3TabValuesToStatement(statement, 11, info.getTab().orElse(null), info.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 14, info.getIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 17, info.getPluginName(), serverUUID);
+                statement.setInt(14, IconAccessor.getId(info.getIcon()));
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 15, info.getPluginName(), serverUUID);
             }
         };
     }

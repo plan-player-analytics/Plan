@@ -207,6 +207,10 @@ public abstract class Transaction {
         return executable.execute(connection);
     }
 
+    protected int executeReturningId(ExecStatement executable) {
+        return executable.executeReturningId(connection);
+    }
+
     protected boolean execute(String sql) {
         return execute(new ExecStatement(sql) {
             @Override
