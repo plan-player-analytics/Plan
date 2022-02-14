@@ -41,7 +41,7 @@ dependencies {
     implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
 
-    implementation("dev.vankka.dependencydownload:runtime:1.1.4") {
+    implementation("dev.vankka.dependencydownload:runtime:1.2.0") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
