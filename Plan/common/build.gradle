@@ -1,7 +1,7 @@
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
 
 plugins {
-    id "dev.vankka.dependencydownload.plugin" version "1.1.4"
+    id "dev.vankka.dependencydownload.plugin" version "1.2.1"
 }
 
 configurations {
