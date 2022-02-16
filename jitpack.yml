@@ -5,4 +5,4 @@ before_install:
    - sdk use java 16.0.1-open
 install:
   - cd Plan
-  - ./gradlew shadowJar
+  - ./gradlew shadowJar publishToMavenLocal
