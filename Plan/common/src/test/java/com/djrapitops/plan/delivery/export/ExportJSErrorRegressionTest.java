@@ -66,15 +66,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SeleniumExtension.class)
 class ExportJSErrorRegressionTest {
 
-    public static PluginMockComponent component;
     static Path tempDir;
     static Path exportDirectory;
-    @Container
-    public static NginxContainer<?> nginx = new NginxContainer<>("nginx:latest")
-            .withCustomContent(exportDirectory.toFile().getAbsolutePath())
-            .waitingFor(new HttpWaitStrategy());
-    private static PlanSystem planSystem;
-    private static ServerUUID serverUUID;
 
     static {
         try {
@@ -87,6 +80,15 @@ class ExportJSErrorRegressionTest {
             throw new AssertionError(e);
         }
     }
+
+    public static PluginMockComponent component;
+
+    @Container
+    public static NginxContainer<?> nginx = new NginxContainer<>("nginx:latest")
+            .withCustomContent(exportDirectory.toFile().getAbsolutePath())
+            .waitingFor(new HttpWaitStrategy());
+    private static PlanSystem planSystem;
+    private static ServerUUID serverUUID;
 
     @BeforeAll
     static void setUpClass() throws Exception {
