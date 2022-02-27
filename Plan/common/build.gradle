@@ -50,6 +50,10 @@ dependencies {
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
+
+    testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
+    testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
+    testImplementation "org.testcontainers:nginx:$testContainersVersion"
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens

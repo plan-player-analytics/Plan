@@ -32,14 +32,14 @@ import javax.inject.Singleton;
 import java.nio.file.Path;
 
 /**
- * Dagger component for {@link com.djrapitops.plan.PlanPlugin} based Plan system.
+ * Dagger component for {@link PlanPlugin} based Plan system.
  *
  * @author AuroraLS3
  */
 @Singleton
 @Component(modules = {
         PlanPluginModule.class,
-        PlanServerPluginModule.class,
+        PlanProxyPluginModule.class,
         TestSystemObjectProvidingModule.class,
         PlatformAbstractionLayerModule.class,
         FiltersModule.class,
@@ -49,7 +49,7 @@ import java.nio.file.Path;
         PluginSuperClassBindingModule.class,
         DBSystemModule.class
 })
-public interface PlanPluginComponent {
+public interface PlanProxyPluginComponent {
     PlanCommand planCommand();
 
     PlanSystem system();
@@ -67,6 +67,6 @@ public interface PlanPluginComponent {
         @BindsInstance
         Builder abstractionLayer(PlatformAbstractionLayer plan);
 
-        PlanPluginComponent build();
+        PlanProxyPluginComponent build();
     }
 }

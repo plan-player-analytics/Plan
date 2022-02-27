@@ -46,6 +46,7 @@ import java.nio.file.Path;
 
         DatabaseTestComponent.DBTestModule.class,
         PlanPluginModule.class,
+        PlanServerPluginModule.class,
         PluginServerPropertiesModule.class,
         PluginSuperClassBindingModule.class
 })

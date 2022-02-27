@@ -16,20 +16,18 @@
  */
 package utilities.dagger;
 
-import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
-import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
+import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerServerInfo;
+import com.djrapitops.plan.settings.BukkitConfigSystem;
+import com.djrapitops.plan.settings.ConfigSystem;
 import dagger.Binds;
 import dagger.Module;
 
-/**
- * Dagger module for binding Plan instance.
- *
- * @author AuroraLS3
- */
 @Module
-public interface PlanPluginModule {
+public interface PlanServerPluginModule {
+    @Binds
+    ConfigSystem bindBukkitConfigSystem(BukkitConfigSystem bukkitConfigSystem);
 
     @Binds
-    JSONStorage bindJSONStorage(JSONFileStorage jsonFileStorage);
-
+    ServerInfo bindServerInfo(ServerServerInfo serverServerInfo);
 }
