@@ -154,7 +154,7 @@ class ExportJSErrorRegressionTest {
     }
 
     @TestFactory
-    Collection<DynamicTest> playerPageDoesNotHaveJavascriptErrors(ChromeDriver driver) {
+    Collection<DynamicTest> exportedWebpageDoesNotHaveErrors(ChromeDriver driver) {
         String[] endpointsToTest = new String[]{
                 "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "/index.html",
 //                "/network/index.html",
@@ -163,7 +163,7 @@ class ExportJSErrorRegressionTest {
         };
 
         return Arrays.stream(endpointsToTest).map(
-                endpoint -> DynamicTest.dynamicTest("Test exported endpoint " + endpoint, () -> {
+                endpoint -> DynamicTest.dynamicTest("Exported page does not log errors to js console " + endpoint, () -> {
                     String address = nginx.getBaseUrl("http", 80).toURI().resolve(endpoint).toString();
 
                     driver.get(address);

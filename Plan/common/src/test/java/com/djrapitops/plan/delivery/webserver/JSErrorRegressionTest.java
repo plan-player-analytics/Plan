@@ -32,6 +32,7 @@ import extension.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -106,7 +107,8 @@ class JSErrorRegressionTest {
         SeleniumExtension.newTab(driver);
     }
 
-    @ParameterizedTest
+    @DisplayName("Page does not log anything on js console: ")
+    @ParameterizedTest(name = "{0}")
     @CsvSource({
             "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_NAME,
             "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING,
@@ -114,7 +116,7 @@ class JSErrorRegressionTest {
             "http://localhost:" + TEST_PORT_NUMBER + "/server/Server 1",
             "http://localhost:" + TEST_PORT_NUMBER + "/players"
     })
-    void playerPageDoesNotHaveJavascriptErrors(String address, ChromeDriver driver) {
+    void javascriptRegressionTest(String address, ChromeDriver driver) {
         driver.get(address);
 
         List<LogEntry> logs = new ArrayList<>();
