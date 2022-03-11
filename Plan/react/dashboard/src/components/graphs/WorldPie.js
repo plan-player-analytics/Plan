@@ -4,19 +4,26 @@ import factory from 'highcharts/modules/drilldown';
 
 import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
+import {withReducedSaturation} from "../../util/colors";
 
 const WorldPie = ({id, gmColors, worldSeries, gmSeries}) => {
     useEffect(() => {
         factory(Highcharts)
     }, []);
 
-    const {graphTheming} = useTheme();
+    const {nightModeEnabled, graphTheming} = useTheme();
 
     useEffect(() => {
+        const reduceColors = (series) => {
+            return series.map(slice => {
+                return {...slice, color: withReducedSaturation(slice.color)};
+            })
+        }
+
         const pieSeries = {
             name: 'World Playtime',
             colorByPoint: true,
-            data: worldSeries
+            data: nightModeEnabled ? reduceColors(worldSeries) : worldSeries
         };
 
         const defaultTitle = '';
@@ -33,7 +40,7 @@ const WorldPie = ({id, gmColors, worldSeries, gmSeries}) => {
                     drilldown: function (e) {
                         chart.setTitle({text: '' + e.point.name}, {text: ''});
                     },
-                    drillup: function (e) {
+                    drillup: function () {
                         chart.setTitle({text: defaultTitle}, {text: defaultSubtitle});
                     }
                 }
@@ -64,7 +71,7 @@ const WorldPie = ({id, gmColors, worldSeries, gmSeries}) => {
                 })
             }
         });
-    }, [worldSeries, gmSeries, graphTheming]);
+    }, [worldSeries, gmSeries, graphTheming, nightModeEnabled, id, gmColors]);
 
     return (<div className="chart-pie" id={id}/>)
 }

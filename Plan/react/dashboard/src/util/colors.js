@@ -124,7 +124,7 @@ export const colorClassToBgClass = colorClass => {
 }
 
 // From https://stackoverflow.com/a/3732187
-const withReducedSaturation = hex => {
+export const withReducedSaturation = hex => {
     const saturationReduction = 0.70;
     // To RGB
     let r = parseInt(hex.substr(1, 2), 16); // Grab the hex representation of red (chars 1-2) and convert to decimal (base 10).
@@ -153,6 +153,8 @@ const withReducedSaturation = hex => {
                 break;
             case b:
                 h = (r - g) / d + 4;
+                break;
+            default:
                 break;
         }
         h /= 6;
@@ -194,7 +196,7 @@ export const createNightModeCss = () => {
         `.fc-today {background:${nightColors.greyBlue} !important}` +
         `.fc-popover-body,.fc-popover-header{background-color: ${nightColors.darkBlue} !important;color: ${nightColors.yellow} !important;}` +
         `select,input,.dataTables_paginate .page-item:not(.active) a,.input-group-text,.input-group-text > * {background-color:${nightColors.darkBlue} !important;border-color:${nightColors.blue} !important;color: ${nightColors.yellow} !important;}` +
-        `.fc td,.fc tr,.fc th, .fc table{border-color:${nightColors.blue} !important;}` +
+        `.fc td,.fc tr,.fc th, .fc table, .modal-header,.modal-body,.modal-footer{border-color:${nightColors.blue} !important;}` +
         `.fc a{color:${nightColors.yellow} !important;}` +
         `.fc-button{ background-color: ${withReducedSaturation(colorMap.PLAN.hex)} !important;}` +
         createNightModeColorCss()

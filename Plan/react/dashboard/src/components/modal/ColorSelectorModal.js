@@ -28,7 +28,7 @@ const ColorSelectorModal = () => {
                 </Modal.Title>
                 <button aria-label="Close" className="btn-close" onClick={theme.toggleColorChooser}/>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body style={{padding: "0.5rem 0 0.5rem 0.5rem"}}>
                 {theme.themeColors.map((color, i) =>
                     <ColorSelectorButton
                         key={i}

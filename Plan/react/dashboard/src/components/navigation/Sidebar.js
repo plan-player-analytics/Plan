@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
 import {
@@ -13,9 +13,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {NavLink} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook";
+import PluginInformationModal from "../modal/PluginInformationModal";
 
 const Logo = () => (
-    <a className="sidebar-brand d-flex align-items-center justify-content-center">
+    <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <img alt="logo" className="w-22" src={logo}/>
     </a>
 )
@@ -35,14 +36,16 @@ const Item = ({href, icon, name}) => (
 const FooterButtons = () => {
     const {color, toggleColorChooser} = useTheme();
 
+    const [infoModalOpen, setInfoModalOpen] = useState(false);
+    const toggleInfoModal = () => setInfoModalOpen(!infoModalOpen);
+
     return (
         <>
             <div className="mt-2 ms-md-3 text-center text-md-start">
-                <button className={"btn bg-" + color} onClick={toggleColorChooser} type="button">
+                <button className={"btn bg-" + color} onClick={toggleColorChooser}>
                     <Fa icon={faPalette}/>
                 </button>
-                <button className={"btn bg-" + color} data-bs-target="#informationModal" data-bs-toggle="modal"
-                        type="button">
+                <button className={"btn bg-" + color} onClick={toggleInfoModal}>
                     <Fa icon={faQuestionCircle}/>
                 </button>
                 <a className={"btn bg-" + color} href="../auth/logout" id="logout-button">
@@ -55,6 +58,7 @@ const FooterButtons = () => {
                     6.0 build 1672
                 </button>
             </div>
+            <PluginInformationModal open={infoModalOpen} toggle={toggleInfoModal}/>
         </>
     )
 }

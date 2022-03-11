@@ -3,15 +3,18 @@ import Highcharts from 'highcharts';
 
 import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
+import {withReducedSaturation} from "../../util/colors";
 
 const ServerPie = ({colors, series}) => {
-    const {graphTheming} = useTheme();
+    const {nightModeEnabled, graphTheming} = useTheme();
 
     useEffect(() => {
+        const reduceColors = (colorsToReduce) => colorsToReduce.map(color => withReducedSaturation(color));
+
         const pieSeries = {
             name: 'Server Playtime',
             colorByPoint: true,
-            colors: colors,
+            colors: nightModeEnabled ? reduceColors(colors) : colors,
             data: series
         };
 
@@ -41,7 +44,7 @@ const ServerPie = ({colors, series}) => {
             },
             series: [pieSeries]
         });
-    }, [colors, series, graphTheming]);
+    }, [colors, series, graphTheming, nightModeEnabled]);
 
     return (<div className="chart-pie" id="server-pie"/>);
 }
