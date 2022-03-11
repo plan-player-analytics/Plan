@@ -1,8 +1,11 @@
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {useTheme} from "../../hooks/themeHook";
 
 const AsNumbersTable = ({headers, children}) => {
-    return <table className="table">
+    const {nightModeEnabled} = useTheme();
+
+    return <table className={"table table-striped" + (nightModeEnabled ? " table-dark" : '')}>
         <thead>
         <tr>
             <th/>

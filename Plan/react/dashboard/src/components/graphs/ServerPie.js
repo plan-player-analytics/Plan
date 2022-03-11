@@ -2,10 +2,11 @@ import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
 
 import {formatTimeAmount} from '../../util/formatters'
-
-// TODO Graphs context for night mode switch
+import {useTheme} from "../../hooks/themeHook";
 
 const ServerPie = ({colors, series}) => {
+    const {graphTheming} = useTheme();
+
     useEffect(() => {
         const pieSeries = {
             name: 'Server Playtime',
@@ -14,7 +15,8 @@ const ServerPie = ({colors, series}) => {
             data: series
         };
 
-        const chart = Highcharts.chart('server-pie', {
+        Highcharts.setOptions(graphTheming);
+        Highcharts.chart('server-pie', {
             chart: {
                 backgroundColor: 'transparent',
                 plotBorderWidth: null,
@@ -39,7 +41,7 @@ const ServerPie = ({colors, series}) => {
             },
             series: [pieSeries]
         });
-    }, [colors, series]);
+    }, [colors, series, graphTheming]);
 
     return (<div className="chart-pie" id="server-pie"/>);
 }

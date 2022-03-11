@@ -3,13 +3,14 @@ import Highcharts from 'highcharts';
 import factory from 'highcharts/modules/drilldown';
 
 import {formatTimeAmount} from '../../util/formatters'
-
-// TODO Graphs context for night mode switch
+import {useTheme} from "../../hooks/themeHook";
 
 const WorldPie = ({id, gmColors, worldSeries, gmSeries}) => {
     useEffect(() => {
         factory(Highcharts)
-    }, [])
+    }, []);
+
+    const {graphTheming} = useTheme();
 
     useEffect(() => {
         const pieSeries = {
@@ -20,6 +21,7 @@ const WorldPie = ({id, gmColors, worldSeries, gmSeries}) => {
 
         const defaultTitle = '';
         const defaultSubtitle = 'Click to expand';
+        Highcharts.setOptions(graphTheming);
         const chart = Highcharts.chart(id, {
             chart: {
                 backgroundColor: 'transparent',
@@ -62,7 +64,7 @@ const WorldPie = ({id, gmColors, worldSeries, gmSeries}) => {
                 })
             }
         });
-    }, [worldSeries, gmSeries]);
+    }, [worldSeries, gmSeries, graphTheming]);
 
     return (<div className="chart-pie" id={id}/>)
 }

@@ -60,7 +60,7 @@ const SessionBody = ({i, session}) => {
                 <hr/>
                 <KillsTable kills={session.player_kills}/>
             </Col>
-            <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                 <WorldPie id={"worldpie_" + i}
                           worldSeries={session.world_series}
                           gmColors={[]}

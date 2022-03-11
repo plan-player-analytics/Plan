@@ -12,6 +12,7 @@ import {
     faQuestionCircle
 } from "@fortawesome/free-solid-svg-icons";
 import {NavLink} from "react-router-dom";
+import {useTheme} from "../../hooks/themeHook";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center">
@@ -31,31 +32,38 @@ const Item = ({href, icon, name}) => (
     </li>
 )
 
-const FooterButtons = () => (
-    <>
-        <div className="mt-2 ms-md-3 text-center text-md-start">
-            <button className="btn bg-plan" data-bs-target="#colorChooserModal" data-bs-toggle="modal" type="button">
-                <Fa icon={faPalette}/>
-            </button>
-            <button className="btn bg-plan" data-bs-target="#informationModal" data-bs-toggle="modal" type="button">
-                <Fa icon={faQuestionCircle}/>
-            </button>
-            <a className="btn bg-plan" href="../auth/logout" id="logout-button">
-                <Fa icon={faDoorOpen}/> Logout
-            </a>
-        </div>
-        <div className="ms-md-3 text-center text-md-start">
-            <button className="btn bg-plan" data-bs-target="#updateModal" data-bs-toggle="modal" type="button">
-                6.0 build 1672
-            </button>
-        </div>
-    </>
+const FooterButtons = () => {
+    const {color, toggleColorChooser} = useTheme();
 
-)
+    return (
+        <>
+            <div className="mt-2 ms-md-3 text-center text-md-start">
+                <button className={"btn bg-" + color} onClick={toggleColorChooser} type="button">
+                    <Fa icon={faPalette}/>
+                </button>
+                <button className={"btn bg-" + color} data-bs-target="#informationModal" data-bs-toggle="modal"
+                        type="button">
+                    <Fa icon={faQuestionCircle}/>
+                </button>
+                <a className={"btn bg-" + color} href="../auth/logout" id="logout-button">
+                    <Fa icon={faDoorOpen}/> Logout
+                </a>
+            </div>
+            <div className="ms-md-3 text-center text-md-start">
+                <button className={"btn bg-" + color} data-bs-target="#updateModal" data-bs-toggle="modal"
+                        type="button">
+                    6.0 build 1672
+                </button>
+            </div>
+        </>
+    )
+}
 
 const Sidebar = () => {
+    const {color} = useTheme();
+
     return (
-        <ul className="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
             <Logo/>
             <Divider/>
             <Item active={true} href={"overview"} icon={faInfoCircle} name="Player Overview"/>

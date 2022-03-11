@@ -179,7 +179,8 @@ div.scrollbar {
 }
 
 .color-chooser {
-    margin-bottom: 0.3rem;
+    margin-right: 0.15rem;
+    margin-bottom: 0.2rem;
 }
 
 /* Navbar ====================================== */
@@ -752,7 +753,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     background-clip: padding-box;
     -webkit-border-radius: 7px;
     background-color: rgba(0, 0, 0, 0.25);
-    -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
+    -webkit-box-shadow: inset -1px -1px 0 rgba(0, 0, 0, 0.05), inset 1px 1px 0 rgba(0, 0, 0, 0.05);
 }
 
 .plan-bg-gradient {

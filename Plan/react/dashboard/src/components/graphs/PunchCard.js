@@ -1,17 +1,20 @@
 import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
-
-// TODO Graphs context for night mode switch
+import {useTheme} from "../../hooks/themeHook";
 
 const PunchCard = ({series}) => {
+    const {graphTheming} = useTheme();
     useEffect(() => {
         const punchCard = {
             name: 'Relative Activity',
             color: '#222',
             data: series
         };
+        Highcharts.setOptions(graphTheming);
         Highcharts.chart('punchcard', {
             chart: {
+                backgroundColor: 'transparent',
+                plotBackgroundColor: 'transparent',
                 defaultSeriesType: 'scatter'
             },
             title: {text: ''},
@@ -39,7 +42,7 @@ const PunchCard = ({series}) => {
             },
             series: [punchCard]
         })
-    }, [series])
+    }, [series, graphTheming])
 
     return (
         <div className="chart-area" id="punchcard">

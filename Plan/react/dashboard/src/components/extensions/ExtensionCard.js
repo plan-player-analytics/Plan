@@ -3,6 +3,7 @@ import {Card, Col} from "react-bootstrap-v5";
 import ExtensionIcon from "./ExtensionIcon";
 import Datapoint from "../Datapoint";
 import Masonry from 'masonry-layout'
+import {useTheme} from "../../hooks/themeHook";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -59,19 +60,24 @@ const ExtensionValues = ({tab}) => (
     </Card.Body>
 )
 
-const ExtensionTable = ({table}) => (
-    <table className="table table-striped">
-        <thead className={table.tableColorClass}>
-        <tr>
-            {table.table.columns.map((column, i) => <th key={i}><ExtensionIcon icon={table.table.icons[i]}/> {column}
-            </th>)}
-        </tr>
-        </thead>
-        <tbody>
-        {table.table.rows.map((row, i) => <tr key={i}>{row.map((value, j) => <td key={i + '' + j}>{value}</td>)}</tr>)}
-        </tbody>
-    </table>
-)
+const ExtensionTable = ({table}) => {
+    const {nightModeEnabled} = useTheme();
+    return (
+        <table className={"table table-striped" + (nightModeEnabled ? " table-dark" : '')}>
+            <thead className={table.tableColorClass}>
+            <tr>
+                {table.table.columns.map((column, i) => <th key={i}><ExtensionIcon
+                    icon={table.table.icons[i]}/> {column}
+                </th>)}
+            </tr>
+            </thead>
+            <tbody>
+            {table.table.rows.map((row, i) => <tr key={i}>{row.map((value, j) => <td
+                key={i + '' + j}>{value}</td>)}</tr>)}
+            </tbody>
+        </table>
+    );
+}
 
 const ExtensionTables = ({tab}) => {
     return (<>

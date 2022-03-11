@@ -69,7 +69,7 @@ const ServerBody = ({i, server}) => {
                 />
                 <hr/>
             </Col>
-            <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                 <WorldPie id={"worldpie_server_" + i}
                           worldSeries={server.world_pie_series}
                           gmColors={[]}

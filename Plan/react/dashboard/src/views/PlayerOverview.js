@@ -23,6 +23,7 @@ import Scrollable from "../components/Scrollable";
 import PunchCard from "../components/graphs/PunchCard";
 import Datapoint from "../components/Datapoint";
 import AsNumbersTable, {TableRow} from "../components/table/AsNumbersTable";
+import {useTheme} from "../hooks/themeHook";
 
 const Header = ({player}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -133,59 +134,65 @@ const PlayerOverviewCard = ({player}) => (
     </Card>
 )
 
-const NicknamesCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black">
-                <Fa icon={faSignature}/> Seen Nicknames
-            </h6>
-        </Card.Header>
-        <Scrollable>
-            <table className="table table-striped mb-0">
-                <thead className="bg-purple">
-                <tr>
-                    <th><Fa icon={faSignature}/> Nickname</th>
-                    <th><Fa icon={faServer}/> Server</th>
-                    <th><Fa icon={faClock}/> Last Seen</th>
-                </tr>
-                </thead>
-                <tbody>
-                {player.nicknames.map((nickname, i) => (<tr key={'nick-' + i}>
-                    <td>{nickname.nickname}</td>
-                    <td>{nickname.server}</td>
-                    <td>{nickname.date}</td>
-                </tr>))}
-                </tbody>
-            </table>
-        </Scrollable>
-    </Card>
-)
+const NicknamesCard = ({player}) => {
+    const {nightModeEnabled} = useTheme();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black">
+                    <Fa icon={faSignature}/> Seen Nicknames
+                </h6>
+            </Card.Header>
+            <Scrollable>
+                <table className={"table table-striped mb-0" + (nightModeEnabled ? " table-dark" : '')}>
+                    <thead className="bg-purple">
+                    <tr>
+                        <th><Fa icon={faSignature}/> Nickname</th>
+                        <th><Fa icon={faServer}/> Server</th>
+                        <th><Fa icon={faClock}/> Last Seen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {player.nicknames.map((nickname, i) => (<tr key={'nick-' + i}>
+                        <td>{nickname.nickname}</td>
+                        <td>{nickname.server}</td>
+                        <td>{nickname.date}</td>
+                    </tr>))}
+                    </tbody>
+                </table>
+            </Scrollable>
+        </Card>
+    );
+}
 
-const ConnectionsCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black">
-                <Fa icon={faWifi}/> Connection Information
-            </h6>
-        </Card.Header>
-        <Scrollable>
-            <table className="table table-striped mb-0">
-                <thead className="bg-green">
-                <tr>
-                    <th><Fa icon={faGlobe}/> Country</th>
-                    <th><Fa icon={faClock}/> Last Connected</th>
-                </tr>
-                </thead>
-                <tbody>
-                {player.connections.map((connection, i) => (<tr key={'connection-' + i}>
-                    <td>{connection.geolocation}</td>
-                    <td>{connection.date}</td>
-                </tr>))}
-                </tbody>
-            </table>
-        </Scrollable>
-    </Card>
-)
+const ConnectionsCard = ({player}) => {
+    const {nightModeEnabled} = useTheme();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black">
+                    <Fa icon={faWifi}/> Connection Information
+                </h6>
+            </Card.Header>
+            <Scrollable>
+                <table className={"table table-striped mb-0" + (nightModeEnabled ? " table-dark" : '')}>
+                    <thead className="bg-green">
+                    <tr>
+                        <th><Fa icon={faGlobe}/> Country</th>
+                        <th><Fa icon={faClock}/> Last Connected</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {player.connections.map((connection, i) => (<tr key={'connection-' + i}>
+                        <td>{connection.geolocation}</td>
+                        <td>{connection.date}</td>
+                    </tr>))}
+                    </tbody>
+                </table>
+            </Scrollable>
+        </Card>
+    )
+}
 
 const PunchCardCard = ({player}) => (
     <Card>

@@ -1,6 +1,5 @@
 import React, {useState} from "react";
-
-// TODO Fix animations
+import {useTheme} from "../../hooks/themeHook";
 
 const SliceHeader = ({i, open, onClick, slice}) => {
     let style = 'bg-' + slice.color + (slice.outline ? '-outline' : '');
@@ -43,6 +42,7 @@ const NoDataRow = ({width}) => {
 
 const Accordion = ({headers, slices, open}) => {
     const [openSlice, setOpenSlice] = useState(open ? 0 : -1);
+    const {nightModeEnabled} = useTheme();
 
     const toggleSlice = (i) => {
         console.log('click', i);
@@ -52,7 +52,7 @@ const Accordion = ({headers, slices, open}) => {
     const width = headers.length;
 
     return (
-        <table className="table accordion-striped" id="tableAccordion">
+        <table className={"table accordion-striped" + (nightModeEnabled ? " table-dark" : '')} id="tableAccordion">
             <thead>
             <tr>
                 {headers.map((header, i) => <th key={i}>{header}</th>)}
