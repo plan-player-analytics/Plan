@@ -1,7 +1,7 @@
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
 
 plugins {
-    id "dev.vankka.dependencydownload.plugin" version "1.1.4"
+    id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
 }
 
 configurations {
@@ -41,7 +41,7 @@ dependencies {
     implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
 
-    implementation("dev.vankka.dependencydownload:runtime:1.1.4") {
+    implementation("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
@@ -50,6 +50,10 @@ dependencies {
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
+
+    testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
+    testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
+    testImplementation "org.testcontainers:nginx:$testContainersVersion"
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens

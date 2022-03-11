@@ -46,7 +46,6 @@ import net.playeranalytics.plugin.scheduling.TimeAmount;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -230,6 +229,7 @@ public abstract class SQLDB extends AbstractDatabase {
      */
     private void setupDatabase() {
         executeTransaction(new CreateTablesTransaction());
+        logger.info("Database: Making sure schema is up to date..");
         for (Patch patch : patches()) {
             executeTransaction(patch);
         }
@@ -240,6 +240,7 @@ public abstract class SQLDB extends AbstractDatabase {
             }
         });
         registerIndexCreationTask();
+        logger.info("Database: Ready for operation.");
     }
 
     private void registerIndexCreationTask() {
@@ -279,14 +280,17 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     private void unloadDriverClassloader() {
-        try {
-            if (driverClassLoader instanceof IsolatedClassLoader) {
-                ((IsolatedClassLoader) driverClassLoader).close();
-            }
+        // Unloading class loader causes issues when reloading.
+        // It is better to leak this memory than crash the plugin on reload.
+
+//        try {
+//            if (driverClassLoader instanceof IsolatedClassLoader) {
+//                ((IsolatedClassLoader) driverClassLoader).close();
+//            }
             driverClassLoader = null;
-        } catch (IOException e) {
-            errorLogger.error(e, ErrorContext.builder().build());
-        }
+//        } catch (IOException e) {
+//            errorLogger.error(e, ErrorContext.builder().build());
+//        }
     }
 
     public abstract Connection getConnection() throws SQLException;

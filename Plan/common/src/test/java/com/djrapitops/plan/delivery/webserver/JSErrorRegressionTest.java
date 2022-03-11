@@ -21,6 +21,7 @@ import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -31,18 +32,26 @@ import extension.SeleniumExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This test class is for catching any JavaScript errors.
@@ -55,31 +64,32 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @ExtendWith(SeleniumExtension.class)
 class JSErrorRegressionTest {
 
-    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final int TEST_PORT_NUMBER = 9091;
 
     public static PluginMockComponent component;
 
-    private static PlanSystem bukkitSystem;
+    private static PlanSystem planSystem;
     private static ServerUUID serverUUID;
 
     @BeforeAll
     static void setUpClass(@TempDir Path tempDir) throws Exception {
         component = new PluginMockComponent(tempDir);
-        bukkitSystem = component.getPlanSystem();
+        planSystem = component.getPlanSystem();
 
-        PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
+        PlanConfig config = planSystem.getConfigSystem().getConfig();
         config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+        config.set(ProxySettings.IP, "localhost:" + TEST_PORT_NUMBER);
 
-        bukkitSystem.enable();
-        serverUUID = bukkitSystem.getServerInfo().getServerUUID();
+        planSystem.enable();
+        serverUUID = planSystem.getServerInfo().getServerUUID();
         savePlayerData();
     }
 
     private static void savePlayerData() {
-        DBSystem dbSystem = bukkitSystem.getDatabaseSystem();
+        DBSystem dbSystem = planSystem.getDatabaseSystem();
         Database database = dbSystem.getDatabase();
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
-        database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, "name"));
+        database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME));
         FinishedSession session = new FinishedSession(uuid, serverUUID, 1000L, 11000L, 500L, new DataMap());
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));
         database.executeTransaction(new SessionEndTransaction(session));
@@ -87,8 +97,8 @@ class JSErrorRegressionTest {
 
     @AfterAll
     static void tearDownClass() {
-        if (bukkitSystem != null) {
-            bukkitSystem.disable();
+        if (planSystem != null) {
+            planSystem.disable();
         }
     }
 
@@ -97,42 +107,28 @@ class JSErrorRegressionTest {
         SeleniumExtension.newTab(driver);
     }
 
-    @Test
-    void playerPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-        System.out.println("Testing Player Page");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/TestPlayer");
-        assertNo500Error(driver);
+    @DisplayName("Page does not log anything on js console: ")
+    @ParameterizedTest(name = "{0}")
+    @CsvSource({
+            "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_NAME,
+            "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING,
+            "http://localhost:" + TEST_PORT_NUMBER + "/network",
+            "http://localhost:" + TEST_PORT_NUMBER + "/server/Server 1",
+            "http://localhost:" + TEST_PORT_NUMBER + "/players"
+    })
+    void javascriptRegressionTest(String address, ChromeDriver driver) {
+        driver.get(address);
+
+        List<LogEntry> logs = new ArrayList<>();
+        logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
+        logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
+
+        assertNoLogs(logs);
     }
 
-    private void assertNo500Error(WebDriver driver) {
-        assertFalse(driver.getPageSource().contains("<span class=\"loader-text\">Error occurred"), driver.getPageSource());
-    }
-
-    @Test
-    void playerPageAccessibleViaUUID(WebDriver driver) {
-        System.out.println("Testing Player Page via UUID");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID);
-        assertNo500Error(driver);
-    }
-
-    @Test
-    void serverPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-        System.out.println("Testing Server Page");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-        assertNo500Error(driver);
-    }
-
-    @Test
-    void playersPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-        System.out.println("Testing Players Page");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/players");
-        assertNo500Error(driver);
-    }
-
-    @Test
-    void debugPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-        System.out.println("Testing Debug Page");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/debug");
-        assertNo500Error(driver);
+    private void assertNoLogs(List<LogEntry> logs) {
+        assertTrue(logs.isEmpty(), () -> "Browser console included " + logs.size() + " logs: " + logs.stream()
+                .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
+                .collect(Collectors.toList()));
     }
 }

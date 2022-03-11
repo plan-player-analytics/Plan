@@ -73,9 +73,9 @@ Cmd Header - Inspect                            || > §2Игрок: §f${0}
 Cmd Header - Network                            || > §2Сетевая страница
 Cmd Header - Players                            || > §2Игроки
 Cmd Header - Search                             || > §2${0} Результаты для §f${1}§2:
-Cmd Header - server list                        || id::name::uuid
+Cmd Header - server list                        || id::название::uuid
 Cmd Header - Servers                            || > §2Серверы
-Cmd Header - web user list                      || username::linked to::permission level
+Cmd Header - web user list                      || имя пользователя::привязан к::уровень прав
 Cmd Header - Web Users                          || > §2${0} Веб-пользователи
 Cmd Info - Bungee Connection                    ||   §2Подключен к прокси: §f${0}
 Cmd Info - Database                             ||   §2Текущая база данных: §f${0}

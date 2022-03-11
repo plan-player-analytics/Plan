@@ -55,6 +55,7 @@ public class NetworkJSONResolver {
                 .add("servers", forJSON(DataID.SERVERS, jsonFactory::serversAsJSONMaps))
                 .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation))
                 .add("listServers", forJSON(DataID.LIST_SERVERS, jsonFactory::listServers))
+                .add("serverOptions", forJSON(DataID.LIST_SERVERS, jsonFactory::listServers))
                 .add("performanceOverview", networkPerformanceJSONResolver)
                 .build();
     }

@@ -60,11 +60,13 @@ public class BadNukkitRegisterValuePatch extends Patch {
     private void multiplyInTable(String tableName, String registered) {
         String sql = "UPDATE " + tableName + " SET " +
                 registered + "=" + registered + "*1000" +
-                WHERE + registered + "<?";
+                WHERE + registered + "<?" +
+                AND + registered + ">?";
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, System.currentTimeMillis() / 1000L);
+                statement.setLong(2, 0L);
             }
         });
     }

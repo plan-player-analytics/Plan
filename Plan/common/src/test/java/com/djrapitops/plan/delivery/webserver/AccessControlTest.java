@@ -30,6 +30,7 @@ import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -56,7 +57,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Tests for limiting user access control based on permissions.
  */
-public class AccessControlTest {
+class AccessControlTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
@@ -124,7 +125,7 @@ public class AccessControlTest {
 
     static String login(String address, String username) throws IOException, KeyManagementException, NoSuchAlgorithmException {
         HttpURLConnection loginConnection = null;
-        String cookie = "";
+        String cookie;
         try {
             loginConnection = CONNECTOR.getConnection("POST", address + "/auth/login");
             loginConnection.setDoOutput(true);
@@ -136,12 +137,13 @@ public class AccessControlTest {
                 System.out.println("Got cookie: " + cookie);
             }
         } finally {
-            loginConnection.disconnect();
+            if (loginConnection != null) loginConnection.disconnect();
         }
         return cookie;
     }
 
-    @ParameterizedTest
+    @DisplayName("Access control test, level 0:")
+    @ParameterizedTest(name = "{0}: expecting {1}")
     @CsvSource({
             "/,302",
             "/server,302",
@@ -196,6 +198,7 @@ public class AccessControlTest {
             "/v1/errors,200",
             "/errors,200",
             "/v1/network/listServers,200",
+            "/v1/network/serverOptions,200",
             "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],200",
             "/v1/version,200",
             "/v1/user,200",
@@ -205,7 +208,8 @@ public class AccessControlTest {
         assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 0, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
     }
 
-    @ParameterizedTest
+    @DisplayName("Access control test, level 1:")
+    @ParameterizedTest(name = "{0}: expecting {1}")
     @CsvSource({
             "/,302",
             "/server,403",
@@ -260,6 +264,7 @@ public class AccessControlTest {
             "/v1/errors,403",
             "/errors,403",
             "/v1/network/listServers,403",
+            "/v1/network/serverOptions,403",
             "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
             "/v1/version,200",
             "/v1/user,200",
@@ -269,7 +274,8 @@ public class AccessControlTest {
         assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 1, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
     }
 
-    @ParameterizedTest
+    @DisplayName("Access control test, level 2:")
+    @ParameterizedTest(name = "{0}: expecting {1}")
     @CsvSource({
             "/,302",
             "/server,403",
@@ -324,6 +330,7 @@ public class AccessControlTest {
             "/v1/errors,403",
             "/errors,403",
             "/v1/network/listServers,403",
+            "/v1/network/serverOptions,403",
             "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
             "/v1/version,200",
             "/v1/user,200",
@@ -333,7 +340,8 @@ public class AccessControlTest {
         assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 2, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
     }
 
-    @ParameterizedTest
+    @DisplayName("Access control test, level 100:")
+    @ParameterizedTest(name = "{0}: expecting {1}")
     @CsvSource({
             "/,403",
             "/server,403",
@@ -386,6 +394,7 @@ public class AccessControlTest {
             "/v1/filters,403",
             "/v1/query,403",
             "/v1/network/listServers,403",
+            "/v1/network/serverOptions,403",
             "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
             "/v1/version,200",
             "/v1/user,200",
@@ -404,7 +413,7 @@ public class AccessControlTest {
             return connection.getResponseCode();
 
         } finally {
-            connection.disconnect();
+            if (connection != null) connection.disconnect();
         }
     }
 

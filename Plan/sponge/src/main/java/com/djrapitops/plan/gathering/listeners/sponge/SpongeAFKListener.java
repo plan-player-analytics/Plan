@@ -33,9 +33,9 @@ import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.event.network.ClientConnectionEvent;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Listener that keeps track of actions that are not considered being AFK.
@@ -56,7 +56,7 @@ public class SpongeAFKListener {
     @Inject
     public SpongeAFKListener(PlanConfig config, ErrorLogger errorLogger) {
         this.errorLogger = errorLogger;
-        this.ignorePermissionInfo = new HashMap<>();
+        this.ignorePermissionInfo = new ConcurrentHashMap<>();
 
         SpongeAFKListener.assignAFKTracker(config);
     }
