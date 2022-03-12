@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import ExtensionCard, {ExtensionCardWrapper} from "../components/extensions/ExtensionCard";
-import {Row} from "react-bootstrap-v5";
+import {Card, Row} from "react-bootstrap-v5";
 import {useParams} from "react-router-dom";
 import Masonry from "masonry-layout";
 import {usePlayer} from "./PlayerPage";
@@ -26,9 +26,22 @@ const PlayerPluginData = () => {
             masonry = new Masonry(masonryRow, {"percentPosition": true, "itemSelector": ".extension-wrapper"});
         }
         return () => {
-            masonry.destroy();
+            if (masonry.element) masonry.destroy();
         }
     }, [])
+
+    if (!extensions) {
+        return <section className="player_plugin_data">
+            <Header player={player} extension_data={{serverName}}/>
+            <Row style={{overflowY: 'hidden'}}>
+                <Card>
+                    <Card.Body>
+                        <p>No Extension data for {serverName}</p>
+                    </Card.Body>
+                </Card>
+            </Row>
+        </section>
+    }
 
     return (
         <section className="player_plugin_data">

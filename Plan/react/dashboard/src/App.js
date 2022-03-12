@@ -11,12 +11,17 @@ import PlayerPvpPve from "./views/PlayerPvpPve";
 import PlayerServers from "./views/PlayerServers";
 import PlayerPluginData from "./views/PlayerPluginData";
 import {ThemeContextProvider} from "./hooks/themeHook";
+import axios from "axios";
+import ErrorView from "./views/ErrorView";
+import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
 
 const PlayerRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
 }
 
 function App() {
+    axios.defaults.withCredentials = true;
+
     return (
         <div className="App">
             <ThemeContextProvider>
@@ -31,6 +36,11 @@ function App() {
                                 <Route path="pvppve" element={<PlayerPvpPve/>}/>
                                 <Route path="servers" element={<PlayerServers/>}/>
                                 <Route path="plugins/:serverName" element={<PlayerPluginData/>}/>
+                                <Route path="*" element={<ErrorView error={{
+                                    message: 'Unknown tab address, please correct the address',
+                                    title: 'No such tab',
+                                    icon: faMapSigns
+                                }}/>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>

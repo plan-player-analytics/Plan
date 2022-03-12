@@ -12,7 +12,6 @@ const Header = ({error}) => (
 );
 
 const ErrorView = ({error}) => {
-    console.error(error);
     return (
         <section className="player_overview">
             <Header error={error}/>
