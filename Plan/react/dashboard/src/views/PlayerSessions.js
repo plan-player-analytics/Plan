@@ -52,7 +52,6 @@ const WorldPieCard = ({player}) => (
         </Card.Header>
         <WorldPie
             id="world-pie"
-            gmColors={[]}
             worldSeries={player.world_pie_series}
             gmSeries={player.gm_series}
         />

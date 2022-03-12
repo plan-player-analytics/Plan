@@ -1,21 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
-import {
-    faCalendar,
-    faCampground,
-    faCubes,
-    faDoorOpen,
-    faDownload,
-    faInfoCircle,
-    faNetworkWired,
-    faPalette,
-    faQuestionCircle
-} from "@fortawesome/free-solid-svg-icons";
+import {faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 import {NavLink} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
 import VersionInformationModal from "../modal/VersionInformationModal";
+import {fetchPlanVersion} from "../../service/metadataService";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -57,16 +48,13 @@ const FooterButtons = () => {
     const toggleVersionModal = () => setVersionModalOpen(!versionModalOpen);
 
     const [versionInfo, setVersionInfo] = useState({currentVersion: 'Loading..', updateAvailable: false});
-    // TODO Load version info from backend
+
+    const loadVersion = async () => {
+        setVersionInfo(await fetchPlanVersion())
+    }
+
     useEffect(() => {
-        setVersionInfo({
-            currentVersion: '6.0 build 1672',
-            updateAvailable: Math.random() > 0.5,
-            newVersion: '6.0 build 1673',
-            downloadUrl: '',
-            changelogUrl: '',
-            isRelease: false
-        })
+        loadVersion();
     }, [])
 
     return (
@@ -78,7 +66,7 @@ const FooterButtons = () => {
                 <button className="btn bg-transparent-light" onClick={toggleInfoModal}>
                     <Fa icon={faQuestionCircle}/>
                 </button>
-                <a className="btn bg-transparent-light" href="../auth/logout" id="logout-button">
+                <a className="btn bg-transparent-light" href="/auth/logout" id="logout-button">
                     <Fa icon={faDoorOpen}/> Logout
                 </a>
             </div>
@@ -91,18 +79,20 @@ const FooterButtons = () => {
     )
 }
 
-const Sidebar = () => {
+const Sidebar = ({items}) => {
     const {color} = useTheme();
 
     return (
         <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
             <Logo/>
             <Divider/>
-            <Item active={true} href={"overview"} icon={faInfoCircle} name="Player Overview"/>
-            <Item active={false} href={"sessions"} icon={faCalendar} name="Sessions"/>
-            <Item active={false} href={"pvppve"} icon={faCampground} name="PvP & PvE"/>
-            <Item active={false} href={"servers"} icon={faNetworkWired} name="Servers Overview"/>
-            <Item active={false} href={"plugins/Server 1"} icon={faCubes} name="Plugins (Server 1)"/>
+            {items.map((item, i) =>
+                <Item key={i}
+                      active={false}
+                      href={item.href}
+                      icon={item.icon}
+                      name={item.name}
+                />)}
             <Divider/>
             <FooterButtons/>
         </ul>

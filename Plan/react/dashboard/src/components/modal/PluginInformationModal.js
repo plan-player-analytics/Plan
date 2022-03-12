@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {Modal} from "react-bootstrap-v5";
 import {
@@ -11,6 +11,7 @@ import {
     faStar
 } from "@fortawesome/free-solid-svg-icons";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
+import {useMetadata} from "../../hooks/metadataHook";
 
 const LicenseSection = () => {
     return (
@@ -41,90 +42,31 @@ const Links = () => {
     )
 }
 
+const getContributionIcon = (type) => {
+    switch (type) {
+        case "LANG":
+            return 'language';
+        case "CODE":
+            return 'code';
+        default:
+            return "exclamation-triangle";
+    }
+}
+
 const Contributor = ({contributor}) => {
-    const icons = contributor.contributions.map(
-        (icon, i) => <Fa key={i} icon={["fa", icon]}/>);
+    const icons = contributor.contributed.map(
+        (type, i) => <Fa key={i} icon={["fa", getContributionIcon(type)]}/>);
     return (
         <li className="col-4">{contributor.name} {icons} </li>
     )
 }
 
-function getContributorsTEMP() {
-    const CODE = "code";
-    const LANG = "language";
-
-    return [{name: "aidn5", contributions: [CODE]},
-        {name: "Antonok", contributions: [CODE]},
-        {name: "Argetan", contributions: [CODE]},
-        {name: "Aurelien", contributions: [CODE, LANG]},
-        {name: "BrainStone", contributions: [CODE]},
-        {name: "Catalina", contributions: [LANG]},
-        {name: "Elguerrero", contributions: [LANG]},
-        {name: "Combustible", contributions: [CODE]},
-        {name: "Creeperface01", contributions: [CODE]},
-        {name: "CyanTech", contributions: [LANG]},
-        {name: "DarkPyves", contributions: [CODE]},
-        {name: "DaveDevil", contributions: [LANG]},
-        {name: "developStorm", contributions: [CODE]},
-        {name: "enterih", contributions: [LANG]},
-        {name: "Eyremba", contributions: [LANG]},
-        {name: "f0rb1d (\u4f5b\u58c1\u706f)", contributions: [LANG]},
-        {name: "Fur_xia", contributions: [LANG]},
-        {name: "fuzzlemann", contributions: [CODE, LANG]},
-        {name: "Guinness_Akihiko", contributions: [LANG]},
-        {name: "hallo1142", contributions: [LANG]},
-        {name: "itaquito", contributions: [LANG]},
-        {name: "jyhsu2000", contributions: [CODE]},
-        {name: "jvmuller", contributions: [LANG]},
-        {name: "Malachiel", contributions: [LANG]},
-        {name: "Miclebrick", contributions: [CODE]},
-        {name: "Morsmorse", contributions: [LANG]},
-        {name: "MAXOUXAX", contributions: [CODE]},
-        {name: "Nogapra", contributions: [LANG]},
-        {name: "Sander0542", contributions: [LANG]},
-        {name: "Saph1s", contributions: [LANG]},
-        {name: "Shadowhackercz", contributions: [LANG]},
-        {name: "shaokeyibb", contributions: [LANG]},
-        {name: "skmedix", contributions: [CODE]},
-        {name: "TDJisvan", contributions: [LANG]},
-        {name: "Vankka", contributions: [CODE]},
-        {name: "yukieji", contributions: [LANG]},
-        {name: "qsefthuopq", contributions: [LANG]},
-        {name: "Karlatemp", contributions: [CODE, LANG]},
-        {name: "Mastory_Md5", contributions: [LANG]},
-        {name: "FluxCapacitor2", contributions: [CODE]},
-        {name: "galexrt", contributions: [LANG]},
-        {name: "QuakyCZ", contributions: [LANG]},
-        {name: "MrFriggo", contributions: [LANG]},
-        {name: "vacoup", contributions: [CODE]},
-        {name: "Kopo942", contributions: [CODE]},
-        {name: "WolverStones", contributions: [LANG]},
-        {name: "BruilsiozPro", contributions: [LANG]},
-        {name: "AppleMacOS", contributions: [CODE]},
-        {name: "10935336", contributions: [LANG]},
-        {name: "EyuphanMandiraci", contributions: [LANG]},
-        {name: "4drian3d", contributions: [LANG]},
-        {name: "\u6d1b\u4f0a", contributions: [LANG]},
-        {name: "portlek", contributions: [CODE]},
-        {name: "mbax", contributions: [CODE]},
-        {name: "KairuByte", contributions: [CODE]},
-        {name: "rymiel", contributions: [CODE]},
-        {name: "Perchun_Pak", contributions: [LANG]},
-        {name: "HexedHero", contributions: [CODE]},
-        {name: "DrexHD", contributions: [CODE]},
-        {name: "zisunny104", contributions: [LANG]},
-        {name: "SkipM4", contributions: [LANG]},
-        {name: "ahdg6", contributions: [CODE]},
-        {name: "BratishkaErik", contributions: [LANG]}];
-}
-
 const Contributions = () => {
-    const [contributors, setContributors] = useState(getContributorsTEMP());
-
-    useEffect(() => {
-        // TODO Load contributors from backend.
-        setContributors(getContributorsTEMP());
-    }, []);
+    const metadata = useMetadata();
+    const contributors = metadata.contributors ? metadata.contributors : [{
+        name: '(Error getting contributors)',
+        contributed: ['exclamation-triangle']
+    }];
 
     return (<>
         <p>Player Analytics is developed by AuroraLS3.</p>

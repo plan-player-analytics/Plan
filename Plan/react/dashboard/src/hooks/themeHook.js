@@ -1,20 +1,21 @@
 import {createContext, useContext, useState} from "react";
 import {createNightModeCss, getColors} from "../util/colors";
 import {getLightModeChartTheming, getNightModeChartTheming} from "../util/graphColors";
+import {useMetadata} from "./metadataHook";
 
 const themeColors = getColors();
 themeColors.splice(themeColors.length - 4, 4);
 
-const getDefaultTheme = () => {
-    const defaultTheme = 'plan'; // TODO Take from backend settings endpoint
+const getDefaultTheme = (metadata) => {
+    const defaultTheme = metadata.defaultTheme;
 
     // Avoid night mode staying on if default theme is night mode
-    return defaultTheme === 'night' ? 'plan' : defaultTheme;
+    return defaultTheme === 'night' || defaultTheme === 'default' ? 'plan' : defaultTheme;
 }
 
-const getStoredTheme = () => {
+const getStoredTheme = (defaultTheme) => {
     const stored = window.localStorage.getItem('themeColor');
-    return stored ? stored : 'plan';
+    return stored ? stored : defaultTheme;
 }
 
 const setStoredTheme = themeColor => {
@@ -24,8 +25,10 @@ const setStoredTheme = themeColor => {
 const ThemeContext = createContext({});
 
 export const ThemeContextProvider = ({children}) => {
+    const metadata = useMetadata();
+
     const [colorChooserOpen, setColorChooserOpen] = useState(false);
-    const [selectedColor, setSelectedColor] = useState(getStoredTheme());
+    const [selectedColor, setSelectedColor] = useState(getStoredTheme(metadata.defaultTheme));
     const [previousColor, setPreviousColor] = useState(undefined);
 
     const sharedState = {
@@ -55,6 +58,8 @@ export const useTheme = () => {
         setColorChooserOpen
     } = useContext(ThemeContext);
 
+    const metadata = useMetadata();
+
     const setTheme = color => {
         setStoredTheme(color);
         setSelectedColor(color);
@@ -72,7 +77,7 @@ export const useTheme = () => {
 
     const toggleNightMode = () => {
         if (isNightModeEnabled()) {
-            setTheme(previousColor ? previousColor : getDefaultTheme());
+            setTheme(previousColor ? previousColor : getDefaultTheme(metadata));
         } else {
             setPreviousColor(selectedColor);
             setTheme('night');

@@ -6,14 +6,14 @@ const PlayerSessionCalendar = ({series, firstDay}) => (
     <FullCalendar
         plugins={[dayGridPlugin]}
         timeZone="UTC"
-        themeSystem='bootstrap' // TODO Fix styling and size of the calendar
+        themeSystem='bootstrap'
         eventColor='#009688'
         dayMaxEventRows={4}
         firstDay={firstDay}
         initialView='dayGridMonth'
         navLinks={true}
-        height={510}
-        contentHeight={510}
+        height={560}
+        contentHeight={560}
         headerToolbar={{
             left: 'title',
             center: '',

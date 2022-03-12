@@ -14,6 +14,7 @@ import {ThemeContextProvider} from "./hooks/themeHook";
 import axios from "axios";
 import ErrorView from "./views/ErrorView";
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
+import {MetadataContextProvider} from "./hooks/metadataHook";
 
 const PlayerRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -24,28 +25,30 @@ function App() {
 
     return (
         <div className="App">
-            <ThemeContextProvider>
-                <div id="wrapper">
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path="/" element={<Navigate to="/player/AuroraLS3" replace={true}/>}/>
-                            <Route path="/player/:identifier" element={<PlayerPage/>}>
-                                <Route path="" element={<PlayerRedirect/>}/>
-                                <Route path="overview" element={<PlayerOverview/>}/>
-                                <Route path="sessions" element={<PlayerSessions/>}/>
-                                <Route path="pvppve" element={<PlayerPvpPve/>}/>
-                                <Route path="servers" element={<PlayerServers/>}/>
-                                <Route path="plugins/:serverName" element={<PlayerPluginData/>}/>
-                                <Route path="*" element={<ErrorView error={{
-                                    message: 'Unknown tab address, please correct the address',
-                                    title: 'No such tab',
-                                    icon: faMapSigns
-                                }}/>}/>
-                            </Route>
-                        </Routes>
-                    </BrowserRouter>
-                </div>
-            </ThemeContextProvider>
+            <MetadataContextProvider>
+                <ThemeContextProvider>
+                    <div id="wrapper">
+                        <BrowserRouter>
+                            <Routes>
+                                <Route path="/" element={<Navigate to="/player/AuroraLS3" replace={true}/>}/>
+                                <Route path="/player/:identifier" element={<PlayerPage/>}>
+                                    <Route path="" element={<PlayerRedirect/>}/>
+                                    <Route path="overview" element={<PlayerOverview/>}/>
+                                    <Route path="sessions" element={<PlayerSessions/>}/>
+                                    <Route path="pvppve" element={<PlayerPvpPve/>}/>
+                                    <Route path="servers" element={<PlayerServers/>}/>
+                                    <Route path="plugins/:serverName" element={<PlayerPluginData/>}/>
+                                    <Route path="*" element={<ErrorView error={{
+                                        message: 'Unknown tab address, please correct the address',
+                                        title: 'No such tab',
+                                        icon: faMapSigns
+                                    }}/>}/>
+                                </Route>
+                            </Routes>
+                        </BrowserRouter>
+                    </div>
+                </ThemeContextProvider>
+            </MetadataContextProvider>
         </div>
     );
 }

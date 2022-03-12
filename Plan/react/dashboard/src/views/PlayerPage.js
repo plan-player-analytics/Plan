@@ -5,11 +5,13 @@ import ColorSelectorModal from "../components/modal/ColorSelectorModal";
 import {NightModeCss} from "../hooks/themeHook";
 import {fetchPlayer} from "../service/playerService";
 import ErrorView from "./ErrorView";
+import {faCalendar, faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 
 
 const PlayerPage = () => {
     const [player, setPlayer] = useState(undefined);
     const [error, setError] = useState(undefined);
+    const [sidebarItems, setSidebarItems] = useState([]);
 
     const {identifier} = useParams();
 
@@ -25,10 +27,29 @@ const PlayerPage = () => {
         updatePlayer()
     }, [identifier]);
 
+    useEffect(() => {
+        if (!player) return;
+
+        const items = [
+            {name: "Player Overview", icon: faInfoCircle, href: "overview"},
+            {name: "Sessions", icon: faCalendar, href: "sessions"},
+            {name: "PvP & PvE", icon: faCampground, href: "pvppve"},
+            {name: "Servers Overview", icon: faNetworkWired, href: "servers"}
+        ]
+
+        player.extensions.map(extension => {
+            return {name: `Plugins (${extension.serverName})`, icon: faCubes, href: `plugins/${extension.serverName}`}
+        }).forEach(item => items.push(item));
+
+        setSidebarItems(items);
+        window.document.title = `Plan | ${player.info.name}`;
+    }, [player])
+
+
     if (error) {
         return <>
             <NightModeCss/>
-            <Sidebar/>
+            <Sidebar items={sidebarItems}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
@@ -45,7 +66,7 @@ const PlayerPage = () => {
     return player ? (
         <>
             <NightModeCss/>
-            <Sidebar/>
+            <Sidebar items={sidebarItems}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">

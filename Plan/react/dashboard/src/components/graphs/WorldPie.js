@@ -5,8 +5,11 @@ import factory from 'highcharts/modules/drilldown';
 import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
+import {useMetadata} from "../../hooks/metadataHook";
 
-const WorldPie = ({id, gmColors, worldSeries, gmSeries}) => {
+const WorldPie = ({id, worldSeries, gmSeries}) => {
+    const {gmPieColors} = useMetadata();
+
     useEffect(() => {
         factory(Highcharts)
     }, []);
@@ -67,11 +70,11 @@ const WorldPie = ({id, gmColors, worldSeries, gmSeries}) => {
             series: [pieSeries],
             drilldown: {
                 series: gmSeries.map(function (d) {
-                    return {name: d.name, id: d.id, colors: gmColors, data: d.data}
+                    return {name: d.name, id: d.id, colors: gmPieColors, data: d.data}
                 })
             }
         });
-    }, [worldSeries, gmSeries, graphTheming, nightModeEnabled, id, gmColors]);
+    }, [worldSeries, gmSeries, graphTheming, nightModeEnabled, id, gmPieColors]);
 
     return (<div className="chart-pie" id={id}/>)
 }

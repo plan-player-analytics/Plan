@@ -63,7 +63,6 @@ const SessionBody = ({i, session}) => {
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                 <WorldPie id={"worldpie_" + i}
                           worldSeries={session.world_series}
-                          gmColors={[]}
                           gmSeries={session.gm_series}/>
                 <a href={session.network_server ? `./player/` : `../player/` + session.player_uuid}
                    className="float-end btn bg-blue">

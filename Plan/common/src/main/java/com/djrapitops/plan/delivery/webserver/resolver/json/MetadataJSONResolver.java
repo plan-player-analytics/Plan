@@ -20,19 +20,27 @@ import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.java.Maps;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
 
 @Singleton
-public class ContributorsJSONResolver implements NoAuthResolver {
+public class MetadataJSONResolver implements NoAuthResolver {
+
+    private final PlanConfig config;
+    private final Theme theme;
 
     @Inject
-    public ContributorsJSONResolver() {
+    public MetadataJSONResolver(PlanConfig config, Theme theme) {
+        this.config = config;
         // Dagger inject constructor
+        this.theme = theme;
     }
 
     @Override
@@ -42,8 +50,10 @@ public class ContributorsJSONResolver implements NoAuthResolver {
 
     private Response getResponse() {
         return Response.builder()
-                .setJSONContent(Maps.builder(String.class, List.class)
+                .setJSONContent(Maps.builder(String.class, Object.class)
                         .put("contributors", Contributors.getContributors())
+                        .put("defaultTheme", config.get(DisplaySettings.THEME))
+                        .put("gmPieColors", theme.getPieColors(ThemeVal.GRAPH_GM_PIE))
                         .build())
                 .build();
     }
