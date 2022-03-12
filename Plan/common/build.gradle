@@ -1,7 +1,9 @@
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
+    id "com.github.node-gradle.node" version "3.2.1"
 }
 
 configurations {
@@ -56,7 +58,6 @@ dependencies {
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
 task updateVersion(type: Copy) {
     from('src/main/resources') {
         include 'plugin.yml'
@@ -68,25 +69,26 @@ task updateVersion(type: Copy) {
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
 }
 
-import org.apache.tools.ant.taskdefs.condition.Os
+node {
+    nodeProjectDir = file("$rootDir/react/dashboard")
+}
 
-task buildYarnProject {
+task yarnBundle(type: YarnTask) {
+    inputs.files(fileTree("$rootDir/react/dashboard/src"))
+    inputs.file("$rootDir/react/dashboard/package.json")
+
+    outputs.dir("$rootDir/react/dashboard/build")
+
+    dependsOn yarn_install
+    args = ['run', 'build']
+}
+
+task copyYarnBuildResults {
+    inputs.files(fileTree("$rootDir/react/dashboard/build"))
+    outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
+
+    dependsOn yarnBundle
     doLast {
-        def stdout = new ByteArrayOutputStream()
-        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-            exec {
-                workingDir file("$rootDir/react/dashboard")
-                commandLine "$rootDir/buildYarn.bat"
-                standardOutput = stdout
-            }
-        } else {
-            exec {
-                workingDir "$rootDir/react/dashboard"
-                commandLine "$rootDir/buildYarn.sh"
-                standardOutput = stdout
-            }
-        }
-        System.out.println stdout
         mkdir "$rootDir/common/build/resources/main/assets/plan/web/react"
         copy {
             from "$rootDir/react/dashboard/build"
@@ -119,7 +121,7 @@ task determineWebAssetModifications {
 }
 
 processResources {
-    dependsOn buildYarnProject, determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
+    dependsOn copyYarnBuildResults, determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
     from 'build/sources/resources'
