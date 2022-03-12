@@ -288,7 +288,7 @@ public class PlayerJSONCreator {
             playerData.add(new ExtensionsDto(
                     playerUUID.toString(), serverUUID.toString(),
                     entry.getValue().getIdentifiableName(),
-                    extensionPlayerData.get(serverUUID)
+                    extensionPlayerData.getOrDefault(serverUUID, Collections.emptyList())
             ));
         }
         return playerData;
