@@ -24,6 +24,7 @@ import PunchCard from "../components/graphs/PunchCard";
 import Datapoint from "../components/Datapoint";
 import AsNumbersTable, {TableRow} from "../components/table/AsNumbersTable";
 import {useTheme} from "../hooks/themeHook";
+import {usePlayer} from "./PlayerPage";
 
 const Header = ({player}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -52,7 +53,7 @@ const PlayerOverviewCard = ({player}) => (
                 </Col>
                 <Col sm={4}>
                     <img className="rounded mx-auto d-block"
-                         alt="player head image"
+                         alt="player head"
                          src={`https://cravatar.eu/helmavatar/${player.info.name}/120.png`}/>
                 </Col>
                 <Col sm={4}>
@@ -233,7 +234,9 @@ const OnlineActivityCard = ({player}) => (
     </Card>
 )
 
-const PlayerOverview = ({player}) => {
+const PlayerOverview = () => {
+    const {player} = usePlayer();
+
     return (
         <section className="player_overview">
             <Header player={player}/>

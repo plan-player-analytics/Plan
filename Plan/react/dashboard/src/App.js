@@ -6,7 +6,6 @@ import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import React from "react";
 import PlayerPage from "./views/PlayerPage";
 import PlayerOverview from "./views/PlayerOverview";
-import player from "./mockdata/player.json";
 import PlayerSessions from "./views/PlayerSessions";
 import PlayerPvpPve from "./views/PlayerPvpPve";
 import PlayerServers from "./views/PlayerServers";
@@ -27,11 +26,11 @@ function App() {
                             <Route path="/" element={<Navigate to="/player/AuroraLS3" replace={true}/>}/>
                             <Route path="/player/:identifier" element={<PlayerPage/>}>
                                 <Route path="" element={<PlayerRedirect/>}/>
-                                <Route path="overview" element={<PlayerOverview player={player}/>}/>
-                                <Route path="sessions" element={<PlayerSessions player={player}/>}/>
-                                <Route path="pvppve" element={<PlayerPvpPve player={player}/>}/>
-                                <Route path="servers" element={<PlayerServers player={player}/>}/>
-                                <Route path="plugins/:serverName" element={<PlayerPluginData player={player}/>}/>
+                                <Route path="overview" element={<PlayerOverview/>}/>
+                                <Route path="sessions" element={<PlayerSessions/>}/>
+                                <Route path="pvppve" element={<PlayerPvpPve/>}/>
+                                <Route path="servers" element={<PlayerServers/>}/>
+                                <Route path="plugins/:serverName" element={<PlayerPluginData/>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>

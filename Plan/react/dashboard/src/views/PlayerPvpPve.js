@@ -6,6 +6,7 @@ import {faCampground, faCrosshairs, faKhanda, faSkull} from "@fortawesome/free-s
 import AsNumbersTable, {TableRow} from "../components/table/AsNumbersTable";
 import Datapoint from "../components/Datapoint";
 import KillsTable from "../components/table/KillsTable";
+import {usePlayer} from "./PlayerPage";
 
 
 const Header = ({player}) => (
@@ -99,7 +100,8 @@ const PvpDeathsTableCard = ({player}) => (
     </Card>
 )
 
-const PlayerPvpPve = ({player}) => {
+const PlayerPvpPve = () => {
+    const {player} = usePlayer();
     return (
         <section className="player_pvp_pve">
             <Header player={player}/>

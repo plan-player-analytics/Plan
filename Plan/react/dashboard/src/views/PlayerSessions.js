@@ -6,6 +6,7 @@ import PlayerSessionCalendar from "../components/calendar/PlayerSessionCalendar"
 import Scrollable from "../components/Scrollable";
 import SessionAccordion from "../components/accordion/SessionAccordion";
 import WorldPie from "../components/graphs/WorldPie";
+import {usePlayer} from "./PlayerPage";
 
 const Header = ({player}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -58,7 +59,8 @@ const WorldPieCard = ({player}) => (
     </Card>
 )
 
-const PlayerSessions = ({player}) => {
+const PlayerSessions = () => {
+    const {player} = usePlayer();
     return (
         <section className="player_sessions">
             <Header player={player}/>

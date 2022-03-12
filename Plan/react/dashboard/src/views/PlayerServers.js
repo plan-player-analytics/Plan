@@ -6,6 +6,7 @@ import Scrollable from "../components/Scrollable";
 import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import ServerPie from "../components/graphs/ServerPie";
 import ServerAccordion from "../components/accordion/ServerAccordion";
+import {usePlayer} from "./PlayerPage";
 
 const Header = ({player}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -46,7 +47,8 @@ const ServerPieCard = ({player}) => (
 )
 
 
-const PlayerSessions = ({player}) => {
+const PlayerServers = () => {
+    const {player} = usePlayer();
     return (
         <section className="player_sessions">
             <Header player={player}/>
@@ -62,4 +64,4 @@ const PlayerSessions = ({player}) => {
     )
 }
 
-export default PlayerSessions
+export default PlayerServers

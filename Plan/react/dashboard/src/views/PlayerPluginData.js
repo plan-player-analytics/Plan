@@ -3,6 +3,7 @@ import ExtensionCard, {ExtensionCardWrapper} from "../components/extensions/Exte
 import {Row} from "react-bootstrap-v5";
 import {useParams} from "react-router-dom";
 import Masonry from "masonry-layout";
+import {usePlayer} from "./PlayerPage";
 
 const Header = ({player, extension_data}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -12,7 +13,8 @@ const Header = ({player, extension_data}) => (
     </div>
 )
 
-const PlayerPluginData = ({player}) => {
+const PlayerPluginData = () => {
+    const {player} = usePlayer();
     const {serverName} = useParams();
 
     const extensions = player.extensions.find(extension => extension.serverName === serverName)
