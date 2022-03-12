@@ -760,6 +760,11 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0) linear-gradient(180deg, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0.2) 100%);
 }
 
+.bg-transparent-light {
+    background-color: transparent;
+    color: #fff;
+}
+
 .bg-red, body.theme-red .fc-toolbar-chunk .btn.btn-primary {
     background-color: #F44336;
     color: #fff;
@@ -890,7 +895,8 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 .btn.bg-deep-orange:hover,
 .btn.bg-brown:hover,
 .btn.bg-grey:hover,
-.btn.bg-blue-grey:hover {
+.btn.bg-blue-grey:hover,
+.btn.bg-transparent-light:hover {
     color: #ccc;
 }
 

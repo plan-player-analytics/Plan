@@ -3390,7 +3390,12 @@
       "date": "Apr 25 2021, 15:36"
     }
   ],
-  "connections": [],
+  "connections": [
+    {
+      "geolocation": "Local Machine",
+      "date": "Apr 25 2021, 15:36"
+    }
+  ],
   "info": {
     "kick_count": 1,
     "last_seen": "Apr 27 2021, 20:09",

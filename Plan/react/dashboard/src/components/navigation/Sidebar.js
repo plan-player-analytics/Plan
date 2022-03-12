@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
 import {
@@ -6,6 +6,7 @@ import {
     faCampground,
     faCubes,
     faDoorOpen,
+    faDownload,
     faInfoCircle,
     faNetworkWired,
     faPalette,
@@ -14,6 +15,7 @@ import {
 import {NavLink} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
+import VersionInformationModal from "../modal/VersionInformationModal";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -33,32 +35,58 @@ const Item = ({href, icon, name}) => (
     </li>
 )
 
+const VersionButton = ({toggleVersionModal, versionInfo}) => {
+    if (versionInfo.updateAvailable) {
+        return <button className="btn bg-white col-plan" onClick={toggleVersionModal}>
+            <Fa icon={faDownload}/> Update Available!
+        </button>;
+    }
+
+    return <button className="btn bg-transparent-light" onClick={toggleVersionModal}>
+        {versionInfo.currentVersion}
+    </button>;
+}
+
 const FooterButtons = () => {
-    const {color, toggleColorChooser} = useTheme();
+    const {toggleColorChooser} = useTheme();
 
     const [infoModalOpen, setInfoModalOpen] = useState(false);
     const toggleInfoModal = () => setInfoModalOpen(!infoModalOpen);
 
+    const [versionModalOpen, setVersionModalOpen] = useState(false);
+    const toggleVersionModal = () => setVersionModalOpen(!versionModalOpen);
+
+    const [versionInfo, setVersionInfo] = useState({currentVersion: 'Loading..', updateAvailable: false});
+    // TODO Load version info from backend
+    useEffect(() => {
+        setVersionInfo({
+            currentVersion: '6.0 build 1672',
+            updateAvailable: Math.random() > 0.5,
+            newVersion: '6.0 build 1673',
+            downloadUrl: '',
+            changelogUrl: '',
+            isRelease: false
+        })
+    }, [])
+
     return (
         <>
             <div className="mt-2 ms-md-3 text-center text-md-start">
-                <button className={"btn bg-" + color} onClick={toggleColorChooser}>
+                <button className="btn bg-transparent-light" onClick={toggleColorChooser}>
                     <Fa icon={faPalette}/>
                 </button>
-                <button className={"btn bg-" + color} onClick={toggleInfoModal}>
+                <button className="btn bg-transparent-light" onClick={toggleInfoModal}>
                     <Fa icon={faQuestionCircle}/>
                 </button>
-                <a className={"btn bg-" + color} href="../auth/logout" id="logout-button">
+                <a className="btn bg-transparent-light" href="../auth/logout" id="logout-button">
                     <Fa icon={faDoorOpen}/> Logout
                 </a>
             </div>
             <div className="ms-md-3 text-center text-md-start">
-                <button className={"btn bg-" + color} data-bs-target="#updateModal" data-bs-toggle="modal"
-                        type="button">
-                    6.0 build 1672
-                </button>
+                <VersionButton toggleVersionModal={toggleVersionModal} versionInfo={versionInfo}/>
             </div>
             <PluginInformationModal open={infoModalOpen} toggle={toggleInfoModal}/>
+            <VersionInformationModal open={versionModalOpen} toggle={toggleVersionModal} versionInfo={versionInfo}/>
         </>
     )
 }
