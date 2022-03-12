@@ -175,7 +175,7 @@ const nightColors = {
 
 const createNightModeColorCss = () => {
     return getColors()
-        .filter(color => color.name !== 'white' && color.name !== 'black')
+        .filter(color => color.name !== 'white' && color.name !== 'black' && color.name !== 'plan')
         .map(color => {
             const desaturatedColor = withReducedSaturation(color.hex);
             return `.bg-${color.name}{background-color: ${desaturatedColor} !important;color: ${nightColors.yellow};}` +
