@@ -24,6 +24,8 @@ import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.identification.UUIDUtility;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -39,14 +41,17 @@ import java.util.UUID;
 @Singleton
 public class PlayerPageResolver implements Resolver {
 
+    private final PlanConfig config;
     private final ResponseFactory responseFactory;
     private final UUIDUtility uuidUtility;
 
     @Inject
     public PlayerPageResolver(
+            PlanConfig config,
             ResponseFactory responseFactory,
             UUIDUtility uuidUtility
     ) {
+        this.config = config;
         this.responseFactory = responseFactory;
         this.uuidUtility = uuidUtility;
     }
@@ -66,7 +71,7 @@ public class PlayerPageResolver implements Resolver {
     @Override
     public Optional<Response> resolve(Request request) {
         URIPath path = request.getPath();
-        if (StringUtils.containsAny(path.asString(), "/vendor/", "/js/", "/css/", "/img/")) {
+        if (StringUtils.containsAny(path.asString(), "/vendor/", "/js/", "/css/", "/img/", "/static/")) {
             return Optional.empty();
         }
         return path.getPart(1)
@@ -82,7 +87,7 @@ public class PlayerPageResolver implements Resolver {
             return responseFactory.rawPlayerPageResponse(playerUUID);
         }
 
-        if (path.getPart(2).isPresent()) {
+        if (path.getPart(2).isPresent() && config.isFalse(PluginSettings.FRONTEND_BETA)) {
             // Redirect /player/{uuid/name}/ to /player/{uuid}
             return responseFactory.redirectResponse("../" + Html.encodeToURL(playerUUID.toString()));
         }
