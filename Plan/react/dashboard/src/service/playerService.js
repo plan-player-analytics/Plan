@@ -1,5 +1,6 @@
 import axios from "axios";
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
+import {RequestError} from "../util/errors";
 
 export const fetchPlayer = async (uuid) => {
     const url = '/v1/player?player=' + uuid;
@@ -10,11 +11,11 @@ export const fetchPlayer = async (uuid) => {
 
         if (response.status === 200) return response.data;
     } catch (e) {
-        if (e.response.status === 400) throw {
+        if (e.response.status === 400) throw RequestError({
             message: 'Player not found: ' + uuid + ', try another player',
             title: '404 Player not found',
             icon: faMapSigns
-        };
-        throw {message: e.message, url, data: e.response.data}
+        });
+        throw RequestError({message: e.message, url, data: e.response.data})
     }
 }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {RequestError} from "../util/errors";
 
 export const fetchPlanMetadata = async () => {
     const url = '/v1/metadata';
@@ -9,7 +10,7 @@ export const fetchPlanMetadata = async () => {
 
         if (response.status === 200) return response.data;
     } catch (e) {
-        throw {message: e.message, url, data: e.response.data}
+        throw RequestError({message: e.message, url, data: e.response.data})
     }
 }
 
@@ -22,6 +23,6 @@ export const fetchPlanVersion = async () => {
 
         if (response.status === 200) return response.data;
     } catch (e) {
-        throw {message: e.message, url, data: e.response.data}
+        throw RequestError({message: e.message, url, data: e.response.data})
     }
 }
