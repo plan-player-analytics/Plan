@@ -5,7 +5,7 @@ import {faCheckCircle, faDownload} from "@fortawesome/free-solid-svg-icons";
 
 const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
     return (
-        <Modal id="versionModal" aria-labelledby="versionModalLabel" show={open} onHide={toggle} size="lg">
+        <Modal id="versionModal" aria-labelledby="versionModalLabel" show={open} onHide={toggle}>
             <Modal.Header>
                 <Modal.Title id="versionModalLabel">
                     <Fa icon={faDownload}/> Version {versionInfo.newVersion} is available!
@@ -31,7 +31,7 @@ const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
 
 const NewestVersionModal = ({open, toggle, versionInfo}) => {
     return (
-        <Modal id="versionModal" aria-labelledby="versionModalLabel" show={open} onHide={toggle} size="lg">
+        <Modal id="versionModal" aria-labelledby="versionModalLabel" show={open} onHide={toggle}>
             <Modal.Header>
                 <Modal.Title id="versionModalLabel">
                     <Fa icon={faCheckCircle}/> You have version {versionInfo.currentVersion}.

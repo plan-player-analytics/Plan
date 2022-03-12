@@ -68,6 +68,33 @@ task updateVersion(type: Copy) {
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
 }
 
+import org.apache.tools.ant.taskdefs.condition.Os
+
+task buildYarnProject {
+    doLast {
+        def stdout = new ByteArrayOutputStream()
+        if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+            exec {
+                workingDir file("$rootDir/react/dashboard")
+                commandLine "$rootDir/buildYarn.bat"
+                standardOutput = stdout
+            }
+        } else {
+            exec {
+                workingDir "$rootDir/react/dashboard"
+                commandLine "$rootDir/buildYarn.sh"
+                standardOutput = stdout
+            }
+        }
+        System.out.println stdout
+        mkdir "$rootDir/common/build/resources/main/assets/plan/web/react"
+        copy {
+            from "$rootDir/react/dashboard/build"
+            into "$rootDir/common/build/resources/main/assets/plan/web"
+        }
+    }
+}
+
 task determineWebAssetModifications {
     doLast {
         mkdir "build/resources/main/assets/plan"
@@ -92,7 +119,7 @@ task determineWebAssetModifications {
 }
 
 processResources {
-    dependsOn determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
+    dependsOn buildYarnProject, determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
     from 'build/sources/resources'

@@ -15,16 +15,16 @@ const PlayerPage = () => {
 
     const {identifier} = useParams();
 
-    const updatePlayer = async () => {
+    const updatePlayer = async (id) => {
         try {
-            setPlayer(await fetchPlayer(identifier));
+            setPlayer(await fetchPlayer(id));
         } catch (e) {
             setError(e);
         }
     }
 
     useEffect(() => {
-        updatePlayer()
+        updatePlayer(identifier)
     }, [identifier]);
 
     useEffect(() => {
