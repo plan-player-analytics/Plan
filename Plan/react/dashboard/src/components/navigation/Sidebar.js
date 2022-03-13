@@ -7,6 +7,7 @@ import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
 import VersionInformationModal from "../modal/VersionInformationModal";
 import {fetchPlanVersion} from "../../service/metadataService";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -40,6 +41,7 @@ const VersionButton = ({toggleVersionModal, versionInfo}) => {
 
 const FooterButtons = () => {
     const {toggleColorChooser} = useTheme();
+    const {authRequired} = useAuth();
 
     const [infoModalOpen, setInfoModalOpen] = useState(false);
     const toggleInfoModal = () => setInfoModalOpen(!infoModalOpen);
@@ -66,9 +68,9 @@ const FooterButtons = () => {
                 <button className="btn bg-transparent-light" onClick={toggleInfoModal}>
                     <Fa icon={faQuestionCircle}/>
                 </button>
-                <a className="btn bg-transparent-light" href="/auth/logout" id="logout-button">
+                {authRequired ? <a className="btn bg-transparent-light" href="/auth/logout" id="logout-button">
                     <Fa icon={faDoorOpen}/> Logout
-                </a>
+                </a> : ''}
             </div>
             <div className="ms-md-3 text-center text-md-start">
                 <VersionButton toggleVersionModal={toggleVersionModal} versionInfo={versionInfo}/>

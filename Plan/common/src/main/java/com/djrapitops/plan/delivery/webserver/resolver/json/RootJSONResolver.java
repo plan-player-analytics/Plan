@@ -61,7 +61,8 @@ public class RootJSONResolver {
             QueryJSONResolver queryJSONResolver,
             UserJSONResolver userJSONResolver,
             VersionJSONResolver versionJSONResolver,
-            MetadataJSONResolver metadataJSONResolver
+            MetadataJSONResolver metadataJSONResolver,
+            WhoAmIJSONResolver whoAmIJSONResolver
     ) {
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
@@ -86,6 +87,7 @@ public class RootJSONResolver {
                 .add("user", userJSONResolver)
                 .add("version", versionJSONResolver)
                 .add("metadata", metadataJSONResolver)
+                .add("whoami", whoAmIJSONResolver)
                 .build();
     }
 

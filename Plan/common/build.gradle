@@ -89,7 +89,7 @@ task copyYarnBuildResults {
 
     dependsOn yarnBundle
     doLast {
-        mkdir "$rootDir/common/build/resources/main/assets/plan/web/react"
+        mkdir "$rootDir/common/build/resources/main/assets/plan/web"
         copy {
             from "$rootDir/react/dashboard/build"
             into "$rootDir/common/build/resources/main/assets/plan/web"

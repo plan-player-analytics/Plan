@@ -12,12 +12,7 @@ async function fetch(url) {
     }
 }
 
-export const fetchPlanMetadata = async () => {
-    const url = '/v1/metadata';
-    return fetch(url);
-}
-
-export const fetchPlanVersion = async () => {
-    const url = '/v1/version';
+export const fetchWhoAmI = async () => {
+    const url = '/v1/whoami';
     return fetch(url);
 }
