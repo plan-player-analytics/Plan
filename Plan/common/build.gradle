@@ -98,9 +98,6 @@ task copyYarnBuildResults {
 }
 
 task determineWebAssetModifications {
-    inputs.files(fileTree("src/main/resources/assets/plan/web"))
-    outputs.file("build/resources/main/assets/plan/WebAssetVersion.yml")
-
     doLast {
         mkdir "build/resources/main/assets/plan"
         def versionFile = file("build/resources/main/assets/plan/WebAssetVersion.yml")
