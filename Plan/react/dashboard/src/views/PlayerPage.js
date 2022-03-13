@@ -6,6 +6,7 @@ import {NightModeCss} from "../hooks/themeHook";
 import {fetchPlayer} from "../service/playerService";
 import ErrorView from "./ErrorView";
 import {faCalendar, faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
+import {useAuth} from "../hooks/authenticationHook";
 
 
 const PlayerPage = () => {
@@ -45,11 +46,13 @@ const PlayerPage = () => {
         window.document.title = `Plan | ${player.info.name}`;
     }, [player])
 
+    const {authRequired, user} = useAuth();
+    const showBackButton = !authRequired || user.permissions.filter(perm => perm !== 'page.player.self').length;
 
     if (error) {
         return <>
             <NightModeCss/>
-            <Sidebar items={sidebarItems}/>
+            <Sidebar items={[]} showBackButton={true}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
@@ -66,7 +69,7 @@ const PlayerPage = () => {
     return player ? (
         <>
             <NightModeCss/>
-            <Sidebar items={sidebarItems}/>
+            <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">

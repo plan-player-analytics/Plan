@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
-import {faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
+import {faArrowLeft, faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 import {NavLink} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
@@ -19,13 +19,25 @@ const Divider = () => (
     <hr className="sidebar-divider my-0"/>
 )
 
-const Item = ({href, icon, name}) => (
-    <li className={"nav-item nav-button"}>
-        <NavLink to={href} className={({isActive}) => isActive ? "nav-link active" : "nav-link"}>
-            <Fa icon={icon}/> <span>{name}</span>
-        </NavLink>
-    </li>
-)
+const Item = ({href, icon, name}) => {
+    if (href.startsWith('/')) {
+        return (
+            <li className={"nav-item nav-button"}>
+                <a href={href} className="nav-link">
+                    <Fa icon={icon}/> <span>{name}</span>
+                </a>
+            </li>
+        )
+    }
+
+    return (
+        <li className={"nav-item nav-button"}>
+            <NavLink to={href} className={({isActive}) => isActive ? "nav-link active" : "nav-link"}>
+                <Fa icon={icon}/> <span>{name}</span>
+            </NavLink>
+        </li>
+    );
+}
 
 const VersionButton = ({toggleVersionModal, versionInfo}) => {
     if (versionInfo.updateAvailable) {
@@ -81,13 +93,17 @@ const FooterButtons = () => {
     )
 }
 
-const Sidebar = ({items}) => {
+const Sidebar = ({items, showBackButton}) => {
     const {color} = useTheme();
 
     return (
         <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
             <Logo/>
             <Divider/>
+            {showBackButton ? <>
+                <Item active={false} href="/" icon={faArrowLeft} name="Back to main page"/>
+                <Divider/>
+            </> : ''}
             {items.map((item, i) =>
                 <Item key={i}
                       active={false}

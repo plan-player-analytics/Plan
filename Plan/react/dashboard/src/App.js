@@ -40,7 +40,6 @@ function App() {
                 <div id="wrapper">
                     <BrowserRouter>
                         <Routes>
-                            <Route path="/" element={<Navigate to="/player/AuroraLS3" replace={true}/>}/>
                             <Route path="/player/:identifier" element={<PlayerPage/>}>
                                 <Route path="" element={<PlayerRedirect/>}/>
                                 <Route path="overview" element={<PlayerOverview/>}/>
