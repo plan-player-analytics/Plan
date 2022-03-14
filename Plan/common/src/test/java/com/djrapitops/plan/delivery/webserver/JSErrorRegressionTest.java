@@ -21,6 +21,7 @@ import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -79,6 +80,7 @@ class JSErrorRegressionTest {
         PlanConfig config = planSystem.getConfigSystem().getConfig();
         config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
         config.set(ProxySettings.IP, "localhost:" + TEST_PORT_NUMBER);
+        config.set(PluginSettings.FRONTEND_BETA, true);
 
         planSystem.enable();
         serverUUID = planSystem.getServerInfo().getServerUUID();
