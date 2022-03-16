@@ -24,7 +24,7 @@ package com.djrapitops.plan.settings.locale.lang;
 public enum HtmlLang implements Lang {
 
     TITLE_NETWORK("html.title.network", "Network"),
-    // Network Page Navigation
+    // Sidebar
     SIDE_INFORMATION("html.sidebar.information", "INFORMATION"), // Nav group title
     SIDE_NETWORK_OVERVIEW("html.sidebar.networkOverview", "Network Overview"),
     SIDE_SERVERS("html.sidebar.servers", "Servers"),
@@ -32,10 +32,11 @@ public enum HtmlLang implements Lang {
     SIDE_SESSIONS("html.sidebar.sessions", "Sessions"),
     SIDE_PLAYERBASE("html.sidebar.playerbase", "Playerbase"),
     SIDE_PLAYER_LIST("html.sidebar.playerList", "Player List"),
-    SIDE_PLAYERBASE_OVERVIEW("html.sidebar.playerbaseOverview", "Playerbase Overview"),
     SIDE_GEOLOCATIONS("html.sidebar.geolocations", "Geolocations"),
-    SIDE_PLUGINS("html.sidebar.plugins", "PLUGINS"), // Nav group title
+    SIDE_PLUGINS("html.sidebar.plugins", "Plugins"), // Nav group title
     SIDE_LINKS("html.sidebar.links", "LINKS"),
+    SIDE_PERFORMANCE("html.sidebar.performance", "Performance"),
+    QUERY_MAKE("html.sidebar.query", "Make a query"),
     UNIT_NO_DATA("generic.noData", "No Data"), // Generic
     // Modals
     TITLE_THEME_SELECT("html.title.themeSelect", "Theme Select"),
@@ -109,6 +110,7 @@ public enum HtmlLang implements Lang {
     LABEL_AFK_TIME("html.label.afkTime", "AFK Time"),
     LABEL_AFK("html.label.afk", "AFK"),
     // Playerbase overview tab #tab-playerbase-overview
+    TITLE_PLAYERBASE_OVERVIEW("html.title.playerbaseOverview", "Playerbase Overview"),
     TITLE_PLAYERBASE_DEVELOPMENT("html.title.playerbaseDevelopment", "Playerbase development"),
     TITLE_CURRENT_PLAYERBASE("html.title.currentPlayerbase", "Current Playerbase"),
     TITLE_JOIN_ADDRESSES("html.title.joinAddresses", "Join Addresses"),
@@ -130,7 +132,6 @@ public enum HtmlLang implements Lang {
     // Server page
     LINK_BACK_NETWORK("html.sidebar.networkPage", "Network page"),
     SIDE_PVP_PVE("html.sidebar.pvpPve", "PvP & PvE"),
-    SIDE_PERFORMANCE("html.sidebar.performance", "Performance"),
     LABEL_RETENTION("html.label.newPlayerRetention", "New Player Retention"),
     DESCRIBE_RETENTION_PREDICTION("html.description.newPlayerRetention", "This value is a prediction based on previous players."),
     TITLE_SERVER_AS_NUMBERS("html.title.serverAsNumberse", "Server as Numbers"),
@@ -260,7 +261,6 @@ public enum HtmlLang implements Lang {
     QUERY_SHOW_VIEW("html.query.label.view", "Show a view"),
     QUERY("html.query.title.text", "Query<"),
     QUERY_MAKE_ANOTHER("html.query.label.makeAnother", "Make another query"),
-    QUERY_MAKE("html.sidebar.query", "Make a query"),
 
     WARNING_NO_GAME_SERVERS("html.description.noGameServers", "Some data requires Plan to be installed on game servers."),
     WARNING_NO_GEOLOCATIONS("html.description.noGeolocations", "Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."),
