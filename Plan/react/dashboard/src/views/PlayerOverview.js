@@ -25,6 +25,7 @@ import Datapoint from "../components/Datapoint";
 import AsNumbersTable, {TableRow} from "../components/table/AsNumbersTable";
 import {useTheme} from "../hooks/themeHook";
 import {usePlayer} from "./PlayerPage";
+import {useMetadata} from "../hooks/metadataHook";
 
 const Header = ({player}) => (
     <div className="d-sm-flex align-items-center justify-content-between mb-4">
@@ -34,106 +35,115 @@ const Header = ({player}) => (
     </div>
 );
 
-const PlayerOverviewCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black">
-                <Fa icon={faAddressBook}/> {player.info.name}
-            </h6>
-        </Card.Header>
-        <Card.Body>
-            <Row>
-                <Col sm={4}>
-                    <p>
-                        <Fa icon={faCircle} className={player.info.online ? "col-green" : "col-red"}/>
-                        {player.info.online ? ' Online' : ' Offline'}
-                    </p>
-                    {player.info.operator ? <p><Fa icon={faSuperpowers} className="col-blue"/> Operator</p> : ''}
-                    <p><Fa icon={faGavel} className="col-brown"/> Times Kicked: {player.info.kick_count}</p>
-                </Col>
-                <Col sm={4}>
-                    <img className="rounded mx-auto d-block"
-                         alt="player head"
-                         src={`https://cravatar.eu/helmavatar/${player.info.name}/120.png`}/>
-                </Col>
-                <Col sm={4}>
-                    <p><Fa icon={faCrosshairs} className="col-red"/> Player Kills: {player.info.player_kill_count}</p>
-                    <p><Fa icon={faCrosshairs} className="col-green"/> Mob Kills: {player.info.mob_kill_count}</p>
-                    <p><Fa icon={faSkull}/> Deaths: {player.info.death_count}</p>
-                </Col>
-            </Row>
-            <hr/>
-            <Row>
-                <Col lg={6}>
-                    <Datapoint
-                        icon={faClock} color="green"
-                        name="Total Playtime" value={player.info.playtime}
-                    />
-                    <Datapoint
-                        icon={faClock} color="green"
-                        name="Total Active" value={player.info.active_playtime}
-                    />
-                    <Datapoint
-                        icon={faClock} color="grey"
-                        name="Total AFK" value={player.info.afk_time}
-                    />
-                    <hr/>
-                    <Datapoint
-                        icon={faCalendarCheck} color="teal"
-                        name="Sessions" value={player.info.session_count} bold
-                    />
-                    <Datapoint
-                        icon={faClock} color="teal"
-                        name="Longest Session" value={player.info.longest_session_length}
-                    />
-                    <Datapoint
-                        icon={faClock} color="teal"
-                        name="Session Median" value={player.info.session_median}
-                    />
-                    <hr/>
-                    <Datapoint
-                        icon={faUserPlus} color="light-green"
-                        name="Registered" value={player.info.registered} boldTitle
-                    />
-                </Col>
-                <Col lg={6}>
-                    <Datapoint
-                        icon={faUser} color="amber"
-                        name="Activity Index"
-                        value={player.info.activity_index} bold
-                        valueLabel={player.info.activity_index_group}
-                    />
-                    <Datapoint
-                        icon={faServer} color="light-green"
-                        name="Favorite server" value={player.info.favorite_server}
-                    />
-                    <Datapoint
-                        icon={faLocationArrow} color="amber"
-                        name="Join Address" value={player.info.latest_join_address}
-                    />
-                    <hr/>
-                    <Datapoint
-                        icon={faSignal} color="amber"
-                        name="Average Ping" value={player.info.average_ping}
-                    />
-                    <Datapoint
-                        icon={faSignal} color="amber"
-                        name="Best Ping" value={player.info.best_ping}
-                    />
-                    <Datapoint
-                        icon={faSignal} color="amber"
-                        name="Worst Ping" value={player.info.worst_ping}
-                    />
-                    <hr/>
-                    <Datapoint
-                        icon={faCalendar} color="teal"
-                        name="Registered" value={player.info.last_seen} boldTitle
-                    />
-                </Col>
-            </Row>
-        </Card.Body>
-    </Card>
-)
+const PlayerOverviewCard = ({player}) => {
+    const {playerHeadImageUrl} = useMetadata();
+
+    const actualHeadImageUrl = (playerHeadImageUrl ? playerHeadImageUrl : "https://cravatar.eu/helmavatar/${playerUUID}/120.png")
+        .replace('${playerUUID}', player.uuid)
+        .replace('${playerName}', player.name)
+
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black">
+                    <Fa icon={faAddressBook}/> {player.info.name}
+                </h6>
+            </Card.Header>
+            <Card.Body>
+                <Row>
+                    <Col sm={4}>
+                        <p>
+                            <Fa icon={faCircle} className={player.info.online ? "col-green" : "col-red"}/>
+                            {player.info.online ? ' Online' : ' Offline'}
+                        </p>
+                        {player.info.operator ? <p><Fa icon={faSuperpowers} className="col-blue"/> Operator</p> : ''}
+                        <p><Fa icon={faGavel} className="col-brown"/> Times Kicked: {player.info.kick_count}</p>
+                    </Col>
+                    <Col sm={4}>
+                        <img className="rounded mx-auto d-block"
+                             alt="player head"
+                             src={actualHeadImageUrl}/>
+                    </Col>
+                    <Col sm={4}>
+                        <p><Fa icon={faCrosshairs} className="col-red"/> Player Kills: {player.info.player_kill_count}
+                        </p>
+                        <p><Fa icon={faCrosshairs} className="col-green"/> Mob Kills: {player.info.mob_kill_count}</p>
+                        <p><Fa icon={faSkull}/> Deaths: {player.info.death_count}</p>
+                    </Col>
+                </Row>
+                <hr/>
+                <Row>
+                    <Col lg={6}>
+                        <Datapoint
+                            icon={faClock} color="green"
+                            name="Total Playtime" value={player.info.playtime}
+                        />
+                        <Datapoint
+                            icon={faClock} color="green"
+                            name="Total Active" value={player.info.active_playtime}
+                        />
+                        <Datapoint
+                            icon={faClock} color="grey"
+                            name="Total AFK" value={player.info.afk_time}
+                        />
+                        <hr/>
+                        <Datapoint
+                            icon={faCalendarCheck} color="teal"
+                            name="Sessions" value={player.info.session_count} bold
+                        />
+                        <Datapoint
+                            icon={faClock} color="teal"
+                            name="Longest Session" value={player.info.longest_session_length}
+                        />
+                        <Datapoint
+                            icon={faClock} color="teal"
+                            name="Session Median" value={player.info.session_median}
+                        />
+                        <hr/>
+                        <Datapoint
+                            icon={faUserPlus} color="light-green"
+                            name="Registered" value={player.info.registered} boldTitle
+                        />
+                    </Col>
+                    <Col lg={6}>
+                        <Datapoint
+                            icon={faUser} color="amber"
+                            name="Activity Index"
+                            value={player.info.activity_index} bold
+                            valueLabel={player.info.activity_index_group}
+                        />
+                        <Datapoint
+                            icon={faServer} color="light-green"
+                            name="Favorite server" value={player.info.favorite_server}
+                        />
+                        <Datapoint
+                            icon={faLocationArrow} color="amber"
+                            name="Join Address" value={player.info.latest_join_address}
+                        />
+                        <hr/>
+                        <Datapoint
+                            icon={faSignal} color="amber"
+                            name="Average Ping" value={player.info.average_ping}
+                        />
+                        <Datapoint
+                            icon={faSignal} color="amber"
+                            name="Best Ping" value={player.info.best_ping}
+                        />
+                        <Datapoint
+                            icon={faSignal} color="amber"
+                            name="Worst Ping" value={player.info.worst_ping}
+                        />
+                        <hr/>
+                        <Datapoint
+                            icon={faCalendar} color="teal"
+                            name="Registered" value={player.info.last_seen} boldTitle
+                        />
+                    </Col>
+                </Row>
+            </Card.Body>
+        </Card>
+    );
+}
 
 const NicknamesCard = ({player}) => {
     const {nightModeEnabled} = useTheme();

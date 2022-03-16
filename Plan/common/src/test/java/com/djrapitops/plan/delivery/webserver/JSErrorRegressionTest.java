@@ -21,35 +21,39 @@ import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.LangCode;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import extension.SeleniumExtension;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -82,6 +86,9 @@ class JSErrorRegressionTest {
         config.set(ProxySettings.IP, "localhost:" + TEST_PORT_NUMBER);
         config.set(PluginSettings.FRONTEND_BETA, true);
 
+        // Avoid accidentally DDoS:ing head image service during tests.
+        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "http://localhost:" + TEST_PORT_NUMBER + "/${playerUUID}/img/Flaticon_circle.png");
+
         planSystem.enable();
         serverUUID = planSystem.getServerInfo().getServerUUID();
         savePlayerData();
@@ -109,27 +116,94 @@ class JSErrorRegressionTest {
         SeleniumExtension.newTab(driver);
     }
 
-    @DisplayName("Page does not log anything on js console: ")
+    @TestFactory
+    Collection<DynamicTest> javascriptRegressionTest(ChromeDriver driver) {
+        String[] addresses = new String[]{
+                "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_NAME,
+                "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING,
+                "http://localhost:" + TEST_PORT_NUMBER + "/network",
+                "http://localhost:" + TEST_PORT_NUMBER + "/server/Server 1",
+                "http://localhost:" + TEST_PORT_NUMBER + "/players",
+                "http://localhost:" + TEST_PORT_NUMBER + "/query"
+        };
+
+        LangCode[] languages = LangCode.values();
+        return Arrays.stream(languages)
+                .filter(lang -> lang != LangCode.CUSTOM)
+                .flatMap(lang ->
+                        Arrays.stream(addresses)
+                                .map(link -> testAddress(link, lang, driver)))
+                .collect(Collectors.toList());
+    }
+
+    private DynamicTest testAddress(String address, LangCode language, ChromeDriver driver) {
+        return DynamicTest.dynamicTest("Page should not log anything on js console (" + language.name() + "): " + address, () -> {
+            try {
+                planSystem.getLocaleSystem().getLocale().loadFromAnotherLocale(Locale.forLangCode(language, planSystem.getPlanFiles()));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+
+            driver.get(address);
+            Thread.sleep(250);
+
+            List<LogEntry> logs = new ArrayList<>();
+            logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
+            logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
+
+            assertNoLogs("", logs);
+        });
+    }
+
+    @DisplayName("Links on page function: ")
     @ParameterizedTest(name = "{0}")
     @CsvSource({
             "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_NAME,
             "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING,
             "http://localhost:" + TEST_PORT_NUMBER + "/network",
             "http://localhost:" + TEST_PORT_NUMBER + "/server/Server 1",
-            "http://localhost:" + TEST_PORT_NUMBER + "/players"
+            "http://localhost:" + TEST_PORT_NUMBER + "/players",
+            "http://localhost:" + TEST_PORT_NUMBER + "/query"
     })
-    void javascriptRegressionTest(String address, ChromeDriver driver) {
+    void linkFunctionRegressionTest(String address, ChromeDriver driver) {
         driver.get(address);
 
-        List<LogEntry> logs = new ArrayList<>();
-        logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
-        logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
+        List<String> anchorLinks = getLinks(driver, 0);
 
-        assertNoLogs(logs);
+        for (String href : anchorLinks) {
+            driver.get(address);
+            Awaitility.await()
+                    .atMost(3, TimeUnit.SECONDS)
+                    .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
+
+            List<LogEntry> logs = new ArrayList<>();
+            logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
+            logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
+
+            assertNoLogs("Page link '" + address + "'->'" + href + "' issue: ", logs);
+            System.out.println("'" + address + "' has link to " + href);
+        }
     }
 
-    private void assertNoLogs(List<LogEntry> logs) {
-        assertTrue(logs.isEmpty(), () -> "Browser console included " + logs.size() + " logs: " + logs.stream()
+    private List<String> getLinks(ChromeDriver driver, int attempt) {
+        if (attempt >= 5) return Collections.emptyList();
+
+        try {
+            return driver.findElements(By.tagName("a")).stream()
+                    .map(anchorLink -> anchorLink.getAttribute("href"))
+                    .filter(Objects::nonNull)
+                    .filter(href -> href.contains("localhost") && !href.contains("logout"))
+                    .map(href -> href.split("#")[0])
+                    .distinct()
+                    .collect(Collectors.toList());
+        } catch (StaleElementReferenceException e) {
+            return getLinks(driver, attempt + 1);
+        }
+    }
+
+
+    private void assertNoLogs(String testName, List<LogEntry> logs) {
+        assertTrue(logs.isEmpty(), () -> testName + "Browser console included " + logs.size() + " logs: " + logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
                 .collect(Collectors.toList()));
     }

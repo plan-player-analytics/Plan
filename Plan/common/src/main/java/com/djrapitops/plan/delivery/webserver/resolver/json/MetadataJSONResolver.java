@@ -54,6 +54,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("contributors", Contributors.getContributors())
                         .put("defaultTheme", config.get(DisplaySettings.THEME))
                         .put("gmPieColors", theme.getPieColors(ThemeVal.GRAPH_GM_PIE))
+                        .put("playerHeadImageUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL))
                         .build())
                 .build();
     }
