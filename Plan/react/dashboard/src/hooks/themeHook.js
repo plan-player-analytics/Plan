@@ -9,8 +9,14 @@ themeColors.splice(themeColors.length - 4, 4);
 const getDefaultTheme = (metadata) => {
     const defaultTheme = metadata.defaultTheme;
 
+    // Use 'plan' if default or if default is undefined.
     // Avoid night mode staying on if default theme is night mode
-    return defaultTheme === 'night' || defaultTheme === 'default' ? 'plan' : defaultTheme;
+    const invalidColor = !defaultTheme
+        || defaultTheme === 'black'
+        || defaultTheme === 'white'
+        || !themeColors.map(color => color.name).includes(defaultTheme)
+
+    return invalidColor ? 'plan' : defaultTheme;
 }
 
 const getStoredTheme = (defaultTheme) => {
