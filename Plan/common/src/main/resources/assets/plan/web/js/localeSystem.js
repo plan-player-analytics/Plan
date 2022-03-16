@@ -42,7 +42,6 @@ const localeSystem = {
                 this.clientLocale = this.defaultLanguage;
             }
 
-            // this.loadSelector();
             i18next.use(i18nextChainedBackend)
                 .init({
                     lng: this.clientLocale,
@@ -60,6 +59,7 @@ const localeSystem = {
                         }]
                     },
                 }, () => {
+                    this.loadSelector();
                     this.initLoci18next();
                 });
         })
