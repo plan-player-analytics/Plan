@@ -169,8 +169,7 @@ public class ResponseFactory {
             String content = UnaryChain.of(getResource(fileName).asString())
                     .chain(theme::replaceThemeColors)
                     .chain(resource -> {
-                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/"))
-                            return resource;
+                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {return resource;}
                         return locale.replaceLanguageInJavascript(resource);
                     })
                     .apply();
@@ -430,6 +429,17 @@ public class ResponseFactory {
             return forPage(pageFactory.errorsPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate errors page");
+        }
+    }
+
+    public Response jsonFileResponse(String file) {
+        try {
+            return Response.builder()
+                    .setMimeType(MimeType.JSON)
+                    .setContent(getResource(file))
+                    .build();
+        } catch (UncheckedIOException e) {
+            return forInternalError(e, "Could not read " + file);
         }
     }
 }

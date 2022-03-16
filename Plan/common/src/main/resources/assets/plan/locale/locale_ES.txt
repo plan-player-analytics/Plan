@@ -228,7 +228,7 @@ HTML - LABEL_NEW_PLAYERS                        || Jugadores nuevos
 HTML - LABEL_NICKNAME                           || Nick
 HTML - LABEL_NO_SESSION_KILLS                   || Nada
 HTML - LABEL_ONLINE_FIRST_JOIN                  || Jugadores en línea en primera unión
-HTML - LABEL_OPERATOR                           || Operador.
+HTML - LABEL_OPERATOR                           || Operador
 HTML - LABEL_PER_PLAYER                         || / Jugador
 HTML - LABEL_PER_REGULAR_PLAYER                 || / Jugador regular
 HTML - LABEL_PLAYER_DEATHS                      || Muertes causadas por jugadores

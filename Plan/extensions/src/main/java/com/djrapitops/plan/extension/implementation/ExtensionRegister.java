@@ -82,7 +82,7 @@ public class ExtensionRegister {
         register(new LibertyBansExtensionFactory(), LibertyBansExtensionFactory::createExtension, LibertyBansExtensionFactory::registerListener);
         register(new LitebansExtensionFactory(), LitebansExtensionFactory::createExtension, LitebansExtensionFactory::registerEvents);
         register(new LogBlockExtensionFactory(), LogBlockExtensionFactory::createExtension);
-        register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension);
+        register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension, LuckPermsExtensionFactory::registerListeners);
         register(new MarriageMasterExtensionFactory(), MarriageMasterExtensionFactory::createExtension);
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension, McMMOExtensionFactory::registerExpansion);
         registerMany(new MinigameLibExtensionFactory(), MinigameLibExtensionFactory::createExtensions);

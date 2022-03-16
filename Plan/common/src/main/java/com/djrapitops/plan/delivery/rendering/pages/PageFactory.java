@@ -28,6 +28,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -119,7 +120,7 @@ public class PageFactory {
         Database db = dbSystem.get().getDatabase();
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         return new PlayerPage(
-                getResource("player.html"), player,
+                getResource(config.get().isTrue(PluginSettings.FRONTEND_BETA) ? "index.html" : "player.html"), player,
                 versionChecker.get(),
                 config.get(), this, theme.get(), locale.get(),
                 formatters.get(), serverInfo.get()

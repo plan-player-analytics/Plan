@@ -29,12 +29,12 @@ public class ExtensionData implements Comparable<ExtensionData> {
 
     private ExtensionInformation extensionInformation;
 
-    private final Map<String, ExtensionTabData> tabs;
+    private final List<ExtensionTabData> tabs;
 
     private ExtensionData(int pluginID) {
         this.pluginID = pluginID;
 
-        tabs = new HashMap<>();
+        tabs = new ArrayList<>();
     }
 
     public int getPluginID() {
@@ -46,11 +46,11 @@ public class ExtensionData implements Comparable<ExtensionData> {
     }
 
     public boolean hasOnlyGenericTab() {
-        return tabs.size() == 1 && tabs.containsKey("");
+        return tabs.size() == 1 && "".equals(tabs.get(0).getTabInformation().getTabName());
     }
 
     public boolean doesNeedWiderSpace() {
-        for (ExtensionTabData tab : tabs.values()) {
+        for (ExtensionTabData tab : tabs) {
             for (ExtensionTableData table : tab.getTableData()) {
                 if (table.isWideTable()) return true;
             }
@@ -59,9 +59,8 @@ public class ExtensionData implements Comparable<ExtensionData> {
     }
 
     public List<ExtensionTabData> getTabs() {
-        List<ExtensionTabData> tabList = new ArrayList<>(tabs.values());
-        Collections.sort(tabList);
-        return tabList;
+        Collections.sort(tabs);
+        return tabs;
     }
 
     @Override
@@ -124,12 +123,14 @@ public class ExtensionData implements Comparable<ExtensionData> {
         }
 
         public Builder addTab(ExtensionTabData tab) {
-            data.tabs.put(tab.getTabInformation().getTabName(), tab);
+            data.tabs.add(tab);
             return this;
         }
 
         public Optional<ExtensionTabData> getTab(String tabName) {
-            return Optional.ofNullable(data.tabs.get(tabName));
+            return data.tabs.stream()
+                    .filter(tab -> tabName.equals(tab.getTabInformation().getTabName()))
+                    .findFirst();
         }
 
         public ExtensionData build() {

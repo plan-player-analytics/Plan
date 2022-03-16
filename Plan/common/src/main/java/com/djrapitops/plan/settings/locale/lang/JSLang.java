@@ -34,7 +34,7 @@ public enum JSLang implements Lang {
     LABEL_SESSION_ENDED("html.label.sessionEnded", " Ended"),
     LINK_PLAYER_PAGE("html.sidebar.playerPage", "Player Page"),
     LABEL_NO_SESSION_KILLS("html.generic.none", "None"),
-    UNIT_ENTITIES("html.unit.entities", "Entities"),
+    // UNIT_ENTITIES("html.unit.entities", "Entities"),
     UNIT_CHUNKS("html.unit.chunks", "Chunks"),
     LABEL_RELATIVE_JOIN_ACTIVITY("html.label.relativeJoinActivity", "Relative Join Activity"),
     LABEL_DAY_OF_WEEK("html.label.dayOfweek", "Day of the Week"),
