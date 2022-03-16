@@ -26,7 +26,6 @@ import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.java.UnaryChain;
@@ -49,7 +48,6 @@ public class PlayerPage implements Page {
     private final PlanConfig config;
     private final PageFactory pageFactory;
     private final Theme theme;
-    private final Locale locale;
     private final ServerInfo serverInfo;
 
     private final Formatter<Long> clockLongFormatter;
@@ -62,7 +60,6 @@ public class PlayerPage implements Page {
             PlanConfig config,
             PageFactory pageFactory,
             Theme theme,
-            Locale locale,
             Formatters formatters,
             ServerInfo serverInfo
     ) {
@@ -72,7 +69,6 @@ public class PlayerPage implements Page {
         this.config = config;
         this.pageFactory = pageFactory;
         this.theme = theme;
-        this.locale = locale;
         this.serverInfo = serverInfo;
 
         clockLongFormatter = formatters.clockLong();
@@ -121,7 +117,6 @@ public class PlayerPage implements Page {
                 .chain(theme::replaceThemeColors)
                 .chain(placeholders::apply)
                 .chain(pluginPlaceholders::apply)
-                .chain(locale::replaceLanguageInHtml)
                 .apply();
     }
 }

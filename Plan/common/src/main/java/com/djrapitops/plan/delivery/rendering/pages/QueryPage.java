@@ -18,7 +18,6 @@ package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.utilities.java.UnaryChain;
 import com.djrapitops.plan.version.VersionChecker;
@@ -32,16 +31,15 @@ public class QueryPage implements Page {
 
     private final String template;
 
-    private final Locale locale;
     private final Theme theme;
     private final VersionChecker versionChecker;
 
     public QueryPage(
             String template,
-            Locale locale, Theme theme, VersionChecker versionChecker
+            Theme theme,
+            VersionChecker versionChecker
     ) {
         this.template = template;
-        this.locale = locale;
         this.theme = theme;
         this.versionChecker = versionChecker;
     }
@@ -56,7 +54,6 @@ public class QueryPage implements Page {
         return UnaryChain.of(template)
                 .chain(theme::replaceThemeColors)
                 .chain(placeholders::apply)
-                .chain(locale::replaceLanguageInHtml)
                 .apply();
     }
 }

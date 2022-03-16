@@ -29,7 +29,6 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -56,7 +55,6 @@ public class PageFactory {
     private final Lazy<VersionChecker> versionChecker;
     private final Lazy<PlanFiles> files;
     private final Lazy<PlanConfig> config;
-    private final Lazy<Locale> locale;
     private final Lazy<Theme> theme;
     private final Lazy<DBSystem> dbSystem;
     private final Lazy<ServerInfo> serverInfo;
@@ -68,7 +66,6 @@ public class PageFactory {
             Lazy<VersionChecker> versionChecker,
             Lazy<PlanFiles> files,
             Lazy<PlanConfig> config,
-            Lazy<Locale> locale,
             Lazy<Theme> theme,
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
@@ -78,7 +75,6 @@ public class PageFactory {
         this.versionChecker = versionChecker;
         this.files = files;
         this.config = config;
-        this.locale = locale;
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -88,7 +84,7 @@ public class PageFactory {
 
     public PlayersPage playersPage() throws IOException {
         return new PlayersPage(getResource("players.html"), versionChecker.get(),
-                config.get(), locale.get(), theme.get(), serverInfo.get());
+                config.get(), theme.get(), serverInfo.get());
     }
 
     /**
@@ -107,7 +103,6 @@ public class PageFactory {
                 server,
                 config.get(),
                 theme.get(),
-                locale.get(),
                 versionChecker.get(),
                 dbSystem.get(),
                 serverInfo.get(),
@@ -122,8 +117,11 @@ public class PageFactory {
         return new PlayerPage(
                 getResource(config.get().isTrue(PluginSettings.FRONTEND_BETA) ? "index.html" : "player.html"), player,
                 versionChecker.get(),
-                config.get(), this, theme.get(), locale.get(),
-                formatters.get(), serverInfo.get()
+                config.get(),
+                this,
+                theme.get(),
+                formatters.get(),
+                serverInfo.get()
         );
     }
 
@@ -164,7 +162,8 @@ public class PageFactory {
         return new NetworkPage(getResource("network.html"),
                 dbSystem.get(),
                 versionChecker.get(),
-                config.get(), theme.get(), locale.get(),
+                config.get(),
+                theme.get(),
                 serverInfo.get(),
                 jsonStorage.get(),
                 formatters.get());
@@ -178,20 +177,19 @@ public class PageFactory {
         } catch (IOException noParse) {
             return () -> "Error occurred: " + error.toString() +
                     ", additional error occurred when attempting to render error page to user: " +
-                    noParse.toString();
+                    noParse;
         }
     }
 
     public Page errorPage(String title, String error) throws IOException {
         return new ErrorMessagePage(
                 getResource("error.html"), title, error,
-                versionChecker.get(), locale.get(), theme.get());
+                versionChecker.get(), theme.get());
     }
 
     public Page errorPage(Icon icon, String title, String error) throws IOException {
         return new ErrorMessagePage(
-                getResource("error.html"), icon, title, error,
-                locale.get(), theme.get(), versionChecker.get());
+                getResource("error.html"), icon, title, error, theme.get(), versionChecker.get());
     }
 
     public String getResource(String name) throws IOException {
@@ -205,21 +203,21 @@ public class PageFactory {
     }
 
     public Page loginPage() throws IOException {
-        return new LoginPage(getResource("login.html"), serverInfo.get(), locale.get(), theme.get(), versionChecker.get());
+        return new LoginPage(getResource("login.html"), serverInfo.get(), theme.get(), versionChecker.get());
     }
 
     public Page registerPage() throws IOException {
-        return new LoginPage(getResource("register.html"), serverInfo.get(), locale.get(), theme.get(), versionChecker.get());
+        return new LoginPage(getResource("register.html"), serverInfo.get(), theme.get(), versionChecker.get());
     }
 
     public Page queryPage() throws IOException {
         return new QueryPage(
                 getResource("query.html"),
-                locale.get(), theme.get(), versionChecker.get()
+                theme.get(), versionChecker.get()
         );
     }
 
     public Page errorsPage() throws IOException {
-        return new ErrorsPage(getResource("error.html"), locale.get(), theme.get(), versionChecker.get());
+        return new ErrorsPage(getResource("error.html"), theme.get(), versionChecker.get());
     }
 }
