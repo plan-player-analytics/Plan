@@ -40,107 +40,97 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
+    <div class="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <a class="sidebar-brand d-flex align-items-center justify-content-center">
+        <a class="sidebar-brand p-0 h-auto mt-3 d-flex align-items-center justify-content-center">
             <img alt="logo" class="w-22" src="./img/Flaticon_circle.png">
         </a>
 
+        <span class="text-center fw-bold py-0 my-2 d-flex align-items-center justify-content-center">Player Analytics</span>
+
         <hr class="sidebar-divider my-0">
 
-        <li class="nav-item nav-button active">
+        <div class="nav-item nav-button active">
             <a class="nav-link" href="#tab-network-overview">
                 <i class="fas fa-fw fa-info-circle"></i>
-                <span>Network Overview</span></a>
-        </li>
-
-        <hr class="sidebar-divider">
-        <div class="sidebar-heading">
-            Information
+                <span data-i18n="html.sidebar.networkOverview"></span></a>
         </div>
 
-        <li class="nav-item">
-            <a aria-controls="serverPages" aria-expanded="true" class="nav-link collapsed" data-bs-target="#serverPages"
-               data-bs-toggle="collapse" href="#">
-                <i class="fas fa-fw fa-server"></i>
-                <span>Servers</span>
-            </a>
-            <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar" id="serverPages">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="#tab-servers"><i
-                            class="fas fa-fw fa-network-wired"></i>
-                        Overview</a>
-                    <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
-                            class="far fa-fw fa-calendar-alt"></i>
-                        Sessions</a>
-                    <a class="collapse-item nav-button" href="#tab-performance">
-                        <i class="fas fa-fw fa-cogs"></i>
-                        <span>Performance</span></a>
-                    <hr class="nav-servers dropdown-divider mx-3 my-2">
-                    <div class="nav-servers" id="navSrvContainer">
+        <hr class="sidebar-divider">
+
+        <ul class="list-unstyled ps-0 my-0">
+            <li class="sidebar-heading" data-i18n="html.sidebar.information"></li>
+            <li class="nav-item">
+                <a aria-controls="serverPages" aria-expanded="true" class="nav-link collapsed"
+                   data-bs-target="#serverPages"
+                   data-bs-toggle="collapse" href="#">
+                    <i class="fas fa-fw fa-server"></i>
+                    <span data-i18n="html.sidebar.servers"></span>
+                </a>
+                <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar"
+                     id="serverPages">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item nav-button" href="#tab-servers"><i
+                                class="fas fa-fw fa-network-wired"></i>
+                            <span data-i18n="html.sidebar.overview"></span></a>
+                        <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
+                                class="far fa-fw fa-calendar-alt"></i>
+                            <span data-i18n="html.sidebar.sessions"></span></a>
+                        <a class="collapse-item nav-button" href="#tab-performance">
+                            <i class="fas fa-fw fa-cogs"></i>
+                            <span data-i18n="html.sidebar.performance"></span></a>
+                        <hr class="nav-servers dropdown-divider mx-3 my-2">
+                        <div class="nav-servers" id="navSrvContainer">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </li>
-
-        <li class="nav-item">
-            <a aria-controls="playerbasePages" aria-expanded="true" class="nav-link collapsed"
-               data-bs-target="#playerbasePages"
-               data-bs-toggle="collapse" href="#">
-                <i class="fas fa-fw fa-users"></i>
-                <span>Playerbase</span>
-            </a>
-            <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar"
-                 id="playerbasePages">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="#tab-playerbase-overview"><i
-                            class="fas fa-fw fa-chart-line"></i>
-                        Overview</a>
-                    <a class="collapse-item" href="./players"><i class="fas fa-fw fa-users"></i>
-                        Player List</a>
-                    <a class="collapse-item nav-button" href="#tab-geolocations"><i class="fas fa-fw fa-globe"></i>
-                        Geolocations</a>
+            </li>
+            <li class="nav-item">
+                <a aria-controls="playerbasePages" aria-expanded="true" class="nav-link collapsed"
+                   data-bs-target="#playerbasePages"
+                   data-bs-toggle="collapse" href="#">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span data-i18n="html.sidebar.playerbase">Playerbase</span>
+                </a>
+                <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar"
+                     id="playerbasePages">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item nav-button" href="#tab-playerbase-overview"><i
+                                class="fas fa-fw fa-chart-line"></i>
+                            <span data-i18n="html.sidebar.overview">Overview</span></a>
+                        <a class="collapse-item" href="./players"><i class="fas fa-fw fa-users"></i>
+                            <span data-i18n="html.sidebar.playerList">Player List</span></a>
+                        <a class="collapse-item nav-button" href="#tab-geolocations"><i class="fas fa-fw fa-globe"></i>
+                            <span data-i18n="html.sidebar.geolocations">Geolocations</span></a>
+                    </div>
                 </div>
-            </div>
-        </li>
-
-        <hr class="sidebar-divider">
-
-        <div class="sidebar-heading">
-            Plugins
-        </div>
-        ${navPluginsTabs}
-
-        <hr class="sidebar-divider">
-
-        <div class="query-buttons">
-            <div class="sidebar-heading">
-                LINKS
-            </div>
+            </li>
+            <li class="sidebar-divider"></li>
+            <li class="sidebar-heading text-uppercase" data-i18n="html.sidebar.plugins">
+                Plugins
+            </li>
+            ${navPluginsTabs}
+            <li class="sidebar-divider"></li>
+            <li class="sidebar-heading text-uppercase" data-i18n="html.sidebar.links">LINKS</li>
             <li class="nav-item nav-button">
                 <a class="nav-link" href="./query">
                     <i class="fas fa-fw fa-search"></i>
-                    <span>Make a query</span></a>
+                    <span data-i18n="html.sidebar.query">Make a query</span></a>
             </li>
-
-            <hr class="sidebar-divider">
-        </div>
+            <li class="sidebar-divider"></li>
+        </ul>
 
         <div class="ms-md-3 text-center text-md-start">
-            <button class="btn bg-plan" data-bs-target="#colorChooserModal" data-bs-toggle="modal" type="button">
-                <i class="fa fa-palette"></i>
-            </button>
             <button class="btn bg-plan" data-bs-target="#informationModal" data-bs-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
-            <a class="btn bg-plan" href="./auth/logout" id="logout-button">
-                <i class="fa fa-fw fa-door-open"></i> Logout
-            </a>
+            <- todo move this
         </div>
+        <!-- TODO move to frontend -->
         <div class="ms-md-3 text-center text-md-start">
             ${versionButton}
         </div>
-    </ul>
+    </div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
