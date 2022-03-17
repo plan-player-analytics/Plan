@@ -119,9 +119,9 @@ class ConfigWriterTest {
         List<String> writtenLines = FileResource.lines(out.toFile());
         List<String> expected = Arrays.asList(
                 "Test:",
-                "  - First",
-                "  - Second",
-                "  - Third"
+                "  - \"First\"",
+                "  - \"Second\"",
+                "  - \"Third\""
         );
         assertEquals(expected, writtenLines);
     }
@@ -138,9 +138,9 @@ class ConfigWriterTest {
         List<String> expected = Arrays.asList(
                 "Test:",
                 "    List:",
-                "      - First",
-                "      - Second",
-                "      - Third"
+                "      - \"First\"",
+                "      - \"Second\"",
+                "      - \"Third\""
         );
         assertEquals(expected, writtenLines);
     }
@@ -160,10 +160,10 @@ class ConfigWriterTest {
         List<String> expected = Arrays.asList(
                 "Test:",
                 "    List:",
-                "      - First",
-                "      - Second",
-                "      - Third",
-                "    Value: Example",
+                "      - \"First\"",
+                "      - \"Second\"",
+                "      - \"Third\"",
+                "    Value: \"Example\"",
                 "Second: 2"
         );
         assertEquals(expected, writtenLines);

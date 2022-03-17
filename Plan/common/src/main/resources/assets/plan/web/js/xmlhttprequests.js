@@ -8,12 +8,12 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
         ? `${address}&timestamp=${timestamp}`
         : `${address}?timestamp=${timestamp}`
 
-    const refreshElement = document.querySelector(`#${tabID} .refresh-element`);
+    const refreshElement = document.querySelector(".refresh-element");
     refreshElement.querySelector('i').addEventListener('click', () => {
         if (currentlyRefreshing[tabID].includes(address)) {
             return;
         }
-        refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
+        refreshElement.querySelector('.refresh-element i').classList.add("fa-spin");
         refreshingJsonRequest(address, callback, tabID, true);
     });
 
@@ -31,7 +31,7 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
                     refreshElement.innerHTML = "System times out of sync with UTC";
                     return jsonRequest(address, callback);
                 }
-                refreshElement.querySelector('.refresh-notice').innerHTML = "";
+                refreshElement.querySelector('.refresh-element i').classList.remove("fa-spin");
                 return callback(json, error);
             }
 
@@ -45,7 +45,7 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
             } else {
                 currentlyRefreshing[tabID].splice(currentlyRefreshing[tabID].indexOf(address), 1);
                 if (!currentlyRefreshing[tabID].length) {
-                    refreshElement.querySelector('.refresh-notice').innerHTML = "";
+                    refreshElement.querySelector('.refresh-element i').classList.remove("fa-spin");
                 }
                 callback(json, error);
             }
@@ -77,7 +77,7 @@ function jsonRequest(address, callback) {
  */
 function jsonPostRequest(address, postBody, callback) {
     setTimeout(function () {
-        const xhr = newConfiguredXHR(callback);
+        const xhr = newConfiguredXHR(callback, address);
 
         xhr.open("POST", address, true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -89,7 +89,7 @@ function jsonPostRequest(address, postBody, callback) {
  * Create new XMLHttpRequest configured for methods such as jsonRequest
  * @param callback function with (json, error) parameters to call after the request.
  */
-function newConfiguredXHR(callback) {
+function newConfiguredXHR(callback, address) {
     const xhr = new XMLHttpRequest();
 
     xhr.withCredentials = true;

@@ -54,6 +54,7 @@ public class RootJSONResolver {
             PlayerBaseOverviewJSONCreator playerBaseOverviewJSONCreator,
             PerformanceJSONCreator performanceJSONCreator,
             ErrorsJSONResolver errorsJSONResolver,
+            LocaleJSONResolver localeJSONResolver,
 
             PlayerJSONResolver playerJSONResolver,
             NetworkJSONResolver networkJSONResolver,
@@ -86,6 +87,7 @@ public class RootJSONResolver {
                 .add("errors", errorsJSONResolver)
                 .add("user", userJSONResolver)
                 .add("version", versionJSONResolver)
+                .add("locale", localeJSONResolver)
                 .add("metadata", metadataJSONResolver)
                 .add("whoami", whoAmIJSONResolver)
                 .build();

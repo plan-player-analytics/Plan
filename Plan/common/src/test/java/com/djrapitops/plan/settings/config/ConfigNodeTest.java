@@ -214,7 +214,7 @@ class ConfigNodeTest {
         testTree.moveChild(oldPath, newPath);
 
         ConfigNode parentNode = testTree.getNode(FIRST_LEVEL).orElseThrow(AssertionError::new);
-        assertEquals(oldValue, parentNode.value);
+        assertEquals(oldValue, parentNode.getString());
     }
 
     @Test

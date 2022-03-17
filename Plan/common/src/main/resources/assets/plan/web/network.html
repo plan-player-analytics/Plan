@@ -10,6 +10,7 @@
     <meta content="AuroraLS3" name="author">
     <meta content="noindex, nofollow" name="robots">
 
+    <!-- TODO figure out translation for title -->
     <title>Plan | Network</title>
 
     <!-- Custom fonts for this template-->
@@ -40,311 +41,333 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
+    <div class="navbar-nav bg-plan sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <a class="sidebar-brand d-flex align-items-center justify-content-center">
+        <a class="sidebar-brand p-0 h-auto mt-3 d-flex align-items-center justify-content-center">
             <img alt="logo" class="w-22" src="./img/Flaticon_circle.png">
         </a>
 
+        <span class="text-center fw-bold py-0 my-2 d-flex align-items-center justify-content-center">Player Analytics</span>
+
         <hr class="sidebar-divider my-0">
 
-        <li class="nav-item nav-button active">
+        <div class="nav-item nav-button active">
             <a class="nav-link" href="#tab-network-overview">
                 <i class="fas fa-fw fa-info-circle"></i>
-                <span>Network Overview</span></a>
-        </li>
-
-        <hr class="sidebar-divider">
-        <div class="sidebar-heading">
-            Information
+                <span data-i18n="html.sidebar.networkOverview"></span></a>
         </div>
 
-        <li class="nav-item">
-            <a aria-controls="serverPages" aria-expanded="true" class="nav-link collapsed" data-bs-target="#serverPages"
-               data-bs-toggle="collapse" href="#">
-                <i class="fas fa-fw fa-server"></i>
-                <span>Servers</span>
-            </a>
-            <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar" id="serverPages">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="#tab-servers"><i
-                            class="fas fa-fw fa-network-wired"></i>
-                        Overview</a>
-                    <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
-                            class="far fa-fw fa-calendar-alt"></i>
-                        Sessions</a>
-                    <a class="collapse-item nav-button" href="#tab-performance">
-                        <i class="fas fa-fw fa-cogs"></i>
-                        <span>Performance</span></a>
-                    <hr class="nav-servers dropdown-divider mx-3 my-2">
-                    <div class="nav-servers" id="navSrvContainer">
+        <hr class="sidebar-divider">
+
+        <ul class="list-unstyled ps-0 my-0">
+            <li class="sidebar-heading" data-i18n="html.sidebar.information"></li>
+            <li class="nav-item">
+                <a aria-controls="serverPages" aria-expanded="true" class="nav-link collapsed"
+                   data-bs-target="#serverPages"
+                   data-bs-toggle="collapse" href="#">
+                    <i class="fas fa-fw fa-server"></i>
+                    <span data-i18n="html.sidebar.servers"></span>
+                </a>
+                <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar"
+                     id="serverPages">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item nav-button" href="#tab-servers"><i
+                                class="fas fa-fw fa-network-wired"></i>
+                            <span data-i18n="html.sidebar.overview"></span></a>
+                        <a class="collapse-item nav-button" href="#tab-sessions-overview"><i
+                                class="far fa-fw fa-calendar-alt"></i>
+                            <span data-i18n="html.sidebar.sessions"></span></a>
+                        <a class="collapse-item nav-button" href="#tab-performance">
+                            <i class="fas fa-fw fa-cogs"></i>
+                            <span data-i18n="html.sidebar.performance"></span></a>
+                        <hr class="nav-servers dropdown-divider mx-3 my-2">
+                        <div class="nav-servers" id="navSrvContainer">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </li>
-
-        <li class="nav-item">
-            <a aria-controls="playerbasePages" aria-expanded="true" class="nav-link collapsed"
-               data-bs-target="#playerbasePages"
-               data-bs-toggle="collapse" href="#">
-                <i class="fas fa-fw fa-users"></i>
-                <span>Playerbase</span>
-            </a>
-            <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar"
-                 id="playerbasePages">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <a class="collapse-item nav-button" href="#tab-playerbase-overview"><i
-                            class="fas fa-fw fa-chart-line"></i>
-                        Overview</a>
-                    <a class="collapse-item" href="./players"><i class="fas fa-fw fa-users"></i>
-                        Player List</a>
-                    <a class="collapse-item nav-button" href="#tab-geolocations"><i class="fas fa-fw fa-globe"></i>
-                        Geolocations</a>
+            </li>
+            <li class="nav-item">
+                <a aria-controls="playerbasePages" aria-expanded="true" class="nav-link collapsed"
+                   data-bs-target="#playerbasePages"
+                   data-bs-toggle="collapse" href="#">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span data-i18n="html.sidebar.playerbase">Playerbase</span>
+                </a>
+                <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar"
+                     id="playerbasePages">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item nav-button" href="#tab-playerbase-overview"><i
+                                class="fas fa-fw fa-chart-line"></i>
+                            <span data-i18n="html.sidebar.overview">Overview</span></a>
+                        <a class="collapse-item" href="./players"><i class="fas fa-fw fa-users"></i>
+                            <span data-i18n="html.sidebar.playerList">Player List</span></a>
+                        <a class="collapse-item nav-button" href="#tab-geolocations"><i class="fas fa-fw fa-globe"></i>
+                            <span data-i18n="html.sidebar.geolocations">Geolocations</span></a>
+                    </div>
                 </div>
-            </div>
-        </li>
-
-        <hr class="sidebar-divider">
-
-        <div class="sidebar-heading">
-            Plugins
-        </div>
-        ${navPluginsTabs}
-
-        <hr class="sidebar-divider">
-
-        <div class="query-buttons">
-            <div class="sidebar-heading">
-                LINKS
-            </div>
+            </li>
+            <li class="sidebar-divider"></li>
+            <li class="sidebar-heading text-uppercase" data-i18n="html.sidebar.plugins">
+                Plugins
+            </li>
+            ${navPluginsTabs}
+            <li class="sidebar-divider"></li>
+            <li class="sidebar-heading text-uppercase" data-i18n="html.sidebar.links">LINKS</li>
             <li class="nav-item nav-button">
                 <a class="nav-link" href="./query">
                     <i class="fas fa-fw fa-search"></i>
-                    <span>Make a query</span></a>
+                    <span data-i18n="html.sidebar.query">Make a query</span></a>
             </li>
-
-            <hr class="sidebar-divider">
-        </div>
+            <li class="sidebar-divider"></li>
+        </ul>
 
         <div class="ms-md-3 text-center text-md-start">
-            <button class="btn bg-plan" data-bs-target="#colorChooserModal" data-bs-toggle="modal" type="button">
-                <i class="fa fa-palette"></i>
-            </button>
             <button class="btn bg-plan" data-bs-target="#informationModal" data-bs-toggle="modal" type="button">
                 <i class="fa fa-fw fa-question-circle"></i>
             </button>
-            <a class="btn bg-plan" href="./auth/logout" id="logout-button">
-                <i class="fa fa-fw fa-door-open"></i> Logout
-            </a>
+            <- todo move this
         </div>
+        <!-- TODO move to frontend -->
         <div class="ms-md-3 text-center text-md-start">
             ${versionButton}
         </div>
-    </ul>
+    </div>
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
-    <div class="d-flex flex-column" id="content-wrapper">
+    <div class="container-fluid" id="content-wrapper">
         <div class="sidebar-close-modal hidden"></div>
 
+        <!-- Top navbar -->
+        <nav class="nav my-3 align-items-center justify-content-between">
+            <div class="d-sm-flex">
+                <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
+                    &middot; Network Overview</h1>
+            </div>
+
+            <div class="topbar-divider"></div>
+            <div class="refresh-element">
+                <i class="fas fa-sync-alt fa-spin"></i> <span class="refresh-time"></span>
+            </div>
+
+            <div class="ms-auto">
+                <select aria-label="Language selector" class="form-select form-select-sm" id="langSelector">
+                </select>
+            </div>
+
+
+            <div class="topbar-divider"></div>
+
+            <div class="nav-item dropdown">
+                <a aria-expanded="false" class="nav-link px-0" data-bs-toggle="dropdown" href="#">
+                    <span class="me-2">Kopo942 </span>
+                    <img alt="" class="rounded-circle" src="https://cravatar.eu/helmavatar/Kopo942/64"
+                         style="height: 2rem">
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-users-cog"></i> Web users</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-code"></i> API access</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" data-bs-target="#colorChooserModal" data-bs-toggle="modal"><i
+                            class="fa fa-palette"></i> Select a theme</a></li>
+                    <li><a class="dropdown-item" href="./auth/logout"><i class="fa fa-fw fa-door-open"></i> Sign out</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+
         <!-- Main Content -->
-        <div id="content" style="display: flex;">
+        <div class="row" id="content">
             <!-- Begin Network Overview Tab -->
             <div class="tab" id="network-overview">
-                <div class="container-fluid mt-4">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
-                            &middot; Network Overview
-                            <span class="refresh-element">
-                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
-                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
-                            </span>
-                        </h1>
-                    </div>
-
-                    <div class="row">
-                        <!-- Online Activity Chart -->
-                        <div class="col-xl-9 col-lg-9 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <ul class="nav nav-tabs" id="onlineActivityTab" role="tablist">
-                                    <li class="nav-item">
-                                        <a aria-controls="profile" aria-selected="false"
-                                           class="nav-link active col-black"
-                                           data-bs-toggle="tab"
-                                           href="#online-tab" id="online-online-tab" role="tab">
-                                            <i class="fas fa-fw fa-chart-area col-blue"></i> Network Online Activity</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a aria-controls="home" aria-selected="true" class="nav-link col-black"
-                                           data-bs-toggle="tab" href="#unique-tab" id="online-unique-tab" role="tab"><i
-                                                class="fa fa-fw fa-chart-area col-blue"></i> Day by Day</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a aria-controls="home" aria-selected="true" class="nav-link col-black"
-                                           data-bs-toggle="tab" href="#hourly-unique-tab" id="online-hourly-unique-tab"
-                                           role="tab"><i
-                                                class="fa fa-fw fa-chart-area col-blue"></i> Hour by Hour</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content" id="onlineActivityTabContent">
-                                    <div aria-labelledby="online-online-tab" class="tab-pane show active"
-                                         id="online-tab"
-                                         role="tabpanel">
-                                        <div class="chart-area" id="playersOnlineChart"><span class="loader"></span>
-                                        </div>
-                                    </div>
-                                    <div aria-labelledby="online-unique-tab" class="tab-pane"
-                                         id="unique-tab"
-                                         role="tabpanel">
-                                        <div class="chart-area" id="uniqueChart"><span class="loader"></span></div>
-                                    </div>
-                                    <div aria-labelledby="online-unique-tab" class="tab-pane"
-                                         id="hourly-unique-tab" role="tabpanel">
-                                        <div class="chart-area" id="hourlyUniqueChart"><span class="loader"></span>
-                                        </div>
+                <div class="row">
+                    <!-- Online Activity Chart -->
+                    <div class="col-xl-9 col-lg-9 col-sm-12">
+                        <div class="card shadow mb-4">
+                            <ul class="nav nav-tabs" id="onlineActivityTab" role="tablist">
+                                <li class="nav-item">
+                                    <a aria-controls="profile" aria-selected="false"
+                                       class="nav-link active col-black"
+                                       data-bs-toggle="tab"
+                                       data-i18n="[append]html.title.graph.networkOnlineActivity" href="#online-tab"
+                                       id="online-online-tab" role="tab">
+                                        <i class="fas fa-fw fa-chart-area col-blue"></i> </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a aria-controls="home" aria-selected="true" class="nav-link col-black"
+                                       data-bs-toggle="tab" data-i18n="[append]html.title.graph.dayByDay"
+                                       href="#unique-tab"
+                                       id="online-unique-tab" role="tab"><i
+                                            class="fa fa-fw fa-chart-area col-blue"></i> </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a aria-controls="home" aria-selected="true" class="nav-link col-black"
+                                       data-bs-toggle="tab" data-i18n="[append]html.title.graph.hourByHour"
+                                       href="#hourly-unique-tab"
+                                       id="online-hourly-unique-tab" role="tab"><i
+                                            class="fa fa-fw fa-chart-area col-blue"></i> </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="onlineActivityTabContent">
+                                <div aria-labelledby="online-online-tab" class="tab-pane show active"
+                                     id="online-tab"
+                                     role="tabpanel">
+                                    <div class="chart-area" id="playersOnlineChart"><span class="loader"></span>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-
-                        <!-- Players -->
-                        <div class="col-xl-3 col-lg-3 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 fw-bold col-black">Players</h6>
+                                <div aria-labelledby="online-unique-tab" class="tab-pane"
+                                     id="unique-tab"
+                                     role="tabpanel">
+                                    <div class="chart-area" id="uniqueChart"><span class="loader"></span></div>
                                 </div>
-                                <div class="card-body" id="data_players">
-                                    <p>Last 24 hours</p>
-                                    <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                            class="float-end"><b id="data_unique_players_1d"></b></span></p>
-                                    <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
-                                            class="float-end"><b id="data_new_players_1d"></b></span></p>
-                                    <p>Last 7 days</p>
-                                    <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                            class="float-end"><b id="data_unique_players_7d"></b></span></p>
-                                    <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
-                                            class="float-end"><b id="data_new_players_7d"></b></span></p>
-                                    <p>Last 30 days</p>
-                                    <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
-                                            class="float-end"><b id="data_unique_players_30d"></b></span></p>
-                                    <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
-                                            class="float-end"><b id="data_new_players_30d"></b></span></p>
+                                <div aria-labelledby="online-unique-tab" class="tab-pane"
+                                     id="hourly-unique-tab" role="tabpanel">
+                                    <div class="chart-area" id="hourlyUniqueChart"><span class="loader"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <!-- Network as Numbers -->
-                        <div class="col-lg-4 mb-4 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 fw-bold col-black"><i class="fa fa-fw fa-book-open"></i>
-                                        Network as Numbers</h6>
-                                </div>
-                                <div class="alert alert-warning mb-0 hidden" id="game-server-warning">
-                                    <i class="fa fa-fw fa-exclamation-triangle"></i>
-                                    Some data requires Plan to be installed on game servers.
-                                </div>
-                                <div class="card-body" id="data_numbers">
-                                    <p><i class="col-light-green fa fa-fw fa-power-off"></i> Current Uptime<span
-                                            class="float-end" id="data_current_uptime"></span></p>
-                                    <hr>
-                                    <p><i class="col-black fa fa-fw fa-users"></i> Total Players<span
-                                            class="float-end"><b id="data_total"></b></span></p>
-                                    <p><i class="col-lime fa fa-fw fa-users"></i> Regular Players<span
-                                            class="float-end"><b id="data_regular"></b></span></p>
-                                    <p><i class="col-blue fa fa-fw fa-user"></i> Players Online<span
-                                            class="float-end"><b id="data_online"></b></span></p>
-                                    <hr>
-                                    <p><i class="col-blue fa fa-fw fa-chart-line"></i> Last Peak: <span
-                                            id="data_last_peak_date"></span><span class="float-end"><b
-                                            id="data_last_peak_players"></b>
-                                                Players</span></p>
-                                    <p><i class="col-green fa fa-fw fa-chart-line"></i> Best Peak: <span
-                                            id="data_best_peak_date"></span><span class="float-end"><b
-                                            id="data_best_peak_players"></b>
-                                                Players</span></p>
-                                    <hr>
-                                    <p><i class="col-green far fa-fw fa-clock"></i> Total Playtime<span
-                                            class="float-end" id="data_playtime"></span></p>
-                                    <p><i class="col-green far fa-fw fa-clock"></i> Average Playtime / Player<span
-                                            class="float-end" id="data_player_playtime"></span></p>
-                                    <p><i class="col-teal far fa-fw fa-clock"></i> Average Session Length<span
-                                            class="float-end" id="data_session_length_avg"></span></p>
-                                    <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
-                                            class="float-end"><b id="data_sessions"></b></span></p>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Week Comparison -->
-                        <div class="col-lg-8 mb-8 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 fw-bold col-black"><i class="fa fa-fw fa-exchange-alt"></i>
-                                        Week Comparison</h6>
-                                </div>
-                                <table class="table" id="data_weeks">
-                                    <thead>
-                                    <tr>
-                                        <th><i class="text-success fa fa-caret-up"></i><i
-                                                class="text-danger fa fa-caret-down"></i>
-                                            <small>Comparing 7 days</small>
-                                        </th>
-                                        <th><span id="data_start"></span> - <span id="data_midpoint"></span></th>
-                                        <th><span id="data_midpoint2"></span> - <span id="data_end"></span></th>
-                                        <th>Trend</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td><i class="col-blue fa fa-fw fa-users"></i> Unique Players</td>
-                                        <td id="data_unique_before"></td>
-                                        <td id="data_unique_after"></td>
-                                        <td><span id="data_unique_trend"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="col-light-green fa fa-fw fa-users"></i> New Players</td>
-                                        <td id="data_new_before"></td>
-                                        <td id="data_new_after"></td>
-                                        <td><span id="data_new_trend"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="col-lime fa fa-fw fa-users"></i> Regular Players</td>
-                                        <td id="data_regular_before"></td>
-                                        <td id="data_regular_after"></td>
-                                        <td><span id="data_regular_trend"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="col-green far fa-fw fa-clock"></i>
-                                            Average Playtime / Player
-                                        </td>
-                                        <td id="data_average_playtime_before"></td>
-                                        <td id="data_average_playtime_after"></td>
-                                        <td><span id="data_average_playtime_trend"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="col-teal far fa-fw fa-clock"></i> Average Session Length</td>
-                                        <td id="data_session_length_average_before"></td>
-                                        <td id="data_session_length_average_after"></td>
-                                        <td><span id="data_session_length_average_trend"></span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions</td>
-                                        <td id="data_sessions_before"></td>
-                                        <td id="data_sessions_after"></td>
-                                        <td><span id="data_sessions_trend"></span></td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                    <!-- Players -->
+                    <div class="col-xl-3 col-lg-3 col-sm-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 fw-bold col-black">Players</h6>
+                            </div>
+                            <div class="card-body" id="data_players">
+                                <p>Last 24 hours</p>
+                                <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
+                                        class="float-end"><b id="data_unique_players_1d"></b></span></p>
+                                <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
+                                        class="float-end"><b id="data_new_players_1d"></b></span></p>
+                                <p>Last 7 days</p>
+                                <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
+                                        class="float-end"><b id="data_unique_players_7d"></b></span></p>
+                                <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
+                                        class="float-end"><b id="data_new_players_7d"></b></span></p>
+                                <p>Last 30 days</p>
+                                <p><i class="col-blue fa fa-fw fa-users"></i> Unique Players<span
+                                        class="float-end"><b id="data_unique_players_30d"></b></span></p>
+                                <p><i class="col-light-green fa fa-fw fa-user-plus"></i> New Players<span
+                                        class="float-end"><b id="data_new_players_30d"></b></span></p>
                             </div>
                         </div>
                     </div>
-                </div> <!-- /.container-fluid -->
-            </div> <!-- End of Network Overview tab -->
+                </div>
+                <div class="row">
+                    <!-- Network as Numbers -->
+                    <div class="col-lg-4 mb-4 col-sm-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 fw-bold col-black"><i class="fa fa-fw fa-book-open"></i>
+                                    Network as Numbers</h6>
+                            </div>
+                            <div class="alert alert-warning mb-0 hidden" id="game-server-warning">
+                                <i class="fa fa-fw fa-exclamation-triangle"></i>
+                                Some data requires Plan to be installed on game servers.
+                            </div>
+                            <div class="card-body" id="data_numbers">
+                                <p><i class="col-light-green fa fa-fw fa-power-off"></i> Current Uptime<span
+                                        class="float-end" id="data_current_uptime"></span></p>
+                                <hr>
+                                <p><i class="col-black fa fa-fw fa-users"></i> Total Players<span
+                                        class="float-end"><b id="data_total"></b></span></p>
+                                <p><i class="col-lime fa fa-fw fa-users"></i> Regular Players<span
+                                        class="float-end"><b id="data_regular"></b></span></p>
+                                <p><i class="col-blue fa fa-fw fa-user"></i> Players Online<span
+                                        class="float-end"><b id="data_online"></b></span></p>
+                                <hr>
+                                <p><i class="col-blue fa fa-fw fa-chart-line"></i> Last Peak: <span
+                                        id="data_last_peak_date"></span><span class="float-end"><b
+                                        id="data_last_peak_players"></b>
+                                        Players</span></p>
+                                <p><i class="col-green fa fa-fw fa-chart-line"></i> Best Peak: <span
+                                        id="data_best_peak_date"></span><span class="float-end"><b
+                                        id="data_best_peak_players"></b>
+                                        Players</span></p>
+                                <hr>
+                                <p><i class="col-green far fa-fw fa-clock"></i> Total Playtime<span
+                                        class="float-end" id="data_playtime"></span></p>
+                                <p><i class="col-green far fa-fw fa-clock"></i> Average Playtime / Player<span
+                                        class="float-end" id="data_player_playtime"></span></p>
+                                <p><i class="col-teal far fa-fw fa-clock"></i> Average Session Length<span
+                                        class="float-end" id="data_session_length_avg"></span></p>
+                                <p><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions<span
+                                        class="float-end"><b id="data_sessions"></b></span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Week Comparison -->
+                    <div class="col-lg-8 mb-8 col-sm-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 fw-bold col-black"><i class="fa fa-fw fa-exchange-alt"></i>
+                                    Week Comparison</h6>
+                            </div>
+                            <table class="table" id="data_weeks">
+                                <thead>
+                                <tr>
+                                    <th><i class="text-success fa fa-caret-up"></i><i
+                                            class="text-danger fa fa-caret-down"></i>
+                                        <small>Comparing 7 days</small>
+                                    </th>
+                                    <th><span id="data_start"></span> - <span id="data_midpoint"></span></th>
+                                    <th><span id="data_midpoint2"></span> - <span id="data_end"></span></th>
+                                    <th>Trend</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><i class="col-blue fa fa-fw fa-users"></i> Unique Players</td>
+                                    <td id="data_unique_before"></td>
+                                    <td id="data_unique_after"></td>
+                                    <td><span id="data_unique_trend"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="col-light-green fa fa-fw fa-users"></i> New Players</td>
+                                    <td id="data_new_before"></td>
+                                    <td id="data_new_after"></td>
+                                    <td><span id="data_new_trend"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="col-lime fa fa-fw fa-users"></i> Regular Players</td>
+                                    <td id="data_regular_before"></td>
+                                    <td id="data_regular_after"></td>
+                                    <td><span id="data_regular_trend"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="col-green far fa-fw fa-clock"></i>
+                                        Average Playtime / Player
+                                    </td>
+                                    <td id="data_average_playtime_before"></td>
+                                    <td id="data_average_playtime_after"></td>
+                                    <td><span id="data_average_playtime_trend"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="col-teal far fa-fw fa-clock"></i> Average Session Length</td>
+                                    <td id="data_session_length_average_before"></td>
+                                    <td id="data_session_length_average_after"></td>
+                                    <td><span id="data_session_length_average_trend"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="col-teal far fa-fw fa-calendar-check"></i> Sessions</td>
+                                    <td id="data_sessions_before"></td>
+                                    <td id="data_sessions_after"></td>
+                                    <td><span id="data_sessions_trend"></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- End of Network Overview tab -->
             <!-- Begin Servers Overview Tab -->
             <div class="tab" id="servers">
                 <div class="container-fluid mt-4">
@@ -353,9 +376,9 @@
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Servers
                             <span class="refresh-element">
-                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
-                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
-                            </span>
+                            <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                            <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                        </span>
                         </h1>
                     </div>
 
@@ -408,7 +431,8 @@
                         </div>
                     </div>
                 </div> <!-- /.container-fluid -->
-            </div> <!-- End of Servers Overview tab -->
+            </div>
+            <!-- End of Servers Overview tab -->
             <!-- Begin Sessions Tab -->
             <div class="tab" id="sessions-overview">
                 <div class="container-fluid mt-4">
@@ -417,9 +441,9 @@
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Sessions
                             <span class="refresh-element">
-                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
-                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
-                            </span>
+                            <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                            <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                        </span>
                         </h1>
                     </div>
 
@@ -432,7 +456,7 @@
                                             class="far fa-fw fa-calendar col-teal"></i>
                                         Recent Sessions<span class="float-end"><i
                                                 class="far fa-fw fa-hand-pointer"></i>
-                                                <small>Click to expand</small></span></h6>
+                                            <small>Click to expand</small></span></h6>
                                 </div>
                                 <table class="table mb-0 accordion-striped" id="tableAccordion">
                                     <thead>
@@ -476,7 +500,8 @@
                         </div>
                     </div>
                 </div> <!-- /.container-fluid -->
-            </div> <!-- End of Sessions tab -->
+            </div>
+            <!-- End of Sessions tab -->
             <!-- Begin Performance Tab -->
             <div class="tab" id="performance">
                 <div class="container-fluid mt-4">
@@ -485,9 +510,9 @@
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Performance
                             <span class="refresh-element">
-                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
-                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
-                            </span>
+                            <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                            <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                        </span>
                         </h1>
                     </div>
 
@@ -625,13 +650,15 @@
                                         <td id="data_tps_24h"></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="fa fa-fw fa-tachometer-alt col-amber"></i> Average CPU Usage</td>
+                                        <td><i class="fa fa-fw fa-tachometer-alt col-amber"></i> Average CPU Usage
+                                        </td>
                                         <td id="data_cpu_30d"></td>
                                         <td id="data_cpu_7d"></td>
                                         <td id="data_cpu_24h"></td>
                                     </tr>
                                     <tr>
-                                        <td><i class="fa fa-fw fa-microchip col-light-green"></i> Average RAM Usage</td>
+                                        <td><i class="fa fa-fw fa-microchip col-light-green"></i> Average RAM Usage
+                                        </td>
                                         <td id="data_ram_30d"></td>
                                         <td id="data_ram_7d"></td>
                                         <td id="data_ram_24h"></td>
@@ -672,7 +699,8 @@
                         </div>
                     </div>
                 </div> <!-- /.container-fluid -->
-            </div> <!-- End of Performance tab -->
+            </div>
+            <!-- End of Performance tab -->
             <!-- Begin Playerbase Overview Tab -->
             <div class="tab" id="playerbase-overview">
                 <div class="container-fluid mt-4">
@@ -681,9 +709,9 @@
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Playerbase Overview
                             <span class="refresh-element">
-                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
-                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
-                            </span>
+                            <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                            <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                        </span>
                         </h1>
                     </div>
 
@@ -798,9 +826,10 @@
                             <div class="mb-4 col-lg-12 col-sm-12">
                                 <div class="card shadow mb-4">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 fw-bold col-black"><i
-                                                class="far fa-fw fa-life-ring col-red"></i>
-                                            Insights for 30 days</h6>
+                                        <h6 class="m-0 fw-bold col-black" data-i18n="[append]html.title.insights30days">
+                                            <i
+                                                    class="far fa-fw fa-life-ring col-red"></i>
+                                        </h6>
                                     </div>
                                     <div class="card-body" id="data_insights">
                                         <p><i class="fa fa-fw fa-user col-light-green"></i> New <i
@@ -834,7 +863,8 @@
                         </div>
                     </div>
                 </div> <!-- /.container-fluid -->
-            </div> <!-- End of Playerbase Overview tab -->
+            </div>
+            <!-- End of Playerbase Overview tab -->
             <!-- Begin Geolocations Tab -->
             <div class="tab" id="geolocations">
                 <div class="container-fluid mt-4">
@@ -843,9 +873,9 @@
                         <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkDisplayName}
                             &middot; Geolocations
                             <span class="refresh-element">
-                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
-                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
-                            </span>
+                            <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
+                            <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
+                        </span>
                         </h1>
                     </div>
 
@@ -899,7 +929,8 @@
                         </div>
                     </div>
                 </div> <!-- /.container-fluid -->
-            </div> <!-- End of Geolocations tab -->
+            </div>
+            <!-- End of Geolocations tab -->
             <!-- Begin Plugins Overview Tab -->
             ${tabsPlugins}
         </div> <!-- End of Main Content -->
@@ -1048,6 +1079,18 @@
         integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k="
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- i18next framework -->
+<script crossorigin="anonymous" integrity="sha256-X/Ihrv+jY1JYWnUyu1yTyAfXp2Cyl3hCGmWP8VmVd04="
+        src="https://cdn.jsdelivr.net/npm/i18next@21.3.2/i18next.min.js"></script>
+<script crossorigin="anonymous" integrity="sha256-p0+nr2VEC2jfCdnWPiXpRBMhZi5zkQQ9ED+1zdT8y3I="
+        src="https://cdn.jsdelivr.net/npm/i18next-chained-backend@3.0.2/i18nextChainedBackend.min.js"></script>
+<script crossorigin="anonymous" integrity="sha256-Ns/J2fzKlD8MMUdgspszWJpbxU+Dcp7MwV81uPW+UFs="
+        src="https://cdn.jsdelivr.net/npm/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js"></script>
+<script crossorigin="anonymous" integrity="sha256-CRzzGmpGsHr5h4OuLJYQJqa/0nrEEtJqsI46lpO6lZI="
+        src="https://cdn.jsdelivr.net/npm/i18next-localstorage-backend@3.1.3/i18nextLocalStorageBackend.min.js"></script>
+<script crossorigin="anonymous" integrity="sha256-e0SeOytMMO6AOUWp00sRX5XFRrf1518dZIl5TvL7qdE="
+        src="https://cdn.jsdelivr.net/npm/loc-i18next@0.1.4/loc-i18next.min.js"></script>
+
 <!-- Page level plugins -->
 <script src="./vendor/datatables/datatables.min.js?v=${version}"></script>
 <link href='./vendor/datatables/datatables.min.css?v=${version}' rel='stylesheet'/>
@@ -1063,6 +1106,7 @@
 <script src="./js/sb-admin-2.js?v=${version}"></script>
 <script src="./js/xmlhttprequests.js?v=${version}"></script>
 <script src="./js/color-selector.js?v=${version}"></script>
+<script src="./js/localeSystem.js?v=${version}"></script>
 
 <!-- Page level custom scripts -->
 <script src="./js/sessionAccordion.js?v=${version}"></script>
@@ -1108,6 +1152,7 @@
         }
     };
     try {
+        localeSystem.init();
         refreshBarrierMs = ${refreshBarrier};
 
         setLoadingText('Calculating values..');
