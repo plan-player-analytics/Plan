@@ -80,41 +80,63 @@
     <!-- Content Wrapper -->
     <div class="d-flex flex-column" id="content-wrapper">
         <div class="sidebar-close-modal hidden"></div>
+        <!-- Top navbar -->
+        <nav class="nav my-3 align-items-center justify-content-between container-fluid">
+            <div class="d-sm-flex">
+                <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkName}
+                    &middot; Players</h1>
+            </div>
+
+            <div class="ms-auto">
+                <select aria-label="Language selector" class="form-select form-select-sm" id="langSelector">
+                </select>
+            </div>
+
+
+            <div class="topbar-divider"></div>
+
+            <div class="nav-item dropdown">
+                <a aria-expanded="false" class="nav-link px-0" data-bs-toggle="dropdown" href="#">
+                    <span class="me-2">Username </span>
+                    <img alt="" class="rounded-circle" src="https://cravatar.eu/helmavatar/Username/64"
+                         style="height: 2rem">
+                </a>
+                <ul class="dropdown-menu">
+                    <!--                    <li><a class="dropdown-item" href="#"><i class="fas fa-users-cog"></i> Web users</a></li>-->
+                    <!--                    <li><a class="dropdown-item" href="#"><i class="fas fa-code"></i> API access</a></li>-->
+                    <!--                    <li>-->
+                    <!--                        <hr class="dropdown-divider">-->
+                    <!--                    </li>-->
+                    <li><a class="dropdown-item" data-bs-target="#colorChooserModal" data-bs-toggle="modal"><i
+                            class="fa fa-palette"></i> Select a theme</a></li>
+                    <li><a class="dropdown-item" href="./auth/logout"><i class="fa fa-fw fa-door-open"></i> Sign out</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
         <!-- Main Content -->
         <div id="content" style="display: flex;">
             <!-- Begin Player Overview Tab -->
             <div class="tab" id="players" style="width: 100%;">
-                <div class="container-fluid mt-4">
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${networkName}
-                            | Players
-                            <span class="refresh-element">
-                                <i class="fa fa-fw fa-sync"></i> <span class="refresh-time"></span>
-                                <span class="refresh-notice"><i class="fa fa-fw fa-cog fa-spin"></i> Updating..</span>
-                            </span>
-                        </h1>
-                    </div>
-
-                    <div class="row">
-                        <!-- Player List -->
-                        <div class="col-xl-12 col-lg-12 col-sm-12">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 fw-bold col-black"><i
-                                            class="fas fa-fw fa-users col-black"></i>
-                                        Player List</h6>
-                                </div>
-                                <table class="table table-bordered table-striped table-hover player-table" style="width: 100%">
-                                    <tr>
-                                        <td>Loading..</td>
-                                    </tr>
-                                </table>
+                <div class="row">
+                    <!-- Player List -->
+                    <div class="col-xl-12 col-lg-12 col-sm-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 fw-bold col-black"><i
+                                        class="fas fa-fw fa-users col-black"></i>
+                                    Player List</h6>
                             </div>
+                            <table class="table table-bordered table-striped table-hover player-table"
+                                   style="width: 100%">
+                                <tr>
+                                    <td>Loading..</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
-                </div> <!-- /.container-fluid -->
+                </div>
             </div> <!-- End of tab -->
         </div> <!-- End of Main Content -->
     </div>
