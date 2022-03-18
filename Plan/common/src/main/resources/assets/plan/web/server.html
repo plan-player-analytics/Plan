@@ -1278,6 +1278,7 @@
 <script src="../js/sb-admin-2.js?v=${version}"></script>
 <script src="../js/xmlhttprequests.js?v=${version}"></script>
 <script src="../js/color-selector.js?v=${version}"></script>
+<script src="../js/localeSystem.js?v=${version}"></script>
 
 <!-- Page level custom scripts -->
 <script src="../js/sessionAccordion.js?v=${version}"></script>
@@ -1316,6 +1317,7 @@
     };
 
     try {
+        localeSystem.init();
         setLoadingText('Calculating values..');
         refreshingJsonRequest("../v1/serverOverview?server=${serverUUID}", loadserverOverviewValues, 'server-overview');
         refreshingJsonRequest("../v1/onlineOverview?server=${serverUUID}", loadOnlineActivityOverviewValues, 'online-activity-overview');

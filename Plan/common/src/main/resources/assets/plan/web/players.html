@@ -293,10 +293,12 @@
 <script src="js/sb-admin-2.js?v=${version}"></script>
 <script src="js/xmlhttprequests.js?v=${version}"></script>
 <script src="js/color-selector.js?v=${version}"></script>
+<script src="js/localeSystem.js?v=${version}"></script>
 
 <script id="mainScript">
     refreshBarrierMs = ${refreshBarrier};
     try {
+        localeSystem.init();
         let table;
         refreshingJsonRequest("./v1/players", function (playersTableJson, error) {
             if (playersTableJson) {
