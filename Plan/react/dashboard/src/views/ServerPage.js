@@ -24,7 +24,7 @@ import {useMetadata} from "../hooks/metadataHook";
 
 const ServerPage = () => {
     const {t} = useTranslation();
-    const {isProxy} = useMetadata();
+    const {isProxy, serverName} = useMetadata();
 
     const [error, setError] = useState(undefined);
     const [sidebarItems, setSidebarItems] = useState([]);
@@ -106,12 +106,13 @@ const ServerPage = () => {
         </>
     }
 
+    const displayedServerName = !isProxy && serverName.startsWith('Server') ? "Plan" : serverName;
     return (
         <>
             <NightModeCss/>
             <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
             <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={"Plan"} tab={currentTab}/>
+                <Header page={displayedServerName} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
                         <Outlet context={{}}/>

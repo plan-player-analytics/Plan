@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useState} from "react";
 import {fetchPlanMetadata} from "../service/metadataService";
 
 const MetadataContext = createContext({});
@@ -6,9 +6,9 @@ const MetadataContext = createContext({});
 export const MetadataContextProvider = ({children}) => {
     const [metadata, setMetadata] = useState({});
 
-    const updateMetadata = async () => {
+    const updateMetadata = useCallback(async () => {
         setMetadata(await fetchPlanMetadata());
-    }
+    })
 
     const getPlayerHeadImageUrl = (name, uuid) => {
         /* eslint-disable no-template-curly-in-string */
@@ -21,7 +21,7 @@ export const MetadataContextProvider = ({children}) => {
 
     useEffect(() => {
         updateMetadata();
-    }, []);
+    }, [updateMetadata]);
 
     const sharedState = {...metadata, getPlayerHeadImageUrl}
     return (<MetadataContext.Provider value={sharedState}>

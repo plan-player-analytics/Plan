@@ -14,36 +14,15 @@ import {ThemeContextProvider} from "./hooks/themeHook";
 import axios from "axios";
 import ErrorView from "./views/ErrorView";
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
-import {MetadataContextProvider, useMetadata} from "./hooks/metadataHook";
-import {AuthenticationContextProvider, useAuth} from "./hooks/authenticationHook";
+import {MetadataContextProvider} from "./hooks/metadataHook";
+import {AuthenticationContextProvider} from "./hooks/authenticationHook";
 import {NavigationContextProvider} from "./hooks/navigationHook";
 import ServerPage from "./views/ServerPage";
 import ServerOverview from "./views/ServerOverview";
+import MainPageRedirect from "./components/navigation/MainPageRedirect";
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
-}
-
-const MainPageRedirect = () => {
-    const {authRequired, loggedIn, user} = useAuth();
-    const {isProxy, serverName} = useMetadata();
-
-    if (authRequired && !loggedIn) {
-        return (<Navigate to={"login"} replace={true}/>)
-    } else if (authRequired && loggedIn) {
-        if (isProxy && user.permissions.includes('page.network')) {
-            return (<Navigate to={"network/overview"} replace={true}/>)
-        } else if (user.permissions.includes('page.server')) {
-            return (<Navigate to={"server/overview"} replace={true}/>)
-        } else if (user.permissions.includes('page.player.other')) {
-            return (<Navigate to={"players"} replace={true}/>)
-        } else if (user.permissions.includes('page.player.self')) {
-            return (<Navigate to={"player/" + user.linkedToUuid} replace={true}/>)
-        }
-    } else {
-        return (<Navigate to={isProxy ? "network/overview" : "server/" + encodeURIComponent(serverName) + "/overview"}
-                          replace={true}/>)
-    }
 }
 
 const ContextProviders = ({children}) => (

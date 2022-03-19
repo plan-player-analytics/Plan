@@ -3,9 +3,13 @@ import React, {useCallback, useEffect, useState} from "react";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {
+    faBookOpen,
     faChartArea,
+    faChartLine,
+    faCrosshairs,
     faExclamationCircle,
     faPowerOff,
+    faSkull,
     faTachometerAlt,
     faUser,
     faUsers
@@ -15,6 +19,7 @@ import {useTranslation} from "react-i18next";
 import PlayersOnlineGraph from "../components/graphs/PlayersOnlineGraph";
 import {useParams} from "react-router-dom";
 import {fetchPlayersOnlineGraph, fetchServerOverview} from "../service/serverService";
+import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 
 
 const OnlineActivityCard = () => {
@@ -28,6 +33,8 @@ const OnlineActivityCard = () => {
         loadData();
     }, [loadData])
 
+    if (!data) return <></>;
+
     return (
         <Card>
             <Card.Header>
@@ -35,13 +42,16 @@ const OnlineActivityCard = () => {
                     <Fa className="col-blue" icon={faChartArea}/> {t('html.title.onlineActivity')}
                 </h6>
             </Card.Header>
-            {data ? <PlayersOnlineGraph data={data}/> : ''}
+            <PlayersOnlineGraph data={data}/>
         </Card>
     )
 }
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
+
+    if (!data) return <></>;
+
     return (
         <Card>
             <Card.Header>
@@ -78,6 +88,65 @@ const Last7DaysCard = ({data}) => {
     )
 }
 
+
+const ServerAsNumbersCard = ({data}) => {
+    const {t} = useTranslation();
+
+    if (!data) return <></>;
+
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black">
+                    <Fa icon={faBookOpen}/> {t('html.title.serverAsNumberse')}
+                </h6>
+            </Card.Header>
+            <Card.Body>
+                <Datapoint name={t('html.label.currentUptime')}
+                           color={'light-green'} icon={faPowerOff}
+                           value={data.current_uptime}/>
+                <hr/>
+                <Datapoint name={t('html.label.totalPlayers')}
+                           color={'black'} icon={faUsers}
+                           value={data.total_players} bold/>
+                <Datapoint name={t('html.label.regularPlayers')}
+                           color={'lime'} icon={faUsers}
+                           value={data.regular_players} bold/>
+                <Datapoint name={t('html.label.playersOnline')}
+                           color={'blue'} icon={faUser}
+                           value={data.online_players} bold/>
+                <hr/>
+                <Datapoint name={t('html.label.lastPeak') + ' (' + data.last_peak_date + ')'}
+                           color={'blue'} icon={faChartLine}
+                           value={data.last_peak_players} valueLabel={t('html.unit.players')} bold/>
+                <Datapoint name={t('html.label.bestPeak') + ' (' + data.best_peak_date + ')'}
+                           color={'light-green'} icon={faChartLine}
+                           value={data.best_peak_players} valueLabel={t('html.unit.players')} bold/>
+                <hr/>
+                <Datapoint name={t('html.label.totalPlaytime')}
+                           color={'green'} icon={faClock}
+                           value={data.playtime}/>
+                <Datapoint name={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
+                           color={'green'} icon={faClock}
+                           value={data.player_playtime}/>
+                <Datapoint name={t('html.sidebar.sessions')}
+                           color={'teal'} icon={faCalendarCheck}
+                           value={data.sessions} bold/>
+                <hr/>
+                <Datapoint name={t('html.label.playerKills')}
+                           color={'red'} icon={faCrosshairs}
+                           value={data.player_kills} bold/>
+                <Datapoint name={t('html.label.mobKills')}
+                           color={'green'} icon={faCrosshairs}
+                           value={data.mob_kills} bold/>
+                <Datapoint name={t('html.label.deaths')}
+                           color={'black'} icon={faSkull}
+                           value={data.deaths} bold/>
+            </Card.Body>
+        </Card>
+    )
+}
+
 const ServerOverview = () => {
     const {identifier} = useParams();
     const [data, setData] = useState(undefined);
@@ -88,8 +157,6 @@ const ServerOverview = () => {
         loadData();
     }, [loadData])
 
-    console.log(data)
-
     return (
         <section className="player_overview">
             <Row>
@@ -98,6 +165,14 @@ const ServerOverview = () => {
                 </Col>
                 <Col lg={3}>
                     <Last7DaysCard data={data ? data.last_7_days : undefined}/>
+                </Col>
+            </Row>
+            <Row>
+                <Col lg={4}>
+                    <ServerAsNumbersCard data={data ? data.numbers : undefined}/>
+                </Col>
+                <Col lg={8}>
+
                 </Col>
             </Row>
         </section>
