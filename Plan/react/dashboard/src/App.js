@@ -16,6 +16,7 @@ import ErrorView from "./views/ErrorView";
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
 import {MetadataContextProvider} from "./hooks/metadataHook";
 import {AuthenticationContextProvider} from "./hooks/authenticationHook";
+import {NavigationContextProvider} from "./hooks/navigationHook";
 
 const PlayerRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -25,7 +26,9 @@ const ContextProviders = ({children}) => (
     <AuthenticationContextProvider>
         <MetadataContextProvider>
             <ThemeContextProvider>
-                {children}
+                <NavigationContextProvider>
+                    {children}
+                </NavigationContextProvider>
             </ThemeContextProvider>
         </MetadataContextProvider>
     </AuthenticationContextProvider>

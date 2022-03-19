@@ -10,11 +10,20 @@ export const MetadataContextProvider = ({children}) => {
         setMetadata(await fetchPlanMetadata());
     }
 
+    const getPlayerHeadImageUrl = (name, uuid) => {
+        /* eslint-disable no-template-curly-in-string */
+        return (metadata.playerHeadImageUrl ? metadata.playerHeadImageUrl : "https://cravatar.eu/helmavatar/${playerUUID}/120.png")
+            .replace('${playerUUID}', uuid)
+            .replace('${playerUUIDNoDash}', uuid.split('-').join(''))
+            .replace('${playerName}', name)
+        /* eslint-enable no-template-curly-in-string */
+    }
+
     useEffect(() => {
         updateMetadata();
     }, []);
 
-    const sharedState = {...metadata}
+    const sharedState = {...metadata, getPlayerHeadImageUrl}
     return (<MetadataContext.Provider value={sharedState}>
             {children}
         </MetadataContext.Provider>

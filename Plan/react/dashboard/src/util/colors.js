@@ -185,7 +185,7 @@ const createNightModeColorCss = () => {
 }
 
 export const createNightModeCss = () => {
-    return `#content {background-color:${nightColors.black};}` +
+    return `#content-wrapper {background-color:${nightColors.black}!important;}` +
         `.btn,.bg-transparent-light {color: ${nightColors.yellow};}` +
         `.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr,form .btn, .btn-outline-secondary{background-color:${nightColors.darkBlue}!important;border-color:${nightColors.blue}!important;}` +
         `.bg-white.collapse-inner {border:1px solid;}` +
@@ -196,7 +196,7 @@ export const createNightModeCss = () => {
         `.fc-today {background:${nightColors.greyBlue} !important}` +
         `.fc-popover-body,.fc-popover-header{background-color: ${nightColors.darkBlue} !important;color: ${nightColors.yellow} !important;}` +
         `select,input,.dataTables_paginate .page-item:not(.active) a,.input-group-text,.input-group-text > * {background-color:${nightColors.darkBlue} !important;border-color:${nightColors.blue} !important;color: ${nightColors.yellow} !important;}` +
-        `.fc td,.fc tr,.fc th, .fc table, .modal-header,.modal-body,.modal-footer{border-color:${nightColors.blue} !important;}` +
+        `.topbar-divider,.fc td,.fc tr,.fc th, .fc table, .modal-header,.modal-body,.modal-footer{border-color:${nightColors.blue} !important;}` +
         `.fc a{color:${nightColors.yellow} !important;}` +
         `.fc-button{ background-color: ${withReducedSaturation(colorMap.PLAN.hex)} !important;}` +
         createNightModeColorCss()

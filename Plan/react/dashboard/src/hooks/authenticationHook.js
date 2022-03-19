@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useState} from "react";
 import {fetchWhoAmI} from "../service/authenticationService";
 
 const AuthenticationContext = createContext({});
@@ -8,14 +8,14 @@ export const AuthenticationContextProvider = ({children}) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [user, setUser] = useState(undefined);
 
-    const updateLoginDetails = async () => {
+    const updateLoginDetails = useCallback(async () => {
         const whoami = await fetchWhoAmI();
         setAuthRequired(whoami.authRequired);
         setLoggedIn(whoami.loggedIn);
         if (whoami.loggedIn) setUser(loggedIn.user);
-    }
+    }, [loggedIn])
 
-    const login = (user, password) => {
+    const login = (username, password) => {
         // TODO implement later when login page is done with React
         updateLoginDetails();
     }
@@ -26,7 +26,7 @@ export const AuthenticationContextProvider = ({children}) => {
 
     useEffect(() => {
         updateLoginDetails();
-    }, []);
+    }, [updateLoginDetails]);
 
     const sharedState = {authRequired, loggedIn, user, login, logout}
     return (<AuthenticationContext.Provider value={sharedState}>

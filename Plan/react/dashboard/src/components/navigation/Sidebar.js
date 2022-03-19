@@ -8,6 +8,7 @@ import PluginInformationModal from "../modal/PluginInformationModal";
 import VersionInformationModal from "../modal/VersionInformationModal";
 import {fetchPlanVersion} from "../../service/metadataService";
 import {useAuth} from "../../hooks/authenticationHook";
+import {useNavigation} from "../../hooks/navigationHook";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -20,6 +21,8 @@ const Divider = () => (
 )
 
 const Item = ({href, icon, name}) => {
+    const {setCurrentTab} = useNavigation();
+
     if (href.startsWith('/')) {
         return (
             <li className={"nav-item nav-button"}>
@@ -32,7 +35,10 @@ const Item = ({href, icon, name}) => {
 
     return (
         <li className={"nav-item nav-button"}>
-            <NavLink to={href} className={({isActive}) => isActive ? "nav-link active" : "nav-link"}>
+            <NavLink to={href} className={({isActive}) => {
+                if (isActive) setCurrentTab(name);
+                return isActive ? "nav-link active" : "nav-link"
+            }}>
                 <Fa icon={icon}/> <span>{name}</span>
             </NavLink>
         </li>

@@ -7,6 +7,8 @@ import {fetchPlayer} from "../service/playerService";
 import ErrorView from "./ErrorView";
 import {faCalendar, faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../hooks/authenticationHook";
+import Header from "../components/navigation/Header";
+import {useNavigation} from "../hooks/navigationHook";
 
 
 const PlayerPage = () => {
@@ -15,6 +17,7 @@ const PlayerPage = () => {
     const [sidebarItems, setSidebarItems] = useState([]);
 
     const {identifier} = useParams();
+    const {currentTab} = useNavigation();
 
     const updatePlayer = async (id) => {
         try {
@@ -39,7 +42,11 @@ const PlayerPage = () => {
         ]
 
         player.extensions.map(extension => {
-            return {name: `Plugins (${extension.serverName})`, icon: faCubes, href: `plugins/${extension.serverName}`}
+            return {
+                name: `Plugins (${extension.serverName})`,
+                icon: faCubes,
+                href: `plugins/${encodeURIComponent(extension.serverName)}`
+            }
         }).forEach(item => items.push(item));
 
         setSidebarItems(items);
@@ -54,6 +61,7 @@ const PlayerPage = () => {
             <NightModeCss/>
             <Sidebar items={[]} showBackButton={true}/>
             <div className="d-flex flex-column" id="content-wrapper">
+                <Header page={error.title ? error.title : 'Unexpected error occurred'}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
                         <ErrorView error={error}/>
@@ -71,6 +79,7 @@ const PlayerPage = () => {
             <NightModeCss/>
             <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
             <div className="d-flex flex-column" id="content-wrapper">
+                <Header page={player.info.name} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
                         <Outlet context={{player, updatePlayer}}/>

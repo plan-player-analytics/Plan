@@ -8,14 +8,6 @@ import ServerPie from "../components/graphs/ServerPie";
 import ServerAccordion from "../components/accordion/ServerAccordion";
 import {usePlayer} from "./PlayerPage";
 
-const Header = ({player}) => (
-    <div className="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 className="h3 mb-0 text-gray-800">
-            {player.info.name} &middot; Servers Overview
-        </h1>
-    </div>
-)
-
 const ServersCard = ({player}) => (
     <Card>
         <Card.Header>
@@ -51,7 +43,6 @@ const PlayerServers = () => {
     const {player} = usePlayer();
     return (
         <section className="player_sessions">
-            <Header player={player}/>
             <Row>
                 <Col lg={8}>
                     <ServersCard player={player}/>

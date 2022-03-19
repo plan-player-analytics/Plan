@@ -8,14 +8,6 @@ import SessionAccordion from "../components/accordion/SessionAccordion";
 import WorldPie from "../components/graphs/WorldPie";
 import {usePlayer} from "./PlayerPage";
 
-const Header = ({player}) => (
-    <div className="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 className="h3 mb-0 text-gray-800">
-            {player.info.name} &middot; Sessions
-        </h1>
-    </div>
-)
-
 const SessionCalendarCard = ({player}) => (
     <Card>
         <Card.Header>
@@ -62,7 +54,6 @@ const PlayerSessions = () => {
     const {player} = usePlayer();
     return (
         <section className="player_sessions">
-            <Header player={player}/>
             <Row>
                 <Col lg={8}>
                     <SessionCalendarCard player={player}/>

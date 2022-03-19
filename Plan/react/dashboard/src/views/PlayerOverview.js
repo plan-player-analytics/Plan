@@ -27,20 +27,9 @@ import {useTheme} from "../hooks/themeHook";
 import {usePlayer} from "./PlayerPage";
 import {useMetadata} from "../hooks/metadataHook";
 
-const Header = ({player}) => (
-    <div className="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 className="h3 mb-0 text-gray-800">
-            {player.info.name} &middot; Player Overview
-        </h1>
-    </div>
-);
-
 const PlayerOverviewCard = ({player}) => {
-    const {playerHeadImageUrl} = useMetadata();
-
-    const actualHeadImageUrl = (playerHeadImageUrl ? playerHeadImageUrl : "https://cravatar.eu/helmavatar/${playerUUID}/120.png")
-        .replace('${playerUUID}', player.uuid)
-        .replace('${playerName}', player.name)
+    const {getPlayerHeadImageUrl} = useMetadata();
+    const headImageUrl = getPlayerHeadImageUrl(player.info.name, player.info.uuid)
 
     return (
         <Card>
@@ -62,7 +51,7 @@ const PlayerOverviewCard = ({player}) => {
                     <Col sm={4}>
                         <img className="rounded mx-auto d-block"
                              alt="player head"
-                             src={actualHeadImageUrl}/>
+                             src={headImageUrl}/>
                     </Col>
                     <Col sm={4}>
                         <p><Fa icon={faCrosshairs} className="col-red"/> Player Kills: {player.info.player_kill_count}
@@ -249,7 +238,6 @@ const PlayerOverview = () => {
 
     return (
         <section className="player_overview">
-            <Header player={player}/>
             <Row>
                 <Col lg={6}>
                     <PlayerOverviewCard player={player}/>

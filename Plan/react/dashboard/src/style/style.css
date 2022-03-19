@@ -1246,7 +1246,6 @@ body.sidebar-hidden .navbar-nav {
 
 .refresh-element {
     font-size: 1rem;
-    margin-left: 1rem;
 }
 
 .refresh-element > i {
@@ -1284,4 +1283,11 @@ body.sidebar-hidden .navbar-nav {
 .container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+}
+
+.topbar-divider {
+    width: 0;
+    border-right: 1px solid #e3e6f0;
+    height: calc(4.375rem - 2rem);
+    margin: auto 1rem;
 }

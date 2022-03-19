@@ -9,14 +9,6 @@ import KillsTable from "../components/table/KillsTable";
 import {usePlayer} from "./PlayerPage";
 
 
-const Header = ({player}) => (
-    <div className="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 className="h3 mb-0 text-gray-800">
-            {player.info.name} &middot; PvP & PvE
-        </h1>
-    </div>
-)
-
 const PvpPveAsNumbersTable = ({player}) => (
     <AsNumbersTable
         headers={['All Time', 'Last 30 days', 'Last 7 days']}
@@ -104,7 +96,6 @@ const PlayerPvpPve = () => {
     const {player} = usePlayer();
     return (
         <section className="player_pvp_pve">
-            <Header player={player}/>
             <Row>
                 <Col lg={8}>
                     <PvpPveNumbersCard player={player}/>

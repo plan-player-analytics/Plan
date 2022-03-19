@@ -5,14 +5,6 @@ import {useParams} from "react-router-dom";
 import Masonry from "masonry-layout";
 import {usePlayer} from "./PlayerPage";
 
-const Header = ({player, extension_data}) => (
-    <div className="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 className="h3 mb-0 text-gray-800">
-            {player.info.name} &middot; Plugins Overview ({extension_data.serverName})
-        </h1>
-    </div>
-)
-
 const PlayerPluginData = () => {
     const {player} = usePlayer();
     const {serverName} = useParams();
@@ -32,7 +24,6 @@ const PlayerPluginData = () => {
 
     if (!extensions) {
         return <section className="player_plugin_data">
-            <Header player={player} extension_data={{serverName}}/>
             <Row style={{overflowY: 'hidden'}}>
                 <Card>
                     <Card.Body>
@@ -45,7 +36,6 @@ const PlayerPluginData = () => {
 
     return (
         <section className="player_plugin_data">
-            <Header player={player} extension_data={extensions}/>
             <Row id="extension-masonry-row"
                  data-masonry='{"percentPosition": true, "itemSelector": ".extension-wrapper"}'
                  style={{overflowY: 'hidden'}}>
