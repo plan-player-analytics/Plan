@@ -7,6 +7,7 @@ import {Col, Row} from "react-bootstrap-v5";
 import WorldPie from "../graphs/WorldPie";
 import KillsTable from "../table/KillsTable";
 import Accordion from "./Accordion";
+import {useTranslation} from "react-i18next";
 
 const SessionHeader = ({session}) => {
     return (
@@ -21,41 +22,42 @@ const SessionHeader = ({session}) => {
 }
 
 const SessionBody = ({i, session}) => {
+    const {t} = useTranslation();
     return (
         <Row>
             <Col lg={6}>
                 <Datapoint
                     icon={faClock} color={"teal"}
-                    name="Ended" value={session.end} bold
+                    name={t('html.label.sessionEnded')} value={session.end} bold
                 />
                 <Datapoint
                     icon={faClock} color={"teal"}
-                    name="Length" value={session.length} bold
+                    name={t('html.title.length')} value={session.length} bold
                 />
                 <Datapoint
                     icon={faClock} color={"grey"}
-                    name="AFK Time" value={session.afk_time} bold
+                    name={t('html.label.afkTime')} value={session.afk_time} bold
                 />
                 <Datapoint
                     icon={faServer} color={"green"}
-                    name="Server" value={session.server_name} bold
+                    name={t('html.title.server')} value={session.server_name} bold
                 />
                 {session.avg_ping ? <Datapoint
                     icon={faSignal} color={"amber"}
-                    name="Average Ping" value={session.avg_ping} bold
+                    name={t('html.title.averagePing')} value={session.avg_ping} bold
                 /> : ''}
                 <br/>
                 <Datapoint
                     icon={faCrosshairs} color="red"
-                    name="Player Kills" value={session.player_kills.length} bold
+                    name={t('html.label.playerKills')} value={session.player_kills.length} bold
                 />
                 <Datapoint
                     icon={faCrosshairs} color="green"
-                    name="Mob Kills" value={session.mob_kills} bold
+                    name={t('html.label.mobKills')} value={session.mob_kills} bold
                 />
                 <Datapoint
                     icon={faSkull} color="black"
-                    name="Deaths" value={session.deaths} bold
+                    name={t('html.label.deaths')} value={session.deaths} bold
                 />
                 <hr/>
                 <KillsTable kills={session.player_kills}/>
@@ -66,11 +68,11 @@ const SessionBody = ({i, session}) => {
                           gmSeries={session.gm_series}/>
                 <a href={session.network_server ? `./player/` : `../player/` + session.player_uuid}
                    className="float-end btn bg-blue">
-                    <Fa icon={faUser}/> Player Page
+                    <Fa icon={faUser}/> {t('html.sidebar.playerPage')}
                 </a>
                 {session.network_server ? <a href={"./server/" + session.server_url_name}
                                              className="float-end btn bg-light-green me-2">
-                    <Fa icon={faServer}/> Server Analysis
+                    <Fa icon={faServer}/> {t('html.sidebar.serverPage')}
                 </a> : ''}
             </div>
         </Row>
@@ -82,12 +84,13 @@ const SessionAccordion = (
         sessions
     }
 ) => {
+    const {t} = useTranslation();
     return (
         <Accordion headers={[
-            <><Fa icon={faServer}/> Server</>,
-            <><Fa icon={faClock}/> Session Started</>,
-            <><Fa icon={faClock}/> Length</>,
-            <><Fa icon={faMap}/> Most played World</>
+            <><Fa icon={faServer}/> {t('html.title.server')}</>,
+            <><Fa icon={faClock}/> {t('html.title.sessionStart')}</>,
+            <><Fa icon={faClock}/> {t('html.title.length')}</>,
+            <><Fa icon={faMap}/> {t('html.title.mostPlayedWorld')}</>
         ]} slices={sessions.map(session => {
             return {
                 body: <SessionBody session={session}/>,

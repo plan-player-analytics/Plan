@@ -1,12 +1,14 @@
 import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
 import {useTheme} from "../../hooks/themeHook";
+import {useTranslation} from "react-i18next";
 
 const PunchCard = ({series}) => {
+    const {t} = useTranslation();
     const {graphTheming} = useTheme();
     useEffect(() => {
         const punchCard = {
-            name: 'Relative Activity',
+            name: t('html.label.relativeJoinActivity'),
             color: '#222',
             data: series
         };
@@ -32,13 +34,13 @@ const PunchCard = ({series}) => {
             },
             yAxis: {
                 title: {
-                    text: "Day of the Week"
+                    text: t('html.label.dayOfweek')
                 },
                 reversed: true,
-                categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                categories: t('html.label.weekdays').replaceAll("'", '').split(', ')
             },
             tooltip: {
-                pointFormat: 'Activity: {point.z}'
+                pointFormat: t('html.label.active') + ': {point.z}'
             },
             series: [punchCard]
         })

@@ -9,6 +9,7 @@ import VersionInformationModal from "../modal/VersionInformationModal";
 import {fetchPlanVersion} from "../../service/metadataService";
 import {useAuth} from "../../hooks/authenticationHook";
 import {useNavigation} from "../../hooks/navigationHook";
+import {useTranslation} from "react-i18next";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -100,6 +101,7 @@ const FooterButtons = () => {
 }
 
 const Sidebar = ({items, showBackButton}) => {
+    const {t} = useTranslation();
     const {color} = useTheme();
 
     return (
@@ -107,7 +109,7 @@ const Sidebar = ({items, showBackButton}) => {
             <Logo/>
             <Divider/>
             {showBackButton ? <>
-                <Item active={false} href="/" icon={faArrowLeft} name="Back to main page"/>
+                <Item active={false} href="/" icon={faArrowLeft} name={t('html.sidebar.toMainPage')}/>
                 <Divider/>
             </> : ''}
             {items.map((item, i) =>

@@ -7,36 +7,43 @@ import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import ServerPie from "../components/graphs/ServerPie";
 import ServerAccordion from "../components/accordion/ServerAccordion";
 import {usePlayer} from "./PlayerPage";
+import {useTranslation} from "react-i18next";
 
-const ServersCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black" style={{width: '100%'}}>
-                <Fa icon={faCalendar} className="col-teal"/> Recent sessions
-                <span className="float-end">
-                    <Fa icon={faHandPointer}/> <small>Click to expand</small>
+const ServersCard = ({player}) => {
+    const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black" style={{width: '100%'}}>
+                    <Fa icon={faCalendar} className="col-teal"/> {t('html.title.recentSessions')}
+                    <span className="float-end">
+                    <Fa icon={faHandPointer}/> <small>{t('html.text.clickToExpand')}</small>
                 </span>
-            </h6>
-        </Card.Header>
-        <Scrollable>
-            <ServerAccordion servers={player.servers}/>
-        </Scrollable>
-    </Card>
-)
+                </h6>
+            </Card.Header>
+            <Scrollable>
+                <ServerAccordion servers={player.servers}/>
+            </Scrollable>
+        </Card>
+    )
+}
 
-const ServerPieCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black" style={{width: '100%'}}>
-                <Fa icon={faNetworkWired} className="col-teal"/> Server Playtime
-            </h6>
-        </Card.Header>
-        <ServerPie
-            colors={player.server_pie_colors}
-            series={player.server_pie_series}
-        />
-    </Card>
-)
+const ServerPieCard = ({player}) => {
+    const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black" style={{width: '100%'}}>
+                    <Fa icon={faNetworkWired} className="col-teal"/> {t('html.title.serverPlaytime')}
+                </h6>
+            </Card.Header>
+            <ServerPie
+                colors={player.server_pie_colors}
+                series={player.server_pie_series}
+            />
+        </Card>
+    )
+}
 
 
 const PlayerServers = () => {

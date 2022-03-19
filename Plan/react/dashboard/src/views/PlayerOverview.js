@@ -26,8 +26,10 @@ import AsNumbersTable, {TableRow} from "../components/table/AsNumbersTable";
 import {useTheme} from "../hooks/themeHook";
 import {usePlayer} from "./PlayerPage";
 import {useMetadata} from "../hooks/metadataHook";
+import {useTranslation} from "react-i18next";
 
 const PlayerOverviewCard = ({player}) => {
+    const {t} = useTranslation();
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = getPlayerHeadImageUrl(player.info.name, player.info.uuid)
 
@@ -43,10 +45,12 @@ const PlayerOverviewCard = ({player}) => {
                     <Col sm={4}>
                         <p>
                             <Fa icon={faCircle} className={player.info.online ? "col-green" : "col-red"}/>
-                            {player.info.online ? ' Online' : ' Offline'}
+                            {' ' + (player.info.online ? t('html.value.online') : t('html.value.offline'))}
                         </p>
-                        {player.info.operator ? <p><Fa icon={faSuperpowers} className="col-blue"/> Operator</p> : ''}
-                        <p><Fa icon={faGavel} className="col-brown"/> Times Kicked: {player.info.kick_count}</p>
+                        {player.info.operator ?
+                            <p><Fa icon={faSuperpowers} className="col-blue"/> {t('html.label.operator')}</p> : ''}
+                        <p><Fa icon={faGavel}
+                               className="col-brown"/> {t('html.label.timesKicked')}: {player.info.kick_count}</p>
                     </Col>
                     <Col sm={4}>
                         <img className="rounded mx-auto d-block"
@@ -54,10 +58,12 @@ const PlayerOverviewCard = ({player}) => {
                              src={headImageUrl}/>
                     </Col>
                     <Col sm={4}>
-                        <p><Fa icon={faCrosshairs} className="col-red"/> Player Kills: {player.info.player_kill_count}
+                        <p><Fa icon={faCrosshairs}
+                               className="col-red"/> {t('html.label.playerKills')}: {player.info.player_kill_count}
                         </p>
-                        <p><Fa icon={faCrosshairs} className="col-green"/> Mob Kills: {player.info.mob_kill_count}</p>
-                        <p><Fa icon={faSkull}/> Deaths: {player.info.death_count}</p>
+                        <p><Fa icon={faCrosshairs}
+                               className="col-green"/> {t('html.label.mobKills')}: {player.info.mob_kill_count}</p>
+                        <p><Fa icon={faSkull}/> {t('html.label.deaths')}: {player.info.death_count}</p>
                     </Col>
                 </Row>
                 <hr/>
@@ -65,67 +71,67 @@ const PlayerOverviewCard = ({player}) => {
                     <Col lg={6}>
                         <Datapoint
                             icon={faClock} color="green"
-                            name="Total Playtime" value={player.info.playtime}
+                            name={t('html.label.totalPlaytime')} value={player.info.playtime}
                         />
                         <Datapoint
                             icon={faClock} color="green"
-                            name="Total Active" value={player.info.active_playtime}
+                            name={t('html.label.totalActive')} value={player.info.active_playtime}
                         />
                         <Datapoint
                             icon={faClock} color="grey"
-                            name="Total AFK" value={player.info.afk_time}
+                            name={t('html.label.totalAfk')} value={player.info.afk_time}
                         />
                         <hr/>
                         <Datapoint
                             icon={faCalendarCheck} color="teal"
-                            name="Sessions" value={player.info.session_count} bold
+                            name={t('html.sidebar.sessions')} value={player.info.session_count} bold
                         />
                         <Datapoint
                             icon={faClock} color="teal"
-                            name="Longest Session" value={player.info.longest_session_length}
+                            name={t('html.label.longestSession')} value={player.info.longest_session_length}
                         />
                         <Datapoint
                             icon={faClock} color="teal"
-                            name="Session Median" value={player.info.session_median}
+                            name={t('html.label.sessionMedian')} value={player.info.session_median}
                         />
                         <hr/>
                         <Datapoint
                             icon={faUserPlus} color="light-green"
-                            name="Registered" value={player.info.registered} boldTitle
+                            name={t('html.label.registered')} value={player.info.registered} boldTitle
                         />
                     </Col>
                     <Col lg={6}>
                         <Datapoint
                             icon={faUser} color="amber"
-                            name="Activity Index"
+                            name={t('html.label.activityIndex')}
                             value={player.info.activity_index} bold
                             valueLabel={player.info.activity_index_group}
                         />
                         <Datapoint
                             icon={faServer} color="light-green"
-                            name="Favorite server" value={player.info.favorite_server}
+                            name={t('html.label.favoriteServer')} value={player.info.favorite_server}
                         />
                         <Datapoint
                             icon={faLocationArrow} color="amber"
-                            name="Join Address" value={player.info.latest_join_address}
+                            name={t('html.label.joinAddress')} value={player.info.latest_join_address}
                         />
                         <hr/>
                         <Datapoint
                             icon={faSignal} color="amber"
-                            name="Average Ping" value={player.info.average_ping}
+                            name={t('html.title.averagePing')} value={player.info.average_ping}
                         />
                         <Datapoint
                             icon={faSignal} color="amber"
-                            name="Best Ping" value={player.info.best_ping}
+                            name={t('html.title.bestPing')} value={player.info.best_ping}
                         />
                         <Datapoint
                             icon={faSignal} color="amber"
-                            name="Worst Ping" value={player.info.worst_ping}
+                            name={t('html.title.worstPing')} value={player.info.worst_ping}
                         />
                         <hr/>
                         <Datapoint
                             icon={faCalendar} color="teal"
-                            name="Registered" value={player.info.last_seen} boldTitle
+                            name={t('html.label.lastSeen')} value={player.info.last_seen} boldTitle
                         />
                     </Col>
                 </Row>
@@ -135,21 +141,22 @@ const PlayerOverviewCard = ({player}) => {
 }
 
 const NicknamesCard = ({player}) => {
+    const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
     return (
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faSignature}/> Seen Nicknames
+                    <Fa icon={faSignature}/> {t('html.title.seenNicknames')}
                 </h6>
             </Card.Header>
             <Scrollable>
                 <table className={"table table-striped mb-0" + (nightModeEnabled ? " table-dark" : '')}>
                     <thead className="bg-purple">
                     <tr>
-                        <th><Fa icon={faSignature}/> Nickname</th>
-                        <th><Fa icon={faServer}/> Server</th>
-                        <th><Fa icon={faClock}/> Last Seen</th>
+                        <th><Fa icon={faSignature}/> {t('html.label.nickname')}</th>
+                        <th><Fa icon={faServer}/> {t('html.title.server')}</th>
+                        <th><Fa icon={faClock}/> {t('html.label.lastSeen')}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -166,20 +173,21 @@ const NicknamesCard = ({player}) => {
 }
 
 const ConnectionsCard = ({player}) => {
+    const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
     return (
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faWifi}/> Connection Information
+                    <Fa icon={faWifi}/> {t('html.title.connectionInfo')}
                 </h6>
             </Card.Header>
             <Scrollable>
                 <table className={"table table-striped mb-0" + (nightModeEnabled ? " table-dark" : '')}>
                     <thead className="bg-green">
                     <tr>
-                        <th><Fa icon={faGlobe}/> Country</th>
-                        <th><Fa icon={faClock}/> Last Connected</th>
+                        <th><Fa icon={faGlobe}/> {t('html.title.country')}</th>
+                        <th><Fa icon={faClock}/> {t('html.label.lastConnected')}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -194,44 +202,50 @@ const ConnectionsCard = ({player}) => {
     )
 }
 
-const PunchCardCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black">
-                <Fa icon={faBraille}/> Punchcard
-            </h6>
-        </Card.Header>
-        <PunchCard series={player.punchcard_series}/>
-    </Card>
-)
+const PunchCardCard = ({player}) => {
+    const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black">
+                    <Fa icon={faBraille}/> {t('html.title.punchcard')}
+                </h6>
+            </Card.Header>
+            <PunchCard series={player.punchcard_series}/>
+        </Card>
+    )
+}
 
-const OnlineActivityCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black">
-                <Fa icon={faBookOpen}/> Online Activity
-            </h6>
-        </Card.Header>
-        <AsNumbersTable headers={['Last 30 days', 'Last 7 days']}>
-            <TableRow icon={faClock} color="green" text="Playtime"
-                      values={[player.online_activity.playtime_30d, player.online_activity.playtime_7d]}/>
-            <TableRow icon={faClock} color="green" text="Active Playtime"
-                      values={[player.online_activity.active_playtime_30d, player.online_activity.active_playtime_7d]}/>
-            <TableRow icon={faClock} color="gray" text="AFK Time"
-                      values={[player.online_activity.afk_time_30d, player.online_activity.afk_time_7d]}/>
-            <TableRow icon={faClock} color="teal" text="Median Session Length"
-                      values={[player.online_activity.median_session_length_30d, player.online_activity.median_session_length_7d]}/>
-            <TableRow icon={faCalendarCheck} color="teal" text="Sessions"
-                      values={[player.online_activity.session_count_30d, player.online_activity.session_count_7d]}/>
-            <TableRow icon={faCrosshairs} color="red" text="Player Kills"
-                      values={[player.online_activity.player_kill_count_30d, player.online_activity.player_kill_count_7d]}/>
-            <TableRow icon={faCrosshairs} color="green" text="Mob Kills"
-                      values={[player.online_activity.mob_kill_count_30d, player.online_activity.mob_kill_count_7d]}/>
-            <TableRow icon={faSkull} color="black" text="Deaths"
-                      values={[player.online_activity.death_count_30d, player.online_activity.death_count_7d]}/>
-        </AsNumbersTable>
-    </Card>
-)
+const OnlineActivityCard = ({player}) => {
+    const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black">
+                    <Fa icon={faBookOpen}/> {t('html.title.onlineActivity')}
+                </h6>
+            </Card.Header>
+            <AsNumbersTable headers={[t('html.title.last30days'), t('html.title.last7days')]}>
+                <TableRow icon={faClock} color="green" text={t('html.label.playtime')}
+                          values={[player.online_activity.playtime_30d, player.online_activity.playtime_7d]}/>
+                <TableRow icon={faClock} color="green" text={t('html.label.activePlaytime')}
+                          values={[player.online_activity.active_playtime_30d, player.online_activity.active_playtime_7d]}/>
+                <TableRow icon={faClock} color="gray" text={t('html.label.afk')}
+                          values={[player.online_activity.afk_time_30d, player.online_activity.afk_time_7d]}/>
+                <TableRow icon={faClock} color="teal" text={t('html.label.medianSessionLength')}
+                          values={[player.online_activity.median_session_length_30d, player.online_activity.median_session_length_7d]}/>
+                <TableRow icon={faCalendarCheck} color="teal" text={t('html.sidebar.sessions')}
+                          values={[player.online_activity.session_count_30d, player.online_activity.session_count_7d]}/>
+                <TableRow icon={faCrosshairs} color="red" text={t('html.label.playerKills')}
+                          values={[player.online_activity.player_kill_count_30d, player.online_activity.player_kill_count_7d]}/>
+                <TableRow icon={faCrosshairs} color="green" text={t('html.label.mobKills')}
+                          values={[player.online_activity.mob_kill_count_30d, player.online_activity.mob_kill_count_7d]}/>
+                <TableRow icon={faSkull} color="black" text={t('html.label.deaths')}
+                          values={[player.online_activity.death_count_30d, player.online_activity.death_count_7d]}/>
+            </AsNumbersTable>
+        </Card>
+    )
+}
 
 const PlayerOverview = () => {
     const {player} = usePlayer();

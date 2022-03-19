@@ -7,48 +7,58 @@ import Scrollable from "../components/Scrollable";
 import SessionAccordion from "../components/accordion/SessionAccordion";
 import WorldPie from "../components/graphs/WorldPie";
 import {usePlayer} from "./PlayerPage";
+import {useTranslation} from "react-i18next";
 
-const SessionCalendarCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black">
-                <Fa icon={faCalendarAlt} className="col-teal"/> Session Calendar
-            </h6>
-        </Card.Header>
-        <PlayerSessionCalendar series={player.calendar_series} firstDay={player.first_day}/>
-    </Card>
-)
+const SessionCalendarCard = ({player}) => {
+    const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black">
+                    <Fa icon={faCalendarAlt} className="col-teal"/> {t('html.title.sessionCalendar')}
+                </h6>
+            </Card.Header>
+            <PlayerSessionCalendar series={player.calendar_series} firstDay={player.first_day}/>
+        </Card>
+    )
+}
 
-const RecentSessionsCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black" style={{width: '100%'}}>
-                <Fa icon={faCalendar} className="col-teal"/> Recent sessions
-                <span className="float-end">
-                    <Fa icon={faHandPointer}/> <small>Click to expand</small>
+const RecentSessionsCard = ({player}) => {
+    const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black" style={{width: '100%'}}>
+                    <Fa icon={faCalendar} className="col-teal"/> {t('html.title.recentSessions')}
+                    <span className="float-end">
+                    <Fa icon={faHandPointer}/> <small>{t('html.text.clickToExpand')}</small>
                 </span>
-            </h6>
-        </Card.Header>
-        <Scrollable>
-            <SessionAccordion sessions={player.sessions}/>
-        </Scrollable>
-    </Card>
-)
+                </h6>
+            </Card.Header>
+            <Scrollable>
+                <SessionAccordion sessions={player.sessions}/>
+            </Scrollable>
+        </Card>
+    )
+}
 
-const WorldPieCard = ({player}) => (
-    <Card>
-        <Card.Header>
-            <h6 className="col-black" style={{width: '100%'}}>
-                <Fa icon={faClock} className="col-teal"/> World Playtime
-            </h6>
-        </Card.Header>
-        <WorldPie
-            id="world-pie"
-            worldSeries={player.world_pie_series}
-            gmSeries={player.gm_series}
-        />
-    </Card>
-)
+const WorldPieCard = ({player}) => {
+    const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black" style={{width: '100%'}}>
+                    <Fa icon={faClock} className="col-teal"/> {t('html.title.worldPlaytime')}
+                </h6>
+            </Card.Header>
+            <WorldPie
+                id="world-pie"
+                worldSeries={player.world_pie_series}
+                gmSeries={player.gm_series}
+            />
+        </Card>
+    )
+}
 
 const PlayerSessions = () => {
     const {player} = usePlayer();

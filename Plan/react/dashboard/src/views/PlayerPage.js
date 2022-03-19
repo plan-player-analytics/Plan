@@ -9,15 +9,19 @@ import {faCalendar, faCampground, faCubes, faInfoCircle, faNetworkWired} from "@
 import {useAuth} from "../hooks/authenticationHook";
 import Header from "../components/navigation/Header";
 import {useNavigation} from "../hooks/navigationHook";
+import {useTranslation} from "react-i18next";
 
 
 const PlayerPage = () => {
+    const {t} = useTranslation();
+
     const [player, setPlayer] = useState(undefined);
     const [error, setError] = useState(undefined);
     const [sidebarItems, setSidebarItems] = useState([]);
 
     const {identifier} = useParams();
     const {currentTab} = useNavigation();
+
 
     const updatePlayer = async (id) => {
         try {
@@ -35,15 +39,15 @@ const PlayerPage = () => {
         if (!player) return;
 
         const items = [
-            {name: "Player Overview", icon: faInfoCircle, href: "overview"},
-            {name: "Sessions", icon: faCalendar, href: "sessions"},
-            {name: "PvP & PvE", icon: faCampground, href: "pvppve"},
-            {name: "Servers Overview", icon: faNetworkWired, href: "servers"}
+            {name: t('html.title.playerOverview'), icon: faInfoCircle, href: "overview"},
+            {name: t('html.sidebar.sessions'), icon: faCalendar, href: "sessions"},
+            {name: t('html.sidebar.pvpPve'), icon: faCampground, href: "pvppve"},
+            {name: t('html.sidebar.servers'), icon: faNetworkWired, href: "servers"}
         ]
 
         player.extensions.map(extension => {
             return {
-                name: `Plugins (${extension.serverName})`,
+                name: `${t('html.side.plugins')} (${extension.serverName})`,
                 icon: faCubes,
                 href: `plugins/${encodeURIComponent(extension.serverName)}`
             }
@@ -51,7 +55,7 @@ const PlayerPage = () => {
 
         setSidebarItems(items);
         window.document.title = `Plan | ${player.info.name}`;
-    }, [player])
+    }, [player, t])
 
     const {authRequired, user} = useAuth();
     const showBackButton = !authRequired || user.permissions.filter(perm => perm !== 'page.player.self').length;

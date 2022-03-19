@@ -8,6 +8,7 @@ import {useTheme} from "../../hooks/themeHook";
 import {Dropdown} from "react-bootstrap-v5";
 import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
 import {localeService} from "../../service/localeService";
+import {useTranslation} from "react-i18next";
 
 const LanguageSelector = () => {
     const languages = localeService.getLanguages();
@@ -31,6 +32,7 @@ const LanguageSelector = () => {
 const Header = ({page, tab}) => {
     const {requiresAuth, user} = useAuth();
     const {toggleColorChooser} = useTheme();
+    const {t} = useTranslation();
 
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = user ? getPlayerHeadImageUrl(user.username, user.linkedToUuid) : undefined
@@ -70,10 +72,10 @@ const Header = ({page, tab}) => {
 
                 <DropdownMenu>
                     <DropdownItem onClick={toggleColorChooser}>
-                        <Fa icon={faPalette}/> Select a theme
+                        <Fa icon={faPalette}/> {t('html.title.themeSelect')}
                     </DropdownItem>
                     {requiresAuth ? <DropdownItem href="./auth/logout">
-                        <Fa icon={faDoorOpen}/> Sign out
+                        <Fa icon={faDoorOpen}/> {t('html.login.logout')}
                     </DropdownItem> : ''}
                 </DropdownMenu>
             </Dropdown>

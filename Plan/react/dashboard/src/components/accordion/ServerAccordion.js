@@ -7,6 +7,7 @@ import {Col, Row} from "react-bootstrap-v5";
 import WorldPie from "../graphs/WorldPie";
 import Accordion from "./Accordion";
 import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
+import {useTranslation} from "react-i18next";
 
 const ServerHeader = ({server}) => {
     return (
@@ -23,49 +24,50 @@ const ServerHeader = ({server}) => {
 }
 
 const ServerBody = ({i, server}) => {
+    const {t} = useTranslation();
     return (
         <Row>
             <Col lg={6}>
-                {server.operator ? <Datapoint icon={faSuperpowers} color="blue" name="Operator"/> : ''}
-                {server.banned ? <Datapoint icon={faGavel} color="red" name="Banned"/> : ''}
+                {server.operator ? <Datapoint icon={faSuperpowers} color="blue" name={t('html.label.operator')}/> : ''}
+                {server.banned ? <Datapoint icon={faGavel} color="red" name={t('html.label.banned')}/> : ''}
                 {server.operator || server.banned ? <br/> : ''}
                 <Datapoint
                     icon={faCalendarCheck} color={"teal"}
-                    name="Sessions" value={server.session_count} bold
+                    name={t('html.sidebar.sessions')} value={server.session_count} bold
                 />
                 <Datapoint
                     icon={faClock} color={"green"}
-                    name="Playtime" value={server.playtime} bold
+                    name={t('html.label.playtime')} value={server.playtime} bold
                 />
                 <Datapoint
                     icon={faClock} color={"grey"}
-                    name="AFK Time" value={server.afk_time} bold
+                    name={t('html.label.afkTime')} value={server.afk_time} bold
                 />
                 <Datapoint
                     icon={faClock} color={"teal"}
-                    name="Longest Session" value={server.longest_session_length} bold
+                    name={t('html.label.longestSession')} value={server.longest_session_length} bold
                 />
                 <Datapoint
                     icon={faClock} color={"teal"}
-                    name="Session Median" value={server.session_median} bold
+                    name={t('html.label.sessionMedian')} value={server.session_median} bold
                 />
                 <br/>
                 <Datapoint
                     icon={faLocationArrow} color={"amber"}
-                    name="Join Address" value={server.join_address}
+                    name={t('html.label.joinAddress')} value={server.join_address}
                 />
                 <br/>
                 <Datapoint
                     icon={faCrosshairs} color="red"
-                    name="Player Kills" value={server.player_kills} bold
+                    name={t('html.label.playerKills')} value={server.player_kills} bold
                 />
                 <Datapoint
                     icon={faCrosshairs} color="green"
-                    name="Mob Kills" value={server.mob_kills} bold
+                    name={t('html.label.mobKills')} value={server.mob_kills} bold
                 />
                 <Datapoint
                     icon={faSkull} color="black"
-                    name="Deaths" value={server.deaths} bold
+                    name={t('html.label.deaths')} value={server.deaths} bold
                 />
                 <hr/>
             </Col>
@@ -79,12 +81,13 @@ const ServerBody = ({i, server}) => {
 }
 
 const ServerAccordion = ({servers}) => {
+    const {t} = useTranslation();
     return (
         <Accordion headers={[
-            <><Fa icon={faServer}/> Server</>,
-            <><Fa icon={faClock}/> Playtime</>,
-            <><Fa icon={faCalendarPlus}/> Registered</>,
-            <><Fa icon={faCalendarCheck}/> Last Seen</>
+            <><Fa icon={faServer}/> {t('html.title.server')}</>,
+            <><Fa icon={faClock}/> {t('html.label.playtime')}</>,
+            <><Fa icon={faCalendarPlus}/> {t('html.label.registered')}</>,
+            <><Fa icon={faCalendarCheck}/> {t('html.label.lastSeen')}</>
         ]} slices={servers.map(server => {
             return {
                 body: <ServerBody server={server}/>,

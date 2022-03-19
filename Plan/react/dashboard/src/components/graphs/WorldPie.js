@@ -6,8 +6,10 @@ import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import {useMetadata} from "../../hooks/metadataHook";
+import {useTranslation} from "react-i18next";
 
 const WorldPie = ({id, worldSeries, gmSeries}) => {
+    const {t} = useTranslation();
     const {gmPieColors} = useMetadata();
 
     useEffect(() => {
@@ -24,13 +26,13 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
         }
 
         const pieSeries = {
-            name: 'World Playtime',
+            name: t('html.title.worldPlaytime'),
             colorByPoint: true,
             data: nightModeEnabled ? reduceColors(worldSeries) : worldSeries
         };
 
         const defaultTitle = '';
-        const defaultSubtitle = 'Click to expand';
+        const defaultSubtitle = t('html.text.clickToExpand');
         Highcharts.setOptions(graphTheming);
         const chart = Highcharts.chart(id, {
             chart: {
