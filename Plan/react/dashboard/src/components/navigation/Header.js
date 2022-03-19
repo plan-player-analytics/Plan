@@ -1,7 +1,7 @@
 import {useMetadata} from "../../hooks/metadataHook";
 import {useAuth} from "../../hooks/authenticationHook";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCog, faDoorOpen, faPalette, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
+import {faBars, faCog, faDoorOpen, faPalette, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
 import DropdownMenu from "react-bootstrap-v5/lib/esm/DropdownMenu";
 import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
 import {useTheme} from "../../hooks/themeHook";
@@ -44,8 +44,8 @@ const Header = ({page, tab}) => {
     return (
         <nav className="nav mt-3 align-items-center justify-content-between container-fluid">
             <div className="d-sm-flex">
-                <h1 className="h3 mb-0 text-gray-800"><i
-                    className="sidebar-toggler fa fa-fw fa-bars"/>{page}
+                <h1 className="h3 mb-0 text-gray-800">
+                    <Fa icon={faBars} className={"sidebar-toggler"}/>{page}
                     {tab ? <>{' '}&middot; {tab}</> : ''}</h1>
             </div>
 

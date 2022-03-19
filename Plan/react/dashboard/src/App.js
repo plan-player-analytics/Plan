@@ -17,8 +17,9 @@ import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
 import {MetadataContextProvider} from "./hooks/metadataHook";
 import {AuthenticationContextProvider} from "./hooks/authenticationHook";
 import {NavigationContextProvider} from "./hooks/navigationHook";
+import ServerPage from "./views/ServerPage";
 
-const PlayerRedirect = () => {
+const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
 }
 
@@ -44,7 +45,7 @@ function App() {
                     <BrowserRouter>
                         <Routes>
                             <Route path="/player/:identifier" element={<PlayerPage/>}>
-                                <Route path="" element={<PlayerRedirect/>}/>
+                                <Route path="" element={<OverviewRedirect/>}/>
                                 <Route path="overview" element={<PlayerOverview/>}/>
                                 <Route path="sessions" element={<PlayerSessions/>}/>
                                 <Route path="pvppve" element={<PlayerPvpPve/>}/>
@@ -55,6 +56,18 @@ function App() {
                                     title: 'No such tab',
                                     icon: faMapSigns
                                 }}/>}/>
+                            </Route>
+                            <Route path="/server/:identifier" element={<ServerPage/>}>
+                                <Route path="" element={<OverviewRedirect/>}/>
+                                <Route path="overview" element={<></>}/>
+                                <Route path="online-activity" element={<></>}/>
+                                <Route path="sessions" element={<></>}/>
+                                <Route path="pvppve" element={<></>}/>
+                                <Route path="playerbase" element={<></>}/>
+                                <Route path="players" element={<></>}/>
+                                <Route path="geolocations" element={<></>}/>
+                                <Route path="performance" element={<></>}/>
+                                <Route path="plugins-overview" element={<></>}/>
                             </Route>
                         </Routes>
                     </BrowserRouter>

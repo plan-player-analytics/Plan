@@ -1291,3 +1291,8 @@ body.sidebar-hidden .navbar-nav {
     height: calc(4.375rem - 2rem);
     margin: auto 1rem;
 }
+
+.collapse-item.nav-button {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

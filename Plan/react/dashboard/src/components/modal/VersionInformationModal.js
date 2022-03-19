@@ -2,24 +2,29 @@ import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {Modal} from "react-bootstrap-v5";
 import {faCheckCircle, faDownload} from "@fortawesome/free-solid-svg-icons";
+import {useTranslation} from "react-i18next";
+
+// TODO translate
 
 const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
+    const {t} = useTranslation();
     return (
         <Modal id="versionModal" aria-labelledby="versionModalLabel" show={open} onHide={toggle}>
             <Modal.Header>
                 <Modal.Title id="versionModalLabel">
-                    <Fa icon={faDownload}/> Version {versionInfo.newVersion} is available!
+                    <Fa icon={faDownload}/> {t('html.modal.version.title')} {versionInfo.newVersion} {t('html.modal.version.available')}
                 </Modal.Title>
                 <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
             </Modal.Header>
             <Modal.Body>
                 <p>You have version {versionInfo.currentVersion}.</p>
-                <p>New release: {versionInfo.newVersion}{versionInfo.isRelease ? '' : " (This is a DEV release)"}</p>
+                <p>New
+                    release: {versionInfo.newVersion}{versionInfo.isRelease ? '' : " (" + t('html.modal.version.dev') + ")"}</p>
                 <a className="btn col-plan" href={versionInfo.changelogUrl} rel="noopener noreferrer" target="_blank">
-                    View Changelog
+                    {t('html.modal.version.changelog')}
                 </a>
                 <a className="btn col-plan" href={versionInfo.downloadUrl} rel="noopener noreferrer" target="_blank">
-                    Download Plan-{versionInfo.newVersion}.jar
+                    {t('html.modal.version.download')} Plan-{versionInfo.newVersion}.jar
                 </a>
             </Modal.Body>
             <Modal.Footer>

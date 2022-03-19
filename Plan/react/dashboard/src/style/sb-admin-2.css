@@ -2609,7 +2609,7 @@ a.text-dark:hover, a.text-dark:focus {
         padding: 1rem;
     }
 
-    .sidebar .nav-item .nav-link i {
+    .sidebar .nav-item .nav-link i, .sidebar .nav-item .nav-link svg {
         font-size: 0.85rem;
         margin-right: 0.25rem;
     }
@@ -2694,7 +2694,7 @@ a.text-dark:hover, a.text-dark:focus {
         display: block;
     }
 
-    .sidebar.toggled .nav-item .nav-link i {
+    .sidebar.toggled .nav-item .nav-link i, .sidebar.toggled .nav-item .nav-link svg {
         margin-right: 0;
     }
 
@@ -2783,7 +2783,7 @@ a.text-dark:hover, a.text-dark:focus {
     color: rgba(255, 255, 255, 0.8);
 }
 
-.sidebar-dark .nav-item .nav-link i {
+.sidebar-dark .nav-item .nav-link i, .sidebar-dark .nav-item .nav-link svg {
     color: rgba(255, 255, 255, 0.3);
 }
 
@@ -2803,7 +2803,7 @@ a.text-dark:hover, a.text-dark:focus {
     color: #fff;
 }
 
-.sidebar-dark .nav-item .nav-link.active i {
+.sidebar-dark .nav-item .nav-link.active i, .sidebar-dark .nav-item .nav-link.active svg {
     color: #fff;
 }
 

@@ -10,6 +10,7 @@ import {fetchPlanVersion} from "../../service/metadataService";
 import {useAuth} from "../../hooks/authenticationHook";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
+import {Collapse} from "react-bootstrap-v5";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -21,14 +22,37 @@ const Divider = () => (
     <hr className="sidebar-divider my-0"/>
 )
 
-const Item = ({href, icon, name}) => {
+const InnerItem = ({href, icon, name, nameShort}) => {
     const {setCurrentTab} = useNavigation();
+
+    if (href.startsWith('/')) {
+        return (
+            <a href={href} className="collapse-item nav-button">
+                <Fa icon={icon}/> <span>{nameShort ? nameShort : name}</span>
+            </a>
+        )
+    }
+
+    return <NavLink to={href} className={({isActive}) => {
+        if (isActive) setCurrentTab(name);
+        return isActive ? "collapse-item nav-button active" : "collapse-item nav-button"
+    }}>
+        <Fa icon={icon}/> <span>{nameShort ? nameShort : name}</span>
+    </NavLink>
+}
+
+const Item = ({href, icon, name, nameShort, inner}) => {
+    const {setCurrentTab} = useNavigation();
+
+    if (inner) {
+        return (<InnerItem href={href} icon={icon} name={name} nameShort={nameShort}/>)
+    }
 
     if (href.startsWith('/')) {
         return (
             <li className={"nav-item nav-button"}>
                 <a href={href} className="nav-link">
-                    <Fa icon={icon}/> <span>{name}</span>
+                    <Fa icon={icon}/> <span>{nameShort ? nameShort : name}</span>
                 </a>
             </li>
         )
@@ -37,7 +61,7 @@ const Item = ({href, icon, name}) => {
     return (
         <li className={"nav-item nav-button"}>
             <NavLink to={href} className={({isActive}) => {
-                if (isActive) setCurrentTab(name);
+                if (isActive) setCurrentTab(nameShort ? nameShort : name);
                 return isActive ? "nav-link active" : "nav-link"
             }}>
                 <Fa icon={icon}/> <span>{name}</span>
@@ -100,9 +124,75 @@ const FooterButtons = () => {
     )
 }
 
+const SidebarCollapse = ({item, open, setOpen}) => {
+    const toggle = event => {
+        event.preventDefault();
+        setOpen(!open);
+    }
+
+    return (
+        <li className="nav-item">
+            <a className="nav-link"
+               onClick={toggle}
+               aria-controls={item.name + "-collapse"}
+               aria-expanded={open}
+               data-bs-toggle="collapse"
+               href="#"
+            >
+                <Fa icon={item.icon}/> <span>{item.name}</span>
+            </a>
+            <Collapse in={open}>
+                <div id={item.name + "-collapse"}>
+                    <div className="bg-white py-2 collapse-inner rounded">
+                        {item.contents.map((content, i) =>
+                            <Item key={i}
+                                  inner
+                                  active={false}
+                                  href={content.href}
+                                  icon={content.icon}
+                                  name={content.name}
+                                  nameShort={content.nameShort}
+                            />)}
+                    </div>
+                </div>
+            </Collapse>
+        </li>
+    )
+}
+
+const renderItem = (item, i, openCollapse, setOpenCollapse) => {
+    if (item.contents) {
+        return <SidebarCollapse key={i}
+                                item={item}
+                                open={openCollapse === item.name}
+                                setOpen={() => setOpenCollapse(item.name)}/>
+    }
+
+    if (item.href) {
+        return <Item key={i}
+                     active={false}
+                     href={item.href}
+                     icon={item.icon}
+                     name={item.name}
+                     nameShort={item.nameShort}
+        />
+    }
+
+    if (item.name) {
+        return <div className="sidebar-heading">{item.name}</div>
+    }
+
+    return <hr className="sidebar-divider"/>
+}
+
 const Sidebar = ({items, showBackButton}) => {
     const {t} = useTranslation();
     const {color} = useTheme();
+
+    const [openCollapse, setOpenCollapse] = useState(undefined);
+    const toggleCollapse = collapse => {
+        setOpenCollapse(openCollapse === collapse ? undefined : collapse);
+    }
 
     return (
         <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
@@ -112,13 +202,7 @@ const Sidebar = ({items, showBackButton}) => {
                 <Item active={false} href="/" icon={faArrowLeft} name={t('html.sidebar.toMainPage')}/>
                 <Divider/>
             </> : ''}
-            {items.map((item, i) =>
-                <Item key={i}
-                      active={false}
-                      href={item.href}
-                      icon={item.icon}
-                      name={item.name}
-                />)}
+            {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse))}
             <Divider/>
             <FooterButtons/>
         </ul>

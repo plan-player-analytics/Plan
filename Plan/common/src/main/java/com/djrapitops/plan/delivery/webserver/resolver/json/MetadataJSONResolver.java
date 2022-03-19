@@ -20,8 +20,10 @@ import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -35,12 +37,14 @@ public class MetadataJSONResolver implements NoAuthResolver {
 
     private final PlanConfig config;
     private final Theme theme;
+    private final ServerInfo serverInfo;
 
     @Inject
-    public MetadataJSONResolver(PlanConfig config, Theme theme) {
+    public MetadataJSONResolver(PlanConfig config, Theme theme, ServerInfo serverInfo) {
         this.config = config;
         // Dagger inject constructor
         this.theme = theme;
+        this.serverInfo = serverInfo;
     }
 
     @Override
@@ -55,6 +59,9 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("defaultTheme", config.get(DisplaySettings.THEME))
                         .put("gmPieColors", theme.getPieColors(ThemeVal.GRAPH_GM_PIE))
                         .put("playerHeadImageUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL))
+                        .put("isProxy", serverInfo.getServer().isProxy())
+                        .put("serverName", serverInfo.getServer().getIdentifiableName())
+                        .put("networkName", serverInfo.getServer().isProxy() ? config.get(ProxySettings.NETWORK_NAME) : null)
                         .build())
                 .build();
     }
