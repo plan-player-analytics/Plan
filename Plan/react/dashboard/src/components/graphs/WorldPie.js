@@ -76,7 +76,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
                 })
             }
         });
-    }, [worldSeries, gmSeries, graphTheming, nightModeEnabled, id, gmPieColors]);
+    }, [worldSeries, gmSeries, graphTheming, nightModeEnabled, id, gmPieColors, t]);
 
     return (<div className="chart-pie" id={id}/>)
 }

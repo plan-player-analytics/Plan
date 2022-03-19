@@ -44,7 +44,7 @@ const PunchCard = ({series}) => {
             },
             series: [punchCard]
         })
-    }, [series, graphTheming])
+    }, [series, graphTheming, t])
 
     return (
         <div className="chart-area" id="punchcard">
