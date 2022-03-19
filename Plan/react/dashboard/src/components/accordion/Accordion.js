@@ -45,7 +45,6 @@ const Accordion = ({headers, slices, open}) => {
     const {nightModeEnabled} = useTheme();
 
     const toggleSlice = (i) => {
-        console.log('click', i);
         setOpenSlice(openSlice === i ? -1 : i);
     }
 
