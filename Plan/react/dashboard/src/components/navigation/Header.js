@@ -7,6 +7,26 @@ import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
 import {useTheme} from "../../hooks/themeHook";
 import {Dropdown} from "react-bootstrap-v5";
 import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
+import {localeService} from "../../service/localeService";
+
+const LanguageSelector = () => {
+    const languages = localeService.getLanguages();
+
+    const onSelect = ({target}) => {
+        localeService.loadLocale(target.value)
+    }
+
+    return (
+        <select onChange={onSelect}
+                aria-label="Language selector"
+                className="form-select form-select-sm"
+                id="langSelector"
+                defaultValue={localeService.clientLocale}>
+            {languages.map((lang, i) =>
+                <option key={i} value={lang.name}>{lang.displayName}</option>)}
+        </select>
+    )
+}
 
 const Header = ({page, tab}) => {
     const {requiresAuth, user} = useAuth();
@@ -33,7 +53,7 @@ const Header = ({page, tab}) => {
             </div>
 
             <div className="ms-auto">
-                <select aria-label="Language selector" className="form-select form-select-sm" id="langSelector"/>
+                <LanguageSelector/>
             </div>
 
             <div className="topbar-divider"/>

@@ -21,3 +21,8 @@ export const fetchPlanVersion = async () => {
     const url = '/v1/version';
     return fetch(url);
 }
+
+export const fetchAvailableLocales = async () => {
+    const url = '/v1/locale';
+    return fetch(url);
+}
