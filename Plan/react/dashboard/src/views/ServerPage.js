@@ -106,7 +106,7 @@ const ServerPage = () => {
         </>
     }
 
-    const displayedServerName = !isProxy && serverName.startsWith('Server') ? "Plan" : serverName;
+    const displayedServerName = !isProxy && serverName && serverName.startsWith('Server') ? "Plan" : serverName;
     return (
         <>
             <NightModeCss/>
