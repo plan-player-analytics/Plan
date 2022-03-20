@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
 import {faArrowLeft, faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
-import {NavLink} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
 import VersionInformationModal from "../modal/VersionInformationModal";
@@ -23,8 +23,6 @@ const Divider = () => (
 )
 
 const InnerItem = ({href, icon, name, nameShort}) => {
-    const {setCurrentTab} = useNavigation();
-
     if (href.startsWith('/')) {
         return (
             <a href={href} className="collapse-item nav-button">
@@ -34,7 +32,6 @@ const InnerItem = ({href, icon, name, nameShort}) => {
     }
 
     return <NavLink to={href} className={({isActive}) => {
-        if (isActive) setCurrentTab(name);
         return isActive ? "collapse-item nav-button active" : "collapse-item nav-button"
     }}>
         <Fa icon={icon}/> <span>{nameShort ? nameShort : name}</span>
@@ -43,16 +40,22 @@ const InnerItem = ({href, icon, name, nameShort}) => {
 
 const Item = ({href, icon, name, nameShort, inner}) => {
     const {setCurrentTab} = useNavigation();
+    const {pathname} = useLocation();
+    const {t} = useTranslation();
+
+    useEffect(() => {
+        if (pathname.includes(href)) setCurrentTab(name);
+    }, [pathname, href])
 
     if (inner) {
-        return (<InnerItem href={href} icon={icon} name={name} nameShort={nameShort}/>)
+        return (<InnerItem href={href} icon={icon} name={t(name)} nameShort={t(nameShort)}/>)
     }
 
     if (href.startsWith('/')) {
         return (
             <li className={"nav-item nav-button"}>
                 <a href={href} className="nav-link">
-                    <Fa icon={icon}/> <span>{nameShort ? nameShort : name}</span>
+                    <Fa icon={icon}/> <span>{t(nameShort ? nameShort : name)}</span>
                 </a>
             </li>
         )
@@ -61,10 +64,9 @@ const Item = ({href, icon, name, nameShort, inner}) => {
     return (
         <li className={"nav-item nav-button"}>
             <NavLink to={href} className={({isActive}) => {
-                if (isActive) setCurrentTab(nameShort ? nameShort : name);
                 return isActive ? "nav-link active" : "nav-link"
             }}>
-                <Fa icon={icon}/> <span>{name}</span>
+                <Fa icon={icon}/> <span>{t(name)}</span>
             </NavLink>
         </li>
     );
@@ -125,6 +127,7 @@ const FooterButtons = () => {
 }
 
 const SidebarCollapse = ({item, open, setOpen}) => {
+    const {t} = useTranslation();
     const toggle = event => {
         event.preventDefault();
         setOpen(!open);
@@ -139,7 +142,7 @@ const SidebarCollapse = ({item, open, setOpen}) => {
                data-bs-toggle="collapse"
                href="#"
             >
-                <Fa icon={item.icon}/> <span>{item.name}</span>
+                <Fa icon={item.icon}/> <span>{t(item.name)}</span>
             </a>
             <Collapse in={open}>
                 <div id={item.name + "-collapse"}>
@@ -164,8 +167,8 @@ const renderItem = (item, i, openCollapse, setOpenCollapse) => {
     if (item.contents) {
         return <SidebarCollapse key={i}
                                 item={item}
-                                open={openCollapse === item.name}
-                                setOpen={() => setOpenCollapse(item.name)}/>
+                                open={openCollapse && openCollapse === i}
+                                setOpen={() => setOpenCollapse(i)}/>
     }
 
     if (item.href) {

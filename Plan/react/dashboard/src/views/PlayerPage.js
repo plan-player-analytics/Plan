@@ -39,10 +39,10 @@ const PlayerPage = () => {
         if (!player) return;
 
         const items = [
-            {name: t('html.title.playerOverview'), icon: faInfoCircle, href: "overview"},
-            {name: t('html.sidebar.sessions'), icon: faCalendar, href: "sessions"},
-            {name: t('html.sidebar.pvpPve'), icon: faCampground, href: "pvppve"},
-            {name: t('html.sidebar.servers'), icon: faNetworkWired, href: "servers"}
+            {name: 'html.title.playerOverview', icon: faInfoCircle, href: "overview"},
+            {name: 'html.sidebar.sessions', icon: faCalendar, href: "sessions"},
+            {name: 'html.sidebar.pvpPve', icon: faCampground, href: "pvppve"},
+            {name: 'html.sidebar.servers', icon: faNetworkWired, href: "servers"}
         ]
 
         player.extensions.map(extension => {

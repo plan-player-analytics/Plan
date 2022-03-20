@@ -23,7 +23,7 @@ const TabButtons = ({tabs, selectedTab}) => {
                     href={tab.href}
                     icon={tab.icon}
                     color={tab.color}
-                    active={tab.name === selectedTab}
+                    active={tab.href === selectedTab}
                 />
             ))}
         </ul>
@@ -32,14 +32,14 @@ const TabButtons = ({tabs, selectedTab}) => {
 
 const CardTabs = ({tabs}) => {
     const {hash} = useLocation();
-    const firstTab = tabs ? tabs[0].name : undefined;
+    const firstTab = tabs ? tabs[0].href : undefined;
     const [selectedTab, setSelectedTab] = useState(firstTab);
 
     useEffect(() => {
-        setSelectedTab(hash && tabs ? tabs.find(t => t.href === hash.substring(1)).name : firstTab)
+        setSelectedTab(hash && tabs ? tabs.find(t => t.href === hash.substring(1)).href : firstTab)
     }, [hash])
 
-    const tabContent = tabs.find(t => t.name === selectedTab).element;
+    const tabContent = tabs.find(t => t.href === selectedTab).element;
     return (
         <>
             <TabButtons tabs={tabs} selectedTab={selectedTab}/>

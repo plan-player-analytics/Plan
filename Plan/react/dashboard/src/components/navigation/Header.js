@@ -46,7 +46,7 @@ const Header = ({page, tab}) => {
             <div className="d-sm-flex">
                 <h1 className="h3 mb-0 text-gray-800">
                     <Fa icon={faBars} className={"sidebar-toggler"}/>{page}
-                    {tab ? <>{' '}&middot; {tab}</> : ''}</h1>
+                    {tab ? <>{' '}&middot; {t(tab)}</> : ''}</h1>
             </div>
 
             <span className="topbar-divider"/>

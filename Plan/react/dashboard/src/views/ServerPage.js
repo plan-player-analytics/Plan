@@ -33,44 +33,44 @@ const ServerPage = () => {
 
     useEffect(() => {
         const items = [
-            {name: t('html.title.serverOverview'), icon: faInfoCircle, href: "overview"},
+            {name: 'html.title.serverOverview', icon: faInfoCircle, href: "overview"},
             {},
-            {name: t('html.sidebar.information')},
+            {name: 'html.sidebar.information'},
             {
-                name: t('html.title.onlineActivity'),
+                name: 'html.title.onlineActivity',
                 icon: faChartArea,
                 contents: [
                     {
-                        nameShort: t('html.sidebar.overview'),
-                        name: t('html.title.playersOnlineOverview'),
+                        nameShort: 'html.sidebar.overview',
+                        name: 'html.title.playersOnlineOverview',
                         icon: faChartArea,
                         href: "online-activity"
                     },
-                    {name: t('html.sidebar.sessions'), icon: faCalendarAlt, href: "sessions"},
-                    {name: t('html.sidebar.pvpPve'), icon: faCampground, href: "pvppve"}
+                    {name: 'html.sidebar.sessions', icon: faCalendarAlt, href: "sessions"},
+                    {name: 'html.sidebar.pvpPve', icon: faCampground, href: "pvppve"}
                 ]
             },
             {
-                name: t('html.sidebar.playerbase'),
+                name: 'html.sidebar.playerbase',
                 icon: faUsers,
                 contents: [
                     {
-                        nameShort: t('html.sidebar.overview'),
-                        name: t('html.sidebar.playerbaseOverview'),
+                        nameShort: 'html.sidebar.overview',
+                        name: 'html.sidebar.playerbaseOverview',
                         icon: faChartLine,
                         href: "playerbase"
                     },
-                    {name: t('html.sidebar.playerList'), icon: faUsers, href: "players"},
-                    {name: t('html.sidebar.geolocations'), icon: faGlobe, href: "geolocations"},
+                    {name: 'html.sidebar.playerList', icon: faUsers, href: "players"},
+                    {name: 'html.sidebar.geolocations', icon: faGlobe, href: "geolocations"},
                 ]
             },
-            {name: t('html.sidebar.performance'), icon: faCogs, href: "performance"},
+            {name: 'html.sidebar.performance', icon: faCogs, href: "performance"},
             {},
-            {name: t('html.sidebar.plugins')},
-            {name: t('html.side.pluginsOverview'), icon: faCubes, href: "plugins-overview"},
+            {name: 'html.sidebar.plugins'},
+            {name: 'html.side.pluginsOverview', icon: faCubes, href: "plugins-overview"},
             {},
-            {name: t('html.sidebar.links')},
-            {name: t('html.sidebar.query'), icon: faSearch, href: "/query"},
+            {name: 'html.sidebar.links'},
+            {name: 'html.sidebar.query', icon: faSearch, href: "/query"},
         ]
 
         // player.extensions.map(extension => {
