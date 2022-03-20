@@ -2791,7 +2791,12 @@ a.text-dark:hover, a.text-dark:focus {
     color: #fff;
 }
 
-.sidebar-dark .nav-item .nav-link:active i, .sidebar-dark .nav-item .nav-link:focus i, .sidebar-dark .nav-item .nav-link:hover i {
+.sidebar-dark .nav-item .nav-link:active i,
+.sidebar-dark .nav-item .nav-link:focus i,
+.sidebar-dark .nav-item .nav-link:hover i,
+.sidebar-dark .nav-item .nav-link:active svg,
+.sidebar-dark .nav-item .nav-link:focus svg,
+.sidebar-dark .nav-item .nav-link:hover svg {
     color: #fff;
 }
 

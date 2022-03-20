@@ -23,3 +23,27 @@ export const fetchPlayersOnlineGraph = async (identifier) => {
     const url = `/v1/graph?type=playersOnline&server=${identifier}&timestamp=${timestamp}`;
     return fetch(url);
 }
+
+export const fetchDayByDayGraph = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=dayByDay&server=${identifier}&timestamp=${timestamp}`;
+    return fetch(url);
+}
+
+export const fetchHourByHourGraph = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=hourByHour&server=${identifier}&timestamp=${timestamp}`;
+    return fetch(url);
+}
+
+export const fetchServerCalendarGraph = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=serverCalendar&server=${identifier}&timestamp=${timestamp}`;
+    return fetch(url);
+}
+
+export const fetchPunchCardGraph = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=punchCard&server=${identifier}&timestamp=${timestamp}`;
+    return fetch(url);
+}

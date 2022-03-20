@@ -20,6 +20,7 @@ import {NavigationContextProvider} from "./hooks/navigationHook";
 import ServerPage from "./views/ServerPage";
 import ServerOverview from "./views/ServerOverview";
 import MainPageRedirect from "./components/navigation/MainPageRedirect";
+import ServerOnlineActivity from "./views/ServerOnlineActivity";
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -63,7 +64,7 @@ function App() {
                             <Route path="/server/:identifier" element={<ServerPage/>}>
                                 <Route path="" element={<OverviewRedirect/>}/>
                                 <Route path="overview" element={<ServerOverview/>}/>
-                                <Route path="online-activity" element={<></>}/>
+                                <Route path="online-activity" element={<ServerOnlineActivity/>}/>
                                 <Route path="sessions" element={<></>}/>
                                 <Route path="pvppve" element={<></>}/>
                                 <Route path="playerbase" element={<></>}/>

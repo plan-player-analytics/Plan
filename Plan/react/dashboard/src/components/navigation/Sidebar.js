@@ -179,10 +179,10 @@ const renderItem = (item, i, openCollapse, setOpenCollapse) => {
     }
 
     if (item.name) {
-        return <div className="sidebar-heading">{item.name}</div>
+        return <div key={i} className="sidebar-heading">{item.name}</div>
     }
 
-    return <hr className="sidebar-divider"/>
+    return <hr key={i} className="sidebar-divider"/>
 }
 
 const Sidebar = ({items, showBackButton}) => {

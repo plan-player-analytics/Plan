@@ -200,7 +200,7 @@ const ServerOverview = () => {
     }, [loadData])
 
     return (
-        <section className="player_overview">
+        <section className="server_overview">
             <Row>
                 <Col lg={9}>
                     <OnlineActivityCard/>
