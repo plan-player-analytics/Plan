@@ -37,7 +37,7 @@ const CardTabs = ({tabs}) => {
 
     useEffect(() => {
         setSelectedTab(hash && tabs ? tabs.find(t => t.href === hash.substring(1)).href : firstTab)
-    }, [hash])
+    }, [hash, tabs, firstTab])
 
     const tabContent = tabs.find(t => t.href === selectedTab).element;
     return (

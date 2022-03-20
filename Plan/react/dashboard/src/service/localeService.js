@@ -36,51 +36,41 @@ export const localeService = {
      * Initializes the locale system. Gets the default & available languages from `/v1/locale`, and initializes i18next.
      */
     init: async function () {
-        const json = await fetchAvailableLocales();
+        try {
+            const json = await fetchAvailableLocales();
 
-        this.defaultLanguage = json.defaultLanguage;
-        this.availableLanguages = json.languages;
+            this.defaultLanguage = json.defaultLanguage;
+            this.availableLanguages = json.languages;
 
-        this.clientLocale = window.localStorage.getItem("locale");
-        if (!this.clientLocale) {
-            this.clientLocale = this.defaultLanguage;
+            this.clientLocale = window.localStorage.getItem("locale");
+            if (!this.clientLocale) {
+                this.clientLocale = this.defaultLanguage;
+            }
+
+            await i18next
+                .use(I18NextChainedBackend)
+                .use(initReactI18next)
+                .init({
+                    lng: this.clientLocale,
+                    fallbackLng: false,
+                    supportedLngs: Object.keys(this.availableLanguages),
+                    backend: {
+                        backends: [
+                            I18NextLocalStorageBackend,
+                            I18NextHttpBackend
+                        ],
+                        backendOptions: [{
+                            expirationTime: 7 * 24 * 60 * 60 * 1000 // 7 days
+                        }, {
+                            loadPath: '/v1/locale/{{lng}}'
+                        }]
+                    },
+                }, () => {/* No need to initialize anything */
+                });
+        } catch (e) {
+            console.error(e);
         }
-
-        await i18next
-            .use(I18NextChainedBackend)
-            .use(initReactI18next)
-            .init({
-                lng: this.clientLocale,
-                fallbackLng: false,
-                supportedLngs: Object.keys(this.availableLanguages),
-                backend: {
-                    backends: [
-                        I18NextLocalStorageBackend,
-                        I18NextHttpBackend
-                    ],
-                    backendOptions: [{
-                        expirationTime: 7 * 24 * 60 * 60 * 1000 // 7 days
-                    }, {
-                        loadPath: '/v1/locale/{{lng}}'
-                    }]
-                },
-            }, () => {
-                // this.loadSelector();
-                // this.initLoci18next();
-            });
     },
-
-    // initLoci18next: function () {
-    //     this.localize = locI18next.init(i18next, {
-    //         selectorAttr: 'data-i18n', // selector for translating elements
-    //         targetAttr: 'i18n-target',
-    //         optionsAttr: 'i18n-options',
-    //         useOptionsAttr: false,
-    //         parseDefaultValueFromContent: false // show key as fallback if locale fails to load
-    //     });
-    //     this.localize("title");
-    //     this.localize("body");
-    // },
 
     /**
      * Loads a locale and translates the page.
@@ -89,7 +79,7 @@ export const localeService = {
      * @throws Error if an invalid langCode is given
      * @see /v1/language endpoint for available language codes
      */
-    loadLocale: function (langCode) {
+    loadLocale: async function (langCode) {
         if (i18next.language === langCode) {
             return;
         }
@@ -98,10 +88,7 @@ export const localeService = {
         }
 
         window.localStorage.setItem("locale", langCode);
-        i18next.changeLanguage(langCode, () => {
-            // this.localize("title");
-            // this.localize("body");
-        })
+        await i18next.changeLanguage(langCode)
     },
 
     getLanguages: function () {
@@ -116,30 +103,5 @@ export const localeService = {
             .map(entry => {
                 return {name: entry[0], displayName: entry[1]}
             });
-    },
-
-    loadSelector: function () {
-        const selector = document.getElementById("langSelector");
-
-        let languages = Object.fromEntries(Object.entries(this.availableLanguages).sort());
-        if ('CUSTOM' in languages) {
-            // Move "Custom" to first in list
-            delete languages["CUSTOM"]
-            languages = Object.assign({"CUSTOM": "Custom"}, languages);
-        }
-
-        for (let lang in languages) {
-            let option = document.createElement("option");
-            option.value = lang;
-            option.innerText = languages[lang];
-            if (this.clientLocale === lang) {
-                option.setAttribute("selected", "")
-            }
-            selector.append(option);
-        }
-
-        selector.addEventListener('change', event => {
-            this.loadLocale(event.target.value);
-        })
     }
 }

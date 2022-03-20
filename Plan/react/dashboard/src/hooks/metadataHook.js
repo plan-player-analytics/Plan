@@ -7,7 +7,11 @@ export const MetadataContextProvider = ({children}) => {
     const [metadata, setMetadata] = useState({});
 
     const updateMetadata = useCallback(async () => {
-        setMetadata(await fetchPlanMetadata());
+        try {
+            setMetadata(await fetchPlanMetadata());
+        } catch (e) {
+            console.error(e);
+        }
     }, [])
 
     const getPlayerHeadImageUrl = (name, uuid) => {

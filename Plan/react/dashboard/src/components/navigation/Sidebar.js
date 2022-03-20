@@ -45,7 +45,7 @@ const Item = ({href, icon, name, nameShort, inner}) => {
 
     useEffect(() => {
         if (pathname.includes(href)) setCurrentTab(name);
-    }, [pathname, href])
+    }, [pathname, href, setCurrentTab, name])
 
     if (inner) {
         return (<InnerItem href={href} icon={icon} name={t(name)} nameShort={t(nameShort)}/>)
@@ -135,15 +135,14 @@ const SidebarCollapse = ({item, open, setOpen}) => {
 
     return (
         <li className="nav-item">
-            <a className="nav-link"
-               onClick={toggle}
-               aria-controls={item.name + "-collapse"}
-               aria-expanded={open}
-               data-bs-toggle="collapse"
-               href="#"
+            <button className="nav-link"
+                    onClick={toggle}
+                    aria-controls={item.name + "-collapse"}
+                    aria-expanded={open}
+                    data-bs-toggle="collapse"
             >
                 <Fa icon={item.icon}/> <span>{t(item.name)}</span>
-            </a>
+            </button>
             <Collapse in={open}>
                 <div id={item.name + "-collapse"}>
                     <div className="bg-white py-2 collapse-inner rounded">

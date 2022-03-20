@@ -5,11 +5,12 @@ import ColorSelectorModal from "../components/modal/ColorSelectorModal";
 import {NightModeCss} from "../hooks/themeHook";
 import {fetchPlayer} from "../service/playerService";
 import ErrorView from "./ErrorView";
-import {faCalendar, faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
+import {faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../hooks/authenticationHook";
 import Header from "../components/navigation/Header";
 import {useNavigation} from "../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
+import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 
 
 const PlayerPage = () => {
@@ -40,7 +41,7 @@ const PlayerPage = () => {
 
         const items = [
             {name: 'html.title.playerOverview', icon: faInfoCircle, href: "overview"},
-            {name: 'html.sidebar.sessions', icon: faCalendar, href: "sessions"},
+            {name: 'html.sidebar.sessions', icon: faCalendarCheck, href: "sessions"},
             {name: 'html.sidebar.pvpPve', icon: faCampground, href: "pvppve"},
             {name: 'html.sidebar.servers', icon: faNetworkWired, href: "servers"}
         ]
