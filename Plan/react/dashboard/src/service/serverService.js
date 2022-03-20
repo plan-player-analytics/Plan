@@ -8,7 +8,7 @@ async function fetch(url) {
 
         if (response.status === 200) return response.data;
     } catch (e) {
-        throw RequestError({message: e.message, url, data: e.response.data})
+        throw new RequestError({message: e.message, url, data: e.response.data})
     }
 }
 

@@ -11,11 +11,11 @@ export const fetchPlayer = async (uuid) => {
 
         if (response.status === 200) return response.data;
     } catch (e) {
-        if (e.response.status === 400) throw RequestError({
+        if (e.response.status === 400) throw new RequestError({
             message: 'Player not found: ' + uuid + ', try another player',
             title: '404 Player not found',
             icon: faMapSigns
         });
-        throw RequestError({message: e.message, url, data: e.response.data})
+        throw new RequestError({message: e.message, url, data: e.response.data})
     }
 }
