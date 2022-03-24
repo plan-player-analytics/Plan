@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects.playertable;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -27,15 +28,14 @@ import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.transactions.temporary.CreateTemporaryQueryUuidsTableTransaction;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -71,7 +71,20 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
     @Override
     public List<TablePlayer> executeQuery(SQLDB db) {
-        String uuidsInSet = " IN ('" + new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+        CreateTemporaryQueryUuidsTableTransaction createTempTables = null;
+        try {
+            createTempTables = new CreateTemporaryQueryUuidsTableTransaction(playerUUIDs);
+            db.executeTransaction(createTempTables).get(); // Wait for transaction to execute
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new DBOpException("Failed to create temporary table for query", e);
+        }
+
+        Optional<String> tableName = createTempTables.getTableName();
+        if (!tableName.isPresent()) return Collections.emptyList();
+
+        String uuidsInSet = " IN (SELECT uuid FROM " + tableName.get() + ")";
 
         String selectLatestGeolocations = SELECT +
                 "a." + GeoInfoTable.USER_ID + ',' +
