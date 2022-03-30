@@ -11,7 +11,7 @@ dependencies {
     implementation 'com.djrapitops:Extension-DiscordSRV:1.18.0-R0.4'
     implementation 'com.djrapitops:Extension-DKBans:2.1.2-R0.3'
     implementation 'com.djrapitops:Extension-DKCoins:3.0.5-R0.1'
-    implementation 'com.djrapitops:Extension-EssentialsX:2.15.0-R0.6'
+    implementation 'com.djrapitops:Extension-EssentialsX:2.15.0-R1.0'
     implementation 'com.djrapitops:Extension-Factions:2.14.0-R0.1'
     implementation 'com.djrapitops:Extension-FactionsUUID:1.6.9.5-U0.5.25-R0.1'
     implementation 'com.djrapitops:Extension-FastLogin:R0.1'
