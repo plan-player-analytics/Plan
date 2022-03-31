@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import React, {useCallback, useEffect, useState} from "react";
-import {fetchPunchCardGraph, fetchServerOverview} from "../service/serverService";
+import {fetchPunchCardGraph} from "../service/serverService";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import CardTabs from "../components/CardTabs";
 import {useTranslation} from "react-i18next";
@@ -57,14 +57,14 @@ const GraphsTabbedCard = () => {
 }
 
 const ServerOnlineActivity = () => {
-    const {identifier} = useParams();
-    const [data, setData] = useState(undefined);
+    // const {identifier} = useParams();
+    // const [data, setData] = useState(undefined);
 
-    const loadData = useCallback(async () => setData(await fetchServerOverview(identifier)), [identifier]);
+    // const loadData = useCallback(async () => setData(await fetchServerOverview(identifier)), [identifier]);
 
-    useEffect(() => {
-        loadData();
-    }, [loadData])
+    // useEffect(() => {
+    //     loadData();
+    // }, [loadData])
 
     return (
         <section className="server_online_activity_overview">

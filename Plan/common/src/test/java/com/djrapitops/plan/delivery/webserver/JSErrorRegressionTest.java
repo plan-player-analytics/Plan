@@ -138,20 +138,23 @@ class JSErrorRegressionTest {
 
     private DynamicTest testAddress(String address, LangCode language, ChromeDriver driver) {
         return DynamicTest.dynamicTest("Page should not log anything on js console (" + language.name() + "): " + address, () -> {
+            Locale locale = planSystem.getLocaleSystem().getLocale();
             try {
-                planSystem.getLocaleSystem().getLocale().loadFromAnotherLocale(Locale.forLangCode(language, planSystem.getPlanFiles()));
+                locale.loadFromAnotherLocale(Locale.forLangCode(language, planSystem.getPlanFiles()));
+
+                driver.get(address);
+                Thread.sleep(250);
+
+                List<LogEntry> logs = new ArrayList<>();
+                logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
+                logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
+
+                assertNoLogs("", logs);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
+            } finally {
+                locale.clear(); // Reset locale after test
             }
-
-            driver.get(address);
-            Thread.sleep(250);
-
-            List<LogEntry> logs = new ArrayList<>();
-            logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
-            logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
-
-            assertNoLogs("", logs);
         });
     }
 
