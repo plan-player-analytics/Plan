@@ -451,14 +451,14 @@ function loadJoinAddressPie(json, error) {
 }
 
 function loadperformanceserverOptions() {
-    // const refreshElement = document.querySelector(`#performance .refresh-element`);
-    // refreshElement.querySelector('i').addEventListener('click', () => {
-    //     if (refreshElement.querySelector('.refresh-notice').innerHTML.length) {
-    //         return;
-    //     }
-    //     onSelectperformanceservers();
-    //     refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
-    // });
+    const refreshElement = document.querySelector(`#performance .refresh-element`);
+    refreshElement.querySelector('i').addEventListener('click', () => {
+        if (refreshElement.querySelector('.refresh-notice').innerHTML.length) {
+            return;
+        }
+        onSelectperformanceservers();
+        refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
+    });
     const selector = document.getElementById('performance-server-selector');
     jsonRequest('./v1/network/serverOptions', function (json, error) {
         if (json) {
@@ -517,9 +517,9 @@ async function onSelectperformanceservers() {
             colors: loadedJson.colors
         }, undefined);
     }
-    // const refreshElement = document.querySelector(`#performance .refresh-element`);
-    // refreshElement.querySelector('.refresh-time').innerText = loadedJson.timestamp_f;
-    // refreshElement.querySelector('.refresh-notice').innerHTML = "";
+    const refreshElement = document.querySelector(`#performance .refresh-element`);
+    refreshElement.querySelector('.refresh-time').innerText = loadedJson.timestamp_f;
+    refreshElement.querySelector('.refresh-notice').innerHTML = "";
 }
 
 async function loadPerformanceGraph(json, error) {

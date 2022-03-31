@@ -1285,12 +1285,3 @@ body.sidebar-hidden .navbar-nav {
     height: calc(4.375rem - 2rem);
     margin: auto 1rem;
 }
-
-.tab {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-}
-
-#content {
-    --bs-gutter-x: 0
-}

@@ -68,52 +68,25 @@
     <div class="d-flex flex-column" id="content-wrapper">
         <div class="sidebar-close-modal hidden"></div>
 
-        <!-- Top navbar -->
-        <nav class="nav my-3 align-items-center justify-content-between container-fluid">
-            <div class="d-sm-flex">
-                <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${title}</h1>
-            </div>
-
-            <div class="ms-auto">
-                <select aria-label="Language selector" class="form-select form-select-sm" id="langSelector">
-                </select>
-            </div>
-
-
-            <div class="topbar-divider"></div>
-
-            <div class="nav-item dropdown">
-                <a aria-expanded="false" class="nav-link px-0" data-bs-toggle="dropdown" href="#">
-                    <span class="me-2">Username </span>
-                    <img alt="" class="rounded-circle" src="https://cravatar.eu/helmavatar/Username/64"
-                         style="height: 2rem">
-                </a>
-                <ul class="dropdown-menu">
-                    <!--                    <li><a class="dropdown-item" href="#"><i class="fas fa-users-cog"></i> Web users</a></li>-->
-                    <!--                    <li><a class="dropdown-item" href="#"><i class="fas fa-code"></i> API access</a></li>-->
-                    <!--                    <li>-->
-                    <!--                        <hr class="dropdown-divider">-->
-                    <!--                    </li>-->
-                    <li><a class="dropdown-item" data-bs-target="#colorChooserModal" data-bs-toggle="modal"><i
-                            class="fa fa-palette"></i> Select a theme</a></li>
-                    <li><a class="dropdown-item" href="./auth/logout"><i class="fa fa-fw fa-door-open"></i> Sign out</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
         <!-- Main Content -->
         <div id="content" style="display: flex;">
             <div class="tab" id="information" style="width: 100%;">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-lg-11">
-                        <div class="card shadow mb-4">
-                            <div class="card-body" id="data_player_info">
-                                ${paragraph}
+                <div class="container-fluid mt-4">
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800"><i class="sidebar-toggler fa fa-fw fa-bars"></i>${title}</h1>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-lg-11">
+                            <div class="card shadow mb-4">
+                                <div class="card-body" id="data_player_info">
+                                    ${paragraph}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> <!-- /.container-fluid -->
             </div> <!-- End of tab -->
         </div> <!-- End of Main Content -->
     </div>
@@ -262,26 +235,11 @@
         integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k="
         crossorigin="anonymous"></script>
 
-<!-- i18next framework -->
-<script crossorigin="anonymous" integrity="sha256-X/Ihrv+jY1JYWnUyu1yTyAfXp2Cyl3hCGmWP8VmVd04="
-        src="https://cdn.jsdelivr.net/npm/i18next@21.3.2/i18next.min.js"></script>
-<script crossorigin="anonymous" integrity="sha256-p0+nr2VEC2jfCdnWPiXpRBMhZi5zkQQ9ED+1zdT8y3I="
-        src="https://cdn.jsdelivr.net/npm/i18next-chained-backend@3.0.2/i18nextChainedBackend.min.js"></script>
-<script crossorigin="anonymous" integrity="sha256-Ns/J2fzKlD8MMUdgspszWJpbxU+Dcp7MwV81uPW+UFs="
-        src="https://cdn.jsdelivr.net/npm/i18next-http-backend@1.3.1/i18nextHttpBackend.min.js"></script>
-<script crossorigin="anonymous" integrity="sha256-CRzzGmpGsHr5h4OuLJYQJqa/0nrEEtJqsI46lpO6lZI="
-        src="https://cdn.jsdelivr.net/npm/i18next-localstorage-backend@3.1.3/i18nextLocalStorageBackend.min.js"></script>
-<script crossorigin="anonymous" integrity="sha256-e0SeOytMMO6AOUWp00sRX5XFRrf1518dZIl5TvL7qdE="
-        src="https://cdn.jsdelivr.net/npm/loc-i18next@0.1.4/loc-i18next.min.js"></script>
-
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.js?v=${version}"></script>
 <script src="js/color-selector.js?v=${version}"></script>
-<script src="js/localeSystem.js?v=${version}"></script>
 
-<script id="mainScript">
-    localeSystem.init();
-</script>
+<script id="mainScript"></script>
 
 </body>
 

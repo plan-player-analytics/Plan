@@ -8,14 +8,14 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
         ? `${address}&timestamp=${timestamp}`
         : `${address}?timestamp=${timestamp}`
 
-    // const refreshElement = document.querySelector(".refresh-element");
-    // refreshElement.querySelector('i').addEventListener('click', () => {
-    //     if (currentlyRefreshing[tabID].includes(address)) {
-    //         return;
-    //     }
-    //     refreshElement.querySelector('.refresh-element i').classList.add("fa-spin");
-    //     refreshingJsonRequest(address, callback, tabID, true);
-    // });
+    const refreshElement = document.querySelector(`#${tabID} .refresh-element`);
+    refreshElement.querySelector('i').addEventListener('click', () => {
+        if (currentlyRefreshing[tabID].includes(address)) {
+            return;
+        }
+        refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
+        refreshingJsonRequest(address, callback, tabID, true);
+    });
 
     let timeout = 1000;
 
@@ -28,14 +28,14 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
                 currentlyRefreshing[tabID].splice(currentlyRefreshing[tabID].indexOf(address), 1);
                 if (error.status === 400 && error.error.includes('Attempt to get data from the future!')) {
                     console.error(error.error); // System time not in sync with UTC
-                    // refreshElement.innerHTML = "System times out of sync with UTC";
+                    refreshElement.innerHTML = "System times out of sync with UTC";
                     return jsonRequest(address, callback);
                 }
-                // refreshElement.querySelector('.refresh-element i').classList.remove("fa-spin");
+                refreshElement.querySelector('.refresh-notice').innerHTML = "";
                 return callback(json, error);
             }
 
-            // refreshElement.querySelector('.refresh-time').innerText = json.timestamp_f;
+            refreshElement.querySelector('.refresh-time').innerText = json.timestamp_f;
 
             const lastUpdated = json.timestamp;
             if (lastUpdated + refreshBarrierMs < timestamp) {
@@ -45,7 +45,7 @@ function refreshingJsonRequest(address, callback, tabID, skipOldData) {
             } else {
                 currentlyRefreshing[tabID].splice(currentlyRefreshing[tabID].indexOf(address), 1);
                 if (!currentlyRefreshing[tabID].length) {
-                    // refreshElement.querySelector('.refresh-element i').classList.remove("fa-spin");
+                    refreshElement.querySelector('.refresh-notice').innerHTML = "";
                 }
                 callback(json, error);
             }
