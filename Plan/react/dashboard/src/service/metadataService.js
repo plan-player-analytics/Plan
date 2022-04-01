@@ -1,28 +1,16 @@
-import axios from "axios";
-import {RequestError} from "../util/errors";
-
-async function fetch(url) {
-    let response = undefined;
-    try {
-        response = await axios.get(url);
-
-        if (response.status === 200) return response.data;
-    } catch (e) {
-        throw new RequestError({message: e.message, url, data: e.response.data})
-    }
-}
+import {doGetRequest} from "./backendConfiguration";
 
 export const fetchPlanMetadata = async () => {
     const url = '/v1/metadata';
-    return fetch(url);
+    return doGetRequest(url);
 }
 
 export const fetchPlanVersion = async () => {
     const url = '/v1/version';
-    return fetch(url);
+    return doGetRequest(url);
 }
 
 export const fetchAvailableLocales = async () => {
     const url = '/v1/locale';
-    return fetch(url);
+    return doGetRequest(url);
 }

@@ -11,30 +11,18 @@ import Header from "../components/navigation/Header";
 import {useNavigation} from "../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
+import {useDataRequest} from "../hooks/dataFetchHook";
 
 
 const PlayerPage = () => {
     const {t} = useTranslation();
 
-    const [player, setPlayer] = useState(undefined);
-    const [error, setError] = useState(undefined);
     const [sidebarItems, setSidebarItems] = useState([]);
 
     const {identifier} = useParams();
     const {currentTab} = useNavigation();
 
-
-    const updatePlayer = async (id) => {
-        try {
-            setPlayer(await fetchPlayer(id));
-        } catch (e) {
-            setError(e);
-        }
-    }
-
-    useEffect(() => {
-        updatePlayer(identifier)
-    }, [identifier]);
+    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier])
 
     useEffect(() => {
         if (!player) return;
@@ -58,18 +46,18 @@ const PlayerPage = () => {
         window.document.title = `Plan | ${player.info.name}`;
     }, [player, t])
 
-    const {authRequired, user} = useAuth();
-    const showBackButton = !authRequired || user.permissions.filter(perm => perm !== 'page.player.self').length;
+    const {hasPermissionOtherThan} = useAuth();
+    const showBackButton = hasPermissionOtherThan('page.player.self');
 
-    if (error) {
+    if (loadingError) {
         return <>
             <NightModeCss/>
             <Sidebar items={[]} showBackButton={true}/>
             <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={error.title ? error.title : 'Unexpected error occurred'}/>
+                <Header page={loadingError.title ? loadingError.title : 'Unexpected error occurred'}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
-                        <ErrorView error={error}/>
+                        <ErrorView error={loadingError}/>
                     </main>
                     <aside>
                         <ColorSelectorModal/>
@@ -79,6 +67,8 @@ const PlayerPage = () => {
         </>
     }
 
+    console.log(player, loadingError)
+
     return player ? (
         <>
             <NightModeCss/>
@@ -87,7 +77,7 @@ const PlayerPage = () => {
                 <Header page={player.info.name} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
-                        <Outlet context={{player, updatePlayer}}/>
+                        <Outlet context={{player: player}}/>
                     </main>
                     <aside>
                         <ColorSelectorModal/>

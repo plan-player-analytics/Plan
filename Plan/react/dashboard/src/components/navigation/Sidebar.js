@@ -11,6 +11,7 @@ import {useAuth} from "../../hooks/authenticationHook";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
 import {Collapse} from "react-bootstrap-v5";
+import {baseAddress} from "../../service/backendConfiguration";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -54,7 +55,7 @@ const Item = ({href, icon, name, nameShort, inner}) => {
     if (href.startsWith('/')) {
         return (
             <li className={"nav-item nav-button"}>
-                <a href={href} className="nav-link">
+                <a href={baseAddress + href} className="nav-link">
                     <Fa icon={icon}/> <span>{t(nameShort ? nameShort : name)}</span>
                 </a>
             </li>
@@ -97,7 +98,12 @@ const FooterButtons = () => {
     const [versionInfo, setVersionInfo] = useState({currentVersion: 'Loading..', updateAvailable: false});
 
     const loadVersion = async () => {
-        setVersionInfo(await fetchPlanVersion())
+        const {data, error} = await fetchPlanVersion();
+        if (data) {
+            setVersionInfo(data);
+        } else if (error) {
+            setVersionInfo({currentVersion: "Error", updateAvailable: false})
+        }
     }
 
     useEffect(() => {
@@ -113,9 +119,10 @@ const FooterButtons = () => {
                 <button className="btn bg-transparent-light" onClick={toggleInfoModal}>
                     <Fa icon={faQuestionCircle}/>
                 </button>
-                {authRequired ? <a className="btn bg-transparent-light" href="/auth/logout" id="logout-button">
-                    <Fa icon={faDoorOpen}/> Logout
-                </a> : ''}
+                {authRequired ?
+                    <a className="btn bg-transparent-light" href={baseAddress + "/auth/logout"} id="logout-button">
+                        <Fa icon={faDoorOpen}/> Logout
+                    </a> : ''}
             </div>
             <div className="ms-md-3 text-center text-md-start">
                 <VersionButton toggleVersionModal={toggleVersionModal} versionInfo={versionInfo}/>

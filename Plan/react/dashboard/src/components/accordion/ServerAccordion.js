@@ -8,6 +8,8 @@ import WorldPie from "../graphs/WorldPie";
 import Accordion from "./Accordion";
 import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import {useTranslation} from "react-i18next";
+import {baseAddress} from "../../service/backendConfiguration";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const ServerHeader = ({server}) => {
     return (
@@ -25,6 +27,8 @@ const ServerHeader = ({server}) => {
 
 const ServerBody = ({i, server}) => {
     const {t} = useTranslation();
+    const {hasPermission} = useAuth();
+
     return (
         <Row>
             <Col lg={6}>
@@ -75,6 +79,11 @@ const ServerBody = ({i, server}) => {
                 <WorldPie id={"worldpie_server_" + i}
                           worldSeries={server.world_pie_series}
                           gmSeries={server.gm_series}/>
+
+                {hasPermission('page.server') && <a href={`${baseAddress}/server/${server.server_uuid}`}
+                                                    className="float-end btn bg-light-green me-2">
+                    <Fa icon={faServer}/> {t('html.sidebar.serverPage')}
+                </a>}
             </div>
         </Row>
     )

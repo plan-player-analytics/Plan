@@ -8,6 +8,7 @@ import WorldPie from "../graphs/WorldPie";
 import KillsTable from "../table/KillsTable";
 import Accordion from "./Accordion";
 import {useTranslation} from "react-i18next";
+import {baseAddress} from "../../service/backendConfiguration";
 
 const SessionHeader = ({session}) => {
     return (
@@ -66,11 +67,11 @@ const SessionBody = ({i, session}) => {
                 <WorldPie id={"worldpie_" + i}
                           worldSeries={session.world_series}
                           gmSeries={session.gm_series}/>
-                <a href={session.network_server ? `./player/` : `../player/` + session.player_uuid}
+                <a href={`${baseAddress}/player/${session.player_uuid}`}
                    className="float-end btn bg-blue">
                     <Fa icon={faUser}/> {t('html.sidebar.playerPage')}
                 </a>
-                {session.network_server ? <a href={"./server/" + session.server_url_name}
+                {session.network_server ? <a href={`${baseAddress}/server/${session.server_uuid}`}
                                              className="float-end btn bg-light-green me-2">
                     <Fa icon={faServer}/> {t('html.sidebar.serverPage')}
                 </a> : ''}

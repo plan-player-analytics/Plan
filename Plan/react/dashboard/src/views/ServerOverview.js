@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React from "react";
 
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
@@ -24,20 +24,20 @@ import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import {TableRow} from "../components/table/AsNumbersTable";
 import ComparisonTable from "../components/table/ComparisonTable";
 import BigTrend from "../components/trend/BigTrend";
+import ErrorView, {ErrorViewCard} from "./ErrorView";
+import {useDataRequest} from "../hooks/dataFetchHook";
 
 
 const OnlineActivityCard = () => {
     const {t} = useTranslation();
     const {identifier} = useParams();
-    const [data, setData] = useState(undefined);
 
-    const loadData = useCallback(async () => setData(await fetchPlayersOnlineGraph(identifier)), [identifier]);
-
-    useEffect(() => {
-        loadData();
-    }, [loadData])
+    const {data, loadingError} = useDataRequest(
+        fetchPlayersOnlineGraph,
+        [identifier])
 
     if (!data) return <></>;
+    if (loadingError) return <ErrorViewCard error={loadingError}/>
 
     return (
         <Card>
@@ -191,13 +191,14 @@ const WeekComparisonCard = ({data}) => {
 
 const ServerOverview = () => {
     const {identifier} = useParams();
-    const [data, setData] = useState(undefined);
 
-    const loadData = useCallback(async () => setData(await fetchServerOverview(identifier)), [identifier]);
+    const {data, loadingError} = useDataRequest(
+        fetchServerOverview,
+        [identifier])
 
-    useEffect(() => {
-        loadData();
-    }, [loadData])
+    if (loadingError) {
+        return <ErrorView error={loadingError}/>
+    }
 
     return (
         <section className="server_overview">

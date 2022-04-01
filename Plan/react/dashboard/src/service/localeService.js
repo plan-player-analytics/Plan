@@ -37,10 +37,10 @@ export const localeService = {
      */
     init: async function () {
         try {
-            const json = await fetchAvailableLocales();
+            const {data} = await fetchAvailableLocales();
 
-            this.defaultLanguage = json.defaultLanguage;
-            this.availableLanguages = json.languages;
+            this.defaultLanguage = data.defaultLanguage;
+            this.availableLanguages = data.languages;
 
             this.clientLocale = window.localStorage.getItem("locale");
             if (!this.clientLocale) {

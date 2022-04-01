@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import React, {useCallback, useEffect, useState} from "react";
+import React from "react";
 import {fetchPunchCardGraph} from "../service/serverService";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import CardTabs from "../components/CardTabs";
@@ -7,6 +7,8 @@ import {useTranslation} from "react-i18next";
 import {faBraille, faChartArea} from "@fortawesome/free-solid-svg-icons";
 import PunchCard from "../components/graphs/PunchCard";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
+import {useDataRequest} from "../hooks/dataFetchHook";
+import {ErrorViewBody} from "./ErrorView";
 
 const DayByDayGraph = () => {
     return <></>
@@ -22,14 +24,10 @@ const ServerCalendar = () => {
 
 const ServerPunchCard = () => {
     const {identifier} = useParams();
-    const [data, setData] = useState(undefined);
 
-    const loadData = useCallback(async () => setData(await fetchPunchCardGraph(identifier)), [identifier]);
+    const {data, loadingError} = useDataRequest(fetchPunchCardGraph, [identifier])
 
-    useEffect(() => {
-        loadData();
-    }, [loadData])
-
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <></>;
 
     return <PunchCard series={data.punchCard}/>
@@ -57,15 +55,6 @@ const GraphsTabbedCard = () => {
 }
 
 const ServerOnlineActivity = () => {
-    // const {identifier} = useParams();
-    // const [data, setData] = useState(undefined);
-
-    // const loadData = useCallback(async () => setData(await fetchServerOverview(identifier)), [identifier]);
-
-    // useEffect(() => {
-    //     loadData();
-    // }, [loadData])
-
     return (
         <section className="server_online_activity_overview">
             <Row>

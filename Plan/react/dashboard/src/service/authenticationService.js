@@ -1,18 +1,6 @@
-import axios from "axios";
-import {RequestError} from "../util/errors";
-
-async function fetch(url) {
-    let response = undefined;
-    try {
-        response = await axios.get(url);
-
-        if (response.status === 200) return response.data;
-    } catch (e) {
-        throw new RequestError({message: e.message, url, data: e.response.data})
-    }
-}
+import {doGetRequest} from "./backendConfiguration";
 
 export const fetchWhoAmI = async () => {
     const url = '/v1/whoami';
-    return fetch(url);
+    return doGetRequest(url);
 }

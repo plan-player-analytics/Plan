@@ -7,10 +7,11 @@ export const MetadataContextProvider = ({children}) => {
     const [metadata, setMetadata] = useState({});
 
     const updateMetadata = useCallback(async () => {
-        try {
-            setMetadata(await fetchPlanMetadata());
-        } catch (e) {
-            console.error(e);
+        const {data, error} = await fetchPlanMetadata();
+        if (data) {
+            setMetadata(data);
+        } else if (error) {
+            setMetadata({metadataError: error})
         }
     }, [])
 
