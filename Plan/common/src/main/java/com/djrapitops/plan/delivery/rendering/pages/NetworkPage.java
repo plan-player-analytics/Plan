@@ -29,6 +29,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -54,6 +55,7 @@ public class NetworkPage implements Page {
     private final ServerInfo serverInfo;
     private final JSONStorage jsonStorage;
     private final Formatters formatters;
+    private final Locale locale;
 
     NetworkPage(
             String templateHtml,
@@ -63,7 +65,8 @@ public class NetworkPage implements Page {
             Theme theme,
             ServerInfo serverInfo,
             JSONStorage jsonStorage,
-            Formatters formatters
+            Formatters formatters,
+            Locale locale
     ) {
         this.templateHtml = templateHtml;
         this.dbSystem = dbSystem;
@@ -73,6 +76,7 @@ public class NetworkPage implements Page {
         this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
+        this.locale = locale;
     }
 
     @Override
@@ -127,6 +131,7 @@ public class NetworkPage implements Page {
                 .chain(theme::replaceThemeColors)
                 .chain(placeholders::apply)
                 .chain(pluginPlaceholders::apply)
+                .chain(locale::replaceLanguageInHtml)
                 .apply();
     }
 }

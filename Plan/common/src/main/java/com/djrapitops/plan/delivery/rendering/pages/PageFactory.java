@@ -29,6 +29,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -60,6 +61,7 @@ public class PageFactory {
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<JSONStorage> jsonStorage;
     private final Lazy<Formatters> formatters;
+    private final Lazy<Locale> locale;
 
     @Inject
     public PageFactory(
@@ -70,7 +72,8 @@ public class PageFactory {
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
             Lazy<JSONStorage> jsonStorage,
-            Lazy<Formatters> formatters
+            Lazy<Formatters> formatters,
+            Lazy<Locale> locale
     ) {
         this.versionChecker = versionChecker;
         this.files = files;
@@ -80,6 +83,7 @@ public class PageFactory {
         this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
+        this.locale = locale;
     }
 
     public PlayersPage playersPage() throws IOException {
@@ -107,7 +111,8 @@ public class PageFactory {
                 dbSystem.get(),
                 serverInfo.get(),
                 jsonStorage.get(),
-                formatters.get()
+                formatters.get(),
+                locale.get()
         );
     }
 
@@ -121,7 +126,8 @@ public class PageFactory {
                 this,
                 theme.get(),
                 formatters.get(),
-                serverInfo.get()
+                serverInfo.get(),
+                locale.get()
         );
     }
 
@@ -166,7 +172,9 @@ public class PageFactory {
                 theme.get(),
                 serverInfo.get(),
                 jsonStorage.get(),
-                formatters.get());
+                formatters.get(),
+                locale.get()
+        );
     }
 
     public Page internalErrorPage(String message, Throwable error) {
@@ -203,21 +211,21 @@ public class PageFactory {
     }
 
     public Page loginPage() throws IOException {
-        return new LoginPage(getResource("login.html"), serverInfo.get(), theme.get(), versionChecker.get());
+        return new LoginPage(getResource("login.html"), serverInfo.get(), locale.get(), theme.get(), versionChecker.get());
     }
 
     public Page registerPage() throws IOException {
-        return new LoginPage(getResource("register.html"), serverInfo.get(), theme.get(), versionChecker.get());
+        return new LoginPage(getResource("register.html"), serverInfo.get(), locale.get(), theme.get(), versionChecker.get());
     }
 
     public Page queryPage() throws IOException {
         return new QueryPage(
                 getResource("query.html"),
-                theme.get(), versionChecker.get()
+                locale.get(), theme.get(), versionChecker.get()
         );
     }
 
     public Page errorsPage() throws IOException {
-        return new ErrorsPage(getResource("error.html"), theme.get(), versionChecker.get());
+        return new ErrorsPage(getResource("error.html"), locale.get(), theme.get(), versionChecker.get());
     }
 }

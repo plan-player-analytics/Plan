@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.utilities.java.UnaryChain;
 import com.djrapitops.plan.version.VersionChecker;
@@ -31,6 +32,7 @@ public class LoginPage implements Page {
 
     private final String template;
     private final ServerInfo serverInfo;
+    private final Locale locale;
     private final Theme theme;
 
     private final VersionChecker versionChecker;
@@ -38,11 +40,13 @@ public class LoginPage implements Page {
     LoginPage(
             String htmlTemplate,
             ServerInfo serverInfo,
+            Locale locale,
             Theme theme,
             VersionChecker versionChecker
     ) {
         this.template = htmlTemplate;
         this.serverInfo = serverInfo;
+        this.locale = locale;
         this.theme = theme;
         this.versionChecker = versionChecker;
     }
@@ -55,6 +59,7 @@ public class LoginPage implements Page {
         return UnaryChain.of(template)
                 .chain(theme::replaceThemeColors)
                 .chain(placeholders::apply)
+                .chain(locale::replaceLanguageInHtml)
                 .apply();
     }
 
