@@ -40,18 +40,14 @@ public class LocaleFileWriter {
         addMissingLang();
 
         Config writing = new Config(file);
-        locale.forEach((lang, message) -> {
-            writing.set(lang.getKey(), message.toString());
-        });
+        locale.forEach((lang, message) -> writing.set(lang.getKey(), message.toString()));
 
         new ConfigWriter(file.toPath()).write(writing);
     }
 
     private void addMissingLang() {
         for (Lang lang : LocaleSystem.getKeys().values()) {
-            if (!locale.containsKey(lang)) {
-                locale.put(lang, new Message(lang.getDefault()));
-            }
+            locale.computeIfAbsent(lang, k -> new Message(lang.getDefault()));
         }
     }
 }

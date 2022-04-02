@@ -60,7 +60,6 @@ public class RootJSONResolver {
             NetworkJSONResolver networkJSONResolver,
             FiltersJSONResolver filtersJSONResolver,
             QueryJSONResolver queryJSONResolver,
-            UserJSONResolver userJSONResolver,
             VersionJSONResolver versionJSONResolver,
             MetadataJSONResolver metadataJSONResolver,
             WhoAmIJSONResolver whoAmIJSONResolver
@@ -85,7 +84,6 @@ public class RootJSONResolver {
                 .add("filters", filtersJSONResolver)
                 .add("query", queryJSONResolver)
                 .add("errors", errorsJSONResolver)
-                .add("user", userJSONResolver)
                 .add("version", versionJSONResolver)
                 .add("locale", localeJSONResolver)
                 .add("metadata", metadataJSONResolver)

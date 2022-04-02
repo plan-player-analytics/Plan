@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.ResponseBuilder;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.ConfigNode;
@@ -68,8 +69,12 @@ public class LocaleJSONResolver implements NoAuthResolver {
 
     private Response getResponse(Request request) {
         ResponseBuilder builder = Response.builder();
-        String path = request.omitFirstInPath().getPath().asString().replaceAll("^/|/$", "");
-        Map<String, Object> json = "".equals(path) ? getLanguageListJSON() : getLocaleJSON(path);
+
+        URIPath path = request.omitFirstInPath().getPath();
+
+        Map<String, Object> json = path.getPart(0)
+                .map(this::getLocaleJSON)
+                .orElseGet(this::getLanguageListJSON);
 
         if (!json.isEmpty()) {
             return builder.setJSONContent(json).build();

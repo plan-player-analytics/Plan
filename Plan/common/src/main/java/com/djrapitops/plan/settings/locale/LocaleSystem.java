@@ -141,7 +141,7 @@ public class LocaleSystem implements SubSystem {
         File oldCustomFile = files.getFileFromPluginFolder("locale.txt");
         if (!files.getLocaleFile().exists() && oldCustomFile.exists()) {
             try {
-                logger.info("Trying to convert locale.txt...");
+                logger.info("Converting locale.txt to yml...");
                 Locale loaded = new LocaleFileReader(new FileResource("locale.txt", oldCustomFile)).loadLegacy(LangCode.CUSTOM);
                 new LocaleFileWriter(loaded).writeToFile(files.getLocaleFile());
             } catch (IOException e) {
@@ -154,8 +154,7 @@ public class LocaleSystem implements SubSystem {
             File oldFile = files.getFileFromPluginFolder("locale_" + code + ".txt");
             if (!files.getFileFromPluginFolder(code.getFileName()).exists() && oldFile.exists()) {
                 try {
-                    // TODO remove debug?
-                    logger.info("Trying to convert " + oldFile.getName() + "...");
+                    logger.info("Converting " + oldFile.getName() + " to yml...");
                     Locale loaded = new LocaleFileReader(new FileResource(oldFile.getName(), oldFile)).loadLegacy(LangCode.CUSTOM);
                     new LocaleFileWriter(loaded).writeToFile(files.getFileFromPluginFolder(code.getFileName()));
                 } catch (IOException e) {
