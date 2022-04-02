@@ -26,7 +26,7 @@ const ColorSelectorModal = () => {
                onHide={theme.toggleColorChooser}>
             <Modal.Header>
                 <Modal.Title id="colorChooserModalLabel">
-                    <Fa icon={faPalette}/> {t('html.title.themeSelect')}
+                    <Fa icon={faPalette}/> {t('html.label.themeSelect')}
                 </Modal.Title>
                 <button aria-label="Close" className="btn-close" onClick={theme.toggleColorChooser}/>
             </Modal.Header>

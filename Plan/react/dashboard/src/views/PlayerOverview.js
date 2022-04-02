@@ -84,7 +84,7 @@ const PlayerOverviewCard = ({player}) => {
                         <hr/>
                         <Datapoint
                             icon={faCalendarCheck} color="teal"
-                            name={t('html.sidebar.sessions')} value={player.info.session_count} bold
+                            name={t('html.label.sessions')} value={player.info.session_count} bold
                         />
                         <Datapoint
                             icon={faClock} color="teal"
@@ -118,15 +118,15 @@ const PlayerOverviewCard = ({player}) => {
                         <hr/>
                         <Datapoint
                             icon={faSignal} color="amber"
-                            name={t('html.title.averagePing')} value={player.info.average_ping}
+                            name={t('html.label.averagePing')} value={player.info.average_ping}
                         />
                         <Datapoint
                             icon={faSignal} color="amber"
-                            name={t('html.title.bestPing')} value={player.info.best_ping}
+                            name={t('html.label.bestPing')} value={player.info.best_ping}
                         />
                         <Datapoint
                             icon={faSignal} color="amber"
-                            name={t('html.title.worstPing')} value={player.info.worst_ping}
+                            name={t('html.label.worstPing')} value={player.info.worst_ping}
                         />
                         <hr/>
                         <Datapoint
@@ -147,7 +147,7 @@ const NicknamesCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faSignature}/> {t('html.title.seenNicknames')}
+                    <Fa icon={faSignature}/> {t('html.label.seenNicknames')}
                 </h6>
             </Card.Header>
             <Scrollable>
@@ -155,7 +155,7 @@ const NicknamesCard = ({player}) => {
                     <thead className="bg-purple">
                     <tr>
                         <th><Fa icon={faSignature}/> {t('html.label.nickname')}</th>
-                        <th><Fa icon={faServer}/> {t('html.title.server')}</th>
+                        <th><Fa icon={faServer}/> {t('html.label.server')}</th>
                         <th><Fa icon={faClock}/> {t('html.label.lastSeen')}</th>
                     </tr>
                     </thead>
@@ -179,14 +179,14 @@ const ConnectionsCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faWifi}/> {t('html.title.connectionInfo')}
+                    <Fa icon={faWifi}/> {t('html.label.connectionInfo')}
                 </h6>
             </Card.Header>
             <Scrollable>
                 <table className={"table table-striped mb-0" + (nightModeEnabled ? " table-dark" : '')}>
                     <thead className="bg-green">
                     <tr>
-                        <th><Fa icon={faGlobe}/> {t('html.title.country')}</th>
+                        <th><Fa icon={faGlobe}/> {t('html.label.country')}</th>
                         <th><Fa icon={faClock}/> {t('html.label.lastConnected')}</th>
                     </tr>
                     </thead>
@@ -208,7 +208,7 @@ const PunchCardCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faBraille}/> {t('html.title.punchcard')}
+                    <Fa icon={faBraille}/> {t('html.label.punchcard')}
                 </h6>
             </Card.Header>
             <PunchCard series={player.punchcard_series}/>
@@ -222,10 +222,10 @@ const OnlineActivityCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faBookOpen}/> {t('html.title.onlineActivity')}
+                    <Fa icon={faBookOpen}/> {t('html.label.onlineActivity')}
                 </h6>
             </Card.Header>
-            <AsNumbersTable headers={[t('html.title.last30days'), t('html.title.last7days')]}>
+            <AsNumbersTable headers={[t('html.label.last30days'), t('html.label.last7days')]}>
                 <TableRow icon={faClock} color="green" text={t('html.label.playtime')}
                           values={[player.online_activity.playtime_30d, player.online_activity.playtime_7d]}/>
                 <TableRow icon={faClock} color="green" text={t('html.label.activePlaytime')}
@@ -234,7 +234,7 @@ const OnlineActivityCard = ({player}) => {
                           values={[player.online_activity.afk_time_30d, player.online_activity.afk_time_7d]}/>
                 <TableRow icon={faClock} color="teal" text={t('html.label.medianSessionLength')}
                           values={[player.online_activity.median_session_length_30d, player.online_activity.median_session_length_7d]}/>
-                <TableRow icon={faCalendarCheck} color="teal" text={t('html.sidebar.sessions')}
+                <TableRow icon={faCalendarCheck} color="teal" text={t('html.label.sessions')}
                           values={[player.online_activity.session_count_30d, player.online_activity.session_count_7d]}/>
                 <TableRow icon={faCrosshairs} color="red" text={t('html.label.playerKills')}
                           values={[player.online_activity.player_kill_count_30d, player.online_activity.player_kill_count_7d]}/>

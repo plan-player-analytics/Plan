@@ -38,16 +38,16 @@ const GraphsTabbedCard = () => {
     return <Card><CardTabs
         tabs={[
             {
-                name: t('html.title.graph.dayByDay'), icon: faChartArea, color: 'blue', href: 'day-by-day',
+                name: t('html.label.dayByDay'), icon: faChartArea, color: 'blue', href: 'day-by-day',
                 element: <DayByDayGraph/>
             }, {
-                name: t('html.title.graph.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
+                name: t('html.label.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
                 element: <HourByHourGraph/>
             }, {
-                name: t('html.title.serverCalendar'), icon: faCalendar, color: 'teal', href: 'server-calendar',
+                name: t('html.label.serverCalendar'), icon: faCalendar, color: 'teal', href: 'server-calendar',
                 element: <ServerCalendar/>
             }, {
-                name: t('html.title.punchcard30days'), icon: faBraille, color: 'black', href: 'punchcard',
+                name: t('html.label.punchcard30days'), icon: faBraille, color: 'black', href: 'punchcard',
                 element: <ServerPunchCard/>
             },
         ]}

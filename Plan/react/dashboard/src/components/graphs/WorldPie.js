@@ -26,7 +26,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
         }
 
         const pieSeries = {
-            name: t('html.title.worldPlaytime'),
+            name: t('html.label.worldPlaytime'),
             colorByPoint: true,
             data: nightModeEnabled ? reduceColors(worldSeries) : worldSeries
         };

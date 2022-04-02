@@ -15,7 +15,7 @@ const ServersCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faCalendar} className="col-teal"/> {t('html.title.recentSessions')}
+                    <Fa icon={faCalendar} className="col-teal"/> {t('html.label.recentSessions')}
                     <span className="float-end">
                     <Fa icon={faHandPointer}/> <small>{t('html.text.clickToExpand')}</small>
                 </span>
@@ -34,7 +34,7 @@ const ServerPieCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faNetworkWired} className="col-teal"/> {t('html.title.serverPlaytime')}
+                    <Fa icon={faNetworkWired} className="col-teal"/> {t('html.label.serverPlaytime')}
                 </h6>
             </Card.Header>
             <ServerPie

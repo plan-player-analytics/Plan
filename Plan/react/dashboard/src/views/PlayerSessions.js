@@ -15,7 +15,7 @@ const SessionCalendarCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faCalendarAlt} className="col-teal"/> {t('html.title.sessionCalendar')}
+                    <Fa icon={faCalendarAlt} className="col-teal"/> {t('html.label.sessionCalendar')}
                 </h6>
             </Card.Header>
             <PlayerSessionCalendar series={player.calendar_series} firstDay={player.first_day}/>
@@ -29,7 +29,7 @@ const RecentSessionsCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faCalendar} className="col-teal"/> {t('html.title.recentSessions')}
+                    <Fa icon={faCalendar} className="col-teal"/> {t('html.label.recentSessions')}
                     <span className="float-end">
                     <Fa icon={faHandPointer}/> <small>{t('html.text.clickToExpand')}</small>
                 </span>
@@ -48,7 +48,7 @@ const WorldPieCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faClock} className="col-teal"/> {t('html.title.worldPlaytime')}
+                    <Fa icon={faClock} className="col-teal"/> {t('html.label.worldPlaytime')}
                 </h6>
             </Card.Header>
             <WorldPie

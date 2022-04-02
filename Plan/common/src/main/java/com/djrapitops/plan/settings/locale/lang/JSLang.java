@@ -32,7 +32,7 @@ public enum JSLang implements Lang {
     LINK_QUICK_VIEW("html.label.quickView", "Quick view"),
     TEXT_FIRST_SESSION("html.label.firstSession", "First session"),
     LABEL_SESSION_ENDED("html.label.sessionEnded", " Ended"),
-    LINK_PLAYER_PAGE("html.sidebar.playerPage", "Player Page"),
+    LINK_PLAYER_PAGE("html.label.playerPage", "Player Page"),
     LABEL_NO_SESSION_KILLS("html.generic.none", "None"),
     // UNIT_ENTITIES("html.unit.entities", "Entities"),
     UNIT_CHUNKS("html.unit.chunks", "Chunks"),

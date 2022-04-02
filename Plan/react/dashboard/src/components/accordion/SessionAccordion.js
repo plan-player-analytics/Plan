@@ -33,7 +33,7 @@ const SessionBody = ({i, session}) => {
                 />
                 <Datapoint
                     icon={faClock} color={"teal"}
-                    name={t('html.title.length')} value={session.length} bold
+                    name={t('html.label.length')} value={session.length} bold
                 />
                 <Datapoint
                     icon={faClock} color={"grey"}
@@ -41,11 +41,11 @@ const SessionBody = ({i, session}) => {
                 />
                 <Datapoint
                     icon={faServer} color={"green"}
-                    name={t('html.title.server')} value={session.server_name} bold
+                    name={t('html.label.server')} value={session.server_name} bold
                 />
                 {session.avg_ping ? <Datapoint
                     icon={faSignal} color={"amber"}
-                    name={t('html.title.averagePing')} value={session.avg_ping} bold
+                    name={t('html.label.averagePing')} value={session.avg_ping} bold
                 /> : ''}
                 <br/>
                 <Datapoint
@@ -69,11 +69,11 @@ const SessionBody = ({i, session}) => {
                           gmSeries={session.gm_series}/>
                 <a href={`${baseAddress}/player/${session.player_uuid}`}
                    className="float-end btn bg-blue">
-                    <Fa icon={faUser}/> {t('html.sidebar.playerPage')}
+                    <Fa icon={faUser}/> {t('html.label.playerPage')}
                 </a>
                 {session.network_server ? <a href={`${baseAddress}/server/${session.server_uuid}`}
                                              className="float-end btn bg-light-green me-2">
-                    <Fa icon={faServer}/> {t('html.sidebar.serverPage')}
+                    <Fa icon={faServer}/> {t('html.label.serverPage')}
                 </a> : ''}
             </div>
         </Row>
@@ -88,10 +88,10 @@ const SessionAccordion = (
     const {t} = useTranslation();
     return (
         <Accordion headers={[
-            <><Fa icon={faServer}/> {t('html.title.server')}</>,
-            <><Fa icon={faClock}/> {t('html.title.sessionStart')}</>,
-            <><Fa icon={faClock}/> {t('html.title.length')}</>,
-            <><Fa icon={faMap}/> {t('html.title.mostPlayedWorld')}</>
+            <><Fa icon={faServer}/> {t('html.label.server')}</>,
+            <><Fa icon={faClock}/> {t('html.label.sessionStart')}</>,
+            <><Fa icon={faClock}/> {t('html.label.length')}</>,
+            <><Fa icon={faMap}/> {t('html.label.mostPlayedWorld')}</>
         ]} slices={sessions.map(session => {
             return {
                 body: <SessionBody session={session}/>,

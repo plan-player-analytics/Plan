@@ -72,7 +72,7 @@ const Header = ({page, tab}) => {
 
                 <DropdownMenu>
                     <DropdownItem onClick={toggleColorChooser}>
-                        <Fa icon={faPalette}/> {t('html.title.themeSelect')}
+                        <Fa icon={faPalette}/> {t('html.label.themeSelect')}
                     </DropdownItem>
                     {requiresAuth ? <DropdownItem href="./auth/logout">
                         <Fa icon={faDoorOpen}/> {t('html.login.logout')}

@@ -43,7 +43,7 @@ const OnlineActivityCard = () => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa className="col-blue" icon={faChartArea}/> {t('html.title.onlineActivity')}
+                    <Fa className="col-blue" icon={faChartArea}/> {t('html.label.onlineActivity')}
                 </h6>
             </Card.Header>
             <PlayersOnlineGraph data={data}/>
@@ -60,7 +60,7 @@ const Last7DaysCard = ({data}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    {t('html.title.last7days')}
+                    {t('html.label.last7days')}
                 </h6>
             </Card.Header>
             <Card.Body>
@@ -102,7 +102,7 @@ const ServerAsNumbersCard = ({data}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faBookOpen}/> {t('html.title.serverAsNumberse')}
+                    <Fa icon={faBookOpen}/> {t('html.label.serverAsNumberse')}
                 </h6>
             </Card.Header>
             <Card.Body>
@@ -133,7 +133,7 @@ const ServerAsNumbersCard = ({data}) => {
                 <Datapoint name={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                            color={'green'} icon={faClock}
                            value={data.player_playtime}/>
-                <Datapoint name={t('html.sidebar.sessions')}
+                <Datapoint name={t('html.label.sessions')}
                            color={'teal'} icon={faCalendarCheck}
                            value={data.sessions} bold/>
                 <hr/>
@@ -158,11 +158,11 @@ const WeekComparisonCard = ({data}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faExchangeAlt}/> {t('html.title.weekComparison')}
+                    <Fa icon={faExchangeAlt}/> {t('html.label.weekComparison')}
                 </h6>
             </Card.Header>
             <ComparisonTable comparisonHeader={t('html.label.comparing7days')}
-                             headers={[data.start + ' - ' + data.midpoint, data.midpoint + ' - ' + data.end, t('html.title.trend')]}>
+                             headers={[data.start + ' - ' + data.midpoint, data.midpoint + ' - ' + data.end, t('html.label.trend')]}>
                 <TableRow icon={faUsers} color="blue" text={t('html.label.uniquePlayers')}
                           values={[data.unique_before, data.unique_after, <BigTrend trend={data.unique_trend}/>]}/>
                 <TableRow icon={faUsers} color="light-green" text={t('html.label.newPlayers')}
@@ -173,7 +173,7 @@ const WeekComparisonCard = ({data}) => {
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                           values={[data.average_playtime_before, data.average_playtime_after,
                               <BigTrend trend={data.average_playtime_trend}/>]}/>
-                <TableRow icon={faCalendarCheck} color="teal" text={t('html.sidebar.sessions')}
+                <TableRow icon={faCalendarCheck} color="teal" text={t('html.label.sessions')}
                           values={[data.sessions_before, data.sessions_after,
                               <BigTrend trend={data.sessions_trend}/>]}/>
                 <TableRow icon={faCrosshairs} color="red" text={t('html.label.playerKills')}

@@ -37,7 +37,7 @@ const ServerBody = ({i, server}) => {
                 {server.operator || server.banned ? <br/> : ''}
                 <Datapoint
                     icon={faCalendarCheck} color={"teal"}
-                    name={t('html.sidebar.sessions')} value={server.session_count} bold
+                    name={t('html.label.sessions')} value={server.session_count} bold
                 />
                 <Datapoint
                     icon={faClock} color={"green"}
@@ -82,7 +82,7 @@ const ServerBody = ({i, server}) => {
 
                 {hasPermission('page.server') && <a href={`${baseAddress}/server/${server.server_uuid}`}
                                                     className="float-end btn bg-light-green me-2">
-                    <Fa icon={faServer}/> {t('html.sidebar.serverPage')}
+                    <Fa icon={faServer}/> {t('html.label.serverPage')}
                 </a>}
             </div>
         </Row>
@@ -93,7 +93,7 @@ const ServerAccordion = ({servers}) => {
     const {t} = useTranslation();
     return (
         <Accordion headers={[
-            <><Fa icon={faServer}/> {t('html.title.server')}</>,
+            <><Fa icon={faServer}/> {t('html.label.server')}</>,
             <><Fa icon={faClock}/> {t('html.label.playtime')}</>,
             <><Fa icon={faCalendarPlus}/> {t('html.label.registered')}</>,
             <><Fa icon={faCalendarCheck}/> {t('html.label.lastSeen')}</>

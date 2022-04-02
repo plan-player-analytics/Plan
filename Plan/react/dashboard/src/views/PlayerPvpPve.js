@@ -14,7 +14,7 @@ const PvpPveAsNumbersTable = ({player}) => {
     const {t} = useTranslation();
     return (
         <AsNumbersTable
-            headers={[t('html.title.allTime'), t('html.title.last30days'), t('html.title.last7days')]}
+            headers={[t('html.label.allTime'), t('html.label.last30days'), t('html.label.last7days')]}
         >
             <TableRow icon={faCrosshairs} color="red" text={t('html.label.kdr')} bold
                       values={[player.kill_data.player_kdr_total,
@@ -54,7 +54,7 @@ const PvpPveNumbersCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faCampground} className="col-red"/> {t('html.title.pvpPveAsNumbers')}
+                    <Fa icon={faCampground} className="col-red"/> {t('html.label.pvpPveAsNumbers')}
                 </h6>
             </Card.Header>
             <PvpPveAsNumbersTable player={player}/>
@@ -68,7 +68,7 @@ const InsightsCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faLifeRing} className="col-red"/> {t('html.title.insights')}
+                    <Fa icon={faLifeRing} className="col-red"/> {t('html.label.insights')}
                 </h6>
             </Card.Header>
             <Card.Body>
@@ -89,7 +89,7 @@ const PvpKillsTableCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faCrosshairs} className="col-red"/> {t('html.title.recentPvpKills')}
+                    <Fa icon={faCrosshairs} className="col-red"/> {t('html.label.recentPvpKills')}
                 </h6>
             </Card.Header>
             <KillsTable kills={player.player_kills}/>
@@ -103,7 +103,7 @@ const PvpDeathsTableCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faSkull} className="col-red"/> {t('html.title.recentPvpDeaths')}
+                    <Fa icon={faSkull} className="col-red"/> {t('html.label.recentPvpDeaths')}
                 </h6>
             </Card.Header>
             <KillsTable kills={player.player_deaths}/>

@@ -33,44 +33,44 @@ const ServerPage = () => {
 
     useEffect(() => {
         const items = [
-            {name: 'html.title.serverOverview', icon: faInfoCircle, href: "overview"},
+            {name: 'html.label.serverOverview', icon: faInfoCircle, href: "overview"},
             {},
-            {name: 'html.sidebar.information'},
+            {name: 'html.label.information'},
             {
-                name: 'html.title.onlineActivity',
+                name: 'html.label.onlineActivity',
                 icon: faChartArea,
                 contents: [
                     {
-                        nameShort: 'html.sidebar.overview',
-                        name: 'html.title.playersOnlineOverview',
+                        nameShort: 'html.label.overview',
+                        name: 'html.label.playersOnlineOverview',
                         icon: faChartArea,
                         href: "online-activity"
                     },
-                    {name: 'html.sidebar.sessions', icon: faCalendarCheck, href: "sessions"},
-                    {name: 'html.sidebar.pvpPve', icon: faCampground, href: "pvppve"}
+                    {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions"},
+                    {name: 'html.label.pvpPve', icon: faCampground, href: "pvppve"}
                 ]
             },
             {
-                name: 'html.sidebar.playerbase',
+                name: 'html.label.playerbase',
                 icon: faUsers,
                 contents: [
                     {
-                        nameShort: 'html.sidebar.overview',
-                        name: 'html.sidebar.playerbaseOverview',
+                        nameShort: 'html.label.overview',
+                        name: 'html.label.playerbaseOverview',
                         icon: faChartLine,
                         href: "playerbase"
                     },
-                    {name: 'html.sidebar.playerList', icon: faUsers, href: "players"},
-                    {name: 'html.sidebar.geolocations', icon: faGlobe, href: "geolocations"},
+                    {name: 'html.label.playerList', icon: faUsers, href: "players"},
+                    {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
                 ]
             },
-            {name: 'html.sidebar.performance', icon: faCogs, href: "performance"},
+            {name: 'html.label.performance', icon: faCogs, href: "performance"},
             {},
-            {name: 'html.sidebar.plugins'},
-            {name: 'html.side.pluginsOverview', icon: faCubes, href: "plugins-overview"},
+            {name: 'html.label.plugins'},
+            {name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"},
             {},
-            {name: 'html.sidebar.links'},
-            {name: 'html.sidebar.query', icon: faSearch, href: "/query"},
+            {name: 'html.label.links'},
+            {name: 'html.label.query', icon: faSearch, href: "/query"},
         ]
 
         // TODO Extensions

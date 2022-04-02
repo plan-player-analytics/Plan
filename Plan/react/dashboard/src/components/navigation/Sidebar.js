@@ -208,7 +208,7 @@ const Sidebar = ({items, showBackButton}) => {
             <Logo/>
             <Divider/>
             {showBackButton ? <>
-                <Item active={false} href="/" icon={faArrowLeft} name={t('html.sidebar.toMainPage')}/>
+                <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
                 <Divider/>
             </> : ''}
             {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse))}
