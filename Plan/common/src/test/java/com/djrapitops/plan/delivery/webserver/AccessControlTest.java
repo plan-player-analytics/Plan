@@ -18,11 +18,13 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
@@ -108,6 +110,10 @@ class AccessControlTest {
                 TestConstants.SERVER_NAME,
                 address
         )));
+
+        Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+                .orElseThrow(AssertionError::new);
+        caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 
         address = "https://localhost:" + TEST_PORT_NUMBER;
         cookieLevel0 = login(address, userLevel0.getUsername());
