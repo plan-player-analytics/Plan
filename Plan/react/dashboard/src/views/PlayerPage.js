@@ -67,8 +67,6 @@ const PlayerPage = () => {
         </>
     }
 
-    console.log(player, loadingError)
-
     return player ? (
         <>
             <NightModeCss/>

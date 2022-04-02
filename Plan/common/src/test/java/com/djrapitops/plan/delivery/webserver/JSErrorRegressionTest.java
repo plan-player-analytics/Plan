@@ -149,7 +149,7 @@ class JSErrorRegressionTest {
                 logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
                 logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
 
-                assertNoLogs("", logs);
+                assertNoLogs("'" + address + "' (in " + language.name() + "),", logs);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             } finally {
