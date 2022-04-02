@@ -15,7 +15,7 @@ import {useDataRequest} from "../hooks/dataFetchHook";
 
 
 const PlayerPage = () => {
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
 
     const [sidebarItems, setSidebarItems] = useState([]);
 
@@ -44,7 +44,7 @@ const PlayerPage = () => {
 
         setSidebarItems(items);
         window.document.title = `Plan | ${player.info.name}`;
-    }, [player, t])
+    }, [player, t, i18n])
 
     const {hasPermissionOtherThan} = useAuth();
     const showBackButton = hasPermissionOtherThan('page.player.self');

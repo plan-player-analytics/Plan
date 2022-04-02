@@ -23,7 +23,7 @@ import {useMetadata} from "../hooks/metadataHook";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 
 const ServerPage = () => {
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
     const {isProxy, serverName} = useMetadata();
 
     const [error] = useState(undefined);
@@ -77,7 +77,7 @@ const ServerPage = () => {
 
         setSidebarItems(items);
         window.document.title = `Plan | Server Analysis`;
-    }, [t])
+    }, [t, i18n])
 
     const {authRequired, user} = useAuth();
     const showBackButton = isProxy && (!authRequired || user.permissions.filter(perm => perm !== 'page.network').length);

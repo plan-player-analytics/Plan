@@ -45,7 +45,7 @@ const Item = ({href, icon, name, nameShort, inner}) => {
     const {t} = useTranslation();
 
     useEffect(() => {
-        if (pathname.includes(href)) setCurrentTab(name);
+        if ('/' !== href && pathname.includes(href)) setCurrentTab(name);
     }, [pathname, href, setCurrentTab, name])
 
     if (inner) {
