@@ -186,7 +186,7 @@ const createNightModeColorCss = () => {
 
 export const createNightModeCss = () => {
     return `#content-wrapper {background-color:${nightColors.black}!important;}` +
-        `.btn,.bg-transparent-light {color: ${nightColors.yellow};}` +
+        `body,.btn,.bg-transparent-light {color: ${nightColors.yellow};}` +
         `.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr,form .btn, .btn-outline-secondary{background-color:${nightColors.darkBlue}!important;border-color:${nightColors.blue}!important;}` +
         `.bg-white.collapse-inner {border:1px solid;}` +
         `.card-header {background-color:${nightColors.darkBlue};border-color:${nightColors.blue};}` +

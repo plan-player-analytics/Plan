@@ -16,10 +16,14 @@ export const MetadataContextProvider = ({children}) => {
     }, [])
 
     const getPlayerHeadImageUrl = (name, uuid) => {
+        if (!uuid && name === 'console') {
+            return '../../Terminal-icon.png';
+        }
+
         /* eslint-disable no-template-curly-in-string */
         return (metadata.playerHeadImageUrl ? metadata.playerHeadImageUrl : "https://cravatar.eu/helmavatar/${playerUUID}/120.png")
             .replace('${playerUUID}', uuid)
-            .replace('${playerUUIDNoDash}', uuid.split('-').join(''))
+            .replace('${playerUUIDNoDash}', uuid ? uuid.split('-').join('') : undefined)
             .replace('${playerName}', name)
         /* eslint-enable no-template-curly-in-string */
     }

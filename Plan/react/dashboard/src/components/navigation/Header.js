@@ -31,14 +31,14 @@ const LanguageSelector = () => {
 }
 
 const Header = ({page, tab}) => {
-    const {requiresAuth, user} = useAuth();
+    const {authRequired, user} = useAuth();
     const {toggleColorChooser} = useTheme();
     const {t} = useTranslation();
 
     const {requestUpdate, updating, lastUpdate} = useNavigation();
 
     const {getPlayerHeadImageUrl} = useMetadata();
-    const headImageUrl = user ? getPlayerHeadImageUrl(user.username, user.linkedToUuid) : undefined
+    const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.linkedToUuid) : undefined
     // <!-- <li><a className="dropdown-item" href="#"><i className="fas fa-users-cog"></i> Web users</a></li>-->
     // <!-- <li><a className="dropdown-item" href="#"><i className="fas fa-code"></i> API access</a></li>-->
     // <!-- <li>-->
@@ -69,8 +69,8 @@ const Header = ({page, tab}) => {
 
             <Dropdown className="nav-item">
                 <DropdownToggle variant=''>
-                    {requiresAuth ? <>
-                        <span className="me-2">{user.username} </span>
+                    {authRequired && user ? <>
+                        <span className="me-1 login-username">{user.username} </span>
                         <img alt="user img" className="rounded-circle" src={headImageUrl} style={{height: "2rem"}}/>
                     </> : <>
                         <Fa icon={faCog} className="me-2"/>
@@ -81,7 +81,7 @@ const Header = ({page, tab}) => {
                     <DropdownItem onClick={toggleColorChooser}>
                         <Fa icon={faPalette}/> {t('html.label.themeSelect')}
                     </DropdownItem>
-                    {requiresAuth ? <DropdownItem href="./auth/logout">
+                    {authRequired ? <DropdownItem href="./auth/logout">
                         <Fa icon={faDoorOpen}/> {t('html.login.logout')}
                     </DropdownItem> : ''}
                 </DropdownMenu>

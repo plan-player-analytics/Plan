@@ -1306,3 +1306,8 @@ button, input[type="submit"], input[type="reset"] {
     cursor: pointer;
     outline: inherit;
 }
+
+.login-username {
+    position: relative;
+    top: 0.1rem;
+}

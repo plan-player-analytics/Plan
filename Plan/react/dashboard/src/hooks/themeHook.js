@@ -12,6 +12,7 @@ const getDefaultTheme = (metadata) => {
     // Use 'plan' if default or if default is undefined.
     // Avoid night mode staying on if default theme is night mode
     const invalidColor = !defaultTheme
+        || defaultTheme === 'default'
         || defaultTheme === 'black'
         || defaultTheme === 'white'
         || !themeColors.map(color => color.name).includes(defaultTheme)
@@ -21,11 +22,13 @@ const getDefaultTheme = (metadata) => {
 
 const getStoredTheme = (defaultTheme) => {
     const stored = window.localStorage.getItem('themeColor');
-    return stored ? stored : defaultTheme;
+    return stored && stored !== 'undefined' ? stored : defaultTheme;
 }
 
 const setStoredTheme = themeColor => {
-    window.localStorage.setItem('themeColor', themeColor);
+    if (themeColor) {
+        window.localStorage.setItem('themeColor', themeColor);
+    }
 }
 
 const ThemeContext = createContext({});
@@ -34,7 +37,7 @@ export const ThemeContextProvider = ({children}) => {
     const metadata = useMetadata();
 
     const [colorChooserOpen, setColorChooserOpen] = useState(false);
-    const [selectedColor, setSelectedColor] = useState(getStoredTheme(metadata.defaultTheme));
+    const [selectedColor, setSelectedColor] = useState(getStoredTheme(getDefaultTheme(metadata)));
     const [previousColor, setPreviousColor] = useState(undefined);
 
     const sharedState = {

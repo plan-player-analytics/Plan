@@ -15,13 +15,13 @@ export const AuthenticationContextProvider = ({children}) => {
         const {data: whoAmI, error} = await fetchWhoAmI();
         if (whoAmI) {
             setAuthRequired(whoAmI.authRequired);
+            if (whoAmI.loggedIn) setUser(whoAmI.user);
             setLoggedIn(whoAmI.loggedIn);
-            if (whoAmI.loggedIn) setUser(loggedIn.user);
             setAuthLoaded(true)
         } else if (error) {
             setLoginError(error);
         }
-    }, [loggedIn])
+    }, [])
 
     const login = async (username, password) => {
         // TODO implement later when login page is done with React
@@ -33,11 +33,11 @@ export const AuthenticationContextProvider = ({children}) => {
     }
 
     const hasPermission = permission => {
-        return !authRequired || (loggedIn && user.permissions.some(perm => perm === permission));
+        return !authRequired || (loggedIn && user && user.permissions.filter(perm => perm === permission).length);
     }
 
     const hasPermissionOtherThan = permission => {
-        return !authRequired || (loggedIn && user.permissions.some(perm => perm !== permission));
+        return !authRequired || (loggedIn && user && user.permissions.filter(perm => perm !== permission).length);
     }
 
     useEffect(() => {

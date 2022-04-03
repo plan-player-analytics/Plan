@@ -86,6 +86,7 @@ const VersionButton = ({toggleVersionModal, versionInfo}) => {
 }
 
 const FooterButtons = () => {
+    const {t} = useTranslation();
     const {toggleColorChooser} = useTheme();
     const {authRequired} = useAuth();
 
@@ -113,10 +114,12 @@ const FooterButtons = () => {
     return (
         <>
             <div className="mt-2 ms-md-3 text-center text-md-start">
-                <button className="btn bg-transparent-light" onClick={toggleColorChooser}>
+                <button className="btn bg-transparent-light" onClick={toggleColorChooser}
+                        title={t('html.label.themeSelect')}>
                     <Fa icon={faPalette}/>
                 </button>
-                <button className="btn bg-transparent-light" onClick={toggleInfoModal}>
+                <button className="btn bg-transparent-light" onClick={toggleInfoModal}
+                        title={t('html.modal.info.text')}>
                     <Fa icon={faQuestionCircle}/>
                 </button>
                 {authRequired ?

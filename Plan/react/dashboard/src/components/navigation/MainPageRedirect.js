@@ -49,6 +49,8 @@ const MainPageRedirect = () => {
     const {authLoaded, authRequired, loggedIn, user} = useAuth();
     const {isProxy, serverName} = useMetadata();
 
+    console.log(authLoaded, authRequired, loggedIn, user)
+
     if (!authLoaded || !serverName) {
         return <RedirectPlaceholder/>
     }
