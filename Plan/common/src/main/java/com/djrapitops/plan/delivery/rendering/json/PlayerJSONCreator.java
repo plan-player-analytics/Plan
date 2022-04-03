@@ -104,6 +104,11 @@ public class PlayerJSONCreator {
         PingMutator.forContainer(player).addPingToSessions(sessionsMutator.all());
 
         Map<String, Object> data = new HashMap<>();
+
+        long now = System.currentTimeMillis();
+        data.put("timestamp", now);
+        data.put("timestamp_f", year.apply(now));
+
         data.put("info", createInfoJSONMap(player, serverNames));
         data.put("online_activity", createOnlineActivityJSONMap(sessionsMutator));
         data.put("kill_data", createPvPPvEMap(player));

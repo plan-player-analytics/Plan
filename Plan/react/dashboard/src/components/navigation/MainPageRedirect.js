@@ -4,13 +4,13 @@ import {Navigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 
 const RedirectPlaceholder = () => {
-    const [redirectStart] = useState(new Date())
+    const [redirectStart] = useState(Date.now())
     const [dateDiff, setDateDiff] = useState(0)
 
     useEffect(() => {
         const interval = setInterval(() => {
             if (dateDiff <= 50) {
-                setDateDiff(new Date() - redirectStart);
+                setDateDiff(Date.now() - redirectStart);
             } else {
                 clearInterval(interval);
             }

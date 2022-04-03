@@ -20,9 +20,9 @@ const PlayerPage = () => {
     const [sidebarItems, setSidebarItems] = useState([]);
 
     const {identifier} = useParams();
-    const {currentTab} = useNavigation();
+    const {currentTab, updateRequested, finishUpdate} = useNavigation();
 
-    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier])
+    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier, updateRequested])
 
     useEffect(() => {
         if (!player) return;
@@ -44,6 +44,8 @@ const PlayerPage = () => {
 
         setSidebarItems(items);
         window.document.title = `Plan | ${player.info.name}`;
+
+        finishUpdate(player.timestamp, player.timestamp_f);
     }, [player, t, i18n])
 
     const {hasPermissionOtherThan} = useAuth();

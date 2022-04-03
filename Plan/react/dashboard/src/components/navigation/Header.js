@@ -9,6 +9,7 @@ import {Dropdown} from "react-bootstrap-v5";
 import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
 import {localeService} from "../../service/localeService";
 import {useTranslation} from "react-i18next";
+import {useNavigation} from "../../hooks/navigationHook";
 
 const LanguageSelector = () => {
     const languages = localeService.getLanguages();
@@ -34,6 +35,8 @@ const Header = ({page, tab}) => {
     const {toggleColorChooser} = useTheme();
     const {t} = useTranslation();
 
+    const {requestUpdate, updating, lastUpdate} = useNavigation();
+
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = user ? getPlayerHeadImageUrl(user.username, user.linkedToUuid) : undefined
     // <!-- <li><a className="dropdown-item" href="#"><i className="fas fa-users-cog"></i> Web users</a></li>-->
@@ -51,7 +54,11 @@ const Header = ({page, tab}) => {
 
             <span className="topbar-divider"/>
             <div className="refresh-element">
-                <Fa icon={faSyncAlt} spin={false}/> <span className="refresh-time">Today, 9:28</span>
+                <button onClick={requestUpdate}>
+                    <Fa icon={faSyncAlt} spin={updating}/>
+                </button>
+                {' '}
+                <span className="refresh-time">{lastUpdate.formatted}</span>
             </div>
 
             <div className="ms-auto">
