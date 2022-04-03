@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.locale.LangCode;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 
@@ -46,16 +47,19 @@ import java.util.TreeMap;
 @Singleton
 public class LocaleJSONResolver implements NoAuthResolver {
 
+    private final LocaleSystem localeSystem;
     private final Locale locale;
     private final PlanFiles files;
     private final Addresses addresses;
 
     @Inject
     public LocaleJSONResolver(
+            LocaleSystem localeSystem,
             Locale locale,
             PlanFiles files,
             Addresses addresses
     ) {
+        this.localeSystem = localeSystem;
         this.locale = locale;
         this.files = files;
         this.addresses = addresses;
@@ -88,13 +92,21 @@ public class LocaleJSONResolver implements NoAuthResolver {
     private Map<String, Object> getLanguageListJSON() {
         Map<String, Object> json = new HashMap<>();
         Map<String, Object> languages = new TreeMap<>();
+        Map<String, Object> languageVersions = new TreeMap<>();
+
+        long localeVersion = localeSystem.getLocaleVersion();
+        Optional<Long> customLocaleVersion = localeSystem.getCustomLocaleVersion();
 
         for (LangCode lang : LangCode.values()) {
             if (lang == LangCode.CUSTOM && locale.getLangCode() != LangCode.CUSTOM) continue;
             languages.put(lang.toString(), lang.getName());
+            languageVersions.put(lang.toString(), localeVersion);
         }
+        customLocaleVersion.ifPresent(version -> languageVersions.put(LangCode.CUSTOM.toString(), version));
+
         json.put("defaultLanguage", locale.getLangCode().toString());
         json.put("languages", languages);
+        json.put("languageVersions", languageVersions);
 
         return json;
     }

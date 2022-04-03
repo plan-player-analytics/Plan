@@ -41,6 +41,7 @@ export const localeService = {
 
             this.defaultLanguage = data.defaultLanguage;
             this.availableLanguages = data.languages;
+            this.languageVersions = data.languageVersions;
 
             this.clientLocale = window.localStorage.getItem("locale");
             if (!this.clientLocale) {
@@ -51,6 +52,7 @@ export const localeService = {
                 .use(I18NextChainedBackend)
                 .use(initReactI18next)
                 .init({
+                    debug: false,
                     lng: this.clientLocale,
                     fallbackLng: false,
                     supportedLngs: Object.keys(this.availableLanguages),
@@ -60,7 +62,8 @@ export const localeService = {
                             I18NextHttpBackend
                         ],
                         backendOptions: [{
-                            expirationTime: 7 * 24 * 60 * 60 * 1000 // 7 days
+                            expirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
+                            versions: this.languageVersions
                         }, {
                             loadPath: '/v1/locale/{{lng}}'
                         }]

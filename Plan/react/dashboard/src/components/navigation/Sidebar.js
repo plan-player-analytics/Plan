@@ -102,7 +102,7 @@ const FooterButtons = () => {
         if (data) {
             setVersionInfo(data);
         } else if (error) {
-            setVersionInfo({currentVersion: "Error", updateAvailable: false})
+            setVersionInfo({currentVersion: "Error getting version", updateAvailable: false})
         }
     }
 
