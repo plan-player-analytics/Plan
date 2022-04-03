@@ -46,7 +46,7 @@ const PlayerPage = () => {
         window.document.title = `Plan | ${player.info.name}`;
 
         finishUpdate(player.timestamp, player.timestamp_f);
-    }, [player, t, i18n])
+    }, [player, t, i18n, finishUpdate])
 
     const {hasPermissionOtherThan} = useAuth();
     const showBackButton = hasPermissionOtherThan('page.player.self');
