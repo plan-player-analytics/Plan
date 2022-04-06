@@ -47,6 +47,10 @@ public class ExtensionStringData implements DescribedExtensionData {
         return description;
     }
 
+    public boolean isPlayerName() {
+        return playerName;
+    }
+
     public String getFormattedValue() {
         String withColors = Html.swapColorCodesToSpan(value);
         return !playerName ? withColors : Html.LINK.create("../player/" + Html.encodeToURL(value), withColors);

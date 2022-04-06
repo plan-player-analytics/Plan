@@ -38,7 +38,9 @@ public class QueryPage implements Page {
 
     public QueryPage(
             String template,
-            Locale locale, Theme theme, VersionChecker versionChecker
+            Locale locale,
+            Theme theme,
+            VersionChecker versionChecker
     ) {
         this.template = template;
         this.locale = locale;

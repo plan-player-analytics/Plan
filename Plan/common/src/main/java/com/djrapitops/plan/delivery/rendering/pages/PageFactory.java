@@ -28,6 +28,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -55,39 +56,39 @@ public class PageFactory {
     private final Lazy<VersionChecker> versionChecker;
     private final Lazy<PlanFiles> files;
     private final Lazy<PlanConfig> config;
-    private final Lazy<Locale> locale;
     private final Lazy<Theme> theme;
     private final Lazy<DBSystem> dbSystem;
     private final Lazy<ServerInfo> serverInfo;
     private final Lazy<JSONStorage> jsonStorage;
     private final Lazy<Formatters> formatters;
+    private final Lazy<Locale> locale;
 
     @Inject
     public PageFactory(
             Lazy<VersionChecker> versionChecker,
             Lazy<PlanFiles> files,
             Lazy<PlanConfig> config,
-            Lazy<Locale> locale,
             Lazy<Theme> theme,
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
             Lazy<JSONStorage> jsonStorage,
-            Lazy<Formatters> formatters
+            Lazy<Formatters> formatters,
+            Lazy<Locale> locale
     ) {
         this.versionChecker = versionChecker;
         this.files = files;
         this.config = config;
-        this.locale = locale;
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
+        this.locale = locale;
     }
 
     public PlayersPage playersPage() throws IOException {
         return new PlayersPage(getResource("players.html"), versionChecker.get(),
-                config.get(), locale.get(), theme.get(), serverInfo.get());
+                config.get(), theme.get(), serverInfo.get());
     }
 
     /**
@@ -106,12 +107,12 @@ public class PageFactory {
                 server,
                 config.get(),
                 theme.get(),
-                locale.get(),
                 versionChecker.get(),
                 dbSystem.get(),
                 serverInfo.get(),
                 jsonStorage.get(),
-                formatters.get()
+                formatters.get(),
+                locale.get()
         );
     }
 
@@ -119,10 +120,14 @@ public class PageFactory {
         Database db = dbSystem.get().getDatabase();
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         return new PlayerPage(
-                getResource("player.html"), player,
+                getResource(config.get().isTrue(PluginSettings.FRONTEND_BETA) ? "index.html" : "player.html"), player,
                 versionChecker.get(),
-                config.get(), this, theme.get(), locale.get(),
-                formatters.get(), serverInfo.get()
+                config.get(),
+                this,
+                theme.get(),
+                formatters.get(),
+                serverInfo.get(),
+                locale.get()
         );
     }
 
@@ -163,10 +168,13 @@ public class PageFactory {
         return new NetworkPage(getResource("network.html"),
                 dbSystem.get(),
                 versionChecker.get(),
-                config.get(), theme.get(), locale.get(),
+                config.get(),
+                theme.get(),
                 serverInfo.get(),
                 jsonStorage.get(),
-                formatters.get());
+                formatters.get(),
+                locale.get()
+        );
     }
 
     public Page internalErrorPage(String message, Throwable error) {
@@ -177,20 +185,19 @@ public class PageFactory {
         } catch (IOException noParse) {
             return () -> "Error occurred: " + error.toString() +
                     ", additional error occurred when attempting to render error page to user: " +
-                    noParse.toString();
+                    noParse;
         }
     }
 
     public Page errorPage(String title, String error) throws IOException {
         return new ErrorMessagePage(
                 getResource("error.html"), title, error,
-                versionChecker.get(), locale.get(), theme.get());
+                versionChecker.get(), theme.get());
     }
 
     public Page errorPage(Icon icon, String title, String error) throws IOException {
         return new ErrorMessagePage(
-                getResource("error.html"), icon, title, error,
-                locale.get(), theme.get(), versionChecker.get());
+                getResource("error.html"), icon, title, error, theme.get(), versionChecker.get());
     }
 
     public String getResource(String name) throws IOException {

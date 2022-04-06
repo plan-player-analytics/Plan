@@ -52,32 +52,31 @@ public class NetworkPage implements Page {
     private final VersionChecker versionChecker;
     private final PlanConfig config;
     private final Theme theme;
-    private final Locale locale;
     private final ServerInfo serverInfo;
     private final JSONStorage jsonStorage;
     private final Formatters formatters;
+    private final Locale locale;
 
     NetworkPage(
             String templateHtml,
-
             DBSystem dbSystem,
             VersionChecker versionChecker,
             PlanConfig config,
             Theme theme,
-            Locale locale,
             ServerInfo serverInfo,
             JSONStorage jsonStorage,
-            Formatters formatters
+            Formatters formatters,
+            Locale locale
     ) {
         this.templateHtml = templateHtml;
         this.dbSystem = dbSystem;
         this.versionChecker = versionChecker;
         this.config = config;
         this.theme = theme;
-        this.locale = locale;
         this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
+        this.locale = locale;
     }
 
     @Override

@@ -39,6 +39,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -115,11 +116,14 @@ public class ResponseResolver {
 
     public void registerPages() {
         String plugin = "Plan";
-        resolverService.registerResolver(plugin, "/robots.txt", (NoAuthResolver) request -> Optional.of(responseFactory.robotsResponse()));
+        resolverService.registerResolver(plugin, "/robots.txt", fileResolver(responseFactory::robotsResponse));
+        resolverService.registerResolver(plugin, "/manifest.json", fileResolver(() -> responseFactory.jsonFileResponse("manifest.json")));
+        resolverService.registerResolver(plugin, "/asset-manifest.json", fileResolver(() -> responseFactory.jsonFileResponse("asset-manifest.json")));
+        resolverService.registerResolver(plugin, "/favicon.ico", fileResolver(responseFactory::faviconResponse));
+
         resolverService.registerResolver(plugin, "/query", queryPageResolver);
         resolverService.registerResolver(plugin, "/players", playersPageResolver);
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
-        resolverService.registerResolver(plugin, "/favicon.ico", (NoAuthResolver) request -> Optional.of(responseFactory.faviconResponse()));
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
 
@@ -132,9 +136,13 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/errors", errorsPageResolver);
 
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
-        resolverService.registerResolverForMatches(plugin, Pattern.compile("^.*/(vendor|css|js|img)/.*"), staticResourceResolver);
+        resolverService.registerResolverForMatches(plugin, Pattern.compile(StaticResourceResolver.PATH_REGEX), staticResourceResolver);
 
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
+    }
+
+    private NoAuthResolver fileResolver(Supplier<Response> response) {
+        return request -> Optional.of(response.get());
     }
 
     public Response getResponse(Request request) {

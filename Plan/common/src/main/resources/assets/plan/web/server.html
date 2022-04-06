@@ -1410,7 +1410,7 @@
         refreshingJsonRequest("../v1/graph?type=geolocation&server=${serverUUID}", loadGeolocationGraph, 'geolocations');
         refreshingJsonRequest("../v1/graph?type=uniqueAndNew&server=${serverUUID}", loadUniqueAndNewGraph, 'online-activity-overview');
         refreshingJsonRequest("../v1/graph?type=hourlyUniqueAndNew&server=${serverUUID}", loadHourlyUniqueAndNewGraph, 'online-activity-overview');
-        refreshingJsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", loadServerCalendar, 'online-activity-overview', true);
+        refreshingJsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", loadserverCalendar, 'online-activity-overview', true);
         refreshingJsonRequest("../v1/graph?type=punchCard&server=${serverUUID}", loadPunchCard, 'online-activity-overview');
 
         setLoadingText('Sorting players table..');

@@ -18,11 +18,13 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
@@ -108,6 +110,10 @@ class AccessControlTest {
                 TestConstants.SERVER_NAME,
                 address
         )));
+
+        Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+                .orElseThrow(AssertionError::new);
+        caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 
         address = "https://localhost:" + TEST_PORT_NUMBER;
         cookieLevel0 = login(address, userLevel0.getUsername());
@@ -201,7 +207,10 @@ class AccessControlTest {
             "/v1/network/serverOptions,200",
             "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],200",
             "/v1/version,200",
-            "/v1/user,200",
+            "/v1/whoami,200",
+            "/v1/metadata,200",
+            "/v1/locale,200",
+            "/v1/locale/EN,200",
     })
     void levelZeroCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel0);
@@ -267,7 +276,10 @@ class AccessControlTest {
             "/v1/network/serverOptions,403",
             "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
             "/v1/version,200",
-            "/v1/user,200",
+            "/v1/whoami,200",
+            "/v1/metadata,200",
+            "/v1/locale,200",
+            "/v1/locale/EN,200",
     })
     void levelOneCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel1);
@@ -333,7 +345,10 @@ class AccessControlTest {
             "/v1/network/serverOptions,403",
             "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
             "/v1/version,200",
-            "/v1/user,200",
+            "/v1/whoami,200",
+            "/v1/metadata,200",
+            "/v1/locale,200",
+            "/v1/locale/EN,200",
     })
     void levelTwoCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel2);
@@ -397,7 +412,10 @@ class AccessControlTest {
             "/v1/network/serverOptions,403",
             "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
             "/v1/version,200",
-            "/v1/user,200",
+            "/v1/whoami,200",
+            "/v1/metadata,200",
+            "/v1/locale,200",
+            "/v1/locale/EN,200",
     })
     void levelHundredCanNotAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel100);

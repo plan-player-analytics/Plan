@@ -1,0 +1,23 @@
+@import "../../node_modules/bootstrap/scss/bootstrap"
+
+@import "src/components/calendar/calendar-fixes"
+
+p, span, td, .h3, a, button
+  .svg-inline--fa, .fa, .far, .fas, .fab
+    text-align: center !important
+    width: 1.25em !important
+
+.card
+  @extend .shadow
+  @extend .mb-4
+
+  .card-header
+    @extend .py-3
+    @extend .d-flex
+    @extend .flex-row
+    @extend .align-items-center
+    @extend .justify-content-between
+
+    h6
+      @extend .m-0
+      @extend .fw-bold

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.settings.config;
 
 import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,7 +40,7 @@ public class ResourceSettings {
     }
 
     public boolean shouldBeCustomized(String plugin, String fileName) {
-        if (config.isTrue(CustomizedFileSettings.WEB_DEV_MODE)) {
+        if (config.isTrue(CustomizedFileSettings.WEB_DEV_MODE) && config.isFalse(PluginSettings.FRONTEND_BETA)) {
             return true;
         }
 

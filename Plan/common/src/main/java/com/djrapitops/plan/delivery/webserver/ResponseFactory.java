@@ -38,6 +38,8 @@ import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQue
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plan.utilities.java.UnaryChain;
+import dagger.Lazy;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -61,6 +63,7 @@ public class ResponseFactory {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final Theme theme;
+    private final Lazy<Addresses> addresses;
 
     @Inject
     public ResponseFactory(
@@ -68,13 +71,15 @@ public class ResponseFactory {
             PageFactory pageFactory,
             Locale locale,
             DBSystem dbSystem,
-            Theme theme
+            Theme theme,
+            Lazy<Addresses> addresses
     ) {
         this.files = files;
         this.pageFactory = pageFactory;
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.theme = theme;
+        this.addresses = addresses;
     }
 
     public WebResource getResource(String resourceName) {
@@ -167,10 +172,10 @@ public class ResponseFactory {
     public Response javaScriptResponse(String fileName) {
         try {
             String content = UnaryChain.of(getResource(fileName).asString())
+                    .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
                     .chain(resource -> {
-                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/"))
-                            return resource;
+                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {return resource;}
                         return locale.replaceLanguageInJavascript(resource);
                     })
                     .apply();
@@ -182,6 +187,12 @@ public class ResponseFactory {
         } catch (UncheckedIOException e) {
             return notFound404("JS File not found from jar: " + fileName + ", " + e.toString());
         }
+    }
+
+    private String replaceMainAddressPlaceholder(String resource) {
+        String address = addresses.get().getAccessAddress()
+                .orElseGet(addresses.get()::getFallbackLocalhostAddress);
+        return StringUtils.replace(resource, "PLAN_BASE_ADDRESS", address);
     }
 
     public Response cssResponse(String fileName) {
@@ -430,6 +441,17 @@ public class ResponseFactory {
             return forPage(pageFactory.errorsPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate errors page");
+        }
+    }
+
+    public Response jsonFileResponse(String file) {
+        try {
+            return Response.builder()
+                    .setMimeType(MimeType.JSON)
+                    .setContent(getResource(file))
+                    .build();
+        } catch (UncheckedIOException e) {
+            return forInternalError(e, "Could not read " + file);
         }
     }
 }

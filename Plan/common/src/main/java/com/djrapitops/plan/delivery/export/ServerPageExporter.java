@@ -110,13 +110,13 @@ public class ServerPageExporter extends FileExporter {
         String html = StringUtils.replaceEach(page.toHtml(),
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance', true);",
-                        "loadServerCalendar, 'online-activity-overview', true);",
+                        "loadserverCalendar, 'online-activity-overview', true);",
                         "}, 'playerlist', true);",
                         "<head>"
                 },
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance');",
-                        "loadServerCalendar, 'online-activity-overview');",
+                        "loadserverCalendar, 'online-activity-overview');",
                         "}, 'playerlist');",
                         "<head><style>.refresh-element {display: none;}</style>"
                 });

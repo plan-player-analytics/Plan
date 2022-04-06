@@ -17,7 +17,9 @@
 package com.djrapitops.plan.delivery.rendering.html;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.CODE;
 import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.LANG;
@@ -29,7 +31,7 @@ import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.LANG;
  */
 public class Contributors {
 
-    private static final Contributor[] CONTRIBUTORS = new Contributor[]{
+    private static final Contributor[] CONTRIBUTOR_ARRAY = new Contributor[]{
             new Contributor("aidn5", CODE),
             new Contributor("Antonok", CODE),
             new Contributor("Argetan", CODE),
@@ -100,11 +102,15 @@ public class Contributors {
     }
 
     public static String generateContributorHtml() {
-        int estimatedLength = CONTRIBUTORS.length * 40 + 50;
+        int estimatedLength = CONTRIBUTOR_ARRAY.length * 40 + 50;
         StringBuilder html = new StringBuilder(estimatedLength);
-        Arrays.stream(CONTRIBUTORS).sorted()
+        Arrays.stream(CONTRIBUTOR_ARRAY).sorted()
                 .forEach(contributor -> contributor.appendHtml(html));
         return html.toString();
+    }
+
+    public static List<Contributor> getContributors() {
+        return Arrays.stream(CONTRIBUTOR_ARRAY).sorted().collect(Collectors.toList());
     }
 
     enum For {

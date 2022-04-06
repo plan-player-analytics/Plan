@@ -21,6 +21,7 @@ import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -165,6 +166,11 @@ class ExportJSErrorRegressionTest {
         return Arrays.stream(endpointsToTest).map(
                 endpoint -> DynamicTest.dynamicTest("Exported page does not log errors to js console " + endpoint, () -> {
                     String address = nginx.getBaseUrl("http", 80).toURI().resolve(endpoint).toString();
+
+                    // Avoid accidentally DDoS:ing head image service during tests.
+                    planSystem.getConfigSystem().getConfig()
+                            .set(DisplaySettings.PLAYER_HEAD_IMG_URL, nginx.getBaseUrl("http", 80).toURI()
+                                    .resolve("/img/Flaticon_circle.png").toString());
 
                     driver.get(address);
 

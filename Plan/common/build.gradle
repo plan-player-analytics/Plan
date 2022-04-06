@@ -1,7 +1,9 @@
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
+    id "com.github.node-gradle.node" version "3.2.1"
 }
 
 configurations {
@@ -56,7 +58,6 @@ dependencies {
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
 task updateVersion(type: Copy) {
     from('src/main/resources') {
         include 'plugin.yml'
@@ -66,6 +67,34 @@ task updateVersion(type: Copy) {
     }
     into 'build/sources/resources/'
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+}
+
+node {
+    nodeProjectDir = file("$rootDir/react/dashboard")
+}
+
+task yarnBundle(type: YarnTask) {
+    inputs.files(fileTree("$rootDir/react/dashboard/src"))
+    inputs.file("$rootDir/react/dashboard/package.json")
+
+    outputs.dir("$rootDir/react/dashboard/build")
+
+    dependsOn yarn_install
+    args = ['run', 'build']
+}
+
+task copyYarnBuildResults {
+    inputs.files(fileTree("$rootDir/react/dashboard/build"))
+    outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
+
+    dependsOn yarnBundle
+    doLast {
+        mkdir "$rootDir/common/build/resources/main/assets/plan/web"
+        copy {
+            from "$rootDir/react/dashboard/build"
+            into "$rootDir/common/build/resources/main/assets/plan/web"
+        }
+    }
 }
 
 task determineWebAssetModifications {
@@ -92,7 +121,7 @@ task determineWebAssetModifications {
 }
 
 processResources {
-    dependsOn determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
+    dependsOn copyYarnBuildResults, determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
     from 'build/sources/resources'
