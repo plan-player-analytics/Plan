@@ -215,7 +215,7 @@ const Sidebar = ({items, showBackButton}) => {
     }, []);
 
     const collapseSidebar = () => setSidebarExpanded(windowWidth > 1350);
-    useEffect(collapseSidebar, [windowWidth, currentTab]);
+    useEffect(collapseSidebar, [windowWidth, currentTab, setSidebarExpanded]);
 
     return (
         <>

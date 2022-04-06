@@ -24,7 +24,7 @@ export const NavigationContextProvider = ({children}) => {
 
     const toggleSidebar = useCallback(() => {
         setSidebarExpanded(!sidebarExpanded);
-    })
+    }, [setSidebarExpanded, sidebarExpanded])
 
     const sharedState = {
         currentTab, setCurrentTab,

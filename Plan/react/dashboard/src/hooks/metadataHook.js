@@ -26,7 +26,7 @@ export const MetadataContextProvider = ({children}) => {
             .replace('${playerUUIDNoDash}', uuid ? uuid.split('-').join('') : undefined)
             .replace('${playerName}', name)
         /* eslint-enable no-template-curly-in-string */
-    }, []);
+    }, [metadata.playerHeadImageUrl]);
 
     useEffect(() => {
         updateMetadata();
