@@ -99,8 +99,9 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">LocaleSystem</a></span>&#8203;(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.delivery.web.WebAssetVersions,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">LocaleSystem</a></span>&#8203;(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+ <a href="../../delivery/web/WebAssetVersions.html" title="class in com.djrapitops.plan.delivery.web">WebAssetVersions</a>&nbsp;webAssetVersions,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -128,12 +129,21 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Performs enable actions for the subsystem.</div>
 </div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getCustomLocaleVersion()">getCustomLocaleVersion</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getIdentifiers()">getIdentifiers</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getIdentifiers()">getIdentifiers</a></span>()</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getKeys()">getKeys</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getLocale()">getLocale</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getLocaleVersion()">getLocaleVersion</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -152,11 +162,12 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.delivery.web.WebAssetVersions,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>LocaleSystem</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">LocaleSystem</span>&#8203;<span class="parameters">(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+ <a href="../../delivery/web/WebAssetVersions.html" title="class in com.djrapitops.plan.delivery.web">WebAssetVersions</a>&nbsp;webAssetVersions,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
 </section>
@@ -173,6 +184,12 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <section class="detail" id="getIdentifiers()">
 <h3>getIdentifiers</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a>&gt;</span>&nbsp;<span class="element-name">getIdentifiers</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getKeys()">
+<h3>getKeys</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,&#8203;<a href="lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a>&gt;</span>&nbsp;<span class="element-name">getKeys</span>()</div>
 </section>
 </li>
 <li>
@@ -203,6 +220,18 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <section class="detail" id="getLocale()">
 <h3>getLocale</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></span>&nbsp;<span class="element-name">getLocale</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLocaleVersion()">
+<h3>getLocaleVersion</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getLocaleVersion</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getCustomLocaleVersion()">
+<h3>getCustomLocaleVersion</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">getCustomLocaleVersion</span>()</div>
 </section>
 </li>
 </ul>

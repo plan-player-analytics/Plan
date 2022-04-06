@@ -94,11 +94,12 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.delivery.rendering.pages.PageFactory,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.settings.theme.Theme)">ResponseFactory</a></span>&#8203;(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.delivery.rendering.pages.PageFactory,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.settings.theme.Theme,dagger.Lazy)">ResponseFactory</a></span>&#8203;(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../rendering/pages/PageFactory.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PageFactory</a>&nbsp;pageFactory,
  <a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../../settings/theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme)</code></div>
+ <a href="../../settings/theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme,
+ dagger.Lazy&lt;<a href="Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&gt;&nbsp;addresses)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -162,47 +163,50 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#javaScriptResponse(java.lang.String)">javaScriptResponse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;fileName)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#loginPageResponse()">loginPageResponse</a></span>()</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#jsonFileResponse(java.lang.String)">jsonFileResponse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;file)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#networkPageResponse()">networkPageResponse</a></span>()</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#loginPageResponse()">loginPageResponse</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#notFound404(java.lang.String)">notFound404</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#networkPageResponse()">networkPageResponse</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pageNotFound404()">pageNotFound404</a></span>()</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#notFound404(java.lang.String)">notFound404</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#playerNotFound404()">playerNotFound404</a></span>()</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pageNotFound404()">pageNotFound404</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#playerPageResponse(java.util.UUID)">playerPageResponse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#playerNotFound404()">playerNotFound404</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#playersPageResponse()">playersPageResponse</a></span>()</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#playerPageResponse(java.util.UUID)">playerPageResponse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#queryPageResponse()">queryPageResponse</a></span>()</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#playersPageResponse()">playersPageResponse</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#rawPlayerPageResponse(java.util.UUID)">rawPlayerPageResponse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#queryPageResponse()">queryPageResponse</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#redirectResponse(java.lang.String)">redirectResponse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;location)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#rawPlayerPageResponse(java.util.UUID)">rawPlayerPageResponse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#registerPageResponse()">registerPageResponse</a></span>()</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#redirectResponse(java.lang.String)">redirectResponse</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;location)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#robotsResponse()">robotsResponse</a></span>()</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#registerPageResponse()">registerPageResponse</a></span>()</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#serverPageResponse(com.djrapitops.plan.identification.ServerUUID)">serverPageResponse</a></span>&#8203;(<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#robotsResponse()">robotsResponse</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#uuidNotFound404()">uuidNotFound404</a></span>()</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#serverPageResponse(com.djrapitops.plan.identification.ServerUUID)">serverPageResponse</a></span>&#8203;(<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#uuidNotFound404()">uuidNotFound404</a></span>()</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -221,14 +225,15 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.delivery.rendering.pages.PageFactory,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.settings.theme.Theme)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.delivery.rendering.pages.PageFactory,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.settings.theme.Theme,dagger.Lazy)">
 <h3>ResponseFactory</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">ResponseFactory</span>&#8203;<span class="parameters">(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../rendering/pages/PageFactory.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PageFactory</a>&nbsp;pageFactory,
  <a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../../settings/theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme)</span></div>
+ <a href="../../settings/theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme,
+ dagger.Lazy&lt;<a href="Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&gt;&nbsp;addresses)</span></div>
 </section>
 </li>
 </ul>
@@ -413,6 +418,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="errorsPageResponse()">
 <h3>errorsPageResponse</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></span>&nbsp;<span class="element-name">errorsPageResponse</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="jsonFileResponse(java.lang.String)">
+<h3>jsonFileResponse</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a></span>&nbsp;<span class="element-name">jsonFileResponse</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;file)</span></div>
 </section>
 </li>
 </ul>
