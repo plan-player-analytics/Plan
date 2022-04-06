@@ -35,7 +35,7 @@ const Header = ({page, tab}) => {
     const {toggleColorChooser} = useTheme();
     const {t} = useTranslation();
 
-    const {requestUpdate, updating, lastUpdate} = useNavigation();
+    const {requestUpdate, updating, lastUpdate, toggleSidebar} = useNavigation();
 
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.linkedToUuid) : undefined
@@ -48,7 +48,10 @@ const Header = ({page, tab}) => {
         <nav className="nav mt-3 align-items-center justify-content-between container-fluid">
             <div className="d-sm-flex">
                 <h1 className="h3 mb-0 text-gray-800">
-                    <Fa icon={faBars} className={"sidebar-toggler"}/>{page}
+                    <button onClick={toggleSidebar}>
+                        <Fa icon={faBars} className={"sidebar-toggler"}/>
+                    </button>
+                    {page}
                     {tab ? <>{' '}&middot; {t(tab)}</> : ''}</h1>
             </div>
 

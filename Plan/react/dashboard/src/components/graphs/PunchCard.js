@@ -13,7 +13,7 @@ const PunchCard = ({series}) => {
             data: series
         };
         Highcharts.setOptions(graphTheming);
-        Highcharts.chart('punchcard', {
+        setTimeout(() => Highcharts.chart('punchcard', {
             chart: {
                 backgroundColor: 'transparent',
                 plotBackgroundColor: 'transparent',
@@ -43,7 +43,7 @@ const PunchCard = ({series}) => {
                 pointFormat: t('html.label.active') + ': {point.z}'
             },
             series: [punchCard]
-        })
+        }), 25)
     }, [series, graphTheming, t])
 
     return (

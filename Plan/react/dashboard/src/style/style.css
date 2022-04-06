@@ -81,7 +81,7 @@ p.collapsing {
 }
 
 .sidebar-toggler {
-    padding: 0.6rem;
+    margin-right: 0.5rem;
     display: inline;
     cursor: pointer;
 }
@@ -1290,6 +1290,16 @@ body.sidebar-hidden .navbar-nav {
     border-right: 1px solid #e3e6f0;
     height: calc(4.375rem - 2rem);
     margin: auto 1rem;
+}
+
+@media (max-width: 660px) {
+    .topbar-divider {
+        display: none;
+    }
+
+    .refresh-element {
+        margin-left: 1rem;
+    }
 }
 
 .collapse-item.nav-button {

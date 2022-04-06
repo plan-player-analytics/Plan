@@ -2573,7 +2573,7 @@ a.text-dark:hover, a.text-dark:focus {
     color: rgba(255, 255, 255, 0.5);
 }
 
-@media (min-width: 768px) {
+/*@media (min-width: 768px) { Commented because mobile should have full width sidebar when open. */
     .sidebar {
         width: 14rem !important;
     }
@@ -2713,7 +2713,8 @@ a.text-dark:hover, a.text-dark:focus {
     .sidebar.toggled .sidebar-heading {
         text-align: center;
     }
-}
+
+/*}*/
 
 .sidebar-light .sidebar-brand {
     color: #6e707e;

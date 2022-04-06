@@ -200,24 +200,38 @@ const renderItem = (item, i, openCollapse, setOpenCollapse) => {
 const Sidebar = ({items, showBackButton}) => {
     const {t} = useTranslation();
     const {color} = useTheme();
+    const {currentTab, sidebarExpanded, setSidebarExpanded} = useNavigation();
 
     const [openCollapse, setOpenCollapse] = useState(undefined);
     const toggleCollapse = collapse => {
         setOpenCollapse(openCollapse === collapse ? undefined : collapse);
     }
 
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const updateWidth = () => setWindowWidth(window.innerWidth);
+    useEffect(() => {
+        window.addEventListener('resize', updateWidth);
+        return () => window.removeEventListener('resize', updateWidth);
+    }, []);
+
+    const collapseSidebar = () => setSidebarExpanded(windowWidth > 1350);
+    useEffect(collapseSidebar, [windowWidth, currentTab]);
+
     return (
-        <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
-            <Logo/>
-            <Divider/>
-            {showBackButton ? <>
-                <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
+        <>
+            {sidebarExpanded &&
+            <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
+                <Logo/>
                 <Divider/>
-            </> : ''}
-            {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse))}
-            <Divider/>
-            <FooterButtons/>
-        </ul>
+                {showBackButton ? <>
+                    <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
+                    <Divider/>
+                </> : ''}
+                {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse))}
+                <Divider/>
+                <FooterButtons/>
+            </ul>}
+        </>
     )
 }
 
