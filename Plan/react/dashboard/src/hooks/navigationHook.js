@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useCallback, useContext, useState} from "react";
 
 const NavigationContext = createContext({});
 
@@ -15,10 +15,10 @@ export const NavigationContextProvider = ({children}) => {
         }
     }
 
-    const finishUpdate = (date, formatted) => {
+    const finishUpdate = useCallback((date, formatted) => {
         setLastUpdate({date, formatted});
         setUpdating(false);
-    }
+    }, [setLastUpdate, setUpdating]);
 
     const sharedState = {
         currentTab, setCurrentTab,

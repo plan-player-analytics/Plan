@@ -20,16 +20,7 @@ const PlayerSessionCalendar = ({series, firstDay}) => {
                 center: '',
                 right: 'dayGridMonth dayGridWeek dayGridDay today prev next'
             }}
-            events={(fetchInfo, successCallback, failCallback) => successCallback(series)}
-            eventDidMount={(info) => {
-                // TODO popover
-                /*{
-                    content: info.event.title,
-                    trigger: 'hover',
-                    placement: 'top',
-                    container: 'body'
-                }*/
-            }}
+            events={(_fetchInfo, successCallback) => successCallback(series)}
         />
     )
 }

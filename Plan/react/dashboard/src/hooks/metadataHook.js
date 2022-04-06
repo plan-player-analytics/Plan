@@ -15,7 +15,7 @@ export const MetadataContextProvider = ({children}) => {
         }
     }, [])
 
-    const getPlayerHeadImageUrl = (name, uuid) => {
+    const getPlayerHeadImageUrl = useCallback((name, uuid) => {
         if (!uuid && name === 'console') {
             return '../../Terminal-icon.png';
         }
@@ -26,7 +26,7 @@ export const MetadataContextProvider = ({children}) => {
             .replace('${playerUUIDNoDash}', uuid ? uuid.split('-').join('') : undefined)
             .replace('${playerName}', name)
         /* eslint-enable no-template-curly-in-string */
-    }
+    }, []);
 
     useEffect(() => {
         updateMetadata();

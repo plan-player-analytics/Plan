@@ -23,22 +23,22 @@ export const AuthenticationContextProvider = ({children}) => {
         }
     }, [])
 
-    const login = async (username, password) => {
+    const login = useCallback(async (username, password) => {
         // TODO implement later when login page is done with React
         await updateLoginDetails();
-    }
+    }, [updateLoginDetails]);
 
-    const logout = () => {
+    const logout = useCallback(() => {
         // TODO implement later when login page is done with React
-    }
+    }, []);
 
-    const hasPermission = permission => {
+    const hasPermission = useCallback(permission => {
         return !authRequired || (loggedIn && user && user.permissions.filter(perm => perm === permission).length);
-    }
+    }, [authRequired, loggedIn, user]);
 
-    const hasPermissionOtherThan = permission => {
+    const hasPermissionOtherThan = useCallback(permission => {
         return !authRequired || (loggedIn && user && user.permissions.filter(perm => perm !== permission).length);
-    }
+    }, [authRequired, loggedIn, user]);
 
     useEffect(() => {
         updateLoginDetails();
