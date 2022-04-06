@@ -559,7 +559,7 @@ function loadHourlyUniqueAndNewGraph(json, error) {
     }
 }
 
-function loadServerCalendar(json, error) {
+function loadserverCalendar(json, error) {
     if (json) {
         document.getElementById('calendar').innerText = '';
         if (window.calendars.online_activity) window.calendars.online_activity.destroy();
