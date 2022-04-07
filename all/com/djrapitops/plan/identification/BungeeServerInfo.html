@@ -109,7 +109,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.identification.properties.ServerProperties,com.djrapitops.plan.identification.storage.ServerFileLoader,com.djrapitops.plan.identification.storage.ServerDBLoader,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.settings.locale.Locale,net.playeranalytics.plugin.server.PluginLogger)">BungeeServerInfo</a></span>&#8203;(<a href="properties/ServerProperties.html" title="class in com.djrapitops.plan.identification.properties">ServerProperties</a>&nbsp;serverProperties,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.identification.properties.ServerProperties,com.djrapitops.plan.identification.storage.ServerFileLoader,com.djrapitops.plan.identification.storage.ServerDBLoader,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.settings.locale.Locale,net.playeranalytics.plugin.server.PluginLogger)">BungeeServerInfo</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentVersion,
+ <a href="properties/ServerProperties.html" title="class in com.djrapitops.plan.identification.properties">ServerProperties</a>&nbsp;serverProperties,
  <a href="storage/ServerFileLoader.html" title="class in com.djrapitops.plan.identification.storage">ServerFileLoader</a>&nbsp;fromFile,
  <a href="storage/ServerDBLoader.html" title="class in com.djrapitops.plan.identification.storage">ServerDBLoader</a>&nbsp;fromDatabase,
  <a href="../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
@@ -155,10 +156,12 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.identification.properties.ServerProperties,com.djrapitops.plan.identification.storage.ServerFileLoader,com.djrapitops.plan.identification.storage.ServerDBLoader,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.settings.locale.Locale,net.playeranalytics.plugin.server.PluginLogger)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.identification.properties.ServerProperties,com.djrapitops.plan.identification.storage.ServerFileLoader,com.djrapitops.plan.identification.storage.ServerDBLoader,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.settings.locale.Locale,net.playeranalytics.plugin.server.PluginLogger)">
 <h3>BungeeServerInfo</h3>
 <div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">BungeeServerInfo</span>&#8203;<span class="parameters">(<a href="properties/ServerProperties.html" title="class in com.djrapitops.plan.identification.properties">ServerProperties</a>&nbsp;serverProperties,
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">BungeeServerInfo</span>&#8203;<span class="parameters">(@Named("currentVersion")
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentVersion,
+ <a href="properties/ServerProperties.html" title="class in com.djrapitops.plan.identification.properties">ServerProperties</a>&nbsp;serverProperties,
  <a href="storage/ServerFileLoader.html" title="class in com.djrapitops.plan.identification.storage">ServerFileLoader</a>&nbsp;fromFile,
  <a href="storage/ServerDBLoader.html" title="class in com.djrapitops.plan.identification.storage">ServerDBLoader</a>&nbsp;fromDatabase,
  <a href="../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,

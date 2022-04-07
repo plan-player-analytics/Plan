@@ -111,7 +111,8 @@ implements <a href="ServerLoader.html" title="interface in com.djrapitops.plan.i
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig)">ServerFileLoader</a></span>&#8203;(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig)">ServerFileLoader</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentVersion,
+ <a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
@@ -171,10 +172,12 @@ implements <a href="ServerLoader.html" title="interface in com.djrapitops.plan.i
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig)">
 <h3>ServerFileLoader</h3>
 <div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">ServerFileLoader</span>&#8203;<span class="parameters">(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">ServerFileLoader</span>&#8203;<span class="parameters">(@Named("currentVersion")
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentVersion,
+ <a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config)</span></div>
 </section>
 </li>
