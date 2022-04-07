@@ -253,7 +253,7 @@ command:
         help: "> §2/${0} Hilfe"
         servers: "> §2Server"
         search: "> §2${0} Ergebnisse für §f${1}§2:"
-        serverList: "id::name::uuid"
+        serverList: "id::name::uuid::version"
         inspect: "> §2Benutzer: §f${0}"
         network: "> §2Netzwerkseite"
         webUsers: "> §2${0} Accounts"

@@ -253,7 +253,7 @@ command:
         help: "> §2/${0} Pomoc"
         servers: "> §2Servery"
         search: "> §2${0} Výsledky pro §f${1}§2:"
-        serverList: "id::jméno::uuid"
+        serverList: "id::jméno::uuid::version"
         inspect: "> §2Hráč: §f${0}"
         network: "> §2Stránka Sítě"
         webUsers: "> §2${0} Web uživatelé"

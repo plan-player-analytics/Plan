@@ -218,7 +218,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new PlayerTableRowPatch(),
                 new ExtensionTableProviderValuesForPatch(),
                 new RemoveIncorrectTebexPackageDataPatch(),
-                new ExtensionTableProviderFormattersPatch()
+                new ExtensionTableProviderFormattersPatch(),
+                new ServerPlanVersionPatch()
         };
     }
 

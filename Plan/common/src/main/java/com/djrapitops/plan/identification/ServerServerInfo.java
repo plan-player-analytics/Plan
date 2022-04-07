@@ -30,6 +30,7 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Optional;
 
@@ -43,6 +44,8 @@ import java.util.Optional;
 @Singleton
 public class ServerServerInfo extends ServerInfo {
 
+    private final String currentVersion;
+
     private final ServerLoader fromFile;
     private final ServerLoader fromDatabase;
 
@@ -55,6 +58,7 @@ public class ServerServerInfo extends ServerInfo {
 
     @Inject
     public ServerServerInfo(
+            @Named("currentVersion") String currentVersion,
             ServerProperties serverProperties,
             ServerFileLoader fromFile,
             ServerDBLoader fromDatabase,
@@ -65,6 +69,7 @@ public class ServerServerInfo extends ServerInfo {
             PluginLogger logger
     ) {
         super(serverProperties);
+        this.currentVersion = currentVersion;
         this.fromFile = fromFile;
         this.fromDatabase = fromDatabase;
         this.processing = processing;
@@ -112,6 +117,6 @@ public class ServerServerInfo extends ServerInfo {
     private Server createServerObject(ServerUUID serverUUID) {
         String webAddress = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
         String name = config.get(PluginSettings.SERVER_NAME);
-        return new Server(serverUUID, name, webAddress);
+        return new Server(serverUUID, name, webAddress, currentVersion);
     }
 }

@@ -28,6 +28,7 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 /**
@@ -38,6 +39,7 @@ import javax.inject.Singleton;
 @Singleton
 public class VelocityServerInfo extends ServerInfo {
 
+    private final String currentVersion;
     private final ServerLoader fromFile;
     private final ServerLoader fromDatabase;
 
@@ -49,6 +51,7 @@ public class VelocityServerInfo extends ServerInfo {
 
     @Inject
     public VelocityServerInfo(
+            @Named("currentVersion") String currentVersion,
             ServerProperties serverProperties,
             ServerFileLoader fromFile,
             ServerDBLoader fromDatabase,
@@ -58,6 +61,7 @@ public class VelocityServerInfo extends ServerInfo {
             PluginLogger logger
     ) {
         super(serverProperties);
+        this.currentVersion = currentVersion;
         this.fromFile = fromFile;
         this.fromDatabase = fromDatabase;
         this.processing = processing;
@@ -89,7 +93,7 @@ public class VelocityServerInfo extends ServerInfo {
     }
 
     /**
-     * @throws EnableException
+     * @throws EnableException If IP setting is unset
      */
     private void checkIfDefaultIP() {
         String ip = serverProperties.getIp();
@@ -112,12 +116,12 @@ public class VelocityServerInfo extends ServerInfo {
     }
 
     /**
-     * @throws EnableException
+     * @throws EnableException If IP setting is unset
      */
     private Server createServerObject() {
         ServerUUID serverUUID = generateNewUUID();
         String accessAddress = addresses.getAccessAddress().orElseThrow(() -> new EnableException("Velocity can not have '0.0.0.0' or '' as an address. Set up 'Server.IP' setting."));
 
-        return new Server(-1, serverUUID, "Velocity", accessAddress, true);
+        return new Server(-1, serverUUID, "Velocity", accessAddress, true, currentVersion);
     }
 }

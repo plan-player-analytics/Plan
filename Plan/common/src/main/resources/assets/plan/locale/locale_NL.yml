@@ -253,7 +253,7 @@ command:
         help: "> §2/${0} Hulp"
         servers: "> §2Servers"
         search: "> §2${0} Resultaten voor §f${1}§2:"
-        serverList: "id::name::uuid"
+        serverList: "id::name::uuid::version"
         inspect: "> §2Speler: §f${0}"
         network: "> §2Netwerkpagina"
         webUsers: "> §2${0} Webgebruikers"

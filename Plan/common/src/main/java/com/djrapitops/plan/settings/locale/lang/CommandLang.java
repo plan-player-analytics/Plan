@@ -81,7 +81,7 @@ public enum CommandLang implements Lang {
     HEADER_PLAYERS("command.header.players", "Cmd Header - Players", "> §2Players"),
     HEADER_WEB_USERS("command.header.webUsers", "Cmd Header - Web Users", "> §2${0} Web Users"),
     HEADER_NETWORK("command.header.network", "Cmd Header - Network", "> §2Network Page"),
-    HEADER_SERVER_LIST("command.header.serverList", "Cmd Header - server list", "id::name::uuid"),
+    HEADER_SERVER_LIST("command.header.serverList", "Cmd Header - server list", "id::name::uuid::version"),
     HEADER_WEB_USER_LIST("command.header.webUserList", "Cmd Header - web user list", "username::linked to::permission level"),
 
     INFO_VERSION("command.subcommand.info.version", "Cmd Info - Version", "  §2Version: §f${0}"),

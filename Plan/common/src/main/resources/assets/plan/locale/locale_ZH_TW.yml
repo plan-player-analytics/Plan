@@ -253,7 +253,7 @@ command:
         help: "> §2/${0} 幫助"
         servers: "> §2全部伺服器"
         search: "> §2${0} 對於 §f${1}§2 的結果:"
-        serverList: "id::名稱::uuid"
+        serverList: "id::名稱::uuid::version"
         inspect: "> §2玩家: §f${0}"
         network: "> §2群組網路頁面"
         webUsers: "> §2${0} 網頁使用者"

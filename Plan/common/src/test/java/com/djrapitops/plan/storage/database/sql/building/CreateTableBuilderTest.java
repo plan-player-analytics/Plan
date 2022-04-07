@@ -39,7 +39,7 @@ class CreateTableBuilderTest {
                 .column(ServerTable.NAME, Sql.varchar(100))
                 .column(ServerTable.WEB_ADDRESS, Sql.varchar(100))
                 .column(ServerTable.INSTALLED, Sql.BOOL).notNull().defaultValue(true)
-                .column(ServerTable.MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
+                .column("max_players", Sql.INT).notNull().defaultValue("-1")
                 .toString();
         assertEquals(expected, result);
     }

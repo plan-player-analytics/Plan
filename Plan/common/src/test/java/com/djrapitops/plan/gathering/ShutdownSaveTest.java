@@ -103,7 +103,7 @@ class ShutdownSaveTest {
         UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
         String worldName = TestConstants.WORLD_ONE_NAME;
 
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, "-", "")));
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, "-", "", TestConstants.VERSION)));
         database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName))
                 .get();
@@ -152,7 +152,7 @@ class ShutdownSaveTest {
         long endTime = System.currentTimeMillis();
         Collection<ActiveSession> activeSessions = SessionCache.getActiveSessions();
         for (FinishedSession session : underTest.finishSessions(activeSessions, endTime)) {
-            assertEquals(endTime, session.getEnd(), () -> "One of the sessions had differing end time");
+            assertEquals(endTime, session.getEnd(), "One of the sessions had differing end time");
         }
     }
 

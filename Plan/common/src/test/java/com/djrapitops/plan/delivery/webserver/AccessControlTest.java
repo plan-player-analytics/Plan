@@ -108,8 +108,8 @@ class AccessControlTest {
         system.getDatabaseSystem().getDatabase().executeTransaction(new StoreServerInformationTransaction(new Server(
                 TestConstants.SERVER_UUID,
                 TestConstants.SERVER_NAME,
-                address
-        )));
+                address,
+                TestConstants.VERSION)));
 
         Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
