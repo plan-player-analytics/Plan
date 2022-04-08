@@ -26,7 +26,6 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
@@ -231,18 +230,18 @@ public abstract class SQLDB extends AbstractDatabase {
      */
     private void setupDatabase() {
         executeTransaction(new CreateTablesTransaction());
-        logger.info("Database: Making sure schema is up to date..");
+        logger.info(locale.getString(PluginLang.DB_SCHEMA_PATCH));
         for (Patch patch : patches()) {
             executeTransaction(patch);
         }
         executeTransaction(new OperationCriticalTransaction() {
             @Override
             protected void performOperations() {
+                logger.info(locale.getString(PluginLang.DB_APPLIED_PATCHES));
                 if (getState() == State.PATCHING) setState(State.OPEN);
             }
         });
         registerIndexCreationTask();
-        logger.info("Database: Ready for operation.");
     }
 
     private void registerIndexCreationTask() {
@@ -382,5 +381,9 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public PluginLogger getLogger() {
         return logger;
+    }
+
+    public Locale getLocale() {
+        return locale;
     }
 }

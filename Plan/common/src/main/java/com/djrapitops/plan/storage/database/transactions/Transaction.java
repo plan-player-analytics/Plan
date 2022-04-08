@@ -18,12 +18,14 @@ package com.djrapitops.plan.storage.database.transactions;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 
@@ -79,6 +81,9 @@ public abstract class Transaction {
             initializeConnection(db);
             if (shouldBeExecuted()) {
                 initializeTransaction(db);
+                if (this instanceof Patch) {
+                    db.getLogger().info(db.getLocale().getString(PluginLang.DB_APPLY_PATCH, getClass().getSimpleName()));
+                }
                 performOperations();
                 if (connection != null) connection.commit();
             }
