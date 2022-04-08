@@ -34,25 +34,25 @@ public abstract class ExecStatement implements Executable {
     }
 
     public int executeReturningId(Connection connection) {
-        try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-                prepare(preparedStatement);
-                preparedStatement.executeUpdate();
-                try (ResultSet ids = preparedStatement.getGeneratedKeys()) {
-                    return ids.next() ? ids.getInt(1) : -1;
-                }
-            }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            prepare(preparedStatement);
+            preparedStatement.executeUpdate();
+            return executeReturningId(preparedStatement);
         } catch (SQLException e) {
             throw DBOpException.forCause(sql, e);
         }
     }
 
+    private int executeReturningId(PreparedStatement preparedStatement) throws SQLException {
+        try (ResultSet ids = preparedStatement.getGeneratedKeys()) {
+            return ids.next() ? ids.getInt(1) : -1;
+        }
+    }
+
     @Override
     public boolean execute(Connection connection) {
-        try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                return execute(preparedStatement);
-            }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            return execute(preparedStatement);
         } catch (SQLException e) {
             throw DBOpException.forCause(sql, e);
         }
