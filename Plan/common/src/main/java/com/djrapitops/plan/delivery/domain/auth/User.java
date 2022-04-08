@@ -51,7 +51,7 @@ public class User implements Comparable<User> {
     }
 
     public WebUser toWebUser() {
-        return new WebUser(linkedTo, username, permissions);
+        return new WebUser(linkedTo, linkedToUUID, username, permissions);
     }
 
     public String getUsername() {

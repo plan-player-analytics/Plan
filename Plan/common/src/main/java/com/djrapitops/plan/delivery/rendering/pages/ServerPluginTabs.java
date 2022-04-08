@@ -150,23 +150,14 @@ public class ServerPluginTabs {
     }
 
     private String wrapInWideColumnTab(String tabName, String content) {
-        return "<div class=\"tab\" id=\"" + NavLink.format("plugins-" + tabName) + "\"><div class=\"container-fluid mt-4\">" +
-                // Page heading
-                "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
-                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${serverName} &middot; " + tabName + "</h1>${backButton}" +
-                "</div>" +
-                // End Page heading
-                "<div class=\"row\"><div class=\"col-md-12\">" + content + "</div></div></div></div>";
+        return "<div class=\"tab\" id=\"" + NavLink.format("plugins-" + tabName) + "\">" +
+                "<div class=\"row\"><div class=\"col-md-12\">" + content + "</div></div></div>";
     }
 
     private String wrapInOverviewTab(String content) {
-        return "<div class=\"tab\" id=\"" + NavLink.format("plugins-overview") + "\"><div class=\"container-fluid mt-4\">" +
-                // Page heading
-                "<div class=\"d-sm-flex align-items-center justify-content-between mb-4\">" +
-                "<h1 class=\"h3 mb-0 text-gray-800\"><i class=\"sidebar-toggler fa fa-fw fa-bars\"></i>${serverName} &middot; Plugins Overview</h1>${backButton}" +
-                "</div>" +
-                // End Page heading
-                "<div class=\"row\" data-masonry='{\"percentPosition\": true}'>" + content + "</div></div></div>";
+        return "<div class=\"tab\" id=\"" + NavLink.format("plugins-overview") + "\">" +
+
+                "<div class=\"row\" data-masonry='{\"percentPosition\": true}'>" + content + "</div></div>";
     }
 
     private TabsElement.Tab wrapToTabElementTab(ExtensionTabData tabData) {

@@ -28,9 +28,9 @@ import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FabricAFKListener implements FabricListener {
 
@@ -43,7 +43,7 @@ public class FabricAFKListener implements FabricListener {
     @Inject
     public FabricAFKListener(PlanConfig config, ErrorLogger errorLogger) {
         this.errorLogger = errorLogger;
-        this.ignorePermissionInfo = new HashMap<>();
+        this.ignorePermissionInfo = new ConcurrentHashMap<>();
 
         FabricAFKListener.assignAFKTracker(config);
     }

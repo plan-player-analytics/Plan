@@ -101,7 +101,7 @@ public class PlayerCalendar {
             long end = session.getEnd();
 
             entries.add(CalendarEntry
-                    .of(locale.getString(HtmlLang.SESSION) + ": " + length,
+                    .of(length + " " + locale.getString(HtmlLang.SESSION),
                             start + timeZone.getOffset(start))
                     .withEnd(end + timeZone.getOffset(end))
             );

@@ -62,8 +62,8 @@ public class ServerQueries {
                             ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return servers;
             }
@@ -94,8 +94,8 @@ public class ServerQueries {
                             serverUUID,
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return servers;
             }
@@ -137,8 +137,8 @@ public class ServerQueries {
                             ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return Optional.empty();
             }
@@ -165,8 +165,8 @@ public class ServerQueries {
                             ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return Optional.empty();
             }
@@ -239,8 +239,8 @@ public class ServerQueries {
                             ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return matches;
             }

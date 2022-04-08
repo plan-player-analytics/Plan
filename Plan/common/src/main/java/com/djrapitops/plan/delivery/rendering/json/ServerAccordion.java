@@ -78,6 +78,7 @@ public class ServerAccordion {
             SessionsMutator sessionsMutator = SessionsMutator.forContainer(ofServer);
 
             server.put("server_name", serverName);
+            server.put("server_uuid", serverUUID);
 
             server.put("banned", ofServer.getValue(PerServerKeys.BANNED).orElse(false));
             server.put("operator", ofServer.getValue(PerServerKeys.OPERATOR).orElse(false));

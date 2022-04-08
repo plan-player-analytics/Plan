@@ -21,7 +21,6 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.utilities.java.UnaryChain;
-
 import com.djrapitops.plan.version.VersionChecker;
 
 /**

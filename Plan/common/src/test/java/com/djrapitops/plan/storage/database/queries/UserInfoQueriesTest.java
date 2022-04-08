@@ -79,7 +79,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> null));
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
-        db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "")));
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", TestConstants.VERSION)));
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, TestConstants.SERVER_TWO_UUID, () -> "example.join.address"));
 
         Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
@@ -285,7 +285,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void joinAddressQueryHasDistinctPlayers() {
-        db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "")));
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", TestConstants.VERSION)));
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, TestConstants.SERVER_TWO_UUID, TestConstants.GET_PLAYER_HOSTNAME));
 

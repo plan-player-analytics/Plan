@@ -49,11 +49,11 @@ public class PlayerPage implements Page {
     private final PlanConfig config;
     private final PageFactory pageFactory;
     private final Theme theme;
-    private final Locale locale;
     private final ServerInfo serverInfo;
 
     private final Formatter<Long> clockLongFormatter;
     private final Formatter<Long> secondLongFormatter;
+    private final Locale locale;
 
     PlayerPage(
             String templateHtml,
@@ -62,9 +62,9 @@ public class PlayerPage implements Page {
             PlanConfig config,
             PageFactory pageFactory,
             Theme theme,
-            Locale locale,
             Formatters formatters,
-            ServerInfo serverInfo
+            ServerInfo serverInfo,
+            Locale locale
     ) {
         this.templateHtml = templateHtml;
         this.player = player;
@@ -72,11 +72,11 @@ public class PlayerPage implements Page {
         this.config = config;
         this.pageFactory = pageFactory;
         this.theme = theme;
-        this.locale = locale;
         this.serverInfo = serverInfo;
 
         clockLongFormatter = formatters.clockLong();
         secondLongFormatter = formatters.secondLong();
+        this.locale = locale;
     }
 
     @Override

@@ -39,6 +39,7 @@ import java.nio.file.Path;
 @Singleton
 @Component(modules = {
         PlanPluginModule.class,
+        PlanServerPluginModule.class,
         TestSystemObjectProvidingModule.class,
         PlatformAbstractionLayerModule.class,
         FiltersModule.class,

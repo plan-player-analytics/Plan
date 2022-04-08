@@ -87,6 +87,7 @@ public class WorldAliasSettings {
 
     private Optional<String> getAlias(String world) {
         for (String[] regexRule : getRegexRules()) {
+            if (regexRule.length < 2) continue;
             String alias = regexRule[0];
             String regex = regexRule[1];
             if (world.matches(regex)) {

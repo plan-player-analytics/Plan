@@ -27,6 +27,7 @@ import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Objects;
@@ -35,6 +36,7 @@ import java.util.Optional;
 @Singleton
 public class ServerFileLoader extends Config implements ServerLoader {
 
+    private final String currentVersion;
     private final PlanFiles files;
     private final PlanConfig config;
 
@@ -42,10 +44,12 @@ public class ServerFileLoader extends Config implements ServerLoader {
 
     @Inject
     public ServerFileLoader(
+            @Named("currentVersion") String currentVersion,
             PlanFiles files,
             PlanConfig config
     ) {
         super(files.getFileFromPluginFolder("ServerInfoFile.yml"));
+        this.currentVersion = currentVersion;
         this.files = files;
         this.config = config;
 
@@ -76,7 +80,7 @@ public class ServerFileLoader extends Config implements ServerLoader {
                     .orElse("Proxy");
             String address = getString("Server.Web_address");
 
-            return Optional.of(new Server(id, serverUUID, name, address, false));
+            return Optional.of(new Server(id, serverUUID, name, address, false, currentVersion));
         } catch (IOException e) {
             throw new EnableException("Failed to read ServerInfoFile.yml: " + e.getMessage());
         }

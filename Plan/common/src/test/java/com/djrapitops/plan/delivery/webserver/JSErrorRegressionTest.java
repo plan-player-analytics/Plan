@@ -21,28 +21,42 @@ import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.LangCode;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import extension.SeleniumExtension;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This test class is for catching any JavaScript errors.
@@ -55,31 +69,36 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 @ExtendWith(SeleniumExtension.class)
 class JSErrorRegressionTest {
 
-    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final int TEST_PORT_NUMBER = 9091;
 
     public static PluginMockComponent component;
 
-    private static PlanSystem bukkitSystem;
+    private static PlanSystem planSystem;
     private static ServerUUID serverUUID;
 
     @BeforeAll
     static void setUpClass(@TempDir Path tempDir) throws Exception {
         component = new PluginMockComponent(tempDir);
-        bukkitSystem = component.getPlanSystem();
+        planSystem = component.getPlanSystem();
 
-        PlanConfig config = bukkitSystem.getConfigSystem().getConfig();
+        PlanConfig config = planSystem.getConfigSystem().getConfig();
         config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+        config.set(ProxySettings.IP, "localhost:" + TEST_PORT_NUMBER);
+        config.set(PluginSettings.FRONTEND_BETA, true);
 
-        bukkitSystem.enable();
-        serverUUID = bukkitSystem.getServerInfo().getServerUUID();
+        // Avoid accidentally DDoS:ing head image service during tests.
+        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "http://localhost:" + TEST_PORT_NUMBER + "/${playerUUID}/img/Flaticon_circle.png");
+
+        planSystem.enable();
+        serverUUID = planSystem.getServerInfo().getServerUUID();
         savePlayerData();
     }
 
     private static void savePlayerData() {
-        DBSystem dbSystem = bukkitSystem.getDatabaseSystem();
+        DBSystem dbSystem = planSystem.getDatabaseSystem();
         Database database = dbSystem.getDatabase();
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
-        database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, "name"));
+        database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME));
         FinishedSession session = new FinishedSession(uuid, serverUUID, 1000L, 11000L, 500L, new DataMap());
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));
         database.executeTransaction(new SessionEndTransaction(session));
@@ -87,8 +106,8 @@ class JSErrorRegressionTest {
 
     @AfterAll
     static void tearDownClass() {
-        if (bukkitSystem != null) {
-            bukkitSystem.disable();
+        if (planSystem != null) {
+            planSystem.disable();
         }
     }
 
@@ -97,42 +116,98 @@ class JSErrorRegressionTest {
         SeleniumExtension.newTab(driver);
     }
 
-    @Test
-    void playerPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-        System.out.println("Testing Player Page");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/TestPlayer");
-        assertNo500Error(driver);
+    @TestFactory
+    Collection<DynamicTest> javascriptRegressionTest(ChromeDriver driver) {
+        String[] addresses = new String[]{
+                "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_NAME,
+                "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING,
+                "http://localhost:" + TEST_PORT_NUMBER + "/network",
+                "http://localhost:" + TEST_PORT_NUMBER + "/server/Server 1",
+                "http://localhost:" + TEST_PORT_NUMBER + "/players",
+                "http://localhost:" + TEST_PORT_NUMBER + "/query"
+        };
+
+        LangCode[] languages = LangCode.values();
+        return Arrays.stream(languages)
+                .filter(lang -> lang != LangCode.CUSTOM)
+                .flatMap(lang ->
+                        Arrays.stream(addresses)
+                                .map(link -> testAddress(link, lang, driver)))
+                .collect(Collectors.toList());
     }
 
-    private void assertNo500Error(WebDriver driver) {
-        assertFalse(driver.getPageSource().contains("<span class=\"loader-text\">Error occurred"), driver.getPageSource());
+    private DynamicTest testAddress(String address, LangCode language, ChromeDriver driver) {
+        return DynamicTest.dynamicTest("Page should not log anything on js console (" + language.name() + "): " + address, () -> {
+            Locale locale = planSystem.getLocaleSystem().getLocale();
+            try {
+                locale.loadFromAnotherLocale(Locale.forLangCode(language, planSystem.getPlanFiles()));
+
+                driver.get(address);
+                Thread.sleep(250);
+
+                List<LogEntry> logs = new ArrayList<>();
+                logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
+                logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
+
+                assertNoLogs("'" + address + "' (in " + language.name() + "),", logs);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            } finally {
+                locale.clear(); // Reset locale after test
+            }
+        });
     }
 
-    @Test
-    void playerPageAccessibleViaUUID(WebDriver driver) {
-        System.out.println("Testing Player Page via UUID");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID);
-        assertNo500Error(driver);
+    @DisplayName("Links on page function: ")
+    @ParameterizedTest(name = "{0}")
+    @CsvSource({
+            "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_NAME,
+            "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING,
+            "http://localhost:" + TEST_PORT_NUMBER + "/network",
+            "http://localhost:" + TEST_PORT_NUMBER + "/server/Server 1",
+            "http://localhost:" + TEST_PORT_NUMBER + "/players",
+            "http://localhost:" + TEST_PORT_NUMBER + "/query"
+    })
+    void linkFunctionRegressionTest(String address, ChromeDriver driver) {
+        driver.get(address);
+
+        List<String> anchorLinks = getLinks(driver, 0);
+
+        for (String href : anchorLinks) {
+            driver.get(address);
+            Awaitility.await()
+                    .atMost(3, TimeUnit.SECONDS)
+                    .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
+
+            List<LogEntry> logs = new ArrayList<>();
+            logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
+            logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
+
+            assertNoLogs("Page link '" + address + "'->'" + href + "' issue: ", logs);
+            System.out.println("'" + address + "' has link to " + href);
+        }
     }
 
-    @Test
-    void serverPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-        System.out.println("Testing Server Page");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/server");
-        assertNo500Error(driver);
+    private List<String> getLinks(ChromeDriver driver, int attempt) {
+        if (attempt >= 5) return Collections.emptyList();
+
+        try {
+            return driver.findElements(By.tagName("a")).stream()
+                    .map(anchorLink -> anchorLink.getAttribute("href"))
+                    .filter(Objects::nonNull)
+                    .filter(href -> href.contains("localhost") && !href.contains("logout"))
+                    .map(href -> href.split("#")[0])
+                    .distinct()
+                    .collect(Collectors.toList());
+        } catch (StaleElementReferenceException e) {
+            return getLinks(driver, attempt + 1);
+        }
     }
 
-    @Test
-    void playersPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-        System.out.println("Testing Players Page");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/players");
-        assertNo500Error(driver);
-    }
 
-    @Test
-    void debugPageDoesNotHaveJavascriptErrors(WebDriver driver) {
-        System.out.println("Testing Debug Page");
-        driver.get("http://localhost:" + TEST_PORT_NUMBER + "/debug");
-        assertNo500Error(driver);
+    private void assertNoLogs(String testName, List<LogEntry> logs) {
+        assertTrue(logs.isEmpty(), () -> testName + "Browser console included " + logs.size() + " logs: " + logs.stream()
+                .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
+                .collect(Collectors.toList()));
     }
 }

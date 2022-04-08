@@ -152,7 +152,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         List<FinishedSession> allSessions = db().query(SessionQueries.fetchAllSessions());
 
-        assertEquals(worldTimes, allSessions.get(0).getExtraData(WorldTimes.class).get());
+        assertEquals(worldTimes, allSessions.get(0).getExtraData(WorldTimes.class)
+                .orElseThrow(AssertionError::new));
     }
 
     @Test
@@ -180,7 +181,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         List<FinishedSession> allSessions = db().query(SessionQueries.fetchAllSessions());
 
-        assertEquals(worldTimes, allSessions.get(0).getExtraData(WorldTimes.class).get());
+        assertEquals(worldTimes, allSessions.get(0).getExtraData(WorldTimes.class)
+                .orElseThrow(AssertionError::new));
     }
 
     @Test
@@ -226,7 +228,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         prepareForSessionSave();
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        List<PlayerKill> expected = session.getExtraData(PlayerKills.class).map(PlayerKills::asList).get();
+        List<PlayerKill> expected = session.getExtraData(PlayerKills.class).map(PlayerKills::asList)
+                .orElseThrow(AssertionError::new);
         execute(DataStoreQueries.storeSession(session));
 
         forcePersistenceCheck();
@@ -236,7 +239,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         assertNotNull(savedSessions);
         assertFalse(savedSessions.isEmpty());
 
-        List<PlayerKill> got = savedSessions.get(0).getExtraData(PlayerKills.class).map(PlayerKills::asList).get();
+        List<PlayerKill> got = savedSessions.get(0).getExtraData(PlayerKills.class).map(PlayerKills::asList)
+                .orElseThrow(AssertionError::new);
         assertEquals(expected, got);
     }
 
@@ -352,7 +356,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         server1Sessions.forEach(session -> execute(DataStoreQueries.storeSession(session)));
 
         ServerUUID serverTwoUuid = TestConstants.SERVER_TWO_UUID;
-        executeTransactions(new StoreServerInformationTransaction(new Server(serverTwoUuid, TestConstants.SERVER_TWO_NAME, "")));
+        executeTransactions(new StoreServerInformationTransaction(new Server(serverTwoUuid, TestConstants.SERVER_TWO_NAME, "", TestConstants.VERSION)));
         db().executeTransaction(new WorldNameStoreTransaction(serverTwoUuid, worlds[0]));
         db().executeTransaction(new WorldNameStoreTransaction(serverTwoUuid, worlds[1]));
         List<FinishedSession> server2Sessions = RandomData.randomSessions(serverTwoUuid, worlds, playerUUID, player2UUID);

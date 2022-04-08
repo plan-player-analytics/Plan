@@ -27,6 +27,13 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '16'
+      - name: Setup Selenium Webdriver
+        uses: nanasess/setup-chromedriver@v1
+      - name: Setup Selenium Webdriver settings
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
       - name: Verify MariaDB connection
         env:
           PORT: ${{ job.services.mariadb.ports[3306] }}
@@ -49,6 +56,7 @@ jobs:
           MYSQL_USER: user
           MYSQL_PASS: password
           MYSQL_PORT: ${{ job.services.mariadb.ports[3306] }}
+          CHROMEDRIVER: /usr/local/bin/chromedriver
         run: |
           cd Plan
           ./gradlew build

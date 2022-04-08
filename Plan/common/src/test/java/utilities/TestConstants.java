@@ -29,6 +29,7 @@ import java.util.function.Supplier;
 public class TestConstants {
 
 
+
     private TestConstants() {
         /* Static variable class */
     }
@@ -56,5 +57,7 @@ public class TestConstants {
 
     public static final int SERVER_MAX_PLAYERS = 20;
     public static final int BUNGEE_MAX_PLAYERS = 100;
+
+    public static final String VERSION = "1.0.0";
 
 }

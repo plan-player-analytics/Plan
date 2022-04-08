@@ -1,0 +1,3426 @@
+{
+  "kill_data": {
+    "deaths_7d": 0,
+    "mob_deaths_7d": 0,
+    "mob_kills_total": 0,
+    "player_kdr_30d": "0",
+    "player_kills_7d": 0,
+    "player_deaths_total": 0,
+    "deaths_30d": 0,
+    "deaths_total": 1,
+    "player_kills_total": 0,
+    "mob_deaths_30d": 0,
+    "player_deaths_30d": 0,
+    "mob_kdr_30d": "0",
+    "player_kdr_total": "0",
+    "weapon_3rd": "-",
+    "mob_kdr_7d": "0",
+    "player_kdr_7d": "0",
+    "player_kills_30d": 0,
+    "weapon_2nd": "-",
+    "player_deaths_7d": 0,
+    "mob_deaths_total": 1,
+    "mob_kills_7d": 0,
+    "mob_kdr_total": "0",
+    "weapon_1st": "-",
+    "mob_kills_30d": 0
+  },
+  "sessions": [
+    {
+      "server_name": "Server 1",
+      "start": "Apr 27 2021, 20:05",
+      "length": "4m 4s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              244828
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 27 2021, 20:09",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 244828,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+      "deaths": 1
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 27 2021, 20:01",
+      "length": "3m 29s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              209257
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "3m 26s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 27 2021, 20:05",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 209257,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 27 2021, 20:00",
+      "length": "27s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              27915
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 27 2021, 20:00",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 27915,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 25 2021, 15:47",
+      "length": "28s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              28465
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+      "most_used_world": "world (100%)",
+      "first_session": false,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 25 2021, 15:48",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 28465,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+      "deaths": 0
+    },
+    {
+      "server_name": "Server 1",
+      "start": "Apr 25 2021, 15:36",
+      "length": "29s",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              29682
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+      "most_used_world": "world (100%)",
+      "first_session": true,
+      "mob_kills": 0,
+      "player_url_name": "AuroraLS3",
+      "afk_time": "0s",
+      "name": "Server 1",
+      "player_kills": [],
+      "end": "Apr 25 2021, 15:37",
+      "player_name": "AuroraLS3",
+      "world_series": [
+        {
+          "name": "world",
+          "y": 29682,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "server_url_name": "Server%201",
+      "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+      "deaths": 0
+    }
+  ],
+  "calendar_series": [
+    {
+      "title": "Registered: Apr 25 2021, 15:36",
+      "start": 1619354208457,
+      "color": "#8BC34A"
+    },
+    {
+      "title": "Playtime: 8m 2s",
+      "start": "2021-04-27",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 3",
+      "start": "2021-04-27"
+    },
+    {
+      "title": "Playtime: 58s",
+      "start": "2021-04-25",
+      "color": "#4CAF50"
+    },
+    {
+      "title": "Sessions: 2",
+      "start": "2021-04-25"
+    },
+    {
+      "title": "Session: 4m 4s",
+      "start": 1619553910579,
+      "end": 1619554155407
+    },
+    {
+      "title": "Session: 3m 29s",
+      "start": 1619553698200,
+      "end": 1619553907457
+    },
+    {
+      "title": "Session: 27s",
+      "start": 1619553623752,
+      "end": 1619553651667
+    },
+    {
+      "title": "Session: 28s",
+      "start": 1619365667004,
+      "end": 1619365695469
+    },
+    {
+      "title": "Session: 29s",
+      "start": 1619365008861,
+      "end": 1619365038543
+    }
+  ],
+  "player_deaths": [],
+  "gm_series": [
+    {
+      "data": [
+        [
+          "SURVIVAL",
+          540147
+        ],
+        [
+          "SPECTATOR",
+          0
+        ],
+        [
+          "CREATIVE",
+          0
+        ],
+        [
+          "ADVENTURE",
+          0
+        ]
+      ],
+      "name": "world",
+      "id": "world"
+    }
+  ],
+  "world_pie_series": [
+    {
+      "name": "world",
+      "y": 540147,
+      "color": "#0099C6",
+      "drilldown": "world"
+    }
+  ],
+  "server_pie_colors": [
+    "#0099C6",
+    "#66AA00",
+    "#316395",
+    "#994499",
+    "#22AA99",
+    "#AAAA11",
+    "#6633CC",
+    "#E67300",
+    "#329262",
+    "#5574A6"
+  ],
+  "extensions": [
+    {
+      "playerUUID": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+      "serverUUID": "53ae017f-5851-467b-9b44-d01e96620447",
+      "serverName": "Server 1",
+      "extensionData": [
+        {
+          "extensionInformation": {
+            "pluginName": "AdvancedAchievements",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "GREEN",
+              "colorClass": "col-green",
+              "iconName": "star"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "REGULAR",
+                  "familyClass": "far",
+                  "color": "GREEN",
+                  "colorClass": "col-green",
+                  "iconName": "check-circle"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "achievementCount",
+                    "text": "Achievements",
+                    "description": "How many achievements the player has",
+                    "icon": {
+                      "family": "REGULAR",
+                      "familyClass": "far",
+                      "color": "GREEN",
+                      "colorClass": "col-green",
+                      "iconName": "check-circle"
+                    },
+                    "priority": 0
+                  },
+                  "type": "NUMBER",
+                  "value": "2"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "AdvancedBan",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "RED",
+              "colorClass": "col-red",
+              "iconName": "gavel"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "DEEP_ORANGE",
+                  "colorClass": "col-deep-orange",
+                  "iconName": "bell-slash"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "isBanned",
+                    "text": "Banned",
+                    "description": "Is the player banned on AdvancedBan",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "RED",
+                      "colorClass": "col-red",
+                      "iconName": "gavel"
+                    },
+                    "priority": 100
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                },
+                {
+                  "description": {
+                    "name": "isMuted",
+                    "text": "Muted",
+                    "description": "Is the player muted on AdvancedBan",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "DEEP_ORANGE",
+                      "colorClass": "col-deep-orange",
+                      "iconName": "bell-slash"
+                    },
+                    "priority": 50
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                },
+                {
+                  "description": {
+                    "name": "warnings",
+                    "text": "Warnings",
+                    "description": "How many unexpired warnings player has on AdvancedBan",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "AMBER",
+                      "colorClass": "col-amber",
+                      "iconName": "flag"
+                    },
+                    "priority": 25
+                  },
+                  "type": "NUMBER",
+                  "value": "0"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "AuthMe",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "AMBER",
+              "colorClass": "col-amber",
+              "iconName": "key"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "LIGHT_GREEN",
+                  "colorClass": "col-light-green",
+                  "iconName": "users"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "altsusingregisterip",
+                    "text": "Alts using register IP",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "LIGHT_GREEN",
+                      "colorClass": "col-light-green",
+                      "iconName": "users"
+                    },
+                    "priority": 100
+                  },
+                  "type": "STRING",
+                  "value": "aurorals3"
+                },
+                {
+                  "description": {
+                    "name": "altsusinglastjoinip",
+                    "text": "Alts using last join IP",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "LIGHT_BLUE",
+                      "colorClass": "col-light-blue",
+                      "iconName": "users"
+                    },
+                    "priority": 90
+                  },
+                  "type": "STRING",
+                  "value": ""
+                },
+                {
+                  "description": {
+                    "name": "lastlogin",
+                    "text": "Last Login",
+                    "icon": {
+                      "family": "REGULAR",
+                      "familyClass": "far",
+                      "color": "LIGHT_BLUE",
+                      "colorClass": "col-light-blue",
+                      "iconName": "calendar"
+                    },
+                    "priority": 80
+                  },
+                  "type": "DATE_SECOND",
+                  "value": "Jan 19 1970, 19:49:14"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "BanManager",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "BROWN",
+              "colorClass": "col-brown",
+              "iconName": "gavel"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "DEEP_ORANGE",
+                  "colorClass": "col-deep-orange",
+                  "iconName": "bell-slash"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "isBanned",
+                    "text": "Banned",
+                    "description": "Is the player banned on BanManager",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "RED",
+                      "colorClass": "col-red",
+                      "iconName": "gavel"
+                    },
+                    "priority": 100
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                },
+                {
+                  "description": {
+                    "name": "isMuted",
+                    "text": "Muted",
+                    "description": "Is the player muted on BanManager",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "DEEP_ORANGE",
+                      "colorClass": "col-deep-orange",
+                      "iconName": "bell-slash"
+                    },
+                    "priority": 50
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "Essentials",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "DEEP_ORANGE",
+              "colorClass": "col-deep-orange",
+              "iconName": "flask"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "BLUE_GREY",
+                  "colorClass": "col-blue-grey",
+                  "iconName": "bell-slash"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "isJailed",
+                    "text": "Jailed",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "DEEP_ORANGE",
+                      "colorClass": "col-deep-orange",
+                      "iconName": "ban"
+                    },
+                    "priority": 100
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                },
+                {
+                  "description": {
+                    "name": "isMuted",
+                    "text": "Muted",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "BLUE_GREY",
+                      "colorClass": "col-blue-grey",
+                      "iconName": "bell-slash"
+                    },
+                    "priority": 80
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                },
+                {
+                  "description": {
+                    "name": "playerHomes",
+                    "text": "homes",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "GREEN",
+                      "colorClass": "col-green",
+                      "iconName": "home"
+                    },
+                    "priority": 70
+                  },
+                  "type": "STRING",
+                  "value": "-"
+                },
+                {
+                  "description": {
+                    "name": "balance",
+                    "text": "Balance",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "GREEN",
+                      "colorClass": "col-green",
+                      "iconName": "coins"
+                    },
+                    "priority": 60
+                  },
+                  "type": "DOUBLE",
+                  "value": "0"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "FactionsUUID",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "GREEN",
+              "colorClass": "col-green",
+              "iconName": "map"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "GREEN",
+                  "colorClass": "col-green",
+                  "iconName": "bolt"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "power",
+                    "text": "Power",
+                    "description": "How much power the player has",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "GREEN",
+                      "colorClass": "col-green",
+                      "iconName": "bolt"
+                    },
+                    "priority": 100
+                  },
+                  "type": "DOUBLE",
+                  "value": "6"
+                },
+                {
+                  "description": {
+                    "name": "powerMax",
+                    "text": "Max Power",
+                    "description": "How much power the player can have",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "GREEN",
+                      "colorClass": "col-green",
+                      "iconName": "bolt"
+                    },
+                    "priority": 95
+                  },
+                  "type": "DOUBLE",
+                  "value": "10"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "FastLogin",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "AMBER",
+              "colorClass": "col-amber",
+              "iconName": "bolt"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "NONE",
+                  "colorClass": "",
+                  "iconName": "user-tag"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "premiumStatus",
+                    "text": "Premium status",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "NONE",
+                      "colorClass": "",
+                      "iconName": "user-tag"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "Unknown"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "GriefPrevention",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "BLUE_GREY",
+              "colorClass": "col-blue-grey",
+              "iconName": "shield-alt"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "REGULAR",
+                  "familyClass": "far",
+                  "color": "DEEP_ORANGE",
+                  "colorClass": "col-deep-orange",
+                  "iconName": "bell-slash"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "isSoftMuted",
+                    "text": "SoftMuted",
+                    "description": "Are the player\u0027s messages muted for others, but shown to them",
+                    "icon": {
+                      "family": "REGULAR",
+                      "familyClass": "far",
+                      "color": "DEEP_ORANGE",
+                      "colorClass": "col-deep-orange",
+                      "iconName": "bell-slash"
+                    },
+                    "priority": 0
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                },
+                {
+                  "description": {
+                    "name": "claimCount",
+                    "text": "Claims",
+                    "description": "How many claims the player has",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "BLUE_GREY",
+                      "colorClass": "col-blue-grey",
+                      "iconName": "map-marker"
+                    },
+                    "priority": 0
+                  },
+                  "type": "NUMBER",
+                  "value": "0"
+                },
+                {
+                  "description": {
+                    "name": "claimedArea",
+                    "text": "Claimed Area",
+                    "description": "How large area the player has claimed",
+                    "icon": {
+                      "family": "REGULAR",
+                      "familyClass": "far",
+                      "color": "BLUE_GREY",
+                      "colorClass": "col-blue-grey",
+                      "iconName": "map"
+                    },
+                    "priority": 0
+                  },
+                  "type": "NUMBER",
+                  "value": "0"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "KingdomsX",
+            "icon": {
+              "family": "BRAND",
+              "familyClass": "fab",
+              "color": "AMBER",
+              "colorClass": "col-amber",
+              "iconName": "fort-awesome"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "BRAND",
+                  "familyClass": "fab",
+                  "color": "AMBER",
+                  "colorClass": "col-amber",
+                  "iconName": "fort-awesome"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "haskingdom",
+                    "text": "Has kingdom",
+                    "icon": {
+                      "family": "BRAND",
+                      "familyClass": "fab",
+                      "color": "AMBER",
+                      "colorClass": "col-amber",
+                      "iconName": "fort-awesome"
+                    },
+                    "priority": 100
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                },
+                {
+                  "description": {
+                    "name": "power",
+                    "text": "Power",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "AMBER",
+                      "colorClass": "col-amber",
+                      "iconName": "bolt"
+                    },
+                    "priority": 60
+                  },
+                  "type": "DOUBLE",
+                  "value": "0"
+                },
+                {
+                  "description": {
+                    "name": "lastdonation",
+                    "text": "Last Donation",
+                    "icon": {
+                      "family": "REGULAR",
+                      "familyClass": "far",
+                      "color": "BLUE",
+                      "colorClass": "col-blue",
+                      "iconName": "calendar"
+                    },
+                    "priority": 60
+                  },
+                  "type": "DATE_YEAR",
+                  "value": "-"
+                },
+                {
+                  "description": {
+                    "name": "lastdonationamount",
+                    "text": "Last Donation Amount",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "BLUE",
+                      "colorClass": "col-blue",
+                      "iconName": "money-bill-wave"
+                    },
+                    "priority": 50
+                  },
+                  "type": "NUMBER",
+                  "value": "0"
+                },
+                {
+                  "description": {
+                    "name": "totaldonations",
+                    "text": "Total Donations",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "BLUE",
+                      "colorClass": "col-blue",
+                      "iconName": "money-bill-wave"
+                    },
+                    "priority": 40
+                  },
+                  "type": "NUMBER",
+                  "value": "0"
+                },
+                {
+                  "description": {
+                    "name": "nation",
+                    "text": "Nation",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "GREEN",
+                      "colorClass": "col-green",
+                      "iconName": "flag"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "No nation"
+                },
+                {
+                  "description": {
+                    "name": "kingdom",
+                    "text": "Kingdom",
+                    "icon": {
+                      "family": "BRAND",
+                      "familyClass": "fab",
+                      "color": "AMBER",
+                      "colorClass": "col-amber",
+                      "iconName": "fort-awesome"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "No kingdom"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "Jobs",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "BROWN",
+              "colorClass": "col-brown",
+              "iconName": "suitcase"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "NONE",
+                  "colorClass": "",
+                  "iconName": "suitcase"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "jobs",
+                    "text": "Job",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "NONE",
+                      "colorClass": "",
+                      "iconName": "suitcase"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "No Job"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "Litebans",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "RED",
+              "colorClass": "col-red",
+              "iconName": "gavel"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "BLUE",
+                  "colorClass": "col-blue",
+                  "iconName": "users"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "connectors",
+                    "text": "Connected from same IP",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "BLUE",
+                      "colorClass": "col-blue",
+                      "iconName": "users"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "AuroraLS3"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "LuckPerms",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "LIGHT_GREEN",
+              "colorClass": "col-light-green",
+              "iconName": "exclamation-triangle"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "Metadata",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "GREEN",
+                  "colorClass": "col-green",
+                  "iconName": "file-signature"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "prefix",
+                    "text": "Prefix",
+                    "description": "Current user prefix",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "GREEN",
+                      "colorClass": "col-green",
+                      "iconName": "file-signature"
+                    },
+                    "priority": 100
+                  },
+                  "type": "STRING",
+                  "value": "None"
+                },
+                {
+                  "description": {
+                    "name": "suffix",
+                    "text": "Suffix",
+                    "description": "Current user suffix",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "BLUE",
+                      "colorClass": "col-blue",
+                      "iconName": "file-signature"
+                    },
+                    "priority": 99
+                  },
+                  "type": "STRING",
+                  "value": "None"
+                }
+              ],
+              "tableData": [
+                {
+                  "tableName": "metatable",
+                  "table": {
+                    "columns": [
+                      "Meta",
+                      "Value"
+                    ],
+                    "icons": [
+                      {
+                        "family": "SOLID",
+                        "familyClass": "fa",
+                        "color": "NONE",
+                        "colorClass": "",
+                        "iconName": "info-circle"
+                      },
+                      {
+                        "family": "SOLID",
+                        "familyClass": "fa",
+                        "color": "NONE",
+                        "colorClass": "",
+                        "iconName": "file-alt"
+                      }
+                    ],
+                    "rows": [
+                      [
+                        "primarygroup",
+                        "[default]"
+                      ]
+                    ]
+                  },
+                  "tableColor": "BLUE",
+                  "tableColorClass": "bg-blue",
+                  "wide": false
+                },
+                {
+                  "tableName": "metaTable",
+                  "table": {
+                    "columns": [
+                      "Meta",
+                      "Value"
+                    ],
+                    "icons": [
+                      {
+                        "family": "SOLID",
+                        "familyClass": "fa",
+                        "color": "NONE",
+                        "colorClass": "",
+                        "iconName": "info-circle"
+                      },
+                      {
+                        "family": "SOLID",
+                        "familyClass": "fa",
+                        "color": "NONE",
+                        "colorClass": "",
+                        "iconName": "file-alt"
+                      }
+                    ],
+                    "rows": [
+                      [
+                        "primarygroup",
+                        "[default]"
+                      ]
+                    ]
+                  },
+                  "tableColor": "BLUE",
+                  "tableColorClass": "bg-blue",
+                  "wide": false
+                }
+              ]
+            },
+            {
+              "tabInformation": {
+                "tabName": "Permission Groups",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "NONE",
+                  "colorClass": "",
+                  "iconName": "users-cog"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "permissionGroups",
+                    "text": "Permission Group",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "NONE",
+                      "colorClass": "",
+                      "iconName": "users-cog"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "default"
+                },
+                {
+                  "description": {
+                    "name": "primaryGroup",
+                    "text": "Primary Group",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "NONE",
+                      "colorClass": "",
+                      "iconName": "users-cog"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "default"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": false,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "MarriageMaster",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "AMBER",
+              "colorClass": "col-amber",
+              "iconName": "ring"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "AMBER",
+                  "colorClass": "col-amber",
+                  "iconName": "ring"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "ismarried",
+                    "text": "Is Married",
+                    "description": "Does the player have an active marriage",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "AMBER",
+                      "colorClass": "col-amber",
+                      "iconName": "ring"
+                    },
+                    "priority": 100
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                },
+                {
+                  "description": {
+                    "name": "sharesbackpack",
+                    "text": "Shares backpack",
+                    "description": "Does the married couple share their inventory",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "BROWN",
+                      "colorClass": "col-brown",
+                      "iconName": "shopping-bag"
+                    },
+                    "priority": 10
+                  },
+                  "type": "BOOLEAN",
+                  "value": "No"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "nuVotifier",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "TEAL",
+              "colorClass": "col-teal",
+              "iconName": "vote-yea"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "TEAL",
+                  "colorClass": "col-teal",
+                  "iconName": "vote-yea"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "votes",
+                    "text": "Votes",
+                    "description": "Times the player has voted",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "TEAL",
+                      "colorClass": "col-teal",
+                      "iconName": "vote-yea"
+                    },
+                    "priority": 0
+                  },
+                  "type": "NUMBER",
+                  "value": "0"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "PlaceholderAPI",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "LIGHT_BLUE",
+              "colorClass": "col-light-blue",
+              "iconName": "user-edit"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "LIGHT_BLUE",
+                  "colorClass": "col-light-blue",
+                  "iconName": "dot-circle"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "example_placeholder",
+                    "text": "example_placeholder",
+                    "description": "Value of %example_placeholder%",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "LIGHT_BLUE",
+                      "colorClass": "col-light-blue",
+                      "iconName": "dot-circle"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "%example_placeholder%"
+                },
+                {
+                  "description": {
+                    "name": "essentials_homes_max",
+                    "text": "essentials_homes_max",
+                    "description": "Value of %essentials_homes_max%",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "LIGHT_BLUE",
+                      "colorClass": "col-light-blue",
+                      "iconName": "dot-circle"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "1"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "ProtocolSupport",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "CYAN",
+              "colorClass": "col-cyan",
+              "iconName": "gamepad"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "CYAN",
+                  "colorClass": "col-cyan",
+                  "iconName": "signal"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "protocolVersion",
+                    "text": "Last Join Version",
+                    "description": "Version used last time the player joined",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "CYAN",
+                      "colorClass": "col-cyan",
+                      "iconName": "signal"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "1.16.4-1.16.5"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "RedProtect",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "RED",
+              "colorClass": "col-red",
+              "iconName": "shield-alt"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "REGULAR",
+                  "familyClass": "far",
+                  "color": "RED",
+                  "colorClass": "col-red",
+                  "iconName": "map"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "totalArea",
+                    "text": "Total Area",
+                    "description": "Total area the player has claimed",
+                    "icon": {
+                      "family": "REGULAR",
+                      "familyClass": "far",
+                      "color": "RED",
+                      "colorClass": "col-red",
+                      "iconName": "map"
+                    },
+                    "priority": 0
+                  },
+                  "type": "NUMBER",
+                  "value": "0"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "SuperbVote",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "TEAL",
+              "colorClass": "col-teal",
+              "iconName": "check"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "TEAL",
+                  "colorClass": "col-teal",
+                  "iconName": "check"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "votes",
+                    "text": "Votes",
+                    "description": "How many times player has voted while SuperbVote was installed",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "TEAL",
+                      "colorClass": "col-teal",
+                      "iconName": "check"
+                    },
+                    "priority": 0
+                  },
+                  "type": "NUMBER",
+                  "value": "0"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "Economy (Vault)",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "GREEN",
+              "colorClass": "col-green",
+              "iconName": "money-bill-wave"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "GREEN",
+                  "colorClass": "col-green",
+                  "iconName": "money-bill-wave"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "balance",
+                    "text": "Balance",
+                    "description": "How much money the player has",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "GREEN",
+                      "colorClass": "col-green",
+                      "iconName": "money-bill-wave"
+                    },
+                    "priority": 0
+                  },
+                  "type": "DOUBLE",
+                  "value": "0"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "Permission Groups (Vault)",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "GREEN",
+              "colorClass": "col-green",
+              "iconName": "users-cog"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "NONE",
+                  "colorClass": "",
+                  "iconName": "users-cog"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "group",
+                    "text": "Permission Groups",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "NONE",
+                      "colorClass": "",
+                      "iconName": "users-cog"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "default"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        },
+        {
+          "extensionInformation": {
+            "pluginName": "ViaVersion",
+            "icon": {
+              "family": "SOLID",
+              "familyClass": "fa",
+              "color": "LIGHT_GREEN",
+              "colorClass": "col-light-green",
+              "iconName": "gamepad"
+            }
+          },
+          "tabs": [
+            {
+              "tabInformation": {
+                "tabName": "",
+                "icon": {
+                  "family": "SOLID",
+                  "familyClass": "fa",
+                  "color": "LIGHT_GREEN",
+                  "colorClass": "col-light-green",
+                  "iconName": "signal"
+                },
+                "elementOrder": [
+                  "VALUES",
+                  "GRAPH",
+                  "TABLE"
+                ],
+                "tabPriority": 100
+              },
+              "values": [
+                {
+                  "description": {
+                    "name": "protocolVersion",
+                    "text": "Last Join Version",
+                    "description": "Version used last time the player joined",
+                    "icon": {
+                      "family": "SOLID",
+                      "familyClass": "fa",
+                      "color": "LIGHT_GREEN",
+                      "colorClass": "col-light-green",
+                      "iconName": "signal"
+                    },
+                    "priority": 0
+                  },
+                  "type": "STRING",
+                  "value": "1.16.4"
+                }
+              ],
+              "tableData": []
+            }
+          ],
+          "onlyGenericTab": true,
+          "wide": false
+        }
+      ]
+    }
+  ],
+  "servers": [
+    {
+      "server_name": "Server 1",
+      "last_seen": "Apr 27 2021, 20:09",
+      "registered": "Apr 25 2021, 15:36",
+      "gm_series": [
+        {
+          "data": [
+            [
+              "SURVIVAL",
+              540147
+            ],
+            [
+              "SPECTATOR",
+              0
+            ],
+            [
+              "CREATIVE",
+              0
+            ],
+            [
+              "ADVENTURE",
+              0
+            ]
+          ],
+          "name": "world",
+          "id": "world"
+        }
+      ],
+      "playtime": "9m ",
+      "session_median": "29s",
+      "world_pie_series": [
+        {
+          "name": "world",
+          "y": 540147,
+          "color": "#0099C6",
+          "drilldown": "world"
+        }
+      ],
+      "operator": false,
+      "mob_kills": 0,
+      "afk_time": "3m 26s",
+      "session_count": 5,
+      "join_address": "localhost",
+      "player_kills": 0,
+      "longest_session_length": "4m 4s",
+      "banned": false,
+      "deaths": 1
+    }
+  ],
+  "server_pie_series": [
+    {
+      "name": "Server 1",
+      "y": 540147
+    }
+  ],
+  "online_activity": {
+    "session_count_30d": 0,
+    "session_count_7d": 0,
+    "afk_time_7d": "0s",
+    "mob_kill_count_30d": 0,
+    "active_playtime_7d": "0s",
+    "mob_kill_count_7d": 0,
+    "afk_time_30d": "0s",
+    "average_session_length_30d": "0s",
+    "death_count_30d": 0,
+    "active_playtime_30d": "0s",
+    "average_session_length_7d": "0s",
+    "median_session_length_7d": "-",
+    "median_session_length_30d": "-",
+    "playtime_30d": "0s",
+    "player_kill_count_30d": 0,
+    "death_count_7d": 0,
+    "playtime_7d": "0s",
+    "player_kill_count_7d": 0
+  },
+  "player_kills": [],
+  "sessions_per_page": 50,
+  "punchcard_series": [
+    {
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 0,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 1,
+      "z": 14,
+      "marker": {
+        "radius": 14
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 1,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 2,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 3,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 4,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 5,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 3600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 7200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 10800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 14400000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 18000000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 21600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 25200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 28800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 32400000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 36000000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 39600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 43200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 46800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 50400000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 54000000,
+      "y": 6,
+      "z": 10,
+      "marker": {
+        "radius": 10
+      }
+    },
+    {
+      "x": 57600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 61200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 64800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 68400000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 72000000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 75600000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 79200000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    },
+    {
+      "x": 82800000,
+      "y": 6,
+      "z": 0,
+      "marker": {
+        "radius": 0
+      }
+    }
+  ],
+  "nicknames": [
+    {
+      "nickname": "AuroraLS3",
+      "server": "Server 1",
+      "date": "Apr 25 2021, 15:36"
+    }
+  ],
+  "connections": [
+    {
+      "geolocation": "Local Machine",
+      "date": "Apr 25 2021, 15:36"
+    }
+  ],
+  "info": {
+    "kick_count": 1,
+    "last_seen": "Apr 27 2021, 20:09",
+    "favorite_server": "Server 1",
+    "mob_kill_count": 0,
+    "player_kill_count": 0,
+    "registered": "Apr 25 2021, 15:36",
+    "activity_index_group": "Inactive",
+    "playtime": "9m ",
+    "session_median": "29s",
+    "uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+    "active_playtime": "5m 34s",
+    "operator": false,
+    "afk_time": "3m 26s",
+    "death_count": 1,
+    "latest_join_address": "localhost",
+    "worst_ping": "Unavailable",
+    "session_count": 5,
+    "name": "AuroraLS3",
+    "online": false,
+    "longest_session_length": "4m 4s",
+    "best_ping": "Unavailable",
+    "banned": false,
+    "activity_index": "0",
+    "average_ping": "Unavailable"
+  },
+  "first_day": 1
+}

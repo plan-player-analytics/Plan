@@ -43,6 +43,18 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
         return HtmlTable.fromExtensionTable(table, tableColor);
     }
 
+    public String getProviderName() {
+        return providerName;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public Color getTableColor() {
+        return tableColor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

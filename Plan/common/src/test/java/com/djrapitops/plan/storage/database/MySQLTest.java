@@ -69,7 +69,7 @@ class MySQLTest implements DatabaseTest, QueriesTestAggregate {
     private static DBPreparer preparer;
 
     @BeforeAll
-    static void setupDatabase(@TempDir Path temp) throws Exception {
+    static void setupDatabase(@TempDir Path temp) {
         component = DaggerDatabaseTestComponent.builder()
                 .bindTemporaryDirectory(temp)
                 .build();
@@ -100,7 +100,7 @@ class MySQLTest implements DatabaseTest, QueriesTestAggregate {
         db().executeTransaction(new CreateTablesTransaction());
         db().executeTransaction(new RemoveEverythingTransaction());
 
-        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), TestConstants.SERVER_NAME, "")));
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), TestConstants.SERVER_NAME, "", TestConstants.VERSION)));
         assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
     }
 
