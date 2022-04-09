@@ -185,7 +185,7 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
         BOTH
     }
 
-    private static class PluginBooleanOption implements Comparable<PluginBooleanOption> {
+    public static class PluginBooleanOption implements Comparable<PluginBooleanOption> {
         private final String serverName;
         private final String pluginName;
         private final String providerText;

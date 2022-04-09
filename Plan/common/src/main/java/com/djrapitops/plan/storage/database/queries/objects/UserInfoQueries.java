@@ -313,7 +313,7 @@ public class UserInfoQueries {
         String sql = SELECT + DISTINCT + UsersTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME + " ux" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=ux." + UserInfoTable.USER_ID +
-                INNER_JOIN + "(" + selectServerIds + ") sel_server." + ServerTable.ID + "=ux." + UserInfoTable.SERVER_ID +
+                INNER_JOIN + "(" + selectServerIds + ") sel_server on sel_server." + ServerTable.ID + "=ux." + UserInfoTable.SERVER_ID +
                 WHERE + "ux." + UserInfoTable.REGISTERED + ">=?" +
                 AND + "ux." + UserInfoTable.REGISTERED + "<=?";
         return new QueryStatement<Set<UUID>>(sql) {
