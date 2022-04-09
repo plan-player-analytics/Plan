@@ -45,10 +45,9 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(SessionsTable.TABLE_NAME, "plan_sessions_date_index",
                 SessionsTable.SESSION_START
         );
-        createIndex(WorldTimesTable.TABLE_NAME, "plan_world_times_uuid_index",
-                WorldTimesTable.USER_UUID,
-                WorldTimesTable.SERVER_UUID
-        );
+        // Replaced by foreign keys
+        dropIndex(WorldTimesTable.TABLE_NAME, "plan_world_times_uuid_index");
+
         createIndex(KillsTable.TABLE_NAME, "plan_kills_uuid_index",
                 KillsTable.KILLER_UUID,
                 KillsTable.VICTIM_UUID,

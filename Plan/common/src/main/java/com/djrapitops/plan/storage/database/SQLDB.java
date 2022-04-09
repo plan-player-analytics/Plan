@@ -193,7 +193,6 @@ public abstract class SQLDB extends AbstractDatabase {
                 new VersionTableRemovalPatch(),
                 new DiskUsagePatch(),
                 new WorldsOptimizationPatch(),
-                new WorldTimesOptimizationPatch(),
                 new KillsOptimizationPatch(),
                 new SessionsOptimizationPatch(),
                 new NicknamesOptimizationPatch(),
@@ -219,7 +218,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new RemoveIncorrectTebexPackageDataPatch(),
                 new ExtensionTableProviderFormattersPatch(),
                 new ServerPlanVersionPatch(),
-                new PingOptimizationPatch()
+                new PingOptimizationPatch(),
+                new WorldTimesOptimizationPatch(),
         };
     }
 

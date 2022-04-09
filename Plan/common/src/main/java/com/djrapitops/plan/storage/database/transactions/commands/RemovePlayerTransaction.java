@@ -52,7 +52,7 @@ public class RemovePlayerTransaction extends ThrowawayTransaction {
         deleteFromUserIdTable(GeoInfoTable.TABLE_NAME);
         deleteFromTable(NicknamesTable.TABLE_NAME);
         deleteFromKillsTable();
-        deleteFromTable(WorldTimesTable.TABLE_NAME);
+        deleteFromUserIdTable(WorldTimesTable.TABLE_NAME);
         deleteFromTable(SessionsTable.TABLE_NAME);
         deleteFromUserIdTable(PingTable.TABLE_NAME);
         deleteFromTable(UserInfoTable.TABLE_NAME);
