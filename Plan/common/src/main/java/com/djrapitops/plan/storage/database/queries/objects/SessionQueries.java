@@ -852,9 +852,6 @@ public class SessionQueries {
 
     public static Query<Map<String, Long>> summaryOfPlayers(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         String uuidsInSet = " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ")";
-        String selectUserIds = SELECT + UsersTable.ID +
-                FROM + UsersTable.TABLE_NAME +
-                WHERE + UsersTable.USER_UUID + uuidsInSet;
         String selectServerIds = SELECT + ServerTable.ID +
                 FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
