@@ -213,7 +213,7 @@ public class NetworkActivityIndexQueries {
 
         String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
                 FROM + '(' + selectActivityIndex + ") q2" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on q2." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.REGISTERED + ">=?" +
                 AND + "u." + UsersTable.REGISTERED + "<=?" +
                 AND + "q2.activity_index>=?" +

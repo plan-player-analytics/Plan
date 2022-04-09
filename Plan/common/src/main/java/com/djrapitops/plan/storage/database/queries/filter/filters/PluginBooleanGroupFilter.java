@@ -51,7 +51,7 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
     }
 
     private static Query<List<PluginBooleanOption>> pluginBooleanOptionsQuery() {
-        String selectOptions = SELECT +
+        String selectOptions = SELECT + DISTINCT +
                 "server." + ServerTable.ID + " as server_id," +
                 "server." + ServerTable.NAME + " as server_name," +
                 "plugin." + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +

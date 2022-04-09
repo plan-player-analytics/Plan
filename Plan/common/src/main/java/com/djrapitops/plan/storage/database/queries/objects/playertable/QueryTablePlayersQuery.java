@@ -90,17 +90,17 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 "COUNT(1) as count," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + '(' + selectUserIds + ") selected on selected." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+                (serverUUIDs.isEmpty() ? "" : INNER_JOIN + '(' + selectServerIds + ") sel_servers on sel_servers." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID) +
                 WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
                 AND + "s." + SessionsTable.SESSION_END + "<=?" +
-                AND + "s." + SessionsTable.USER_ID + " IN (" + selectUserIds + ")" +
-                (serverUUIDs.isEmpty() ? "" : AND + "s." + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")") +
                 GROUP_BY + "s." + SessionsTable.USER_ID;
 
         String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_ID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?" +
-                AND + "s." + SessionsTable.USER_ID + " IN (" + selectUserIds + ")" +
-                (serverUUIDs.isEmpty() ? "" : AND + "s." + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
+                AND + "ub." + UserInfoTable.USER_ID + " IN (" + selectUserIds + ")" +
+                (serverUUIDs.isEmpty() ? "" : AND + "ub." + UserInfoTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +
@@ -113,11 +113,11 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
+                INNER_JOIN + '(' + selectUserIds + ") selected on selected." + UsersTable.ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
-                WHERE + "u." + UserInfoTable.USER_ID + "IN (" + selectUserIds + ")" +
                 ORDER_BY + "ses.last_seen DESC";
 
         return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {

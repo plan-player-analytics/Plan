@@ -202,7 +202,6 @@ public abstract class SQLDB extends AbstractDatabase {
                 new ExtensionShowInPlayersTablePatch(),
                 new ExtensionTableRowValueLengthPatch(),
                 new CommandUsageTableRemovalPatch(),
-                new RegisterDateMinimizationPatch(),
                 new BadNukkitRegisterValuePatch(),
                 new LinkedToSecurityTablePatch(),
                 new LinkUsersToPlayersSecurityTablePatch(),
@@ -220,6 +219,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 new WorldTimesOptimizationPatch(),
                 new SessionsOptimizationPatch(),
                 new UserInfoHostnameAllowNullPatch(),
+                new RegisterDateMinimizationPatch(),
         };
     }
 

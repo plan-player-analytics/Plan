@@ -311,11 +311,11 @@ public class UserInfoQueries {
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
 
         String sql = SELECT + DISTINCT + UsersTable.USER_UUID +
-                FROM + UserInfoTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID +
-                WHERE + UserInfoTable.REGISTERED + ">=?" +
-                AND + UserInfoTable.REGISTERED + "<=?" +
-                AND + UserInfoTable.SERVER_ID + " IN (" + selectServerIds + ")";
+                FROM + UserInfoTable.TABLE_NAME + " ux" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=ux." + UserInfoTable.USER_ID +
+                INNER_JOIN + "(" + selectServerIds + ") sel_server." + ServerTable.ID + "=ux." + UserInfoTable.SERVER_ID +
+                WHERE + "ux." + UserInfoTable.REGISTERED + ">=?" +
+                AND + "ux." + UserInfoTable.REGISTERED + "<=?";
         return new QueryStatement<Set<UUID>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

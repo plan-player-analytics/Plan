@@ -568,19 +568,16 @@ public class PlayerCountQueries {
     public static Query<Integer> retainedPlayerCount(long after, long before, ServerUUID serverUUID) {
         String selectUniqueUUIDs = SELECT + DISTINCT + "s." + SessionsTable.USER_ID +
                 FROM + SessionsTable.TABLE_NAME + " s" +
-                INNER_JOIN + UserInfoTable.TABLE_NAME +
-                " on " + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID + '=' + "s." + SessionsTable.USER_ID +
-                AND + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID + '=' + "s." + SessionsTable.SERVER_ID +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " ux" +
+                " on ux." + UserInfoTable.USER_ID + "=s." + SessionsTable.USER_ID +
+                AND + "ux." + UserInfoTable.SERVER_ID + "=s." + SessionsTable.SERVER_ID +
                 WHERE + UserInfoTable.REGISTERED + ">=?" +
                 AND + UserInfoTable.REGISTERED + "<=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_END + "<=?" +
                 AND + "s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
 
-        String sql = SELECT + "COUNT(1) as player_count" +
-                FROM + '(' + selectUniqueUUIDs + ")";
-
-        return new QueryStatement<Integer>(sql) {
+        return new QueryStatement<Integer>(selectUniqueUUIDs) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -595,7 +592,11 @@ public class PlayerCountQueries {
 
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getInt("player_count") : 0;
+                int count = 0;
+                while (set.next()) {
+                    count++;
+                }
+                return count;
             }
         };
     }
