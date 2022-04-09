@@ -32,14 +32,14 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
  */
 public class UserInfoHostnameAllowNullPatch extends Patch {
 
-    private final String tempTableName = "temp_user_info_join_address_patching";
-    private final String tableName = UserInfoTable.TABLE_NAME;
+    private static final String TEMP_TABLE_NAME = "temp_user_info_join_address_patching";
+    private static final String TABLE_NAME = UserInfoTable.TABLE_NAME;
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, UserInfoTable.JOIN_ADDRESS)
-                && !hasColumn(tableName, "hostname")
-                && !hasTable(tempTableName);
+        return hasColumn(TABLE_NAME, UserInfoTable.JOIN_ADDRESS)
+                && !hasColumn(TABLE_NAME, "hostname")
+                && !hasTable(TEMP_TABLE_NAME);
     }
 
     @Override
@@ -47,23 +47,23 @@ public class UserInfoHostnameAllowNullPatch extends Patch {
         tempOldTable();
         execute(UserInfoTable.createTableSQL(dbType));
 
-        execute(new ExecStatement("INSERT INTO " + tableName + " (" +
+        execute(new ExecStatement("INSERT INTO " + TABLE_NAME + " (" +
                 UserInfoTable.ID + ',' +
-                UserInfoTable.USER_UUID + ',' +
-                UserInfoTable.SERVER_UUID + ',' +
+                UserInfoTable.USER_ID + ',' +
+                UserInfoTable.SERVER_ID + ',' +
                 UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.OP + ',' +
                 UserInfoTable.BANNED + ',' +
                 UserInfoTable.JOIN_ADDRESS +
                 ") SELECT " +
                 UserInfoTable.ID + ',' +
-                UserInfoTable.USER_UUID + ',' +
-                UserInfoTable.SERVER_UUID + ',' +
+                UserInfoTable.USER_ID + ',' +
+                UserInfoTable.SERVER_ID + ',' +
                 UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.OP + ',' +
                 UserInfoTable.BANNED + ',' +
                 "?" +
-                FROM + tempTableName
+                FROM + TEMP_TABLE_NAME
         ) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -71,13 +71,13 @@ public class UserInfoHostnameAllowNullPatch extends Patch {
             }
         });
 
-        dropTable(tempTableName);
+        dropTable(TEMP_TABLE_NAME);
     }
 
 
     private void tempOldTable() {
-        if (!hasTable(tempTableName)) {
-            renameTable(tableName, tempTableName);
+        if (!hasTable(TEMP_TABLE_NAME)) {
+            renameTable(TABLE_NAME, TEMP_TABLE_NAME);
         }
     }
 }

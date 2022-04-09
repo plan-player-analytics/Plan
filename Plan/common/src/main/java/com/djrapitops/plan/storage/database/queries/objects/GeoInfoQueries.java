@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.java.Lists;
@@ -172,9 +173,9 @@ public class GeoInfoQueries {
                 // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
                 LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=a." + GeoInfoTable.USER_ID +
-                INNER_JOIN + UserInfoTable.TABLE_NAME + " ui on ui." + UserInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                INNER_JOIN + UserInfoTable.TABLE_NAME + " ui on ui." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
-                AND + "ui." + UserInfoTable.SERVER_UUID + "=?" +
+                AND + "ui." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryStatement<Map<String, Integer>>(sql) {

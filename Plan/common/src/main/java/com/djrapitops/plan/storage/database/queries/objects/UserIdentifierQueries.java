@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
@@ -75,8 +76,8 @@ public class UserIdentifierQueries {
                 UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + ',' +
                 FROM + UsersTable.TABLE_NAME +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
-                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
-                WHERE + UserInfoTable.SERVER_UUID + "=?";
+                UsersTable.TABLE_NAME + '.' + UsersTable.ID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID +
+                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
         return new QueryStatement<Set<UUID>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

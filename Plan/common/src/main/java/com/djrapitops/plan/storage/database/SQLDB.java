@@ -194,9 +194,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 new DiskUsagePatch(),
                 new WorldsOptimizationPatch(),
                 new KillsOptimizationPatch(),
-                new SessionsOptimizationPatch(),
                 new NicknamesOptimizationPatch(),
-                new UserInfoOptimizationPatch(),
                 new GeoInfoOptimizationPatch(),
                 new TransferTableRemovalPatch(),
                 new BadAFKThresholdValuePatch(),
@@ -211,7 +209,6 @@ public abstract class SQLDB extends AbstractDatabase {
                 new LitebansTableHeaderPatch(),
                 new UserInfoHostnamePatch(),
                 new ServerIsProxyPatch(),
-                new UserInfoHostnameAllowNullPatch(),
                 new ServerTableRowPatch(),
                 new PlayerTableRowPatch(),
                 new ExtensionTableProviderValuesForPatch(),
@@ -219,7 +216,10 @@ public abstract class SQLDB extends AbstractDatabase {
                 new ExtensionTableProviderFormattersPatch(),
                 new ServerPlanVersionPatch(),
                 new PingOptimizationPatch(),
+                new UserInfoOptimizationPatch(),
                 new WorldTimesOptimizationPatch(),
+                new SessionsOptimizationPatch(),
+                new UserInfoHostnameAllowNullPatch(),
         };
     }
 

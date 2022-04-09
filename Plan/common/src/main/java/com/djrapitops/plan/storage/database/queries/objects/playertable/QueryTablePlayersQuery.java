@@ -18,24 +18,21 @@ package com.djrapitops.plan.storage.database.queries.objects.playertable;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
-import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
-import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
-import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
-import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
-import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
-import com.djrapitops.plan.storage.database.transactions.temporary.CreateTemporaryQueryUuidsTableTransaction;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -71,20 +68,12 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
     @Override
     public List<TablePlayer> executeQuery(SQLDB db) {
-        CreateTemporaryQueryUuidsTableTransaction createTempTables = null;
-        try {
-            createTempTables = new CreateTemporaryQueryUuidsTableTransaction(playerUUIDs);
-            db.executeTransaction(createTempTables).get(); // Wait for transaction to execute
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            throw new DBOpException("Failed to create temporary table for query", e);
-        }
-
-        Optional<String> tableName = createTempTables.getTableName();
-        if (!tableName.isPresent()) return Collections.emptyList();
-
-        String uuidsInSet = " IN (SELECT uuid FROM " + tableName.get() + ")";
+        String selectUserIds = SELECT + UsersTable.ID +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.USER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(playerUUIDs, "','") + "')";
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
 
         String selectLatestGeolocations = SELECT +
                 "a." + GeoInfoTable.USER_ID + ',' +
@@ -96,41 +85,39 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL;
 
-        String selectSessionData = SELECT + "s." + SessionsTable.USER_UUID + ',' +
+        String selectSessionData = SELECT + "s." + SessionsTable.USER_ID + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "COUNT(1) as count," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
                 AND + "s." + SessionsTable.SESSION_END + "<=?" +
-                AND + "s." + SessionsTable.USER_UUID +
-                uuidsInSet +
-                (serverUUIDs.isEmpty() ? "" : AND + "s." + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')") +
-                GROUP_BY + "s." + SessionsTable.USER_UUID;
+                AND + "s." + SessionsTable.USER_ID + " IN (" + selectUserIds + ")" +
+                (serverUUIDs.isEmpty() ? "" : AND + "s." + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")") +
+                GROUP_BY + "s." + SessionsTable.USER_ID;
 
-        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_UUID +
+        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_ID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?" +
-                AND + UserInfoTable.USER_UUID + uuidsInSet +
-                (serverUUIDs.isEmpty() ? "" : AND + UserInfoTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
+                AND + "s." + SessionsTable.USER_ID + " IN (" + selectUserIds + ")" +
+                (serverUUIDs.isEmpty() ? "" : AND + "s." + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +
                 "u." + UsersTable.USER_NAME + ',' +
                 "u." + UsersTable.REGISTERED + ',' +
-                "ban." + UserInfoTable.USER_UUID + " as banned," +
+                "ban." + UserInfoTable.USER_ID + " as banned," +
                 "geo." + GeoInfoTable.GEOLOCATION + ',' +
                 "ses.last_seen," +
                 "ses.count," +
                 "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
-                LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + SessionsTable.USER_UUID + "=act." + UserInfoTable.USER_UUID +
-                WHERE + "u." + UserInfoTable.USER_UUID +
-                uuidsInSet +
+                LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
+                WHERE + "u." + UserInfoTable.USER_ID + "IN (" + selectUserIds + ")" +
                 ORDER_BY + "ses.last_seen DESC";
 
         return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {

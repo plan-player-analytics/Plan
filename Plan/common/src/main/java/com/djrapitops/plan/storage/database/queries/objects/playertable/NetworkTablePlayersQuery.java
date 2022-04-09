@@ -65,14 +65,14 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL;
 
-        String selectSessionData = SELECT + "s." + SessionsTable.USER_UUID + ',' +
+        String selectSessionData = SELECT + "s." + SessionsTable.USER_ID + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "COUNT(1) as count," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
-                GROUP_BY + "s." + SessionsTable.USER_UUID;
+                GROUP_BY + "s." + SessionsTable.USER_ID;
 
-        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_UUID +
+        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_ID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?";
 
@@ -80,17 +80,17 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 "u." + UsersTable.USER_UUID + ',' +
                 "u." + UsersTable.USER_NAME + ',' +
                 "u." + UsersTable.REGISTERED + ',' +
-                "ban." + UserInfoTable.USER_UUID + " as banned," +
+                "ban." + UserInfoTable.USER_ID + " as banned," +
                 "geo." + GeoInfoTable.GEOLOCATION + ',' +
                 "ses.last_seen," +
                 "ses.count," +
                 "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
-                LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.USER_UUID + "=act." + UserInfoTable.USER_UUID +
+                LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
                 ORDER_BY + "ses.last_seen DESC LIMIT ?";
 
         return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {

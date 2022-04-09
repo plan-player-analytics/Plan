@@ -34,14 +34,12 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(UsersTable.TABLE_NAME, "plan_users_uuid_index",
                 UsersTable.USER_UUID
         );
-        createIndex(UserInfoTable.TABLE_NAME, "plan_user_info_uuid_index",
-                UserInfoTable.USER_UUID,
-                UserInfoTable.SERVER_UUID
-        );
-        createIndex(SessionsTable.TABLE_NAME, "plan_sessions_uuid_index",
-                SessionsTable.USER_UUID,
-                SessionsTable.SERVER_UUID
-        );
+
+        // replaced by foreign keys
+        dropIndex(UserInfoTable.TABLE_NAME, "plan_user_info_uuid_index");
+        // replaced by foreign keys
+        dropIndex(SessionsTable.TABLE_NAME, "plan_sessions_uuid_index");
+
         createIndex(SessionsTable.TABLE_NAME, "plan_sessions_date_index",
                 SessionsTable.SESSION_START
         );

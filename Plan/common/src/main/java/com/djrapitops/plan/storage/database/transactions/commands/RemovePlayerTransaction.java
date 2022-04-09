@@ -53,9 +53,9 @@ public class RemovePlayerTransaction extends ThrowawayTransaction {
         deleteFromTable(NicknamesTable.TABLE_NAME);
         deleteFromKillsTable();
         deleteFromUserIdTable(WorldTimesTable.TABLE_NAME);
-        deleteFromTable(SessionsTable.TABLE_NAME);
+        deleteFromUserIdTable(SessionsTable.TABLE_NAME);
         deleteFromUserIdTable(PingTable.TABLE_NAME);
-        deleteFromTable(UserInfoTable.TABLE_NAME);
+        deleteFromUserIdTable(UserInfoTable.TABLE_NAME);
         deleteFromTable(UsersTable.TABLE_NAME);
 
         deleteFromTable(ExtensionPlayerTableValueTable.TABLE_NAME);

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
@@ -62,7 +63,7 @@ public class ServerAggregateQueries {
      */
     public static Query<Integer> serverUserCount(ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_UUID + "=?";
+                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
         return new QueryStatement<Integer>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -85,14 +86,17 @@ public class ServerAggregateQueries {
      * @return Map: Server UUID - Count of users registered to that server
      */
     public static Query<Map<ServerUUID, Integer>> serverUserCounts() {
-        String sql = SELECT + "COUNT(1) as c, " + UserInfoTable.SERVER_UUID + FROM + UserInfoTable.TABLE_NAME +
-                GROUP_BY + UserInfoTable.SERVER_UUID;
+        String sql = SELECT + "COUNT(1) as c, " + ServerTable.SERVER_UUID +
+                FROM + UserInfoTable.TABLE_NAME +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID +
+                GROUP_BY + UserInfoTable.SERVER_ID;
+
         return new QueryAllStatement<Map<ServerUUID, Integer>>(sql, 100) {
             @Override
             public Map<ServerUUID, Integer> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, Integer> ofServer = new HashMap<>();
                 while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     int count = set.getInt("c");
                     ofServer.put(serverUUID, count);
                 }

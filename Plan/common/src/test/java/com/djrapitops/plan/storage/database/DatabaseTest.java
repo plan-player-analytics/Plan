@@ -223,7 +223,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         Sql sql = db.getType().getSql();
         String testSQL = SELECT + sql.dateToEpochSecond(sql.epochSecondToDate(Long.toString(expected))) + " as ms";
 
-        long result = db.query(new QueryAllStatement<Long>(testSQL) {
+        long result = db.query(new QueryAllStatement<>(testSQL) {
             @Override
             public Long processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getLong("ms") : -1L;
@@ -243,7 +243,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset) / 1000))) + " as date";
 
         String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
-        String result = db.query(new QueryAllStatement<String>(testSQL) {
+        String result = db.query(new QueryAllStatement<>(testSQL) {
             @Override
             public String processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getString("date") : null;
@@ -269,7 +269,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset) / 1000))) + " as date";
 
                 String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
-                String result = db.query(new QueryAllStatement<String>(testSQL) {
+                String result = db.query(new QueryAllStatement<>(testSQL) {
                     @Override
                     public String processResults(ResultSet set) throws SQLException {
                         return set.next() ? set.getString("date") : null;
@@ -289,7 +289,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 , new Transaction() {
                     @Override
                     protected void performOperations() {
-                        execute("UPDATE " + UserInfoTable.TABLE_NAME + " SET " + UserInfoTable.REGISTERED + "=0" + WHERE + UserInfoTable.USER_UUID + "='" + playerUUID + "'");
+                        execute("UPDATE " + UserInfoTable.TABLE_NAME + " SET " + UserInfoTable.REGISTERED + "=0" + WHERE + UserInfoTable.USER_ID + "=1");
                     }
                 }
         );

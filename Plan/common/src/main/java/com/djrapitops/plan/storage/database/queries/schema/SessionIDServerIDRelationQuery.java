@@ -38,7 +38,7 @@ public class SessionIDServerIDRelationQuery extends QueryAllStatement<Map<Intege
 
     public SessionIDServerIDRelationQuery() {
         super(SELECT + SessionsTable.ID + ',' +
-                "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=" + SessionsTable.SERVER_UUID + ") as server_id" +
+                "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.id=" + SessionsTable.SERVER_ID + ") as server_id" +
                 FROM + SessionsTable.TABLE_NAME, 50000);
     }
 

@@ -201,6 +201,9 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void cleanRemovesOnlyDuplicatedUserInfo() throws ExecutionException, InterruptedException {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, System::currentTimeMillis, TestConstants.PLAYER_TWO_NAME));
+
         // Store one duplicate
         db().executeTransaction(new Transaction() {
             @Override
@@ -306,6 +309,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     @Test
     default void joinAddressFilterOptionsAreFetchedWhenThereAreMultiple() {
         joinAddressIsUpdatedUponSecondLogin();
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", TestConstants.VERSION)));
 
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> TestConstants.GET_PLAYER_HOSTNAME.get() + "_b"));
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, TestConstants.SERVER_TWO_UUID, () -> TestConstants.GET_PLAYER_HOSTNAME.get() + "_a"));

@@ -301,8 +301,8 @@ public class DataStoreQueries {
     public static Executable updateJoinAddress(UUID playerUUID, ServerUUID serverUUID, String joinAddress) {
         String sql = "UPDATE " + UserInfoTable.TABLE_NAME + " SET " +
                 UserInfoTable.JOIN_ADDRESS + "=?" +
-                WHERE + UserInfoTable.USER_UUID + "=?" +
-                AND + UserInfoTable.SERVER_UUID + "=?";
+                WHERE + UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
