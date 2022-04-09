@@ -178,15 +178,15 @@ public class NetworkActivityIndexQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs, List<ServerUUID> serverUUIDs) {
+    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<Integer> userIds, List<ServerUUID> serverUUIDs) {
         String selectActivityIndex = selectActivityIndexSQL(serverUUIDs);
 
         String selectIndexes = SELECT + "activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?" +
-                AND + "u." + UsersTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+                AND + "u." + UsersTable.ID + " IN (" +
+                new TextStringBuilder().appendWithSeparators(userIds, ",").build() + ")";
 
         return new QueryStatement<Map<String, Integer>>(selectIndexes) {
             @Override
@@ -436,20 +436,20 @@ public class NetworkActivityIndexQueries {
         };
     }
 
-    public static Query<Map<UUID, ActivityIndex>> activityIndexForAllPlayers(long date, long playtimeThreshold) {
+    public static Query<Map<Integer, ActivityIndex>> activityIndexForAllPlayers(long date, long playtimeThreshold) {
         String selectActivityIndex = selectActivityIndexSQL();
-        return new QueryStatement<Map<UUID, ActivityIndex>>(selectActivityIndex, 1000) {
+        return new QueryStatement<Map<Integer, ActivityIndex>>(selectActivityIndex, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, date);
             }
 
             @Override
-            public Map<UUID, ActivityIndex> processResults(ResultSet set) throws SQLException {
-                Map<UUID, ActivityIndex> indexes = new HashMap<>();
+            public Map<Integer, ActivityIndex> processResults(ResultSet set) throws SQLException {
+                Map<Integer, ActivityIndex> indexes = new HashMap<>();
                 while (set.next()) {
                     indexes.put(
-                            UUID.fromString(set.getString(UsersTable.USER_UUID)),
+                            set.getInt(UsersTable.ID),
                             new ActivityIndex(set.getDouble("activity_index"), date)
                     );
                 }

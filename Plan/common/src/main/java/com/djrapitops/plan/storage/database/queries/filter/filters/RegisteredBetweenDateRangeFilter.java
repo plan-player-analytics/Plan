@@ -26,7 +26,10 @@ import com.google.gson.Gson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @Singleton
 public class RegisteredBetweenDateRangeFilter extends DateRangeFilter {
@@ -45,14 +48,14 @@ public class RegisteredBetweenDateRangeFilter extends DateRangeFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
         long after = getAfter(query);
         long before = getBefore(query);
         List<String> serverNames = getServerNames(query);
         List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
         return dbSystem.getDatabase().query(
-                serverUUIDs.isEmpty() ? BaseUserQueries.uuidsOfRegisteredBetween(after, before)
-                        : UserInfoQueries.uuidsOfRegisteredBetween(after, before, serverUUIDs)
+                serverUUIDs.isEmpty() ? BaseUserQueries.userIdsOfRegisteredBetween(after, before)
+                        : UserInfoQueries.userIdsOfRegisteredBetween(after, before, serverUUIDs)
         );
     }
 

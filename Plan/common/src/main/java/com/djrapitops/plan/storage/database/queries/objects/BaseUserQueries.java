@@ -105,12 +105,12 @@ public class BaseUserQueries {
         };
     }
 
-    public static Query<Set<UUID>> uuidsOfRegisteredBetween(long after, long before) {
-        String sql = SELECT + DISTINCT + UsersTable.USER_UUID +
+    public static Query<Set<Integer>> userIdsOfRegisteredBetween(long after, long before) {
+        String sql = SELECT + DISTINCT + UsersTable.ID +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.REGISTERED + ">=?" +
                 AND + UsersTable.REGISTERED + "<=?";
-        return new QueryStatement<Set<UUID>>(sql) {
+        return new QueryStatement<Set<Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -118,12 +118,12 @@ public class BaseUserQueries {
             }
 
             @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> uuids = new HashSet<>();
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> userIds = new HashSet<>();
                 while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
+                    userIds.add(set.getInt(UsersTable.ID));
                 }
-                return uuids;
+                return userIds;
             }
         };
     }
@@ -143,4 +143,21 @@ public class BaseUserQueries {
         };
     }
 
+    public static Query<Integer> fetchUserId(UUID playerUUID) {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.ID)
+                .where(UsersTable.USER_UUID + "=?")
+                .toString();
+
+        return new QueryStatement<Integer>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt(UsersTable.ID) : -1;
+            }
+        };
+    }
 }

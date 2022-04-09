@@ -24,7 +24,10 @@ import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class PlayedOnServerFilter extends MultiOptionFilter {
@@ -51,10 +54,10 @@ public class PlayedOnServerFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
         List<String> serverNames = getSelected(query);
         List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
 
-        return dbSystem.getDatabase().query(UserInfoQueries.uuidsOfRegisteredBetween(0, System.currentTimeMillis(), serverUUIDs));
+        return dbSystem.getDatabase().query(UserInfoQueries.userIdsOfRegisteredBetween(0, System.currentTimeMillis(), serverUUIDs));
     }
 }

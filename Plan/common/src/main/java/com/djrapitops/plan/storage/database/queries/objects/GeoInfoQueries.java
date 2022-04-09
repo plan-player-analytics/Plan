@@ -136,7 +136,7 @@ public class GeoInfoQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> networkGeolocationCounts(Collection<UUID> playerUUIDs) {
+    public static Query<Map<String, Integer>> networkGeolocationCounts(Collection<Integer> userIds) {
         String sql = SELECT +
                 "a." + GeoInfoTable.GEOLOCATION + ", " +
                 "COUNT(1) as c" +
@@ -147,8 +147,8 @@ public class GeoInfoQueries {
                 LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on a." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
-                AND + UsersTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
+                AND + "u." + UsersTable.ID + " IN (" +
+                new TextStringBuilder().appendWithSeparators(userIds, ",").build() + ")" +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryAllStatement<Map<String, Integer>>(sql) {
@@ -208,19 +208,19 @@ public class GeoInfoQueries {
         };
     }
 
-    public static Query<Set<UUID>> uuidsOfPlayersWithGeolocations(List<String> selected) {
-        String sql = SELECT + UsersTable.USER_UUID +
+    public static Query<Set<Integer>> userIdsOfPlayersWithGeolocations(List<String> selected) {
+        String sql = SELECT + "u." + UsersTable.ID +
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=g." + GeoInfoTable.USER_ID +
                 WHERE + GeoInfoTable.GEOLOCATION +
                 " IN ('" +
                 new TextStringBuilder().appendWithSeparators(selected, "','") +
                 "')";
-        return new QueryAllStatement<Set<UUID>>(sql) {
+        return new QueryAllStatement<Set<Integer>>(sql) {
             @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> geolocations = new HashSet<>();
-                while (set.next()) geolocations.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> geolocations = new HashSet<>();
+                while (set.next()) geolocations.add(set.getInt(UsersTable.ID));
                 return geolocations;
             }
         };

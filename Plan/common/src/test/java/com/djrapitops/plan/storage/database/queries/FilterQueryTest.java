@@ -102,7 +102,7 @@ public interface FilterQueryTest extends DatabaseTestPreparer {
         assertAll(Arrays.stream(filter.getExpectedParameters())
                 .map(parameter -> () -> assertTrue(setParameters.contains(parameter), () -> "Incorrect test setup: Parameter '" + parameter + "' was not set for filter " + filter.getKind())));
 
-        Set<UUID> matchingUUIDs = filter.getMatchingUUIDs(input);
-        assertNotNull(matchingUUIDs);
+        Set<Integer> matchingUserIds = filter.getMatchingUserIds(input);
+        assertNotNull(matchingUserIds);
     }
 }

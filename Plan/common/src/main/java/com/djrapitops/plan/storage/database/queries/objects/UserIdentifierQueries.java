@@ -203,4 +203,19 @@ public class UserIdentifierQueries {
             }
         };
     }
+
+    public static Query<Set<Integer>> fetchAllUserIds() {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.ID).toString();
+
+        return new QueryAllStatement<Set<Integer>>(sql, 2000) {
+            @Override
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> playerUUIDs = new HashSet<>();
+                while (set.next()) {
+                    playerUUIDs.add(set.getInt(UsersTable.ID));
+                }
+                return playerUUIDs;
+            }
+        };
+    }
 }

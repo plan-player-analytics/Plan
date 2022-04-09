@@ -821,18 +821,18 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Set<UUID>> uuidsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
+    public static Query<Set<Integer>> userIdsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
         String selectServerIds = SELECT + ServerTable.ID +
                 FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
 
-        String sql = SELECT + DISTINCT + UsersTable.USER_UUID +
+        String sql = SELECT + DISTINCT + "u." + UsersTable.ID +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.USER_ID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
                 (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
-        return new QueryStatement<Set<UUID>>(sql) {
+        return new QueryStatement<Set<Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -840,20 +840,21 @@ public class SessionQueries {
             }
 
             @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> uuids = new HashSet<>();
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> userIds = new HashSet<>();
                 while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
+                    userIds.add(set.getInt(UsersTable.ID));
                 }
-                return uuids;
+                return userIds;
             }
         };
     }
 
-    public static Query<Map<String, Long>> summaryOfPlayers(Set<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long after, long before) {
+    public static Query<Map<String, Long>> summaryOfPlayers(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
+        String uuidsInSet = " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ")";
         String selectUserIds = SELECT + UsersTable.ID +
                 FROM + UsersTable.TABLE_NAME +
-                WHERE + UsersTable.USER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(playerUUIDs, "','") + "')";
+                WHERE + UsersTable.USER_UUID + uuidsInSet;
         String selectServerIds = SELECT + ServerTable.ID +
                 FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
@@ -865,7 +866,7 @@ public class SessionQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
-                AND + SessionsTable.USER_ID + " IN (" + selectUserIds + ")" +
+                AND + SessionsTable.USER_ID + uuidsInSet +
                 (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
         return new QueryStatement<Map<String, Long>>(selectAggregates) {
@@ -881,7 +882,7 @@ public class SessionQueries {
                     long sessionCount = set.getLong("session_count");
                     long playtime = set.getLong("playtime");
                     long activePlaytime = set.getLong("active_playtime");
-                    int playerCount = playerUUIDs.size();
+                    int playerCount = userIds.size();
                     return Maps.builder(String.class, Long.class)
                             .put("total_playtime", playtime)
                             .put("average_playtime", playerCount != 0 ? playtime / playerCount : -1L)

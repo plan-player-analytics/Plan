@@ -243,8 +243,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
             }
         }).get();
 
-        Set<UUID> expected = Collections.singleton(player2UUID);
-        Set<UUID> result = db().query(BaseUserQueries.uuidsOfRegisteredBetween(2500L, 7500L));
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(player2UUID)));
+        Set<Integer> result = db().query(BaseUserQueries.userIdsOfRegisteredBetween(2500L, 7500L));
         assertEquals(expected, result);
     }
 
@@ -327,8 +327,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void joinAddressFilterUUIDsAreFetched() {
         joinAddressIsUpdatedUponSecondLogin();
 
-        Set<UUID> expected = Collections.singleton(playerUUID);
-        Set<UUID> result = db().query(UserInfoQueries.uuidsOfPlayersWithJoinAddresses(
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> result = db().query(UserInfoQueries.userIdsOfPlayersWithJoinAddresses(
                 Collections.singletonList(TestConstants.GET_PLAYER_HOSTNAME.get().toLowerCase()))
         );
         assertEquals(expected, result);
@@ -338,8 +338,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void joinAddressFilterUUIDsAreFetchedWhenUnknown() {
         joinAddressCanBeNull();
 
-        Set<UUID> expected = Collections.singleton(playerUUID);
-        Set<UUID> result = db().query(UserInfoQueries.uuidsOfPlayersWithJoinAddresses(
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> result = db().query(UserInfoQueries.userIdsOfPlayersWithJoinAddresses(
                 Collections.singletonList("unknown"))
         );
         assertEquals(expected, result);

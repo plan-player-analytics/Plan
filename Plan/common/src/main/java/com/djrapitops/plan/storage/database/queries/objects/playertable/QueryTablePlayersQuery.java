@@ -43,7 +43,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
-    private final Collection<UUID> playerUUIDs;
+    private final Collection<Integer> userIds;
     private final List<ServerUUID> serverUUIDs;
     private final long afterDate;
     private final long beforeDate;
@@ -52,14 +52,14 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
     /**
      * Create a new query.
      *
-     * @param playerUUIDs       UUIDs of the players in the query
+     * @param userIds           User ids of the players in the query
      * @param serverUUIDs       View data for these Server UUIDs
      * @param afterDate         View data after this epoch ms
      * @param beforeDate        View data before this epoch ms
      * @param activeMsThreshold Playtime threshold for Activity Index calculation
      */
-    public QueryTablePlayersQuery(Collection<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {
-        this.playerUUIDs = playerUUIDs;
+    public QueryTablePlayersQuery(Collection<Integer> userIds, List<ServerUUID> serverUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {
+        this.userIds = userIds;
         this.serverUUIDs = serverUUIDs;
         this.afterDate = afterDate;
         this.beforeDate = beforeDate;
@@ -68,9 +68,6 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
     @Override
     public List<TablePlayer> executeQuery(SQLDB db) {
-        String selectUserIds = SELECT + UsersTable.ID +
-                FROM + UsersTable.TABLE_NAME +
-                WHERE + UsersTable.USER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(playerUUIDs, "','") + "')";
         String selectServerIds = SELECT + ServerTable.ID +
                 FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
@@ -85,21 +82,22 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL;
 
+        String userIdsInSet = " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ')';
         String selectSessionData = SELECT + "s." + SessionsTable.USER_ID + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "COUNT(1) as count," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
-                INNER_JOIN + '(' + selectUserIds + ") selected on selected." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
                 (serverUUIDs.isEmpty() ? "" : INNER_JOIN + '(' + selectServerIds + ") sel_servers on sel_servers." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID) +
                 WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
                 AND + "s." + SessionsTable.SESSION_END + "<=?" +
+                AND + "s." + SessionsTable.USER_ID + userIdsInSet +
                 GROUP_BY + "s." + SessionsTable.USER_ID;
 
         String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_ID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?" +
-                AND + "ub." + UserInfoTable.USER_ID + " IN (" + selectUserIds + ")" +
+                AND + "ub." + UserInfoTable.USER_ID + userIdsInSet +
                 (serverUUIDs.isEmpty() ? "" : AND + "ub." + UserInfoTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
         String selectBaseUsers = SELECT +
@@ -113,11 +111,11 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
-                INNER_JOIN + '(' + selectUserIds + ") selected on selected." + UsersTable.ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
+                WHERE + "u." + UsersTable.ID + userIdsInSet +
                 ORDER_BY + "ses.last_seen DESC";
 
         return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {

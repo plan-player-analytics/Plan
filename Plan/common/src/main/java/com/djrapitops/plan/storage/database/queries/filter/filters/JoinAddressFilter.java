@@ -22,7 +22,10 @@ import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class JoinAddressFilter extends MultiOptionFilter {
@@ -47,7 +50,7 @@ public class JoinAddressFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
-        return dbSystem.getDatabase().query(UserInfoQueries.uuidsOfPlayersWithJoinAddresses(getSelected(query)));
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
+        return dbSystem.getDatabase().query(UserInfoQueries.userIdsOfPlayersWithJoinAddresses(getSelected(query)));
     }
 }
