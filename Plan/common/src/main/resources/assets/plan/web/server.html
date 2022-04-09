@@ -1428,6 +1428,7 @@
                 }
                 table = $('.player-table').DataTable({
                     responsive: true,
+                    deferRender: true,
                     columns: json.columns,
                     data: json.data,
                     order: [[5, "desc"]]
