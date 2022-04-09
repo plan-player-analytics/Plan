@@ -51,12 +51,15 @@ public class RegisterDateMinimizationPatch extends Patch {
     }
 
     private Query<Map<UUID, Long>> fetchSmallestServerRegisterDates() {
-        String sql = SELECT + "u1.uuid,u1." + UsersTable.REGISTERED + ",min_registered" + FROM + '(' +
-                SELECT + UserInfoTable.USER_UUID + ',' +
+        String selectSmallestRegisterDates = SELECT +
+                UserInfoTable.USER_ID + ',' +
                 "MIN(" + UserInfoTable.REGISTERED + ") as min_registered" +
                 FROM + UserInfoTable.TABLE_NAME +
-                GROUP_BY + UserInfoTable.USER_UUID + ") u2" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u1 on u1.uuid=u2.uuid" +
+                GROUP_BY + UserInfoTable.USER_ID;
+
+        String sql = SELECT + UsersTable.USER_UUID + ",u1." + UsersTable.REGISTERED + ",min_registered" +
+                FROM + '(' + selectSmallestRegisterDates + ") u2" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u1 on u1." + UsersTable.ID + "=u2." + UserInfoTable.USER_ID +
                 WHERE + "u1." + UsersTable.REGISTERED + ">min_registered";
 
         return new QueryAllStatement<Map<UUID, Long>>(sql, 500) {
@@ -64,7 +67,7 @@ public class RegisterDateMinimizationPatch extends Patch {
             public Map<UUID, Long> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Long> dates = new HashMap<>();
                 while (set.next()) {
-                    UUID playerUUID = UUID.fromString(set.getString(1));
+                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
                     long newRegisterDate = set.getLong("min_registered");
                     dates.put(playerUUID, newRegisterDate);
                 }

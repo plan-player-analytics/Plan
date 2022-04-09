@@ -23,10 +23,7 @@ import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
-import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
-import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
-import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
-import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
@@ -46,7 +43,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
-    private final Collection<UUID> playerUUIDs;
+    private final Collection<Integer> userIds;
     private final List<ServerUUID> serverUUIDs;
     private final long afterDate;
     private final long beforeDate;
@@ -55,14 +52,14 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
     /**
      * Create a new query.
      *
-     * @param playerUUIDs       UUIDs of the players in the query
+     * @param userIds           User ids of the players in the query
      * @param serverUUIDs       View data for these Server UUIDs
      * @param afterDate         View data after this epoch ms
      * @param beforeDate        View data before this epoch ms
      * @param activeMsThreshold Playtime threshold for Activity Index calculation
      */
-    public QueryTablePlayersQuery(Collection<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {
-        this.playerUUIDs = playerUUIDs;
+    public QueryTablePlayersQuery(Collection<Integer> userIds, List<ServerUUID> serverUUIDs, long afterDate, long beforeDate, long activeMsThreshold) {
+        this.userIds = userIds;
         this.serverUUIDs = serverUUIDs;
         this.afterDate = afterDate;
         this.beforeDate = beforeDate;
@@ -71,60 +68,54 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
     @Override
     public List<TablePlayer> executeQuery(SQLDB db) {
-        String uuidsInSet = " IN ('" + new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
 
-        String selectGeolocations = SELECT + DISTINCT +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED +
-                FROM + GeoInfoTable.TABLE_NAME;
-        String selectLatestGeolocationDate = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                "MAX(" + GeoInfoTable.LAST_USED + ") as last_used_g" +
-                FROM + GeoInfoTable.TABLE_NAME +
-                GROUP_BY + GeoInfoTable.USER_UUID;
         String selectLatestGeolocations = SELECT +
-                "g1." + GeoInfoTable.GEOLOCATION + ',' +
-                "g1." + GeoInfoTable.USER_UUID +
-                FROM + "(" + selectGeolocations + ") AS g1" +
-                INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS g2 ON g1.uuid = g2.uuid" +
-                WHERE + GeoInfoTable.LAST_USED + "=last_used_g";
+                "a." + GeoInfoTable.USER_ID + ',' +
+                "a." + GeoInfoTable.GEOLOCATION +
+                FROM + GeoInfoTable.TABLE_NAME + " a" +
+                // Super smart optimization https://stackoverflow.com/a/28090544
+                // Join the last_used column, but only if there's a bigger one.
+                // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
+                LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
+                WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL;
 
-        String selectSessionData = SELECT + "s." + SessionsTable.USER_UUID + ',' +
+        String userIdsInSet = " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ')';
+        String selectSessionData = SELECT + "s." + SessionsTable.USER_ID + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "COUNT(1) as count," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
+                (serverUUIDs.isEmpty() ? "" : INNER_JOIN + '(' + selectServerIds + ") sel_servers on sel_servers." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID) +
                 WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
                 AND + "s." + SessionsTable.SESSION_END + "<=?" +
-                AND + "s." + SessionsTable.USER_UUID +
-                uuidsInSet +
-                (serverUUIDs.isEmpty() ? "" : AND + "s." + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')") +
-                GROUP_BY + "s." + SessionsTable.USER_UUID;
+                AND + "s." + SessionsTable.USER_ID + userIdsInSet +
+                GROUP_BY + "s." + SessionsTable.USER_ID;
 
-        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_UUID +
+        String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_ID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?" +
-                AND + UserInfoTable.USER_UUID + uuidsInSet +
-                (serverUUIDs.isEmpty() ? "" : AND + UserInfoTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
+                AND + "ub." + UserInfoTable.USER_ID + userIdsInSet +
+                (serverUUIDs.isEmpty() ? "" : AND + "ub." + UserInfoTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +
                 "u." + UsersTable.USER_NAME + ',' +
                 "u." + UsersTable.REGISTERED + ',' +
-                "ban." + UserInfoTable.USER_UUID + " as banned," +
+                "ban." + UserInfoTable.USER_ID + " as banned," +
                 "geo." + GeoInfoTable.GEOLOCATION + ',' +
                 "ses.last_seen," +
                 "ses.count," +
                 "ses.active_playtime," +
                 "act.activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + SessionsTable.USER_UUID + "=act." + UserInfoTable.USER_UUID +
-                WHERE + "u." + UserInfoTable.USER_UUID +
-                uuidsInSet +
+                LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
+                LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
+                LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
+                WHERE + "u." + UsersTable.ID + userIdsInSet +
                 ORDER_BY + "ses.last_seen DESC";
 
         return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {

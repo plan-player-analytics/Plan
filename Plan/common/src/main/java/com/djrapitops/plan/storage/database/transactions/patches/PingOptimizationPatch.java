@@ -22,7 +22,7 @@ import com.djrapitops.plan.storage.database.sql.tables.PingTable;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 
 /**
- * Replaces user_id and server_id foreign keys with respective uuid fields in ping table.
+ * Replaces uuid and server_uuid with foreign keys in ping table.
  *
  * @author AuroraLS3
  */
@@ -38,10 +38,10 @@ public class PingOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, PingTable.USER_UUID)
-                && hasColumn(tableName, PingTable.SERVER_UUID)
-                && !hasColumn(tableName, "user_id")
-                && !hasColumn(tableName, "server_id")
+        return hasColumn(tableName, PingTable.USER_ID)
+                && hasColumn(tableName, PingTable.SERVER_ID)
+                && !hasColumn(tableName, "uuid")
+                && !hasColumn(tableName, "server_uuid")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
 
@@ -52,16 +52,16 @@ public class PingOptimizationPatch extends Patch {
             execute(PingTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    PingTable.USER_UUID + ',' +
-                    PingTable.SERVER_UUID + ',' +
+                    PingTable.USER_ID + ',' +
+                    PingTable.SERVER_ID + ',' +
                     PingTable.ID + ',' +
                     PingTable.MIN_PING + ',' +
                     PingTable.MAX_PING + ',' +
                     PingTable.AVG_PING + ',' +
                     PingTable.DATE +
                     ") SELECT " +
-                    "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
-                    "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
+                    "(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid = " + tempTableName + ".uuid LIMIT 1), " +
+                    "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid = " + tempTableName + ".server_uuid LIMIT 1), " +
                     PingTable.ID + ',' +
                     PingTable.MIN_PING + ',' +
                     PingTable.MAX_PING + ',' +

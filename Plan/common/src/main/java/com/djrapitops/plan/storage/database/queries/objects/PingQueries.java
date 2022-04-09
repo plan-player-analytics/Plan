@@ -23,6 +23,8 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.PingTable;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
@@ -54,9 +56,11 @@ public class PingQueries {
                 PingTable.MAX_PING + ',' +
                 PingTable.MIN_PING + ',' +
                 PingTable.AVG_PING + ',' +
-                PingTable.USER_UUID + ',' +
-                PingTable.SERVER_UUID +
-                FROM + PingTable.TABLE_NAME;
+                "u." + UsersTable.USER_UUID + " as uuid," +
+                "s." + ServerTable.SERVER_UUID + " as server_uuid" +
+                FROM + PingTable.TABLE_NAME + " p" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=p." + PingTable.USER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on s.id=p." + PingTable.SERVER_ID;
         return new QueryAllStatement<Map<UUID, List<Ping>>>(sql, 100000) {
             @Override
             public Map<UUID, List<Ping>> processResults(ResultSet set) throws SQLException {
@@ -69,8 +73,8 @@ public class PingQueries {
         Map<UUID, List<Ping>> userPings = new HashMap<>();
 
         while (set.next()) {
-            UUID uuid = UUID.fromString(set.getString(PingTable.USER_UUID));
-            ServerUUID serverUUID = ServerUUID.fromString(set.getString(PingTable.SERVER_UUID));
+            UUID uuid = UUID.fromString(set.getString("uuid"));
+            ServerUUID serverUUID = ServerUUID.fromString(set.getString("server_uuid"));
             long date = set.getLong(PingTable.DATE);
             double avgPing = set.getDouble(PingTable.AVG_PING);
             int minPing = set.getInt(PingTable.MIN_PING);
@@ -93,8 +97,9 @@ public class PingQueries {
      * @return List of Ping entries for this player.
      */
     public static Query<List<Ping>> fetchPingDataOfPlayer(UUID playerUUID) {
-        String sql = SELECT + '*' + FROM + PingTable.TABLE_NAME +
-                WHERE + PingTable.USER_UUID + "=?";
+        String sql = SELECT + '*' + FROM + PingTable.TABLE_NAME + " p" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + "=p." + PingTable.SERVER_ID +
+                WHERE + PingTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
 
         return new QueryStatement<List<Ping>>(sql, 10000) {
             @Override
@@ -109,7 +114,7 @@ public class PingQueries {
                 while (set.next()) {
                     pings.add(new Ping(
                                     set.getLong(PingTable.DATE),
-                                    ServerUUID.fromString(set.getString(PingTable.SERVER_UUID)),
+                                    ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                                     set.getInt(PingTable.MIN_PING),
                                     set.getInt(PingTable.MAX_PING),
                                     set.getDouble(PingTable.AVG_PING)
@@ -122,38 +127,14 @@ public class PingQueries {
         };
     }
 
-    public static Query<Map<UUID, List<Ping>>> fetchPingDataOfServer(ServerUUID serverUUID) {
-        String sql = SELECT +
-                PingTable.DATE + ',' +
-                PingTable.MAX_PING + ',' +
-                PingTable.MIN_PING + ',' +
-                PingTable.AVG_PING + ',' +
-                PingTable.USER_UUID + ',' +
-                PingTable.SERVER_UUID +
-                FROM + PingTable.TABLE_NAME +
-                WHERE + PingTable.SERVER_UUID + "=?";
-        return new QueryStatement<Map<UUID, List<Ping>>>(sql, 100000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, List<Ping>> processResults(ResultSet set) throws SQLException {
-                return extractUserPings(set);
-            }
-        };
-    }
-
     public static Query<List<Ping>> fetchPingDataOfServer(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
                 PingTable.DATE + ", " +
                 PingTable.MAX_PING + ", " +
                 PingTable.MIN_PING + ", " +
-                PingTable.AVG_PING + ", " +
-                PingTable.SERVER_UUID +
+                PingTable.AVG_PING +
                 FROM + PingTable.TABLE_NAME +
-                WHERE + PingTable.SERVER_UUID + "=?" +
+                WHERE + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + PingTable.DATE + ">=?" +
                 AND + PingTable.DATE + "<=?";
         return new QueryStatement<List<Ping>>(sql, 1000) {
@@ -169,7 +150,6 @@ public class PingQueries {
                 List<Ping> pings = new ArrayList<>();
 
                 while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(PingTable.SERVER_UUID));
                     long date = set.getLong(PingTable.DATE);
                     double avgPing = set.getDouble(PingTable.AVG_PING);
                     int minPing = set.getInt(PingTable.MIN_PING);
@@ -187,35 +167,19 @@ public class PingQueries {
     }
 
     public static Query<Map<String, Ping>> fetchPingDataOfServerByGeolocation(ServerUUID serverUUID) {
-        String selectPingOfServer = SELECT +
-                PingTable.MAX_PING + ", " +
-                PingTable.MIN_PING + ", " +
-                PingTable.AVG_PING + ", " +
-                PingTable.USER_UUID + ", " +
-                PingTable.SERVER_UUID +
-                FROM + PingTable.TABLE_NAME;
-
-        String selectGeolocations = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED +
-                FROM + GeoInfoTable.TABLE_NAME;
-        String selectLatestGeolocationDate = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
-                FROM + GeoInfoTable.TABLE_NAME +
-                GROUP_BY + GeoInfoTable.USER_UUID;
-
-        String selectPingByGeolocation = SELECT + GeoInfoTable.GEOLOCATION +
+        String selectPingByGeolocation = SELECT + "a." + GeoInfoTable.GEOLOCATION +
                 ", MIN(" + PingTable.MIN_PING + ") as minPing" +
                 ", MAX(" + PingTable.MAX_PING + ") as maxPing" +
                 ", AVG(" + PingTable.AVG_PING + ") as avgPing" +
-                FROM + "(" + selectGeolocations + ") AS q1" +
-                INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS q2 ON q1.uuid = q2.uuid" +
-                INNER_JOIN + '(' + selectPingOfServer + ") sp on sp." + PingTable.USER_UUID + "=q1.uuid" +
-                WHERE + GeoInfoTable.LAST_USED + "=m" +
-                AND + "sp." + PingTable.SERVER_UUID + "=?" +
-                GROUP_BY + GeoInfoTable.GEOLOCATION;
+                FROM + GeoInfoTable.TABLE_NAME + " a" +
+                // Super smart optimization https://stackoverflow.com/a/28090544
+                // Join the last_used column, but only if there's a bigger one.
+                // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
+                LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
+                INNER_JOIN + PingTable.TABLE_NAME + " sp on sp." + PingTable.USER_ID + "=a." + GeoInfoTable.USER_ID +
+                WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
+                AND + "sp." + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryStatement<Map<String, Ping>>(selectPingByGeolocation) {
             @Override
@@ -243,35 +207,18 @@ public class PingQueries {
     }
 
     public static Query<Map<String, Ping>> fetchPingDataOfNetworkByGeolocation() {
-        String selectPingOfServer = SELECT +
-                PingTable.MAX_PING + ", " +
-                PingTable.MIN_PING + ", " +
-                PingTable.AVG_PING + ", " +
-                PingTable.USER_UUID + ", " +
-                PingTable.SERVER_UUID +
-                FROM + PingTable.TABLE_NAME;
-
-        String selectGeolocations = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                GeoInfoTable.GEOLOCATION + ", " +
-                GeoInfoTable.LAST_USED +
-                FROM + GeoInfoTable.TABLE_NAME;
-        String selectLatestGeolocationDate = SELECT +
-                GeoInfoTable.USER_UUID + ", " +
-                "MAX(" + GeoInfoTable.LAST_USED + ") as m" +
-                FROM + GeoInfoTable.TABLE_NAME +
-                GROUP_BY + GeoInfoTable.USER_UUID;
-
-        String selectPingByGeolocation = SELECT + GeoInfoTable.GEOLOCATION +
+        String selectPingByGeolocation = SELECT + "a." + GeoInfoTable.GEOLOCATION +
                 ", MIN(" + PingTable.MIN_PING + ") as minPing" +
                 ", MAX(" + PingTable.MAX_PING + ") as maxPing" +
                 ", AVG(" + PingTable.AVG_PING + ") as avgPing" +
-                FROM + "(" +
-                "(" + selectGeolocations + ") AS q1" +
-                INNER_JOIN + "(" + selectLatestGeolocationDate + ") AS q2 ON q1.uuid = q2.uuid" +
-                INNER_JOIN + '(' + selectPingOfServer + ") sp on sp." + PingTable.USER_UUID + "=q1.uuid)" +
-                WHERE + GeoInfoTable.LAST_USED + "=m" +
-                GROUP_BY + GeoInfoTable.GEOLOCATION;
+                FROM + GeoInfoTable.TABLE_NAME + " a" +
+                // Super smart optimization https://stackoverflow.com/a/28090544
+                // Join the last_used column, but only if there's a bigger one.
+                // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
+                LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
+                INNER_JOIN + PingTable.TABLE_NAME + " sp on sp." + PingTable.USER_ID + "=a." + GeoInfoTable.USER_ID +
+                WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
+                GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryAllStatement<Map<String, Ping>>(selectPingByGeolocation) {
             @Override
@@ -295,7 +242,7 @@ public class PingQueries {
 
     public static Query<Double> averagePing(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "AVG(" + PingTable.AVG_PING + ") as average" + FROM + PingTable.TABLE_NAME +
-                WHERE + PingTable.SERVER_UUID + "=?" +
+                WHERE + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + PingTable.DATE + ">=?" +
                 AND + PingTable.DATE + "<=?";
 

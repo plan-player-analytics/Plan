@@ -50,7 +50,7 @@ public class TPSTable {
             + CHUNKS + ','
             + FREE_DISK
             + ") VALUES ("
-            + ServerTable.STATEMENT_SELECT_SERVER_ID + ','
+            + ServerTable.SELECT_SERVER_ID + ','
             + "?, ?, ?, ?, ?, ?, ?, ?)";
 
     private TPSTable() {
@@ -68,7 +68,7 @@ public class TPSTable {
                 .column(ENTITIES, Sql.INT).notNull()
                 .column(CHUNKS, Sql.INT).notNull()
                 .column(FREE_DISK, Sql.LONG).notNull()
-                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
+                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }
 }

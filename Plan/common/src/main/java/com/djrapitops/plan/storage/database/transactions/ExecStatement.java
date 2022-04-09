@@ -18,9 +18,7 @@ package com.djrapitops.plan.storage.database.transactions;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * SQL executing statement that closes appropriate elements.
@@ -35,12 +33,26 @@ public abstract class ExecStatement implements Executable {
         this.sql = sql;
     }
 
+    public int executeReturningId(Connection connection) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            prepare(preparedStatement);
+            preparedStatement.executeUpdate();
+            return executeReturningId(preparedStatement);
+        } catch (SQLException e) {
+            throw DBOpException.forCause(sql, e);
+        }
+    }
+
+    private int executeReturningId(PreparedStatement preparedStatement) throws SQLException {
+        try (ResultSet ids = preparedStatement.getGeneratedKeys()) {
+            return ids.next() ? ids.getInt(1) : -1;
+        }
+    }
+
     @Override
     public boolean execute(Connection connection) {
-        try {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                return execute(preparedStatement);
-            }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            return execute(preparedStatement);
         } catch (SQLException e) {
             throw DBOpException.forCause(sql, e);
         }

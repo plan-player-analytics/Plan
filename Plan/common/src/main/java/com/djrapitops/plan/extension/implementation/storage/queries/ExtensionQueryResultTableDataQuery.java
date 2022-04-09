@@ -49,11 +49,11 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, ExtensionTabData>> {
 
     private final ServerUUID serverUUID;
-    private final Collection<UUID> playerUUIDs;
+    private final Collection<Integer> userIds;
 
-    public ExtensionQueryResultTableDataQuery(ServerUUID serverUUID, Collection<UUID> playerUUIDs) {
+    public ExtensionQueryResultTableDataQuery(ServerUUID serverUUID, Collection<Integer> userIds) {
         this.serverUUID = serverUUID;
-        this.playerUUIDs = playerUUIDs;
+        this.userIds = userIds;
     }
 
     @Override
@@ -77,6 +77,9 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
     }
 
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerData() {
+        String selectUuids = SELECT + UsersTable.USER_UUID +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.ID + " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ")";
 
         String sql = SELECT +
                 "v1." + ExtensionPlayerValueTable.USER_UUID + " as uuid," +
@@ -93,12 +96,11 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
                 "i1." + ExtensionIconTable.ICON_NAME + " as provider_icon_name," +
                 "i1." + ExtensionIconTable.FAMILY + " as provider_icon_family" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME + " v1" +
+                INNER_JOIN + '(' + selectUuids + ") sel on sel." + UsersTable.USER_UUID + "=v1." + ExtensionPlayerValueTable.USER_UUID +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p1 on p1." + ExtensionProviderTable.ID + "=v1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on e1." + ExtensionPluginTable.ID + "=p1." + ExtensionProviderTable.PLUGIN_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
-                WHERE + "v1." + ExtensionPlayerValueTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
-                AND + "p1." + ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE + "=?" +
+                WHERE + "p1." + ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE + "=?" +
                 AND + "p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?" +
                 AND + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
 
@@ -118,6 +120,10 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
     }
 
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerGroups() {
+        String selectUuids = SELECT + UsersTable.USER_UUID +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.ID + " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ")";
+
         String sql = SELECT +
                 "v1." + ExtensionGroupsTable.USER_UUID + " as uuid," +
                 "v1." + ExtensionGroupsTable.GROUP_NAME + " as group_value," +
@@ -126,12 +132,11 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
                 "i1." + ExtensionIconTable.ICON_NAME + " as provider_icon_name," +
                 "i1." + ExtensionIconTable.FAMILY + " as provider_icon_family" +
                 FROM + ExtensionGroupsTable.TABLE_NAME + " v1" +
+                INNER_JOIN + '(' + selectUuids + ") sel on sel." + UsersTable.USER_UUID + "=v1." + ExtensionGroupsTable.USER_UUID +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p1 on p1." + ExtensionProviderTable.ID + "=v1." + ExtensionGroupsTable.PROVIDER_ID +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on e1." + ExtensionPluginTable.ID + "=p1." + ExtensionProviderTable.PLUGIN_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
-                WHERE + "v1." + ExtensionPlayerValueTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
-                AND + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
+                WHERE + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
 
         return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
             @Override

@@ -21,6 +21,8 @@ import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
+
 /**
  * Table information about 'plan_users'.
  * <p>
@@ -43,6 +45,9 @@ public class UsersTable {
     public static final String TIMES_KICKED = "times_kicked";
 
     public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_UUID, USER_NAME, REGISTERED, TIMES_KICKED);
+    public static final String SELECT_USER_ID = '(' + SELECT + TABLE_NAME + '.' + ID +
+            FROM + TABLE_NAME +
+            WHERE + TABLE_NAME + '.' + USER_UUID + "=?" + LIMIT + "1)";
 
     private UsersTable() {
         /* Static information class */

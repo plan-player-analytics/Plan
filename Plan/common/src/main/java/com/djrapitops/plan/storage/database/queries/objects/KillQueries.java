@@ -22,7 +22,10 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -55,7 +58,7 @@ public class KillQueries {
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
-                "server." + ServerTable.SERVER_ID + " as server_id" +
+                "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
                 INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +
@@ -91,7 +94,7 @@ public class KillQueries {
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
-                "server." + ServerTable.SERVER_ID + " as server_id" +
+                "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
                 INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +
@@ -126,7 +129,7 @@ public class KillQueries {
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
-                "server." + ServerTable.SERVER_ID + " as server_id" +
+                "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + "=ki." + KillsTable.VICTIM_UUID +
                 INNER_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + "=ki." + KillsTable.KILLER_UUID +
@@ -198,17 +201,18 @@ public class KillQueries {
                 AND + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.KILLER_UUID;
-        String selectDeathCounts = SELECT + "COUNT(1) as deaths," + KillsTable.VICTIM_UUID +
+        String selectPlayerDeathCounts = SELECT + "COUNT(1) as deaths," + KillsTable.VICTIM_UUID +
                 FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.SERVER_UUID + "=?" +
                 AND + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.VICTIM_UUID;
-        String sql = SELECT + "u." + UserInfoTable.USER_UUID + ",kills, deaths" +
-                FROM + UserInfoTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectKillCounts + ") q1 on q1." + KillsTable.KILLER_UUID + "=u." + UserInfoTable.USER_UUID +
-                LEFT_JOIN + '(' + selectDeathCounts + ") q2 on q2." + KillsTable.VICTIM_UUID + "=u." + UserInfoTable.USER_UUID +
-                WHERE + "u." + UserInfoTable.SERVER_UUID + "=?";
+        String sql = SELECT + "kills, deaths" +
+                FROM + UsersTable.TABLE_NAME + " u" +
+                LEFT_JOIN + '(' + selectKillCounts + ") q1 on q1." + KillsTable.KILLER_UUID + "=u." + UsersTable.USER_UUID +
+                LEFT_JOIN + '(' + selectPlayerDeathCounts + ") q2 on q2." + KillsTable.VICTIM_UUID + "=u." + UsersTable.USER_UUID +
+                WHERE + "kills" + IS_NOT_NULL +
+                AND + "deaths" + IS_NOT_NULL;
 
         return new QueryStatement<Double>(sql) {
             @Override
@@ -219,7 +223,6 @@ public class KillQueries {
                 statement.setString(4, serverUUID.toString());
                 statement.setLong(5, after);
                 statement.setLong(6, before);
-                statement.setString(7, serverUUID.toString());
             }
 
             @Override
@@ -240,7 +243,7 @@ public class KillQueries {
     public static Query<Long> mobKillCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.MOB_KILLS + ") as count" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
         return new QueryStatement<Long>(sql) {
@@ -261,7 +264,7 @@ public class KillQueries {
     public static Query<Long> deathCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as count" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
         return new QueryStatement<Long>(sql) {

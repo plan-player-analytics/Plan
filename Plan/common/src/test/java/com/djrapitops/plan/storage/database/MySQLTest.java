@@ -25,6 +25,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.queries.QueriesTestAggregate;
+import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
@@ -143,6 +144,11 @@ class MySQLTest implements DatabaseTest, QueriesTestAggregate {
     @Override
     public ExtensionSvc extensionService() {
         return component.extensionService();
+    }
+
+    @Override
+    public QueryFilters queryFilters() {
+        return component.queryFilters();
     }
 
     @Override

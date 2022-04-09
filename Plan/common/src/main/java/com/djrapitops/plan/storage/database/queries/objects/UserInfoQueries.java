@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.java.Lists;
@@ -53,21 +54,23 @@ public class UserInfoQueries {
      */
     public static Query<Map<ServerUUID, List<UserInfo>>> fetchAllUserInformation() {
         String sql = SELECT +
-                UserInfoTable.REGISTERED + ',' +
+                "ux." + UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
                 UserInfoTable.OP + ',' +
-                UserInfoTable.USER_UUID + ',' +
-                UserInfoTable.SERVER_UUID + ',' +
+                "u." + UsersTable.USER_UUID + ',' +
+                "s." + ServerTable.SERVER_UUID + " as server_uuid," +
                 UserInfoTable.JOIN_ADDRESS +
-                FROM + UserInfoTable.TABLE_NAME;
+                FROM + UserInfoTable.TABLE_NAME + " ux" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + "ux." + UserInfoTable.USER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + "ux." + UserInfoTable.SERVER_ID;
 
         return new QueryAllStatement<Map<ServerUUID, List<UserInfo>>>(sql, 50000) {
             @Override
             public Map<ServerUUID, List<UserInfo>> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, List<UserInfo>> serverMap = new HashMap<>();
                 while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
-                    UUID uuid = UUID.fromString(set.getString(UserInfoTable.USER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString("server_uuid"));
+                    UUID uuid = UUID.fromString(set.getString(UsersTable.USER_UUID));
 
                     List<UserInfo> userInfos = serverMap.computeIfAbsent(serverUUID, Lists::create);
 
@@ -94,10 +97,11 @@ public class UserInfoQueries {
                 UserInfoTable.TABLE_NAME + '.' + UserInfoTable.REGISTERED + ',' +
                 UserInfoTable.BANNED + ',' +
                 UserInfoTable.OP + ',' +
-                UserInfoTable.SERVER_UUID + ',' +
+                ServerTable.SERVER_UUID + ',' +
                 UserInfoTable.JOIN_ADDRESS +
                 FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID + "=?";
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID +
+                WHERE + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
 
         return new QueryStatement<Set<UserInfo>>(sql) {
             @Override
@@ -112,7 +116,7 @@ public class UserInfoQueries {
                     long registered = set.getLong(UserInfoTable.REGISTERED);
                     boolean op = set.getBoolean(UserInfoTable.OP);
                     boolean banned = set.getBoolean(UserInfoTable.BANNED);
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     String joinAddress = set.getString(UserInfoTable.JOIN_ADDRESS);
 
                     userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, joinAddress, banned));
@@ -122,57 +126,15 @@ public class UserInfoQueries {
         };
     }
 
-    /**
-     * Query database for all User information of a specific server.
-     *
-     * @param serverUUID UUID of the Plan server.
-     * @return Map: Player UUID - user information
-     */
-    public static Query<Map<UUID, UserInfo>> fetchUserInformationOfServer(ServerUUID serverUUID) {
-        String sql = SELECT +
-                UserInfoTable.REGISTERED + ',' +
-                UserInfoTable.BANNED + ',' +
-                UserInfoTable.JOIN_ADDRESS + ',' +
-                UserInfoTable.OP + ',' +
-                UserInfoTable.USER_UUID + ',' +
-                UserInfoTable.SERVER_UUID +
-                FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_UUID + "=?";
-
-        return new QueryStatement<Map<UUID, UserInfo>>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, UserInfo> processResults(ResultSet set) throws SQLException {
-                Map<UUID, UserInfo> userInformation = new HashMap<>();
-                while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(UserInfoTable.SERVER_UUID));
-                    UUID uuid = UUID.fromString(set.getString(UserInfoTable.USER_UUID));
-
-                    long registered = set.getLong(UserInfoTable.REGISTERED);
-                    boolean banned = set.getBoolean(UserInfoTable.BANNED);
-                    boolean op = set.getBoolean(UserInfoTable.OP);
-
-                    String joinAddress = set.getString(UserInfoTable.JOIN_ADDRESS);
-
-                    userInformation.put(uuid, new UserInfo(uuid, serverUUID, registered, op, joinAddress, banned));
-                }
-                return userInformation;
-            }
-        };
-    }
-
     public static Query<Map<UUID, Long>> fetchRegisterDates(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
-                UserInfoTable.USER_UUID + ',' +
-                UserInfoTable.REGISTERED +
-                FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_UUID + "=?" +
-                AND + UserInfoTable.REGISTERED + ">=?" +
-                AND + UserInfoTable.REGISTERED + "<=?";
+                UsersTable.USER_UUID + ',' +
+                "ux." + UserInfoTable.REGISTERED +
+                FROM + UserInfoTable.TABLE_NAME + " ux" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + "ux." + UserInfoTable.USER_ID +
+                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                AND + "ux." + UserInfoTable.REGISTERED + ">=?" +
+                AND + "ux." + UserInfoTable.REGISTERED + "<=?";
 
         return new QueryStatement<Map<UUID, Long>>(sql, 1000) {
             @Override
@@ -187,7 +149,7 @@ public class UserInfoQueries {
                 Map<UUID, Long> registerDates = new HashMap<>();
                 while (set.next()) {
                     registerDates.put(
-                            UUID.fromString(set.getString(UserInfoTable.USER_UUID)),
+                            UUID.fromString(set.getString(UsersTable.USER_UUID)),
                             set.getLong(UserInfoTable.REGISTERED)
                     );
                 }
@@ -202,7 +164,7 @@ public class UserInfoQueries {
                 "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
                 FROM + '(' +
                 SELECT + DISTINCT +
-                UserInfoTable.USER_UUID + ',' +
+                UserInfoTable.USER_ID + ',' +
                 UserInfoTable.JOIN_ADDRESS +
                 FROM + UserInfoTable.TABLE_NAME +
                 ") q1" +
@@ -231,7 +193,7 @@ public class UserInfoQueries {
                 "COUNT(1) as total," +
                 "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
                 FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_UUID + "=?" +
+                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + "address" +
                 ORDER_BY + "address ASC";
 
@@ -272,58 +234,61 @@ public class UserInfoQueries {
         };
     }
 
-    public static Query<Set<UUID>> uuidsOfOperators() {
-        return getUUIDsForBooleanGroup(UserInfoTable.OP, true);
+    public static Query<Set<Integer>> userIdsOfOperators() {
+        return getUserIdsForBooleanGroup(UserInfoTable.OP, true);
     }
 
-    public static Query<Set<UUID>> getUUIDsForBooleanGroup(String column, boolean value) {
-        String sql = SELECT + UserInfoTable.USER_UUID + FROM + UserInfoTable.TABLE_NAME +
+    public static Query<Set<Integer>> getUserIdsForBooleanGroup(String column, boolean value) {
+        String sql = SELECT + "u." + UsersTable.ID +
+                FROM + UserInfoTable.TABLE_NAME +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID +
                 WHERE + column + "=?";
-        return new QueryStatement<Set<UUID>>(sql) {
+        return new QueryStatement<Set<Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, value);
             }
 
             @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                return extractUUIDs(set);
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                return extractUserIds(set);
             }
         };
     }
 
-    public static Set<UUID> extractUUIDs(ResultSet set) throws SQLException {
-        Set<UUID> uuids = new HashSet<>();
+    public static Set<Integer> extractUserIds(ResultSet set) throws SQLException {
+        Set<Integer> userIds = new HashSet<>();
         while (set.next()) {
-            uuids.add(UUID.fromString(set.getString(UserInfoTable.USER_UUID)));
+            userIds.add(set.getInt(UsersTable.ID));
         }
-        return uuids;
+        return userIds;
     }
 
-    public static Query<Set<UUID>> uuidsOfNonOperators() {
-        return getUUIDsForBooleanGroup(UserInfoTable.OP, false);
+    public static Query<Set<Integer>> userIdsOfNonOperators() {
+        return getUserIdsForBooleanGroup(UserInfoTable.OP, false);
     }
 
-    public static Query<Set<UUID>> uuidsOfBanned() {
-        return getUUIDsForBooleanGroup(UserInfoTable.BANNED, true);
+    public static Query<Set<Integer>> userIdsOfBanned() {
+        return getUserIdsForBooleanGroup(UserInfoTable.BANNED, true);
     }
 
-    public static Query<Set<UUID>> uuidsOfNotBanned() {
-        return getUUIDsForBooleanGroup(UserInfoTable.BANNED, false);
+    public static Query<Set<Integer>> userIdsOfNotBanned() {
+        return getUserIdsForBooleanGroup(UserInfoTable.BANNED, false);
     }
 
-    public static Query<Set<UUID>> uuidsOfPlayersWithJoinAddresses(List<String> joinAddresses) {
+    public static Query<Set<Integer>> userIdsOfPlayersWithJoinAddresses(List<String> joinAddresses) {
         String selectLowercaseJoinAddresses = SELECT +
-                UserInfoTable.USER_UUID + ',' +
+                "u." + UsersTable.ID + ',' +
                 "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
-                FROM + UserInfoTable.TABLE_NAME;
-        String sql = SELECT + DISTINCT + UserInfoTable.USER_UUID +
+                FROM + UserInfoTable.TABLE_NAME +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID;
+        String sql = SELECT + DISTINCT + UsersTable.ID +
                 FROM + '(' + selectLowercaseJoinAddresses + ") q1" +
                 WHERE + "address IN (" +
                 new TextStringBuilder().appendWithSeparators(joinAddresses.stream().map(item -> '?').iterator(), ",") +
                 ')'; // Don't append addresses directly, SQL injection hazard
 
-        return new QueryStatement<Set<UUID>>(sql) {
+        return new QueryStatement<Set<Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, "unknown");
@@ -334,19 +299,24 @@ public class UserInfoQueries {
             }
 
             @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                return extractUUIDs(set);
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                return extractUserIds(set);
             }
         };
     }
 
-    public static Query<Set<UUID>> uuidsOfRegisteredBetween(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + DISTINCT + UserInfoTable.USER_UUID +
-                FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.REGISTERED + ">=?" +
-                AND + UserInfoTable.REGISTERED + "<=?" +
-                AND + UserInfoTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
-        return new QueryStatement<Set<UUID>>(sql) {
+    public static Query<Set<Integer>> userIdsOfRegisteredBetween(long after, long before, List<ServerUUID> serverUUIDs) {
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
+
+        String sql = SELECT + DISTINCT + "u." + UsersTable.ID +
+                FROM + UserInfoTable.TABLE_NAME + " ux" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=ux." + UserInfoTable.USER_ID +
+                INNER_JOIN + "(" + selectServerIds + ") sel_server on sel_server." + ServerTable.ID + "=ux." + UserInfoTable.SERVER_ID +
+                WHERE + "ux." + UserInfoTable.REGISTERED + ">=?" +
+                AND + "ux." + UserInfoTable.REGISTERED + "<=?";
+        return new QueryStatement<Set<Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -354,12 +324,12 @@ public class UserInfoQueries {
             }
 
             @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> uuids = new HashSet<>();
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> userIds = new HashSet<>();
                 while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
+                    userIds.add(set.getInt(UsersTable.ID));
                 }
-                return uuids;
+                return userIds;
             }
         };
     }

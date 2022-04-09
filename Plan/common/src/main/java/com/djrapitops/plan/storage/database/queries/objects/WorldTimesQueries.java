@@ -23,9 +23,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
-import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
-import com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -64,7 +62,7 @@ public class WorldTimesQueries {
     public static Query<WorldTimes> fetchServerTotalWorldTimes(ServerUUID serverUUID) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
-                WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID + "=?" +
+                WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + WORLD_COLUMN;
 
         return new QueryStatement<WorldTimes>(sql, 1000) {
@@ -99,7 +97,7 @@ public class WorldTimesQueries {
     public static Query<WorldTimes> fetchPlayerTotalWorldTimes(UUID playerUUID) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
-                WHERE + WorldTimesTable.USER_UUID + "=?" +
+                WHERE + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 GROUP_BY + WORLD_COLUMN;
 
         return new QueryStatement<WorldTimes>(sql) {
@@ -133,10 +131,11 @@ public class WorldTimesQueries {
      */
     public static Query<Map<ServerUUID, WorldTimes>> fetchPlayerWorldTimesOnServers(UUID playerUUID) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
-                WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID + ',' +
+                "s." + ServerTable.SERVER_UUID + ',' +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
-                WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.USER_UUID + "=?" +
-                GROUP_BY + WORLD_COLUMN + ',' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_UUID;
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID + "=s." + ServerTable.ID +
+                WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                GROUP_BY + WORLD_COLUMN + ',' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID;
 
         return new QueryStatement<Map<ServerUUID, WorldTimes>>(sql, 1000) {
             @Override
@@ -150,7 +149,7 @@ public class WorldTimesQueries {
 
                 Map<ServerUUID, WorldTimes> worldTimesMap = new HashMap<>();
                 while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(WorldTimesTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     WorldTimes worldTimes = worldTimesMap.getOrDefault(serverUUID, new WorldTimes());
                     String worldName = set.getString(WORLD_COLUMN);
 
@@ -180,7 +179,7 @@ public class WorldTimesQueries {
                 "SUM(" + WorldTimesTable.SPECTATOR + ") as SPECTATOR" +
                 FROM + WorldTimesTable.TABLE_NAME + " w1" +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " s1 on s1." + SessionsTable.ID + '=' + WorldTimesTable.SESSION_ID +
-                WHERE + "w1." + WorldTimesTable.SERVER_UUID + "=?" +
+                WHERE + "w1." + WorldTimesTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_END + "<=?";
 

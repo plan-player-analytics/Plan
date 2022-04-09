@@ -78,7 +78,7 @@ public class NicknameLastSeenPatch extends Patch {
 
     private Map<Integer, ServerUUID> getServerUUIDsByID() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                ServerTable.SERVER_ID, ServerTable.SERVER_UUID)
+                        ServerTable.ID, ServerTable.SERVER_UUID)
                 .toString();
 
         return query(new QueryAllStatement<Map<Integer, ServerUUID>>(sql) {
@@ -86,7 +86,7 @@ public class NicknameLastSeenPatch extends Patch {
             public Map<Integer, ServerUUID> processResults(ResultSet set) throws SQLException {
                 Map<Integer, ServerUUID> uuids = new HashMap<>();
                 while (set.next()) {
-                    int id = set.getInt(ServerTable.SERVER_ID);
+                    int id = set.getInt(ServerTable.ID);
                     uuids.put(id, ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)));
                 }
                 return uuids;

@@ -25,6 +25,9 @@ package com.djrapitops.plan.extension.icon;
  */
 public class Icon {
 
+    // Implementation detail, set during icon storage to optimize relation inserts.
+    int id;
+
     private Family type;
     private String name;
     private Color color;

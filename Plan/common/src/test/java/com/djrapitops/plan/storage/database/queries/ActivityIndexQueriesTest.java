@@ -216,14 +216,14 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         String sql = SELECT +
                 "ux." + UsersTable.USER_UUID + ",COALESCE(active_playtime,0) AS active_playtime" +
                 FROM + UsersTable.TABLE_NAME + " ux" +
-                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_UUID +
+                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_ID +
                 ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + SessionsTable.USER_UUID +
-                ") sx on sx.uuid=ux.uuid";
-        return new QueryStatement<Long>(sql) {
+                GROUP_BY + SessionsTable.USER_ID +
+                ") sx on sx." + SessionsTable.USER_ID + "=ux." + UsersTable.ID;
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);

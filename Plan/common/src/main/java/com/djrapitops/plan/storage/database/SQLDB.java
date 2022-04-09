@@ -193,12 +193,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new VersionTableRemovalPatch(),
                 new DiskUsagePatch(),
                 new WorldsOptimizationPatch(),
-                new WorldTimesOptimizationPatch(),
                 new KillsOptimizationPatch(),
-                new SessionsOptimizationPatch(),
-                new PingOptimizationPatch(),
                 new NicknamesOptimizationPatch(),
-                new UserInfoOptimizationPatch(),
                 new GeoInfoOptimizationPatch(),
                 new TransferTableRemovalPatch(),
                 new BadAFKThresholdValuePatch(),
@@ -206,20 +202,24 @@ public abstract class SQLDB extends AbstractDatabase {
                 new ExtensionShowInPlayersTablePatch(),
                 new ExtensionTableRowValueLengthPatch(),
                 new CommandUsageTableRemovalPatch(),
-                new RegisterDateMinimizationPatch(),
                 new BadNukkitRegisterValuePatch(),
                 new LinkedToSecurityTablePatch(),
                 new LinkUsersToPlayersSecurityTablePatch(),
                 new LitebansTableHeaderPatch(),
                 new UserInfoHostnamePatch(),
                 new ServerIsProxyPatch(),
-                new UserInfoHostnameAllowNullPatch(),
                 new ServerTableRowPatch(),
                 new PlayerTableRowPatch(),
                 new ExtensionTableProviderValuesForPatch(),
                 new RemoveIncorrectTebexPackageDataPatch(),
                 new ExtensionTableProviderFormattersPatch(),
-                new ServerPlanVersionPatch()
+                new ServerPlanVersionPatch(),
+                new PingOptimizationPatch(),
+                new UserInfoOptimizationPatch(),
+                new WorldTimesOptimizationPatch(),
+                new SessionsOptimizationPatch(),
+                new UserInfoHostnameAllowNullPatch(),
+                new RegisterDateMinimizationPatch(),
         };
     }
 
@@ -230,18 +230,18 @@ public abstract class SQLDB extends AbstractDatabase {
      */
     private void setupDatabase() {
         executeTransaction(new CreateTablesTransaction());
-        logger.info("Database: Making sure schema is up to date..");
+        logger.info(locale.getString(PluginLang.DB_SCHEMA_PATCH));
         for (Patch patch : patches()) {
             executeTransaction(patch);
         }
         executeTransaction(new OperationCriticalTransaction() {
             @Override
             protected void performOperations() {
+                logger.info(locale.getString(PluginLang.DB_APPLIED_PATCHES));
                 if (getState() == State.PATCHING) setState(State.OPEN);
             }
         });
         registerIndexCreationTask();
-        logger.info("Database: Ready for operation.");
     }
 
     private void registerIndexCreationTask() {
@@ -381,5 +381,9 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public PluginLogger getLogger() {
         return logger;
+    }
+
+    public Locale getLocale() {
+        return locale;
     }
 }

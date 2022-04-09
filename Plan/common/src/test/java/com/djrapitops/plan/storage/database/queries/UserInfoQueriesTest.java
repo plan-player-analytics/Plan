@@ -32,7 +32,6 @@ import org.junit.jupiter.api.Test;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
-import utilities.TestData;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -149,21 +148,6 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void baseUsersQueryDoesNotReturnDuplicatePlayers() {
-        db().executeTransaction(TestData.storeServers());
-        executeTransactions(TestData.storePlayerOneData());
-        executeTransactions(TestData.storePlayerTwoData());
-
-        Collection<BaseUser> expected = new HashSet<>(Arrays.asList(TestData.getPlayerBaseUser(), TestData.getPlayer2BaseUser()));
-
-        Collection<BaseUser> server1Result = db().query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_UUID));
-        assertEquals(expected, server1Result);
-
-        Collection<BaseUser> server2Result = db().query(BaseUserQueries.fetchServerBaseUsers(TestConstants.SERVER_TWO_UUID));
-        assertEquals(expected, server2Result);
-    }
-
-    @Test
     default void matchingByNameFindsNamesCaseInsensitive() {
         String exp1 = "TestName";
         String exp2 = "TestName2";
@@ -217,6 +201,9 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void cleanRemovesOnlyDuplicatedUserInfo() throws ExecutionException, InterruptedException {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, System::currentTimeMillis, TestConstants.PLAYER_TWO_NAME));
+
         // Store one duplicate
         db().executeTransaction(new Transaction() {
             @Override
@@ -256,8 +243,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
             }
         }).get();
 
-        Set<UUID> expected = Collections.singleton(player2UUID);
-        Set<UUID> result = db().query(BaseUserQueries.uuidsOfRegisteredBetween(2500L, 7500L));
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(player2UUID)));
+        Set<Integer> result = db().query(BaseUserQueries.userIdsOfRegisteredBetween(2500L, 7500L));
         assertEquals(expected, result);
     }
 
@@ -322,6 +309,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     @Test
     default void joinAddressFilterOptionsAreFetchedWhenThereAreMultiple() {
         joinAddressIsUpdatedUponSecondLogin();
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", TestConstants.VERSION)));
 
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), () -> TestConstants.GET_PLAYER_HOSTNAME.get() + "_b"));
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, TestConstants.SERVER_TWO_UUID, () -> TestConstants.GET_PLAYER_HOSTNAME.get() + "_a"));
@@ -339,8 +327,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void joinAddressFilterUUIDsAreFetched() {
         joinAddressIsUpdatedUponSecondLogin();
 
-        Set<UUID> expected = Collections.singleton(playerUUID);
-        Set<UUID> result = db().query(UserInfoQueries.uuidsOfPlayersWithJoinAddresses(
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> result = db().query(UserInfoQueries.userIdsOfPlayersWithJoinAddresses(
                 Collections.singletonList(TestConstants.GET_PLAYER_HOSTNAME.get().toLowerCase()))
         );
         assertEquals(expected, result);
@@ -350,8 +338,8 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void joinAddressFilterUUIDsAreFetchedWhenUnknown() {
         joinAddressCanBeNull();
 
-        Set<UUID> expected = Collections.singleton(playerUUID);
-        Set<UUID> result = db().query(UserInfoQueries.uuidsOfPlayersWithJoinAddresses(
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> result = db().query(UserInfoQueries.userIdsOfPlayersWithJoinAddresses(
                 Collections.singletonList("unknown"))
         );
         assertEquals(expected, result);

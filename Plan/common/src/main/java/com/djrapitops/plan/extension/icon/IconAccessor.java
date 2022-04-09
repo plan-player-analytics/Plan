@@ -14,23 +14,20 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.queries;
+package com.djrapitops.plan.extension.icon;
 
-import com.djrapitops.plan.storage.database.queries.analysis.TopListQueriesTest;
+public class IconAccessor {
 
-public interface QueriesTestAggregate extends
-        ActivityIndexQueriesTest,
-        DatabaseBackupTest,
-        ExtensionsDatabaseTest,
-        GeolocationQueriesTest,
-        NicknameQueriesTest,
-        PingQueriesTest,
-        ServerQueriesTest,
-        SessionQueriesTest,
-        TopListQueriesTest,
-        TPSQueriesTest,
-        UserInfoQueriesTest,
-        WebUserQueriesTest,
-        FilterQueryTest {
-    /* Collects all query tests together so its easier to implement database tests */
+    private IconAccessor() {
+        /* Static access class for package private field */
+    }
+
+    public static Integer getId(Icon icon) {
+        return icon != null ? icon.id : null;
+    }
+
+    public static void setId(Icon icon, int id) {
+        icon.id = id;
+    }
+
 }

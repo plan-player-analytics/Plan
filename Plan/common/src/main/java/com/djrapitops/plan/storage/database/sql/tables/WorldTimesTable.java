@@ -50,8 +50,8 @@ public class WorldTimesTable {
     public static final String TABLE_NAME = "plan_world_times";
 
     public static final String ID = "id";
-    public static final String USER_UUID = "uuid";
-    public static final String SERVER_UUID = "server_uuid";
+    public static final String USER_ID = "user_id";
+    public static final String SERVER_ID = "server_id";
     public static final String SESSION_ID = "session_id";
     public static final String WORLD_ID = "world_id";
     public static final String SURVIVAL = "survival_time";
@@ -62,8 +62,8 @@ public class WorldTimesTable {
     public static final String INSERT_STATEMENT = "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
             WorldTimesTable.SESSION_ID + ',' +
             WorldTimesTable.WORLD_ID + ',' +
-            WorldTimesTable.USER_UUID + ',' +
-            WorldTimesTable.SERVER_UUID + ',' +
+            WorldTimesTable.USER_ID + ',' +
+            WorldTimesTable.SERVER_ID + ',' +
             WorldTimesTable.SURVIVAL + ',' +
             WorldTimesTable.CREATIVE + ',' +
             WorldTimesTable.ADVENTURE + ',' +
@@ -71,7 +71,9 @@ public class WorldTimesTable {
             ") VALUES ( " +
             SessionsTable.SELECT_SESSION_ID_STATEMENT + ',' +
             WorldTable.SELECT_WORLD_ID_STATEMENT + ',' +
-            "?, ?, ?, ?, ?, ?)";
+            UsersTable.SELECT_USER_ID + ',' +
+            ServerTable.SELECT_SERVER_ID + ',' +
+            "?, ?, ?, ?)";
 
     private WorldTimesTable() {
         /* Static information class */
@@ -80,9 +82,9 @@ public class WorldTimesTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(USER_ID, Sql.INT).notNull()
                 .column(WORLD_ID, Sql.INT).notNull()
-                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(SERVER_ID, Sql.INT).notNull()
                 .column(SESSION_ID, Sql.INT).notNull()
                 .column(SURVIVAL, Sql.LONG).notNull().defaultValue("0")
                 .column(CREATIVE, Sql.LONG).notNull().defaultValue("0")
@@ -90,6 +92,8 @@ public class WorldTimesTable {
                 .column(SPECTATOR, Sql.LONG).notNull().defaultValue("0")
                 .foreignKey(WORLD_ID, WorldTable.TABLE_NAME, WorldTable.ID)
                 .foreignKey(SESSION_ID, SessionsTable.TABLE_NAME, SessionsTable.ID)
+                .foreignKey(USER_ID, UsersTable.TABLE_NAME, UsersTable.ID)
+                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }
 

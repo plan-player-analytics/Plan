@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
@@ -93,8 +94,8 @@ public class PlayerFetchQueries {
     public static Query<Boolean> isPlayerRegisteredOnServer(UUID playerUUID, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as c" +
                 FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.USER_UUID + "=?" +
-                AND + UserInfoTable.SERVER_UUID + "=?";
+                WHERE + UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

@@ -34,21 +34,18 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(UsersTable.TABLE_NAME, "plan_users_uuid_index",
                 UsersTable.USER_UUID
         );
-        createIndex(UserInfoTable.TABLE_NAME, "plan_user_info_uuid_index",
-                UserInfoTable.USER_UUID,
-                UserInfoTable.SERVER_UUID
-        );
-        createIndex(SessionsTable.TABLE_NAME, "plan_sessions_uuid_index",
-                SessionsTable.USER_UUID,
-                SessionsTable.SERVER_UUID
-        );
+
+        // replaced by foreign keys
+        dropIndex(UserInfoTable.TABLE_NAME, "plan_user_info_uuid_index");
+        // replaced by foreign keys
+        dropIndex(SessionsTable.TABLE_NAME, "plan_sessions_uuid_index");
+
         createIndex(SessionsTable.TABLE_NAME, "plan_sessions_date_index",
                 SessionsTable.SESSION_START
         );
-        createIndex(WorldTimesTable.TABLE_NAME, "plan_world_times_uuid_index",
-                WorldTimesTable.USER_UUID,
-                WorldTimesTable.SERVER_UUID
-        );
+        // Replaced by foreign keys
+        dropIndex(WorldTimesTable.TABLE_NAME, "plan_world_times_uuid_index");
+
         createIndex(KillsTable.TABLE_NAME, "plan_kills_uuid_index",
                 KillsTable.KILLER_UUID,
                 KillsTable.VICTIM_UUID,
@@ -57,10 +54,9 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(KillsTable.TABLE_NAME, "plan_kills_date_index",
                 KillsTable.DATE
         );
-        createIndex(PingTable.TABLE_NAME, "plan_ping_uuid_index",
-                PingTable.USER_UUID,
-                PingTable.SERVER_UUID
-        );
+        // Replaced with foreign keys.
+        dropIndex(PingTable.TABLE_NAME, "plan_ping_uuid_index");
+
         createIndex(PingTable.TABLE_NAME, "plan_ping_date_index",
                 PingTable.DATE
         );
@@ -91,5 +87,16 @@ public class CreateIndexTransaction extends Transaction {
         sql.append(')');
 
         execute(sql.toString());
+    }
+
+    private void dropIndex(String tableName, String indexName) {
+        boolean isMySQL = dbType == DBType.MYSQL;
+        if (isMySQL) {
+            boolean indexExists = query(MySQLSchemaQueries.doesIndexExist(indexName, tableName));
+            if (!indexExists) return;
+            execute("DROP INDEX " + indexName + " ON " + tableName);
+        } else {
+            execute("DROP INDEX IF EXISTS " + indexName);
+        }
     }
 }

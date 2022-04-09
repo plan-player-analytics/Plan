@@ -17,15 +17,17 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions;
 
 import com.djrapitops.plan.extension.icon.Icon;
-import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
+import com.djrapitops.plan.extension.icon.IconAccessor;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
-import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -44,12 +46,16 @@ public class StoreIconTransaction extends ThrowawayTransaction {
 
     @Override
     protected void performOperations() {
-        if (Boolean.FALSE.equals(query(isIconStored()))) {
-            execute(insertIcon());
+        Optional<Integer> iconId = query(getIconId());
+        if (iconId.isPresent()) {
+            IconAccessor.setId(icon, iconId.get());
+        } else {
+            int id = executeReturningId(insertIcon());
+            IconAccessor.setId(icon, id);
         }
     }
 
-    private Executable insertIcon() {
+    private ExecStatement insertIcon() {
         String sql = "INSERT INTO " + ExtensionIconTable.TABLE_NAME + "(" +
                 ExtensionIconTable.ICON_NAME + "," +
                 ExtensionIconTable.FAMILY + "," +
@@ -63,16 +69,27 @@ public class StoreIconTransaction extends ThrowawayTransaction {
         };
     }
 
-    private Query<Boolean> isIconStored() {
-        String sql = SELECT + "COUNT(1) as c" +
+    private Query<Optional<Integer>> getIconId() {
+        String sql = SELECT + "id" +
                 FROM + ExtensionIconTable.TABLE_NAME +
                 WHERE + ExtensionIconTable.ICON_NAME + "=?" +
                 AND + ExtensionIconTable.FAMILY + "=?" +
                 AND + ExtensionIconTable.COLOR + "=?";
-        return new HasMoreThanZeroQueryStatement(sql) {
+        return new QueryStatement<Optional<Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 ExtensionIconTable.set3IconValuesToStatement(statement, icon);
+            }
+
+            @Override
+            public Optional<Integer> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    int id = set.getInt(ExtensionIconTable.ID);
+                    if (!set.wasNull()) {
+                        return Optional.of(id);
+                    }
+                }
+                return Optional.empty();
             }
         };
     }

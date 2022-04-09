@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable;
@@ -73,14 +74,17 @@ public class WorldsServerIDPatch extends Patch {
         String worldIDColumn = WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID;
         String worldSessionIDColumn = WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID;
         String sessionIDColumn = SessionsTable.TABLE_NAME + '.' + SessionsTable.ID;
-        String sessionServerUUIDColumn = SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID;
+        String sessionServerIDColumn = SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID;
+        String serverIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.ID;
+        String serverUUIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_UUID;
 
         String sql = SELECT + DISTINCT +
                 WorldTable.NAME + FROM +
                 WorldTable.TABLE_NAME +
                 INNER_JOIN + WorldTimesTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + '.' + WorldTable.ID +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
-                WHERE + sessionServerUUIDColumn + "=?";
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + sessionServerIDColumn +
+                WHERE + serverUUIDColumn + "=?";
 
         return query(new QueryStatement<Set<String>>(sql, 1000) {
             @Override

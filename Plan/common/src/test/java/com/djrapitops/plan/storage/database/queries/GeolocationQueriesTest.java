@@ -21,6 +21,7 @@ import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
+import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.PingQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
@@ -177,8 +178,8 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
             save(playerUUID, geoInfo);
         }
 
-        Set<UUID> expected = Collections.singleton(playerUUID);
-        Set<UUID> result = db().query(GeoInfoQueries.uuidsOfPlayersWithGeolocations(
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> result = db().query(GeoInfoQueries.userIdsOfPlayersWithGeolocations(
                 Collections.singletonList(savedData.get(0).getGeolocation()))
         );
         assertEquals(expected, result);

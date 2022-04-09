@@ -41,19 +41,19 @@ public class GeoInfoTable {
     public static final String TABLE_NAME = "plan_geolocations";
 
     public static final String ID = "id";
-    public static final String USER_UUID = "uuid";
+    public static final String USER_ID = "user_id";
     public static final String GEOLOCATION = "geolocation";
     public static final String LAST_USED = "last_used";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + USER_UUID + ','
+            + USER_ID + ','
             + GEOLOCATION + ','
             + LAST_USED
-            + ") VALUES (?, ?, ?)";
+            + ") VALUES (" + UsersTable.SELECT_USER_ID + ", ?, ?)";
 
-    public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET "
-            + LAST_USED + "=?" +
-            WHERE + USER_UUID + "=?" +
+    public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " +
+            LAST_USED + "=?" +
+            WHERE + USER_ID + "=" + UsersTable.SELECT_USER_ID +
             AND + GEOLOCATION + "=?";
 
     private GeoInfoTable() {
@@ -63,9 +63,10 @@ public class GeoInfoTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(USER_UUID, Sql.varchar(36)).notNull()
+                .column(USER_ID, Sql.INT).notNull()
                 .column(GEOLOCATION, Sql.varchar(50)).notNull()
                 .column(LAST_USED, Sql.LONG).notNull().defaultValue("0")
+                .foreignKey(USER_ID, UsersTable.TABLE_NAME, UsersTable.ID)
                 .toString();
     }
 

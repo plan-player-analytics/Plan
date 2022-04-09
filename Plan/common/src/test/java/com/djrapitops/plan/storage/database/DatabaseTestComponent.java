@@ -22,6 +22,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import dagger.BindsInstance;
 import dagger.Component;
@@ -53,6 +54,8 @@ import java.nio.file.Path;
 public interface DatabaseTestComponent extends DBPreparer.Dependencies {
 
     default void enable() {
+        SQLDB.setDownloadDriver(false);
+
         files().enable();
         configSystem().enable();
         dbSystem().enable();
@@ -79,6 +82,8 @@ public interface DatabaseTestComponent extends DBPreparer.Dependencies {
     PlanFiles files();
 
     ExtensionSvc extensionService();
+
+    QueryFilters queryFilters();
 
     @Component.Builder
     interface Builder {
