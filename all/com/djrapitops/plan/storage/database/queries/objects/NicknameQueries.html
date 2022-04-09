@@ -108,11 +108,6 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../delivery/domain/Nickname.html" title="class in com.djrapitops.plan.delivery.domain">Nickname</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fetchNicknameDataOfPlayer(java.util.UUID)">fetchNicknameDataOfPlayer</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../delivery/domain/Nickname.html" title="class in com.djrapitops.plan.delivery.domain">Nickname</a>&gt;&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fetchNicknameDataOfServer(com.djrapitops.plan.identification.ServerUUID)">fetchNicknameDataOfServer</a></span>&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
-<div class="block">Query database for nickname information of a server.</div>
-</div>
 </div>
 </div>
 </div>
@@ -152,19 +147,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="fetchNicknameDataOfPlayer(java.util.UUID)">
 <h3>fetchNicknameDataOfPlayer</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../delivery/domain/Nickname.html" title="class in com.djrapitops.plan.delivery.domain">Nickname</a>&gt;&gt;</span>&nbsp;<span class="element-name">fetchNicknameDataOfPlayer</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="fetchNicknameDataOfServer(com.djrapitops.plan.identification.ServerUUID)">
-<h3>fetchNicknameDataOfServer</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>,&#8203;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../delivery/domain/Nickname.html" title="class in com.djrapitops.plan.delivery.domain">Nickname</a>&gt;&gt;&gt;</span>&nbsp;<span class="element-name">fetchNicknameDataOfServer</span>&#8203;<span class="parameters">(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</span></div>
-<div class="block">Query database for nickname information of a server.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>serverUUID</code> - UUID the the Plan server.</dd>
-<dt>Returns:</dt>
-<dd>Map: Player UUID - List of Nicknames on the server.</dd>
-</dl>
 </section>
 </li>
 </ul>

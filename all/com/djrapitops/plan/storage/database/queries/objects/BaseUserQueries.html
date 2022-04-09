@@ -106,16 +106,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Query database for common user information of a player.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fetchServerBaseUsers(com.djrapitops.plan.identification.ServerUUID)">fetchServerBaseUsers</a></span>&#8203;(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
-<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
-<div class="block">Query database for common user information for players that have played on a specific server.</div>
-</div>
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#fetchUserId(java.util.UUID)">fetchUserId</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#minimumRegisterDate()">minimumRegisterDate</a></span>()</code></div>
 <div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#uuidsOfRegisteredBetween(long,long)">uuidsOfRegisteredBetween</a></span>&#8203;(long&nbsp;after,
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#userIdsOfRegisteredBetween(long,long)">userIdsOfRegisteredBetween</a></span>&#8203;(long&nbsp;after,
  long&nbsp;before)</code></div>
 <div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
@@ -164,26 +162,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="fetchServerBaseUsers(com.djrapitops.plan.identification.ServerUUID)">
-<h3>fetchServerBaseUsers</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a>&gt;&gt;</span>&nbsp;<span class="element-name">fetchServerBaseUsers</span>&#8203;<span class="parameters">(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</span></div>
-<div class="block">Query database for common user information for players that have played on a specific server.
- <p>
- Only one <a href="../../../../gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain"><code>BaseUser</code></a> per player exists unlike <a href="../../../../gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain"><code>UserInfo</code></a> which is available per server.
- <p>
- This will fetch BaseUsers for which UserInfo object also exists on the server.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>serverUUID</code> - UUID of the Plan server.</dd>
-<dt>Returns:</dt>
-<dd>Collection: BaseUsers</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="uuidsOfRegisteredBetween(long,long)">
-<h3>uuidsOfRegisteredBetween</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;&gt;</span>&nbsp;<span class="element-name">uuidsOfRegisteredBetween</span>&#8203;<span class="parameters">(long&nbsp;after,
+<section class="detail" id="userIdsOfRegisteredBetween(long,long)">
+<h3>userIdsOfRegisteredBetween</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&gt;</span>&nbsp;<span class="element-name">userIdsOfRegisteredBetween</span>&#8203;<span class="parameters">(long&nbsp;after,
  long&nbsp;before)</span></div>
 </section>
 </li>
@@ -191,6 +172,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="minimumRegisterDate()">
 <h3>minimumRegisterDate</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&gt;</span>&nbsp;<span class="element-name">minimumRegisterDate</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="fetchUserId(java.util.UUID)">
+<h3>fetchUserId</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">fetchUserId</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</span></div>
 </section>
 </li>
 </ul>

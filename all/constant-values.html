@@ -318,12 +318,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ExtensionIconTable.html#ID">ID</a></code></div>
 <div class="col-last odd-row-color"><code>"id"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable.STATEMENT_SELECT_ICON_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ExtensionIconTable.html#STATEMENT_SELECT_ICON_ID">STATEMENT_SELECT_ICON_ID</a></code></div>
-<div class="col-last even-row-color"><code>"(SELECT id FROM plan_extension_icons WHERE name=? AND family=? AND color=? LIMIT 1)"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ExtensionIconTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
-<div class="col-last odd-row-color"><code>"plan_extension_icons"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ExtensionIconTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last even-row-color"><code>"plan_extension_icons"</code></div>
 </div>
 </li>
 <li>
@@ -692,7 +689,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color"><code>"id"</code></div>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/GeoInfoTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last even-row-color"><code>"INSERT INTO plan_geolocations (uuid,geolocation,last_used) VALUES (?, ?, ?)"</code></div>
+<div class="col-last even-row-color"><code>"INSERT INTO plan_geolocations (user_id,geolocation,last_used) VALUES ((SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1), ?, ?)"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable.LAST_USED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/GeoInfoTable.html#LAST_USED">LAST_USED</a></code></div>
 <div class="col-last odd-row-color"><code>"last_used"</code></div>
@@ -701,10 +698,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color"><code>"plan_geolocations"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable.UPDATE_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/GeoInfoTable.html#UPDATE_STATEMENT">UPDATE_STATEMENT</a></code></div>
-<div class="col-last odd-row-color"><code>"UPDATE plan_geolocations SET last_used=? WHERE uuid=? AND geolocation=?"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable.USER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/GeoInfoTable.html#USER_UUID">USER_UUID</a></code></div>
-<div class="col-last even-row-color"><code>"uuid"</code></div>
+<div class="col-last odd-row-color"><code>"UPDATE plan_geolocations SET last_used=? WHERE user_id=(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1) AND geolocation=?"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable.USER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/GeoInfoTable.html#USER_ID">USER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"user_id"</code></div>
 </div>
 </li>
 <li>
@@ -721,7 +718,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color"><code>"id"</code></div>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.KillsTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last even-row-color"><code>"INSERT INTO plan_kills (session_id,killer_uuid,victim_uuid,server_uuid,date,weapon) VALUES ((SELECT plan_sessions.id FROM plan_sessions WHERE plan_sessions.uuid=? AND plan_sessions.server_uuid=? AND session_start=? AND session_end=? LIMIT 1), ?, ?, ?, ?, ?)"</code></div>
+<div class="col-last even-row-color"><code>"INSERT INTO plan_kills (session_id,killer_uuid,victim_uuid,server_uuid,date,weapon) VALUES ((SELECT plan_sessions.id FROM plan_sessions WHERE plan_sessions.user_id=(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1) AND plan_sessions.server_id=(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1) AND session_start=? AND session_end=? LIMIT 1), ?, ?, ?, ?, ?)"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.KillsTable.KILLER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#KILLER_UUID">KILLER_UUID</a></code></div>
 <div class="col-last odd-row-color"><code>"killer_uuid"</code></div>
@@ -820,22 +817,22 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color"><code>"id"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PingTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PingTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last odd-row-color"><code>"INSERT INTO plan_ping (uuid,server_uuid,date,min_ping,max_ping,avg_ping) VALUES (?, ?, ?, ?, ?, ?)"</code></div>
+<div class="col-last odd-row-color"><code>"INSERT INTO plan_ping (user_id,server_id,date,min_ping,max_ping,avg_ping) VALUES ((SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1),(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1), ?, ?, ?, ?)"</code></div>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PingTable.MAX_PING">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PingTable.html#MAX_PING">MAX_PING</a></code></div>
 <div class="col-last even-row-color"><code>"max_ping"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PingTable.MIN_PING">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PingTable.html#MIN_PING">MIN_PING</a></code></div>
 <div class="col-last odd-row-color"><code>"min_ping"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PingTable.SERVER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PingTable.html#SERVER_UUID">SERVER_UUID</a></code></div>
-<div class="col-last even-row-color"><code>"server_uuid"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PingTable.SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PingTable.html#SERVER_ID">SERVER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"server_id"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PingTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PingTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
 <div class="col-last odd-row-color"><code>"plan_ping"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PingTable.USER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PingTable.html#USER_UUID">USER_UUID</a></code></div>
-<div class="col-last even-row-color"><code>"uuid"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PingTable.USER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PingTable.html#USER_ID">USER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"user_id"</code></div>
 </div>
 </li>
 <li>
@@ -870,27 +867,27 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Constant Field</div>
 <div class="table-header col-last">Value</div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.INSTALLED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#INSTALLED">INSTALLED</a></code></div>
-<div class="col-last even-row-color"><code>"is_installed"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#NAME">NAME</a></code></div>
-<div class="col-last odd-row-color"><code>"name"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.PLAN_VERSION">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#PLAN_VERSION">PLAN_VERSION</a></code></div>
-<div class="col-last even-row-color"><code>"plan_version"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.PROXY">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#PROXY">PROXY</a></code></div>
-<div class="col-last odd-row-color"><code>"is_proxy"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#SERVER_ID">SERVER_ID</a></code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#ID">ID</a></code></div>
 <div class="col-last even-row-color"><code>"id"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.SERVER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#SERVER_UUID">SERVER_UUID</a></code></div>
-<div class="col-last odd-row-color"><code>"uuid"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.STATEMENT_SELECT_SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#STATEMENT_SELECT_SERVER_ID">STATEMENT_SELECT_SERVER_ID</a></code></div>
-<div class="col-last even-row-color"><code>"(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1)"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.INSTALLED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#INSTALLED">INSTALLED</a></code></div>
+<div class="col-last odd-row-color"><code>"is_installed"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#NAME">NAME</a></code></div>
+<div class="col-last even-row-color"><code>"name"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.PLAN_VERSION">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#PLAN_VERSION">PLAN_VERSION</a></code></div>
+<div class="col-last odd-row-color"><code>"plan_version"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.PROXY">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#PROXY">PROXY</a></code></div>
+<div class="col-last even-row-color"><code>"is_proxy"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.SELECT_SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#SELECT_SERVER_ID">SELECT_SERVER_ID</a></code></div>
+<div class="col-last odd-row-color"><code>"(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1)"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.SERVER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#SERVER_UUID">SERVER_UUID</a></code></div>
+<div class="col-last even-row-color"><code>"uuid"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.ServerTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/ServerTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
 <div class="col-last odd-row-color"><code>"plan_servers"</code></div>
@@ -916,16 +913,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color"><code>"id"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last odd-row-color"><code>"INSERT INTO plan_sessions (uuid,session_start,session_end,deaths,mob_kills,afk_time,server_uuid) VALUES (?, ?, ?, ?, ?, ?, ?)"</code></div>
+<div class="col-last odd-row-color"><code>"INSERT INTO plan_sessions (user_id,session_start,session_end,deaths,mob_kills,afk_time,server_id) VALUES ((SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1), ?, ?, ?, ?, ?, (SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1))"</code></div>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.MOB_KILLS">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#MOB_KILLS">MOB_KILLS</a></code></div>
 <div class="col-last even-row-color"><code>"mob_kills"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.SELECT_SESSION_ID_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#SELECT_SESSION_ID_STATEMENT">SELECT_SESSION_ID_STATEMENT</a></code></div>
-<div class="col-last odd-row-color"><code>"(SELECT plan_sessions.id FROM plan_sessions WHERE plan_sessions.uuid=? AND plan_sessions.server_uuid=? AND session_start=? AND session_end=? LIMIT 1)"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.SERVER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#SERVER_UUID">SERVER_UUID</a></code></div>
-<div class="col-last even-row-color"><code>"server_uuid"</code></div>
+<div class="col-last odd-row-color"><code>"(SELECT plan_sessions.id FROM plan_sessions WHERE plan_sessions.user_id=(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1) AND plan_sessions.server_id=(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1) AND session_start=? AND session_end=? LIMIT 1)"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#SERVER_ID">SERVER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"server_id"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.SESSION_END">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#SESSION_END">SESSION_END</a></code></div>
 <div class="col-last odd-row-color"><code>"session_end"</code></div>
@@ -935,9 +932,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
 <div class="col-last odd-row-color"><code>"plan_sessions"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.USER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#USER_UUID">USER_UUID</a></code></div>
-<div class="col-last even-row-color"><code>"uuid"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SessionsTable.USER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#USER_ID">USER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"user_id"</code></div>
 </div>
 </li>
 <li>
@@ -1024,7 +1021,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color"><code>"id"</code></div>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last even-row-color"><code>"INSERT INTO plan_user_info (uuid,registered,server_uuid,banned,join_address,opped) VALUES (?, ?, ?, ?, ?, ?)"</code></div>
+<div class="col-last even-row-color"><code>"INSERT INTO plan_user_info (user_id,registered,server_id,banned,join_address,opped) VALUES ((SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1), ?, (SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1), ?, ?, ?)"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.JOIN_ADDRESS">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#JOIN_ADDRESS">JOIN_ADDRESS</a></code></div>
 <div class="col-last odd-row-color"><code>"join_address"</code></div>
@@ -1034,15 +1031,15 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.REGISTERED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#REGISTERED">REGISTERED</a></code></div>
 <div class="col-last odd-row-color"><code>"registered"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.SERVER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#SERVER_UUID">SERVER_UUID</a></code></div>
-<div class="col-last even-row-color"><code>"server_uuid"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#SERVER_ID">SERVER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"server_id"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
 <div class="col-last odd-row-color"><code>"plan_user_info"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.USER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#USER_UUID">USER_UUID</a></code></div>
-<div class="col-last even-row-color"><code>"uuid"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UserInfoTable.USER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UserInfoTable.html#USER_ID">USER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"user_id"</code></div>
 </div>
 </li>
 <li>
@@ -1057,18 +1054,21 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.REGISTERED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#REGISTERED">REGISTERED</a></code></div>
 <div class="col-last odd-row-color"><code>"registered"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
-<div class="col-last even-row-color"><code>"plan_users"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.TIMES_KICKED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#TIMES_KICKED">TIMES_KICKED</a></code></div>
-<div class="col-last odd-row-color"><code>"times_kicked"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.USER_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#USER_NAME">USER_NAME</a></code></div>
-<div class="col-last even-row-color"><code>"name"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.USER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#USER_UUID">USER_UUID</a></code></div>
-<div class="col-last odd-row-color"><code>"uuid"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.SELECT_USER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#SELECT_USER_ID">SELECT_USER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1)"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"plan_users"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.TIMES_KICKED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#TIMES_KICKED">TIMES_KICKED</a></code></div>
+<div class="col-last even-row-color"><code>"times_kicked"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.USER_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#USER_NAME">USER_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"name"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.UsersTable.USER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/UsersTable.html#USER_UUID">USER_UUID</a></code></div>
+<div class="col-last even-row-color"><code>"uuid"</code></div>
 </div>
 </li>
 <li>
@@ -1114,10 +1114,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color"><code>"id"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last odd-row-color"><code>"INSERT INTO plan_world_times (session_id,world_id,uuid,server_uuid,survival_time,creative_time,adventure_time,spectator_time) VALUES ( (SELECT plan_sessions.id FROM plan_sessions WHERE plan_sessions.uuid=? AND plan_sessions.server_uuid=? AND session_start=? AND session_end=? LIMIT 1),(SELECT plan_worlds.id FROM plan_worlds WHERE (world_name=?) AND (plan_worlds.server_uuid=?) LIMIT 1),?, ?, ?, ?, ?, ?)"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable.SERVER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#SERVER_UUID">SERVER_UUID</a></code></div>
-<div class="col-last even-row-color"><code>"server_uuid"</code></div>
+<div class="col-last odd-row-color"><code>"INSERT INTO plan_world_times (session_id,world_id,user_id,server_id,survival_time,creative_time,adventure_time,spectator_time) VALUES ( (SELECT plan_sessions.id FROM plan_sessions WHERE plan_sessions.user_id=(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1) AND plan_sessions.server_id=(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1) AND session_start=? AND session_end=? LIMIT 1),(SELECT plan_worlds.id FROM plan_worlds WHERE (world_name=?) AND (plan_worlds.server_uuid=?) LIMIT 1),(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1),(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1),?, ?, ?, ?)"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable.SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#SERVER_ID">SERVER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"server_id"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable.SESSION_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#SESSION_ID">SESSION_ID</a></code></div>
 <div class="col-last odd-row-color"><code>"session_id"</code></div>
@@ -1130,9 +1130,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
 <div class="col-last even-row-color"><code>"plan_world_times"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable.USER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#USER_UUID">USER_UUID</a></code></div>
-<div class="col-last odd-row-color"><code>"uuid"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable.USER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#USER_ID">USER_ID</a></code></div>
+<div class="col-last odd-row-color"><code>"user_id"</code></div>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable.WORLD_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#WORLD_ID">WORLD_ID</a></code></div>
 <div class="col-last even-row-color"><code>"world_id"</code></div>
