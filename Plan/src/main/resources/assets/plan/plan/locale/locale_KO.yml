@@ -253,7 +253,7 @@ command:
         help: "> §2/${0} Help"
         servers: "> §2서버 목록"
         search: "> §2${0} Results for §f${1}§2:"
-        serverList: "id::name::uuid"
+        serverList: "id::name::uuid::version"
         inspect: "> §2플레이어: §f${0}"
         network: "> §2네트워크 페이지"
         webUsers: "> §2${0} 웹 사용자"

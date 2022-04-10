@@ -253,7 +253,7 @@ command:
         help: "> §2/${0} Apu"
         servers: "> §2Palvelimet"
         search: "> §2${0} Tulosta haulle §f${1}§2:"
-        serverList: "id::nimi::uuid"
+        serverList: "id::nimi::uuid::version"
         inspect: "> §2Pelaaja: §f${0}"
         network: "> §2Verkoston Sivu"
         webUsers: "> §2${0} Web Käyttäjät"

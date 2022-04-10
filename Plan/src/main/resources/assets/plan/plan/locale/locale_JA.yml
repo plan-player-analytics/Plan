@@ -253,7 +253,7 @@ command:
         help: "> §2/${0}の詳細"
         servers: "> §2サーバー"
         search: "> §2${0} §f${1}§2 の結果:"
-        serverList: "Minecraft id::名前::uuid"
+        serverList: "Minecraft id::名前::uuid::version"
         inspect: "> §2プレイヤー: §f${0}"
         network: "> §2ネットワークページ"
         webUsers: "> §2${0} ウェブユーザー"

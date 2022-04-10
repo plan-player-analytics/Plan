@@ -253,7 +253,7 @@ command:
         help: "> §2/${0} 帮助"
         servers: "> §2全部服务器"
         search: "> §2${0} 对于 §f${1}§2 的结果:"
-        serverList: "id::名称::uuid"
+        serverList: "id::名称::uuid::version"
         inspect: "> §2玩家: §f${0}"
         network: "> §2群组网络页面"
         webUsers: "> §2${0} 网页用户"

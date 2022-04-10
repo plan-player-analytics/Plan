@@ -253,7 +253,7 @@ command:
         help: "> §2/${0} Help"
         servers: "> §2Sunucular"
         search: "> §2${0} §f${1} §2için sonuçlar:"
-        serverList: "id::isim::uuid"
+        serverList: "id::isim::uuid::version"
         inspect: "> §2Oyuncu: §f${0}"
         network: "> §2Ağ Sayfası"
         webUsers: "> §2${0} Web kullanıcıları"
