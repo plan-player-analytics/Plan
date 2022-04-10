@@ -94,7 +94,8 @@ public class Contributors {
             new Contributor("zisunny104", LANG),
             new Contributor("SkipM4", LANG),
             new Contributor("ahdg6", CODE),
-            new Contributor("BratishkaErik", LANG)
+            new Contributor("BratishkaErik", LANG),
+            new Contributor("Pingger", CODE)
     };
 
     private Contributors() {
