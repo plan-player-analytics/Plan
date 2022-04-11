@@ -70,6 +70,7 @@ public class Contributors {
             new Contributor("yukieji", LANG),
             new Contributor("qsefthuopq", LANG),
             new Contributor("Karlatemp", CODE, LANG),
+            new Contributor("KasperiP", LANG),
             new Contributor("Mastory_Md5", LANG),
             new Contributor("FluxCapacitor2", CODE),
             new Contributor("galexrt", LANG),

@@ -372,7 +372,7 @@ html:
         totalActive: "Aktiivisena"
         playersOnline: "Pelaajia Paikalla"
         perPlayer: "/ Pelaaja"
-        dayOfweek: "Viikon päivä"
+        dayOfweek: "Viikonpäivä"
         sessionStart: "Istunto alkoi"
         loadedChunks: "Ladatut Chunkit"
         disk: "Levytila"
