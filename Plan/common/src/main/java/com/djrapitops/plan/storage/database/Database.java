@@ -21,7 +21,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Interface for interacting with a Plan SQL database.
@@ -58,7 +58,7 @@ public interface Database {
      * @param transaction Transaction to execute.
      * @return Future that is finished when the transaction has been executed.
      */
-    Future<?> executeTransaction(Transaction transaction);
+    CompletableFuture<?> executeTransaction(Transaction transaction);
 
     /**
      * Used to get the {@code DBType} of the Database

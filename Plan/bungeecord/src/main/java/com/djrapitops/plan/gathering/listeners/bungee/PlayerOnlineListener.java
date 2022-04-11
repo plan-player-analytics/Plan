@@ -108,18 +108,20 @@ public class PlayerOnlineListener implements Listener {
         sessionCache.cacheSession(playerUUID, session);
         Database database = dbSystem.getDatabase();
 
-        boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
-        if (gatheringGeolocations) {
-            database.executeTransaction(
-                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
-            );
-        }
+        database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName))
+                .thenRunAsync(() -> {
+                    boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+                    if (gatheringGeolocations) {
+                        database.executeTransaction(
+                                new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                        );
+                    }
 
-        database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
-            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
-        }
+                    processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+                    if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+                        processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+                    }
+                });
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

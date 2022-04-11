@@ -188,32 +188,35 @@ public class PlayerOnlineListener implements FabricListener {
         String playerName = player.getEntityName();
         String displayName = player.getDisplayName().asString();
 
-        boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
-        if (gatheringGeolocations) {
-            database.executeTransaction(
-                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
-            );
-        }
 
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID,
-                System::currentTimeMillis, playerName, serverUUID, getHostName));
-        database.executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, server.getPlayerManager().getOpList().isOp(player.getGameProfile())));
+                        System::currentTimeMillis, playerName, serverUUID, getHostName))
+                .thenRunAsync(() -> {
+                    boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+                    if (gatheringGeolocations) {
+                        database.executeTransaction(
+                                new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                        );
+                    }
 
-        ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
-        session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
-        session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
-        sessionCache.cacheSession(playerUUID, session)
-                .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
+                    database.executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, server.getPlayerManager().getOpList().isOp(player.getGameProfile())));
 
-        database.executeTransaction(new NicknameStoreTransaction(
-                playerUUID, new Nickname(displayName, time, serverUUID),
-                (uuid, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
-        ));
+                    ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
+                    session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
+                    session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
+                    sessionCache.cacheSession(playerUUID, session)
+                            .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
 
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
-            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
-        }
+                    database.executeTransaction(new NicknameStoreTransaction(
+                            playerUUID, new Nickname(displayName, time, serverUUID),
+                            (uuid, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
+                    ));
+
+                    processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+                    if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+                        processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+                    }
+                });
     }
 
     private String getHostname(ServerPlayerEntity player) {

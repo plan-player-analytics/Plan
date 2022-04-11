@@ -49,7 +49,10 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -305,7 +308,7 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     @Override
-    public Future<?> executeTransaction(Transaction transaction) {
+    public CompletableFuture<?> executeTransaction(Transaction transaction) {
         if (getState() == State.CLOSED) {
             throw new DBOpException("Transaction tried to execute although database is closed.");
         }

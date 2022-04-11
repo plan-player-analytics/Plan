@@ -343,7 +343,7 @@ public class PlayerCountQueries {
     }
 
     public static Query<Map<ServerUUID, Integer>> newPlayerCounts(long after, long before) {
-        String sql = SELECT + ServerTable.SERVER_UUID + ",COUNT(1) as player_count" +
+        String sql = SELECT + "s." + ServerTable.SERVER_UUID + ",COUNT(1) as player_count" +
                 FROM + UserInfoTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +

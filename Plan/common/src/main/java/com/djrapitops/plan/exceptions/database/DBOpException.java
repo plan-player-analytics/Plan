@@ -53,6 +53,10 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
         context.related("Error code: " + errorCode)
                 .related(sql);
         switch (errorCode) {
+            case 0:
+                context.related("Connection aquisition error")
+                        .whatToDo("Failed to aquire connection. Try increasing 'Database.MySQL.Max_connections' setting.");
+                break;
             // SQLite Corrupt
             case 10:
             case 523:
@@ -128,6 +132,11 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1366:
                 context.related("Incorrect character encoding in MySQL")
                         .whatToDo("Convert your MySQL database and tables to use utf8mb4: https://www.a2hosting.com/kb/developer-corner/mysql/convert-mysql-database-utf-8");
+                break;
+            case 1048:
+                // MySQL
+                context.related("Not null constraint violation")
+                        .whatToDo("Report this error. NOT NULL constraint violation occurred.");
                 break;
             default:
                 context.related("Unknown SQL Error code");
