@@ -70,6 +70,8 @@ task updateVersion(type: Copy) {
 }
 
 node {
+    download = true
+    version = "16.14.2"
     nodeProjectDir = file("$rootDir/react/dashboard")
 }
 
