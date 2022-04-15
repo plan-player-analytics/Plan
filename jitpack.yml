@@ -3,6 +3,7 @@ jdk:
 before_install:
    - sdk install java 16.0.1-open
    - sdk use java 16.0.1-open
+   - sudo apt-get install -y nodejs
 install:
   - cd Plan
   - ./gradlew shadowJar publishToMavenLocal
