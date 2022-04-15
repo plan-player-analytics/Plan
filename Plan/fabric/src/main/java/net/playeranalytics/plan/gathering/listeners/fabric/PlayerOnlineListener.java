@@ -42,6 +42,7 @@ import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.playeranalytics.plan.gathering.FabricPlayerPositionTracker;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
@@ -234,6 +235,7 @@ public class PlayerOnlineListener implements FabricListener {
         beforePlayerQuit(player);
         try {
             actOnQuitEvent(player);
+            FabricPlayerPositionTracker.removePlayer(player.getUuid());
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(getClass(), player).build());
         }
