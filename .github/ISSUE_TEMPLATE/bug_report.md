@@ -12,9 +12,13 @@ labels: 'Bug'
 ### Exceptions & Other Logs
 <!-- If reporting an Exception, please provide the error log from /plugins/Plan/logs, it has context in it -->
 
-```
-Place log contents here
+<!-- Paste log contents inside the backticks below -->
 ```
 
+```
+
+### Plugin versions
+<!-- Versions of Plan and any other related plugins -->
+
 ### Additional information
-<!-- Any additional information, plugin versions, context, what was attempted, etc -->
+<!-- Any additional information, context, what was attempted, etc -->
