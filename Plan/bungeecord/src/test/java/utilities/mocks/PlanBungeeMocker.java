@@ -67,7 +67,7 @@ public class PlanBungeeMocker extends Mocker {
         return this;
     }
 
-    PlanBungeeMocker withResourceFetchingFromJar() throws Exception {
+    PlanBungeeMocker withResourceFetchingFromJar() {
         return this;
     }
 

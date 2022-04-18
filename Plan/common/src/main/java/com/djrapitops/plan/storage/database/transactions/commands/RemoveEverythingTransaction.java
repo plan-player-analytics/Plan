@@ -17,21 +17,22 @@
 package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
-import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
-
-import static com.djrapitops.plan.storage.database.sql.building.Sql.DELETE_FROM;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 
 /**
  * Transaction that removes everything from the database.
  *
  * @author AuroraLS3
  */
-public class RemoveEverythingTransaction extends ThrowawayTransaction {
+public class RemoveEverythingTransaction extends Patch {
 
     @Override
-    protected void performOperations() {
-        // Delete statements are run in a specific order as some tables have foreign keys,
-        // or had at some point in the past.
+    public boolean hasBeenApplied() {
+        return false;
+    }
+
+    @Override
+    protected void applyPatch() {
         clearTable(SettingsTable.TABLE_NAME);
         clearTable(GeoInfoTable.TABLE_NAME);
         clearTable(NicknamesTable.TABLE_NAME);
@@ -59,6 +60,6 @@ public class RemoveEverythingTransaction extends ThrowawayTransaction {
     }
 
     private void clearTable(String tableName) {
-        execute(DELETE_FROM + tableName);
+        execute("DELETE FROM " + tableName);
     }
 }

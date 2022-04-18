@@ -37,6 +37,7 @@ import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkT
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
@@ -56,8 +57,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -255,7 +255,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
-    @Disabled
+    @Disabled("Flaky test, fails every evening.")
     default void sqlDateParsingSanitySQLDoesNotApplyTimezone() {
         Database db = db();
 
@@ -292,7 +292,8 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 , new Transaction() {
                     @Override
                     protected void performOperations() {
-                        execute("UPDATE " + UserInfoTable.TABLE_NAME + " SET " + UserInfoTable.REGISTERED + "=0" + WHERE + UserInfoTable.USER_ID + "=1");
+                        execute("UPDATE " + UserInfoTable.TABLE_NAME + " SET " + UserInfoTable.REGISTERED + "=0" +
+                                WHERE + UserInfoTable.USER_ID + "=(" + SELECT + "MAX(" + UsersTable.ID + ")" + FROM + UsersTable.TABLE_NAME + ")");
                     }
                 }
         );
