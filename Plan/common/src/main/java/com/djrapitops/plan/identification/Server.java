@@ -93,12 +93,13 @@ public class Server implements Comparable<Server> {
         Server that = (Server) o;
         return Objects.equals(uuid, that.uuid) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(webAddress, that.webAddress);
+                Objects.equals(webAddress, that.webAddress) &&
+                Objects.equals(planVersion, that.planVersion);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, id, name, webAddress);
+        return Objects.hash(uuid, id, name, webAddress, planVersion);
     }
 
     @Override
@@ -108,6 +109,8 @@ public class Server implements Comparable<Server> {
                 ", id=" + id +
                 ", name='" + name + '\'' +
                 ", webAddress='" + webAddress + '\'' +
+                ", proxy=" + proxy +
+                ", planVersion='" + planVersion + '\'' +
                 '}';
     }
 

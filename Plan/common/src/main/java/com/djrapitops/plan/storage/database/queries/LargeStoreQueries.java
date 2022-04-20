@@ -153,6 +153,7 @@ public class LargeStoreQueries {
                     statement.setString(3, server.getWebAddress());
                     statement.setBoolean(4, true);
                     statement.setBoolean(5, server.isProxy());
+                    statement.setString(6, server.getPlanVersion());
                     statement.addBatch();
                 }
             }

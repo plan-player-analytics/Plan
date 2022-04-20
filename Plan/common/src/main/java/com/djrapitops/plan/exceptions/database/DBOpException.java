@@ -53,10 +53,6 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
         context.related("Error code: " + errorCode)
                 .related(sql);
         switch (errorCode) {
-            case 0:
-                context.related("Connection aquisition error")
-                        .whatToDo("Failed to aquire connection. Try increasing 'Database.MySQL.Max_connections' setting.");
-                break;
             // SQLite Corrupt
             case 10:
             case 523:
