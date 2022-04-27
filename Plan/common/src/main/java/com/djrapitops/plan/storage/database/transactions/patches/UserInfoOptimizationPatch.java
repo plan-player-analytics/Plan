@@ -56,13 +56,15 @@ public class UserInfoOptimizationPatch extends Patch {
                     UserInfoTable.SERVER_ID + ',' +
                     UserInfoTable.REGISTERED + ',' +
                     UserInfoTable.BANNED + ',' +
-                    UserInfoTable.OP +
+                    UserInfoTable.OP + ',' +
+                    UserInfoTable.JOIN_ADDRESS +
                     ") SELECT " +
                     "(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid = " + tempTableName + ".uuid LIMIT 1), " +
                     "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid = " + tempTableName + ".server_uuid LIMIT 1), " +
                     UserInfoTable.REGISTERED + ',' +
                     UserInfoTable.BANNED + ',' +
-                    UserInfoTable.OP +
+                    UserInfoTable.OP + ',' +
+                    UserInfoTable.JOIN_ADDRESS +
                     FROM + tempTableName
             );
 
