@@ -270,9 +270,9 @@ public class PlayerPlaceHolders implements Placeholders {
                         .toPlaytime())
         );
         placeholders.register("player_time_month_raw",
-                player -> time.apply(SessionsMutator.forContainer(player)
+                player -> SessionsMutator.forContainer(player)
                         .filterSessionsBetween(monthAgo(), now())
-                        .toPlaytime())
+                        .toPlaytime()
         );
 
         placeholders.register("player_server_time_active",
@@ -281,9 +281,9 @@ public class PlayerPlaceHolders implements Placeholders {
                         .toActivePlaytime())
         );
         placeholders.register("player_server_time_active_raw",
-                player -> time.apply(SessionsMutator.forContainer(player)
+                player -> SessionsMutator.forContainer(player)
                         .filterPlayedOnServer(serverInfo.getServerUUID())
-                        .toActivePlaytime())
+                        .toActivePlaytime()
         );
 
         placeholders.register("player_server_time_afk",
