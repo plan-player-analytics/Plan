@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -72,6 +73,19 @@ public class GeoInfoStoreTransaction extends Transaction {
     protected void performOperations() {
         if (geoInfo == null) geoInfo = createGeoInfo();
         if (geoInfo.getGeolocation() == null) return; // Don't save null geolocation.
+        try {
+            execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
+        } catch (DBOpException failed) {
+            if (failed.isUserIdConstraintViolation()) {
+                retry();
+            } else {
+                throw failed;
+            }
+        }
+    }
+
+    private void retry() {
+        executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
         execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
     }
 }

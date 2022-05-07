@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -41,6 +42,20 @@ public class SessionEndTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
+        try {
+            execute(DataStoreQueries.storeSession(session));
+        } catch (DBOpException failed) {
+            if (failed.isUserIdConstraintViolation()) {
+                retry();
+            } else {
+                throw failed;
+            }
+        }
+    }
+
+    private void retry() {
+        UUID playerUUID = session.getPlayerUUID();
+        executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
         execute(DataStoreQueries.storeSession(session));
     }
 }

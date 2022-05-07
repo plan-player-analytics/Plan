@@ -146,7 +146,7 @@ public class DataStoreQueries {
      * @param playerName Name of the player.
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable registerBaseUser(UUID playerUUID, long registered, String playerName) {
+    public static ExecStatement registerBaseUser(UUID playerUUID, long registered, String playerName) {
         return new ExecStatement(UsersTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

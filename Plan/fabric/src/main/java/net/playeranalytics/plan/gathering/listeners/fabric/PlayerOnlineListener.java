@@ -182,8 +182,6 @@ public class PlayerOnlineListener implements FabricListener {
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
 
-        InetSocketAddress socketAddress = (InetSocketAddress) player.networkHandler.connection.getAddress();
-        InetAddress address = InetAddresses.forString(socketAddress.getAddress().toString().replace("/", ""));
         Supplier<String> getHostName = () -> getHostname(player);
 
         String playerName = player.getEntityName();
@@ -195,9 +193,7 @@ public class PlayerOnlineListener implements FabricListener {
                 .thenRunAsync(() -> {
                     boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
                     if (gatheringGeolocations) {
-                        database.executeTransaction(
-                                new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
-                        );
+                        gatherGeolocation(player, playerUUID, time, database);
                     }
 
                     database.executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, server.getPlayerManager().getOpList().isOp(player.getGameProfile())));
@@ -218,6 +214,15 @@ public class PlayerOnlineListener implements FabricListener {
                         processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
                     }
                 });
+    }
+
+    private void gatherGeolocation(ServerPlayerEntity player, UUID playerUUID, long time, Database database) {
+        InetSocketAddress socketAddress = (InetSocketAddress) player.networkHandler.connection.getAddress();
+        if (socketAddress == null) return;
+        InetAddress address = InetAddresses.forString(socketAddress.getAddress().toString().replace("/", ""));
+        database.executeTransaction(
+                new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+        );
     }
 
     private String getHostname(ServerPlayerEntity player) {

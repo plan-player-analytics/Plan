@@ -218,4 +218,23 @@ public class UserIdentifierQueries {
             }
         };
     }
+
+    public static Query<Optional<Integer>> fetchUserId(UUID playerUUID) {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.ID).where(UsersTable.USER_UUID + "=?").toString();
+
+        return new QueryStatement<Optional<Integer>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Optional<Integer> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getInt(UsersTable.ID));
+                }
+                return Optional.empty();
+            }
+        };
+    }
 }

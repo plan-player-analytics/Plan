@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,11 +39,13 @@ public class Identifiers {
 
     protected final DBSystem dbSystem;
     private final UUIDUtility uuidUtility;
+    private final ErrorLogger errorLogger;
 
     @Inject
-    public Identifiers(DBSystem dbSystem, UUIDUtility uuidUtility) {
+    public Identifiers(DBSystem dbSystem, UUIDUtility uuidUtility, ErrorLogger errorLogger) {
         this.dbSystem = dbSystem;
         this.uuidUtility = uuidUtility;
+        this.errorLogger = errorLogger;
     }
 
     /**
@@ -103,6 +106,10 @@ public class Identifiers {
 
     public UUID getPlayerUUID(String name) {
         return uuidUtility.getUUIDOf(name);
+    }
+
+    public Optional<Integer> getPlayerUserId(UUID playerUUID) {
+        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchUserId(playerUUID));
     }
 
     public static Optional<Long> getTimestamp(Request request) {

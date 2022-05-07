@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
@@ -48,6 +49,19 @@ public class PingStoreTransaction extends Transaction {
     @Override
     protected void performOperations() {
         Ping ping = calculateAggregatePing();
+        try {
+            execute(DataStoreQueries.storePing(playerUUID, serverUUID, ping));
+        } catch (DBOpException failed) {
+            if (failed.isUserIdConstraintViolation()) {
+                retry(ping);
+            } else {
+                throw failed;
+            }
+        }
+    }
+
+    private void retry(Ping ping) {
+        executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
         execute(DataStoreQueries.storePing(playerUUID, serverUUID, ping));
     }
 

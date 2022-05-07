@@ -29,6 +29,7 @@ import java.util.Optional;
  */
 public class DBOpException extends IllegalStateException implements ExceptionWithContext {
 
+    public static final String CONSTRAINT_VIOLATION = "Constraint Violation";
     private final ErrorContext context;
 
     public DBOpException(String message) {
@@ -101,7 +102,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1364:
             case 1451:
             case 1557:
-                context.related("Constraint Violation")
+                context.related(CONSTRAINT_VIOLATION)
                         .whatToDo("Report this, there is an SQL Constraint Violation.");
                 break;
             // Custom rules based on reported errors
@@ -145,5 +146,11 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
     @Override
     public Optional<ErrorContext> getContext() {
         return Optional.ofNullable(context);
+    }
+
+    public boolean isUserIdConstraintViolation() {
+        return context != null
+                && context.getRelated().contains(DBOpException.CONSTRAINT_VIOLATION)
+                && getMessage().contains("user_id");
     }
 }

@@ -26,7 +26,7 @@ import java.util.*;
  */
 public class ErrorContext implements Serializable {
 
-    private final List<Object> related;
+    private final transient List<Object> related;
     private String whatToDo;
 
     private ErrorContext() {
@@ -53,6 +53,10 @@ public class ErrorContext implements Serializable {
     public void merge(ErrorContext context) {
         this.related.addAll(context.related);
         if (this.whatToDo == null && context.whatToDo != null) this.whatToDo = context.whatToDo;
+    }
+
+    public List<Object> getRelated() {
+        return related;
     }
 
     public static class Builder {
