@@ -45,7 +45,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested.class.summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
@@ -90,6 +90,21 @@ implements <a href="../../../SubSystem.html" title="interface in com.djrapitops.
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested.class.summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="ActiveCookieStore.Holder.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieStore.Holder</a></span></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field.summary">
@@ -100,7 +115,7 @@ implements <a href="../../../SubSystem.html" title="interface in com.djrapitops.
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static long</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#cookieExpiresAfter">cookieExpiresAfter</a></span></code></div>
+<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#cookieExpiresAfterMs">cookieExpiresAfterMs</a></span></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -113,10 +128,11 @@ implements <a href="../../../SubSystem.html" title="interface in com.djrapitops.
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.processing.Processing)">ActiveCookieStore</a></span>&#8203;(<a href="ActiveCookieExpiryCleanupTask.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieExpiryCleanupTask</a>&nbsp;activeCookieExpiryCleanupTask,
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.processing.Processing,net.playeranalytics.plugin.server.PluginLogger)">ActiveCookieStore</a></span>&#8203;(<a href="ActiveCookieExpiryCleanupTask.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieExpiryCleanupTask</a>&nbsp;activeCookieExpiryCleanupTask,
  <a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing)</code></div>
+ <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
+ net.playeranalytics.plugin.server.PluginLogger&nbsp;logger)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -175,9 +191,9 @@ implements <a href="../../../SubSystem.html" title="interface in com.djrapitops.
 <h2>Field Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="cookieExpiresAfter">
-<h3>cookieExpiresAfter</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">cookieExpiresAfter</span></div>
+<section class="detail" id="cookieExpiresAfterMs">
+<h3>cookieExpiresAfterMs</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">cookieExpiresAfterMs</span></div>
 </section>
 </li>
 </ul>
@@ -189,13 +205,14 @@ implements <a href="../../../SubSystem.html" title="interface in com.djrapitops.
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.processing.Processing)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.processing.Processing,net.playeranalytics.plugin.server.PluginLogger)">
 <h3>ActiveCookieStore</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">ActiveCookieStore</span>&#8203;<span class="parameters">(<a href="ActiveCookieExpiryCleanupTask.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieExpiryCleanupTask</a>&nbsp;activeCookieExpiryCleanupTask,
  <a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing)</span></div>
+ <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
+ net.playeranalytics.plugin.server.PluginLogger&nbsp;logger)</span></div>
 </section>
 </li>
 </ul>
