@@ -71,21 +71,25 @@ public class RemoveDanglingUserDataPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        if (!userInfoTableOk) fixTable(UserInfoTable.TABLE_NAME);
-        if (!geolocationsTableOk) fixTable(GeoInfoTable.TABLE_NAME);
-        if (!pingTableOk) fixTable(PingTable.TABLE_NAME);
-        if (!worldTimesTableOk) fixTable(WorldTimesTable.TABLE_NAME);
-        if (!sessionsTableOk) fixTable(SessionsTable.TABLE_NAME);
+        Set<String> uuids = query(getUuids(UsersTable.TABLE_NAME));
 
-        if (pingOptimizationFailed) fixTable("temp_ping");
-        if (userInfoOptimizationFailed) fixTable("temp_user_info");
-        if (worldTimesOptimizationFailed) fixTable("temp_world_times");
-        if (sessionsOptimizationFailed) fixTable("temp_sessions");
-        if (geolocationOptimizationFailed) fixTable("temp_geoinformation");
+        if (!userInfoTableOk) fixTable(UserInfoTable.TABLE_NAME, uuids);
+        if (!geolocationsTableOk) fixTable(GeoInfoTable.TABLE_NAME, uuids);
+        if (!pingTableOk) fixTable(PingTable.TABLE_NAME, uuids);
+        if (!worldTimesTableOk) fixTable(WorldTimesTable.TABLE_NAME, uuids);
+        if (!sessionsTableOk) fixTable(SessionsTable.TABLE_NAME, uuids);
+
+        if (pingOptimizationFailed) fixTable("temp_ping", uuids);
+        if (userInfoOptimizationFailed) fixTable("temp_user_info", uuids);
+        if (worldTimesOptimizationFailed) fixTable("temp_world_times", uuids);
+        if (sessionsOptimizationFailed) fixTable("temp_sessions", uuids);
+        if (geolocationOptimizationFailed) fixTable("temp_geoinformation", uuids);
     }
 
-    private void fixTable(String tableName) {
-        Set<String> badUuids = query(getBadUuids(tableName));
+    private void fixTable(String tableName, Set<String> uuids) {
+        Set<String> badUuids = query(getUuids(tableName));
+        badUuids.removeAll(uuids);
+
         if (!badUuids.isEmpty()) {
             execute(deleteBadUuids(tableName, badUuids));
         }
@@ -104,10 +108,8 @@ public class RemoveDanglingUserDataPatch extends Patch {
         };
     }
 
-    private Query<Set<String>> getBadUuids(String tableName) {
-        String sql = "SELECT g.uuid FROM " + tableName + " g " +
-                "LEFT JOIN plan_users u on u.uuid=g.uuid " +
-                "WHERE u.uuid IS NULL";
+    private Query<Set<String>> getUuids(String tableName) {
+        String sql = "SELECT DISTINCT uuid FROM " + tableName;
 
         return new QueryAllStatement<Set<String>>(sql) {
             @Override

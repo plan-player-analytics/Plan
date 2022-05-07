@@ -18,10 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
-import com.djrapitops.plan.storage.database.sql.tables.PingTable;
-import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
-import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
-import com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 
@@ -68,19 +65,23 @@ public class RemoveDanglingServerDataPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        if (!userInfoTableOk) fixTable(UserInfoTable.TABLE_NAME);
-        if (!pingTableOk) fixTable(PingTable.TABLE_NAME);
-        if (!worldTimesTableOk) fixTable(WorldTimesTable.TABLE_NAME);
-        if (!sessionsTableOk) fixTable(SessionsTable.TABLE_NAME);
+        Set<String> serverUuids = query(getServerUuids());
 
-        if (pingOptimizationFailed) fixTable("temp_ping");
-        if (userInfoOptimizationFailed) fixTable("temp_user_info");
-        if (worldTimesOptimizationFailed) fixTable("temp_world_times");
-        if (sessionsOptimizationFailed) fixTable("temp_sessions");
+        if (!userInfoTableOk) fixTable(UserInfoTable.TABLE_NAME, serverUuids);
+        if (!pingTableOk) fixTable(PingTable.TABLE_NAME, serverUuids);
+        if (!worldTimesTableOk) fixTable(WorldTimesTable.TABLE_NAME, serverUuids);
+        if (!sessionsTableOk) fixTable(SessionsTable.TABLE_NAME, serverUuids);
+
+        if (pingOptimizationFailed) fixTable("temp_ping", serverUuids);
+        if (userInfoOptimizationFailed) fixTable("temp_user_info", serverUuids);
+        if (worldTimesOptimizationFailed) fixTable("temp_world_times", serverUuids);
+        if (sessionsOptimizationFailed) fixTable("temp_sessions", serverUuids);
     }
 
-    private void fixTable(String tableName) {
-        Set<String> badUuids = query(getBadUuids(tableName));
+    private void fixTable(String tableName, Set<String> serverUuids) {
+        Set<String> badUuids = query(getServerUuids(tableName));
+        badUuids.removeAll(serverUuids);
+
         if (!badUuids.isEmpty()) {
             execute(deleteBadUuids(tableName, badUuids));
         }
@@ -99,10 +100,23 @@ public class RemoveDanglingServerDataPatch extends Patch {
         };
     }
 
-    private Query<Set<String>> getBadUuids(String tableName) {
-        String sql = "SELECT g.uuid FROM " + tableName + " g " +
-                "LEFT JOIN plan_servers s on s.uuid=g.server_uuid " +
-                "WHERE s.uuid IS NULL";
+    private Query<Set<String>> getServerUuids() {
+        String sql = "SELECT uuid FROM " + ServerTable.TABLE_NAME;
+
+        return new QueryAllStatement<Set<String>>(sql) {
+            @Override
+            public Set<String> processResults(ResultSet set) throws SQLException {
+                HashSet<String> uuids = new HashSet<>();
+                while (set.next()) {
+                    uuids.add(set.getString("uuid"));
+                }
+                return uuids;
+            }
+        };
+    }
+
+    private Query<Set<String>> getServerUuids(String tableName) {
+        String sql = "SELECT DISTINCT server_uuid FROM " + tableName;
 
         return new QueryAllStatement<Set<String>>(sql) {
             @Override
