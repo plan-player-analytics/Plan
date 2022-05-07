@@ -137,21 +137,12 @@ public class PlanSystem implements SubSystem {
         this.logger = logger;
         this.errorLogger = errorLogger;
 
-        logger.info("");
+        logger.info("§2");
         logger.info("§2           ██▌");
         logger.info("§2     ██▌   ██▌");
         logger.info("§2  ██▌██▌██▌██▌  §2Player Analytics");
         logger.info("§2  ██▌██▌██▌██▌  §fv" + versionChecker.getCurrentVersion());
-        logger.info("");
-
-        String javaVersion = System.getProperty("java.specification.version");
-        if ("1.8".equals(javaVersion) || "9".equals(javaVersion) || "10".equals(javaVersion)
-        ) {
-            logger.warn("! ------- Deprecation warning ------- !");
-            logger.warn("Plan version 5.5 will require Java 11 or newer,");
-            logger.warn("consider updating your JVM as soon as possible.");
-            logger.warn("! ----------------------------------- !");
-        }
+        logger.info("§2");
     }
 
     @Deprecated
@@ -194,6 +185,15 @@ public class PlanSystem implements SubSystem {
 
         extensionService.registerExtensions();
         enabled = true;
+
+        String javaVersion = System.getProperty("java.specification.version");
+        if ("1.8".equals(javaVersion) || "9".equals(javaVersion) || "10".equals(javaVersion)
+        ) {
+            logger.warn("! ------- Deprecation warning ------- !");
+            logger.warn("Plan version 5.5 will require Java 11 or newer,");
+            logger.warn("consider updating your JVM as soon as possible.");
+            logger.warn("! ----------------------------------- !");
+        }
     }
 
     private void enableSystems(SubSystem... systems) {
