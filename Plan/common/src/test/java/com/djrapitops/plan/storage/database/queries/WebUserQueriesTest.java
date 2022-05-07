@@ -31,6 +31,7 @@ import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
+import utilities.TestPluginLogger;
 
 import java.util.Collections;
 import java.util.Map;
@@ -122,8 +123,8 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
                 Mockito.mock(ActiveCookieExpiryCleanupTask.class),
                 Mockito.mock(PlanConfig.class),
                 dbSystem(),
-                Mockito.mock(Processing.class)
-        );
+                Mockito.mock(Processing.class),
+                new TestPluginLogger());
     }
 
     @Test

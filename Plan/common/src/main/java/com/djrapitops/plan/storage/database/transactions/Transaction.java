@@ -80,9 +80,9 @@ public abstract class Transaction {
         try {
             initializeConnection(db);
             if (shouldBeExecuted()) {
-                initializeTransaction(db);
+                initializeTransaction();
                 if (this instanceof Patch) {
-                    db.getLogger().info(db.getLocale().getString(PluginLang.DB_APPLY_PATCH, getClass().getSimpleName()));
+                    db.getLogger().info(db.getLocale().getString(PluginLang.DB_APPLY_PATCH, getName()));
                 }
                 performOperations();
                 if (connection != null) connection.commit();
@@ -171,7 +171,7 @@ public abstract class Transaction {
         }
     }
 
-    private void initializeTransaction(SQLDB db) {
+    private void initializeTransaction() {
         try {
             createSavePoint();
         } catch (SQLException e) {
@@ -268,5 +268,10 @@ public abstract class Transaction {
 
     public boolean dbIsNotUnderHeavyLoad() {
         return !db.isUnderHeavyLoad();
+    }
+
+    public String getName() {
+        String simpleName = getClass().getSimpleName();
+        return simpleName.isEmpty() ? getClass().getName() : simpleName;
     }
 }

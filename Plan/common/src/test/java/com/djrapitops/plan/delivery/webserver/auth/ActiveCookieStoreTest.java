@@ -28,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
+import utilities.TestPluginLogger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -48,8 +49,8 @@ class ActiveCookieStoreTest {
                 Mockito.mock(ActiveCookieExpiryCleanupTask.class),
                 Mockito.mock(PlanConfig.class),
                 dbSystem,
-                Mockito.mock(Processing.class)
-        );
+                Mockito.mock(Processing.class),
+                new TestPluginLogger());
         user = new User(TestConstants.PLAYER_ONE_NAME, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
     }
 
