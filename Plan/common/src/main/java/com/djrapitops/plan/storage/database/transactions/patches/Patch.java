@@ -157,4 +157,8 @@ public abstract class Patch extends OperationCriticalTransaction {
             }
         });
     }
+
+    protected int columnVarcharLength(String table, String column) {
+        return dbType == DBType.SQLITE ? Integer.MAX_VALUE : query(MySQLSchemaQueries.columnVarcharLength(table, column));
+    }
 }

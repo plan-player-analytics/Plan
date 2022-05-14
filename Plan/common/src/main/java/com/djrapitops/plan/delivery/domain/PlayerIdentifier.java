@@ -37,7 +37,7 @@ public class PlayerIdentifier {
     }
 
     public boolean isSame(PlayerIdentifier that) {
-        return Objects.equals(getUuid(), that.getUuid()) && Objects.equals(getName(), that.getName());
+        return Objects.equals(this, that);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PlayerIdentifier {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PlayerIdentifier that = (PlayerIdentifier) o;
-        return Objects.equals(getUuid(), that.getUuid()) && Objects.equals(getName(), that.getName());
+        return Objects.equals(getUuid(), that.getUuid());
     }
 
     @Override

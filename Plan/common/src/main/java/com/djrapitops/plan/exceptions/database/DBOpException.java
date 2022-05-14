@@ -132,7 +132,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 break;
             case 1048:
                 // MySQL
-                context.related("Not null constraint violation")
+                context.related(CONSTRAINT_VIOLATION)
                         .whatToDo("Report this error. NOT NULL constraint violation occurred.");
                 break;
             default:

@@ -31,6 +31,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * Patches that apply to this table:
  * {@link com.djrapitops.plan.storage.database.transactions.patches.Version10Patch}
  * {@link com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch}
+ * {@link com.djrapitops.plan.storage.database.transactions.patches.UsersTableNameLengthPatch}
  *
  * @author AuroraLS3
  */
@@ -58,7 +59,7 @@ public class UsersTable {
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull().unique()
                 .column(REGISTERED, Sql.LONG).notNull()
-                .column(USER_NAME, Sql.varchar(16)).notNull()
+                .column(USER_NAME, Sql.varchar(36)).notNull()
                 .column(TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
                 .toString();
     }

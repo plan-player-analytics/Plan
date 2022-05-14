@@ -17,7 +17,6 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
@@ -42,10 +41,6 @@ public class ExtensionTableRowValueLengthPatch extends Patch {
         return dbType == DBType.SQLITE || // SQLite does not limit varchar lengths
                 columnVarcharLength(playerTable, ExtensionPlayerTableValueTable.VALUE_4) >= 250
                         && columnVarcharLength(serverTable, ExtensionServerTableValueTable.VALUE_5) >= 250;
-    }
-
-    private int columnVarcharLength(String table, String column) {
-        return query(MySQLSchemaQueries.columnVarcharLength(table, column));
     }
 
     @Override

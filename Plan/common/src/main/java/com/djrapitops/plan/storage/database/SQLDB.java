@@ -225,6 +225,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 new SessionsOptimizationPatch(),
                 new UserInfoHostnameAllowNullPatch(),
                 new RegisterDateMinimizationPatch(),
+                new UsersTableNameLengthPatch()
         };
     }
 

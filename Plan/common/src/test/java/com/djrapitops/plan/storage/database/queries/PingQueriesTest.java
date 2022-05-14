@@ -17,20 +17,20 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.gathering.domain.BaseUser;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
+import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.PingQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,6 +40,35 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
     private void prepareForPingStorage() {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+    }
+
+    @Test
+    default void pingStoreTransactionOutOfOrderDoesNotFailDueToMissingUser() {
+        DateObj<Integer> saved = RandomData.randomIntDateObject();
+        int value = saved.getValue();
+        db().executeTransaction(new PingStoreTransaction(playerUUID, serverUUID(),
+                Collections.singletonList(saved)
+        ));
+
+        Map<UUID, List<Ping>> expected = Collections.singletonMap(playerUUID, Collections.singletonList(
+                new Ping(saved.getDate(), serverUUID(), value, value, value)
+        ));
+        Map<UUID, List<Ping>> fetched = db().query(PingQueries.fetchAllPingData());
+        assertEquals(expected, fetched);
+    }
+
+
+    @Test
+    default void pingStoreTransactionOutOfOrderUpdatesUserInformation() {
+        db().executeTransaction(new PingStoreTransaction(playerUUID, serverUUID(),
+                Collections.singletonList(RandomData.randomIntDateObject())
+        ));
+        long registerDate = RandomData.randomTime();
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> registerDate, TestConstants.PLAYER_ONE_NAME));
+
+        Optional<BaseUser> expected = Optional.of(new BaseUser(playerUUID, TestConstants.PLAYER_ONE_NAME, registerDate, 0));
+        Optional<BaseUser> result = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
+        assertEquals(expected, result);
     }
 
     @Test

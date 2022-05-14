@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.gathering.domain.BaseUser;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.storage.database.Database;
@@ -27,6 +28,7 @@ import com.djrapitops.plan.storage.database.queries.objects.PingQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
@@ -39,6 +41,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface GeolocationQueriesTest extends DatabaseTestPreparer {
+
+    @Test
+    default void geoInfoStoreTransactionOutOfOrderDoesNotFailDueToMissingUser() {
+        List<GeoInfo> expected = RandomData.randomGeoInfo();
+        for (GeoInfo geoInfo : expected) {
+            save(playerUUID, geoInfo);
+        }
+
+        List<GeoInfo> result = db().query(GeoInfoQueries.fetchAllGeoInformation()).get(playerUUID);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void geoInfoStoreTransactionOutOfOrderUpdatesUserInformation() {
+        List<GeoInfo> geoInfos = RandomData.randomGeoInfo();
+        for (GeoInfo geoInfo : geoInfos) {
+            save(playerUUID, geoInfo);
+        }
+
+        long registerDate = RandomData.randomTime();
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> registerDate, TestConstants.PLAYER_ONE_NAME));
+
+        Optional<BaseUser> expected = Optional.of(new BaseUser(playerUUID, TestConstants.PLAYER_ONE_NAME, registerDate, 0));
+        Optional<BaseUser> result = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
+        assertEquals(expected, result);
+    }
 
     @Test
     default void geoInformationIsStored() {
