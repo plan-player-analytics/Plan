@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
-    id "com.github.node-gradle.node" version "3.2.1"
+    id "com.github.node-gradle.node" version "3.3.0"
 }
 
 configurations {
