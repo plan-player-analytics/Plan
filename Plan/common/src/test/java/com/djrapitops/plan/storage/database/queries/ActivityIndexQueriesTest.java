@@ -28,6 +28,7 @@ import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTa
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         }
 
         for (FinishedSession session : RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID)) {
-            if (save.test(session)) execute(DataStoreQueries.storeSession(session));
+            if (save.test(session)) db().executeTransaction(new SessionEndTransaction(session));
         }
     }
 

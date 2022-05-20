@@ -63,6 +63,9 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(TPSTable.TABLE_NAME, "plan_tps_date_index",
                 TPSTable.DATE
         );
+
+        createIndex(SessionsTable.TABLE_NAME, "plan_session_join_address_index",
+                SessionsTable.JOIN_ADDRESS_ID);
     }
 
     private void createIndex(String tableName, String indexName, String... indexedColumns) {

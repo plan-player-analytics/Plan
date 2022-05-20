@@ -151,6 +151,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
     public boolean isUserIdConstraintViolation() {
         return context != null
                 && context.getRelated().contains(DBOpException.CONSTRAINT_VIOLATION)
-                && getMessage().contains("user_id");
+                && getCause() != null
+                && getCause().getMessage().contains("user_id");
     }
 }

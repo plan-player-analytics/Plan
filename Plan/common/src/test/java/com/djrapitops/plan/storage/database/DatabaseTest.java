@@ -30,7 +30,10 @@ import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.storage.database.queries.*;
+import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
+import com.djrapitops.plan.storage.database.queries.ServerAggregateQueries;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
@@ -101,7 +104,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
 
-        execute(DataStoreQueries.storeSession(session));
+        db().executeTransaction(new SessionEndTransaction(session));
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", RandomData.randomTime(), serverUUID()), (uuid, name) -> false /* Not cached */));
         db().executeTransaction(new GeoInfoStoreTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
 
@@ -131,7 +134,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         long sessionStart = System.currentTimeMillis();
         ActiveSession session = new ActiveSession(playerUUID, serverUUID(), sessionStart, worlds[0], "SURVIVAL");
-        execute(DataStoreQueries.storeSession(session.toFinishedSession(sessionStart + 22345L)));
+        db().executeTransaction(new SessionEndTransaction(session.toFinishedSession(sessionStart + 22345L)));
 
         TestPluginLogger logger = new TestPluginLogger();
         new DBCleanTask(
@@ -154,7 +157,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         saveUserTwo();
         saveTwoWorlds();
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        execute(DataStoreQueries.storeSession(session));
+        db().executeTransaction(new SessionEndTransaction(session));
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */));
         saveGeoInfo(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime()));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));

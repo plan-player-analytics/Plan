@@ -31,6 +31,7 @@ public interface QueriesTestAggregate extends
         TPSQueriesTest,
         UserInfoQueriesTest,
         WebUserQueriesTest,
-        FilterQueryTest {
+        FilterQueryTest,
+        JoinAddressQueriesTest {
     /* Collects all query tests together so its easier to implement database tests */
 }

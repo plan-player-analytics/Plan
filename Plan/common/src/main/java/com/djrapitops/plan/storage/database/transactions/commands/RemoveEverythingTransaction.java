@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 
 /**
@@ -39,6 +40,7 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(KillsTable.TABLE_NAME);
         clearTable(WorldTimesTable.TABLE_NAME);
         clearTable(SessionsTable.TABLE_NAME);
+        clearTable(JoinAddressTable.TABLE_NAME);
         clearTable(WorldTable.TABLE_NAME);
         clearTable(PingTable.TABLE_NAME);
         clearTable(UserInfoTable.TABLE_NAME);
@@ -57,6 +59,8 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(ExtensionTabTable.TABLE_NAME);
         clearTable(ExtensionPluginTable.TABLE_NAME);
         clearTable(ExtensionIconTable.TABLE_NAME);
+
+        executeOther(new StoreJoinAddressTransaction(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
     }
 
     private void clearTable(String tableName) {

@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
@@ -289,6 +290,8 @@ public class SessionsMutator {
             WorldPie worldPie = graphs.pie().worldPie(session.getExtraData(WorldTimes.class).orElseGet(WorldTimes::new));
             sessionMap.put("world_series", worldPie.getSlices());
             sessionMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+            sessionMap.put("join_address", session.getExtraData(JoinAddress.class)
+                    .map(JoinAddress::getAddress).orElse("-"));
 
             session.getExtraData(AveragePing.class).ifPresent(averagePing ->
                     sessionMap.put("avg_ping", formatters.decimals().apply(averagePing.getValue()) + " ms")

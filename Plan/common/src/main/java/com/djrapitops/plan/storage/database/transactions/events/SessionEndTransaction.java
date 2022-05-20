@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
@@ -32,10 +33,6 @@ public class SessionEndTransaction extends Transaction {
 
     private final FinishedSession session;
 
-    public SessionEndTransaction(UUID playerUUID, FinishedSession session) {
-        this(session);
-    }
-
     public SessionEndTransaction(FinishedSession session) {
         this.session = session;
     }
@@ -43,19 +40,36 @@ public class SessionEndTransaction extends Transaction {
     @Override
     protected void performOperations() {
         try {
-            execute(DataStoreQueries.storeSession(session));
+            storeSession();
         } catch (DBOpException failed) {
             if (failed.isUserIdConstraintViolation()) {
-                retry();
+                retry(failed);
             } else {
                 throw failed;
             }
         }
     }
 
-    private void retry() {
-        UUID playerUUID = session.getPlayerUUID();
-        executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
+    private void storeSession() {
+        storeJoinAddressIfPresent();
         execute(DataStoreQueries.storeSession(session));
+    }
+
+    private void storeJoinAddressIfPresent() {
+        session.getExtraData(JoinAddress.class)
+                .map(JoinAddress::getAddress)
+                .map(StoreJoinAddressTransaction::new)
+                .ifPresent(this::executeOther);
+    }
+
+    private void retry(DBOpException failed) {
+        try {
+            UUID playerUUID = session.getPlayerUUID();
+            executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
+            storeSession();
+        } catch (DBOpException anotherFail) {
+            anotherFail.addSuppressed(failed);
+            throw anotherFail;
+        }
     }
 }

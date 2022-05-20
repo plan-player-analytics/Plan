@@ -50,6 +50,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQuerie
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -123,7 +124,7 @@ public class GraphJSONCreator {
     }
 
     public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID, URIQuery query) {
-        long after = getAfter(query); // TODO Implement if performance issues become apparent.
+//        long after = getAfter(query); // TODO Implement if performance issues become apparent.
 
         long now = System.currentTimeMillis();
         long twoMonthsAgo = now - TimeUnit.DAYS.toMillis(60);
@@ -438,7 +439,7 @@ public class GraphJSONCreator {
 
     public Map<String, Object> playerHostnamePieJSONAsMap() {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Integer> joinAddresses = dbSystem.getDatabase().query(UserInfoQueries.joinAddresses());
+        Map<String, Integer> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.latestJoinAddresses());
 
         translateUnknown(joinAddresses);
 
@@ -450,7 +451,7 @@ public class GraphJSONCreator {
 
     public Map<String, Object> playerHostnamePieJSONAsMap(ServerUUID serverUUID) {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Integer> joinAddresses = dbSystem.getDatabase().query(UserInfoQueries.joinAddresses(serverUUID));
+        Map<String, Integer> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.latestJoinAddresses(serverUUID));
 
         translateUnknown(joinAddresses);
 
@@ -461,9 +462,9 @@ public class GraphJSONCreator {
     }
 
     public void translateUnknown(Map<String, Integer> joinAddresses) {
-        Integer unknown = joinAddresses.get("unknown");
+        Integer unknown = joinAddresses.get(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         if (unknown != null) {
-            joinAddresses.remove("unknown");
+            joinAddresses.remove(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
             joinAddresses.put(locale.getString(GenericLang.UNKNOWN).toLowerCase(), unknown);
         }
     }

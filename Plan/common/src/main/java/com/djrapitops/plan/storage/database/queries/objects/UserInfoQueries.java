@@ -158,82 +158,6 @@ public class UserInfoQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> joinAddresses() {
-        String sql = SELECT +
-                "COUNT(1) as total," +
-                "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
-                FROM + '(' +
-                SELECT + DISTINCT +
-                UserInfoTable.USER_ID + ',' +
-                UserInfoTable.JOIN_ADDRESS +
-                FROM + UserInfoTable.TABLE_NAME +
-                ") q1" +
-                GROUP_BY + "address" +
-                ORDER_BY + "address ASC";
-
-        return new QueryStatement<Map<String, Integer>>(sql, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, "Unknown");
-            }
-
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> joinAddresses = new TreeMap<>();
-                while (set.next()) {
-                    joinAddresses.put(set.getString("address"), set.getInt("total"));
-                }
-                return joinAddresses;
-            }
-        };
-    }
-
-    public static Query<Map<String, Integer>> joinAddresses(ServerUUID serverUUID) {
-        String sql = SELECT +
-                "COUNT(1) as total," +
-                "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
-                FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                GROUP_BY + "address" +
-                ORDER_BY + "address ASC";
-
-        return new QueryStatement<Map<String, Integer>>(sql, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, "Unknown");
-                statement.setString(2, serverUUID.toString());
-            }
-
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> joinAddresses = new TreeMap<>();
-                while (set.next()) {
-                    joinAddresses.put(set.getString("address"), set.getInt("total"));
-                }
-                return joinAddresses;
-            }
-        };
-    }
-
-    public static Query<List<String>> uniqueJoinAddresses() {
-        String sql = SELECT + DISTINCT + "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
-                FROM + UserInfoTable.TABLE_NAME +
-                ORDER_BY + "address ASC";
-        return new QueryStatement<List<String>>(sql, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, "unknown");
-            }
-
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> joinAddresses = new ArrayList<>();
-                while (set.next()) joinAddresses.add(set.getString("address"));
-                return joinAddresses;
-            }
-        };
-    }
-
     public static Query<Set<Integer>> userIdsOfOperators() {
         return getUserIdsForBooleanGroup(UserInfoTable.OP, true);
     }
@@ -257,9 +181,13 @@ public class UserInfoQueries {
     }
 
     public static Set<Integer> extractUserIds(ResultSet set) throws SQLException {
+        return extractUserIds(set, UsersTable.ID);
+    }
+
+    public static Set<Integer> extractUserIds(ResultSet set, String column) throws SQLException {
         Set<Integer> userIds = new HashSet<>();
         while (set.next()) {
-            userIds.add(set.getInt(UsersTable.ID));
+            userIds.add(set.getInt(column));
         }
         return userIds;
     }
@@ -274,35 +202,6 @@ public class UserInfoQueries {
 
     public static Query<Set<Integer>> userIdsOfNotBanned() {
         return getUserIdsForBooleanGroup(UserInfoTable.BANNED, false);
-    }
-
-    public static Query<Set<Integer>> userIdsOfPlayersWithJoinAddresses(List<String> joinAddresses) {
-        String selectLowercaseJoinAddresses = SELECT +
-                "u." + UsersTable.ID + ',' +
-                "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
-                FROM + UserInfoTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID;
-        String sql = SELECT + DISTINCT + UsersTable.ID +
-                FROM + '(' + selectLowercaseJoinAddresses + ") q1" +
-                WHERE + "address IN (" +
-                new TextStringBuilder().appendWithSeparators(joinAddresses.stream().map(item -> '?').iterator(), ",") +
-                ')'; // Don't append addresses directly, SQL injection hazard
-
-        return new QueryStatement<Set<Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, "unknown");
-                for (int i = 1; i <= joinAddresses.size(); i++) {
-                    String address = joinAddresses.get(i - 1);
-                    statement.setString(i + 1, address);
-                }
-            }
-
-            @Override
-            public Set<Integer> processResults(ResultSet set) throws SQLException {
-                return extractUserIds(set);
-            }
-        };
     }
 
     public static Query<Set<Integer>> userIdsOfRegisteredBetween(long after, long before, List<ServerUUID> serverUUIDs) {

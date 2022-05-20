@@ -184,7 +184,8 @@ public class PlayerOnlineListener implements Listener {
                     session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
                     session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
                     sessionCache.cacheSession(playerUUID, session)
-                            .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
+                            .map(SessionEndTransaction::new)
+                            .ifPresent(database::executeTransaction);
 
                     database.executeTransaction(new NicknameStoreTransaction(
                             playerUUID, new Nickname(displayName, time, serverUUID),

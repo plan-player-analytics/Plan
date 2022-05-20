@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
+import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,11 +46,11 @@ public class JoinAddressFilter extends MultiOptionFilter {
     }
 
     private List<String> getSelectionOptions() {
-        return dbSystem.getDatabase().query(UserInfoQueries.uniqueJoinAddresses());
+        return dbSystem.getDatabase().query(JoinAddressQueries.uniqueJoinAddresses());
     }
 
     @Override
     public Set<Integer> getMatchingUserIds(InputFilterDto query) {
-        return dbSystem.getDatabase().query(UserInfoQueries.userIdsOfPlayersWithJoinAddresses(getSelected(query)));
+        return dbSystem.getDatabase().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(getSelected(query)));
     }
 }

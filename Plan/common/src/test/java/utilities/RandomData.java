@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -28,6 +29,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class RandomData {
 
@@ -36,6 +39,9 @@ public class RandomData {
     }
 
     private static final Random r = new Random();
+
+    private static final int JOIN_ADDRESS_COUNT = 50;
+    private static final List<JoinAddress> JOIN_ADDRESSES = generateJoinAddresses(JOIN_ADDRESS_COUNT);
 
     public static int randomInt(int rangeStart, int rangeEnd) {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
@@ -117,6 +123,7 @@ public class RandomData {
         }
         extraData.put(MobKillCounter.class, new MobKillCounter());
         extraData.put(DeathCounter.class, new DeathCounter());
+        extraData.put(JoinAddress.class, JOIN_ADDRESSES.get(randomInt(0, JOIN_ADDRESS_COUNT)));
         return new FinishedSession(
                 uuids[0], serverUUID,
                 start, end, RandomData.randomLong(0, end - start),
@@ -196,5 +203,11 @@ public class RandomData {
 
     public static double randomDouble() {
         return ThreadLocalRandom.current().nextDouble();
+    }
+
+    public static List<JoinAddress> generateJoinAddresses(int n) {
+        return IntStream.range(0, n).mapToObj(i -> "join_address_" + i)
+                .map(JoinAddress::new)
+                .collect(Collectors.toList());
     }
 }

@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -70,6 +71,7 @@ public class SessionQueries {
             WorldTimesTable.ADVENTURE + ',' +
             WorldTimesTable.SPECTATOR + ',' +
             WorldTable.NAME + ',' +
+            "j." + JoinAddressTable.JOIN_ADDRESS + " as join_address," +
             KillsTable.KILLER_UUID + ',' +
             KillsTable.VICTIM_UUID + ',' +
             "v." + UsersTable.USER_NAME + " as victim_name, " +
@@ -77,6 +79,7 @@ public class SessionQueries {
             KillsTable.DATE + ',' +
             KillsTable.WEAPON +
             FROM + SessionsTable.TABLE_NAME + " s" +
+            INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
             INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
             INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
             LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_ID + "=s." + SessionsTable.USER_ID + AND + "u_info." + UserInfoTable.SERVER_ID + "=s." + SessionsTable.SERVER_ID + ')' +
@@ -114,7 +117,7 @@ public class SessionQueries {
         String sql = SELECT_SESSIONS_STATEMENT +
                 WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 ORDER_BY_SESSION_START_DESC;
-        return new QueryStatement<Map<ServerUUID, List<FinishedSession>>>(sql, 50000) {
+        return new QueryStatement<Map<ServerUUID, List<FinishedSession>>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -159,6 +162,7 @@ public class SessionQueries {
             extraData.put(FinishedSession.Id.class, new FinishedSession.Id(set.getInt(SessionsTable.ID)));
             extraData.put(MobKillCounter.class, new MobKillCounter(set.getInt(SessionsTable.MOB_KILLS)));
             extraData.put(DeathCounter.class, new DeathCounter(set.getInt(SessionsTable.DEATHS)));
+            extraData.put(JoinAddress.class, new JoinAddress(set.getString("join_address")));
 
             Optional<WorldTimes> existingWorldTimes = extraData.get(WorldTimes.class);
             Optional<PlayerKills> existingPlayerKills = extraData.get(PlayerKills.class);

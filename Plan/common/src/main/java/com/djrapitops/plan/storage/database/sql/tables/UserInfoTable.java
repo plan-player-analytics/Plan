@@ -42,6 +42,10 @@ public class UserInfoTable {
     public static final String REGISTERED = "registered";
     public static final String OP = "opped";
     public static final String BANNED = "banned";
+    /**
+     * @deprecated Join address is now stored in {@link JoinAddressTable}, this column may become unreliable in the future.
+     */
+    @Deprecated
     public static final String JOIN_ADDRESS = "join_address";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +

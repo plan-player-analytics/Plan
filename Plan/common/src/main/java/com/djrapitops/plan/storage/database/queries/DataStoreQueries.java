@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
@@ -68,6 +69,8 @@ public class DataStoreQueries {
                 statement.setInt(5, session.getMobKillCount());
                 statement.setLong(6, session.getAfkTime());
                 statement.setString(7, session.getServerUUID().toString());
+                statement.setString(8, session.getExtraData(JoinAddress.class)
+                        .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
             }
         };
     }

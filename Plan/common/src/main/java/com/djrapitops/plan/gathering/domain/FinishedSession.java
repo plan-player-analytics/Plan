@@ -17,7 +17,9 @@
 package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,7 +49,7 @@ public class FinishedSession implements DateHolder {
         this.start = start;
         this.end = end;
         this.afkTime = afkTime;
-        this.extraData = extraData;
+        this.extraData = extraData != null ? extraData : new DataMap();
     }
 
     public UUID getPlayerUUID() {
@@ -113,50 +115,6 @@ public class FinishedSession implements DateHolder {
         return getStart();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FinishedSession that = (FinishedSession) o;
-        return start == that.start && end == that.end &&
-                afkTime == that.afkTime &&
-                Objects.equals(playerUUID, that.playerUUID) &&
-                Objects.equals(serverUUID, that.serverUUID) &&
-                Objects.equals(getExtraData(WorldTimes.class), that.getExtraData(WorldTimes.class)) &&
-                Objects.equals(getExtraData(PlayerKills.class), that.getExtraData(PlayerKills.class)) &&
-                Objects.equals(getExtraData(MobKillCounter.class), that.getExtraData(MobKillCounter.class)) &&
-                Objects.equals(getExtraData(DeathCounter.class), that.getExtraData(DeathCounter.class));
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(playerUUID, serverUUID, start, end, afkTime, extraData);
-    }
-
-    @Override
-    public String toString() {
-        return "FinishedSession{" +
-                "playerUUID=" + playerUUID +
-                ", serverUUID=" + serverUUID +
-                ", start=" + start +
-                ", end=" + end +
-                ", afkTime=" + afkTime +
-                ", extraData=" + extraData +
-                '}';
-    }
-
-    public static class Id {
-        private final int value;
-
-        public Id(int value) {
-            this.value = value;
-        }
-
-        public int get() {
-            return value;
-        }
-    }
-
     /**
      * Deserialize csv format of the session.
      *
@@ -182,7 +140,41 @@ public class FinishedSession implements DateHolder {
         extraData.put(PlayerKills.class, gson.fromJson(asArray[6], PlayerKills.class));
         extraData.put(MobKillCounter.class, gson.fromJson(asArray[7], MobKillCounter.class));
         extraData.put(DeathCounter.class, gson.fromJson(asArray[8], DeathCounter.class));
+        extraData.put(JoinAddress.class, new JoinAddress(asArray[9]));
         return Optional.of(new FinishedSession(playerUUID, serverUUID, start, end, afkTime, extraData));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(playerUUID, serverUUID, start, end, afkTime, extraData);
+    }
+
+    @Override
+    public String toString() {
+        return "FinishedSession{" +
+                "playerUUID=" + playerUUID +
+                ", serverUUID=" + serverUUID +
+                ", start=" + start +
+                ", end=" + end +
+                ", afkTime=" + afkTime +
+                ", extraData=" + extraData +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FinishedSession that = (FinishedSession) o;
+        return start == that.start && end == that.end &&
+                afkTime == that.afkTime &&
+                Objects.equals(playerUUID, that.playerUUID) &&
+                Objects.equals(serverUUID, that.serverUUID) &&
+                Objects.equals(getExtraData(WorldTimes.class), that.getExtraData(WorldTimes.class)) &&
+                Objects.equals(getExtraData(PlayerKills.class), that.getExtraData(PlayerKills.class)) &&
+                Objects.equals(getExtraData(MobKillCounter.class), that.getExtraData(MobKillCounter.class)) &&
+                Objects.equals(getExtraData(DeathCounter.class), that.getExtraData(DeathCounter.class)) &&
+                Objects.equals(getExtraData(JoinAddress.class), that.getExtraData(JoinAddress.class));
     }
 
     /**
@@ -199,6 +191,19 @@ public class FinishedSession implements DateHolder {
                 getExtraData(WorldTimes.class).orElseGet(WorldTimes::new).toJson() + ';' +
                 getExtraData(PlayerKills.class).orElseGet(PlayerKills::new).toJson() + ';' +
                 getExtraData(MobKillCounter.class).orElseGet(MobKillCounter::new).toJson() + ';' +
-                getExtraData(DeathCounter.class).orElseGet(DeathCounter::new).toJson();
+                getExtraData(DeathCounter.class).orElseGet(DeathCounter::new).toJson() + ';' +
+                getExtraData(JoinAddress.class).orElseGet(() -> new JoinAddress(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP)).getAddress();
+    }
+
+    public static class Id {
+        private final int value;
+
+        public Id(int value) {
+            this.value = value;
+        }
+
+        public int get() {
+            return value;
+        }
     }
 }

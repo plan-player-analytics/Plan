@@ -32,6 +32,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * {@link Version10Patch}
  * {@link SessionAFKTimePatch}
  * {@link SessionsOptimizationPatch}
+ * {@link com.djrapitops.plan.storage.database.transactions.patches.SessionJoinAddressPatch}
  *
  * @author AuroraLS3
  */
@@ -47,6 +48,7 @@ public class SessionsTable {
     public static final String MOB_KILLS = "mob_kills";
     public static final String DEATHS = "deaths";
     public static final String AFK_TIME = "afk_time";
+    public static final String JOIN_ADDRESS_ID = "join_address_id";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
             + USER_ID + ','
@@ -55,8 +57,9 @@ public class SessionsTable {
             + DEATHS + ','
             + MOB_KILLS + ','
             + AFK_TIME + ','
-            + SERVER_ID
-            + ") VALUES (" + UsersTable.SELECT_USER_ID + ", ?, ?, ?, ?, ?, " + ServerTable.SELECT_SERVER_ID + ")";
+            + SERVER_ID + ','
+            + JOIN_ADDRESS_ID
+            + ") VALUES (" + UsersTable.SELECT_USER_ID + ", ?, ?, ?, ?, ?, " + ServerTable.SELECT_SERVER_ID + ", " + JoinAddressTable.SELECT_ID + ")";
 
     public static final String SELECT_SESSION_ID_STATEMENT = "(SELECT " + TABLE_NAME + '.' + ID + FROM + TABLE_NAME +
             WHERE + TABLE_NAME + '.' + USER_ID + "=" + UsersTable.SELECT_USER_ID +
@@ -78,6 +81,7 @@ public class SessionsTable {
                 .column(MOB_KILLS, Sql.INT).notNull()
                 .column(DEATHS, Sql.INT).notNull()
                 .column(AFK_TIME, Sql.LONG).notNull()
+                .column(JOIN_ADDRESS_ID, INT).notNull().defaultValue("1") // References JoinAddressTable.ID, but no foreign key to allow null values.
                 .foreignKey(USER_ID, UsersTable.TABLE_NAME, UsersTable.ID)
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();

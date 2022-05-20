@@ -16,21 +16,41 @@
  */
 package com.djrapitops.plan.gathering.domain.event;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 public class JoinAddress {
-    private final String address;
+    private final Supplier<String> address;
 
     public JoinAddress(String address) {
+        this(() -> address);
+    }
+
+    public JoinAddress(Supplier<String> address) {
         this.address = address;
     }
 
     public String getAddress() {
-        return address;
+        return address.get();
     }
 
     @Override
     public String toString() {
         return "JoinAddress{" +
-                "address='" + address + '\'' +
+                "address='" + address.get() + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JoinAddress that = (JoinAddress) o;
+        return Objects.equals(getAddress(), that.getAddress());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAddress());
     }
 }
