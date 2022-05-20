@@ -334,12 +334,17 @@ implements <a href="../../delivery/domain/DateHolder.html" title="interface in c
 </section>
 </li>
 <li>
-<section class="detail" id="equals(java.lang.Object)">
-<h3>equals</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
+<section class="detail" id="deserializeCSV(java.lang.String)">
+<h3>deserializeCSV</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;</span>&nbsp;<span class="element-name">deserializeCSV</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serialized)</span></div>
+<div class="block">Deserialize csv format of the session.</div>
 <dl class="notes">
-<dt>Overrides:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>serialized</code> - Serialized version of the session</dd>
+<dt>Returns:</dt>
+<dd>Proper session if the csv had 9 columns or more</dd>
+<dt>Throws:</dt>
+<dd><code>com.google.gson.JsonSyntaxException</code> - if serialized format has a json syntax error</dd>
 </dl>
 </section>
 </li>
@@ -364,17 +369,12 @@ implements <a href="../../delivery/domain/DateHolder.html" title="interface in c
 </section>
 </li>
 <li>
-<section class="detail" id="deserializeCSV(java.lang.String)">
-<h3>deserializeCSV</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain">FinishedSession</a>&gt;</span>&nbsp;<span class="element-name">deserializeCSV</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serialized)</span></div>
-<div class="block">Deserialize csv format of the session.</div>
+<section class="detail" id="equals(java.lang.Object)">
+<h3>equals</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>serialized</code> - Serialized version of the session</dd>
-<dt>Returns:</dt>
-<dd>Proper session if the csv had 9 columns or more</dd>
-<dt>Throws:</dt>
-<dd><code>com.google.gson.JsonSyntaxException</code> - if serialized format has a json syntax error</dd>
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>

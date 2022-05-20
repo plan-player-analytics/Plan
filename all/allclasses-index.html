@@ -1362,6 +1362,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/pie/JoinAddressPie.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.pie">JoinAddressPie</a></div>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/queries/objects/JoinAddressQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">JoinAddressQueries</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/tables/JoinAddressTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">JoinAddressTable</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="com/djrapitops/plan/settings/locale/lang/JSLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">JSLang</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
 <div class="block">Lang enum for all text included in the javascript files.</div>
@@ -2731,196 +2735,202 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Query to fetch server id for each session, used by 2 patches.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/placeholder/SessionPlaceHolders.html" title="class in com.djrapitops.plan.placeholder">SessionPlaceHolders</a></div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/transactions/patches/SessionJoinAddressPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionJoinAddressPatch</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="block">Adds join_address_id to plan_sessions, and populates latest session rows with value from plan_user_info.</div>
+</div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/placeholder/SessionPlaceHolders.html" title="class in com.djrapitops.plan.placeholder">SessionPlaceHolders</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Placeholders about sessions.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/queries/objects/SessionQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">SessionQueries</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/queries/objects/SessionQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">SessionQueries</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Queries for <a href="com/djrapitops/plan/gathering/domain/FinishedSession.html" title="class in com.djrapitops.plan.gathering.domain"><code>FinishedSession</code></a> objects.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/webserver/resolver/json/SessionsJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json">SessionsJSONResolver</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/webserver/resolver/json/SessionsJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json">SessionsJSONResolver</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Resolves /v1/sessions JSON requests.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/domain/mutators/SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/domain/mutators/SessionsMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">SessionsMutator</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Mutator for a list of Sessions.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/transactions/patches/SessionsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionsOptimizationPatch</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/transactions/patches/SessionsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">SessionsOptimizationPatch</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Replaces user_id and server_id foreign keys with respective uuid fields in sessions table.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/SessionsOverviewJSONCreator.html" title="class in com.djrapitops.plan.delivery.rendering.json">SessionsOverviewJSONCreator</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/SessionsOverviewJSONCreator.html" title="class in com.djrapitops.plan.delivery.rendering.json">SessionsOverviewJSONCreator</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Creates JSON payload for /server-page Sessions tab.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">SessionsTable</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">SessionsTable</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Table information about 'plan_sessions'.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/utilities/comparators/SessionStartComparator.html" title="class in com.djrapitops.plan.utilities.comparators">SessionStartComparator</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/utilities/comparators/SessionStartComparator.html" title="class in com.djrapitops.plan.utilities.comparators">SessionStartComparator</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Comparator for Sessions in descending start order (Most recent first).</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/transactions/commands/SetServerAsUninstalledTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.commands">SetServerAsUninstalledTransaction</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/transactions/commands/SetServerAsUninstalledTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.commands">SetServerAsUninstalledTransaction</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Transaction for telling Plan that Plan has been uninstalled from the server.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/settings/config/paths/key/Setting.html" title="class in com.djrapitops.plan.settings.config.paths.key">Setting</a>&lt;<a href="com/djrapitops/plan/settings/config/paths/key/Setting.html" title="type parameter in Setting">T</a>&gt;</div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/settings/config/paths/key/Setting.html" title="class in com.djrapitops.plan.settings.config.paths.key">Setting</a>&lt;<a href="com/djrapitops/plan/settings/config/paths/key/Setting.html" title="type parameter in Setting">T</a>&gt;</div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Represents a path to a config value.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab1 all-classes-table"><a href="com/djrapitops/plan/settings/SettingsService.html" title="interface in com.djrapitops.plan.settings">SettingsService</a></div>
-<div class="col-last odd-row-color all-classes-table-tab1 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab1 all-classes-table"><a href="com/djrapitops/plan/settings/SettingsService.html" title="interface in com.djrapitops.plan.settings">SettingsService</a></div>
+<div class="col-last even-row-color all-classes-table-tab1 all-classes-table">
 <div class="block">Service for defining plugin specific settings to the Plan config.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/settings/SettingsService.Holder.html" title="class in com.djrapitops.plan.settings">SettingsService.Holder</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/settings/SettingsSvc.html" title="class in com.djrapitops.plan.settings">SettingsSvc</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/settings/SettingsService.Holder.html" title="class in com.djrapitops.plan.settings">SettingsService.Holder</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/settings/SettingsSvc.html" title="class in com.djrapitops.plan.settings">SettingsSvc</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Implementation for <a href="com/djrapitops/plan/settings/SettingsService.html" title="interface in com.djrapitops.plan.settings"><code>SettingsService</code></a>.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/tables/SettingsTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">SettingsTable</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/tables/SettingsTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">SettingsTable</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Table information about 'plan_settings'.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/ShutdownDataPreservation.html" title="class in com.djrapitops.plan.gathering">ShutdownDataPreservation</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/ShutdownHook.html" title="class in com.djrapitops.plan.gathering">ShutdownHook</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/ShutdownDataPreservation.html" title="class in com.djrapitops.plan.gathering">ShutdownDataPreservation</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/ShutdownHook.html" title="class in com.djrapitops.plan.gathering">ShutdownHook</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Thread that is run when JVM shuts down.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/ShutdownHook.Registrar.html" title="class in com.djrapitops.plan.gathering">ShutdownHook.Registrar</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/special/SpecialGraphFactory.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.special">SpecialGraphFactory</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/ShutdownHook.Registrar.html" title="class in com.djrapitops.plan.gathering">ShutdownHook.Registrar</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/special/SpecialGraphFactory.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.special">SpecialGraphFactory</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Factory class for different objects representing special HTML graphs.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeAFKListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeAFKListener</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeAFKListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeAFKListener</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Listener that keeps track of actions that are not considered being AFK.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/file/SpongeAssetResource.html" title="class in com.djrapitops.plan.storage.file">SpongeAssetResource</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/file/SpongeAssetResource.html" title="class in com.djrapitops.plan.storage.file">SpongeAssetResource</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block"><a href="com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file"><code>Resource</code></a> implementation for Sponge Asset API.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeChatListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeChatListener</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeChatListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeChatListener</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Listener that keeps track of player display name.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/commands/use/SpongeCMDSender.html" title="class in com.djrapitops.plan.commands.use">SpongeCMDSender</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/commands/use/SpongeCommand.html" title="class in com.djrapitops.plan.commands.use">SpongeCommand</a></div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/commands/use/SpongeCMDSender.html" title="class in com.djrapitops.plan.commands.use">SpongeCMDSender</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/settings/SpongeConfigSystem.html" title="class in com.djrapitops.plan.settings">SpongeConfigSystem</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/commands/use/SpongeCommand.html" title="class in com.djrapitops.plan.commands.use">SpongeCommand</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/settings/SpongeConfigSystem.html" title="class in com.djrapitops.plan.settings">SpongeConfigSystem</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Sponge ConfigSystem that disables Geolocations on first enable.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/SpongeDBSystem.html" title="class in com.djrapitops.plan.storage.database">SpongeDBSystem</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/SpongeDBSystem.html" title="class in com.djrapitops.plan.storage.database">SpongeDBSystem</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">DBSystem for Sponge.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeDeathListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeDeathListener</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeDeathListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeDeathListener</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Listener for Deaths and Kills on Sponge.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeGMChangeListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeGMChangeListener</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeGMChangeListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeGMChangeListener</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Listener for GameMode change on Sponge.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/SpongeListenerSystem.html" title="class in com.djrapitops.plan.gathering.listeners">SpongeListenerSystem</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/commands/use/SpongeMessageBuilder.html" title="class in com.djrapitops.plan.commands.use">SpongeMessageBuilder</a></div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/SpongeListenerSystem.html" title="class in com.djrapitops.plan.gathering.listeners">SpongeListenerSystem</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/timed/SpongePingCounter.html" title="class in com.djrapitops.plan.gathering.timed">SpongePingCounter</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/commands/use/SpongeMessageBuilder.html" title="class in com.djrapitops.plan.commands.use">SpongeMessageBuilder</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/timed/SpongePingCounter.html" title="class in com.djrapitops.plan.gathering.timed">SpongePingCounter</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Task that handles player ping calculation on Sponge based servers.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/file/SpongePlanFiles.html" title="class in com.djrapitops.plan.storage.file">SpongePlanFiles</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/file/SpongePlanFiles.html" title="class in com.djrapitops.plan.storage.file">SpongePlanFiles</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Implements jar resource fetching with Sponge Asset API.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/commands/use/SpongePlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">SpongePlayerCMDSender</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/SpongeSensor.html" title="class in com.djrapitops.plan.gathering">SpongeSensor</a></div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/commands/use/SpongePlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">SpongePlayerCMDSender</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/identification/properties/SpongeServerProperties.html" title="class in com.djrapitops.plan.identification.properties">SpongeServerProperties</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/SpongeSensor.html" title="class in com.djrapitops.plan.gathering">SpongeSensor</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/identification/properties/SpongeServerProperties.html" title="class in com.djrapitops.plan.identification.properties">SpongeServerProperties</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">ServerProperties for Sponge.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/modules/sponge/SpongeServerPropertiesModule.html" title="class in com.djrapitops.plan.modules.sponge">SpongeServerPropertiesModule</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/modules/sponge/SpongeServerPropertiesModule.html" title="class in com.djrapitops.plan.modules.sponge">SpongeServerPropertiesModule</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Dagger module for Sponge ServerProperties.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/SpongeServerShutdownSave.html" title="class in com.djrapitops.plan">SpongeServerShutdownSave</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/SpongeServerShutdownSave.html" title="class in com.djrapitops.plan">SpongeServerShutdownSave</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">ServerShutdownSave implementation for Sponge</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab1 all-classes-table"><a href="com/djrapitops/plan/modules/sponge/SpongeSuperClassBindingModule.html" title="interface in com.djrapitops.plan.modules.sponge">SpongeSuperClassBindingModule</a></div>
-<div class="col-last odd-row-color all-classes-table-tab1 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab1 all-classes-table"><a href="com/djrapitops/plan/modules/sponge/SpongeSuperClassBindingModule.html" title="interface in com.djrapitops.plan.modules.sponge">SpongeSuperClassBindingModule</a></div>
+<div class="col-last even-row-color all-classes-table-tab1 all-classes-table">
 <div class="block">Module for binding Sponge specific classes as interface implementations.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab1 all-classes-table"><a href="com/djrapitops/plan/modules/sponge/SpongeTaskModule.html" title="interface in com.djrapitops.plan.modules.sponge">SpongeTaskModule</a></div>
-<div class="col-last even-row-color all-classes-table-tab1 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/version/SpongeVersionChecker.html" title="class in com.djrapitops.plan.version">SpongeVersionChecker</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab1 all-classes-table"><a href="com/djrapitops/plan/modules/sponge/SpongeTaskModule.html" title="interface in com.djrapitops.plan.modules.sponge">SpongeTaskModule</a></div>
+<div class="col-last odd-row-color all-classes-table-tab1 all-classes-table">&nbsp;</div>
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/version/SpongeVersionChecker.html" title="class in com.djrapitops.plan.version">SpongeVersionChecker</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">System for checking if new Version is available when the System initializes, using the Ore API.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeWorldChangeListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeWorldChangeListener</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeWorldChangeListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeWorldChangeListener</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Listener for World change on Sponge.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/building/Sql.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/building/Sql.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Duplicate String reducing utility class for SQL language Strings.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/building/Sql.MySQL.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql.MySQL</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/building/Sql.SQLite.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql.SQLite</a></div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/building/Sql.MySQL.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql.MySQL</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/building/SqlBuilder.html" title="class in com.djrapitops.plan.storage.database.sql.building">SqlBuilder</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/building/Sql.SQLite.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql.SQLite</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/sql/building/SqlBuilder.html" title="class in com.djrapitops.plan.storage.database.sql.building">SqlBuilder</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Class for building different SQL strings.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Class containing main logic for different data related save and load functionality.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/SQLiteDB.html" title="class in com.djrapitops.plan.storage.database">SQLiteDB</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/SQLiteDB.Factory.html" title="class in com.djrapitops.plan.storage.database">SQLiteDB.Factory</a></div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/SQLiteDB.html" title="class in com.djrapitops.plan.storage.database">SQLiteDB</a></div>
 <div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/queries/schema/SQLiteSchemaQueries.html" title="class in com.djrapitops.plan.storage.database.queries.schema">SQLiteSchemaQueries</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/SQLiteDB.Factory.html" title="class in com.djrapitops.plan.storage.database">SQLiteDB.Factory</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/queries/schema/SQLiteSchemaQueries.html" title="class in com.djrapitops.plan.storage.database.queries.schema">SQLiteSchemaQueries</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Static method class for SQLite Schema related queries.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/stack/StackDataSet.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.stack">StackDataSet</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/stack/StackDataSet.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.stack">StackDataSet</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Represents a value set for a Stack graph.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/stack/StackGraph.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.stack">StackGraph</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/stack/StackGraph.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.stack">StackGraph</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Utility for creating HighCharts Stack graphs.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/stack/StackGraphFactory.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.stack">StackGraphFactory</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/rendering/json/graphs/stack/StackGraphFactory.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.stack">StackGraphFactory</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Factory class for different objects representing HTML stack graphs.</div>
 </div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/webserver/resolver/StaticResourceResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver">StaticResourceResolver</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/delivery/webserver/resolver/StaticResourceResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver">StaticResourceResolver</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Resolves all static resources for the pages.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/Status.html" title="class in com.djrapitops.plan.gathering.listeners">Status</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
-<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/transactions/StoreConfigTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions">StoreConfigTransaction</a></div>
-<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/gathering/listeners/Status.html" title="class in com.djrapitops.plan.gathering.listeners">Status</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/transactions/StoreConfigTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions">StoreConfigTransaction</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Transaction to store a server's configuration file in the database.</div>
 </div>
-<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/extension/implementation/storage/transactions/StoreIconTransaction.html" title="class in com.djrapitops.plan.extension.implementation.storage.transactions">StoreIconTransaction</a></div>
-<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">
+<div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/extension/implementation/storage/transactions/StoreIconTransaction.html" title="class in com.djrapitops.plan.extension.implementation.storage.transactions">StoreIconTransaction</a></div>
+<div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Transaction to store an Icon to the database.</div>
 </div>
+<div class="col-first odd-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/storage/database/transactions/events/StoreJoinAddressTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">StoreJoinAddressTransaction</a></div>
+<div class="col-last odd-row-color all-classes-table-tab2 all-classes-table">&nbsp;</div>
 <div class="col-first even-row-color all-classes-table-tab2 all-classes-table"><a href="com/djrapitops/plan/extension/implementation/storage/transactions/results/StorePlayerBooleanResultTransaction.html" title="class in com.djrapitops.plan.extension.implementation.storage.transactions.results">StorePlayerBooleanResultTransaction</a></div>
 <div class="col-last even-row-color all-classes-table-tab2 all-classes-table">
 <div class="block">Transaction to store method result of a boolean.</div>
