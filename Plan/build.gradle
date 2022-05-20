@@ -90,7 +90,7 @@ subprojects {
 
         junitVersion = "5.8.2"
         mockitoVersion = "4.5.1"
-        testContainersVersion = "1.17.1"
+        testContainersVersion = "1.17.2"
     }
 
     repositories {
