@@ -2,65 +2,12 @@ import React from "react";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLifeRing} from "@fortawesome/free-regular-svg-icons";
-import {faCampground, faCrosshairs, faKhanda, faSkull} from "@fortawesome/free-solid-svg-icons";
-import AsNumbersTable, {TableRow} from "../components/table/AsNumbersTable";
+import {faCrosshairs, faKhanda, faSkull} from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../components/Datapoint";
 import KillsTable from "../components/table/KillsTable";
 import {usePlayer} from "./PlayerPage";
 import {useTranslation} from "react-i18next";
-
-
-const PvpPveAsNumbersTable = ({player}) => {
-    const {t} = useTranslation();
-    return (
-        <AsNumbersTable
-            headers={[t('html.label.allTime'), t('html.label.last30days'), t('html.label.last7days')]}
-        >
-            <TableRow icon={faCrosshairs} color="red" text={t('html.label.kdr')} bold
-                      values={[player.kill_data.player_kdr_total,
-                          player.kill_data.player_kdr_30d,
-                          player.kill_data.player_kdr_7d]}/>
-            <TableRow icon={faCrosshairs} color="red" text={t('html.label.playerKills')}
-                      values={[player.kill_data.player_kills_total,
-                          player.kill_data.player_kills_30d,
-                          player.kill_data.player_kills_7d]}/>
-            <TableRow icon={faSkull} color="red" text={t('html.label.playerDeaths')}
-                      values={[player.kill_data.player_deaths_total,
-                          player.kill_data.player_deaths_30d,
-                          player.kill_data.player_deaths_7d]}/>
-            <TableRow icon={faCrosshairs} color="green" text={t('html.label.mobKdr')} bold
-                      values={[player.kill_data.mob_kdr_total,
-                          player.kill_data.mob_kdr_30d,
-                          player.kill_data.mob_kdr_7d]}/>
-            <TableRow icon={faCrosshairs} color="green" text={t('html.label.mobKills')}
-                      values={[player.kill_data.mob_kills_total,
-                          player.kill_data.mob_kills_30d,
-                          player.kill_data.mob_kills_7d]}/>
-            <TableRow icon={faSkull} color="green" text={t('html.label.mobDeaths')}
-                      values={[player.kill_data.mob_deaths_total,
-                          player.kill_data.mob_deaths_30d,
-                          player.kill_data.mob_deaths_7d]}/>
-            <TableRow icon={faSkull} color="black" text={t('html.label.deaths')}
-                      values={[player.kill_data.deaths_total,
-                          player.kill_data.deaths_30d,
-                          player.kill_data.deaths_7d]}/>
-        </AsNumbersTable>
-    )
-}
-
-const PvpPveNumbersCard = ({player}) => {
-    const {t} = useTranslation();
-    return (
-        <Card>
-            <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faCampground} className="col-red"/> {t('html.label.pvpPveAsNumbers')}
-                </h6>
-            </Card.Header>
-            <PvpPveAsNumbersTable player={player}/>
-        </Card>
-    )
-}
+import PvpPveAsNumbersCard from "../components/cards/player/PvpPveAsNumbersCard";
 
 const InsightsCard = ({player}) => {
     const {t} = useTranslation();
@@ -117,7 +64,7 @@ const PlayerPvpPve = () => {
         <section className="player_pvp_pve">
             <Row>
                 <Col lg={8}>
-                    <PvpPveNumbersCard player={player}/>
+                    <PvpPveAsNumbersCard player={player}/>
                 </Col>
                 <Col lg={4}>
                     <InsightsCard player={player}/>

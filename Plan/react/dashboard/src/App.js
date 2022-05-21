@@ -21,6 +21,7 @@ import ServerPage from "./views/ServerPage";
 import ServerOverview from "./views/ServerOverview";
 import MainPageRedirect from "./components/navigation/MainPageRedirect";
 import ServerOnlineActivity from "./views/ServerOnlineActivity";
+import ServerSessions from "./views/ServerSessions";
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -65,7 +66,7 @@ function App() {
                                 <Route path="" element={<OverviewRedirect/>}/>
                                 <Route path="overview" element={<ServerOverview/>}/>
                                 <Route path="online-activity" element={<ServerOnlineActivity/>}/>
-                                <Route path="sessions" element={<></>}/>
+                                <Route path="sessions" element={<ServerSessions/>}/>
                                 <Route path="pvppve" element={<></>}/>
                                 <Route path="playerbase" element={<></>}/>
                                 <Route path="players" element={<></>}/>

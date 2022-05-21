@@ -6,6 +6,18 @@ export const fetchServerOverview = async (identifier) => {
     return doGetRequest(url);
 }
 
+export const fetchOnlineActivityOverview = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/onlineOverview?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchSessions = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/sessions?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
 export const fetchPlayersOnlineGraph = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/graph?type=playersOnline&server=${identifier}&timestamp=${timestamp}`;
@@ -33,5 +45,11 @@ export const fetchServerCalendarGraph = async (identifier) => {
 export const fetchPunchCardGraph = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/graph?type=punchCard&server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchWorldPie = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=worldPie&server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
