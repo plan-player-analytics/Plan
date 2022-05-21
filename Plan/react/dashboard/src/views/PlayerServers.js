@@ -1,13 +1,32 @@
 import React from "react";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCalendar, faHandPointer} from "@fortawesome/free-regular-svg-icons";
+import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import Scrollable from "../components/Scrollable";
-import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
+import {faNetworkWired, faSignal} from "@fortawesome/free-solid-svg-icons";
 import ServerPie from "../components/graphs/ServerPie";
 import ServerAccordion from "../components/accordion/ServerAccordion";
 import {usePlayer} from "./PlayerPage";
 import {useTranslation} from "react-i18next";
+import PingGraph from "../components/graphs/PingGraph";
+
+const PingGraphCard = ({player}) => {
+    const {t} = useTranslation();
+
+    const hasPingData = Boolean(player.ping_graph.avg_ping_series.length);
+
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black" style={{width: '100%'}}>
+                    <Fa icon={faSignal} className="col-amber"/> {t('html.label.ping')}
+                </h6>
+            </Card.Header>
+            {hasPingData && <PingGraph data={player.ping_graph}/>}
+            {!hasPingData && <Card.Body><p>{t('generic.noData')}</p></Card.Body>}
+        </Card>
+    )
+}
 
 const ServersCard = ({player}) => {
     const {t} = useTranslation();
@@ -15,7 +34,7 @@ const ServersCard = ({player}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faCalendar} className="col-teal"/> {t('html.label.recentSessions')}
+                    <Fa icon={faNetworkWired} className="col-light-green"/> {t('html.label.servers')}
                     <span className="float-end">
                     <Fa icon={faHandPointer}/> <small>{t('html.text.clickToExpand')}</small>
                 </span>
@@ -50,6 +69,11 @@ const PlayerServers = () => {
     const {player} = usePlayer();
     return (
         <section className="player_sessions">
+            <Row>
+                <Col lg={12}>
+                    <PingGraphCard player={player}/>
+                </Col>
+            </Row>
             <Row>
                 <Col lg={8}>
                     <ServersCard player={player}/>

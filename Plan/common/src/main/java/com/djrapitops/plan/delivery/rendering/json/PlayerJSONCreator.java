@@ -24,6 +24,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.PingGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
@@ -46,6 +47,7 @@ import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQu
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
+import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
@@ -131,9 +133,24 @@ public class PlayerJSONCreator {
         data.put("calendar_series", graphs.calendar().playerCalendar(player).getEntries());
         data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
         data.put("server_pie_colors", pieColors);
+        data.put("ping_graph", createPingGraphJson(player));
         data.put("first_day", 1); // Monday
         data.put("extensions", playerExtensionData(playerUUID));
         return data;
+    }
+
+    private Map<String, Object> createPingGraphJson(PlayerContainer player) {
+        PingGraph pingGraph = graphs.line().pingGraph(player.getUnsafe(PlayerKeys.PING));
+        return Maps.builder(String.class, Object.class)
+                .put("min_ping_series", pingGraph.getMinGraph().getPoints())
+                .put("avg_ping_series", pingGraph.getAvgGraph().getPoints())
+                .put("max_ping_series", pingGraph.getMaxGraph().getPoints())
+                .put("colors", Maps.builder(String.class, String.class)
+                        .put("min", theme.getValue(ThemeVal.GRAPH_MIN_PING))
+                        .put("avg", theme.getValue(ThemeVal.GRAPH_AVG_PING))
+                        .put("max", theme.getValue(ThemeVal.GRAPH_MAX_PING))
+                        .build())
+                .build();
     }
 
     private Map<String, Object> createOnlineActivityJSONMap(SessionsMutator sessionsMutator) {

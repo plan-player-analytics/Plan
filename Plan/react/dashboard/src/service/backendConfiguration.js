@@ -18,21 +18,30 @@ export const doSomeGetRequest = async (url, statusOptions) => {
             }
         }
     } catch (e) {
-        for (const statusOption of statusOptions) {
-            if (e.response.status === statusOption.status) {
-                return {
-                    data: undefined,
-                    error: statusOption.get(response, e)
-                };
-            }
-        }
         console.error(e);
+        if (e.response !== undefined) {
+            for (const statusOption of statusOptions) {
+                if (e.response.status === statusOption.status) {
+                    return {
+                        data: undefined,
+                        error: statusOption.get(response, e)
+                    };
+                }
+            }
+            return {
+                data: undefined,
+                error: {
+                    message: e.message,
+                    url,
+                    data: e.response.data
+                }
+            };
+        }
         return {
             data: undefined,
             error: {
                 message: e.message,
-                url,
-                data: e.response.data
+                url
             }
         };
     }

@@ -38,10 +38,15 @@ export const localeService = {
     init: async function () {
         try {
             const {data} = await fetchAvailableLocales();
-
-            this.defaultLanguage = data.defaultLanguage;
-            this.availableLanguages = data.languages;
-            this.languageVersions = data.languageVersions;
+            if (data !== undefined) {
+                this.defaultLanguage = data.defaultLanguage;
+                this.availableLanguages = data.languages;
+                this.languageVersions = data.languageVersions;
+            } else {
+                this.defaultLanguage = 'en'
+                this.availableLanguages = [];
+                this.languageVersions = [];
+            }
 
             this.clientLocale = window.localStorage.getItem("locale");
             if (!this.clientLocale) {
