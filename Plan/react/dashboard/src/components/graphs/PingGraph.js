@@ -1,12 +1,11 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../hooks/themeHook";
-import Highcharts from "highcharts/highstock";
-import {linegraphButtons, tooltip} from "../../util/graphs";
+import {tooltip} from "../../util/graphs";
+import LineGraph from "./LineGraph";
 
 const PingGraph = ({data}) => {
     const {t} = useTranslation();
-    const {graphTheming} = useTheme();
+    const [series, setSeries] = useState([]);
 
     useEffect(() => {
         const avgPingSeries = {
@@ -30,25 +29,11 @@ const PingGraph = ({data}) => {
             data: data.min_ping_series,
             color: data.colors.min
         }
-        Highcharts.setOptions(graphTheming);
-        Highcharts.stockChart("ping-graph", {
-            rangeSelector: {
-                selected: 2,
-                buttons: linegraphButtons
-            },
-            yAxis: {
-                softMax: 2,
-                softMin: 0
-            },
-            title: {text: ''},
-            series: [avgPingSeries, maxPingSeries, minPingSeries]
-        })
-    }, [data, graphTheming, t])
+        setSeries([avgPingSeries, maxPingSeries, minPingSeries]);
+    }, [data, t])
 
     return (
-        <div className="chart-area" id="ping-graph">
-            <span className="loader"/>
-        </div>
+        <LineGraph id="ping-graph" series={series}/>
     )
 }
 

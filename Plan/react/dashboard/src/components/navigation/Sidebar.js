@@ -172,7 +172,7 @@ const SidebarCollapse = ({item, open, setOpen}) => {
     )
 }
 
-const renderItem = (item, i, openCollapse, setOpenCollapse) => {
+const renderItem = (item, i, openCollapse, setOpenCollapse, t) => {
     if (item.contents) {
         return <SidebarCollapse key={i}
                                 item={item}
@@ -191,7 +191,7 @@ const renderItem = (item, i, openCollapse, setOpenCollapse) => {
     }
 
     if (item.name) {
-        return <div key={i} className="sidebar-heading">{item.name}</div>
+        return <div key={i} className="sidebar-heading">{t(item.name)}</div>
     }
 
     return <hr key={i} className="sidebar-divider"/>
@@ -227,7 +227,7 @@ const Sidebar = ({items, showBackButton}) => {
                     <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
                     <Divider/>
                 </> : ''}
-                {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse))}
+                {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t))}
                 <Divider/>
                 <FooterButtons/>
             </ul>}

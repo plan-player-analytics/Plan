@@ -37,6 +37,7 @@ public enum HtmlLang implements Lang {
     SIDE_PERFORMANCE("html.label.performance", "Performance"),
     QUERY_MAKE("html.label.query", "Make a query"),
     UNIT_NO_DATA("generic.noData", "No Data"), // Generic
+    GRAPH_NO_DATA("html.label.noDataToDisplay", "No Data to Display"),
     // Modals
     TITLE_THEME_SELECT("html.label.themeSelect", "Theme Select"),
     LINK_NIGHT_MODE("html.button.nightMode", "Night Mode"),

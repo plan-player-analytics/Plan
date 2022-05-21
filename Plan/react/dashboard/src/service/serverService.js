@@ -14,13 +14,13 @@ export const fetchPlayersOnlineGraph = async (identifier) => {
 
 export const fetchDayByDayGraph = async (identifier) => {
     const timestamp = Date.now();
-    const url = `/v1/graph?type=dayByDay&server=${identifier}&timestamp=${timestamp}`;
+    const url = `/v1/graph?type=uniqueAndNew&server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 
 export const fetchHourByHourGraph = async (identifier) => {
     const timestamp = Date.now();
-    const url = `/v1/graph?type=hourByHour&server=${identifier}&timestamp=${timestamp}`;
+    const url = `/v1/graph?type=hourlyUniqueAndNew&server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 

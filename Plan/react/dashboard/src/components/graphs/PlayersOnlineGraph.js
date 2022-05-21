@@ -1,12 +1,11 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../hooks/themeHook";
-import Highcharts from "highcharts/highstock";
-import {linegraphButtons, tooltip} from "../../util/graphs";
+import {tooltip} from "../../util/graphs";
+import LineGraph from "./LineGraph";
 
 const PlayersOnlineGraph = ({data}) => {
     const {t} = useTranslation();
-    const {graphTheming} = useTheme();
+    const [series, setSeries] = useState([]);
 
     useEffect(() => {
         const playersOnlineSeries = {
@@ -17,30 +16,11 @@ const PlayersOnlineGraph = ({data}) => {
             color: data.color,
             yAxis: 0
         }
-        Highcharts.setOptions(graphTheming);
-        Highcharts.stockChart("online-activity-graph", {
-            rangeSelector: {
-                selected: 2,
-                buttons: linegraphButtons
-            },
-            yAxis: {
-                softMax: 2,
-                softMin: 0
-            },
-            title: {text: ''},
-            plotOptions: {
-                areaspline: {
-                    fillOpacity: 0.4
-                }
-            },
-            series: [playersOnlineSeries]
-        })
-    }, [data, graphTheming, t])
+        setSeries([playersOnlineSeries]);
+    }, [data, t])
 
     return (
-        <div className="chart-area" id="online-activity-graph">
-            <span className="loader"/>
-        </div>
+        <LineGraph id="players-online-graph" series={series}/>
     )
 }
 

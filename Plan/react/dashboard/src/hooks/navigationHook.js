@@ -18,6 +18,7 @@ export const NavigationContextProvider = ({children}) => {
     }, [updating, setUpdateRequested, setUpdating]);
 
     const finishUpdate = useCallback((date, formatted) => {
+        // TODO Logic to retry if received data is too old
         setLastUpdate({date, formatted});
         setUpdating(false);
     }, [setLastUpdate, setUpdating]);
