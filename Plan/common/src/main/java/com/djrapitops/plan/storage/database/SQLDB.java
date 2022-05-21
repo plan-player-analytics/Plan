@@ -53,6 +53,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -83,6 +84,8 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
+
+    private final AtomicBoolean ranIntoFatalError = new AtomicBoolean(false);
 
     protected SQLDB(
             Supplier<ServerUUID> serverUUIDSupplier,
@@ -295,7 +298,7 @@ public abstract class SQLDB extends AbstractDatabase {
 //            if (driverClassLoader instanceof IsolatedClassLoader) {
 //                ((IsolatedClassLoader) driverClassLoader).close();
 //            }
-            driverClassLoader = null;
+        driverClassLoader = null;
 //        } catch (IOException e) {
 //            errorLogger.error(e, ErrorContext.builder().build());
 //        }
@@ -321,7 +324,9 @@ public abstract class SQLDB extends AbstractDatabase {
 
         return CompletableFuture.supplyAsync(() -> {
             accessLock.checkAccess(transaction);
-            transaction.executeTransaction(this);
+            if (!ranIntoFatalError.get()) {
+                transaction.executeTransaction(this);
+            }
             return CompletableFuture.completedFuture(null);
         }, getTransactionExecutor()).exceptionally(errorHandler(transaction, origin));
     }
@@ -332,6 +337,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 return CompletableFuture.completedFuture(null);
             }
             if (throwable.getCause() instanceof FatalDBException) {
+                ranIntoFatalError.set(true);
                 logger.error("Database failed to open, " + transaction.getClass().getName() + " failed to be executed.");
                 FatalDBException actual = (FatalDBException) throwable.getCause();
                 Optional<String> whatToDo = actual.getContext().flatMap(ErrorContext::getWhatToDo);
@@ -343,7 +349,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
             ErrorContext errorContext = ErrorContext.builder()
                     .related("Transaction: " + transaction.getClass())
-                    .related("DB State: " + getState())
+                    .related("DB State: " + getState() + " - fatal: " + ranIntoFatalError.get())
                     .build();
             if (getState() == State.CLOSED) {
                 errorLogger.critical(throwable, errorContext);

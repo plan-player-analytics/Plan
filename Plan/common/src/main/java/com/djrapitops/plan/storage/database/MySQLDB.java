@@ -194,7 +194,7 @@ public class MySQLDB extends SQLDB {
                 connection.close();
             }
         } catch (SQLException e) {
-            errorLogger.critical(e, ErrorContext.builder().related("Closing connection").build());
+            errorLogger.error(e, ErrorContext.builder().related("Closing connection").build());
         }
     }
 
