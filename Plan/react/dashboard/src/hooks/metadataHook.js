@@ -1,6 +1,8 @@
 import {createContext, useCallback, useContext, useEffect, useState} from "react";
 import {fetchPlanMetadata} from "../service/metadataService";
 
+import terminal from '../Terminal-icon.png'
+
 const MetadataContext = createContext({});
 
 export const MetadataContextProvider = ({children}) => {
@@ -17,7 +19,7 @@ export const MetadataContextProvider = ({children}) => {
 
     const getPlayerHeadImageUrl = useCallback((name, uuid) => {
         if (!uuid && name === 'console') {
-            return '../../Terminal-icon.png';
+            return terminal;
         }
 
         /* eslint-disable no-template-curly-in-string */
