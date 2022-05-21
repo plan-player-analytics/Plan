@@ -2,7 +2,13 @@ import axios from "axios";
 
 const toBeReplaced = "PLAN_BASE_ADDRESS";
 
-export const baseAddress = toBeReplaced.includes("BASE") ? "" : toBeReplaced;
+const isCurrentAddress = (address) => {
+    const is = window.location.href.startsWith(address);
+    if (!is) console.warn(`Configured address ${address} did not match start of ${window.location.href}, falling back to relative address. Configure 'Webserver.Alternative_IP' settings to point to your address.`)
+    return is;
+}
+
+export const baseAddress = "PLAN_BASE_ADDRESS" === toBeReplaced || !isCurrentAddress(toBeReplaced) ? "" : toBeReplaced;
 
 export const doSomeGetRequest = async (url, statusOptions) => {
     let response = undefined;
