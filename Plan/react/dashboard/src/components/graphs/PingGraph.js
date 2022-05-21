@@ -17,14 +17,14 @@ const PingGraph = ({data}) => {
             color: data.colors.avg
         }
         const maxPingSeries = {
-            name: t('html.label.maxPing'),
+            name: t('html.label.worstPing'),
             type: 'spline',
             tooltip: tooltip.twoDecimals,
             data: data.max_ping_series,
             color: data.colors.max
         }
         const minPingSeries = {
-            name: t('html.label.minPing'),
+            name: t('html.label.bestPing'),
             type: 'spline',
             tooltip: tooltip.twoDecimals,
             data: data.min_ping_series,
