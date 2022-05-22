@@ -6,7 +6,7 @@ import Scrollable from "../../Scrollable";
 import SessionAccordion from "../../accordion/SessionAccordion";
 import React from "react";
 
-const RecentSessionsCard = ({sessions}) => {
+const RecentSessionsCard = ({sessions, isPlayer}) => {
     const {t} = useTranslation();
     return (
         <Card>
@@ -19,7 +19,7 @@ const RecentSessionsCard = ({sessions}) => {
                 </h6>
             </Card.Header>
             <Scrollable>
-                <SessionAccordion sessions={sessions}/>
+                <SessionAccordion sessions={sessions} isPlayer={isPlayer}/>
             </Scrollable>
         </Card>
     )

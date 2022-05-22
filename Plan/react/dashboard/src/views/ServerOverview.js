@@ -4,7 +4,6 @@ import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {
     faBookOpen,
-    faChartArea,
     faChartLine,
     faCrosshairs,
     faExchangeAlt,
@@ -17,39 +16,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../components/Datapoint";
 import {useTranslation} from "react-i18next";
-import PlayersOnlineGraph from "../components/graphs/PlayersOnlineGraph";
 import {useParams} from "react-router-dom";
-import {fetchPlayersOnlineGraph, fetchServerOverview} from "../service/serverService";
+import {fetchServerOverview} from "../service/serverService";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import {TableRow} from "../components/table/AsNumbersTable";
 import ComparisonTable from "../components/table/ComparisonTable";
 import BigTrend from "../components/trend/BigTrend";
-import ErrorView, {ErrorViewCard} from "./ErrorView";
+import ErrorView from "./ErrorView";
 import {useDataRequest} from "../hooks/dataFetchHook";
-
-
-const OnlineActivityCard = () => {
-    const {t} = useTranslation();
-    const {identifier} = useParams();
-
-    const {data, loadingError} = useDataRequest(
-        fetchPlayersOnlineGraph,
-        [identifier])
-
-    if (!data) return <></>;
-    if (loadingError) return <ErrorViewCard error={loadingError}/>
-
-    return (
-        <Card>
-            <Card.Header>
-                <h6 className="col-black">
-                    <Fa className="col-blue" icon={faChartArea}/> {t('html.label.onlineActivity')}
-                </h6>
-            </Card.Header>
-            <PlayersOnlineGraph data={data}/>
-        </Card>
-    )
-}
+import OnlineActivityCard from "../components/cards/server/OnlineActivityCard";
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();

@@ -11,7 +11,9 @@ import {
     faGlobe,
     faInfoCircle,
     faSearch,
-    faUsers
+    faUserGroup,
+    faUsers,
+    faUsersViewfinder
 } from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../hooks/authenticationHook";
 import {NightModeCss} from "../hooks/themeHook";
@@ -60,7 +62,8 @@ const ServerPage = () => {
                         icon: faChartLine,
                         href: "playerbase"
                     },
-                    {name: 'html.label.playerList', icon: faUsers, href: "players"},
+                    {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
+                    {name: 'html.label.playerList', icon: faUserGroup, href: "players"},
                     {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
                 ]
             },

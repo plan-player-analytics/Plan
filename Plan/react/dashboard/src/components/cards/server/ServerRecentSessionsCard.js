@@ -15,7 +15,7 @@ const ServerRecentSessionsCard = () => {
     if (!data) return <></>;
 
     return (
-        <RecentSessionsCard sessions={data.sessions}/>
+        <RecentSessionsCard sessions={data.sessions} isPlayer={true}/>
     )
 }
 

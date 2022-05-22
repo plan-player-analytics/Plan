@@ -3,7 +3,7 @@ import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCampground} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import PvpPveAsNumbersTable from "../../table/PvpPveAsNumbersTable";
+import PlayerPvpPveAsNumbersTable from "../../table/PlayerPvpPveAsNumbersTable";
 
 const PvpPveAsNumbersCard = ({player}) => {
     const {t} = useTranslation();
@@ -14,7 +14,7 @@ const PvpPveAsNumbersCard = ({player}) => {
                     <Fa icon={faCampground} className="col-red"/> {t('html.label.pvpPveAsNumbers')}
                 </h6>
             </Card.Header>
-            <PvpPveAsNumbersTable killData={player.kill_data}/>
+            <PlayerPvpPveAsNumbersTable killData={player.kill_data}/>
         </Card>
     )
 }

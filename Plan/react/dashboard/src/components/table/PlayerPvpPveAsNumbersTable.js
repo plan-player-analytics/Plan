@@ -3,7 +3,7 @@ import AsNumbersTable, {TableRow} from "./AsNumbersTable";
 import {faCrosshairs, faSkull} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 
-const PvpPveAsNumbersTable = ({killData}) => {
+const PlayerPvpPveAsNumbersTable = ({killData}) => {
     const {t} = useTranslation();
     return (
         <AsNumbersTable
@@ -41,4 +41,4 @@ const PvpPveAsNumbersTable = ({killData}) => {
     )
 }
 
-export default PvpPveAsNumbersTable;
+export default PlayerPvpPveAsNumbersTable;

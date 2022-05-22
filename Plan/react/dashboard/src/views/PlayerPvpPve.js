@@ -2,12 +2,13 @@ import React from "react";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLifeRing} from "@fortawesome/free-regular-svg-icons";
-import {faCrosshairs, faKhanda, faSkull} from "@fortawesome/free-solid-svg-icons";
+import {faKhanda, faSkull} from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../components/Datapoint";
 import KillsTable from "../components/table/KillsTable";
 import {usePlayer} from "./PlayerPage";
 import {useTranslation} from "react-i18next";
 import PvpPveAsNumbersCard from "../components/cards/player/PvpPveAsNumbersCard";
+import PvpKillsTableCard from "../components/cards/common/PvpKillsTableCard";
 
 const InsightsCard = ({player}) => {
     const {t} = useTranslation();
@@ -26,20 +27,6 @@ const InsightsCard = ({player}) => {
                 <Datapoint icon={faKhanda} color="brown" name={t('html.label.thirdDeadliestWeapon')}
                            value={player.kill_data.weapon_3rd}/>
             </Card.Body>
-        </Card>
-    )
-}
-
-const PvpKillsTableCard = ({player}) => {
-    const {t} = useTranslation();
-    return (
-        <Card>
-            <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faCrosshairs} className="col-red"/> {t('html.label.recentPvpKills')}
-                </h6>
-            </Card.Header>
-            <KillsTable kills={player.player_kills}/>
         </Card>
     )
 }
@@ -72,7 +59,7 @@ const PlayerPvpPve = () => {
             </Row>
             <Row>
                 <Col lg={6}>
-                    <PvpKillsTableCard player={player}/>
+                    <PvpKillsTableCard player_kills={player.player_kills}/>
                 </Col>
                 <Col lg={6}>
                     <PvpDeathsTableCard player={player}/>

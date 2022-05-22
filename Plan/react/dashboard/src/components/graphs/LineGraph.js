@@ -30,7 +30,7 @@ const LineGraph = ({id, series}) => {
             },
             series: series
         })
-    }, [series, graphTheming])
+    }, [series, graphTheming, id, t])
 
     return (
         <div className="chart-area" id={id}>

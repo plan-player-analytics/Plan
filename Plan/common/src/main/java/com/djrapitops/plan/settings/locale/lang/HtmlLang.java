@@ -133,6 +133,7 @@ public enum HtmlLang implements Lang {
     LINK_BACK_NETWORK("html.label.networkPage", "Network page"),
     SIDE_PVP_PVE("html.label.pvpPve", "PvP & PvE"),
     LABEL_RETENTION("html.label.newPlayerRetention", "New Player Retention"),
+    LABEL_RETENTION_GENERAL("html.label.playerRetention", "Player Retention"),
     DESCRIBE_RETENTION_PREDICTION("html.description.newPlayerRetention", "This value is a prediction based on previous players."),
     TITLE_SERVER_AS_NUMBERS("html.label.serverAsNumberse", "Server as Numbers"),
     TITLE_ONLINE_ACTIVITY_AS_NUMBERS("html.label.onlineActivityAsNumbers", "Online Activity as Numbers"),

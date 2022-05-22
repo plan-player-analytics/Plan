@@ -9,7 +9,6 @@ const ServerWorldPieCard = () => {
     const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchWorldPie, [identifier]);
-    console.log(data);
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <></>;

@@ -82,13 +82,18 @@ const SessionBody = ({i, session}) => {
 
 const SessionAccordion = (
     {
-        sessions
+        sessions,
+        isPlayer
     }
 ) => {
     const {t} = useTranslation();
+
+    const firstColumn = isPlayer ? (<><Fa icon={faUser}/> {t('html.label.player')}</>)
+        : (<><Fa icon={faServer}/> {t('html.label.server')}</>)
+
     return (
         <Accordion headers={[
-            <><Fa icon={faServer}/> {t('html.label.server')}</>,
+            firstColumn,
             <><Fa icon={faClock}/> {t('html.label.sessionStart')}</>,
             <><Fa icon={faClock}/> {t('html.label.length')}</>,
             <><Fa icon={faMap}/> {t('html.label.mostPlayedWorld')}</>

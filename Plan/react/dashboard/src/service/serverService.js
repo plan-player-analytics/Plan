@@ -12,6 +12,12 @@ export const fetchOnlineActivityOverview = async (identifier) => {
     return doGetRequest(url);
 }
 
+export const fetchPlayerbaseOverview = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/playerbaseOverview?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
 export const fetchSessions = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/sessions?server=${identifier}&timestamp=${timestamp}`;
@@ -21,6 +27,12 @@ export const fetchSessions = async (identifier) => {
 export const fetchPlayersOnlineGraph = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/graph?type=playersOnline&server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchPlayerbaseDevelopmentGraph = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=activity&server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 
