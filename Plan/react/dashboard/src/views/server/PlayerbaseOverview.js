@@ -1,13 +1,15 @@
 import {Col, Row} from "react-bootstrap-v5";
 import React from "react";
-import PlayerbaseDevelopmentCard from "../components/cards/server/PlayerbaseDevelopmentCard";
-import CurrentPlayerbaseCard from "../components/cards/server/CurrentPlayerbaseCard";
+import PlayerbaseDevelopmentCard from "../../components/cards/server/graphs/PlayerbaseDevelopmentCard";
+import CurrentPlayerbaseCard from "../../components/cards/server/graphs/CurrentPlayerbaseCard";
 import {useParams} from "react-router-dom";
-import {useDataRequest} from "../hooks/dataFetchHook";
-import {fetchPlayerbaseOverview} from "../service/serverService";
-import ErrorView from "./ErrorView";
+import {useDataRequest} from "../../hooks/dataFetchHook";
+import {fetchPlayerbaseOverview} from "../../service/serverService";
+import ErrorView from "../ErrorView";
+import PlayerbaseTrendsCard from "../../components/cards/server/tables/PlayerbaseTrendsCard";
+import PlayerbaseInsightsCard from "../../components/cards/server/insights/PlayerbaseInsightsCard";
 
-const ServerPlayerbaseOverview = () => {
+const PlayerbaseOverview = () => {
     const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchPlayerbaseOverview, [identifier]);
@@ -27,10 +29,10 @@ const ServerPlayerbaseOverview = () => {
             </Row>
             <Row>
                 <Col lg={8}>
-
+                    <PlayerbaseTrendsCard data={data?.trends}/>
                 </Col>
                 <Col lg={4}>
-
+                    <PlayerbaseInsightsCard data={data?.insights}/>
                 </Col>
             </Row>
         </section>
@@ -38,4 +40,4 @@ const ServerPlayerbaseOverview = () => {
     )
 }
 
-export default ServerPlayerbaseOverview;
+export default PlayerbaseOverview;

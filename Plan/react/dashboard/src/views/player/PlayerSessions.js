@@ -2,11 +2,11 @@ import React from "react";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCalendarAlt} from "@fortawesome/free-regular-svg-icons";
-import PlayerSessionCalendar from "../components/calendar/PlayerSessionCalendar";
-import {usePlayer} from "./PlayerPage";
+import PlayerSessionCalendar from "../../components/calendar/PlayerSessionCalendar";
+import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
-import PlayerWorldPieCard from "../components/cards/player/PlayerWorldPieCard";
-import PlayerRecentSessionsCard from "../components/cards/player/PlayerRecentSessionsCard";
+import PlayerWorldPieCard from "../../components/cards/player/PlayerWorldPieCard";
+import PlayerRecentSessionsCard from "../../components/cards/player/PlayerRecentSessionsCard";
 
 const SessionCalendarCard = ({player}) => {
     const {t} = useTranslation();

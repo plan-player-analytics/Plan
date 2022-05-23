@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
-import ExtensionCard, {ExtensionCardWrapper} from "../components/extensions/ExtensionCard";
+import ExtensionCard, {ExtensionCardWrapper} from "../../components/extensions/ExtensionCard";
 import {Card, Row} from "react-bootstrap-v5";
 import {useParams} from "react-router-dom";
 import Masonry from "masonry-layout";
-import {usePlayer} from "./PlayerPage";
+import {usePlayer} from "../layout/PlayerPage";
 
 const PlayerPluginData = () => {
     const {player} = usePlayer();

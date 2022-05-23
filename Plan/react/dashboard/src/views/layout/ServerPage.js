@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Outlet} from "react-router-dom";
-import {useNavigation} from "../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook";
 import {
     faCampground,
     faChartArea,
@@ -15,13 +15,13 @@ import {
     faUsers,
     faUsersViewfinder
 } from "@fortawesome/free-solid-svg-icons";
-import {useAuth} from "../hooks/authenticationHook";
-import {NightModeCss} from "../hooks/themeHook";
-import Sidebar from "../components/navigation/Sidebar";
-import Header from "../components/navigation/Header";
-import ErrorView from "./ErrorView";
-import ColorSelectorModal from "../components/modal/ColorSelectorModal";
-import {useMetadata} from "../hooks/metadataHook";
+import {useAuth} from "../../hooks/authenticationHook";
+import {NightModeCss} from "../../hooks/themeHook";
+import Sidebar from "../../components/navigation/Sidebar";
+import Header from "../../components/navigation/Header";
+import ErrorView from "../ErrorView";
+import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
+import {useMetadata} from "../../hooks/metadataHook";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 
 const ServerPage = () => {

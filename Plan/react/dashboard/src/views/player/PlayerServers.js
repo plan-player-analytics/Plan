@@ -2,13 +2,13 @@ import React from "react";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
-import Scrollable from "../components/Scrollable";
+import Scrollable from "../../components/Scrollable";
 import {faNetworkWired, faSignal} from "@fortawesome/free-solid-svg-icons";
-import ServerPie from "../components/graphs/ServerPie";
-import ServerAccordion from "../components/accordion/ServerAccordion";
-import {usePlayer} from "./PlayerPage";
+import ServerPie from "../../components/graphs/ServerPie";
+import ServerAccordion from "../../components/accordion/ServerAccordion";
+import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
-import PingGraph from "../components/graphs/PingGraph";
+import PingGraph from "../../components/graphs/PingGraph";
 
 const PingGraphCard = ({player}) => {
     const {t} = useTranslation();

@@ -1,12 +1,12 @@
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
-import {useDataRequest} from "../../../hooks/dataFetchHook";
-import {fetchPlayerbaseDevelopmentGraph} from "../../../service/serverService";
-import {ErrorViewCard} from "../../../views/ErrorView";
+import {useDataRequest} from "../../../../hooks/dataFetchHook";
+import {fetchPlayerbaseDevelopmentGraph} from "../../../../service/serverService";
+import {ErrorViewCard} from "../../../../views/ErrorView";
 import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartLine} from "@fortawesome/free-solid-svg-icons";
-import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
+import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import React from "react";
 
 const PlayerbaseDevelopmentCard = () => {

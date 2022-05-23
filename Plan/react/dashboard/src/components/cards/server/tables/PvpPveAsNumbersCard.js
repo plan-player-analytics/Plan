@@ -3,7 +3,7 @@ import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCampground} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import ServerPvpPveAsNumbersTable from "../../table/ServerPvpPveAsNumbersTable";
+import ServerPvpPveAsNumbersTable from "../../../table/ServerPvpPveAsNumbersTable";
 
 const PvpPveAsNumbersCard = ({kill_data}) => {
     const {t} = useTranslation();

@@ -3,7 +3,7 @@ import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
-import OnlineActivityAsNumbersTable from "../../table/OnlineActivityAsNumbersTable";
+import OnlineActivityAsNumbersTable from "../../../table/OnlineActivityAsNumbersTable";
 
 const OnlineActivityAsNumbersCard = () => {
     const {t} = useTranslation();

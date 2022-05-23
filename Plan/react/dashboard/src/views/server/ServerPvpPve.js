@@ -1,8 +1,8 @@
 import React from "react";
-import PvpPveAsNumbersCard from "../components/cards/server/PvpPveAsNumbersCard";
+import PvpPveAsNumbersCard from "../../components/cards/server/tables/PvpPveAsNumbersCard";
 import {Col, Row} from "react-bootstrap-v5";
-import PvpKillsTableCard from "../components/cards/common/PvpKillsTableCard";
-import PvpPveInsightsCard from "../components/cards/server/PvpPveInsightsCard";
+import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
+import PvpPveInsightsCard from "../../components/cards/server/insights/PvpPveInsightsCard";
 
 const ServerPvpPve = () => {
     return (

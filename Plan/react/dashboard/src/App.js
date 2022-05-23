@@ -4,12 +4,12 @@ import './style/style.css';
 
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import React from "react";
-import PlayerPage from "./views/PlayerPage";
-import PlayerOverview from "./views/PlayerOverview";
-import PlayerSessions from "./views/PlayerSessions";
-import PlayerPvpPve from "./views/PlayerPvpPve";
-import PlayerServers from "./views/PlayerServers";
-import PlayerPluginData from "./views/PlayerPluginData";
+import PlayerPage from "./views/layout/PlayerPage";
+import PlayerOverview from "./views/player/PlayerOverview";
+import PlayerSessions from "./views/player/PlayerSessions";
+import PlayerPvpPve from "./views/player/PlayerPvpPve";
+import PlayerServers from "./views/player/PlayerServers";
+import PlayerPluginData from "./views/player/PlayerPluginData";
 import {ThemeContextProvider} from "./hooks/themeHook";
 import axios from "axios";
 import ErrorView from "./views/ErrorView";
@@ -17,13 +17,13 @@ import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
 import {MetadataContextProvider} from "./hooks/metadataHook";
 import {AuthenticationContextProvider} from "./hooks/authenticationHook";
 import {NavigationContextProvider} from "./hooks/navigationHook";
-import ServerPage from "./views/ServerPage";
-import ServerOverview from "./views/ServerOverview";
+import ServerPage from "./views/layout/ServerPage";
+import ServerOverview from "./views/server/ServerOverview";
 import MainPageRedirect from "./components/navigation/MainPageRedirect";
-import ServerOnlineActivity from "./views/ServerOnlineActivity";
-import ServerSessions from "./views/ServerSessions";
-import ServerPvpPve from "./views/ServerPvpPve";
-import ServerPlayerbaseOverview from "./views/ServerPlayerbaseOverview";
+import OnlineActivity from "./views/server/OnlineActivity";
+import ServerSessions from "./views/server/ServerSessions";
+import ServerPvpPve from "./views/server/ServerPvpPve";
+import PlayerbaseOverview from "./views/server/PlayerbaseOverview";
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -67,10 +67,10 @@ function App() {
                             <Route path="/server/:identifier" element={<ServerPage/>}>
                                 <Route path="" element={<OverviewRedirect/>}/>
                                 <Route path="overview" element={<ServerOverview/>}/>
-                                <Route path="online-activity" element={<ServerOnlineActivity/>}/>
+                                <Route path="online-activity" element={<OnlineActivity/>}/>
                                 <Route path="sessions" element={<ServerSessions/>}/>
                                 <Route path="pvppve" element={<ServerPvpPve/>}/>
-                                <Route path="playerbase" element={<ServerPlayerbaseOverview/>}/>
+                                <Route path="playerbase" element={<PlayerbaseOverview/>}/>
                                 <Route path="retention" element={<></>}/>
                                 <Route path="players" element={<></>}/>
                                 <Route path="geolocations" element={<></>}/>

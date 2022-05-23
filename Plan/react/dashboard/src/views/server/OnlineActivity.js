@@ -1,14 +1,14 @@
 import React from "react";
 import {Col, Row} from "react-bootstrap-v5";
-import OnlineActivityGraphsCard from "../components/cards/server/OnlineActivityGraphsCard";
-import OnlineActivityAsNumbersCard from "../components/cards/server/OnlineActivityAsNumbersCard";
+import OnlineActivityGraphsCard from "../../components/cards/server/graphs/OnlineActivityGraphsCard";
+import OnlineActivityAsNumbersCard from "../../components/cards/server/tables/OnlineActivityAsNumbersCard";
 import {useParams} from "react-router-dom";
-import {useDataRequest} from "../hooks/dataFetchHook";
-import {fetchOnlineActivityOverview} from "../service/serverService";
-import {ErrorViewBody} from "./ErrorView";
-import OnlineActivityInsightsCard from "../components/cards/server/OnlineActivityInsightsCard";
+import {useDataRequest} from "../../hooks/dataFetchHook";
+import {fetchOnlineActivityOverview} from "../../service/serverService";
+import {ErrorViewBody} from "../ErrorView";
+import OnlineActivityInsightsCard from "../../components/cards/server/insights/OnlineActivityInsightsCard";
 
-const ServerOnlineActivity = () => {
+const OnlineActivity = () => {
     const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchOnlineActivityOverview, [identifier])
@@ -35,4 +35,4 @@ const ServerOnlineActivity = () => {
     )
 }
 
-export default ServerOnlineActivity
+export default OnlineActivity

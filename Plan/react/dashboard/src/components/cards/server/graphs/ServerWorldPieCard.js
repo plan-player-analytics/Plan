@@ -1,9 +1,9 @@
 import React from "react";
-import WorldPieCard from "../common/WorldPieCard";
+import WorldPieCard from "../../common/WorldPieCard";
 import {useParams} from "react-router-dom";
-import {useDataRequest} from "../../../hooks/dataFetchHook";
-import {fetchWorldPie} from "../../../service/serverService";
-import {ErrorViewBody} from "../../../views/ErrorView";
+import {useDataRequest} from "../../../../hooks/dataFetchHook";
+import {fetchWorldPie} from "../../../../service/serverService";
+import {ErrorViewBody} from "../../../../views/ErrorView";
 
 const ServerWorldPieCard = () => {
     const {identifier} = useParams();

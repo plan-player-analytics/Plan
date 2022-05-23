@@ -1,17 +1,17 @@
 import React, {useEffect, useState} from "react";
-import Sidebar from "../components/navigation/Sidebar";
+import Sidebar from "../../components/navigation/Sidebar";
 import {Outlet, useOutletContext, useParams} from "react-router-dom";
-import ColorSelectorModal from "../components/modal/ColorSelectorModal";
-import {NightModeCss} from "../hooks/themeHook";
-import {fetchPlayer} from "../service/playerService";
-import ErrorView from "./ErrorView";
+import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
+import {NightModeCss} from "../../hooks/themeHook";
+import {fetchPlayer} from "../../service/playerService";
+import ErrorView from "../ErrorView";
 import {faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
-import {useAuth} from "../hooks/authenticationHook";
-import Header from "../components/navigation/Header";
-import {useNavigation} from "../hooks/navigationHook";
+import {useAuth} from "../../hooks/authenticationHook";
+import Header from "../../components/navigation/Header";
+import {useNavigation} from "../../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
-import {useDataRequest} from "../hooks/dataFetchHook";
+import {useDataRequest} from "../../hooks/dataFetchHook";
 
 
 const PlayerPage = () => {

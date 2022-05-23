@@ -1,8 +1,8 @@
 import React from "react";
 import {useParams} from "react-router-dom";
-import {useDataRequest} from "../../../hooks/dataFetchHook";
-import {fetchPlayerbaseDevelopmentGraph} from "../../../service/serverService";
-import {ErrorViewBody} from "../../../views/ErrorView";
+import {useDataRequest} from "../../../../hooks/dataFetchHook";
+import {fetchPlayerbaseDevelopmentGraph} from "../../../../service/serverService";
+import {ErrorViewBody} from "../../../../views/ErrorView";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";

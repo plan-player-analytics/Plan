@@ -3,12 +3,12 @@ import {Card, Col, Row} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLifeRing} from "@fortawesome/free-regular-svg-icons";
 import {faKhanda, faSkull} from "@fortawesome/free-solid-svg-icons";
-import Datapoint from "../components/Datapoint";
-import KillsTable from "../components/table/KillsTable";
-import {usePlayer} from "./PlayerPage";
+import Datapoint from "../../components/Datapoint";
+import KillsTable from "../../components/table/KillsTable";
+import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
-import PvpPveAsNumbersCard from "../components/cards/player/PvpPveAsNumbersCard";
-import PvpKillsTableCard from "../components/cards/common/PvpKillsTableCard";
+import PvpPveAsNumbersCard from "../../components/cards/player/PvpPveAsNumbersCard";
+import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
 
 const InsightsCard = ({player}) => {
     const {t} = useTranslation();

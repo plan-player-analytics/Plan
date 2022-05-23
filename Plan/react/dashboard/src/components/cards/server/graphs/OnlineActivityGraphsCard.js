@@ -1,21 +1,21 @@
 import {useParams} from "react-router-dom";
-import {useDataRequest} from "../../../hooks/dataFetchHook";
+import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {
     fetchDayByDayGraph,
     fetchHourByHourGraph,
     fetchPunchCardGraph,
     fetchServerCalendarGraph
-} from "../../../service/serverService";
-import {ErrorViewBody} from "../../../views/ErrorView";
-import PunchCard from "../../graphs/PunchCard";
+} from "../../../../service/serverService";
+import {ErrorViewBody} from "../../../../views/ErrorView";
+import PunchCard from "../../../graphs/PunchCard";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap-v5";
-import CardTabs from "../../CardTabs";
+import CardTabs from "../../../CardTabs";
 import {faBraille, faChartArea} from "@fortawesome/free-solid-svg-icons";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
-import TimeByTimeGraph from "../../graphs/TimeByTimeGraph";
-import ServerCalendar from "../../calendar/ServerCalendar";
+import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
+import ServerCalendar from "../../../calendar/ServerCalendar";
 
 const DayByDayTab = () => {
     const {identifier} = useParams();

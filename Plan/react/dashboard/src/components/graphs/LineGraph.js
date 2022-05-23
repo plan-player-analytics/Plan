@@ -11,7 +11,7 @@ const LineGraph = ({id, series}) => {
 
     useEffect(() => {
         NoDataDisplay(Highcharts);
-        Highcharts.setOptions({lang: {noData: t('html.labels.noDataToDisplay')}})
+        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
         Highcharts.stockChart(id, {
             rangeSelector: {
