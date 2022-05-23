@@ -5,6 +5,8 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import Datapoint from "../../../Datapoint";
 import {faLongArrowAltRight, faUser} from "@fortawesome/free-solid-svg-icons";
 import SmallTrend from "../../../trend/SmallTrend";
+import End from "../../../layout/End";
+import ComparingLabel from "../../../trend/ComparingLabel";
 
 const TwoPlayerChange = ({colorBefore, labelBefore, colorAfter, labelAfter}) => {
     return (
@@ -35,6 +37,7 @@ const PlayerbaseInsightsCard = ({data}) => {
                        value={data.regular_to_inactive}
                        trend={<SmallTrend trend={data.regular_to_inactive_trend}/>}
             />
+            <End><ComparingLabel>{t('html.text.comparing30daysAgo')}</ComparingLabel></End>
         </InsightsFor30DaysCard>
     )
 }

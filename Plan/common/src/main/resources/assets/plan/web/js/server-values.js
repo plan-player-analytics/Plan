@@ -158,9 +158,9 @@ function loadOnlineActivityOverviewValues(json, error) {
     element.querySelector('#data_new_players_7d_avg').innerText = data.new_players_7d_avg;
     element.querySelector('#data_new_players_24h_avg').innerText = data.new_players_24h_avg;
 
-    element.querySelector('#data_new_players_retention_30d').innerText = '(' + data.new_players_retention_30d + '/' + data.new_players_30d + ') ' + data.new_players_retention_30d_perc;
-    element.querySelector('#data_new_players_retention_7d').innerText = '(' + data.new_players_retention_7d + '/' + data.new_players_7d + ') ' + data.new_players_retention_7d_perc;
-    element.querySelector('#data_new_players_retention_24h').innerHTML = '(' + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + ' <i class="far fa-fw fa-eye"></i>';
+    element.querySelector('#data_new_players_retention_30d').innerText = `(${data.new_players_retention_30d}/${data.new_players_30d}) ${data.new_players_retention_30d_perc}`;
+    element.querySelector('#data_new_players_retention_7d').innerText = `(${data.new_players_retention_7d}/${data.new_players_7d}) ${data.new_players_retention_7d_perc}`;
+    element.querySelector('#data_new_players_retention_24h').innerHTML = `(${data.new_players_retention_24h}/${data.new_players_24h}) ${data.new_players_retention_24h_perc} <i class="far fa-fw fa-eye"></i>`;
 
     element.querySelector('#data_playtime_30d').innerHTML = data.playtime_30d + smallTrend(data.playtime_30d_trend);
     element.querySelector('#data_playtime_7d').innerText = data.playtime_7d;

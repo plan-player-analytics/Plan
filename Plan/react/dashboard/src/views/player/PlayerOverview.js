@@ -21,12 +21,13 @@ import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import Scrollable from "../../components/Scrollable";
 import PunchCard from "../../components/graphs/PunchCard";
 import Datapoint from "../../components/Datapoint";
-import AsNumbersTable, {TableRow} from "../../components/table/AsNumbersTable";
+import AsNumbersTable from "../../components/table/AsNumbersTable";
 import {useTheme} from "../../hooks/themeHook";
 import {usePlayer} from "../layout/PlayerPage";
 import {useMetadata} from "../../hooks/metadataHook";
 import {useTranslation} from "react-i18next";
 import NicknamesCard from "../../components/cards/player/NicknamesCard";
+import {TableRow} from "../../components/table/TableRow";
 
 const PlayerOverviewCard = ({player}) => {
     const {t} = useTranslation();

@@ -3,10 +3,10 @@ import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faExchangeAlt, faUsers} from "@fortawesome/free-solid-svg-icons";
 import ComparisonTable from "../../../table/ComparisonTable";
-import {TableRow} from "../../../table/AsNumbersTable";
 import BigTrend from "../../../trend/BigTrend";
 import React from "react";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
+import {TableRow} from "../../../table/TableRow";
 
 const PlayerbaseTrendsCard = ({data}) => {
     const {t} = useTranslation();

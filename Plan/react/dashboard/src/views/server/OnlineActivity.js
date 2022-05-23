@@ -25,10 +25,10 @@ const OnlineActivity = () => {
             </Row>
             <Row>
                 <Col lg={8}>
-                    <OnlineActivityAsNumbersCard data={data}/>
+                    <OnlineActivityAsNumbersCard data={data?.numbers}/>
                 </Col>
                 <Col lg={4}>
-                    <OnlineActivityInsightsCard data={data}/>
+                    <OnlineActivityInsightsCard data={data?.insights}/>
                 </Col>
             </Row>
         </section>

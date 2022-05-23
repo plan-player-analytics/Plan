@@ -5,8 +5,10 @@ import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import OnlineActivityAsNumbersTable from "../../../table/OnlineActivityAsNumbersTable";
 
-const OnlineActivityAsNumbersCard = () => {
+const OnlineActivityAsNumbersCard = ({data}) => {
     const {t} = useTranslation();
+    if (!data) return <></>
+
     return (
         <Card>
             <Card.Header>
@@ -14,7 +16,7 @@ const OnlineActivityAsNumbersCard = () => {
                     <Fa icon={faBookOpen} className="col-light-blue"/> {t('html.label.onlineActivityAsNumbers')}
                 </h6>
             </Card.Header>
-            <OnlineActivityAsNumbersTable/>
+            <OnlineActivityAsNumbersTable data={data}/>
         </Card>
     )
 }

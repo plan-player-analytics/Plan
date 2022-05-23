@@ -3,10 +3,10 @@ import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCrosshairs, faExchangeAlt, faSkull, faUsers} from "@fortawesome/free-solid-svg-icons";
 import ComparisonTable from "../../../table/ComparisonTable";
-import {TableRow} from "../../../table/AsNumbersTable";
 import BigTrend from "../../../trend/BigTrend";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
+import {TableRow} from "../../../table/TableRow";
 
 const ServerWeekComparisonCard = ({data}) => {
     const {t} = useTranslation();

@@ -1,7 +1,8 @@
 import {useTranslation} from "react-i18next";
-import AsNumbersTable, {TableRow} from "./AsNumbersTable";
+import AsNumbersTable from "./AsNumbersTable";
 import {faCrosshairs, faSkull} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
+import {TableRow} from "./TableRow";
 
 const PlayerPvpPveAsNumbersTable = ({killData}) => {
     const {t} = useTranslation();
