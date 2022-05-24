@@ -74,6 +74,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 break;
             // Duplicate key
             case 1062:
+            case 1022:
             case 23001:
             case 23505:
                 context.related("Duplicate key")
@@ -85,7 +86,6 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 531:
             case 787:
             case 1043:
-            case 1299:
             case 1555:
             case 2579:
             case 1811:
@@ -111,7 +111,8 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 context.related("SQLite file is corrupt.")
                         .whatToDo("SQLite database is corrupt, restore database.db, .db-shm & .db-wal files from a backup, or repair the database: See https://wordpress.semnaitik.com/repair-sqlite-database/.");
                 break;
-            case 13:
+            case 13: // SQLite
+            case 1021: // MariaDB
                 context.related("Disk or temporary directory is full.")
                         .whatToDo("Disk or temporary directory is full, attempt to clear space in the temporary directory. See https://sqlite.org/rescode.html#full. If you use the Pterodactyl panel, increase the \"tmpfs_size\" config setting. See https://pterodactyl.io/wings/1.0/configuration.html#other-values");
                 break;
@@ -127,11 +128,17 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 break;
             case 1267:
             case 1366:
+            case 1115:
                 context.related("Incorrect character encoding in MySQL")
                         .whatToDo("Convert your MySQL database and tables to use utf8mb4: https://www.a2hosting.com/kb/developer-corner/mysql/convert-mysql-database-utf-8");
                 break;
-            case 1048:
-                // MySQL
+            case 1299: // SQLite
+            case 1048: // MySQL or MariaDB
+            case 1452:
+            case 1121:
+            case 1171:
+            case 1830:
+            case 1263:
                 context.related(CONSTRAINT_VIOLATION)
                         .whatToDo("Report this error. NOT NULL constraint violation occurred.");
                 break;

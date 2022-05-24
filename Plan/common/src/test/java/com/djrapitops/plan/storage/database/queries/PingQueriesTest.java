@@ -46,11 +46,11 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
     default void pingStoreTransactionOutOfOrderDoesNotFailDueToMissingUser() {
         DateObj<Integer> saved = RandomData.randomIntDateObject();
         int value = saved.getValue();
-        db().executeTransaction(new PingStoreTransaction(playerUUID, serverUUID(),
+        db().executeTransaction(new PingStoreTransaction(player2UUID, serverUUID(),
                 Collections.singletonList(saved)
         ));
 
-        Map<UUID, List<Ping>> expected = Collections.singletonMap(playerUUID, Collections.singletonList(
+        Map<UUID, List<Ping>> expected = Collections.singletonMap(player2UUID, Collections.singletonList(
                 new Ping(saved.getDate(), serverUUID(), value, value, value)
         ));
         Map<UUID, List<Ping>> fetched = db().query(PingQueries.fetchAllPingData());
@@ -60,14 +60,14 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void pingStoreTransactionOutOfOrderUpdatesUserInformation() {
-        db().executeTransaction(new PingStoreTransaction(playerUUID, serverUUID(),
+        db().executeTransaction(new PingStoreTransaction(player2UUID, serverUUID(),
                 Collections.singletonList(RandomData.randomIntDateObject())
         ));
         long registerDate = RandomData.randomTime();
-        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> registerDate, TestConstants.PLAYER_ONE_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> registerDate, TestConstants.PLAYER_ONE_NAME));
 
-        Optional<BaseUser> expected = Optional.of(new BaseUser(playerUUID, TestConstants.PLAYER_ONE_NAME, registerDate, 0));
-        Optional<BaseUser> result = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
+        Optional<BaseUser> expected = Optional.of(new BaseUser(player2UUID, TestConstants.PLAYER_ONE_NAME, registerDate, 0));
+        Optional<BaseUser> result = db().query(BaseUserQueries.fetchBaseUserOfPlayer(player2UUID));
         assertEquals(expected, result);
     }
 
