@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
+import com.djrapitops.plan.utilities.java.OptionalArray;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
 
@@ -123,24 +124,25 @@ public class FinishedSession implements DateHolder {
      * @throws com.google.gson.JsonSyntaxException if serialized format has a json syntax error
      */
     public static Optional<FinishedSession> deserializeCSV(String serialized) {
-        String[] asArray = StringUtils.split(serialized, ';');
-        if (asArray.length < 9) return Optional.empty();
+        String[] array = StringUtils.split(serialized, ';');
+        OptionalArray<String> asOptionals = OptionalArray.of(array);
+        if (array.length < 5) return Optional.empty();
         // Note for the future: Use length to determine version of serialized class
 
         Gson gson = new Gson();
 
-        UUID playerUUID = UUID.fromString(asArray[0]);
-        ServerUUID serverUUID = ServerUUID.fromString(asArray[1]);
-        long start = Long.parseLong(asArray[2]);
-        long end = Long.parseLong(asArray[3]);
-        long afkTime = Long.parseLong(asArray[4]);
+        UUID playerUUID = UUID.fromString(array[0]);
+        ServerUUID serverUUID = ServerUUID.fromString(array[1]);
+        long start = Long.parseLong(array[2]);
+        long end = Long.parseLong(array[3]);
+        long afkTime = Long.parseLong(array[4]);
 
         DataMap extraData = new DataMap();
-        extraData.put(WorldTimes.class, gson.fromJson(asArray[5], WorldTimes.class));
-        extraData.put(PlayerKills.class, gson.fromJson(asArray[6], PlayerKills.class));
-        extraData.put(MobKillCounter.class, gson.fromJson(asArray[7], MobKillCounter.class));
-        extraData.put(DeathCounter.class, gson.fromJson(asArray[8], DeathCounter.class));
-        extraData.put(JoinAddress.class, new JoinAddress(asArray[9]));
+        asOptionals.get(5).ifPresent(value -> extraData.put(WorldTimes.class, gson.fromJson(value, WorldTimes.class)));
+        asOptionals.get(6).ifPresent(value -> extraData.put(PlayerKills.class, gson.fromJson(value, PlayerKills.class)));
+        asOptionals.get(7).ifPresent(value -> extraData.put(MobKillCounter.class, gson.fromJson(value, MobKillCounter.class)));
+        asOptionals.get(8).ifPresent(value -> extraData.put(DeathCounter.class, gson.fromJson(value, DeathCounter.class)));
+        asOptionals.get(9).ifPresent(value -> extraData.put(JoinAddress.class, new JoinAddress(value)));
         return Optional.of(new FinishedSession(playerUUID, serverUUID, start, end, afkTime, extraData));
     }
 
