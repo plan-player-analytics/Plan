@@ -123,7 +123,7 @@ public class RemoveDanglingServerDataPatch extends Patch {
             public Set<String> processResults(ResultSet set) throws SQLException {
                 HashSet<String> uuids = new HashSet<>();
                 while (set.next()) {
-                    uuids.add(set.getString("uuid"));
+                    uuids.add(set.getString("server_uuid"));
                 }
                 return uuids;
             }
