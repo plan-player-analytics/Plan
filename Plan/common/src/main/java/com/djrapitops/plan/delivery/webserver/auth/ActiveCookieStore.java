@@ -128,12 +128,17 @@ public class ActiveCookieStore implements SubSystem {
         Optional<User> foundUser = checkCookie(cookie);
         if (foundUser.isPresent()) {
             USERS_BY_COOKIE.remove(cookie);
-            deleteCookie(foundUser.get().getUsername());
+            deleteCookieByUser(foundUser.get().getUsername());
+            deleteCookie(cookie);
         }
     }
 
-    private void deleteCookie(String username) {
-        dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeCookie(username));
+    private void deleteCookie(String cookie) {
+        dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeCookie(cookie));
+    }
+
+    private void deleteCookieByUser(String username) {
+        dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeCookieByUser(username));
     }
 
     public void removeAll() {
