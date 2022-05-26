@@ -73,13 +73,18 @@ public class PlayerFetchQueries {
      * @return True if the player's BaseUser is found
      */
     public static Query<Boolean> isPlayerRegistered(UUID playerUUID) {
-        String sql = SELECT + "COUNT(1) as c" +
+        String sql = SELECT + UsersTable.ID +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=?";
-        return new HasMoreThanZeroQueryStatement(sql) {
+        return new QueryStatement<Boolean>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return set.next();
             }
         };
     }

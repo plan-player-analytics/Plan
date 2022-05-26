@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
+import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.net.InetAddress;
@@ -30,7 +31,7 @@ import java.util.function.UnaryOperator;
  *
  * @author AuroraLS3
  */
-public class GeoInfoStoreTransaction extends Transaction {
+public class StoreGeoInfoTransaction extends Transaction {
 
     private final UUID playerUUID;
     private String ip;
@@ -39,14 +40,14 @@ public class GeoInfoStoreTransaction extends Transaction {
 
     private GeoInfo geoInfo;
 
-    public GeoInfoStoreTransaction(UUID playerUUID, String ip, long time, UnaryOperator<String> geolocationFunction) {
+    public StoreGeoInfoTransaction(UUID playerUUID, String ip, long time, UnaryOperator<String> geolocationFunction) {
         this.playerUUID = playerUUID;
         this.ip = ip;
         this.time = time;
         this.geolocationFunction = geolocationFunction;
     }
 
-    public GeoInfoStoreTransaction(
+    public StoreGeoInfoTransaction(
             UUID playerUUID,
             InetAddress ip,
             long time,
@@ -58,7 +59,7 @@ public class GeoInfoStoreTransaction extends Transaction {
         this.geolocationFunction = geolocationFunction;
     }
 
-    public GeoInfoStoreTransaction(UUID playerUUID, GeoInfo geoInfo) {
+    public StoreGeoInfoTransaction(UUID playerUUID, GeoInfo geoInfo) {
         this.playerUUID = playerUUID;
         this.geoInfo = geoInfo;
     }
@@ -73,19 +74,37 @@ public class GeoInfoStoreTransaction extends Transaction {
     protected void performOperations() {
         if (geoInfo == null) geoInfo = createGeoInfo();
         if (geoInfo.getGeolocation() == null) return; // Don't save null geolocation.
+
+        if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegistered(playerUUID)))) {
+            registerPlayer();
+        }
+
         try {
             execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
         } catch (DBOpException failed) {
             if (failed.isUserIdConstraintViolation()) {
-                retry();
+                retry(failed);
             } else {
                 throw failed;
             }
         }
     }
 
-    private void retry() {
-        executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
-        execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
+    private void retry(DBOpException failed) {
+        try {
+            executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
+            execute(DataStoreQueries.storeGeoInfo(playerUUID, geoInfo));
+        } catch (DBOpException failedAgain) {
+            failedAgain.addSuppressed(failed);
+            throw failedAgain;
+        }
+    }
+
+    private void registerPlayer() {
+        try {
+            execute(DataStoreQueries.registerBaseUser(playerUUID, geoInfo.getDate(), playerUUID.toString()));
+        } catch (DBOpException ignored) {
+            // Ignored. Likely that another transaction managed to insert first.
+        }
     }
 }

@@ -21,6 +21,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
+import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.Predicates;
 import com.djrapitops.plan.utilities.analysis.Median;
@@ -49,20 +50,43 @@ public class PingStoreTransaction extends Transaction {
     @Override
     protected void performOperations() {
         Ping ping = calculateAggregatePing();
+
+        DBOpException userInsertError = null;
+        if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegistered(playerUUID)))) {
+            userInsertError = tryToRegisterUser(ping.getDate());
+        }
+
         try {
             execute(DataStoreQueries.storePing(playerUUID, serverUUID, ping));
         } catch (DBOpException failed) {
+            if (userInsertError != null) failed.addSuppressed(userInsertError);
             if (failed.isUserIdConstraintViolation()) {
-                retry(ping);
+                retry(ping, failed);
             } else {
                 throw failed;
             }
         }
     }
 
-    private void retry(Ping ping) {
-        executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
-        execute(DataStoreQueries.storePing(playerUUID, serverUUID, ping));
+    private void retry(Ping ping, DBOpException failed) {
+        DBOpException userInsertError = null;
+        try {
+            userInsertError = tryToRegisterUser(ping.getDate());
+            execute(DataStoreQueries.storePing(playerUUID, serverUUID, ping));
+        } catch (DBOpException failedAgain) {
+            if (userInsertError != null) failedAgain.addSuppressed(userInsertError);
+            failedAgain.addSuppressed(failed);
+            throw failedAgain;
+        }
+    }
+
+    private DBOpException tryToRegisterUser(long date) {
+        try {
+            execute(DataStoreQueries.registerBaseUser(playerUUID, date, playerUUID.toString()));
+            return null;
+        } catch (DBOpException failedInsert) {
+            return failedInsert;
+        }
     }
 
     private Ping calculateAggregatePing() {

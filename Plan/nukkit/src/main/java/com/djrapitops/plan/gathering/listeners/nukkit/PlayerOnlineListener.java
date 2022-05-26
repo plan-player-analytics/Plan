@@ -174,7 +174,7 @@ public class PlayerOnlineListener implements Listener {
                     boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
                     if (gatheringGeolocations) {
                         database.executeTransaction(
-                                new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                                new StoreGeoInfoTransaction(playerUUID, address, time, geolocationCache::getCountry)
                         );
                     }
 
@@ -184,7 +184,7 @@ public class PlayerOnlineListener implements Listener {
                     session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
                     session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
                     sessionCache.cacheSession(playerUUID, session)
-                            .map(SessionEndTransaction::new)
+                            .map(StoreSessionTransaction::new)
                             .ifPresent(database::executeTransaction);
 
                     database.executeTransaction(new NicknameStoreTransaction(
@@ -231,7 +231,7 @@ public class PlayerOnlineListener implements Listener {
         dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, player::isBanned));
 
         sessionCache.endSession(playerUUID, time)
-                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
+                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new StoreSessionTransaction(endedSession)));
 
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));

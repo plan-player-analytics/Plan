@@ -36,10 +36,7 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
@@ -82,7 +79,7 @@ public class MySQLDB extends SQLDB {
         try {
             return files.getResourceFromJar("dependencies/mysqlDriver.txt").asLines();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get MySQL dependency information", e);
+            throw new DBInitException("Failed to get MySQL dependency information", e);
         }
     }
 
@@ -177,7 +174,14 @@ public class MySQLDB extends SQLDB {
             }
         }
         if (connection.getAutoCommit()) connection.setAutoCommit(false);
+        setTimezoneToUTC(connection);
         return connection;
+    }
+
+    private void setTimezoneToUTC(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("set time_zone = '+00:00'");
+        }
     }
 
     @Override

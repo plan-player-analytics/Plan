@@ -26,10 +26,10 @@ import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.PingQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreGeoInfoTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -85,7 +85,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
     }
 
     default void save(UUID uuid, GeoInfo info) {
-        db().executeTransaction(new GeoInfoStoreTransaction(uuid, info));
+        db().executeTransaction(new StoreGeoInfoTransaction(uuid, info));
     }
 
     @Test

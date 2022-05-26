@@ -24,8 +24,8 @@ import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.SessionEndTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
@@ -69,7 +69,7 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         session.getExtraData().remove(JoinAddress.class);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
         Set<Integer> result = db().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(List.of(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP)));
@@ -89,7 +89,7 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         String expectedAddress = TestConstants.GET_PLAYER_HOSTNAME.get();
         session.getExtraData().put(JoinAddress.class, new JoinAddress(expectedAddress));
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         Map<String, Integer> expected = Map.of(expectedAddress, 1);
         Map<String, Integer> result = db().query(JoinAddressQueries.latestJoinAddresses());
@@ -108,7 +108,7 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(TestConstants.SERVER_TWO_UUID, worlds, playerUUID, player2UUID);
         String expectedAddress = TestConstants.GET_PLAYER_HOSTNAME.get();
         session.getExtraData().put(JoinAddress.class, new JoinAddress(expectedAddress));
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         Map<String, Integer> expected1 = Map.of(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP, 1);
         Map<String, Integer> result1 = db().query(JoinAddressQueries.latestJoinAddresses(serverUUID()));
@@ -148,7 +148,7 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, player2UUID, playerUUID);
         String expectedAddress = TestConstants.GET_PLAYER_HOSTNAME.get();
         session.getExtraData().put(JoinAddress.class, new JoinAddress(expectedAddress));
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         Map<String, Integer> expected = Map.of(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP, 1, expectedAddress, 1);
         Map<String, Integer> result = db().query(JoinAddressQueries.latestJoinAddresses());

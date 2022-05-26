@@ -57,7 +57,6 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, fetched);
     }
 
-
     @Test
     default void pingStoreTransactionOutOfOrderUpdatesUserInformation() {
         db().executeTransaction(new PingStoreTransaction(player2UUID, serverUUID(),

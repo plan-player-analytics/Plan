@@ -59,7 +59,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
 
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         Map<ServerUUID, List<FinishedSession>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         List<FinishedSession> savedSessions = sessions.get(serverUUID());
@@ -78,7 +78,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         Map<ServerUUID, List<FinishedSession>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
         List<FinishedSession> savedSessions = sessions.get(serverUUID());
@@ -140,7 +140,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
         // killed user is registered after session already ended.
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
@@ -159,7 +159,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         long registerDate = RandomData.randomTime();
         db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> registerDate, TestConstants.PLAYER_ONE_NAME));
@@ -177,7 +177,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         long expectedLength = session.getLength();
         long sessionEnd = session.getEnd();
 
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         forcePersistenceCheck();
 
@@ -206,7 +206,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     default void sessionsAreStoredWithAllData() {
         prepareForSessionSave();
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         forcePersistenceCheck();
 
@@ -223,7 +223,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     default void mostRecentSessionsCanBeQueried() {
         prepareForSessionSave();
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         List<FinishedSession> expected = Collections.singletonList(session);
         List<FinishedSession> result = db().query(SessionQueries.fetchLatestSessionsOfServer(serverUUID(), 1));
@@ -330,7 +330,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         prepareForSessionSave();
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         forcePersistenceCheck();
 
@@ -346,7 +346,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         List<PlayerKill> expected = session.getExtraData(PlayerKills.class).map(PlayerKills::asList)
                 .orElseThrow(AssertionError::new);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         forcePersistenceCheck();
 
@@ -366,7 +366,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         WorldTimes expected = session.getExtraData(WorldTimes.class).orElseThrow(AssertionError::new);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         // Fetch the session
         Map<ServerUUID, List<FinishedSession>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
@@ -413,8 +413,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         prepareForSessionSave();
         List<FinishedSession> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
         List<FinishedSession> player2Sessions = RandomData.randomSessions(serverUUID(), worlds, player2UUID, playerUUID);
-        player1Sessions.forEach(session -> db().executeTransaction(new SessionEndTransaction(session)));
-        player2Sessions.forEach(session -> db().executeTransaction(new SessionEndTransaction(session)));
+        player1Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
+        player2Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
 
         long playtimeThreshold = RandomData.randomLong(TimeUnit.HOURS.toMillis(1L), TimeUnit.DAYS.toMillis(2L));
 
@@ -433,8 +433,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         prepareForSessionSave();
         List<FinishedSession> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
         List<FinishedSession> player2Sessions = RandomData.randomSessions(serverUUID(), worlds, player2UUID, playerUUID);
-        player1Sessions.forEach(session -> db().executeTransaction(new SessionEndTransaction(session)));
-        player2Sessions.forEach(session -> db().executeTransaction(new SessionEndTransaction(session)));
+        player1Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
+        player2Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
 
         long time = System.currentTimeMillis();
         long playtimeThreshold = RandomData.randomLong(TimeUnit.HOURS.toMillis(1L), TimeUnit.DAYS.toMillis(2L));
@@ -469,14 +469,14 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     default void serverPreferencePieValuesAreCorrect() {
         prepareForSessionSave();
         List<FinishedSession> server1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
-        server1Sessions.forEach(session -> db().executeTransaction(new SessionEndTransaction(session)));
+        server1Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
 
         ServerUUID serverTwoUuid = TestConstants.SERVER_TWO_UUID;
         executeTransactions(new StoreServerInformationTransaction(new Server(serverTwoUuid, TestConstants.SERVER_TWO_NAME, "", TestConstants.VERSION)));
         db().executeTransaction(new WorldNameStoreTransaction(serverTwoUuid, worlds[0]));
         db().executeTransaction(new WorldNameStoreTransaction(serverTwoUuid, worlds[1]));
         List<FinishedSession> server2Sessions = RandomData.randomSessions(serverTwoUuid, worlds, playerUUID, player2UUID);
-        server2Sessions.forEach(session -> db().executeTransaction(new SessionEndTransaction(session)));
+        server2Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
 
         Map<String, Long> expected = Maps.builder(String.class, Long.class)
                 .put(TestConstants.SERVER_NAME, new SessionsMutator(server1Sessions).toPlaytime())

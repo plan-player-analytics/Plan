@@ -21,6 +21,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
+import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.UUID;
@@ -30,16 +31,19 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
-public class SessionEndTransaction extends Transaction {
+public class StoreSessionTransaction extends Transaction {
 
     private final FinishedSession session;
 
-    public SessionEndTransaction(FinishedSession session) {
+    public StoreSessionTransaction(FinishedSession session) {
         this.session = session;
     }
 
     @Override
     protected void performOperations() {
+        if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegistered(session.getPlayerUUID())))) {
+            registerPlayer();
+        }
         try {
             storeSession();
         } catch (DBOpException failed) {
@@ -65,15 +69,23 @@ public class SessionEndTransaction extends Transaction {
 
     private void retry(DBOpException failed) {
         try {
-            UUID playerUUID = session.getPlayerUUID();
-            String playerName = session.getExtraData(PlayerName.class)
-                    .map(PlayerName::get)
-                    .orElseGet(playerUUID::toString);
-            executeOther(new PlayerRegisterTransaction(playerUUID, session::getStart, playerName));
+            registerPlayer();
             storeSession();
         } catch (DBOpException anotherFail) {
             anotherFail.addSuppressed(failed);
             throw anotherFail;
+        }
+    }
+
+    private void registerPlayer() {
+        try {
+            UUID playerUUID = session.getPlayerUUID();
+            String playerName = session.getExtraData(PlayerName.class)
+                    .map(PlayerName::get)
+                    .orElseGet(playerUUID::toString);
+            execute(DataStoreQueries.registerBaseUser(playerUUID, session.getStart(), playerName));
+        } catch (DBOpException ignored) {
+            // Ignored. Likely that another transaction managed to insert first.
         }
     }
 }

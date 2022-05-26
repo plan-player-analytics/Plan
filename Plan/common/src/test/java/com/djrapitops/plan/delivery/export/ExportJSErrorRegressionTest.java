@@ -28,7 +28,7 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.SessionEndTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import extension.SeleniumExtension;
 import org.junit.jupiter.api.*;
@@ -131,7 +131,7 @@ class ExportJSErrorRegressionTest {
         database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME));
         FinishedSession session = new FinishedSession(uuid, serverUUID, 1000L, 11000L, 500L, new DataMap());
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));
-        database.executeTransaction(new SessionEndTransaction(session));
+        database.executeTransaction(new StoreSessionTransaction(session));
     }
 
     @AfterAll

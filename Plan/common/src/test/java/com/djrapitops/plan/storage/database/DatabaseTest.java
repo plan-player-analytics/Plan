@@ -29,6 +29,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -48,7 +49,6 @@ import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utilities.FieldFetcher;
 import utilities.RandomData;
@@ -57,6 +57,8 @@ import utilities.TestPluginLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -104,9 +106,9 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
 
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", RandomData.randomTime(), serverUUID()), (uuid, name) -> false /* Not cached */));
-        db().executeTransaction(new GeoInfoStoreTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
+        db().executeTransaction(new StoreGeoInfoTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
 
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
 
@@ -124,7 +126,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     default void saveGeoInfo(UUID uuid, GeoInfo geoInfo) {
-        db().executeTransaction(new GeoInfoStoreTransaction(uuid, geoInfo));
+        db().executeTransaction(new StoreGeoInfoTransaction(uuid, geoInfo));
     }
 
     @Test
@@ -134,7 +136,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         long sessionStart = System.currentTimeMillis();
         ActiveSession session = new ActiveSession(playerUUID, serverUUID(), sessionStart, worlds[0], "SURVIVAL");
-        db().executeTransaction(new SessionEndTransaction(session.toFinishedSession(sessionStart + 22345L)));
+        db().executeTransaction(new StoreSessionTransaction(session.toFinishedSession(sessionStart + 22345L)));
 
         TestPluginLogger logger = new TestPluginLogger();
         new DBCleanTask(
@@ -157,7 +159,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         saveUserTwo();
         saveTwoWorlds();
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        db().executeTransaction(new SessionEndTransaction(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
         db().executeTransaction(new NicknameStoreTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */));
         saveGeoInfo(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime()));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
@@ -258,22 +260,24 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
-    @Disabled("Flaky test, fails every evening.")
     default void sqlDateParsingSanitySQLDoesNotApplyTimezone() {
         Database db = db();
+        config().set(FormatSettings.TIMEZONE, "UTC");
 
         List<org.junit.jupiter.api.function.Executable> assertions = new ArrayList<>();
-        long now = System.currentTimeMillis();
+        long now = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+        long dayStartEpochSecond = now - (now % TimeUnit.DAYS.toSeconds(1));
+
         for (int i = 0; i < 24; i++) {
-            long hourChange = TimeUnit.HOURS.toMillis(i);
+            long hourChange = TimeUnit.HOURS.toSeconds(i);
             assertions.add(() -> {
-                long time = now + hourChange;
+                long time = dayStartEpochSecond + hourChange;
                 int offset = 0;
 
                 Sql sql = db.getType().getSql();
-                String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset) / 1000))) + " as date";
+                String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset)))) + " as date";
 
-                String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(time);
+                String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(TimeUnit.SECONDS.toMillis(time));
                 //noinspection Convert2Diamond Causes compiler issues without Generic type definition
                 String result = db.query(new QueryAllStatement<String>(testSQL) {
                     @Override
@@ -324,7 +328,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new SessionEndTransaction(RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID)));
+        db().executeTransaction(new StoreSessionTransaction(RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID)));
 
         List<TablePlayer> result = db().query(new ServerTablePlayersQuery(serverUUID(), System.currentTimeMillis(), 10L, 1));
         assertEquals(1, result.size(), () -> "Incorrect query result: " + result);
@@ -339,7 +343,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new SessionEndTransaction(RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID)));
+        db().executeTransaction(new StoreSessionTransaction(RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID)));
 
         List<TablePlayer> result = db().query(new NetworkTablePlayersQuery(System.currentTimeMillis(), 10L, 1));
         assertEquals(1, result.size(), () -> "Incorrect query result: " + result);
