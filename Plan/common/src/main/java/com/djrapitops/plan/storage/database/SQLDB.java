@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
@@ -54,6 +55,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -85,6 +87,8 @@ public abstract class SQLDB extends AbstractDatabase {
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
 
+    private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
+    private final AtomicBoolean dropUnimportantTransactions = new AtomicBoolean(false);
     private final AtomicBoolean ranIntoFatalError = new AtomicBoolean(false);
 
     protected SQLDB(
@@ -291,17 +295,10 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     private void unloadDriverClassloader() {
-        // Unloading class loader causes issues when reloading.
+        // Unloading class loader using close() causes issues when reloading.
         // It is better to leak this memory than crash the plugin on reload.
 
-//        try {
-//            if (driverClassLoader instanceof IsolatedClassLoader) {
-//                ((IsolatedClassLoader) driverClassLoader).close();
-//            }
         driverClassLoader = null;
-//        } catch (IOException e) {
-//            errorLogger.error(e, ErrorContext.builder().build());
-//        }
     }
 
     public abstract Connection getConnection() throws SQLException;
@@ -322,13 +319,36 @@ public abstract class SQLDB extends AbstractDatabase {
 
         Exception origin = new Exception();
 
-        return CompletableFuture.supplyAsync(() -> {
-            accessLock.checkAccess(transaction);
-            if (!ranIntoFatalError.get()) {
-                transaction.executeTransaction(this);
-            }
+        if (determineIfShouldDropUnimportantTransactions(transactionQueueSize.incrementAndGet())
+                && transaction instanceof ThrowawayTransaction) {
+            // Drop throwaway transaction immediately.
             return CompletableFuture.completedFuture(null);
+        }
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                accessLock.checkAccess(transaction);
+                if (!ranIntoFatalError.get()) {
+                    transaction.executeTransaction(this);
+                }
+                return CompletableFuture.completedFuture(null);
+            } finally {
+                transactionQueueSize.decrementAndGet();
+            }
         }, getTransactionExecutor()).exceptionally(errorHandler(transaction, origin));
+    }
+
+    private boolean determineIfShouldDropUnimportantTransactions(int queueSize) {
+        boolean dropTransactions = dropUnimportantTransactions.get();
+        if (queueSize >= 500 && !dropTransactions) {
+            logger.warn("Database can't keep up with transactions (Queue size: " + queueSize + "), dropping some unimportant transactions from execution.");
+            dropUnimportantTransactions.set(true);
+            return true;
+        } else if (queueSize < 50 && dropTransactions) {
+            dropUnimportantTransactions.set(false);
+            return false;
+        }
+        return dropTransactions;
     }
 
     private Function<Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, Exception origin) {
@@ -398,5 +418,9 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public Locale getLocale() {
         return locale;
+    }
+
+    public boolean shouldDropUnimportantTransactions() {
+        return dropUnimportantTransactions.get();
     }
 }

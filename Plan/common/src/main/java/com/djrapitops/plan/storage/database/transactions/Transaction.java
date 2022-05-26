@@ -70,8 +70,8 @@ public abstract class Transaction {
 
         if (db.isUnderHeavyLoad()) {
             try {
-                Thread.sleep(db.getHeavyLoadDelayMs());
                 Thread.yield();
+                Thread.sleep(db.getHeavyLoadDelayMs());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -112,7 +112,7 @@ public abstract class Transaction {
             if (!db.isUnderHeavyLoad()) {
                 db.getLogger().warn("Database appears to be under heavy load. Dropping some unimportant transactions and adding short pauses for next 10 minutes.");
                 db.getRunnableFactory().create(db::assumeNoMoreHeavyLoad)
-                        .runTaskLaterAsynchronously(TimeAmount.toTicks(10, TimeUnit.MINUTES));
+                        .runTaskLaterAsynchronously(TimeAmount.toTicks(2, TimeUnit.MINUTES));
             }
             db.increaseHeavyLoadDelay();
             executeTransaction(db); // Recurse to attempt again.
@@ -267,7 +267,7 @@ public abstract class Transaction {
     }
 
     public boolean dbIsNotUnderHeavyLoad() {
-        return !db.isUnderHeavyLoad();
+        return !db.isUnderHeavyLoad() && !db.shouldDropUnimportantTransactions();
     }
 
     public String getName() {
