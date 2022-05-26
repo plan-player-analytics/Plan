@@ -84,6 +84,7 @@ public class ServerServerInfo extends ServerInfo {
         logger.info(locale.getString(PluginLang.LOADING_SERVER_INFO));
         Optional<Server> loaded = fromFile.load(null);
         server = loaded.orElseGet(this::registerNew);
+        logger.info(locale.getString(PluginLang.LOADED_SERVER_INFO, server.getUuid().toString()));
         processing.submitNonCritical(this::updateStorage);
     }
 

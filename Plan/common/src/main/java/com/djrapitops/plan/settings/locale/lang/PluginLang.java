@@ -85,6 +85,7 @@ public enum PluginLang implements Lang {
     DB_NOTIFY_SQLITE_WAL("plugin.generic.dbNotifySQLiteWAL", "Database Notify - SQLite No WAL", "SQLite WAL mode not supported on this server version, using default. This may or may not affect performance."),
     DB_MYSQL_LAUNCH_OPTIONS_FAIL("plugin.generic.dbFaultyLaunchOptions", "Database MySQL - Launch Options Error", "Launch Options were faulty, using default (${0})"),
     LOADING_SERVER_INFO("plugin.generic.loadingServerInfo", "ServerInfo - Loading", "Loading server identifying information"),
+    LOADED_SERVER_INFO("plugin.generic.loadedServerInfo", "ServerInfo - Loaded", "Server identifier loaded: ${0}"),
     DB_SCHEMA_PATCH("plugin.generic.dbSchemaPatch", "Database Notify - Patch", "Database: Making sure schema is up to date.."),
     ;
 

@@ -243,8 +243,13 @@ public abstract class SQLDB extends AbstractDatabase {
      * Updates to latest schema.
      */
     private void setupDatabase() {
+        executeTransaction(new OperationCriticalTransaction() {
+            @Override
+            protected void performOperations() {
+                logger.info(locale.getString(PluginLang.DB_SCHEMA_PATCH));
+            }
+        });
         executeTransaction(new CreateTablesTransaction());
-        logger.info(locale.getString(PluginLang.DB_SCHEMA_PATCH));
         for (Patch patch : patches()) {
             executeTransaction(patch);
         }
