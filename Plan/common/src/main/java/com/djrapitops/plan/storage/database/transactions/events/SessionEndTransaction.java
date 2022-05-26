@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
+import com.djrapitops.plan.delivery.domain.PlayerName;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
@@ -65,7 +66,10 @@ public class SessionEndTransaction extends Transaction {
     private void retry(DBOpException failed) {
         try {
             UUID playerUUID = session.getPlayerUUID();
-            executeOther(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString()));
+            String playerName = session.getExtraData(PlayerName.class)
+                    .map(PlayerName::get)
+                    .orElseGet(playerUUID::toString);
+            executeOther(new PlayerRegisterTransaction(playerUUID, session::getStart, playerName));
             storeSession();
         } catch (DBOpException anotherFail) {
             anotherFail.addSuppressed(failed);
