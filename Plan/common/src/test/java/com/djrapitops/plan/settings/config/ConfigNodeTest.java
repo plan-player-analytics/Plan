@@ -17,12 +17,12 @@
 package com.djrapitops.plan.settings.config;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -370,5 +370,27 @@ class ConfigNodeTest {
 
         copied = testTree.getString("Test." + SECOND_LEVEL + "." + THIRD_LEVEL);
         assertEquals("ORIGINAL", copied);
+    }
+
+    @TestFactory
+    Collection<DynamicTest> copyMissingCorrectnessTests() {
+        return Arrays.stream(new String[][]{
+                new String[]{"", "Value"},
+                new String[]{null, "Value"},
+                new String[]{"Value", ""},
+                new String[]{"Value", null}
+        }).map(valuePair -> {
+            String previousValue = valuePair[0];
+            String overridingValue = valuePair[1];
+            return DynamicTest.dynamicTest("ConfigNode#copyMissing sets 'Value' correctly '" + previousValue + "', '" + overridingValue + "'",
+                    () -> {
+                        ConfigNode underTest = new ConfigNode("Test", null, previousValue);
+                        ConfigNode copyFrom = new ConfigNode("Test", null, overridingValue);
+
+                        underTest.copyMissing(copyFrom);
+
+                        assertEquals("Value", underTest.getString());
+                    });
+        }).collect(Collectors.toList());
     }
 }

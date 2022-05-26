@@ -92,7 +92,7 @@ public class ServerFileLoader extends Config implements ServerLoader {
             if (!prepared) prepare();
 
             server.getId().ifPresent(id -> set("Server.ID", id));
-            set("Server.UUID", server.getUuid());
+            set("Server.UUID", server.getUuid().toString());
             set("Server.Web_address", server.getWebAddress());
 
             save();

@@ -303,7 +303,7 @@ public class ConfigNode {
      * @return List of config keys
      */
     public List<String> getConfigPaths() {
-        Stack<ConfigNode> dfs = new Stack<>();
+        ArrayDeque<ConfigNode> dfs = new ArrayDeque<>();
         dfs.push(this);
 
         List<String> configPaths = new ArrayList<>();
@@ -345,7 +345,9 @@ public class ConfigNode {
         }
 
         // Override value conditionally
-        if (value == null || value.isEmpty() && from.value != null) {
+        boolean currentValueIsMissing = value == null || value.isEmpty();
+        boolean otherNodeHasValue = from.value != null && !from.value.isEmpty();
+        if (currentValueIsMissing && otherNodeHasValue) {
             value = from.value;
         }
 
