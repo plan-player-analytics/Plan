@@ -95,7 +95,11 @@ public class ShutdownHook extends Thread {
 
         @Override
         public void run() {
-            shutdownHook.register();
+            try {
+                shutdownHook.register();
+            } finally {
+                cancel();
+            }
         }
 
         @Override

@@ -103,7 +103,11 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
 
     @Override
     public void run() {
-        storePreviouslyPreservedSessions();
+        try {
+            storePreviouslyPreservedSessions();
+        } finally {
+            cancel();
+        }
     }
 
     @Override

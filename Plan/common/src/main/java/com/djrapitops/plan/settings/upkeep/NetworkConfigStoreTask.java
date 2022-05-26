@@ -51,8 +51,11 @@ public class NetworkConfigStoreTask extends TaskSystem.Task {
 
     @Override
     public void run() {
-        updateDBConfigs();
-        cancel();
+        try {
+            updateDBConfigs();
+        } finally {
+            cancel();
+        }
     }
 
     @Override
