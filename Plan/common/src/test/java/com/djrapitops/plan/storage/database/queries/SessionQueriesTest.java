@@ -34,10 +34,7 @@ import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.SessionEndTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 import org.junit.jupiter.api.RepeatedTest;
@@ -93,6 +90,45 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         session.getExtraData(PlayerKills.class)
                 .map(PlayerKills::asList)
                 .ifPresent(List::clear);
+
+        assertEquals(session, savedSessions.get(0));
+    }
+
+    @Test
+    default void shutdownDataPreservationTransactionOutOfOrderDoesNotFailDueToMissingMainUser() {
+        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+
+        db().executeTransaction(new ShutdownDataPreservationTransaction(List.of(session)));
+
+        Map<ServerUUID, List<FinishedSession>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        List<FinishedSession> savedSessions = sessions.get(serverUUID());
+
+        assertNotNull(savedSessions);
+        assertEquals(1, savedSessions.size());
+
+        assertEquals(session, savedSessions.get(0));
+    }
+
+    @Test
+    default void shutdownDataPreservationTransactionOutOfOrderDoesNotFailDueToMissingKilledUser() {
+        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new ShutdownDataPreservationTransaction(List.of(session)));
+
+        Map<ServerUUID, List<FinishedSession>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        List<FinishedSession> savedSessions = sessions.get(serverUUID());
+
+        assertNotNull(savedSessions);
+        assertEquals(1, savedSessions.size());
 
         assertEquals(session, savedSessions.get(0));
     }

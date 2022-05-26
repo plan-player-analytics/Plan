@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -157,6 +158,23 @@ public class BaseUserQueries {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt(UsersTable.ID) : -1;
+            }
+        };
+    }
+
+    public static Query<Set<UUID>> fetchExistingUUIDs(Set<UUID> outOfPlayerUUIDs) {
+        String sql = SELECT + UsersTable.USER_UUID +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.USER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(outOfPlayerUUIDs, "','").build() + "')";
+
+        return new QueryAllStatement<Set<UUID>>(sql) {
+            @Override
+            public Set<UUID> processResults(ResultSet set) throws SQLException {
+                Set<UUID> uuids = new HashSet<>();
+                while (set.next()) {
+                    uuids.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
+                }
+                return uuids;
             }
         };
     }

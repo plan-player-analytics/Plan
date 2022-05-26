@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
+import com.djrapitops.plan.delivery.domain.PlayerName;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
@@ -143,6 +144,7 @@ public class FinishedSession implements DateHolder {
         asOptionals.get(7).ifPresent(value -> extraData.put(MobKillCounter.class, gson.fromJson(value, MobKillCounter.class)));
         asOptionals.get(8).ifPresent(value -> extraData.put(DeathCounter.class, gson.fromJson(value, DeathCounter.class)));
         asOptionals.get(9).ifPresent(value -> extraData.put(JoinAddress.class, new JoinAddress(value)));
+        asOptionals.get(10).ifPresent(value -> extraData.put(PlayerName.class, new PlayerName(value)));
         return Optional.of(new FinishedSession(playerUUID, serverUUID, start, end, afkTime, extraData));
     }
 
@@ -194,7 +196,8 @@ public class FinishedSession implements DateHolder {
                 getExtraData(PlayerKills.class).orElseGet(PlayerKills::new).toJson() + ';' +
                 getExtraData(MobKillCounter.class).orElseGet(MobKillCounter::new).toJson() + ';' +
                 getExtraData(DeathCounter.class).orElseGet(DeathCounter::new).toJson() + ';' +
-                getExtraData(JoinAddress.class).orElseGet(() -> new JoinAddress(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP)).getAddress();
+                getExtraData(JoinAddress.class).map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP) + ';' +
+                getExtraData(PlayerName.class).map(PlayerName::get).orElseGet(playerUUID::toString);
     }
 
     public static class Id {
