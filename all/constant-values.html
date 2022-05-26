@@ -270,24 +270,27 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.DELETE_ALL_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#DELETE_ALL_STATEMENT">DELETE_ALL_STATEMENT</a></code></div>
 <div class="col-last odd-row-color"><code>"DELETE FROM plan_cookies"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.DELETE_BY_USER_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#DELETE_BY_USER_STATEMENT">DELETE_BY_USER_STATEMENT</a></code></div>
-<div class="col-last even-row-color"><code>"DELETE FROM plan_cookies WHERE web_username=?"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.DELETE_OLDER_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#DELETE_OLDER_STATEMENT">DELETE_OLDER_STATEMENT</a></code></div>
-<div class="col-last odd-row-color"><code>"DELETE FROM plan_cookies WHERE expires&lt;=?"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.EXPIRES">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#EXPIRES">EXPIRES</a></code></div>
-<div class="col-last even-row-color"><code>"expires"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last odd-row-color"><code>"INSERT INTO plan_cookies (web_username,cookie,expires) VALUES (?,?,?)"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
-<div class="col-last even-row-color"><code>"plan_cookies"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.WEB_USERNAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#WEB_USERNAME">WEB_USERNAME</a></code></div>
-<div class="col-last odd-row-color"><code>"web_username"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.DELETE_BY_COOKIE_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#DELETE_BY_COOKIE_STATEMENT">DELETE_BY_COOKIE_STATEMENT</a></code></div>
+<div class="col-last even-row-color"><code>"DELETE FROM plan_cookies WHERE cookie=?"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.DELETE_BY_USER_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#DELETE_BY_USER_STATEMENT">DELETE_BY_USER_STATEMENT</a></code></div>
+<div class="col-last odd-row-color"><code>"DELETE FROM plan_cookies WHERE web_username=?"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.DELETE_OLDER_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#DELETE_OLDER_STATEMENT">DELETE_OLDER_STATEMENT</a></code></div>
+<div class="col-last even-row-color"><code>"DELETE FROM plan_cookies WHERE expires&lt;=?"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.EXPIRES">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#EXPIRES">EXPIRES</a></code></div>
+<div class="col-last odd-row-color"><code>"expires"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
+<div class="col-last even-row-color"><code>"INSERT INTO plan_cookies (web_username,cookie,expires) VALUES (?,?,?)"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"plan_cookies"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.CookieTable.WEB_USERNAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#WEB_USERNAME">WEB_USERNAME</a></code></div>
+<div class="col-last even-row-color"><code>"web_username"</code></div>
 </div>
 </li>
 <li>
