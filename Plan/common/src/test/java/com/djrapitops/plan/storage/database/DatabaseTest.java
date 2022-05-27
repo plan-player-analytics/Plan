@@ -275,7 +275,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 int offset = 0;
 
                 Sql sql = db.getType().getSql();
-                String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString((time + offset)))) + " as date";
+                String testSQL = SELECT + sql.dateToDayStamp(sql.epochSecondToDate(Long.toString(time + offset))) + " as date";
 
                 String expected = deliveryUtilities().getFormatters().iso8601NoClockLong().apply(TimeUnit.SECONDS.toMillis(time));
                 //noinspection Convert2Diamond Causes compiler issues without Generic type definition
