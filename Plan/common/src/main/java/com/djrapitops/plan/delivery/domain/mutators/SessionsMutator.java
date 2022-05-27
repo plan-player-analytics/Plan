@@ -31,6 +31,7 @@ import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
+import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.*;
@@ -100,6 +101,10 @@ public class SessionsMutator {
 
     public List<FinishedSession> all() {
         return sessions;
+    }
+
+    public TimeSegmentsMutator<Integer> onlineTimeSegments() {
+        return TimeSegmentsMutator.sessionClockSegments(sort(new DateHolderOldestComparator()).all());
     }
 
     public SessionsMutator filterPlayedOnServer(ServerUUID serverUUID) {
