@@ -206,7 +206,7 @@ public class PlayerOnlineListener implements FabricListener {
                     session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
                     session.getExtraData().put(JoinAddress.class, new JoinAddress(getHostName));
                     sessionCache.cacheSession(playerUUID, session)
-                            .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
+                            .ifPresent(previousSession -> database.executeTransaction(new StoreSessionTransaction(previousSession)));
 
                     database.executeTransaction(new NicknameStoreTransaction(
                             playerUUID, new Nickname(displayName, time, serverUUID),
@@ -225,7 +225,7 @@ public class PlayerOnlineListener implements FabricListener {
         if (socketAddress == null) return;
         InetAddress address = InetAddresses.forString(socketAddress.getAddress().toString().replace("/", ""));
         database.executeTransaction(
-                new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                new StoreGeoInfoTransaction(playerUUID, address, time, geolocationCache::getCountry)
         );
     }
 
@@ -264,7 +264,7 @@ public class PlayerOnlineListener implements FabricListener {
         dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> server.getPlayerManager().getUserBanList().contains(player.getGameProfile())));
 
         sessionCache.endSession(playerUUID, time)
-                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
+                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new StoreSessionTransaction(endedSession)));
 
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));

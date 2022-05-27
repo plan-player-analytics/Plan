@@ -317,6 +317,9 @@ function loadPerformanceValues(json, error) {
     element.querySelector('#data_server_downtime_30d').innerText = data.server_downtime_30d;
     element.querySelector('#data_server_downtime_7d').innerText = data.server_downtime_7d;
     element.querySelector('#data_server_downtime_24h').innerText = data.server_downtime_24h;
+    element.querySelector('#data_players_30d').innerText = data.players_30d;
+    element.querySelector('#data_players_7d').innerText = data.players_7d;
+    element.querySelector('#data_players_24h').innerText = data.players_24h;
     element.querySelector('#data_tps_30d').innerText = data.tps_30d;
     element.querySelector('#data_tps_7d').innerText = data.tps_7d;
     element.querySelector('#data_tps_24h').innerText = data.tps_24h;

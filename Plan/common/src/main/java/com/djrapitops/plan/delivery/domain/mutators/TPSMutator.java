@@ -183,6 +183,13 @@ public class TPSMutator {
         return spikeCount;
     }
 
+    public int averagePlayers() {
+        return (int) tpsData.stream()
+                .mapToInt(TPS::getPlayers)
+                .filter(num -> num >= 0)
+                .average().orElse(-1);
+    }
+
     public double averageTPS() {
         return tpsData.stream()
                 .mapToDouble(TPS::getTicksPerSecond)
