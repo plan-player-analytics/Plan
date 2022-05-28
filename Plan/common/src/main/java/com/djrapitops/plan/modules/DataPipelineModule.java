@@ -24,7 +24,7 @@ import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.gathering.domain.event.MobKill;
 import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
 import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
-import com.djrapitops.plan.storage.database.transactions.events.SessionEndTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
@@ -76,9 +76,7 @@ public class DataPipelineModule {
                         service.pull(ActiveSession.class, uuid)
                                 .map(ActiveSession::getExtraData)
                                 .flatMap(extra -> extra.get(PlayerKills.class)))
-                .registerSink(UUID.class, MobKill.class, (uuid, kill) -> {
-                    service.pull(MobKillCounter.class, uuid).ifPresent(Counter::add);
-                })
+                .registerSink(UUID.class, MobKill.class, (uuid, kill) -> service.pull(MobKillCounter.class, uuid).ifPresent(Counter::add))
                 .registerSink(UUID.class, PlayerKill.class, (uuid, kill) -> {
                     service.pull(PlayerKills.class, kill.getKiller().getUuid()).ifPresent(playerKills -> playerKills.add(kill));
                     service.pull(DeathCounter.class, kill.getVictim().getUuid()).ifPresent(Counter::add);
@@ -91,7 +89,7 @@ public class DataPipelineModule {
     DataService.Pipeline playerLeaveToSession(SessionCache sessionCache) {
         return service -> service
                 .registerOptionalMapper(UUID.class, PlayerLeave.class, FinishedSession.class, sessionCache::endSession)
-                .registerDatabaseSink(UUID.class, FinishedSession.class, SessionEndTransaction::new);
+                .registerDatabaseSink(UUID.class, FinishedSession.class, (playerUUID, session) -> new StoreSessionTransaction(session));
     }
 
 }

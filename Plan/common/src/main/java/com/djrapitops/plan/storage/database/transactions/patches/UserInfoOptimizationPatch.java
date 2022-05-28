@@ -38,10 +38,10 @@ public class UserInfoOptimizationPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(tableName, UserInfoTable.USER_UUID)
-                && hasColumn(tableName, UserInfoTable.SERVER_UUID)
-                && !hasColumn(tableName, "user_id")
-                && !hasColumn(tableName, "server_id")
+        return hasColumn(tableName, UserInfoTable.USER_ID)
+                && hasColumn(tableName, UserInfoTable.SERVER_ID)
+                && !hasColumn(tableName, "uuid")
+                && !hasColumn(tableName, "server_uuid")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
 
@@ -52,17 +52,19 @@ public class UserInfoOptimizationPatch extends Patch {
             execute(UserInfoTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
-                    UserInfoTable.USER_UUID + ',' +
-                    UserInfoTable.SERVER_UUID + ',' +
+                    UserInfoTable.USER_ID + ',' +
+                    UserInfoTable.SERVER_ID + ',' +
                     UserInfoTable.REGISTERED + ',' +
                     UserInfoTable.BANNED + ',' +
-                    UserInfoTable.OP +
+                    UserInfoTable.OP + ',' +
+                    UserInfoTable.JOIN_ADDRESS +
                     ") SELECT " +
-                    "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
-                    "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
+                    "(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid = " + tempTableName + ".uuid LIMIT 1), " +
+                    "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid = " + tempTableName + ".server_uuid LIMIT 1), " +
                     UserInfoTable.REGISTERED + ',' +
                     UserInfoTable.BANNED + ',' +
-                    UserInfoTable.OP +
+                    UserInfoTable.OP + ',' +
+                    UserInfoTable.JOIN_ADDRESS +
                     FROM + tempTableName
             );
 

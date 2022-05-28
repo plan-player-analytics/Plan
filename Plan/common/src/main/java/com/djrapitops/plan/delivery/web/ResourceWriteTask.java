@@ -57,22 +57,33 @@ public class ResourceWriteTask extends TaskSystem.Task {
 
     @Override
     public void run() {
+        try {
+            runTask();
+        } finally {
+            cancel();
+        }
+    }
+
+    private void runTask() {
         ResourceService resourceService = ResourceService.getInstance();
-        Optional<ConfigNode> planCustomizationNode = getPlanCustomizationNode();
-        if (planCustomizationNode.isPresent()) {
-            for (ConfigNode child : planCustomizationNode.get().getChildren()) {
+        getPlanCustomizationNode().ifPresent(customizationNode -> {
+            for (ConfigNode child : customizationNode.getChildren()) {
                 if (child.getBoolean()) {
                     String resource = child.getKey(false).replace(',', '.');
-                    try {
-                        resourceService.getResource("Plan", resource, () -> files.getResourceFromJar("web/" + resource).asWebResource());
-                    } catch (UncheckedIOException resourceNoLongerFound) {
-                        if (!(resourceNoLongerFound.getCause() instanceof FileNotFoundException)) {
-                            errorLogger.error(resourceNoLongerFound, ErrorContext.builder()
-                                    .whatToDo("A resource could not be read from the jar: " + resource + ", try restarting the server. Report this if error still occurs afterwards: " + resourceNoLongerFound.getMessage())
-                                    .build());
-                        }
-                    }
+                    writeResource(resourceService, resource);
                 }
+            }
+        });
+    }
+
+    private void writeResource(ResourceService resourceService, String resource) {
+        try {
+            resourceService.getResource("Plan", resource, () -> files.getResourceFromJar("web/" + resource).asWebResource());
+        } catch (UncheckedIOException resourceNoLongerFound) {
+            if (!(resourceNoLongerFound.getCause() instanceof FileNotFoundException)) {
+                errorLogger.error(resourceNoLongerFound, ErrorContext.builder()
+                        .whatToDo("A resource could not be read from the jar: " + resource + ", try restarting the server. Report this if error still occurs afterwards: " + resourceNoLongerFound.getMessage())
+                        .build());
             }
         }
     }

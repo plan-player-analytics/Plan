@@ -20,6 +20,7 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.DELETE_FROM;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
@@ -40,13 +41,16 @@ public class CookieTable {
             COOKIE + ',' +
             EXPIRES + ") VALUES (?,?,?)";
 
-    public static final String DELETE_BY_USER_STATEMENT = "DELETE FROM " + TABLE_NAME +
+    public static final String DELETE_BY_COOKIE_STATEMENT = DELETE_FROM + TABLE_NAME +
+            WHERE + COOKIE + "=?";
+
+    public static final String DELETE_BY_USER_STATEMENT = DELETE_FROM + TABLE_NAME +
             WHERE + WEB_USERNAME + "=?";
 
-    public static final String DELETE_OLDER_STATEMENT = "DELETE FROM " + TABLE_NAME +
+    public static final String DELETE_OLDER_STATEMENT = DELETE_FROM + TABLE_NAME +
             WHERE + EXPIRES + "<=?";
 
-    public static final String DELETE_ALL_STATEMENT = "DELETE FROM " + TABLE_NAME;
+    public static final String DELETE_ALL_STATEMENT = DELETE_FROM + TABLE_NAME;
 
 
     private CookieTable() {

@@ -99,13 +99,14 @@ public interface ConfigValueParser<T> {
             boolean surroundedByDoubleQuotes = value.startsWith("\"") || value.endsWith("\"");
             boolean containsSpace = value.isEmpty() || value.contains(" ");
             boolean startsWithSpecialSymbol = value.startsWith("-") || value.startsWith("#") || value.startsWith("&");
+            boolean containsDoubleQuotes = value.contains("\"");
 
-            if (surroundedByDoubleQuotes || containsSpace || startsWithSpecialSymbol) {
+            if (surroundedByDoubleQuotes || containsDoubleQuotes) {
                 return "'" + value + "'";
-            } else if (surroundedByQuotes) {
-                return "\"" + value + "\"";
+            } else if (surroundedByQuotes || containsSpace || startsWithSpecialSymbol) {
+                return '"' + value + '"';
             }
-            return value;
+            return '"' + value + '"';
         }
     }
 

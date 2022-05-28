@@ -21,6 +21,8 @@ import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
+
 /**
  * Table information about 'plan_users'.
  * <p>
@@ -29,6 +31,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
  * Patches that apply to this table:
  * {@link com.djrapitops.plan.storage.database.transactions.patches.Version10Patch}
  * {@link com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch}
+ * {@link com.djrapitops.plan.storage.database.transactions.patches.UsersTableNameLengthPatch}
  *
  * @author AuroraLS3
  */
@@ -43,6 +46,9 @@ public class UsersTable {
     public static final String TIMES_KICKED = "times_kicked";
 
     public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_UUID, USER_NAME, REGISTERED, TIMES_KICKED);
+    public static final String SELECT_USER_ID = '(' + SELECT + TABLE_NAME + '.' + ID +
+            FROM + TABLE_NAME +
+            WHERE + TABLE_NAME + '.' + USER_UUID + "=?" + LIMIT + "1)";
 
     private UsersTable() {
         /* Static information class */
@@ -53,7 +59,7 @@ public class UsersTable {
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_UUID, Sql.varchar(36)).notNull().unique()
                 .column(REGISTERED, Sql.LONG).notNull()
-                .column(USER_NAME, Sql.varchar(16)).notNull()
+                .column(USER_NAME, Sql.varchar(36)).notNull()
                 .column(TIMES_KICKED, Sql.INT).notNull().defaultValue("0")
                 .toString();
     }

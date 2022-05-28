@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -114,7 +115,9 @@ public class PlayerOnlineListener implements Listener {
             boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
             String joinAddress = event.getHostname();
             if (!joinAddress.isEmpty()) {
-                joinAddresses.put(playerUUID, joinAddress.substring(0, joinAddress.lastIndexOf(':')));
+                joinAddress = joinAddress.substring(0, joinAddress.lastIndexOf(':'));
+                joinAddresses.put(playerUUID, joinAddress);
+                dbSystem.getDatabase().executeTransaction(new StoreJoinAddressTransaction(joinAddress));
             }
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> banned));
         } catch (Exception e) {
@@ -166,7 +169,7 @@ public class PlayerOnlineListener implements Listener {
         BukkitAFKListener.afkTracker.performedAction(playerUUID, time);
 
         String world = player.getWorld().getName();
-        String gm = Optional.ofNullable(player.getGameMode()).map(gameMode -> gameMode.name()).orElse("Unknown");
+        String gm = Optional.ofNullable(player.getGameMode()).map(Enum::name).orElse("Unknown");
 
         Database database = dbSystem.getDatabase();
         database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
@@ -177,32 +180,36 @@ public class PlayerOnlineListener implements Listener {
         String playerName = player.getName();
         String displayName = player.getDisplayName();
 
-        boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
-        if (gatheringGeolocations) {
-            database.executeTransaction(
-                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
-            );
-        }
-
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID,
-                player::getFirstPlayed, playerName, serverUUID, getHostName));
-        database.executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, player.isOp()));
+                        player::getFirstPlayed, playerName, serverUUID, getHostName))
+                .thenRunAsync(() -> {
+                    boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+                    if (gatheringGeolocations) {
+                        database.executeTransaction(
+                                new StoreGeoInfoTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                        );
+                    }
 
-        ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
-        session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
-        session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
-        sessionCache.cacheSession(playerUUID, session)
-                .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
+                    database.executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, player.isOp()));
 
-        database.executeTransaction(new NicknameStoreTransaction(
-                playerUUID, new Nickname(displayName, time, serverUUID),
-                (uuid, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
-        ));
+                    ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
+                    session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
+                    session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
+                    session.getExtraData().put(JoinAddress.class, new JoinAddress(getHostName));
+                    sessionCache.cacheSession(playerUUID, session)
+                            .map(StoreSessionTransaction::new)
+                            .ifPresent(database::executeTransaction);
 
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
-            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
-        }
+                    database.executeTransaction(new NicknameStoreTransaction(
+                            playerUUID, new Nickname(displayName, time, serverUUID),
+                            (uuid, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
+                    ));
+
+                    processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+                    if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+                        processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+                    }
+                });
     }
 
     private String getHostname(Player player) {
@@ -241,7 +248,7 @@ public class PlayerOnlineListener implements Listener {
         dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, player::isBanned));
 
         sessionCache.endSession(playerUUID, time)
-                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
+                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new StoreSessionTransaction(endedSession)));
 
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));

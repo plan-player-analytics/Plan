@@ -22,7 +22,10 @@ import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class GeolocationsFilter extends MultiOptionFilter {
@@ -47,7 +50,7 @@ public class GeolocationsFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
-        return dbSystem.getDatabase().query(GeoInfoQueries.uuidsOfPlayersWithGeolocations(getSelected(query)));
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
+        return dbSystem.getDatabase().query(GeoInfoQueries.userIdsOfPlayersWithGeolocations(getSelected(query)));
     }
 }

@@ -33,13 +33,13 @@ class CreateTableBuilderTest {
     void createsSameTablesAsOldParser() {
         String expected = "CREATE TABLE IF NOT EXISTS plan_servers (id integer NOT NULL AUTO_INCREMENT,uuid varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL UNIQUE,name varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,web_address varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,is_installed boolean NOT NULL DEFAULT 1,max_players integer NOT NULL DEFAULT -1,PRIMARY KEY (id))";
         String result = CreateTableBuilder.create(ServerTable.TABLE_NAME, DBType.MYSQL)
-                .column(ServerTable.SERVER_ID, Sql.INT)
+                .column(ServerTable.ID, Sql.INT)
                 .primaryKey()
                 .column(ServerTable.SERVER_UUID, Sql.varchar(36)).notNull().unique()
                 .column(ServerTable.NAME, Sql.varchar(100))
                 .column(ServerTable.WEB_ADDRESS, Sql.varchar(100))
                 .column(ServerTable.INSTALLED, Sql.BOOL).notNull().defaultValue(true)
-                .column(ServerTable.MAX_PLAYERS, Sql.INT).notNull().defaultValue("-1")
+                .column("max_players", Sql.INT).notNull().defaultValue("-1")
                 .toString();
         assertEquals(expected, result);
     }

@@ -51,7 +51,7 @@ public class LargeFetchQueries {
      * @return Map: Server UUID - List of TPS data
      */
     public static Query<Map<ServerUUID, List<TPS>>> fetchAllTPSData() {
-        String serverIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_ID;
+        String serverIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.ID;
         String serverUUIDColumn = ServerTable.TABLE_NAME + '.' + ServerTable.SERVER_UUID + " as s_uuid";
         String sql = SELECT +
                 TPSTable.DATE + ',' +

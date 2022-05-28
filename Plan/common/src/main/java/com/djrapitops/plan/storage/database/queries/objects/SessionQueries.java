@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -54,12 +55,12 @@ public class SessionQueries {
 
     private static final String SELECT_SESSIONS_STATEMENT = SELECT +
             "s." + SessionsTable.ID + ',' +
-            "s." + SessionsTable.USER_UUID + ',' +
-            "s." + SessionsTable.SERVER_UUID + ',' +
             "u." + UsersTable.USER_NAME + " as name," +
+            "u." + UsersTable.USER_UUID + ',' +
             "u_info." + UserInfoTable.REGISTERED + " as registered," +
             "server." + ServerTable.NAME + " as server_name," +
-            "server." + ServerTable.SERVER_ID + " as server_id," +
+            "server." + ServerTable.ID + " as server_id," +
+            "server." + ServerTable.SERVER_UUID + " as server_uuid," +
             SessionsTable.SESSION_START + ',' +
             SessionsTable.SESSION_END + ',' +
             SessionsTable.MOB_KILLS + ',' +
@@ -70,6 +71,7 @@ public class SessionQueries {
             WorldTimesTable.ADVENTURE + ',' +
             WorldTimesTable.SPECTATOR + ',' +
             WorldTable.NAME + ',' +
+            "j." + JoinAddressTable.JOIN_ADDRESS + " as join_address," +
             KillsTable.KILLER_UUID + ',' +
             KillsTable.VICTIM_UUID + ',' +
             "v." + UsersTable.USER_NAME + " as victim_name, " +
@@ -77,9 +79,10 @@ public class SessionQueries {
             KillsTable.DATE + ',' +
             KillsTable.WEAPON +
             FROM + SessionsTable.TABLE_NAME + " s" +
-            INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=s." + SessionsTable.USER_UUID +
-            INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID +
-            LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID + ')' +
+            INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
+            INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+            INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
+            LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_ID + "=s." + SessionsTable.USER_ID + AND + "u_info." + UserInfoTable.SERVER_ID + "=s." + SessionsTable.SERVER_ID + ')' +
             LEFT_JOIN + KillsTable.TABLE_NAME + " ON " + "s." + SessionsTable.ID + '=' + KillsTable.TABLE_NAME + '.' + KillsTable.SESSION_ID +
             LEFT_JOIN + UsersTable.TABLE_NAME + " v on v." + UsersTable.USER_UUID + '=' + KillsTable.VICTIM_UUID +
             LEFT_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + '=' + KillsTable.KILLER_UUID +
@@ -105,33 +108,6 @@ public class SessionQueries {
     }
 
     /**
-     * Query the database for Session data of a server with kill and world data.
-     *
-     * @param serverUUID UUID of the Plan server.
-     * @return Map: Player UUID - List of sessions on the server.
-     */
-    public static Query<Map<UUID, List<FinishedSession>>> fetchSessionsOfServer(ServerUUID serverUUID) {
-        return db -> SessionsMutator.sortByPlayers(db.query(fetchSessionsOfServerFlat(serverUUID)));
-    }
-
-    public static QueryStatement<List<FinishedSession>> fetchSessionsOfServerFlat(ServerUUID serverUUID) {
-        String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + "s." + SessionsTable.SERVER_UUID + "=?" +
-                ORDER_BY_SESSION_START_DESC;
-        return new QueryStatement<List<FinishedSession>>(sql, 50000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public List<FinishedSession> processResults(ResultSet set) throws SQLException {
-                return extractDataFromSessionSelectStatement(set);
-            }
-        };
-    }
-
-    /**
      * Query the database for Session data of a player with kill and world data.
      *
      * @param playerUUID UUID of the Player.
@@ -139,9 +115,9 @@ public class SessionQueries {
      */
     public static Query<Map<ServerUUID, List<FinishedSession>>> fetchSessionsOfPlayer(UUID playerUUID) {
         String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + "s." + SessionsTable.USER_UUID + "=?" +
+                WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 ORDER_BY_SESSION_START_DESC;
-        return new QueryStatement<Map<ServerUUID, List<FinishedSession>>>(sql, 50000) {
+        return new QueryStatement<Map<ServerUUID, List<FinishedSession>>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -165,10 +141,10 @@ public class SessionQueries {
         Comparator<Long> longRecentComparator = (one, two) -> Long.compare(two, one); // Descending order, most recent first.
 
         while (set.next()) {
-            ServerUUID serverUUID = ServerUUID.fromString(set.getString(SessionsTable.SERVER_UUID));
+            ServerUUID serverUUID = ServerUUID.fromString(set.getString("server_uuid"));
             Map<UUID, SortedMap<Long, FinishedSession>> serverSessions = byServer.computeIfAbsent(serverUUID, Maps::create);
 
-            UUID playerUUID = UUID.fromString(set.getString(SessionsTable.USER_UUID));
+            UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
             SortedMap<Long, FinishedSession> playerSessions = serverSessions.computeIfAbsent(playerUUID, key -> new TreeMap<>(longRecentComparator));
 
             long sessionStart = set.getLong(SessionsTable.SESSION_START);
@@ -186,6 +162,7 @@ public class SessionQueries {
             extraData.put(FinishedSession.Id.class, new FinishedSession.Id(set.getInt(SessionsTable.ID)));
             extraData.put(MobKillCounter.class, new MobKillCounter(set.getInt(SessionsTable.MOB_KILLS)));
             extraData.put(DeathCounter.class, new DeathCounter(set.getInt(SessionsTable.DEATHS)));
+            extraData.put(JoinAddress.class, new JoinAddress(set.getString("join_address")));
 
             Optional<WorldTimes> existingWorldTimes = extraData.get(WorldTimes.class);
             Optional<PlayerKills> existingPlayerKills = extraData.get(PlayerKills.class);
@@ -253,15 +230,16 @@ public class SessionQueries {
 
     public static Query<List<FinishedSession>> fetchServerSessionsWithoutKillOrWorldData(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
-                SessionsTable.ID + ',' +
-                SessionsTable.USER_UUID + ',' +
+                SessionsTable.TABLE_NAME + '.' + SessionsTable.ID + ',' +
+                UsersTable.USER_UUID + ',' +
                 SessionsTable.SESSION_START + ',' +
                 SessionsTable.SESSION_END + ',' +
                 SessionsTable.DEATHS + ',' +
                 SessionsTable.MOB_KILLS + ',' +
                 SessionsTable.AFK_TIME +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
 
@@ -277,7 +255,7 @@ public class SessionQueries {
             public List<FinishedSession> processResults(ResultSet set) throws SQLException {
                 List<FinishedSession> sessions = new ArrayList<>();
                 while (set.next()) {
-                    UUID uuid = UUID.fromString(set.getString(SessionsTable.USER_UUID));
+                    UUID uuid = UUID.fromString(set.getString(UsersTable.USER_UUID));
                     long start = set.getLong(SessionsTable.SESSION_START);
                     long end = set.getLong(SessionsTable.SESSION_END);
 
@@ -300,7 +278,7 @@ public class SessionQueries {
 
     private static Query<Long> fetchLatestSessionStartLimitForServer(ServerUUID serverUUID, int limit) {
         String sql = SELECT + SessionsTable.SESSION_START + FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 ORDER_BY_SESSION_START_DESC + " LIMIT ?";
 
         return new QueryStatement<Long>(sql, limit) {
@@ -344,7 +322,7 @@ public class SessionQueries {
 
     public static Query<List<FinishedSession>> fetchLatestSessionsOfServer(ServerUUID serverUUID, int limit) {
         String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + "s." + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + "s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + "s." + SessionsTable.SESSION_START + ">=?" +
                 ORDER_BY_SESSION_START_DESC;
 
@@ -368,7 +346,7 @@ public class SessionQueries {
     public static Query<List<FinishedSession>> fetchLatestSessions(int limit) {
         String sql = SELECT_SESSIONS_STATEMENT
                 // Fix for "First Session" icons in the Most recent sessions on network page
-                .replace(LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_UUID + "=s." + SessionsTable.USER_UUID + AND + "u_info." + UserInfoTable.SERVER_UUID + "=s." + SessionsTable.SERVER_UUID + ')', "")
+                .replace(LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_ID + "=s." + SessionsTable.USER_ID + AND + "u_info." + UserInfoTable.SERVER_ID + "=s." + SessionsTable.SERVER_ID + ')', "")
                 .replace("u_info", "u") +
                 WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
                 ORDER_BY_SESSION_START_DESC;
@@ -391,7 +369,7 @@ public class SessionQueries {
     public static Query<Long> sessionCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as count" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
         return new QueryStatement<Long>(sql) {
@@ -447,7 +425,7 @@ public class SessionQueries {
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     GROUP_BY + "date";
 
             return database.query(new QueryStatement<NavigableMap<Long, Integer>>(selectSessionsPerDay, 100) {
@@ -474,7 +452,7 @@ public class SessionQueries {
     public static Query<Long> playtime(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
         return new QueryStatement<Long>(sql) {
@@ -493,12 +471,13 @@ public class SessionQueries {
     }
 
     public static Query<Map<ServerUUID, Long>> playtimeOfPlayer(long after, long before, UUID playerUUID) {
-        String sql = SELECT + SessionsTable.SERVER_UUID + ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+        String sql = SELECT + ServerTable.SERVER_UUID + ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.USER_UUID + "=?" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
+                WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + SessionsTable.SERVER_UUID;
+                GROUP_BY + SessionsTable.SERVER_ID;
         return new QueryStatement<Map<ServerUUID, Long>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -511,7 +490,7 @@ public class SessionQueries {
             public Map<ServerUUID, Long> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, Long> playtimeOfPlayer = new HashMap<>();
                 while (set.next()) {
-                    playtimeOfPlayer.put(ServerUUID.fromString(set.getString(SessionsTable.SERVER_UUID)), set.getLong("playtime"));
+                    playtimeOfPlayer.put(ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)), set.getLong("playtime"));
                 }
                 return playtimeOfPlayer;
             }
@@ -556,7 +535,7 @@ public class SessionQueries {
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     GROUP_BY + "date";
 
             return database.query(new QueryStatement<NavigableMap<Long, Long>>(selectPlaytimePerDay, 100) {
@@ -590,7 +569,7 @@ public class SessionQueries {
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_UUID + "=?" +
+                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     GROUP_BY + "date";
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerDay + ") q1";
 
@@ -614,13 +593,13 @@ public class SessionQueries {
     public static Query<Long> averagePlaytimePerPlayer(long after, long before, ServerUUID serverUUID) {
         return database -> {
             String selectPlaytimePerPlayer = SELECT +
-                    SessionsTable.USER_UUID + "," +
+                    SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_UUID + "=?" +
-                    GROUP_BY + SessionsTable.USER_UUID;
+                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
             return database.query(new QueryStatement<Long>(selectAverage, 100) {
@@ -649,12 +628,12 @@ public class SessionQueries {
     public static Query<Long> averagePlaytimePerPlayer(long after, long before) {
         return database -> {
             String selectPlaytimePerPlayer = SELECT +
-                    SessionsTable.USER_UUID + "," +
+                    SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    GROUP_BY + SessionsTable.USER_UUID;
+                    GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
             return database.query(new QueryStatement<Long>(selectAverage, 100) {
@@ -675,13 +654,13 @@ public class SessionQueries {
     public static Query<Long> averageAfkPerPlayer(long after, long before, ServerUUID serverUUID) {
         return database -> {
             String selectAfkPerPlayer = SELECT +
-                    SessionsTable.USER_UUID + "," +
+                    SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.AFK_TIME + ") as afk" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_UUID + "=?" +
-                    GROUP_BY + SessionsTable.USER_UUID;
+                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
 
             return database.query(new QueryStatement<Long>(selectAverage, 100) {
@@ -710,12 +689,12 @@ public class SessionQueries {
     public static Query<Long> averageAfkPerPlayer(long after, long before) {
         return database -> {
             String selectAfkPerPlayer = SELECT +
-                    SessionsTable.USER_UUID + "," +
+                    SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.AFK_TIME + ") as afk" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    GROUP_BY + SessionsTable.USER_UUID;
+                    GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
 
             return database.query(new QueryStatement<Long>(selectAverage, 100) {
@@ -736,7 +715,7 @@ public class SessionQueries {
     public static Query<Long> afkTime(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ") as afk_time" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
         return new QueryStatement<Long>(sql) {
@@ -776,13 +755,13 @@ public class SessionQueries {
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
         String sql = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
-                "s." + ServerTable.SERVER_ID + ',' +
+                "s." + ServerTable.ID + ',' +
                 "s." + ServerTable.NAME +
                 FROM + SessionsTable.TABLE_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.SERVER_UUID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_UUID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + "s." + ServerTable.SERVER_ID;
+                GROUP_BY + "s." + ServerTable.ID;
         return new QueryStatement<Map<String, Long>>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -796,7 +775,7 @@ public class SessionQueries {
                 while (set.next()) {
                     String name = Server.getIdentifiableName(
                             set.getString(ServerTable.NAME),
-                            set.getInt(ServerTable.SERVER_ID)
+                            set.getInt(ServerTable.ID)
                     );
                     playtimePerServer.put(name, set.getLong("playtime"));
                 }
@@ -808,8 +787,8 @@ public class SessionQueries {
     public static Query<Long> lastSeen(UUID playerUUID, ServerUUID serverUUID) {
         String sql = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.USER_UUID + "=?" +
-                AND + SessionsTable.SERVER_UUID + "=?";
+                WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
         return new QueryStatement<Long>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -828,7 +807,7 @@ public class SessionQueries {
         String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
                 ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_UUID + "=?" +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
         return new QueryStatement<Long>(sql) {
@@ -846,13 +825,18 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Set<UUID>> uuidsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + DISTINCT + SessionsTable.USER_UUID +
+    public static Query<Set<Integer>> userIdsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
+
+        String sql = SELECT + DISTINCT + "u." + UsersTable.ID +
                 FROM + SessionsTable.TABLE_NAME +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.USER_ID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
-        return new QueryStatement<Set<UUID>>(sql) {
+                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
+        return new QueryStatement<Set<Integer>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -860,17 +844,22 @@ public class SessionQueries {
             }
 
             @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> uuids = new HashSet<>();
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> userIds = new HashSet<>();
                 while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(SessionsTable.USER_UUID)));
+                    userIds.add(set.getInt(UsersTable.ID));
                 }
-                return uuids;
+                return userIds;
             }
         };
     }
 
-    public static Query<Map<String, Long>> summaryOfPlayers(Set<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long after, long before) {
+    public static Query<Map<String, Long>> summaryOfPlayers(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
+        String uuidsInSet = " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ")";
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
+
         String selectAggregates = SELECT +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime," +
@@ -878,9 +867,8 @@ public class SessionQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
-                AND + SessionsTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')" +
-                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')");
+                AND + SessionsTable.USER_ID + uuidsInSet +
+                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
         return new QueryStatement<Map<String, Long>>(selectAggregates) {
             @Override
@@ -895,7 +883,7 @@ public class SessionQueries {
                     long sessionCount = set.getLong("session_count");
                     long playtime = set.getLong("playtime");
                     long activePlaytime = set.getLong("active_playtime");
-                    int playerCount = playerUUIDs.size();
+                    int playerCount = userIds.size();
                     return Maps.builder(String.class, Long.class)
                             .put("total_playtime", playtime)
                             .put("average_playtime", playerCount != 0 ? playtime / playerCount : -1L)

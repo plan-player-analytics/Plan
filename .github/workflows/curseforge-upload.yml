@@ -26,7 +26,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: 2:Java 16,73242:1.17,73242:1.17.1,Fabric
+          game_versions: "2:Java 16,2:Java 17,73242:1.17,73242:1.17.1,Fabric,73250:1.18,73250:1.18.1,9008:1.18.2"
           release_type: release
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
 
@@ -51,6 +51,6 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: 2:Java 16,73242:1.17,73242:1.17.1,Fabric
+          game_versions: "2:Java 16,2:Java 17,73242:1.17,73242:1.17.1,Fabric,73250:1.18,73250:1.18.1,9008:1.18.2"
           release_type: beta
           relations: fabric-api:requiredDependency,luckperms:optionalDependency

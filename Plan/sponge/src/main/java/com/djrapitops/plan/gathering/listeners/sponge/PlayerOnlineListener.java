@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
 import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -170,30 +171,35 @@ public class PlayerOnlineListener {
         String playerName = player.name();
         String displayName = LegacyComponentSerializer.legacyAmpersand().serialize(player.displayName().get());
 
-        boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
-        if (gatheringGeolocations) {
-            database.executeTransaction(
-                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
-            );
-        }
-
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time,
-                playerName, serverUUID, getHostName));
-        ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
-        session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
-        session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
-        sessionCache.cacheSession(playerUUID, session)
-                .ifPresent(previousSession -> database.executeTransaction(new SessionEndTransaction(previousSession)));
+                        playerName, serverUUID, getHostName))
+                .thenRunAsync(() -> {
+                    boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+                    if (gatheringGeolocations) {
+                        database.executeTransaction(
+                                new StoreGeoInfoTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                        );
+                    }
+                    database.executeTransaction(new StoreJoinAddressTransaction(getHostName));
 
-        database.executeTransaction(new NicknameStoreTransaction(
-                playerUUID, new Nickname(displayName, time, serverUUID),
-                (uuid, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
-        ));
+                    ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
+                    session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
+                    session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
+                    session.getExtraData().put(JoinAddress.class, new JoinAddress(getHostName));
+                    sessionCache.cacheSession(playerUUID, session)
+                            .map(StoreSessionTransaction::new)
+                            .ifPresent(database::executeTransaction);
 
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
-            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
-        }
+                    database.executeTransaction(new NicknameStoreTransaction(
+                            playerUUID, new Nickname(displayName, time, serverUUID),
+                            (uuid, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
+                    ));
+
+                    processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+                    if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+                        processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+                    }
+                });
     }
 
     @Listener(order = Order.DEFAULT)
@@ -227,7 +233,7 @@ public class PlayerOnlineListener {
         dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(player.profile())));
 
         sessionCache.endSession(playerUUID, time)
-                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new SessionEndTransaction(endedSession)));
+                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new StoreSessionTransaction(endedSession)));
 
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));

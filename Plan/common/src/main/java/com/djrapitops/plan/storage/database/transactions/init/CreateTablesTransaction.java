@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.init;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 
 /**
  * Transaction that creates the table schema of Plan database.
@@ -36,6 +37,8 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(UserInfoTable.createTableSQL(dbType));
         execute(GeoInfoTable.createTableSQL(dbType));
         execute(NicknamesTable.createTableSQL(dbType));
+        execute(JoinAddressTable.createTableSQL(dbType));
+        executeOther(new StoreJoinAddressTransaction(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
         execute(SessionsTable.createTableSQL(dbType));
         execute(KillsTable.createTableSQL(dbType));
         execute(PingTable.createTableSQL(dbType));

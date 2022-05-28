@@ -41,7 +41,7 @@ public class BungeeMockComponent {
         SQLDB.setDownloadDriver(false);
     }
 
-    public PlanBungee getPlanMock() throws Exception {
+    public PlanBungee getPlanMock() {
         if (planMock == null) {
             planMock = PlanBungeeMocker.setUp()
                     .withDataFolder(tempDir.toFile())
@@ -53,7 +53,7 @@ public class BungeeMockComponent {
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanBungee planMock = getPlanMock();
             component = DaggerPlanBungeeComponent.builder()

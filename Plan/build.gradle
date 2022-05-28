@@ -60,10 +60,9 @@ subprojects {
     }
 
     ext {
-        daggerVersion = "2.40.5"
-        daggerCompilerVersion = "2.40.5"
+        daggerVersion = "2.42"
 
-        palVersion = "5.0.0"
+        palVersion = "5.0.3"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
@@ -80,12 +79,18 @@ subprojects {
         mysqlVersion = "8.0.28"
         sqliteVersion = "3.36.0.3"
         hikariVersion = "4.0.3"
-        slf4jVersion = "1.7.35"
+        slf4jVersion = "1.7.36"
         geoIpVersion = "2.16.1"
-        gsonVersion = "2.8.9"
+        gsonVersion = "2.9.0"
+        dependencyDownloadVersion = "1.2.1"
+
         bstatsVersion = "3.0.0"
         placeholderapiVersion = "2.11.1"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
+
+        junitVersion = "5.8.2"
+        mockitoVersion = "4.5.1"
+        testContainersVersion = "1.17.2"
     }
 
     repositories {
@@ -103,15 +108,15 @@ subprojects {
     dependencies {
         // Dependency Injection used across the project
         implementation "com.google.dagger:dagger:$daggerVersion"
-        annotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
-        testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerCompilerVersion"
+        annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+        testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
         // Test Tooling Dependencies
-        testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'      // JUnit 5
-        testImplementation "org.mockito:mockito-core:4.3.1"                // Mockito Core
-        testImplementation "org.mockito:mockito-junit-jupiter:4.3.1"       // Mockito JUnit 5 Extension
-        testImplementation "org.seleniumhq.selenium:selenium-java:4.1.2" // Selenium (Browser tests)
-        testImplementation "com.jayway.awaitility:awaitility:1.7.0"         // Awaitility (Concurrent wait conditions)
+        testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"      // JUnit 5
+        testImplementation "org.mockito:mockito-core:$mockitoVersion"           // Mockito Core
+        testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"  // Mockito JUnit 5 Extension
+        testImplementation "org.seleniumhq.selenium:selenium-java:4.1.4"        // Selenium (Browser tests)
+        testImplementation "com.jayway.awaitility:awaitility:1.7.0"             // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
         testImplementation "org.xerial:sqlite-jdbc:$sqliteVersion"    // SQLite
@@ -159,6 +164,6 @@ sonarqube {
     properties {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
-        property "sonar.coverage.jacoco.xmlReportPaths", "**/build/report/jacoco/test/jacocoTestReport.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/report/jacoco/test/jacocoTestReport.xml"
     }
 }

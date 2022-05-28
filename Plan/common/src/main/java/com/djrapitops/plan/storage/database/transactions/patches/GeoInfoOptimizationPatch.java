@@ -31,16 +31,16 @@ public class GeoInfoOptimizationPatch extends Patch {
     private final String oldTableName;
 
     public GeoInfoOptimizationPatch() {
-        oldTableName = "plan_ips";
-        tempTableName = "temp_ips";
+        oldTableName = GeoInfoTable.TABLE_NAME;
+        tempTableName = "temp_geoinformation";
     }
 
     @Override
     public boolean hasBeenApplied() {
         return !hasTable(oldTableName)
                 || hasColumn(oldTableName, GeoInfoTable.ID)
-                && hasColumn(oldTableName, GeoInfoTable.USER_UUID)
-                && !hasColumn(oldTableName, "user_id")
+                && hasColumn(oldTableName, GeoInfoTable.USER_ID)
+                && !hasColumn(oldTableName, "uuid")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
 
@@ -50,11 +50,11 @@ public class GeoInfoOptimizationPatch extends Patch {
         execute(GeoInfoTable.createTableSQL(dbType));
 
         execute("INSERT INTO " + GeoInfoTable.TABLE_NAME + " (" +
-                GeoInfoTable.USER_UUID + ',' +
+                GeoInfoTable.USER_ID + ',' +
                 GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +
                 ") " + SELECT + DISTINCT +
-                "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
+                "(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid = " + tempTableName + ".uuid LIMIT 1)," +
                 GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +
                 FROM + tempTableName

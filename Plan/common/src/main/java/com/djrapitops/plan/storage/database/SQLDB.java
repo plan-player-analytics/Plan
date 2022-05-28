@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
@@ -46,11 +47,15 @@ import net.playeranalytics.plugin.scheduling.TimeAmount;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -81,6 +86,10 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
+
+    private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
+    private final AtomicBoolean dropUnimportantTransactions = new AtomicBoolean(false);
+    private final AtomicBoolean ranIntoFatalError = new AtomicBoolean(false);
 
     protected SQLDB(
             Supplier<ServerUUID> serverUUIDSupplier,
@@ -194,31 +203,37 @@ public abstract class SQLDB extends AbstractDatabase {
                 new VersionTableRemovalPatch(),
                 new DiskUsagePatch(),
                 new WorldsOptimizationPatch(),
-                new WorldTimesOptimizationPatch(),
                 new KillsOptimizationPatch(),
-                new SessionsOptimizationPatch(),
-                new PingOptimizationPatch(),
                 new NicknamesOptimizationPatch(),
-                new UserInfoOptimizationPatch(),
-                new GeoInfoOptimizationPatch(),
                 new TransferTableRemovalPatch(),
                 new BadAFKThresholdValuePatch(),
                 new DeleteIPsPatch(),
                 new ExtensionShowInPlayersTablePatch(),
                 new ExtensionTableRowValueLengthPatch(),
                 new CommandUsageTableRemovalPatch(),
-                new RegisterDateMinimizationPatch(),
                 new BadNukkitRegisterValuePatch(),
                 new LinkedToSecurityTablePatch(),
                 new LinkUsersToPlayersSecurityTablePatch(),
                 new LitebansTableHeaderPatch(),
                 new UserInfoHostnamePatch(),
                 new ServerIsProxyPatch(),
-                new UserInfoHostnameAllowNullPatch(),
                 new ServerTableRowPatch(),
                 new PlayerTableRowPatch(),
                 new ExtensionTableProviderValuesForPatch(),
-                new RemoveIncorrectTebexPackageDataPatch()
+                new RemoveIncorrectTebexPackageDataPatch(),
+                new ExtensionTableProviderFormattersPatch(),
+                new ServerPlanVersionPatch(),
+                new RemoveDanglingUserDataPatch(),
+                new RemoveDanglingServerDataPatch(),
+                new GeoInfoOptimizationPatch(),
+                new PingOptimizationPatch(),
+                new UserInfoOptimizationPatch(),
+                new WorldTimesOptimizationPatch(),
+                new SessionsOptimizationPatch(),
+                new UserInfoHostnameAllowNullPatch(),
+                new RegisterDateMinimizationPatch(),
+                new UsersTableNameLengthPatch(),
+                new SessionJoinAddressPatch()
         };
     }
 
@@ -228,6 +243,12 @@ public abstract class SQLDB extends AbstractDatabase {
      * Updates to latest schema.
      */
     private void setupDatabase() {
+        executeTransaction(new OperationCriticalTransaction() {
+            @Override
+            protected void performOperations() {
+                logger.info(locale.getString(PluginLang.DB_SCHEMA_PATCH));
+            }
+        });
         executeTransaction(new CreateTablesTransaction());
         for (Patch patch : patches()) {
             executeTransaction(patch);
@@ -235,6 +256,7 @@ public abstract class SQLDB extends AbstractDatabase {
         executeTransaction(new OperationCriticalTransaction() {
             @Override
             protected void performOperations() {
+                logger.info(locale.getString(PluginLang.DB_APPLIED_PATCHES));
                 if (getState() == State.PATCHING) setState(State.OPEN);
             }
         });
@@ -278,14 +300,10 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     private void unloadDriverClassloader() {
-        try {
-            if (driverClassLoader != null && driverClassLoader instanceof IsolatedClassLoader) {
-                ((IsolatedClassLoader) driverClassLoader).close();
-            }
-            driverClassLoader = null;
-        } catch (IOException e) {
-            errorLogger.error(e, ErrorContext.builder().build());
-        }
+        // Unloading class loader using close() causes issues when reloading.
+        // It is better to leak this memory than crash the plugin on reload.
+
+        driverClassLoader = null;
     }
 
     public abstract Connection getConnection() throws SQLException;
@@ -299,18 +317,43 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     @Override
-    public Future<?> executeTransaction(Transaction transaction) {
+    public CompletableFuture<?> executeTransaction(Transaction transaction) {
         if (getState() == State.CLOSED) {
             throw new DBOpException("Transaction tried to execute although database is closed.");
         }
 
         Exception origin = new Exception();
 
-        return CompletableFuture.supplyAsync(() -> {
-            accessLock.checkAccess(transaction);
-            transaction.executeTransaction(this);
+        if (determineIfShouldDropUnimportantTransactions(transactionQueueSize.incrementAndGet())
+                && transaction instanceof ThrowawayTransaction) {
+            // Drop throwaway transaction immediately.
             return CompletableFuture.completedFuture(null);
+        }
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                accessLock.checkAccess(transaction);
+                if (!ranIntoFatalError.get()) {
+                    transaction.executeTransaction(this);
+                }
+                return CompletableFuture.completedFuture(null);
+            } finally {
+                transactionQueueSize.decrementAndGet();
+            }
         }, getTransactionExecutor()).exceptionally(errorHandler(transaction, origin));
+    }
+
+    private boolean determineIfShouldDropUnimportantTransactions(int queueSize) {
+        boolean dropTransactions = dropUnimportantTransactions.get();
+        if (queueSize >= 500 && !dropTransactions) {
+            logger.warn("Database can't keep up with transactions (Queue size: " + queueSize + "), dropping some unimportant transactions from execution.");
+            dropUnimportantTransactions.set(true);
+            return true;
+        } else if (queueSize < 50 && dropTransactions) {
+            dropUnimportantTransactions.set(false);
+            return false;
+        }
+        return dropTransactions;
     }
 
     private Function<Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, Exception origin) {
@@ -319,6 +362,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 return CompletableFuture.completedFuture(null);
             }
             if (throwable.getCause() instanceof FatalDBException) {
+                ranIntoFatalError.set(true);
                 logger.error("Database failed to open, " + transaction.getClass().getName() + " failed to be executed.");
                 FatalDBException actual = (FatalDBException) throwable.getCause();
                 Optional<String> whatToDo = actual.getContext().flatMap(ErrorContext::getWhatToDo);
@@ -330,7 +374,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
             ErrorContext errorContext = ErrorContext.builder()
                     .related("Transaction: " + transaction.getClass())
-                    .related("DB State: " + getState())
+                    .related("DB State: " + getState() + " - fatal: " + ranIntoFatalError.get())
                     .build();
             if (getState() == State.CLOSED) {
                 errorLogger.critical(throwable, errorContext);
@@ -375,5 +419,13 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public PluginLogger getLogger() {
         return logger;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public boolean shouldDropUnimportantTransactions() {
+        return dropUnimportantTransactions.get();
     }
 }

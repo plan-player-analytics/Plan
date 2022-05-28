@@ -36,10 +36,7 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
@@ -82,7 +79,7 @@ public class MySQLDB extends SQLDB {
         try {
             return files.getResourceFromJar("dependencies/mysqlDriver.txt").asLines();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get MySQL dependency information", e);
+            throw new DBInitException("Failed to get MySQL dependency information", e);
         }
     }
 
@@ -110,7 +107,7 @@ public class MySQLDB extends SQLDB {
             String database = config.get(DatabaseSettings.MYSQL_DATABASE);
             String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
             // REGEX: match "?", match "word=word&" *-times, match "word=word"
-            if (launchOptions.isEmpty() || !launchOptions.matches("\\?(((\\w|[-])+=.+)&)*((\\w|[-])+=.+)")) {
+            if (launchOptions.isEmpty() || !launchOptions.matches("\\?((([\\w-])+=.+)&)*(([\\w-])+=.+)")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
@@ -127,7 +124,7 @@ public class MySQLDB extends SQLDB {
             hikariConfig.setPoolName("Plan Connection Pool-" + increment);
             increment();
 
-            hikariConfig.setAutoCommit(true);
+            hikariConfig.setAutoCommit(false);
             try {
                 hikariConfig.setMaximumPoolSize(config.get(DatabaseSettings.MAX_CONNECTIONS));
             } catch (IllegalStateException e) {
@@ -177,7 +174,14 @@ public class MySQLDB extends SQLDB {
             }
         }
         if (connection.getAutoCommit()) connection.setAutoCommit(false);
+        setTimezoneToUTC(connection);
         return connection;
+    }
+
+    private void setTimezoneToUTC(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("set time_zone = '+00:00'");
+        }
     }
 
     @Override
@@ -194,7 +198,7 @@ public class MySQLDB extends SQLDB {
                 connection.close();
             }
         } catch (SQLException e) {
-            errorLogger.critical(e, ErrorContext.builder().related("Closing connection").build());
+            errorLogger.error(e, ErrorContext.builder().related("Closing connection").build());
         }
     }
 

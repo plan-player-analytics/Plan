@@ -25,10 +25,10 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.queries.QueriesTestAggregate;
+import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
-import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
@@ -69,7 +69,7 @@ class MySQLTest implements DatabaseTest, QueriesTestAggregate {
     private static DBPreparer preparer;
 
     @BeforeAll
-    static void setupDatabase(@TempDir Path temp) throws Exception {
+    static void setupDatabase(@TempDir Path temp) {
         component = DaggerDatabaseTestComponent.builder()
                 .bindTemporaryDirectory(temp)
                 .build();
@@ -77,35 +77,21 @@ class MySQLTest implements DatabaseTest, QueriesTestAggregate {
         Optional<Database> mysql = preparer.prepareMySQL();
         Assumptions.assumeTrue(mysql.isPresent());
         database = mysql.get();
+        database.executeTransaction(new CreateTablesTransaction());
     }
 
     @BeforeEach
     void setUp() {
         TestErrorLogger.throwErrors(true);
-        db().executeTransaction(new Patch() {
-            @Override
-            public boolean hasBeenApplied() {
-                return false;
-            }
-
-            @Override
-            public void applyPatch() {
-                dropTable("plan_world_times");
-                dropTable("plan_kills");
-                dropTable("plan_sessions");
-                dropTable("plan_worlds");
-                dropTable("plan_users");
-            }
-        });
-        db().executeTransaction(new CreateTablesTransaction());
         db().executeTransaction(new RemoveEverythingTransaction());
 
-        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), TestConstants.SERVER_NAME, "")));
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), TestConstants.SERVER_NAME, "", TestConstants.VERSION)));
         assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
     }
 
     @AfterAll
     static void disableSystem() {
+        preparer.prepareMySQL().ifPresent(Database::close);
         if (database != null) database.close();
         preparer.tearDown();
     }
@@ -143,6 +129,11 @@ class MySQLTest implements DatabaseTest, QueriesTestAggregate {
     @Override
     public ExtensionSvc extensionService() {
         return component.extensionService();
+    }
+
+    @Override
+    public QueryFilters queryFilters() {
+        return component.queryFilters();
     }
 
     @Override

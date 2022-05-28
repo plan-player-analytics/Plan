@@ -125,7 +125,7 @@ public class LinkCommands {
         String serversListed = dbSystem.getDatabase()
                 .query(ServerQueries.fetchPlanServerInformationCollection())
                 .stream().sorted()
-                .map(server -> m + server.getId().orElse(0) + "::" + t + server.getName() + "::" + s + server.getUuid() + "\n")
+                .map(server -> m + server.getId().orElse(0) + "::" + t + server.getName() + "::" + s + server.getUuid() + "::" + s + server.getPlanVersion() + "\n")
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
         sender.buildMessage()

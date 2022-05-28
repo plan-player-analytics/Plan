@@ -18,8 +18,8 @@ package com.djrapitops.plan.storage.database.queries.analysis;
 
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
-import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
@@ -37,7 +37,7 @@ public interface TopListQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        execute(DataStoreQueries.storeSession(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
     }
 
     @Test

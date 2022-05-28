@@ -18,7 +18,9 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,10 +53,11 @@ public class PerServerAggregateQueries {
      */
     public static Query<Map<ServerUUID, Long>> lastSeenOnServers(UUID playerUUID) {
         String sql = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
-                SessionsTable.SERVER_UUID +
+                ServerTable.SERVER_UUID +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.USER_UUID + "=?" +
-                GROUP_BY + SessionsTable.SERVER_UUID;
+                INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
+                WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                GROUP_BY + SessionsTable.SERVER_ID;
         return new QueryStatement<Map<ServerUUID, Long>>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -65,7 +68,7 @@ public class PerServerAggregateQueries {
             public Map<ServerUUID, Long> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, Long> lastSeenMap = new HashMap<>();
                 while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(SessionsTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     long lastSeen = set.getLong("last_seen");
                     lastSeenMap.put(serverUUID, lastSeen);
                 }
@@ -81,7 +84,8 @@ public class PerServerAggregateQueries {
      * @return Map: Server UUID - Player kill count
      */
     public static Query<Map<ServerUUID, Integer>> playerKillCountOnServers(UUID playerUUID) {
-        String sql = SELECT + "COUNT(1) as kill_count, " + KillsTable.SERVER_UUID + FROM + KillsTable.TABLE_NAME +
+        String sql = SELECT + "COUNT(1) as kill_count, " + KillsTable.SERVER_UUID +
+                FROM + KillsTable.TABLE_NAME +
                 WHERE + KillsTable.KILLER_UUID + "=?" +
                 GROUP_BY + KillsTable.SERVER_UUID;
         return getQueryForCountOf(playerUUID, sql, "kill_count");
@@ -95,17 +99,21 @@ public class PerServerAggregateQueries {
      */
     public static Query<Map<ServerUUID, Integer>> mobKillCountOnServers(UUID playerUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.MOB_KILLS + ") as kill_count, " +
-                SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.USER_UUID + "=?" +
-                GROUP_BY + SessionsTable.SERVER_UUID;
+                ServerTable.SERVER_UUID + " as server_uuid" +
+                FROM + SessionsTable.TABLE_NAME +
+                INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
+                WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                GROUP_BY + SessionsTable.SERVER_ID;
         return getQueryForCountOf(playerUUID, sql, "kill_count");
     }
 
     public static Query<Map<ServerUUID, Integer>> totalDeathCountOnServers(UUID playerUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as death_count, " +
-                SessionsTable.SERVER_UUID + FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.USER_UUID + "=?" +
-                GROUP_BY + SessionsTable.SERVER_UUID;
+                ServerTable.SERVER_UUID + " as server_uuid" +
+                FROM + SessionsTable.TABLE_NAME +
+                INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
+                WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                GROUP_BY + SessionsTable.SERVER_ID;
         return getQueryForCountOf(playerUUID, sql, "death_count");
     }
 
@@ -121,7 +129,7 @@ public class PerServerAggregateQueries {
             public Map<ServerUUID, Integer> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, Integer> killCountMap = new HashMap<>();
                 while (set.next()) {
-                    ServerUUID serverUUID = ServerUUID.fromString(set.getString(SessionsTable.SERVER_UUID));
+                    ServerUUID serverUUID = ServerUUID.fromString(set.getString("server_uuid"));
                     int count = set.getInt(column);
                     killCountMap.put(serverUUID, count);
                 }

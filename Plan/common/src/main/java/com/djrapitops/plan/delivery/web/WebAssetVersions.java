@@ -29,27 +29,36 @@ import java.util.Optional;
 @Singleton
 public class WebAssetVersions {
 
-  private final PlanFiles files;
-  private Config webAssetConfig;
+    private final PlanFiles files;
+    private Config webAssetConfig;
 
-  private boolean prepared;
-
-  @Inject
-  public WebAssetVersions(
-      PlanFiles files
-  ) {
-    this.files = files;
-  }
-
-  public void prepare() throws IOException {
-    try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("WebAssetVersion.yml").asInputStream())) {
-      webAssetConfig = reader.read();
+    @Inject
+    public WebAssetVersions(
+            PlanFiles files
+    ) {
+        this.files = files;
     }
-  }
 
-  public Optional<Long> getWebAssetVersion(String resource) {
-    if (webAssetConfig == null) return Optional.empty();
+    public void prepare() throws IOException {
+        try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("WebAssetVersion.yml").asInputStream())) {
+            webAssetConfig = reader.read();
+        }
+    }
 
-    return webAssetConfig.getNode(resource.replace('.', ',')).map(ConfigNode::getLong);
-  }
+    public Optional<Long> getWebAssetVersion(String resource) {
+        if (webAssetConfig == null) return Optional.empty();
+
+        return webAssetConfig.getNode(resource.replace('.', ',')).map(ConfigNode::getLong);
+    }
+
+    public Optional<Long> getLatestWebAssetVersion() {
+        if (webAssetConfig == null) return Optional.empty();
+
+        long max = 0;
+        for (String configPath : webAssetConfig.getConfigPaths()) {
+            max = Math.max(max, webAssetConfig.getLong(configPath));
+        }
+
+        return Optional.of(max);
+    }
 }

@@ -18,6 +18,7 @@ package com.djrapitops.plan.placeholder;
 
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 
@@ -45,16 +46,19 @@ public final class PlanPlaceholders {
     private final Map<String, PlayerPlaceholderLoader> playerPlaceholders;
     private final Map<String, StaticPlaceholderLoader> staticPlaceholders;
 
-    private final Map<String, BiFunction<String, PlayerContainer, Serializable>> rawHandlers;
+    private final Map<String, Function<String, Serializable>> rawHandlers;
 
     private final DBSystem dbSystem;
+    private final Identifiers identifiers;
 
     @Inject
     public PlanPlaceholders(
             DBSystem dbSystem,
-            Set<Placeholders> placeholderRegistries
+            Set<Placeholders> placeholderRegistries,
+            Identifiers identifiers
     ) {
         this.dbSystem = dbSystem;
+        this.identifiers = identifiers;
 
         this.playerPlaceholders = new HashMap<>();
         this.staticPlaceholders = new HashMap<>();
@@ -81,7 +85,7 @@ public final class PlanPlaceholders {
         playerPlaceholders.put(name, loader);
     }
 
-    public void registerRaw(String name, BiFunction<String, PlayerContainer, Serializable> loader) {
+    public void registerRaw(String name, Function<String, Serializable> loader) {
         rawHandlers.put(name, loader);
     }
 
@@ -93,38 +97,41 @@ public final class PlanPlaceholders {
         return staticPlaceholders;
     }
 
-    public String onPlaceholderRequest(UUID uuid, String placeholder, List<String> parameters) {
-        PlayerContainer player;
-
-        if (uuid != null) {
-            player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
-        } else {
-            player = null;
-        }
-
-        return onPlaceholderRequest(player, placeholder, parameters);
-    }
-
     /**
      * Look up the placeholder and check if it is registered.
      *
-     * @param player      the player who is viewing the placeholder
+     * @param uuid        the player who is viewing the placeholder
      * @param placeholder the placeholder to look up to.
      * @param parameters  additional placeholder parameters
      * @return the value of the placeholder if found, or empty {@link String} if no
      * value found but the placeholder is registered,
      * otherwise {@code null}
      */
-    public String onPlaceholderRequest(PlayerContainer player, String placeholder, List<String> parameters) {
-        for (Entry<String, BiFunction<String, PlayerContainer, Serializable>> entry : rawHandlers.entrySet()) {
+    public String onPlaceholderRequest(UUID uuid, String placeholder, List<String> parameters) {
+        for (Entry<String, Function<String, Serializable>> entry : rawHandlers.entrySet()) {
             if (placeholder.startsWith(entry.getKey())) {
-                return Objects.toString(entry.getValue().apply(placeholder, player));
+                return Objects.toString(entry.getValue().apply(placeholder));
             }
         }
 
+        Arguments arguments = new Arguments(parameters);
+
         StaticPlaceholderLoader staticLoader = staticPlaceholders.get(placeholder);
         if (staticLoader != null) {
-            return Objects.toString(staticLoader.apply(new Arguments(parameters)));
+            return Objects.toString(staticLoader.apply(arguments));
+        }
+
+        Optional<String> givenIdentifier = arguments.get(0);
+        Optional<UUID> foundUUID = givenIdentifier
+                .flatMap(this::getPlayerUUIDForIdentifier);
+        UUID playerUUID = foundUUID.orElse(uuid);
+        PlayerContainer player;
+        if (givenIdentifier.isPresent() && !foundUUID.isPresent()) {
+            player = null; // Don't show other player whose identifier is not found.
+        } else if (playerUUID != null) {
+            player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        } else {
+            player = null;
         }
 
         PlayerPlaceholderLoader loader = playerPlaceholders.get(placeholder);
@@ -135,7 +142,28 @@ public final class PlanPlaceholders {
         return null;
     }
 
+    private Optional<UUID> getPlayerUUIDForIdentifier(String identifier) {
+        return Optional.ofNullable(identifiers.getPlayerUUID(identifier));
+    }
+
     public interface PlayerPlaceholderLoader extends BiFunction<PlayerContainer, List<String>, Serializable> {}
 
     public interface StaticPlaceholderLoader extends Function<Arguments, Serializable> {}
+
+    public List<String> getRegisteredServerPlaceholders() {
+        List<String> placeholders = new ArrayList<>();
+
+        placeholders.addAll(staticPlaceholders.keySet());
+        placeholders.addAll(rawHandlers.keySet());
+
+        Collections.sort(placeholders);
+        return placeholders;
+    }
+
+    public List<String> getRegisteredPlayerPlaceholders() {
+        List<String> placeholders = new ArrayList<>(playerPlaceholders.keySet());
+
+        Collections.sort(placeholders);
+        return placeholders;
+    }
 }

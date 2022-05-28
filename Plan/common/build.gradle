@@ -1,7 +1,9 @@
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
+import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id "dev.vankka.dependencydownload.plugin" version "1.1.4"
+    id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
+    id "com.github.node-gradle.node" version "3.3.0"
 }
 
 configurations {
@@ -42,7 +44,7 @@ dependencies {
     implementation "com.google.code.gson:gson:$gsonVersion"
     compileOnly "net.kyori:adventure-api:4.9.3"
 
-    implementation("dev.vankka.dependencydownload:runtime:1.1.4") {
+    implementation("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
@@ -51,9 +53,12 @@ dependencies {
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
+
+    testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
+    testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
+    testImplementation "org.testcontainers:nginx:$testContainersVersion"
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
 task updateVersion(type: Copy) {
     from('src/main/resources') {
         include 'plugin.yml'
@@ -63,6 +68,36 @@ task updateVersion(type: Copy) {
     }
     into 'build/sources/resources/'
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+}
+
+node {
+    download = true
+    version = "16.14.2"
+    nodeProjectDir = file("$rootDir/react/dashboard")
+}
+
+task yarnBundle(type: YarnTask) {
+    inputs.files(fileTree("$rootDir/react/dashboard/src"))
+    inputs.file("$rootDir/react/dashboard/package.json")
+
+    outputs.dir("$rootDir/react/dashboard/build")
+
+    dependsOn yarn_install
+    args = ['run', 'build']
+}
+
+task copyYarnBuildResults {
+    inputs.files(fileTree("$rootDir/react/dashboard/build"))
+    outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
+
+    dependsOn yarnBundle
+    doLast {
+        mkdir "$rootDir/common/build/resources/main/assets/plan/web"
+        copy {
+            from "$rootDir/react/dashboard/build"
+            into "$rootDir/common/build/resources/main/assets/plan/web"
+        }
+    }
 }
 
 task determineWebAssetModifications {
@@ -89,7 +124,7 @@ task determineWebAssetModifications {
 }
 
 processResources {
-    dependsOn determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
+    dependsOn copyYarnBuildResults, determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
     from 'build/sources/resources'

@@ -57,17 +57,17 @@ public class OperatorsFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
         List<String> selected = getSelected(query);
-        Set<UUID> uuids = new HashSet<>();
+        Set<Integer> userIds = new HashSet<>();
         String[] options = getOptionsArray();
 
         boolean includeOperators = selected.contains(options[0]);
         boolean includeNonOperators = selected.contains(options[1]);
 
         if (includeOperators && includeNonOperators) throw new CompleteSetException(); // Full set, no need for query
-        if (includeOperators) uuids.addAll(dbSystem.getDatabase().query(UserInfoQueries.uuidsOfOperators()));
-        if (includeNonOperators) uuids.addAll(dbSystem.getDatabase().query(UserInfoQueries.uuidsOfNonOperators()));
-        return uuids;
+        if (includeOperators) userIds.addAll(dbSystem.getDatabase().query(UserInfoQueries.userIdsOfOperators()));
+        if (includeNonOperators) userIds.addAll(dbSystem.getDatabase().query(UserInfoQueries.userIdsOfNonOperators()));
+        return userIds;
     }
 }

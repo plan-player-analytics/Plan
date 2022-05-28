@@ -163,7 +163,7 @@ public class QueryJSONResolver implements Resolver {
                     .put("timestamp", timestamp)
                     .build();
             if (!result.isEmpty()) {
-                json.put("data", getDataFor(result.getResultUUIDs(), view));
+                json.put("data", getDataFor(result.getResultUserIds(), view));
             }
 
             JSONStorage.StoredJSON stored = jsonStorage.storeJson("query", json, timestamp);
@@ -177,22 +177,22 @@ public class QueryJSONResolver implements Resolver {
         }
     }
 
-    private Map<String, Object> getDataFor(Set<UUID> playerUUIDs, ViewDto view) throws ParseException {
+    private Map<String, Object> getDataFor(Set<Integer> userIds, ViewDto view) throws ParseException {
         long after = view.getAfterEpochMs();
         long before = view.getBeforeEpochMs();
         List<ServerUUID> serverUUIDs = view.getServerUUIDs();
 
         return Maps.builder(String.class, Object.class)
-                .put("players", getPlayersTableData(playerUUIDs, serverUUIDs, after, before))
-                .put("activity", getActivityGraphData(playerUUIDs, serverUUIDs, after, before))
-                .put("geolocation", getGeolocationData(playerUUIDs))
-                .put("sessions", getSessionSummaryData(playerUUIDs, serverUUIDs, after, before))
+                .put("players", getPlayersTableData(userIds, serverUUIDs, after, before))
+                .put("activity", getActivityGraphData(userIds, serverUUIDs, after, before))
+                .put("geolocation", getGeolocationData(userIds))
+                .put("sessions", getSessionSummaryData(userIds, serverUUIDs, after, before))
                 .build();
     }
 
-    private Map<String, String> getSessionSummaryData(Set<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long after, long before) {
+    private Map<String, String> getSessionSummaryData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         Database database = dbSystem.getDatabase();
-        Map<String, Long> summary = database.query(SessionQueries.summaryOfPlayers(playerUUIDs, serverUUIDs, after, before));
+        Map<String, Long> summary = database.query(SessionQueries.summaryOfPlayers(userIds, serverUUIDs, after, before));
         Map<String, String> formattedSummary = new HashMap<>();
         Formatter<Long> timeAmount = formatters.timeAmount();
         for (Map.Entry<String, Long> entry : summary.entrySet()) {
@@ -203,14 +203,14 @@ public class QueryJSONResolver implements Resolver {
         return formattedSummary;
     }
 
-    private Map<String, Object> getGeolocationData(Set<UUID> playerUUIDs) {
+    private Map<String, Object> getGeolocationData(Set<Integer> userIds) {
         Database database = dbSystem.getDatabase();
         return graphJSONCreator.createGeolocationJSON(
-                database.query(GeoInfoQueries.networkGeolocationCounts(playerUUIDs))
+                database.query(GeoInfoQueries.networkGeolocationCounts(userIds))
         );
     }
 
-    private Map<String, Object> getActivityGraphData(Set<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long after, long before) {
+    private Map<String, Object> getActivityGraphData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         Database database = dbSystem.getDatabase();
         Long threshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
 
@@ -219,17 +219,17 @@ public class QueryJSONResolver implements Resolver {
 
         DateMap<Map<String, Integer>> activityData = new DateMap<>();
         for (long time = before; time >= stopDate; time -= TimeAmount.WEEK.toMillis(1L)) {
-            activityData.put(time, database.query(NetworkActivityIndexQueries.fetchActivityIndexGroupingsOn(time, threshold, playerUUIDs, serverUUIDs)));
+            activityData.put(time, database.query(NetworkActivityIndexQueries.fetchActivityIndexGroupingsOn(time, threshold, userIds, serverUUIDs)));
         }
 
         return graphJSONCreator.createActivityGraphJSON(activityData);
     }
 
-    private Map<String, Object> getPlayersTableData(Set<UUID> playerUUIDs, List<ServerUUID> serverUUIDs, long after, long before) {
+    private Map<String, Object> getPlayersTableData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         Database database = dbSystem.getDatabase();
         return new PlayersTableJSONCreator(
-                database.query(new QueryTablePlayersQuery(playerUUIDs, serverUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
-                database.query(new ExtensionQueryResultTableDataQuery(serverInfo.getServerUUID(), playerUUIDs)),
+                database.query(new QueryTablePlayersQuery(userIds, serverUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
+                database.query(new ExtensionQueryResultTableDataQuery(serverInfo.getServerUUID(), userIds)),
                 config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                 formatters, locale
         ).toJSONMap();

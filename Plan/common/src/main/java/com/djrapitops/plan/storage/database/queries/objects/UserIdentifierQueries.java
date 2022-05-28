@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
@@ -75,8 +76,8 @@ public class UserIdentifierQueries {
                 UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + ',' +
                 FROM + UsersTable.TABLE_NAME +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
-                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
-                WHERE + UserInfoTable.SERVER_UUID + "=?";
+                UsersTable.TABLE_NAME + '.' + UsersTable.ID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID +
+                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
         return new QueryStatement<Set<UUID>>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -199,6 +200,40 @@ public class UserIdentifierQueries {
                     }
                 }
                 return matchingNames;
+            }
+        };
+    }
+
+    public static Query<Set<Integer>> fetchAllUserIds() {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.ID).toString();
+
+        return new QueryAllStatement<Set<Integer>>(sql, 2000) {
+            @Override
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> playerUUIDs = new HashSet<>();
+                while (set.next()) {
+                    playerUUIDs.add(set.getInt(UsersTable.ID));
+                }
+                return playerUUIDs;
+            }
+        };
+    }
+
+    public static Query<Optional<Integer>> fetchUserId(UUID playerUUID) {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.ID).where(UsersTable.USER_UUID + "=?").toString();
+
+        return new QueryStatement<Optional<Integer>>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Optional<Integer> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(set.getInt(UsersTable.ID));
+                }
+                return Optional.empty();
             }
         };
     }

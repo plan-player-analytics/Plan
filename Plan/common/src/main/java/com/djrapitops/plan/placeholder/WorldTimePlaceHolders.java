@@ -52,11 +52,11 @@ public class WorldTimePlaceHolders implements Placeholders {
     public void register(
             PlanPlaceholders placeholders
     ) {
-        placeholders.registerRaw("worlds_playtime_total_", (input, p) -> {
+        placeholders.registerRaw("worlds_playtime_total_", placeholder -> {
             // get world total play time
             // e.g. "plan_worlds_playtime_total_%worldname%"
             // where %worldname% is "world_nether"
-            String worldName = input.substring("worlds_playtime_total_".length());
+            String worldName = placeholder.substring("worlds_playtime_total_".length());
 
             return getWorldPlaytime(worldName);
         });

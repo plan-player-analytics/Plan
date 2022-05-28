@@ -58,12 +58,12 @@ public class ServerQueries {
                 Collection<Server> servers = new HashSet<>();
                 while (set.next()) {
                     servers.add(new Server(
-                            set.getInt(ServerTable.SERVER_ID),
+                            set.getInt(ServerTable.ID),
                             ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return servers;
             }
@@ -90,12 +90,12 @@ public class ServerQueries {
                 while (set.next()) {
                     ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     servers.put(serverUUID, new Server(
-                            set.getInt(ServerTable.SERVER_ID),
+                            set.getInt(ServerTable.ID),
                             serverUUID,
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return servers;
             }
@@ -114,8 +114,8 @@ public class ServerQueries {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + "(LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
-                OR + ServerTable.SERVER_ID + "=?" +
-                OR + ServerTable.SERVER_ID + "=?)" +
+                OR + ServerTable.ID + "=?" +
+                OR + ServerTable.ID + "=?)" +
                 AND + ServerTable.INSTALLED + "=?" +
                 LIMIT + '1';
         return new QueryStatement<Optional<Server>>(sql) {
@@ -133,12 +133,12 @@ public class ServerQueries {
             public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(new Server(
-                            set.getInt(ServerTable.SERVER_ID),
+                            set.getInt(ServerTable.ID),
                             ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return Optional.empty();
             }
@@ -161,12 +161,12 @@ public class ServerQueries {
             public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
                     return Optional.of(new Server(
-                            set.getInt(ServerTable.SERVER_ID),
+                            set.getInt(ServerTable.ID),
                             ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return Optional.empty();
             }
@@ -175,7 +175,7 @@ public class ServerQueries {
 
     public static Query<List<String>> fetchGameServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                        ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                        ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME)
                 .where(ServerTable.PROXY + "=0")
                 .toString();
 
@@ -184,7 +184,7 @@ public class ServerQueries {
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> names = new ArrayList<>();
                 while (set.next()) {
-                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.SERVER_ID)));
+                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID)));
                 }
                 return names;
             }
@@ -193,7 +193,7 @@ public class ServerQueries {
 
     public static Query<Map<ServerUUID, String>> fetchServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                        ServerTable.SERVER_ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                        ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME)
                 .toString();
 
         return new QueryAllStatement<Map<ServerUUID, String>>(sql) {
@@ -202,7 +202,7 @@ public class ServerQueries {
                 Map<ServerUUID, String> names = new HashMap<>();
                 while (set.next()) {
                     ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
-                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.SERVER_ID)));
+                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID)));
                 }
                 return names;
             }
@@ -215,8 +215,8 @@ public class ServerQueries {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + "(LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
-                OR + ServerTable.SERVER_ID + "=?" +
-                OR + ServerTable.SERVER_ID + "=?)" +
+                OR + ServerTable.ID + "=?" +
+                OR + ServerTable.ID + "=?)" +
                 AND + ServerTable.INSTALLED + "=?" +
                 LIMIT + '1';
         return new QueryStatement<List<Server>>(sql) {
@@ -235,12 +235,12 @@ public class ServerQueries {
                 List<Server> matches = new ArrayList<>();
                 while (set.next()) {
                     matches.add(new Server(
-                            set.getInt(ServerTable.SERVER_ID),
+                            set.getInt(ServerTable.ID),
                             ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
                             set.getString(ServerTable.NAME),
                             set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY)
-                    ));
+                            set.getBoolean(ServerTable.PROXY),
+                            set.getString(ServerTable.PLAN_VERSION)));
                 }
                 return matches;
             }
@@ -264,7 +264,7 @@ public class ServerQueries {
     }
 
     public static Query<Integer> fetchBiggestServerID() {
-        String sql = SELECT + "MAX(" + ServerTable.SERVER_ID + ") as max_id" + FROM + ServerTable.TABLE_NAME +
+        String sql = SELECT + "MAX(" + ServerTable.ID + ") as max_id" + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?";
         return new QueryStatement<Integer>(sql) {
             @Override

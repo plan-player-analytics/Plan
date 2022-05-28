@@ -84,10 +84,11 @@ public class ExportScheduler extends PluginRunnable {
     }
 
     private void schedulePlayersPageExport() {
-        long period = TimeAmount.toTicks(config.get(ExportSettings.EXPORT_PERIOD), TimeUnit.MILLISECONDS);
+        long period = TimeAmount.toTicks(config.get(ExportSettings.EXPORT_PERIOD), TimeUnit.MILLISECONDS)
+                / 4;
         runnableFactory.create(
                 new ExportTask(exporter, Exporter::exportPlayersPage, errorLogger)
-        ).runTaskTimerAsynchronously(0L, period);
+        ).runTaskTimerAsynchronously(TimeAmount.toTicks(2, TimeUnit.MINUTES), period);
     }
 
     private void scheduleServerPageExport() {
@@ -102,17 +103,17 @@ public class ExportScheduler extends PluginRunnable {
 
         Optional<Server> proxy = servers.stream().filter(Server::isProxy).findFirst();
         proxy.ifPresent(mainServer -> runnableFactory.create(
-                new ExportTask(exporter, same -> same.exportServerPage(mainServer), errorLogger))
-                .runTaskTimerAsynchronously(0L, period)
+                        new ExportTask(exporter, same -> same.exportServerPage(mainServer), errorLogger))
+                .runTaskTimerAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES), period)
         );
 
         int offsetMultiplier = proxy.isPresent() ? 1 : 0; // Delay first server export if on a network.
         for (Server server : servers) {
             runnableFactory.create(
-                    new ExportTask(exporter, same -> {
-                        same.exportServerPage(server);
-                        same.exportServerJSON(server);
-                    }, errorLogger))
+                            new ExportTask(exporter, same -> {
+                                same.exportServerPage(server);
+                                same.exportServerJSON(server);
+                            }, errorLogger))
                     .runTaskTimerAsynchronously(offset * offsetMultiplier, period);
             offsetMultiplier++;
         }

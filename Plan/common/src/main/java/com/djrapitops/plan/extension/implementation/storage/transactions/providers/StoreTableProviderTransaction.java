@@ -17,12 +17,13 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.icon.IconAccessor;
 import com.djrapitops.plan.extension.implementation.MethodType;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -77,6 +78,7 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
     private Executable updateProvider() {
         String[] columns = table.getColumns();
         Icon[] icons = table.getIcons();
+        TableColumnFormat[] formats = table.getTableColumnFormats();
 
         String sql = "UPDATE " + TABLE_NAME + " SET " +
                 COLOR + "=?," +
@@ -87,11 +89,16 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 COL_5 + "=?," +
                 CONDITION + "=?," +
                 TAB_ID + '=' + ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
-                ICON_1_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ICON_2_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ICON_3_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ICON_4_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ICON_5_ID + '=' + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                ICON_1_ID + "=?," +
+                ICON_2_ID + "=?," +
+                ICON_3_ID + "=?," +
+                ICON_4_ID + "=?," +
+                ICON_5_ID + "=?," +
+                FORMAT_1 + "=?," +
+                FORMAT_2 + "=?," +
+                FORMAT_3 + "=?," +
+                FORMAT_4 + "=?," +
+                FORMAT_5 + "=?," +
                 VALUES_FOR + "=?" +
                 WHERE + PROVIDER_NAME + "=?" +
                 AND + PLUGIN_ID + '=' + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
@@ -107,21 +114,36 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 setStringOrNull(statement, 6, columns[4]);
                 setStringOrNull(statement, 7, information.getCondition().orElse(null));
                 ExtensionTabTable.set3TabValuesToStatement(statement, 8, information.getTab().orElse("No Tab"), information.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 11, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 14, icons[1]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[2]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[3]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[4]);
-                statement.setInt(26, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
-                statement.setString(27, information.getName());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 28, information.getPluginName(), serverUUID);
+                setIconId(statement, 11, 0, icons);
+                setIconId(statement, 12, 1, icons);
+                setIconId(statement, 13, 2, icons);
+                setIconId(statement, 14, 3, icons);
+                setIconId(statement, 15, 4, icons);
+                setStringOrNull(statement, 16, formats[0] == TableColumnFormat.NONE ? null : formats[0].name());
+                setStringOrNull(statement, 17, formats[1] == TableColumnFormat.NONE ? null : formats[1].name());
+                setStringOrNull(statement, 18, formats[2] == TableColumnFormat.NONE ? null : formats[2].name());
+                setStringOrNull(statement, 19, formats[3] == TableColumnFormat.NONE ? null : formats[3].name());
+                setStringOrNull(statement, 20, formats[4] == TableColumnFormat.NONE ? null : formats[4].name());
+                statement.setInt(21, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
+                statement.setString(22, information.getName());
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 23, information.getPluginName(), serverUUID);
             }
         };
+    }
+
+    private void setIconId(PreparedStatement statement, int index, int iconIndex, Icon[] icons) throws SQLException {
+        Icon icon = icons[iconIndex];
+        if (icon == null) {
+            statement.setNull(index, Types.INTEGER);
+        } else {
+            statement.setInt(index, IconAccessor.getId(icon));
+        }
     }
 
     private Executable insertProvider() {
         String[] columns = table.getColumns();
         Icon[] icons = table.getIcons();
+        TableColumnFormat[] formats = table.getTableColumnFormats();
 
         String sql = "INSERT INTO " + TABLE_NAME + '(' +
                 PROVIDER_NAME + ',' +
@@ -139,15 +161,17 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ICON_3_ID + ',' +
                 ICON_4_ID + ',' +
                 ICON_5_ID + ',' +
+                FORMAT_1 + ',' +
+                FORMAT_2 + ',' +
+                FORMAT_3 + ',' +
+                FORMAT_4 + ',' +
+                FORMAT_5 + ',' +
                 VALUES_FOR +
                 ") VALUES (?,?,?,?,?,?,?,?," +
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
                 ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ',' +
-                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
-                ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ',' +
+                "?,?,?,?,?," + // 5 icons
+                "?,?,?,?,?," + // 5 formats
                 "?)";
 
         return new ExecStatement(sql) {
@@ -163,12 +187,17 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 setStringOrNull(statement, 8, information.getCondition().orElse(null));
                 ExtensionTabTable.set3TabValuesToStatement(statement, 9, information.getTab().orElse("No Tab"), information.getPluginName(), serverUUID);
                 ExtensionPluginTable.set2PluginValuesToStatement(statement, 12, information.getPluginName(), serverUUID);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 14, icons[0]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 17, icons[1]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 20, icons[2]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 23, icons[3]);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 26, icons[4]);
-                statement.setInt(29, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
+                setIconId(statement, 14, 0, icons);
+                setIconId(statement, 15, 1, icons);
+                setIconId(statement, 16, 2, icons);
+                setIconId(statement, 17, 3, icons);
+                setIconId(statement, 18, 4, icons);
+                setStringOrNull(statement, 19, formats[0] == TableColumnFormat.NONE ? null : formats[0].name());
+                setStringOrNull(statement, 20, formats[1] == TableColumnFormat.NONE ? null : formats[1].name());
+                setStringOrNull(statement, 21, formats[2] == TableColumnFormat.NONE ? null : formats[2].name());
+                setStringOrNull(statement, 22, formats[3] == TableColumnFormat.NONE ? null : formats[3].name());
+                setStringOrNull(statement, 23, formats[4] == TableColumnFormat.NONE ? null : formats[4].name());
+                statement.setInt(24, forPlayer ? VALUES_FOR_PLAYER : VALUES_FOR_SERVER);
             }
         };
     }

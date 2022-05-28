@@ -22,6 +22,7 @@ import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.PlatformAbstractionLayerModule;
+import com.djrapitops.plan.placeholder.PlanPlaceholders;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import dagger.BindsInstance;
 import dagger.Component;
@@ -39,6 +40,7 @@ import java.nio.file.Path;
 @Singleton
 @Component(modules = {
         PlanPluginModule.class,
+        PlanServerPluginModule.class,
         TestSystemObjectProvidingModule.class,
         PlatformAbstractionLayerModule.class,
         FiltersModule.class,
@@ -54,6 +56,8 @@ public interface PlanPluginComponent {
     PlanSystem system();
 
     PluginErrorLogger pluginErrorLogger();
+
+    PlanPlaceholders placeholders();
 
     @Component.Builder
     interface Builder {

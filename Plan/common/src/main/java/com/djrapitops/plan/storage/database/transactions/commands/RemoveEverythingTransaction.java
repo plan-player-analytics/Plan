@@ -17,27 +17,30 @@
 package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
-import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
-
-import static com.djrapitops.plan.storage.database.sql.building.Sql.DELETE_FROM;
+import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 
 /**
  * Transaction that removes everything from the database.
  *
  * @author AuroraLS3
  */
-public class RemoveEverythingTransaction extends ThrowawayTransaction {
+public class RemoveEverythingTransaction extends Patch {
 
     @Override
-    protected void performOperations() {
-        // Delete statements are run in a specific order as some tables have foreign keys,
-        // or had at some point in the past.
+    public boolean hasBeenApplied() {
+        return false;
+    }
+
+    @Override
+    protected void applyPatch() {
         clearTable(SettingsTable.TABLE_NAME);
         clearTable(GeoInfoTable.TABLE_NAME);
         clearTable(NicknamesTable.TABLE_NAME);
         clearTable(KillsTable.TABLE_NAME);
         clearTable(WorldTimesTable.TABLE_NAME);
         clearTable(SessionsTable.TABLE_NAME);
+        clearTable(JoinAddressTable.TABLE_NAME);
         clearTable(WorldTable.TABLE_NAME);
         clearTable(PingTable.TABLE_NAME);
         clearTable(UserInfoTable.TABLE_NAME);
@@ -56,9 +59,11 @@ public class RemoveEverythingTransaction extends ThrowawayTransaction {
         clearTable(ExtensionTabTable.TABLE_NAME);
         clearTable(ExtensionPluginTable.TABLE_NAME);
         clearTable(ExtensionIconTable.TABLE_NAME);
+
+        executeOther(new StoreJoinAddressTransaction(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
     }
 
     private void clearTable(String tableName) {
-        execute(DELETE_FROM + tableName);
+        execute("DELETE FROM " + tableName);
     }
 }

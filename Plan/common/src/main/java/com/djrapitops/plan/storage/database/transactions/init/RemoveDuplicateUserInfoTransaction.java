@@ -44,8 +44,8 @@ public class RemoveDuplicateUserInfoTransaction extends ThrowawayTransaction {
             SELECT + DISTINCT + "u2." + UserInfoTable.ID + " as id" +
                     FROM + UserInfoTable.TABLE_NAME + " u1" +
                     INNER_JOIN + UserInfoTable.TABLE_NAME + " u2 on " +
-                    "u1." + UserInfoTable.USER_UUID + "=u2." + UserInfoTable.USER_UUID + AND +
-                    "u1." + UserInfoTable.SERVER_UUID + "=u2." + UserInfoTable.SERVER_UUID + AND +
+                    "u1." + UserInfoTable.USER_ID + "=u2." + UserInfoTable.USER_ID + AND +
+                    "u1." + UserInfoTable.SERVER_ID + "=u2." + UserInfoTable.SERVER_ID + AND +
                     "u1." + UserInfoTable.ID + "<u2." + UserInfoTable.ID;
 
     @Override

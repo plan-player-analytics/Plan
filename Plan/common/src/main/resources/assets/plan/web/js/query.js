@@ -373,6 +373,7 @@ function displayResults(json) {
     /* Player table */
     $('.player-table').DataTable({
         responsive: true,
+        deferRender: true,
         columns: json.data.players.columns,
         data: json.data.players.data,
         order: [[5, "desc"]]

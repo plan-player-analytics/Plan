@@ -17,17 +17,22 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionsDto;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.*;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.delivery.rendering.json.graphs.line.PingGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
+import com.djrapitops.plan.extension.implementation.results.ExtensionData;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
@@ -42,6 +47,7 @@ import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQu
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
+import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
@@ -100,6 +106,11 @@ public class PlayerJSONCreator {
         PingMutator.forContainer(player).addPingToSessions(sessionsMutator.all());
 
         Map<String, Object> data = new HashMap<>();
+
+        long now = System.currentTimeMillis();
+        data.put("timestamp", now);
+        data.put("timestamp_f", year.apply(now));
+
         data.put("info", createInfoJSONMap(player, serverNames));
         data.put("online_activity", createOnlineActivityJSONMap(sessionsMutator));
         data.put("kill_data", createPvPPvEMap(player));
@@ -122,8 +133,24 @@ public class PlayerJSONCreator {
         data.put("calendar_series", graphs.calendar().playerCalendar(player).getEntries());
         data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
         data.put("server_pie_colors", pieColors);
+        data.put("ping_graph", createPingGraphJson(player));
         data.put("first_day", 1); // Monday
+        data.put("extensions", playerExtensionData(playerUUID));
         return data;
+    }
+
+    private Map<String, Object> createPingGraphJson(PlayerContainer player) {
+        PingGraph pingGraph = graphs.line().pingGraph(player.getUnsafe(PlayerKeys.PING));
+        return Maps.builder(String.class, Object.class)
+                .put("min_ping_series", pingGraph.getMinGraph().getPoints())
+                .put("avg_ping_series", pingGraph.getAvgGraph().getPoints())
+                .put("max_ping_series", pingGraph.getMaxGraph().getPoints())
+                .put("colors", Maps.builder(String.class, String.class)
+                        .put("min", theme.getValue(ThemeVal.GRAPH_MIN_PING))
+                        .put("avg", theme.getValue(ThemeVal.GRAPH_AVG_PING))
+                        .put("max", theme.getValue(ThemeVal.GRAPH_MAX_PING))
+                        .build())
+                .build();
     }
 
     private Map<String, Object> createOnlineActivityJSONMap(SessionsMutator sessionsMutator) {
@@ -166,6 +193,8 @@ public class PlayerJSONCreator {
 
         Map<String, Object> info = new HashMap<>();
 
+        info.put("name", player.getValue(PlayerKeys.NAME).orElse(player.getUnsafe(PlayerKeys.UUID).toString()));
+        info.put("uuid", player.getUnsafe(PlayerKeys.UUID).toString());
         info.put("online", SessionCache.getCachedSession(player.getUnsafe(PlayerKeys.UUID)).isPresent());
         info.put("operator", player.getValue(PlayerKeys.OPERATOR).orElse(false));
         info.put("banned", player.getValue(PlayerKeys.BANNED).orElse(false));
@@ -267,6 +296,24 @@ public class PlayerJSONCreator {
 
     private <T> Optional<T> getWeapon(List<T> list, int index) {
         return list.size() <= index ? Optional.empty() : Optional.of(list.get(index));
+    }
+
+
+    public List<ExtensionsDto> playerExtensionData(UUID playerUUID) {
+        Database database = dbSystem.getDatabase();
+        Map<ServerUUID, List<ExtensionData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
+        Map<ServerUUID, Server> servers = database.query(ServerQueries.fetchPlanServerInformation());
+
+        List<ExtensionsDto> playerData = new ArrayList<>();
+        for (Map.Entry<ServerUUID, Server> entry : servers.entrySet()) {
+            ServerUUID serverUUID = entry.getKey();
+            playerData.add(new ExtensionsDto(
+                    playerUUID.toString(), serverUUID.toString(),
+                    entry.getValue().getIdentifiableName(),
+                    extensionPlayerData.getOrDefault(serverUUID, Collections.emptyList())
+            ));
+        }
+        return playerData;
     }
 
     public static class Nickname {

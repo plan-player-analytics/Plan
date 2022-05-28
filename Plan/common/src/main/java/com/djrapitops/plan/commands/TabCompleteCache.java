@@ -20,6 +20,7 @@ import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class TabCompleteCache implements SubSystem {
 
+    private final Processing processing;
     private final PlanFiles files;
     private final DBSystem dbSystem;
 
@@ -49,9 +51,11 @@ public class TabCompleteCache implements SubSystem {
 
     @Inject
     public TabCompleteCache(
+            Processing processing,
             PlanFiles files,
             DBSystem dbSystem
     ) {
+        this.processing = processing;
         this.files = files;
         this.dbSystem = dbSystem;
         playerIdentifiers = new ArrayList<>();
@@ -62,15 +66,17 @@ public class TabCompleteCache implements SubSystem {
 
     @Override
     public void enable() {
-        refreshPlayerIdentifiers();
-        refreshServerIdentifiers();
-        refreshUserIdentifiers();
-        refreshBackupFileNames();
+        processing.submitNonCritical(() -> {
+            refreshPlayerIdentifiers();
+            refreshServerIdentifiers();
+            refreshUserIdentifiers();
+            refreshBackupFileNames();
 
-        Collections.sort(playerIdentifiers);
-        Collections.sort(serverIdentifiers);
-        Collections.sort(userIdentifiers);
-        Collections.sort(backupFileNames);
+            Collections.sort(playerIdentifiers);
+            Collections.sort(serverIdentifiers);
+            Collections.sort(userIdentifiers);
+            Collections.sort(backupFileNames);
+        });
     }
 
     private void refreshServerIdentifiers() {

@@ -162,8 +162,8 @@ public class Locale extends HashMap<Lang, Message> {
         for (Lang extra : new Lang[]{
                 HtmlLang.UNIT_NO_DATA,
                 HtmlLang.TITLE_WORLD_PLAYTIME,
-                HtmlLang.LABEL_OPERATOR,
-                HtmlLang.LABEL_BANNED,
+//                HtmlLang.LABEL_OPERATOR,
+//                HtmlLang.LABEL_BANNED,
                 HtmlLang.SIDE_SESSIONS,
                 HtmlLang.LABEL_PLAYTIME,
                 HtmlLang.LABEL_AFK_TIME,

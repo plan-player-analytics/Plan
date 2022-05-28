@@ -35,6 +35,9 @@ import java.util.Optional;
 @Singleton
 public class StaticResourceResolver implements NoAuthResolver {
 
+    private static final String PART_REGEX = "(vendor|css|js|img|static)";
+    public static final String PATH_REGEX = "^.*/" + PART_REGEX + "/.*";
+
     private final ResponseFactory responseFactory;
 
     @Inject
@@ -67,7 +70,7 @@ public class StaticResourceResolver implements NoAuthResolver {
     private URIPath getPath(Request request) {
         URIPath path = request.getPath();
         // Remove everything before /vendor /css /js or /img
-        while (!path.getPart(0).map(part -> part.matches("(vendor|css|js|img)")).orElse(true)) {
+        while (!path.getPart(0).map(part -> part.matches(PART_REGEX)).orElse(true)) {
             path = path.omitFirst();
         }
         return path;

@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.LongSupplier;
 
@@ -35,6 +36,8 @@ public class PlayerRegisterTransaction extends Transaction {
     protected final UUID playerUUID;
     protected final LongSupplier registered;
     private final String playerName;
+
+    private Integer userId;
 
     public PlayerRegisterTransaction(UUID playerUUID, LongSupplier registered, String playerName) {
         this.playerUUID = playerUUID;
@@ -54,17 +57,23 @@ public class PlayerRegisterTransaction extends Transaction {
             insertUser(registerDate);
             SessionCache.getCachedSession(playerUUID).ifPresent(session -> session.setAsFirstSessionIfMatches(registerDate));
         }
-        execute(DataStoreQueries.updatePlayerName(playerUUID, playerName));
+        if (!playerUUID.toString().equals(playerName)) {
+            execute(DataStoreQueries.updatePlayerName(playerUUID, playerName));
+        }
     }
 
     private void insertUser(long registerDate) {
         try {
-            execute(DataStoreQueries.registerBaseUser(playerUUID, registerDate, playerName));
+            userId = executeReturningId(DataStoreQueries.registerBaseUser(playerUUID, registerDate, playerName));
         } catch (DBOpException failed) {
             boolean alreadySaved = failed.getMessage().contains("Duplicate entry");
             if (!alreadySaved) {
                 throw failed;
             }
         }
+    }
+
+    public Optional<Integer> getUserId() {
+        return Optional.ofNullable(userId);
     }
 }

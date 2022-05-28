@@ -30,14 +30,17 @@ import javax.inject.Singleton;
 @Singleton
 public class ExportSystem implements SubSystem {
 
+    private final Exporter exporter;
     private final ExportScheduler exportScheduler;
     private final RunnableFactory runnableFactory;
 
     @Inject
     public ExportSystem(
+            Exporter exporter,
             ExportScheduler exportScheduler,
             RunnableFactory runnableFactory
     ) {
+        this.exporter = exporter;
         this.exportScheduler = exportScheduler;
         this.runnableFactory = runnableFactory;
     }
@@ -50,5 +53,9 @@ public class ExportSystem implements SubSystem {
     @Override
     public void disable() {
         // Nothing to disable
+    }
+
+    public Exporter getExporter() {
+        return exporter;
     }
 }

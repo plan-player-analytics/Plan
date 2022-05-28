@@ -58,6 +58,14 @@ public class OldDependencyCacheDeletionTask extends TaskSystem.Task {
 
     @Override
     public void run() {
+        try {
+            runTask();
+        } finally {
+            cancel();
+        }
+    }
+
+    private void runTask() {
         tryToDeleteDirectory(oldDependencyCache);
         tryToDeleteDirectory(dependencyCache);
 

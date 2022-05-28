@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -35,9 +36,11 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.Predicates;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -145,6 +148,7 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         registerPlaytimePlaceholders(placeholders, time);
+        registerSessionLengethPlaceholders(placeholders, time);
 
         placeholders.register("player_favorite_server",
                 player -> PerServerMutator.forContainer(player).favoriteServer()
@@ -167,6 +171,33 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         registerKillPlaceholders(placeholders);
+    }
+
+    private void registerSessionLengethPlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+        placeholders.register("player_current_session_length",
+                player -> time.apply(getActiveSessionLength(player).orElse(-1L)));
+        placeholders.register("player_current_session_length_raw",
+                player -> getActiveSessionLength(player).orElse(0L));
+
+        placeholders.register("player_latest_session_length",
+                player -> time.apply(getActiveSessionLength(player)
+                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
+                                .map(FinishedSession::getLength)
+                                .orElse(-1L))));
+        placeholders.register("player_latest_session_length_raw",
+                player -> getActiveSessionLength(player)
+                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
+                                .map(FinishedSession::getLength)
+                                .orElse(0L)));
+
+        placeholders.register("player_previous_session_length",
+                player -> time.apply(SessionsMutator.forContainer(player).previousSession()
+                        .map(FinishedSession::getLength)
+                        .orElse(-1L)));
+        placeholders.register("player_previous_session_length_raw",
+                player -> SessionsMutator.forContainer(player).previousSession()
+                        .map(FinishedSession::getLength)
+                        .orElse(0L));
     }
 
     private boolean isAfk(PlayerContainer player) {
@@ -198,7 +229,7 @@ public class PlayerPlaceHolders implements Placeholders {
             placeholders.register("player_recent_kill_" + index,
                     player -> player.getValue(PlayerKeys.PLAYER_KILLS)
                             .filter(list -> list.size() >= index)
-                            .map(list -> list.get(index))
+                            .map(list -> list.get(index - 1))
                             .map(PlayerKill::getVictim)
                             .map(PlayerKill.Victim::getName)
                             .orElse("-")
@@ -206,7 +237,7 @@ public class PlayerPlaceHolders implements Placeholders {
             placeholders.register("player_recent_death_" + index,
                     player -> player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS)
                             .filter(list -> list.size() >= index)
-                            .map(list -> list.get(index))
+                            .map(list -> list.get(index - 1))
                             .map(PlayerKill::getKiller)
                             .map(PlayerKill.Killer::getName)
                             .orElse("-")
@@ -270,9 +301,9 @@ public class PlayerPlaceHolders implements Placeholders {
                         .toPlaytime())
         );
         placeholders.register("player_time_month_raw",
-                player -> time.apply(SessionsMutator.forContainer(player)
+                player -> SessionsMutator.forContainer(player)
                         .filterSessionsBetween(monthAgo(), now())
-                        .toPlaytime())
+                        .toPlaytime()
         );
 
         placeholders.register("player_server_time_active",
@@ -281,9 +312,9 @@ public class PlayerPlaceHolders implements Placeholders {
                         .toActivePlaytime())
         );
         placeholders.register("player_server_time_active_raw",
-                player -> time.apply(SessionsMutator.forContainer(player)
+                player -> SessionsMutator.forContainer(player)
                         .filterPlayedOnServer(serverInfo.getServerUUID())
-                        .toActivePlaytime())
+                        .toActivePlaytime()
         );
 
         placeholders.register("player_server_time_afk",
@@ -346,5 +377,13 @@ public class PlayerPlaceHolders implements Placeholders {
                         .filterPlayedOnServer(serverInfo.getServerUUID())
                         .toPlaytime()
         );
+    }
+
+    @NotNull
+    private Optional<Long> getActiveSessionLength(PlayerContainer player) {
+        SessionCache.refreshActiveSessionsState();
+        return SessionCache.getCachedSession(player.getUnsafe(PlayerKeys.UUID))
+                .map(ActiveSession::toFinishedSessionFromStillActive)
+                .map(FinishedSession::getLength);
     }
 }

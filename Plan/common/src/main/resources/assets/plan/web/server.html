@@ -1108,6 +1108,12 @@
                                         <td id="data_server_downtime_24h"></td>
                                     </tr>
                                     <tr>
+                                        <td><i class="fa fa-fw fa-user col-light-blue"></i> Average Players</td>
+                                        <td id="data_players_30d"></td>
+                                        <td id="data_players_7d"></td>
+                                        <td id="data_players_24h"></td>
+                                    </tr>
+                                    <tr>
                                         <td><i class="fa fa-fw fa-tachometer-alt col-orange"></i> Average TPS</td>
                                         <td id="data_tps_30d"></td>
                                         <td id="data_tps_7d"></td>
@@ -1410,7 +1416,7 @@
         refreshingJsonRequest("../v1/graph?type=geolocation&server=${serverUUID}", loadGeolocationGraph, 'geolocations');
         refreshingJsonRequest("../v1/graph?type=uniqueAndNew&server=${serverUUID}", loadUniqueAndNewGraph, 'online-activity-overview');
         refreshingJsonRequest("../v1/graph?type=hourlyUniqueAndNew&server=${serverUUID}", loadHourlyUniqueAndNewGraph, 'online-activity-overview');
-        refreshingJsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", loadServerCalendar, 'online-activity-overview', true);
+        refreshingJsonRequest("../v1/graph?type=serverCalendar&server=${serverUUID}", loadserverCalendar, 'online-activity-overview', true);
         refreshingJsonRequest("../v1/graph?type=punchCard&server=${serverUUID}", loadPunchCard, 'online-activity-overview');
 
         setLoadingText('Sorting players table..');
@@ -1428,6 +1434,7 @@
                 }
                 table = $('.player-table').DataTable({
                     responsive: true,
+                    deferRender: true,
                     columns: json.columns,
                     data: json.data,
                     order: [[5, "desc"]]

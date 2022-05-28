@@ -59,6 +59,7 @@ public class ServerDBLoader implements ServerLoader {
 
     @Override
     public void save(Server server) {
+        if (server == null) return;
         try {
             dbSystem.getDatabase().executeTransaction(
                     new StoreServerInformationTransaction(server)

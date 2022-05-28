@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
@@ -64,16 +63,19 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     private final String transferTable = "CREATE TABLE IF NOT EXISTS plan_transfer (sender_server_id integer NOT NULL, expiry_date bigint NOT NULL DEFAULT 0, type varchar(100) NOT NULL, extra_variables varchar(255) DEFAULT '', content_64 MEDIUMTEXT, part bigint NOT NULL DEFAULT 0, FOREIGN KEY(sender_server_id) REFERENCES plan_servers(id))";
 
     private MySQLDB underTest;
+    private static DBPreparer dbPreparer;
 
     @BeforeAll
     static void ensureMySQLAvailable(@TempDir Path tempDir) {
         assumeTrue(System.getenv(CIProperties.MYSQL_DATABASE) != null);
-        component = new PluginMockComponent(tempDir);
+        dbPreparer = new DBPreparer(DaggerDatabaseTestComponent.builder()
+                .bindTemporaryDirectory(tempDir)
+                .build(), TEST_PORT_NUMBER);
     }
 
     @AfterAll
-    static void closeSystem() throws Exception {
-        if (component != null) component.getPlanSystem().disable();
+    static void closeSystem() {
+        if (dbPreparer != null) dbPreparer.tearDown();
     }
 
     private void dropAllTables() {
@@ -89,9 +91,8 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
     }
 
     @BeforeEach
-    void setUpDBWithOldSchema() throws Exception {
-        PlanSystem system = component.getPlanSystem();
-        Optional<Database> db = new DBPreparer(system, TEST_PORT_NUMBER).prepareMySQL();
+    void setUpDBWithOldSchema() {
+        Optional<Database> db = dbPreparer.prepareMySQL();
         assumeTrue(db.isPresent());
 
         underTest = (MySQLDB) db.get();

@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.UserInfo;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.PerServerAggregateQueries;
@@ -64,6 +65,12 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
         for (Map.Entry<ServerUUID, List<FinishedSession>> entry : sessions.entrySet()) {
             ServerUUID serverUUID = entry.getKey();
             List<FinishedSession> serverSessions = entry.getValue();
+            if (!serverSessions.isEmpty()) {
+                serverSessions.get(0).getExtraData().get(JoinAddress.class).map(JoinAddress::getAddress)
+                        .ifPresent(address ->
+                                perServerContainer.putToContainerOfServer(serverUUID, PerServerKeys.JOIN_ADDRESS, address)
+                        );
+            }
 
             DataContainer serverContainer = perServerContainer.getOrDefault(serverUUID, new SupplierDataContainer());
             serverContainer.putRawData(PerServerKeys.SESSIONS, serverSessions);

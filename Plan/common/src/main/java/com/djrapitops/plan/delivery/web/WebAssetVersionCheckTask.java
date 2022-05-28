@@ -67,6 +67,14 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
 
     @Override
     public void run() {
+        try {
+            runTask();
+        } finally {
+            cancel();
+        }
+    }
+
+    private void runTask() {
         Optional<ConfigNode> planCustomizationNode = getPlanCustomizationNode();
         if (planCustomizationNode.isPresent()) {
             try {
@@ -104,14 +112,12 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
     private Optional<AssetInfo> findOutdatedResource(String resource) {
         Optional<File> resourceFile = files.attemptToFind(resource);
         Optional<Long> webAssetVersion = webAssetVersions.getWebAssetVersion(resource);
-        if (resourceFile.isPresent() && webAssetVersion.isPresent()) {
-            if (webAssetVersion.get() > resourceFile.get().lastModified()) {
-                return Optional.of(new AssetInfo(
-                        resource,
-                        resourceFile.get().lastModified(),
-                        webAssetVersion.get()
-                ));
-            }
+        if (resourceFile.isPresent() && webAssetVersion.isPresent() && webAssetVersion.get() > resourceFile.get().lastModified()) {
+            return Optional.of(new AssetInfo(
+                    resource,
+                    resourceFile.get().lastModified(),
+                    webAssetVersion.get()
+            ));
         }
         return Optional.empty();
     }

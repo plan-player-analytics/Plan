@@ -49,13 +49,13 @@ public class RemovePlayerTransaction extends ThrowawayTransaction {
     protected void performOperations() {
         query(PlayerFetchQueries.playerUserName(playerUUID)).ifPresent(this::deleteWebUser);
 
-        deleteFromTable(GeoInfoTable.TABLE_NAME);
+        deleteFromUserIdTable(GeoInfoTable.TABLE_NAME);
         deleteFromTable(NicknamesTable.TABLE_NAME);
         deleteFromKillsTable();
-        deleteFromTable(WorldTimesTable.TABLE_NAME);
-        deleteFromTable(SessionsTable.TABLE_NAME);
-        deleteFromTable(PingTable.TABLE_NAME);
-        deleteFromTable(UserInfoTable.TABLE_NAME);
+        deleteFromUserIdTable(WorldTimesTable.TABLE_NAME);
+        deleteFromUserIdTable(SessionsTable.TABLE_NAME);
+        deleteFromUserIdTable(PingTable.TABLE_NAME);
+        deleteFromUserIdTable(UserInfoTable.TABLE_NAME);
         deleteFromTable(UsersTable.TABLE_NAME);
 
         deleteFromTable(ExtensionPlayerTableValueTable.TABLE_NAME);
@@ -69,6 +69,15 @@ public class RemovePlayerTransaction extends ThrowawayTransaction {
 
     private void deleteFromTable(String tableName) {
         execute(new ExecStatement(DELETE_FROM + tableName + WHERE + "uuid=?") {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+            }
+        });
+    }
+
+    private void deleteFromUserIdTable(String tableName) {
+        execute(new ExecStatement(DELETE_FROM + tableName + WHERE + "user_id=" + UsersTable.SELECT_USER_ID) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());

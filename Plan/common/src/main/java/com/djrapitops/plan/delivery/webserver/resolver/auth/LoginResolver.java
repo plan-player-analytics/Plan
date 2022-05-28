@@ -64,7 +64,7 @@ public class LoginResolver implements NoAuthResolver {
     public Response getResponse(String cookie) {
         return Response.builder()
                 .setStatus(200)
-                .setHeader("Set-Cookie", "auth=" + cookie + "; Path=/; Max-Age=" + ActiveCookieStore.cookieExpiresAfter + "; SameSite=Lax; Secure;")
+                .setHeader("Set-Cookie", "auth=" + cookie + "; Path=/; Max-Age=" + ActiveCookieStore.cookieExpiresAfterMs + "; SameSite=Lax; Secure;")
                 .setJSONContent(Collections.singletonMap("success", true))
                 .build();
     }

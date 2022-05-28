@@ -20,6 +20,7 @@ import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -46,6 +47,11 @@ class AFKTrackerTest {
         new SessionCache().cacheSession(playerUUID, new ActiveSession(playerUUID, null, 0, null, null));
 
         underTest = new AFKTracker(config);
+    }
+
+    @AfterEach
+    void tearDown() {
+        SessionCache.clear();
     }
 
     @Test

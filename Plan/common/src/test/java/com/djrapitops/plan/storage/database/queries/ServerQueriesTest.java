@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.commands.SetServerAsUninstalledTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.OptionalAssert;
+import utilities.TestConstants;
 
 import java.util.Collection;
 import java.util.Map;
@@ -56,7 +57,7 @@ public interface ServerQueriesTest extends DatabaseTestPreparer {
         assertFalse(bungeeInfo.isPresent());
 
         ServerUUID bungeeUUID = ServerUUID.randomUUID();
-        Server bungeeCord = new Server(bungeeUUID, "BungeeCord", "Random:1234");
+        Server bungeeCord = new Server(bungeeUUID, "BungeeCord", "Random:1234", TestConstants.VERSION);
         bungeeCord.setProxy(true);
         db().executeTransaction(new StoreServerInformationTransaction(bungeeCord));
 

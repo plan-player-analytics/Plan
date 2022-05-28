@@ -52,12 +52,12 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        execute(DataStoreQueries.storeSession(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         db().executeTransaction(
                 new NicknameStoreTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */)
         );
-        db().executeTransaction(new GeoInfoStoreTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
+        db().executeTransaction(new StoreGeoInfoTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
 
         List<TPS> expected = RandomData.randomTPS();
         for (TPS tps : expected) {
