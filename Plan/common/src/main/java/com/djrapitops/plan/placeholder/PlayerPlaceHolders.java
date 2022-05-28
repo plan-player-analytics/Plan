@@ -229,7 +229,7 @@ public class PlayerPlaceHolders implements Placeholders {
             placeholders.register("player_recent_kill_" + index,
                     player -> player.getValue(PlayerKeys.PLAYER_KILLS)
                             .filter(list -> list.size() >= index)
-                            .map(list -> list.get(index))
+                            .map(list -> list.get(index - 1))
                             .map(PlayerKill::getVictim)
                             .map(PlayerKill.Victim::getName)
                             .orElse("-")
@@ -237,7 +237,7 @@ public class PlayerPlaceHolders implements Placeholders {
             placeholders.register("player_recent_death_" + index,
                     player -> player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS)
                             .filter(list -> list.size() >= index)
-                            .map(list -> list.get(index))
+                            .map(list -> list.get(index - 1))
                             .map(PlayerKill::getKiller)
                             .map(PlayerKill.Killer::getName)
                             .orElse("-")
