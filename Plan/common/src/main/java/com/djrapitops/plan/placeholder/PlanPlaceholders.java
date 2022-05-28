@@ -121,9 +121,11 @@ public final class PlanPlaceholders {
             return Objects.toString(staticLoader.apply(arguments));
         }
 
-        UUID playerUUID = arguments.get(0).flatMap(this::getPlayerUUIDForIdentifier).orElse(uuid);
+        UUID playerUUID = arguments.get(0)
+                .flatMap(this::getPlayerUUIDForIdentifier)
+                .orElse(uuid);
         PlayerContainer player;
-        if (uuid != null) {
+        if (playerUUID != null) {
             player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         } else {
             player = null;
@@ -144,4 +146,21 @@ public final class PlanPlaceholders {
     public interface PlayerPlaceholderLoader extends BiFunction<PlayerContainer, List<String>, Serializable> {}
 
     public interface StaticPlaceholderLoader extends Function<Arguments, Serializable> {}
+
+    public List<String> getRegisteredServerPlaceholders() {
+        List<String> placeholders = new ArrayList<>();
+
+        placeholders.addAll(staticPlaceholders.keySet());
+        placeholders.addAll(rawHandlers.keySet());
+
+        Collections.sort(placeholders);
+        return placeholders;
+    }
+
+    public List<String> getRegisteredPlayerPlaceholders() {
+        List<String> placeholders = new ArrayList<>(playerPlaceholders.keySet());
+
+        Collections.sort(placeholders);
+        return placeholders;
+    }
 }
