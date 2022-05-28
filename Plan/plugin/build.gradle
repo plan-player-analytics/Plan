@@ -13,6 +13,13 @@ dependencies {
     testImplementation project(path: ":velocity", configuration: 'testArtifacts')
 }
 
+jar {
+    // Add the sponge mixin into the manifest
+    manifest.attributes([
+            'MixinConfigs': 'plan-sponge.mixins.json'
+    ])
+}
+
 shadowJar {
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'

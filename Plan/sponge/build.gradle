@@ -1,7 +1,9 @@
 import org.spongepowered.gradle.plugin.config.PluginLoaders
+import org.spongepowered.gradle.vanilla.repository.MinecraftPlatform
 
 plugins {
-    id 'org.spongepowered.gradle.plugin' version '2.0.0'
+    id "org.spongepowered.gradle.plugin" version "2.0.0"
+    id "org.spongepowered.gradle.vanilla" version "0.2"
 }
 
 dependencies {
@@ -15,6 +17,7 @@ dependencies {
 
     testImplementation "org.spongepowered:spongeapi:$spongeVersion"
     annotationProcessor "org.spongepowered:spongeapi:$spongeVersion"
+    implementation "org.spongepowered:mixin:0.7.11-SNAPSHOT"
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
@@ -60,10 +63,15 @@ sponge {
     }
 }
 
+minecraft {
+    version("1.16.5")
+    platform(MinecraftPlatform.JOINED)
+}
+
 compileJava {
     options.release = 11
 }
 
 shadowJar {
-    relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
+    relocate "org.bstats", "com.djrapitops.plan.utilities.metrics"
 }
