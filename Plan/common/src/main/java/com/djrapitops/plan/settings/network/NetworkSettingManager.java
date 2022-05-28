@@ -166,10 +166,12 @@ public class NetworkSettingManager implements SubSystem {
     private void updateConfigFromDBIfUpdated() {
         Database database = dbSystem.getDatabase();
         Set<ServerUUID> serverUUIDs = database.query(ServerQueries.fetchPlanServerInformation()).keySet();
-        // Remove the proxy server from the list
-        serverUUIDs.remove(serverInfo.getServerUUID());
 
         for (ServerUUID serverUUID : serverUUIDs) {
+            // Remove the proxy server on the list
+            if (serverUUID.equals(serverInfo.getServerUUID())) {
+                continue;
+            }
             updateConfigFromDBIfUpdated(database, serverUUID);
         }
     }
@@ -201,8 +203,8 @@ public class NetworkSettingManager implements SubSystem {
         Database database = dbSystem.getDatabase();
 
         try (ConfigReader reader = new ConfigReader(file.toPath())) {
-            Config config = reader.read();
-            database.executeTransaction(new StoreConfigTransaction(serverUUID, config, file.lastModified()));
+            Config serverConfig = reader.read();
+            database.executeTransaction(new StoreConfigTransaction(serverUUID, serverConfig, file.lastModified()));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
