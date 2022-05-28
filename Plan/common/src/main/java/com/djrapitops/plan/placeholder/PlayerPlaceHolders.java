@@ -148,6 +148,7 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         registerPlaytimePlaceholders(placeholders, time);
+        registerSessionLengethPlaceholders(placeholders, time);
 
         placeholders.register("player_favorite_server",
                 player -> PerServerMutator.forContainer(player).favoriteServer()
@@ -170,6 +171,33 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         registerKillPlaceholders(placeholders);
+    }
+
+    private void registerSessionLengethPlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+        placeholders.register("player_current_session_length",
+                player -> time.apply(getActiveSessionLength(player).orElse(-1L)));
+        placeholders.register("player_current_session_length_raw",
+                player -> getActiveSessionLength(player).orElse(0L));
+
+        placeholders.register("player_latest_session_length",
+                player -> time.apply(getActiveSessionLength(player)
+                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
+                                .map(FinishedSession::getLength)
+                                .orElse(-1L))));
+        placeholders.register("player_latest_session_length_raw",
+                player -> getActiveSessionLength(player)
+                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
+                                .map(FinishedSession::getLength)
+                                .orElse(0L)));
+
+        placeholders.register("player_previous_session_length",
+                player -> time.apply(SessionsMutator.forContainer(player).previousSession()
+                        .map(FinishedSession::getLength)
+                        .orElse(-1L)));
+        placeholders.register("player_previous_session_length_raw",
+                player -> SessionsMutator.forContainer(player).previousSession()
+                        .map(FinishedSession::getLength)
+                        .orElse(0L));
     }
 
     private boolean isAfk(PlayerContainer player) {
@@ -349,31 +377,6 @@ public class PlayerPlaceHolders implements Placeholders {
                         .filterPlayedOnServer(serverInfo.getServerUUID())
                         .toPlaytime()
         );
-
-        placeholders.register("player_current_session_length",
-                player -> time.apply(getActiveSessionLength(player).orElse(-1L)));
-        placeholders.register("player_current_session_length_raw",
-                player -> getActiveSessionLength(player).orElse(0L));
-
-        placeholders.register("player_latest_session_length",
-                player -> time.apply(getActiveSessionLength(player)
-                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
-                                .map(FinishedSession::getLength)
-                                .orElse(-1L))));
-        placeholders.register("player_latest_session_length_raw",
-                player -> getActiveSessionLength(player)
-                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
-                                .map(FinishedSession::getLength)
-                                .orElse(0L)));
-
-        placeholders.register("player_previous_session_length",
-                player -> time.apply(SessionsMutator.forContainer(player).previousSession()
-                        .map(FinishedSession::getLength)
-                        .orElse(-1L)));
-        placeholders.register("player_previous_session_length_raw",
-                player -> SessionsMutator.forContainer(player).previousSession()
-                        .map(FinishedSession::getLength)
-                        .orElse(0L));
     }
 
     @NotNull
