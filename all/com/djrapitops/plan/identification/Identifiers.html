@@ -109,9 +109,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.UUIDUtility,com.djrapitops.plan.utilities.logging.ErrorLogger)">Identifiers</a></span>&#8203;(<a href="../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a>&nbsp;uuidUtility,
- <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.UUIDUtility)">Identifiers</a></span>&#8203;(<a href="../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
+ <a href="UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a>&nbsp;uuidUtility)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -135,7 +134,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Obtain UUID of the player.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a></code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a></code></div>
 <div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#getPlayerUUID(java.lang.String)">getPlayerUUID</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a></code></div>
@@ -183,12 +182,11 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.UUIDUtility,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.UUIDUtility)">
 <h3>Identifiers</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">Identifiers</span>&#8203;<span class="parameters">(<a href="../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a>&nbsp;uuidUtility,
- <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
+ <a href="UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a>&nbsp;uuidUtility)</span></div>
 </section>
 </li>
 </ul>
@@ -247,7 +245,8 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="getPlayerUUID(java.lang.String)">
 <h3>getPlayerUUID</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a></span>&nbsp;<span class="element-name">getPlayerUUID</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
+<div class="member-signature"><span class="annotations">@Nullable
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a></span>&nbsp;<span class="element-name">getPlayerUUID</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</span></div>
 </section>
 </li>
 <li>
