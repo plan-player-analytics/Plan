@@ -121,11 +121,14 @@ public final class PlanPlaceholders {
             return Objects.toString(staticLoader.apply(arguments));
         }
 
-        UUID playerUUID = arguments.get(0)
-                .flatMap(this::getPlayerUUIDForIdentifier)
-                .orElse(uuid);
+        Optional<String> givenIdentifier = arguments.get(0);
+        Optional<UUID> foundUUID = givenIdentifier
+                .flatMap(this::getPlayerUUIDForIdentifier);
+        UUID playerUUID = foundUUID.orElse(uuid);
         PlayerContainer player;
-        if (playerUUID != null) {
+        if (givenIdentifier.isPresent() && !foundUUID.isPresent()) {
+            player = null; // Don't show other player whose identifier is not found.
+        } else if (playerUUID != null) {
             player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
         } else {
             player = null;
