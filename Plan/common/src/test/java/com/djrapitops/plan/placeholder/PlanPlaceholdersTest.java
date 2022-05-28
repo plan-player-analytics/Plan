@@ -29,6 +29,7 @@ import utilities.TestConstants;
 import utilities.dagger.PlanPluginComponent;
 import utilities.mocks.PluginMockComponent;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
@@ -55,6 +56,33 @@ class PlanPlaceholdersTest {
         playerUUID = UUID.randomUUID();
 
         storeSomeData();
+    }
+
+    // Print all placeholders to console
+    public static void main(String[] args) throws Exception {
+        prepareSystem(Files.createTempDirectory("temp-plan-"));
+
+
+        System.out.println("Player placeholders:\n\n```");
+        underTest.getRegisteredPlayerPlaceholders()
+                .stream()
+                .map(placeholder -> placeholder.replaceAll("\\d+", "{n}"))
+                .distinct()
+                .forEach(System.out::println);
+        System.out.println("```");
+
+        System.out.println();
+
+        System.out.println("Server placeholders:\n\n```");
+        underTest.getRegisteredServerPlaceholders()
+                .stream()
+                .map(placeholder -> placeholder.replaceAll("\\d+", "{n}"))
+                .distinct()
+                .forEach(System.out::println);
+        System.out.println("```");
+
+        component.system().disable();
+        System.exit(0);
     }
 
     private static void storeSomeData() {
