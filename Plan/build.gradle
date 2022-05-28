@@ -164,6 +164,6 @@ sonarqube {
     properties {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
-        property "sonar.coverage.jacoco.xmlReportPaths", "**/build/report/jacoco/test/jacocoTestReport.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/report/jacoco/test/jacocoTestReport.xml"
     }
 }
