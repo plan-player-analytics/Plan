@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -35,9 +36,11 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.Predicates;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -346,5 +349,38 @@ public class PlayerPlaceHolders implements Placeholders {
                         .filterPlayedOnServer(serverInfo.getServerUUID())
                         .toPlaytime()
         );
+
+        placeholders.register("player_current_session_length",
+                player -> time.apply(getActiveSessionLength(player).orElse(-1L)));
+        placeholders.register("player_current_session_length_raw",
+                player -> getActiveSessionLength(player).orElse(0L));
+
+        placeholders.register("player_latest_session_length",
+                player -> time.apply(getActiveSessionLength(player)
+                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
+                                .map(FinishedSession::getLength)
+                                .orElse(-1L))));
+        placeholders.register("player_latest_session_length_raw",
+                player -> getActiveSessionLength(player)
+                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
+                                .map(FinishedSession::getLength)
+                                .orElse(0L)));
+
+        placeholders.register("player_previous_session_length",
+                player -> time.apply(SessionsMutator.forContainer(player).previousSession()
+                        .map(FinishedSession::getLength)
+                        .orElse(-1L)));
+        placeholders.register("player_previous_session_length_raw",
+                player -> SessionsMutator.forContainer(player).previousSession()
+                        .map(FinishedSession::getLength)
+                        .orElse(0L));
+    }
+
+    @NotNull
+    private Optional<Long> getActiveSessionLength(PlayerContainer player) {
+        SessionCache.refreshActiveSessionsState();
+        return SessionCache.getCachedSession(player.getUnsafe(PlayerKeys.UUID))
+                .map(ActiveSession::toFinishedSessionFromStillActive)
+                .map(FinishedSession::getLength);
     }
 }
