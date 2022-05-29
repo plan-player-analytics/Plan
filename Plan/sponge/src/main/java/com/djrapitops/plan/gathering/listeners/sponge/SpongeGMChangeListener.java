@@ -86,7 +86,10 @@ public class SpongeGMChangeListener {
             // uh oh
             errorLogger.error(
                     new RuntimeException("GameMode changed for player but no ServerPlayer was found"),
-                    ErrorContext.builder().related(event.player, event.player.getGameProfile().getName()).build()
+                    ErrorContext.builder()
+                        .related(event.player, event.player.getGameProfile().getName())
+                        .whatToDo("Report this, the gamemode change mixin might be broken")
+                        .build()
             );
             return;
         }
