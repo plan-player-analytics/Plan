@@ -68,11 +68,12 @@ public class SpongePlanFiles extends PlanFiles {
     }
 
     private Resource asStringResource(org.spongepowered.api.resource.Resource resource, String resourceName) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.inputStream(), StandardCharsets.UTF_8))) {
-            try (StringWriter writer = new StringWriter()) {
-                reader.transferTo(writer);
-                return new StringResource(resourceName, writer.toString());
-            }
+        try (
+                BufferedReader reader = new BufferedReader(new InputStreamReader(resource.inputStream(), StandardCharsets.UTF_8));
+                StringWriter writer = new StringWriter()
+        ) {
+            reader.transferTo(writer);
+            return new StringResource(resourceName, writer.toString());
         }
     }
 }
