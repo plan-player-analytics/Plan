@@ -22,6 +22,7 @@ import com.djrapitops.plan.SpongeServerShutdownSave;
 import com.djrapitops.plan.api.events.PlanSpongeEnableEvent;
 import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.sponge.*;
+import com.djrapitops.plan.gathering.listeners.sponge.SpongeGMChangeListener;
 import net.playeranalytics.plugin.server.Listeners;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Event;
@@ -82,7 +83,7 @@ public class SpongeListenerSystem extends ListenerSystem {
     public void callEnableEvent(PlanPlugin plugin) {
         try {
             Event event = new PlanSpongeEnableEvent((PlanSponge) plugin);
-            Sponge.getEventManager().post(event);
+            Sponge.eventManager().post(event);
         } catch (IllegalStateException ignore) {
             /* Ignore, Sponge is not initialized */
         }

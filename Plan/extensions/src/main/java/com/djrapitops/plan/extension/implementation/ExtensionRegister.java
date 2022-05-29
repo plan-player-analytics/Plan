@@ -75,7 +75,7 @@ public class ExtensionRegister {
         register(new FloodgateExtensionFactory(), FloodgateExtensionFactory::createExtension, FloodgateExtensionFactory::registerListener);
         register(new GriefDefenderExtensionFactory(), GriefDefenderExtensionFactory::createExtension);
         register(new GriefPreventionExtensionFactory(), GriefPreventionExtensionFactory::createExtension);
-        register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension);
+        //register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension); // TODO: update for Sponge API 8
         register(new HeroesExtensionFactory(), HeroesExtensionFactory::createExtension);
         register(new KingdomsXExtensionFactory(), KingdomsXExtensionFactory::createExtension);
         register(new JobsExtensionFactory(), JobsExtensionFactory::createExtension);
@@ -88,7 +88,7 @@ public class ExtensionRegister {
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension, McMMOExtensionFactory::registerExpansion);
         registerMany(new MinigameLibExtensionFactory(), MinigameLibExtensionFactory::createExtensions);
         register(new MyPetExtensionFactory(), MyPetExtensionFactory::createExtension);
-        register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
+        //register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension); // TODO: update for Sponge API 8
         register(new NuVotifierExtensionFactory(), NuVotifierExtensionFactory::createExtension);
         register(new PlaceholderAPIExtensionFactory(), PlaceholderAPIExtensionFactory::createExtension);
         register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);

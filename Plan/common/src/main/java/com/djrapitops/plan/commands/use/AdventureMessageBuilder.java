@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -24,16 +25,21 @@ import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Collection;
 
-public class VelocityMessageBuilder implements MessageBuilder {
+/**
+ * Shared Adventure {@link MessageBuilder} shared by Velocity and Sponge.
+ */
+public class AdventureMessageBuilder implements MessageBuilder {
 
-    private final VelocityCMDSender sender;
+    private final CMDSender sender;
+    private final Audience audience;
     private final TextComponent.Builder builder;
 
     // Store reference to previous component to properly add hover & click events
     private Component previousComponent;
 
-    public VelocityMessageBuilder(VelocityCMDSender sender) {
+    AdventureMessageBuilder(CMDSender sender, Audience audience) {
         this.sender = sender;
+        this.audience = audience;
         builder = Component.text();
     }
 
@@ -112,6 +118,6 @@ public class VelocityMessageBuilder implements MessageBuilder {
         if (previousComponent != null) {
             builder.append(previousComponent);
         }
-        sender.commandSource.sendMessage(builder.build());
+        audience.sendMessage(builder.build());
     }
 }

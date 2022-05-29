@@ -62,12 +62,12 @@ subprojects {
     ext {
         daggerVersion = "2.42"
 
-        palVersion = "5.0.3"
+        palVersion = "5.1.0"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
         paperVersion = "1.13.2-R0.1-SNAPSHOT"
-        spongeVersion = "7.4.0"
+        spongeVersion = "8.1.0"
         nukkitVersion = "1.0-SNAPSHOT"
         bungeeVersion = "1.16-R0.4"
         velocityVersion = "3.0.0-SNAPSHOT"
@@ -84,7 +84,7 @@ subprojects {
         gsonVersion = "2.9.0"
         dependencyDownloadVersion = "1.2.1"
 
-        bstatsVersion = "2.2.1"
+        bstatsVersion = "3.0.0"
         placeholderapiVersion = "2.11.1"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 

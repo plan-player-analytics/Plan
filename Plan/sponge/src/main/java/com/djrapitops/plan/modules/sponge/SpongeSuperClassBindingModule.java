@@ -34,7 +34,7 @@ import com.djrapitops.plan.version.SpongeVersionChecker;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Binds;
 import dagger.Module;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.server.ServerWorld;
 
 /**
  * Module for binding Sponge specific classes as interface implementations.
@@ -63,10 +63,10 @@ public interface SpongeSuperClassBindingModule {
     ServerShutdownSave bindServerShutdownSave(SpongeServerShutdownSave shutdownSave);
 
     @Binds
-    ServerSensor<World> bindServerSensor(SpongeSensor sensor);
+    ServerSensor<ServerWorld> bindServerSensor(SpongeSensor sensor);
 
     @Binds
-    ServerSensor<?> bindGenericsServerSensor(ServerSensor<World> sensor);
+    ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerWorld> sensor);
 
     @Binds
     VersionChecker bindVersionChecker(SpongeVersionChecker versionChecker);

@@ -150,8 +150,18 @@ public class PlanSystem implements SubSystem {
         return webServerSystem.getAddresses().getMainAddress().orElse(webServerSystem.getAddresses().getFallbackLocalhostAddress());
     }
 
-    @Override
-    public void enable() {
+    /**
+     * Enables only the systems that are required for {@link com.djrapitops.plan.commands.PlanCommand}.
+     * @see #enableOtherThanCommands()
+     */
+    public void enableForCommands() {
+        enableSystems(configSystem);
+    }
+
+    /**
+     * Enables the rest of the systems that are not enabled in {@link #enableForCommands()}.
+     */
+    public void enableOtherThanCommands() {
         extensionService.register();
         resolverService.register();
         resourceService.register();
@@ -162,7 +172,6 @@ public class PlanSystem implements SubSystem {
 
         enableSystems(
                 files,
-                configSystem,
                 localeSystem,
                 versionChecker,
                 databaseSystem,
@@ -194,6 +203,12 @@ public class PlanSystem implements SubSystem {
             logger.warn("consider updating your JVM as soon as possible.");
             logger.warn("! ----------------------------------- !");
         }
+    }
+
+    @Override
+    public void enable() {
+        enableForCommands();
+        enableOtherThanCommands();
     }
 
     private void enableSystems(SubSystem... systems) {

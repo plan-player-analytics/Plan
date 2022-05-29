@@ -17,8 +17,8 @@
 package com.djrapitops.plan.api.events;
 
 import com.djrapitops.plan.PlanSponge;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.Cause;
+import org.spongepowered.api.event.EventContext;
 import org.spongepowered.api.event.impl.AbstractEvent;
 
 /**
@@ -50,17 +50,17 @@ public class PlanSpongeEnableEvent extends AbstractEvent {
     }
 
     @Override
-    public Cause getCause() {
+    public Cause cause() {
         return Cause.builder().append(plugin.getSystem()).build(EventContext.empty());
     }
 
     @Override
-    public Object getSource() {
+    public Object source() {
         return plugin.getSystem();
     }
 
     @Override
-    public EventContext getContext() {
+    public EventContext context() {
         return EventContext.empty();
     }
 }

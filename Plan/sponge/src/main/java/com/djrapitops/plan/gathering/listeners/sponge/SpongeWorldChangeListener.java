@@ -24,13 +24,14 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.entity.MoveEntityEvent;
+import org.spongepowered.api.event.entity.ChangeEntityWorldEvent;
 import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.registry.RegistryTypes;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -62,11 +63,7 @@ public class SpongeWorldChangeListener {
     }
 
     @Listener(order = Order.POST)
-    public void onWorldChange(MoveEntityEvent.Teleport event, @First Player player) {
-        if (event.isCancelled()) {
-            return;
-        }
-
+    public void onWorldChange(ChangeEntityWorldEvent event, @First ServerPlayer player) {
         try {
             actOnEvent(event, player);
         } catch (Exception e) {
@@ -74,12 +71,13 @@ public class SpongeWorldChangeListener {
         }
     }
 
-    private void actOnEvent(MoveEntityEvent.Teleport event, Player player) {
+    private void actOnEvent(ChangeEntityWorldEvent event, ServerPlayer player) {
         long time = System.currentTimeMillis();
 
-        UUID uuid = player.getUniqueId();
+        UUID uuid = player.uniqueId();
 
-        String worldName = event.getToTransform().getExtent().getName();
+        String worldName = Sponge.game().server().worldManager().worldDirectory(event.destinationWorld().key())
+                .map(path -> path.getFileName().toString()).orElse("Unknown");
         String gameMode = getGameMode(player);
 
         dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
@@ -89,9 +87,9 @@ public class SpongeWorldChangeListener {
         cachedSession.ifPresent(session -> session.changeState(worldName, gameMode, time));
     }
 
-    private String getGameMode(Player player) {
-        Optional<GameMode> gameMode = player.getGameModeData().get(Keys.GAME_MODE);
-        return gameMode.map(gm -> gm.getName().toUpperCase()).orElse("ADVENTURE");
+    private String getGameMode(ServerPlayer player) {
+        GameMode gameMode = player.gameMode().get();
+        return gameMode.key(RegistryTypes.GAME_MODE).value().toUpperCase();
     }
 
 }
