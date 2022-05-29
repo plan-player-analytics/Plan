@@ -11,8 +11,7 @@ dependencies {
     implementation project(path: ":common", configuration: 'shadow')
     compileOnly project(":api")
 
-    // TODO: remove -sponge from version once sponge api 8 is merged to the mainstream PAL
-    implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion-sponge"
+    implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
     implementation "org.bstats:bstats-sponge:$bstatsVersion"
 
     testImplementation "org.spongepowered:spongeapi:$spongeVersion"
