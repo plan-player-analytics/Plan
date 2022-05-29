@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import com.djrapitops.plan.PlanSpongeComponent;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.kyori.adventure.audience.Audience;
@@ -27,7 +28,6 @@ import org.spongepowered.api.command.Command;
 import org.spongepowered.api.command.CommandCause;
 import org.spongepowered.api.command.CommandCompletion;
 import org.spongepowered.api.command.CommandResult;
-import org.spongepowered.api.command.exception.CommandException;
 import org.spongepowered.api.command.parameter.ArgumentReader;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.network.RconConnection;
@@ -36,21 +36,39 @@ import org.spongepowered.api.service.permission.Subject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class SpongeCommand implements Command.Raw {
 
     private final RunnableFactory runnableFactory;
-    private final ErrorLogger errorLogger;
-    private final Subcommand command;
+    private final Supplier<PlanSpongeComponent> componentSupplier;
+    private PlanSpongeComponent commandComponent;
+    private ErrorLogger errorLogger;
+    private Subcommand subcommand;
 
     public SpongeCommand(
             RunnableFactory runnableFactory,
-            ErrorLogger errorLogger, Subcommand command
+            Supplier<PlanSpongeComponent> componentSupplier,
+            Subcommand initialCommand
     ) {
         this.runnableFactory = runnableFactory;
-        this.errorLogger = errorLogger;
-        this.command = command;
+        this.componentSupplier = componentSupplier;
+        this.commandComponent = componentSupplier.get();
+        this.errorLogger = commandComponent.system().getErrorLogger();
+        this.subcommand = initialCommand;
+    }
+
+    private synchronized Subcommand getCommand() {
+        PlanSpongeComponent component = componentSupplier.get();
+        // Check if the component has changed, if it has, update the command and error logger.
+        if (commandComponent != component) {
+            errorLogger = component.system().getErrorLogger();
+            subcommand = component.planCommand().build();
+            commandComponent = component;
+        }
+
+        return subcommand;
     }
 
     private CMDSender getSender(CommandCause cause) {
@@ -70,10 +88,10 @@ public class SpongeCommand implements Command.Raw {
     }
 
     @Override
-    public CommandResult process(CommandCause cause, ArgumentReader.Mutable arguments) throws CommandException {
+    public CommandResult process(CommandCause cause, ArgumentReader.Mutable arguments) {
         runnableFactory.create(() -> {
             try {
-                command.getExecutor().accept(getSender(cause), new Arguments(arguments.input()));
+                getCommand().getExecutor().accept(getSender(cause), new Arguments(arguments.input()));
             } catch (Exception e) {
                 errorLogger.error(e, ErrorContext.builder()
                         .related(cause.subject().getClass())
@@ -87,7 +105,7 @@ public class SpongeCommand implements Command.Raw {
     @Override
     public List<CommandCompletion> complete(CommandCause cause, ArgumentReader.Mutable arguments) {
         try {
-            return command.getArgumentResolver()
+            return getCommand().getArgumentResolver()
                     .apply(getSender(cause), new Arguments(arguments.input()))
                     .stream()
                     .map(CommandCompletion::of)
@@ -104,7 +122,7 @@ public class SpongeCommand implements Command.Raw {
 
     @Override
     public boolean canExecute(CommandCause cause) {
-        for (String requiredPermission : command.getRequiredPermissions()) {
+        for (String requiredPermission : getCommand().getRequiredPermissions()) {
             if (!cause.subject().hasPermission(requiredPermission)) {
                 return false;
             }
@@ -114,18 +132,18 @@ public class SpongeCommand implements Command.Raw {
 
     @Override
     public Optional<Component> shortDescription(CommandCause cause) {
-        return Optional.ofNullable(command.getDescription()).map(this::convertLegacy);
+        return Optional.ofNullable(getCommand().getDescription()).map(this::convertLegacy);
     }
 
     @Override
     public Optional<Component> extendedDescription(CommandCause cause) {
-        return Optional.ofNullable(command.getDescription()).map(this::convertLegacy);
+        return Optional.ofNullable(getCommand().getDescription()).map(this::convertLegacy);
     }
 
     @Override
     public Component usage(CommandCause cause) {
         TextComponent.Builder builder = Component.text();
-        List<String> lines = command.getInDepthDescription();
+        List<String> lines = getCommand().getInDepthDescription();
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             builder.append(convertLegacy(line));

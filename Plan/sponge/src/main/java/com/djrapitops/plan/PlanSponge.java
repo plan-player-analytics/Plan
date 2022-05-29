@@ -224,7 +224,16 @@ public class PlanSponge implements PlanPlugin {
     public void onRegisterCommand(RegisterCommandEvent<Command.Raw> event) {
         Subcommand command = component.planCommand().build();
         List<String> aliases = new ArrayList<>(command.getAliases());
-        event.register(plugin, new SpongeCommand(runnableFactory, system.getErrorLogger(), command), aliases.remove(0), aliases.toArray(new String[0]));
+        event.register(
+                plugin,
+                new SpongeCommand(
+                        runnableFactory,
+                        () -> component,
+                        command
+                ),
+                aliases.remove(0),
+                aliases.toArray(new String[0])
+        );
     }
 
     @Override
