@@ -56,7 +56,7 @@ subprojects {
     apply plugin: "jacoco"
 
     compileJava {
-        options.release = 8
+        options.release = 11
     }
 
     ext {
@@ -75,6 +75,7 @@ subprojects {
 
         commonsTextVersion = "1.9"
         commonsCompressVersion = "1.21"
+        commonsCodecVersion = "1.15"
         caffeineVersion = "3.1.1"
         mysqlVersion = "8.0.29"
         sqliteVersion = "3.36.0.3"
