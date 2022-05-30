@@ -80,7 +80,7 @@ subprojects {
         sqliteVersion = "3.36.0.3"
         hikariVersion = "4.0.3"
         slf4jVersion = "1.7.36"
-        geoIpVersion = "2.16.1"
+        geoIpVersion = "3.0.1"
         gsonVersion = "2.9.0"
         dependencyDownloadVersion = "1.2.1"
 
