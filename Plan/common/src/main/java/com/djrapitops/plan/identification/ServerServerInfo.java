@@ -19,6 +19,7 @@ package com.djrapitops.plan.identification;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
+import com.djrapitops.plan.identification.storage.AtomicServerLoader;
 import com.djrapitops.plan.identification.storage.ServerDBLoader;
 import com.djrapitops.plan.identification.storage.ServerFileLoader;
 import com.djrapitops.plan.identification.storage.ServerLoader;
@@ -70,8 +71,8 @@ public class ServerServerInfo extends ServerInfo {
     ) {
         super(serverProperties);
         this.currentVersion = currentVersion;
-        this.fromFile = fromFile;
-        this.fromDatabase = fromDatabase;
+        this.fromFile = new AtomicServerLoader(fromFile);
+        this.fromDatabase = new AtomicServerLoader(fromDatabase);
         this.processing = processing;
         this.addresses = addresses;
         this.config = config;
