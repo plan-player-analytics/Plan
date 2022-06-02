@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {tooltip} from "../../util/graphs";
 import LineGraph from "./LineGraph";
+import {ChartLoader} from "../navigation/Loader";
 
 const PlayersOnlineGraph = ({data}) => {
     const {t} = useTranslation();
@@ -18,6 +19,8 @@ const PlayersOnlineGraph = ({data}) => {
         }
         setSeries([playersOnlineSeries]);
     }, [data, t])
+
+    if (!data) return <ChartLoader/>;
 
     return (
         <LineGraph id="players-online-graph" series={series}/>

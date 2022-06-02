@@ -1,27 +1,26 @@
 import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
-
-import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
 
-const ServerPie = ({colors, series}) => {
+const PlayerbasePie = ({series}) => {
     const {t} = useTranslation();
     const {nightModeEnabled, graphTheming} = useTheme();
 
     useEffect(() => {
-        const reduceColors = (colorsToReduce) => colorsToReduce.map(color => withReducedSaturation(color));
+        const reduceColors = (series) => series.map(slice => {
+            return {...slice, color: withReducedSaturation(slice.color)}
+        });
 
         const pieSeries = {
-            name: t('html.label.serverPlaytime'),
+            name: t('html.label.players'),
             colorByPoint: true,
-            colors: nightModeEnabled ? reduceColors(colors) : colors,
-            data: series
+            data: nightModeEnabled ? reduceColors(series) : series
         };
 
         Highcharts.setOptions(graphTheming);
-        Highcharts.chart('server-pie', {
+        Highcharts.chart('playerbase-pie', {
             chart: {
                 backgroundColor: 'transparent',
                 plotBorderWidth: null,
@@ -39,16 +38,11 @@ const ServerPie = ({colors, series}) => {
                     showInLegend: true
                 }
             },
-            tooltip: {
-                formatter: function () {
-                    return '<b>' + this.point.name + ':</b> ' + formatTimeAmount(this.y) + ' (' + this.percentage.toFixed(2) + '%)';
-                }
-            },
             series: [pieSeries]
         });
-    }, [colors, series, graphTheming, nightModeEnabled]);
+    }, [series, graphTheming, nightModeEnabled]);
 
-    return (<div className="chart-pie" id="server-pie"/>);
+    return (<div className="chart-area" id="playerbase-pie"/>);
 }
 
-export default ServerPie;
+export default PlayerbasePie;

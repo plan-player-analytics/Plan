@@ -7,6 +7,9 @@ import React from "react";
 
 const PvpKillsTableCard = ({player_kills}) => {
     const {t} = useTranslation();
+
+    if (!player_kills) return <></>;
+
     return (
         <Card>
             <Card.Header>

@@ -4,6 +4,7 @@ import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchWorldPie} from "../../../../service/serverService";
 import {ErrorViewBody} from "../../../../views/ErrorView";
+import {CardLoader} from "../../../navigation/Loader";
 
 const ServerWorldPieCard = () => {
     const {identifier} = useParams();
@@ -11,7 +12,7 @@ const ServerWorldPieCard = () => {
     const {data, loadingError} = useDataRequest(fetchWorldPie, [identifier]);
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
 
     return (
         <WorldPieCard

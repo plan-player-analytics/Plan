@@ -11,9 +11,9 @@ const ServerPvpPveAsNumbersTable = ({killData}) => {
             headers={[t('html.label.allTime'), t('html.label.last30days'), t('html.label.last7days')]}
         >
             <TableRow icon={faCrosshairs} color="red" text={t('html.label.averageKdr')}
-                      values={[killData.player_kdr_total,
-                          killData.player_kdr_30d,
-                          killData.player_kdr_7d]}/>
+                      values={[killData.player_kdr_avg,
+                          killData.player_kdr_avg_30d,
+                          killData.player_kdr_avg_7d]}/>
             <TableRow icon={faCrosshairs} color="red" text={t('html.label.playerKills')}
                       values={[killData.player_kills_total,
                           killData.player_kills_30d,

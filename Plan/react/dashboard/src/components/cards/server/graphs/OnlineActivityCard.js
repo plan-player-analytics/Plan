@@ -8,6 +8,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartArea} from "@fortawesome/free-solid-svg-icons";
 import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import React from "react";
+import {CardLoader} from "../../../navigation/Loader";
 
 const OnlineActivityCard = () => {
     const {t} = useTranslation();
@@ -17,8 +18,8 @@ const OnlineActivityCard = () => {
         fetchPlayersOnlineGraph,
         [identifier])
 
-    if (!data) return <></>;
     if (loadingError) return <ErrorViewCard error={loadingError}/>
+    if (!data) return <CardLoader/>;
 
     return (
         <Card>
