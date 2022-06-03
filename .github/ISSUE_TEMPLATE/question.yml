@@ -1,20 +1,14 @@
 name: Question
-description: Ask a Question about the plugin
+description: Ask a Question about the plugin or installation
 labels: [Question]
-body:
-- type: markdown
-  attributes:
-    value: |
-      > Before opening a question:
-      > - See if [the wiki](https://github.com/plan-player-analytics/Plan/wiki#tutorials) has an answer to your question
-      > - See if [the question has been answered](https://github.com/plan-player-analytics/Plan/projects/4)
-- type: textarea
-  attributes:
-    label: Question
-    description: Write your question here
-  validations:
-      required: true
-- type: textarea
-  attributes:
-    label: Additional context
-    description: Any additional information to understand the question better
+blank_issues_enabled: false
+contact_links:
+  - name: Wiki
+    url: https://github.com/plan-player-analytics/Plan/wiki
+    about: Please check if the wiki already has answer to your question
+  - name: Previous Q&A Discussions
+    url: https://github.com/plan-player-analytics/Plan/discussions/new
+    about: You can also check if someone else has asked your question already
+  - name: New Question to Discussions
+    url: https://github.com/plan-player-analytics/Plan/discussions/new
+    about: Open a new discussion for your question
