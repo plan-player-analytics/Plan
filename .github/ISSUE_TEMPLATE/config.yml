@@ -1,4 +1,4 @@
 contact_links:  
-- name: Question
+  - name: Question
     url: https://github.com/plan-player-analytics/Plan/discussions/new
     about: Ask a question about the plugin or installation on the Discussions forum
