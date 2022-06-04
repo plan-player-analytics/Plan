@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ServerFileLoaderTest {
     static PlanSystem system;
-    static ServerFileLoader underTest;
+    static ServerLoader underTest;
     private static ServerUUID serverUUID;
 
     @BeforeAll
@@ -57,7 +57,9 @@ class ServerFileLoaderTest {
 
     @BeforeEach
     void setUpEach() {
-        underTest = new ServerFileLoader(TestConstants.VERSION, system.getPlanFiles(), system.getConfigSystem().getConfig());
+        underTest = new AtomicServerLoader(
+                new ServerFileLoader(TestConstants.VERSION, system.getPlanFiles(), system.getConfigSystem().getConfig())
+        );
         Optional<Server> loaded = underTest.load(null);
         assertTrue(loaded.isPresent());
 
@@ -71,16 +73,20 @@ class ServerFileLoaderTest {
         ExecutorService executorService = new ScheduledThreadPoolExecutor(6);
 
         AtomicInteger runs = new AtomicInteger(1);
-        int expected = 10000;
+        int expected = 1000;
         AtomicInteger fails = new AtomicInteger(0);
         try {
             for (int i = 0; i < expected; i++) {
                 executorService.submit(() -> {
-                    Optional<Server> load = underTest.load(null);
-                    if (load.isPresent()) {
-                        underTest.save(load.get());
-                    } else {
-                        System.out.println("Failure " + fails.incrementAndGet());
+                    try {
+                        Optional<Server> load = underTest.load(null);
+                        if (load.isPresent()) {
+                            underTest.save(load.get());
+                        } else {
+                            System.out.println("Failure " + fails.incrementAndGet());
+                        }
+                    } finally {
+                        runs.incrementAndGet();
                     }
                 });
             }
