@@ -9,7 +9,7 @@ const PlayerbasePie = ({series}) => {
     const {nightModeEnabled, graphTheming} = useTheme();
 
     useEffect(() => {
-        const reduceColors = (series) => series.map(slice => {
+        const reduceColors = (slices) => slices.map(slice => {
             return {...slice, color: withReducedSaturation(slice.color)}
         });
 
@@ -40,7 +40,7 @@ const PlayerbasePie = ({series}) => {
             },
             series: [pieSeries]
         });
-    }, [series, graphTheming, nightModeEnabled]);
+    }, [series, graphTheming, nightModeEnabled, t]);
 
     return (<div className="chart-area" id="playerbase-pie"/>);
 }

@@ -46,7 +46,7 @@ const ServerPie = ({colors, series}) => {
             },
             series: [pieSeries]
         });
-    }, [colors, series, graphTheming, nightModeEnabled]);
+    }, [colors, series, graphTheming, nightModeEnabled, t]);
 
     return (<div className="chart-pie" id="server-pie"/>);
 }

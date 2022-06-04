@@ -12,8 +12,8 @@ const PlayerbaseGraph = ({data}) => {
     const id = 'playerbase-graph';
 
     useEffect(() => {
-        const reduceColors = (series) => series.map(slice => {
-            return {...slice, color: withReducedSaturation(slice.color)}
+        const reduceColors = (lines) => lines.map(line => {
+            return {...line, color: withReducedSaturation(line.color)}
         });
 
         NoDataDisplay(Highcharts);
@@ -48,7 +48,7 @@ const PlayerbaseGraph = ({data}) => {
             },
             series: nightModeEnabled ? reduceColors(series) : series
         })
-    }, [data, graphTheming, id, t])
+    }, [data, graphTheming, id, t, nightModeEnabled])
 
     return (
         <div className="chart-area" id={id}>
