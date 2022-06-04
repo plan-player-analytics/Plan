@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
@@ -75,11 +75,7 @@ loadScripts(document, 'script');</script>
 <h1 title="Class ServerFileLoader" class="title">Class ServerFileLoader</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="../../settings/config/ConfigNode.html" title="class in com.djrapitops.plan.settings.config">com.djrapitops.plan.settings.config.ConfigNode</a>
-<div class="inheritance"><a href="../../settings/config/Config.html" title="class in com.djrapitops.plan.settings.config">com.djrapitops.plan.settings.config.Config</a>
 <div class="inheritance">com.djrapitops.plan.identification.storage.ServerFileLoader</div>
-</div>
-</div>
 </div>
 <section class="description">
 <dl class="notes">
@@ -89,20 +85,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="annotations">@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">ServerFileLoader</span>
-<span class="extends-implements">extends <a href="../../settings/config/Config.html" title="class in com.djrapitops.plan.settings.config">Config</a>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="ServerLoader.html" title="interface in com.djrapitops.plan.identification.storage">ServerLoader</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== FIELD SUMMARY =========== -->
-<li>
-<section class="field-summary" id="field.summary">
-<h2>Field Summary</h2>
-<div class="inherited-list">
-<h3 id="fields.inherited.from.class.com.djrapitops.plan.settings.config.ConfigNode">Fields inherited from class&nbsp;com.djrapitops.plan.settings.config.<a href="../../settings/config/ConfigNode.html" title="class in com.djrapitops.plan.settings.config">ConfigNode</a></h3>
-<code><a href="../../settings/config/ConfigNode.html#childNodes">childNodes</a>, <a href="../../settings/config/ConfigNode.html#comment">comment</a>, <a href="../../settings/config/ConfigNode.html#key">key</a>, <a href="../../settings/config/ConfigNode.html#nodeModificationLock">nodeModificationLock</a>, <a href="../../settings/config/ConfigNode.html#nodeOrder">nodeOrder</a>, <a href="../../settings/config/ConfigNode.html#parent">parent</a>, <a href="../../settings/config/ConfigNode.html#value">value</a></code></div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor.summary">
@@ -141,25 +128,16 @@ implements <a href="ServerLoader.html" title="interface in com.djrapitops.plan.i
 <div class="block">Load the server information.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#prepare()">prepare</a></span>()</code></div>
-<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#save(com.djrapitops.plan.identification.Server)">save</a></span>&#8203;(<a href="../Server.html" title="class in com.djrapitops.plan.identification">Server</a>&nbsp;server)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#save(com.djrapitops.plan.identification.Server)">save</a></span>&#8203;(<a href="../Server.html" title="class in com.djrapitops.plan.identification">Server</a>&nbsp;server)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Save the server information.</div>
 </div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods.inherited.from.class.com.djrapitops.plan.settings.config.Config">Methods inherited from class&nbsp;com.djrapitops.plan.settings.config.<a href="../../settings/config/Config.html" title="class in com.djrapitops.plan.settings.config">Config</a></h3>
-<code><a href="../../settings/config/Config.html#getConfigFilePath()">getConfigFilePath</a>, <a href="../../settings/config/Config.html#read()">read</a>, <a href="../../settings/config/Config.html#save()">save</a></code></div>
-<div class="inherited-list">
-<h3 id="methods.inherited.from.class.com.djrapitops.plan.settings.config.ConfigNode">Methods inherited from class&nbsp;com.djrapitops.plan.settings.config.<a href="../../settings/config/ConfigNode.html" title="class in com.djrapitops.plan.settings.config">ConfigNode</a></h3>
-<code><a href="../../settings/config/ConfigNode.html#addChild(com.djrapitops.plan.settings.config.ConfigNode)">addChild</a>, <a href="../../settings/config/ConfigNode.html#addNode(java.lang.String)">addNode</a>, <a href="../../settings/config/ConfigNode.html#contains(java.lang.String)">contains</a>, <a href="../../settings/config/ConfigNode.html#copyAll(com.djrapitops.plan.settings.config.ConfigNode)">copyAll</a>, <a href="../../settings/config/ConfigNode.html#copyMissing(com.djrapitops.plan.settings.config.ConfigNode)">copyMissing</a>, <a href="../../settings/config/ConfigNode.html#getBoolean()">getBoolean</a>, <a href="../../settings/config/ConfigNode.html#getBoolean(java.lang.String)">getBoolean</a>, <a href="../../settings/config/ConfigNode.html#getChildren()">getChildren</a>, <a href="../../settings/config/ConfigNode.html#getComment()">getComment</a>, <a href="../../settings/config/ConfigNode.html#getConfigPaths()">getConfigPaths</a>, <a href="../../settings/config/ConfigNode.html#getDouble()">getDouble</a>, <a href="../../settings/config/ConfigNode.html#getDouble(java.lang.String)">getDouble</a>, <a href="../../settings/config/ConfigNode.html#getInteger()">getInteger</a>, <a href="../../settings/config/ConfigNode.html#getInteger(java.lang.String)">getInteger</a>, <a href="../../settings/config/ConfigNode.html#getKey(boolean)">getKey</a>, <a href="../../settings/config/ConfigNode.html#getLong()">getLong</a>, <a href="../../settings/config/ConfigNode.html#getLong(java.lang.String)">getLong</a>, <a href="../../settings/config/ConfigNode.html#getNode(java.lang.String)">getNode</a>, <a href="../../settings/config/ConfigNode.html#getNodeDepth()">getNodeDepth</a>, <a href="../../settings/config/ConfigNode.html#getNodeOrder()">getNodeOrder</a>, <a href="../../settings/config/ConfigNode.html#getParent()">getParent</a>, <a href="../../settings/config/ConfigNode.html#getString()">getString</a>, <a href="../../settings/config/ConfigNode.html#getString(java.lang.String)">getString</a>, <a href="../../settings/config/ConfigNode.html#getStringList()">getStringList</a>, <a href="../../settings/config/ConfigNode.html#getStringList(java.lang.String)">getStringList</a>, <a href="../../settings/config/ConfigNode.html#getStringMap(boolean)">getStringMap</a>, <a href="../../settings/config/ConfigNode.html#isLeafNode()">isLeafNode</a>, <a href="../../settings/config/ConfigNode.html#moveChild(java.lang.String,java.lang.String)">moveChild</a>, <a href="../../settings/config/ConfigNode.html#remove()">remove</a>, <a href="../../settings/config/ConfigNode.html#removeChild(com.djrapitops.plan.settings.config.ConfigNode)">removeChild</a>, <a href="../../settings/config/ConfigNode.html#removeNode(java.lang.String)">removeNode</a>, <a href="../../settings/config/ConfigNode.html#reorder(java.util.List)">reorder</a>, <a href="../../settings/config/ConfigNode.html#set(java.lang.String,T)">set</a>, <a href="../../settings/config/ConfigNode.html#set(T)">set</a>, <a href="../../settings/config/ConfigNode.html#setComment(java.util.List)">setComment</a>, <a href="../../settings/config/ConfigNode.html#sort()">sort</a>, <a href="../../settings/config/ConfigNode.html#toString()">toString</a>, <a href="../../settings/config/ConfigNode.html#updateParent(com.djrapitops.plan.settings.config.ConfigNode)">updateParent</a></code></div>
-<div class="inherited-list">
 <h3 id="methods.inherited.from.class.java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -189,17 +167,6 @@ implements <a href="ServerLoader.html" title="interface in com.djrapitops.plan.i
 <section class="method-details" id="method.detail">
 <h2>Method Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="prepare()">
-<h3>prepare</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">prepare</span>()
-             throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
-<dl class="notes">
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
-</dl>
-</section>
-</li>
 <li>
 <section class="detail" id="load(com.djrapitops.plan.identification.ServerUUID)">
 <h3>load</h3>
@@ -236,7 +203,7 @@ implements <a href="ServerLoader.html" title="interface in com.djrapitops.plan.i
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">equals</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</span></div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="../../settings/config/Config.html#equals(java.lang.Object)">equals</a></code>&nbsp;in class&nbsp;<code><a href="../../settings/config/Config.html" title="class in com.djrapitops.plan.settings.config">Config</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>
@@ -246,7 +213,7 @@ implements <a href="ServerLoader.html" title="interface in com.djrapitops.plan.i
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">hashCode</span>()</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="../../settings/config/Config.html#hashCode()">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="../../settings/config/Config.html" title="class in com.djrapitops.plan.settings.config">Config</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
 </dl>
 </section>
 </li>
