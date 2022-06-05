@@ -54,6 +54,17 @@ public class CommandWithSubcommands extends Subcommand {
         return subcommands;
     }
 
+    public Optional<Subcommand> findSubCommand(Arguments arguments) {
+        return arguments.get(0).flatMap(alias -> {
+            for (Subcommand subcommand : subcommands) {
+                if (subcommand.getAliases().contains(alias)) {
+                    return Optional.of(subcommand);
+                }
+            }
+            return Optional.empty();
+        });
+    }
+
     public void onHelp(CMDSender sender, Arguments arguments) {
         List<Subcommand> hasPermissionFor = getPermittedSubcommands(sender);
         sender.buildMessage()
