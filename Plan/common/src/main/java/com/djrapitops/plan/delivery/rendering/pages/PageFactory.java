@@ -86,7 +86,12 @@ public class PageFactory {
         this.locale = locale;
     }
 
-    public PlayersPage playersPage() throws IOException {
+    public Page playersPage() throws IOException {
+        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+            String reactHtml = getResource("index.html");
+            return () -> reactHtml;
+        }
+
         return new PlayersPage(getResource("players.html"), versionChecker.get(),
                 config.get(), theme.get(), serverInfo.get());
     }
@@ -116,11 +121,17 @@ public class PageFactory {
         );
     }
 
-    public PlayerPage playerPage(UUID playerUUID) throws IOException {
+    public Page playerPage(UUID playerUUID) throws IOException {
         Database db = dbSystem.get().getDatabase();
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+
+        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+            String reactHtml = getResource("index.html");
+            return () -> reactHtml;
+        }
+
         return new PlayerPage(
-                getResource(config.get().isTrue(PluginSettings.FRONTEND_BETA) ? "index.html" : "player.html"), player,
+                getResource("player.html"), player,
                 versionChecker.get(),
                 config.get(),
                 this,
