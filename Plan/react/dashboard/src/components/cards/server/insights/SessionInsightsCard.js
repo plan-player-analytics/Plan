@@ -10,8 +10,8 @@ import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 
 const SessionInsightsCard = () => {
-    const {identifier} = useParams();
     const {t} = useTranslation();
+    const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchSessionOverview, [identifier]);
 

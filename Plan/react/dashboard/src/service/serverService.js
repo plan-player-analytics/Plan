@@ -42,6 +42,12 @@ export const fetchKills = async (identifier) => {
     return doGetRequest(url);
 }
 
+export const fetchPlayers = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/players?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
 export const fetchPlayersOnlineGraph = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/graph?type=playersOnline&server=${identifier}&timestamp=${timestamp}`;

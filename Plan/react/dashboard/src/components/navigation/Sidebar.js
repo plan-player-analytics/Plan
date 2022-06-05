@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
 import {faArrowLeft, faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
@@ -208,11 +208,11 @@ const Sidebar = ({items, showBackButton}) => {
     }
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const updateWidth = () => setWindowWidth(window.innerWidth);
+    const updateWidth = useCallback(() => setWindowWidth(window.innerWidth), []);
     useEffect(() => {
         window.addEventListener('resize', updateWidth);
         return () => window.removeEventListener('resize', updateWidth);
-    }, []);
+    }, [updateWidth]);
 
     const collapseSidebar = () => setSidebarExpanded(windowWidth > 1350);
     useEffect(collapseSidebar, [windowWidth, currentTab, setSidebarExpanded]);
