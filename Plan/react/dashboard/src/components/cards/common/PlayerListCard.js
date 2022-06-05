@@ -19,7 +19,7 @@ const PlayerListCard = ({data}) => {
             responsive: true,
             deferRender: true,
             columns: data.columns,
-            data: data?.data,
+            data: data.data,
             order: [[5, "desc"]]
         });
     }, [data])

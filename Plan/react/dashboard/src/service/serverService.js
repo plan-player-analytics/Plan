@@ -44,7 +44,7 @@ export const fetchKills = async (identifier) => {
 
 export const fetchPlayers = async (identifier) => {
     const timestamp = Date.now();
-    const url = `/v1/players?server=${identifier}&timestamp=${timestamp}`;
+    const url = identifier ? `/v1/players?server=${identifier}&timestamp=${timestamp}` : `/v1/players?timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 

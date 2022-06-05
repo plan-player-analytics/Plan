@@ -19,8 +19,8 @@ const Logo = () => (
     </a>
 )
 
-const Divider = () => (
-    <hr className="sidebar-divider my-0"/>
+const Divider = ({showMargin}) => (
+    <hr className={"sidebar-divider" + (showMargin ? '' : " my-0")}/>
 )
 
 const InnerItem = ({href, icon, name, nameShort}) => {
@@ -180,7 +180,7 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t) => {
                                 setOpen={() => setOpenCollapse(i)}/>
     }
 
-    if (item.href) {
+    if (item.href !== undefined) {
         return <Item key={i}
                      active={false}
                      href={item.href}
@@ -217,16 +217,18 @@ const Sidebar = ({items, showBackButton}) => {
     const collapseSidebar = () => setSidebarExpanded(windowWidth > 1350);
     useEffect(collapseSidebar, [windowWidth, currentTab, setSidebarExpanded]);
 
+    if (!items.length) return <></>
+
     return (
         <>
             {sidebarExpanded &&
             <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
                 <Logo/>
                 <Divider/>
-                {showBackButton ? <>
+                {showBackButton && <>
                     <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
-                    <Divider/>
-                </> : ''}
+                    <Divider showMargin={!items[0].contents && items[0].href === undefined}/>
+                </>}
                 {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t))}
                 <Divider/>
                 <FooterButtons/>

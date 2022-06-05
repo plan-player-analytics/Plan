@@ -25,6 +25,8 @@ import ServerSessions from "./views/server/ServerSessions";
 import ServerPvpPve from "./views/server/ServerPvpPve";
 import PlayerbaseOverview from "./views/server/PlayerbaseOverview";
 import ServerPlayers from "./views/server/ServerPlayers";
+import PlayersPage from "./views/layout/PlayersPage";
+import AllPlayers from "./views/players/AllPlayers";
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -64,6 +66,10 @@ function App() {
                                     title: 'No such tab',
                                     icon: faMapSigns
                                 }}/>}/>
+                            </Route>
+                            <Route path="/players" element={<PlayersPage/>}>
+                                <Route path="" element={<AllPlayers/>}/>
+                                <Route path="*" element={<AllPlayers/>}/>
                             </Route>
                             <Route path="/server/:identifier" element={<ServerPage/>}>
                                 <Route path="" element={<OverviewRedirect/>}/>
