@@ -202,7 +202,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
             }
         }).get();
 
-        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(player2UUID)));
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(player2UUID)).orElseThrow(AssertionError::new));
         Set<Integer> result = db().query(BaseUserQueries.userIdsOfRegisteredBetween(2500L, 7500L));
         assertEquals(expected, result);
     }

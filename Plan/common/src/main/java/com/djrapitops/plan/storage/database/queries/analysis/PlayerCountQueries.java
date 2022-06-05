@@ -439,17 +439,7 @@ public class PlayerCountQueries {
         String sql = SELECT + "COUNT(1) as " + PLAYER_COUNT + FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + UserInfoTable.OP + "=?";
-        return new QueryStatement<Integer>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setBoolean(2, true);
-            }
-
-            @Override
-            public Integer processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getInt(PLAYER_COUNT) : 0;
-            }
-        };
+        return db -> db.queryOptional(sql, set -> set.getInt(PLAYER_COUNT), serverUUID, true)
+                .orElse(0);
     }
 }

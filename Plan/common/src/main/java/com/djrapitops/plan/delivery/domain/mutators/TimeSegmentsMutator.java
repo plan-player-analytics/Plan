@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeSegmentsMutator<T> {
 
-    List<TimeSegment<T>> segments;
+    private final List<TimeSegment<T>> segments;
 
     public TimeSegmentsMutator(List<TimeSegment<T>> segments) {
         this.segments = segments;

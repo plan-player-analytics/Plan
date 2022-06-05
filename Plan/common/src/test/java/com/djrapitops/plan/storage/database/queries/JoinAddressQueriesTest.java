@@ -71,7 +71,7 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
         session.getExtraData().remove(JoinAddress.class);
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)).orElseThrow(AssertionError::new));
         Set<Integer> result = db().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(List.of(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP)));
 
         assertEquals(expected, result);
@@ -190,7 +190,7 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
     default void joinAddressFilterUUIDsAreFetched() {
         latestJoinAddressIsUpdatedUponSecondSession();
 
-        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)).orElseThrow(AssertionError::new));
         Set<Integer> result = db().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(
                 List.of(TestConstants.GET_PLAYER_HOSTNAME.get().toLowerCase()))
         );
@@ -201,7 +201,7 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
     default void joinAddressFilterUUIDsAreFetchedWhenUnknown() {
         joinAddressCanBeUnknown();
 
-        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)).orElseThrow(AssertionError::new));
         Set<Integer> result = db().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(
                 List.of(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP))
         );

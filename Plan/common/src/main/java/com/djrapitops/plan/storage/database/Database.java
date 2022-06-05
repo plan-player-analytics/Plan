@@ -66,7 +66,7 @@ public interface Database {
 
             @Override
             public Optional<T> processResults(ResultSet set) throws SQLException {
-                return set.next() ? Optional.of(rowExtractor.extract(set)) : Optional.empty();
+                return set.next() ? Optional.ofNullable(rowExtractor.extract(set)) : Optional.empty();
             }
         });
     }
@@ -80,7 +80,7 @@ public interface Database {
     }
 
     default <C extends Collection<T>, T> C queryCollection(String sql, RowExtractor<T> rowExtractor, Supplier<C> collectionConstructor, Object... parameters) {
-        return query(new QueryStatement<C>(sql) {
+        return query(new QueryStatement<C>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 QueryParameterSetter.setParameters(statement, parameters);
@@ -102,7 +102,7 @@ public interface Database {
     }
 
     default <M extends Map<K, V>, K, V> M queryMap(String sql, MapRowExtractor<K, V> rowExtractor, Supplier<M> mapConstructor, Object... parameters) {
-        return query(new QueryStatement<M>(sql) {
+        return query(new QueryStatement<M>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 QueryParameterSetter.setParameters(statement, parameters);
