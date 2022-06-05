@@ -4969,6 +4969,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/settings/config/paths/WebserverSettings.html#EXTERNAL_LINK">EXTERNAL_LINK</a></span> - Static variable in class com.djrapitops.plan.settings.config.paths.<a href="com/djrapitops/plan/settings/config/paths/WebserverSettings.html" title="class in com.djrapitops.plan.settings.config.paths">WebserverSettings</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/queries/RowExtractor.html#extract(java.sql.ResultSet)">extract(ResultSet)</a></span> - Method in interface com.djrapitops.plan.storage.database.queries.<a href="com/djrapitops/plan/storage/database/queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/queries/MapRowExtractor.html#extract(java.sql.ResultSet,java.util.Map)">extract(ResultSet, Map&lt;K, V&gt;)</a></span> - Method in interface com.djrapitops.plan.storage.database.queries.<a href="com/djrapitops/plan/storage/database/queries/MapRowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">MapRowExtractor</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/extension/extractor/ExtensionExtractor.html#extractAnnotationInformation()">extractAnnotationInformation()</a></span> - Method in class com.djrapitops.plan.extension.extractor.<a href="com/djrapitops/plan/extension/extractor/ExtensionExtractor.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionExtractor</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
@@ -10364,6 +10368,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/DataSvc.html#map(K,A,java.lang.Class)">map(K, A, Class&lt;B&gt;)</a></span> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/DataSvc.html" title="class in com.djrapitops.plan">DataSvc</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/queries/MapRowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries"><span class="type-name-link">MapRowExtractor</span></a>&lt;<a href="com/djrapitops/plan/storage/database/queries/MapRowExtractor.html" title="type parameter in MapRowExtractor">K</a>,&#8203;<a href="com/djrapitops/plan/storage/database/queries/MapRowExtractor.html" title="type parameter in MapRowExtractor">V</a>&gt; - Interface in <a href="com/djrapitops/plan/storage/database/queries/package-summary.html">com.djrapitops.plan.storage.database.queries</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/java/Maps.html" title="class in com.djrapitops.plan.utilities.java"><span class="type-name-link">Maps</span></a> - Class in <a href="com/djrapitops/plan/utilities/java/package-summary.html">com.djrapitops.plan.utilities.java</a></dt>
 <dd>
 <div class="block">Methods that can be used as functional interfaces when dealing with Maps.</div>
@@ -13152,6 +13158,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/queries/QueryAPIQuery.html#%3Cinit%3E(java.lang.String,com.djrapitops.plan.query.QueryService.ThrowingFunction)">QueryAPIQuery(String, QueryService.ThrowingFunction&lt;PreparedStatement, T&gt;)</a></span> - Constructor for class com.djrapitops.plan.storage.database.queries.<a href="com/djrapitops/plan/storage/database/queries/QueryAPIQuery.html" title="class in com.djrapitops.plan.storage.database.queries">QueryAPIQuery</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/Database.html#queryCollection(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.util.function.Supplier,java.lang.Object...)">queryCollection(String, RowExtractor&lt;T&gt;, Supplier&lt;C&gt;, Object...)</a></span> - Method in interface com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/filter/QueryFilters.html" title="class in com.djrapitops.plan.storage.database.queries.filter"><span class="type-name-link">QueryFilters</span></a> - Class in <a href="com/djrapitops/plan/storage/database/queries/filter/package-summary.html">com.djrapitops.plan.storage.database.queries.filter</a></dt>
 <dd>
 <div class="block">Contains a single instance of each filter kind.</div>
@@ -13161,6 +13169,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/delivery/webserver/resolver/json/QueryJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json"><span class="type-name-link">QueryJSONResolver</span></a> - Class in <a href="com/djrapitops/plan/delivery/webserver/resolver/json/package-summary.html">com.djrapitops.plan.delivery.webserver.resolver.json</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/delivery/webserver/resolver/json/QueryJSONResolver.html#%3Cinit%3E(com.djrapitops.plan.storage.database.queries.filter.QueryFilters,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.webserver.cache.JSONStorage,com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.delivery.formatting.Formatters,com.google.gson.Gson)">QueryJSONResolver(QueryFilters, PlanConfig, DBSystem, ServerInfo, JSONStorage, GraphJSONCreator, Locale, Formatters, Gson)</a></span> - Constructor for class com.djrapitops.plan.delivery.webserver.resolver.json.<a href="com/djrapitops/plan/delivery/webserver/resolver/json/QueryJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json">QueryJSONResolver</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/Database.html#queryList(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">queryList(String, RowExtractor&lt;T&gt;, Object...)</a></span> - Method in interface com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/Database.html#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.lang.Object...)">queryMap(String, MapRowExtractor&lt;K, V&gt;, Object...)</a></span> - Method in interface com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/Database.html#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.util.function.Supplier,java.lang.Object...)">queryMap(String, MapRowExtractor&lt;K, V&gt;, Supplier&lt;M&gt;, Object...)</a></span> - Method in interface com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/Database.html#queryOptional(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">queryOptional(String, RowExtractor&lt;T&gt;, Object...)</a></span> - Method in interface com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/delivery/rendering/pages/PageFactory.html#queryPage()">queryPage()</a></span> - Method in class com.djrapitops.plan.delivery.rendering.pages.<a href="com/djrapitops/plan/delivery/rendering/pages/PageFactory.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PageFactory</a></dt>
 <dd>&nbsp;</dd>
@@ -13175,6 +13191,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/delivery/webserver/resolver/QueryPageResolver.html#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.ResponseFactory)">QueryPageResolver(ResponseFactory)</a></span> - Constructor for class com.djrapitops.plan.delivery.webserver.resolver.<a href="com/djrapitops/plan/delivery/webserver/resolver/QueryPageResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver">QueryPageResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html#queryPageResponse()">queryPageResponse()</a></span> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html" title="class in com.djrapitops.plan.delivery.webserver">ResponseFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/queries/QueryParameterSetter.html" title="class in com.djrapitops.plan.storage.database.queries"><span class="type-name-link">QueryParameterSetter</span></a> - Class in <a href="com/djrapitops/plan/storage/database/queries/package-summary.html">com.djrapitops.plan.storage.database.queries</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/query/QueryService.html" title="interface in com.djrapitops.plan.query"><span class="type-name-link">QueryService</span></a> - Interface in <a href="com/djrapitops/plan/query/package-summary.html">com.djrapitops.plan.query</a></dt>
 <dd>
@@ -13194,6 +13212,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">See https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html</div>
 </dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/Database.html#querySet(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">querySet(String, RowExtractor&lt;T&gt;, Object...)</a></span> - Method in interface com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/QueryStatement.html" title="class in com.djrapitops.plan.storage.database.queries"><span class="type-name-link">QueryStatement</span></a>&lt;<a href="com/djrapitops/plan/storage/database/queries/QueryStatement.html" title="type parameter in QueryStatement">T</a>&gt; - Class in <a href="com/djrapitops/plan/storage/database/queries/package-summary.html">com.djrapitops.plan.storage.database.queries</a></dt>
 <dd>
 <div class="block">SQL query that closes proper elements.</div>
@@ -14057,6 +14077,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/delivery/webserver/resolver/RootPageResolver.html#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.ResponseFactory,dagger.Lazy,com.djrapitops.plan.identification.ServerInfo)">RootPageResolver(ResponseFactory, Lazy&lt;WebServer&gt;, ServerInfo)</a></span> - Constructor for class com.djrapitops.plan.delivery.webserver.resolver.<a href="com/djrapitops/plan/delivery/webserver/resolver/RootPageResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver">RootPageResolver</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries"><span class="type-name-link">RowExtractor</span></a>&lt;<a href="com/djrapitops/plan/storage/database/queries/RowExtractor.html" title="type parameter in RowExtractor">T</a>&gt; - Interface in <a href="com/djrapitops/plan/storage/database/queries/package-summary.html">com.djrapitops.plan.storage.database.queries</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/settings/locale/LangCode.html#RU">RU</a></span> - Enum constant in enum class com.djrapitops.plan.settings.locale.<a href="com/djrapitops/plan/settings/locale/LangCode.html" title="enum class in com.djrapitops.plan.settings.locale">LangCode</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/addons/placeholderapi/PlaceholderCacheRefreshTask.html#run()">run()</a></span> - Method in class com.djrapitops.plan.addons.placeholderapi.<a href="com/djrapitops/plan/addons/placeholderapi/PlaceholderCacheRefreshTask.html" title="class in com.djrapitops.plan.addons.placeholderapi">PlaceholderCacheRefreshTask</a></dt>
@@ -14898,6 +14920,8 @@ loadScripts(document, 'script');</script>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html#setNicknames(java.util.List)">setNicknames(List&lt;Nickname&gt;)</a></span> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html#setOp(boolean)">setOp(boolean)</a></span> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="com/djrapitops/plan/storage/database/queries/QueryParameterSetter.html#setParameters(java.sql.PreparedStatement,java.lang.Object...)">setParameters(PreparedStatement, Object...)</a></span> - Static method in class com.djrapitops.plan.storage.database.queries.<a href="com/djrapitops/plan/storage/database/queries/QueryParameterSetter.html" title="class in com.djrapitops.plan.storage.database.queries">QueryParameterSetter</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="com/djrapitops/plan/delivery/domain/auth/User.html#setPermissionLevel(int)">setPermissionLevel(int)</a></span> - Method in class com.djrapitops.plan.delivery.domain.auth.<a href="com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth">User</a></dt>
 <dd>

@@ -147,6 +147,43 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table method-summary-table-tab3">
 <div class="block">Execute an SQL Query statement to get a result.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;C extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;,&#8203;
+T&gt;<br>C</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#queryCollection(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.util.function.Supplier,java.lang.Object...)">queryCollection</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;C&gt;&nbsp;collectionConstructor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#queryList(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">queryList</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;K,&#8203;
+V&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,&#8203;V&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.lang.Object...)">queryMap</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/MapRowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">MapRowExtractor</a>&lt;K,&#8203;V&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;M extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,&#8203;
+V&gt;,&#8203;
+K,&#8203;
+V&gt;<br>M</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.util.function.Supplier,java.lang.Object...)">queryMap</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/MapRowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">MapRowExtractor</a>&lt;K,&#8203;V&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;M&gt;&nbsp;mapConstructor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#queryOptional(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">queryOptional</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table"><code><span class="member-name-link"><a href="#querySet(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">querySet</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab5 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -195,6 +232,61 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>Result of the query.</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="queryOptional(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">
+<h3>queryOptional</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;T&gt;</span>&nbsp;<span class="element-name">queryOptional</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="queryList(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">
+<h3>queryList</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</span>&nbsp;<span class="element-name">queryList</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="querySet(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)">
+<h3>querySet</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;T&gt;</span>&nbsp;<span class="element-name">querySet</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="queryCollection(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.util.function.Supplier,java.lang.Object...)">
+<h3>queryCollection</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;C extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;,&#8203;
+T&gt;</span>&nbsp;<span class="return-type">C</span>&nbsp;<span class="element-name">queryCollection</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;C&gt;&nbsp;collectionConstructor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.lang.Object...)">
+<h3>queryMap</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;K,&#8203;
+V&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,&#8203;V&gt;</span>&nbsp;<span class="element-name">queryMap</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/MapRowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">MapRowExtractor</a>&lt;K,&#8203;V&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.util.function.Supplier,java.lang.Object...)">
+<h3>queryMap</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;M extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,&#8203;
+V&gt;,&#8203;
+K,&#8203;
+V&gt;</span>&nbsp;<span class="return-type">M</span>&nbsp;<span class="element-name">queryMap</span>&#8203;<span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/MapRowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">MapRowExtractor</a>&lt;K,&#8203;V&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;M&gt;&nbsp;mapConstructor,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</span></div>
 </section>
 </li>
 <li>
