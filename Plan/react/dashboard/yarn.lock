@@ -1224,6 +1224,11 @@
     "@fullcalendar/common" "~5.11.0"
     tslib "^2.1.0"
 
+"@highcharts/map-collection@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@highcharts/map-collection/-/map-collection-2.0.1.tgz#c5eac79b9711c75248d4219c53be9b6a07704c9d"
+  integrity sha512-eC5sEMC8LoCVMCz4BKuREcS3wVBBSFaRClJ7/vVZxd4nJe0VEykSFfQJwh8lpY4oJDy46iYrFzy3fwsTo9hmqg==
+
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.9.5.tgz#2cbaf9a89460da24b5ca6531b8bbfc23e1df50c7"

@@ -6,9 +6,9 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import {NightModeCss} from "../../hooks/themeHook";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
-import ErrorView from "../ErrorView";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
+import ErrorPage from "./ErrorPage";
 
 const PlayersPage = () => {
     const {t, i18n} = useTranslation();
@@ -33,23 +33,7 @@ const PlayersPage = () => {
     // const {authRequired, user} = useAuth();
     const showBackButton = true; // TODO
 
-    if (error) {
-        return <>
-            <NightModeCss/>
-            <Sidebar items={[]} showBackButton={showBackButton}/>
-            <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={error.title ? error.title : 'Unexpected error occurred'}/>
-                <div id="content" style={{display: 'flex'}}>
-                    <main className="container-fluid mt-4">
-                        <ErrorView error={error}/>
-                    </main>
-                    <aside>
-                        <ColorSelectorModal/>
-                    </aside>
-                </div>
-            </div>
-        </>
-    }
+    if (error) return <ErrorPage error={error}/>;
 
     const displayedServerName = !isProxy && serverName && serverName.startsWith('Server') ? "Plan" : serverName;
     return (

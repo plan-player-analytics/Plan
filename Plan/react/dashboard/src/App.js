@@ -27,6 +27,7 @@ import PlayerbaseOverview from "./views/server/PlayerbaseOverview";
 import ServerPlayers from "./views/server/ServerPlayers";
 import PlayersPage from "./views/layout/PlayersPage";
 import AllPlayers from "./views/players/AllPlayers";
+import ServerGeolocations from "./views/server/ServerGeolocations";
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -80,7 +81,7 @@ function App() {
                                 <Route path="playerbase" element={<PlayerbaseOverview/>}/>
                                 <Route path="retention" element={<></>}/>
                                 <Route path="players" element={<ServerPlayers/>}/>
-                                <Route path="geolocations" element={<></>}/>
+                                <Route path="geolocations" element={<ServerGeolocations/>}/>
                                 <Route path="performance" element={<></>}/>
                                 <Route path="plugins-overview" element={<></>}/>
                             </Route>

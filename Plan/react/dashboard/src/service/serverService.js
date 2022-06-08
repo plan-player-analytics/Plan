@@ -89,3 +89,9 @@ export const fetchWorldPie = async (identifier) => {
     const url = `/v1/graph?type=worldPie&server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
+
+export const fetchGeolocations = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=geolocation&server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
