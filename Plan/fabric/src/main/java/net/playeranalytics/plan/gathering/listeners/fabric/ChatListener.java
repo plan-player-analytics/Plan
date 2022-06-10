@@ -72,7 +72,7 @@ public class ChatListener implements FabricListener {
         long time = System.currentTimeMillis();
         ServerPlayerEntity player = handler.player;
         UUID uuid = player.getUuid();
-        String displayName = player.getDisplayName().asString();
+        String displayName = player.getDisplayName().getString();
 
         dbSystem.getDatabase().executeTransaction(new NicknameStoreTransaction(
                 uuid, new Nickname(displayName, time, serverInfo.getServerUUID()),

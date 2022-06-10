@@ -72,7 +72,7 @@ public class GameModeChangeListener implements FabricListener {
         UUID uuid = player.getUuid();
         long time = System.currentTimeMillis();
         String gameMode = newGameMode.name();
-        String worldName = player.getServerWorld().getRegistryKey().getValue().toString();
+        String worldName = player.getWorld().getRegistryKey().getValue().toString();
 
         dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
         worldAliasSettings.addWorld(worldName);

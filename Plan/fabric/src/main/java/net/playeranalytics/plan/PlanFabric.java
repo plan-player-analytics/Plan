@@ -26,7 +26,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
@@ -163,7 +163,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             onEnable();
         });
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> commandManager = new CommandManager(dispatcher, this));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> commandManager = new CommandManager(dispatcher, this));
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }

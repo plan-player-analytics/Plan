@@ -2,8 +2,7 @@
   "schemaVersion": 1,
   "id": "plan",
   "name": "Plan",
-  "version": "@version@",
-
+  "version": "${version}",
   "environment": "server",
   "entrypoints": {
     "server": [
@@ -14,10 +13,10 @@
     "plan.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.17",
-    "java": ">=16",
+    "minecraft": ">=1.19",
+    "java": ">=17",
     "fabric-api-base": "*",
-    "fabric-command-api-v1": "*",
+    "fabric-command-api-v2": "*",
     "fabric-entity-events-v1": "*",
     "fabric-lifecycle-events-v1": "*",
     "fabric-networking-v0": "*"
