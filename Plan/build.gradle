@@ -63,7 +63,7 @@ subprojects {
     ext {
         daggerVersion = "2.42"
 
-        palVersion = "5.0.3"
+        palVersion = "5.1.0"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
