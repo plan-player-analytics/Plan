@@ -32,7 +32,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
@@ -82,9 +82,9 @@ public class CommandManager {
                 subcommand.getExecutor().accept((CMDSender) ctx.getSource(), new Arguments(getCommandArguments(ctx)));
             } catch (Exception e) {
                 if (e instanceof IllegalArgumentException) {
-                    ctx.getSource().sendError(new LiteralText(e.getMessage()));
+                    ctx.getSource().sendError(Text.literal(e.getMessage()));
                 } else {
-                    ctx.getSource().sendError(new LiteralText("An internal error occurred, see the console for details."));
+                    ctx.getSource().sendError(Text.literal("An internal error occurred, see the console for details."));
                     plugin.getSystem().getErrorLogger().error(e, ErrorContext.builder()
                             .related(ctx.getSource().getClass())
                             .related(subcommand.getPrimaryAlias() + " " + getCommandArguments(ctx))

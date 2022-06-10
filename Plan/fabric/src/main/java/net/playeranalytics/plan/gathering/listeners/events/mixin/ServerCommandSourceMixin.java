@@ -20,7 +20,6 @@ import com.djrapitops.plan.commands.use.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.playeranalytics.plan.commands.CommandManager;
 import net.playeranalytics.plan.commands.use.FabricMessageBuilder;
@@ -73,7 +72,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public void send(String message) {
-        this.sendFeedback(new LiteralText(message), false);
+        this.sendFeedback(Text.literal(message), false);
     }
 
     @Override

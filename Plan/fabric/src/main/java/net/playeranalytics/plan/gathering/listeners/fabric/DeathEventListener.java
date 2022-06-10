@@ -89,11 +89,11 @@ public class DeathEventListener implements FabricListener {
     }
 
     private PlayerKill.Killer getKiller(ServerPlayerEntity killer) {
-        return new PlayerKill.Killer(killer.getUuid(), killer.getName().asString());
+        return new PlayerKill.Killer(killer.getUuid(), killer.getName().getString());
     }
 
     private PlayerKill.Victim getVictim(ServerPlayerEntity victim) {
-        return new PlayerKill.Victim(victim.getUuid(), victim.getName().asString());
+        return new PlayerKill.Victim(victim.getUuid(), victim.getName().getString());
     }
 
     public Optional<ServerPlayerEntity> getCause(Entity killer) {
@@ -107,12 +107,12 @@ public class DeathEventListener implements FabricListener {
         if (killer instanceof ServerPlayerEntity) return getItemInHand((ServerPlayerEntity) killer);
 
         // Projectile, EnderCrystal and all other causes that are not known yet
-        return new EntityNameFormatter().apply(killer.getType().getName().asString());
+        return new EntityNameFormatter().apply(killer.getType().getName().getString());
     }
 
     private String getItemInHand(ServerPlayerEntity killer) {
         ItemStack itemInHand = killer.getMainHandStack();
-        return itemInHand.getItem().getName().asString();
+        return itemInHand.getItem().getName().getString();
     }
 
     private Optional<ServerPlayerEntity> getShooter(ProjectileEntity projectile) {
