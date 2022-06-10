@@ -32,10 +32,10 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property "version", project.ext.fullVersion
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.ext.fullVersion
     }
 }
 

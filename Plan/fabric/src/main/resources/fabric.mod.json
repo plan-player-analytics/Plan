@@ -2,8 +2,7 @@
   "schemaVersion": 1,
   "id": "plan",
   "name": "Plan",
-  "version": "@version@",
-
+  "version": "${version}",
   "environment": "server",
   "entrypoints": {
     "server": [
