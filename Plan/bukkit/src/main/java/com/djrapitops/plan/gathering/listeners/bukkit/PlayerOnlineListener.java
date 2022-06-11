@@ -195,7 +195,7 @@ public class PlayerOnlineListener implements Listener {
                     ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
                     session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
                     session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
-                    session.getExtraData().put(JoinAddress.class, new JoinAddress(getHostName));
+                    session.getExtraData().put(JoinAddress.class, new JoinAddress(getHostName.get()));
                     sessionCache.cacheSession(playerUUID, session)
                             .map(StoreSessionTransaction::new)
                             .ifPresent(database::executeTransaction);
