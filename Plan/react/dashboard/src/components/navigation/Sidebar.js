@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
 import {faArrowLeft, faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
@@ -19,8 +19,8 @@ const Logo = () => (
     </a>
 )
 
-const Divider = () => (
-    <hr className="sidebar-divider my-0"/>
+const Divider = ({showMargin}) => (
+    <hr className={"sidebar-divider" + (showMargin ? '' : " my-0")}/>
 )
 
 const InnerItem = ({href, icon, name, nameShort}) => {
@@ -180,7 +180,7 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t) => {
                                 setOpen={() => setOpenCollapse(i)}/>
     }
 
-    if (item.href) {
+    if (item.href !== undefined) {
         return <Item key={i}
                      active={false}
                      href={item.href}
@@ -208,14 +208,16 @@ const Sidebar = ({items, showBackButton}) => {
     }
 
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const updateWidth = () => setWindowWidth(window.innerWidth);
+    const updateWidth = useCallback(() => setWindowWidth(window.innerWidth), []);
     useEffect(() => {
         window.addEventListener('resize', updateWidth);
         return () => window.removeEventListener('resize', updateWidth);
-    }, []);
+    }, [updateWidth]);
 
     const collapseSidebar = () => setSidebarExpanded(windowWidth > 1350);
     useEffect(collapseSidebar, [windowWidth, currentTab, setSidebarExpanded]);
+
+    if (!items.length) return <></>
 
     return (
         <>
@@ -223,10 +225,10 @@ const Sidebar = ({items, showBackButton}) => {
             <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
                 <Logo/>
                 <Divider/>
-                {showBackButton ? <>
+                {showBackButton && <>
                     <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
-                    <Divider/>
-                </> : ''}
+                    <Divider showMargin={!items[0].contents && items[0].href === undefined}/>
+                </>}
                 {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t))}
                 <Divider/>
                 <FooterButtons/>

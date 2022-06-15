@@ -44,7 +44,7 @@ export const localeService = {
                 this.languageVersions = data.languageVersions;
             } else {
                 this.defaultLanguage = 'en'
-                this.availableLanguages = [];
+                this.availableLanguages = {};
                 this.languageVersions = [];
             }
 

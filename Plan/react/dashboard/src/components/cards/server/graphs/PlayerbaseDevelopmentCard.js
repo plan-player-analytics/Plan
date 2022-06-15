@@ -6,8 +6,8 @@ import {ErrorViewCard} from "../../../../views/ErrorView";
 import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartLine} from "@fortawesome/free-solid-svg-icons";
-import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import React from "react";
+import PlayerbaseGraph from "../../../graphs/PlayerbaseGraph";
 
 const PlayerbaseDevelopmentCard = () => {
     const {t} = useTranslation();
@@ -27,7 +27,7 @@ const PlayerbaseDevelopmentCard = () => {
                     <Fa className="col-amber" icon={faChartLine}/> {t('html.label.playerbaseDevelopment')}
                 </h6>
             </Card.Header>
-            <PlayersOnlineGraph data={data}/>
+            <PlayerbaseGraph data={data}/>
         </Card>
     )
 }

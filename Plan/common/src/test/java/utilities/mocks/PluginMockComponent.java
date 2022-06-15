@@ -18,6 +18,7 @@ package utilities.mocks;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.utilities.logging.PluginErrorLogger;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -25,6 +26,7 @@ import utilities.dagger.DaggerPlanPluginComponent;
 import utilities.dagger.PlanPluginComponent;
 
 import java.nio.file.Path;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Test utility for creating a dagger PlanComponent using a mocked Plan.
@@ -55,7 +57,10 @@ public class PluginMockComponent {
 
     public PlanSystem getPlanSystem() throws Exception {
         initComponent();
-        return component.system();
+        PlanSystem system = component.system();
+        system.getConfigSystem().getConfig().set(WebserverSettings.PORT, ThreadLocalRandom.current()
+                .nextInt(65535 - 1024) + 1024); // Random non-privileged port
+        return system;
     }
 
     private void initComponent() throws Exception {

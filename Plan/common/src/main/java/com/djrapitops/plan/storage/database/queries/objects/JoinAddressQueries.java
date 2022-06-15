@@ -20,12 +20,12 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.queries.RowExtractors;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import org.apache.commons.text.TextStringBuilder;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -50,16 +50,11 @@ public class JoinAddressQueries {
                 GROUP_BY + JoinAddressTable.JOIN_ADDRESS +
                 ORDER_BY + JoinAddressTable.JOIN_ADDRESS + " ASC";
 
-        return new QueryAllStatement<Map<String, Integer>>(selectLatestJoinAddresses, 100) {
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> joinAddresses = new TreeMap<>();
-                while (set.next()) {
-                    joinAddresses.put(set.getString(JoinAddressTable.JOIN_ADDRESS), set.getInt("total"));
-                }
-                return joinAddresses;
-            }
-        };
+        return db -> db.queryMap(selectLatestJoinAddresses, JoinAddressQueries::extractJoinAddressCounts, TreeMap::new);
+    }
+
+    private static void extractJoinAddressCounts(ResultSet set, Map<String, Integer> joinAddresses) throws SQLException {
+        joinAddresses.put(set.getString(JoinAddressTable.JOIN_ADDRESS), set.getInt("total"));
     }
 
     public static Query<Map<String, Integer>> latestJoinAddresses(ServerUUID serverUUID) {
@@ -76,27 +71,15 @@ public class JoinAddressQueries {
                 GROUP_BY + JoinAddressTable.JOIN_ADDRESS +
                 ORDER_BY + JoinAddressTable.JOIN_ADDRESS + " ASC";
 
-        return new QueryStatement<Map<String, Integer>>(selectLatestJoinAddresses, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
 
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> joinAddresses = new TreeMap<>();
-                while (set.next()) {
-                    joinAddresses.put(set.getString(JoinAddressTable.JOIN_ADDRESS), set.getInt("total"));
-                }
-                return joinAddresses;
-            }
-        };
+        return db -> db.queryMap(selectLatestJoinAddresses, JoinAddressQueries::extractJoinAddressCounts, TreeMap::new, serverUUID);
     }
 
     public static QueryStatement<List<String>> allJoinAddresses() {
         String sql = SELECT + JoinAddressTable.JOIN_ADDRESS +
                 FROM + JoinAddressTable.TABLE_NAME +
                 ORDER_BY + JoinAddressTable.JOIN_ADDRESS + " ASC";
+
         return new QueryAllStatement<List<String>>(sql, 100) {
             @Override
             public List<String> processResults(ResultSet set) throws SQLException {
@@ -125,18 +108,8 @@ public class JoinAddressQueries {
                 new TextStringBuilder().appendWithSeparators(joinAddresses.stream().map(item -> '?').iterator(), ",") +
                 ')'; // Don't append addresses directly, SQL injection hazard
 
-        return new QueryStatement<Set<Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                for (int i = 0; i < joinAddresses.size(); i++) {
-                    statement.setString(i + 1, joinAddresses.get(i).toLowerCase());
-                }
-            }
-
-            @Override
-            public Set<Integer> processResults(ResultSet set) throws SQLException {
-                return UserInfoQueries.extractUserIds(set, SessionsTable.USER_ID);
-            }
-        };
+        return db -> db.querySet(sql, RowExtractors.getInt(SessionsTable.USER_ID), joinAddresses
+                .stream().map(String::toLowerCase)
+                .toArray());
     }
 }

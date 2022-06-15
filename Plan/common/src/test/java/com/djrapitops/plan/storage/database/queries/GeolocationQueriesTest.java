@@ -206,7 +206,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
             save(playerUUID, geoInfo);
         }
 
-        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)));
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)).orElseThrow(AssertionError::new));
         Set<Integer> result = db().query(GeoInfoQueries.userIdsOfPlayersWithGeolocations(
                 Collections.singletonList(savedData.get(0).getGeolocation()))
         );

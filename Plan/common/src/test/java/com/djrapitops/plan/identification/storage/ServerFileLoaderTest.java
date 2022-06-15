@@ -1,3 +1,19 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
 package com.djrapitops.plan.identification.storage;
 
 import com.djrapitops.plan.PlanSystem;
@@ -24,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ServerFileLoaderTest {
     static PlanSystem system;
-    static ServerFileLoader underTest;
+    static ServerLoader underTest;
     private static ServerUUID serverUUID;
 
     @BeforeAll
@@ -41,7 +57,9 @@ class ServerFileLoaderTest {
 
     @BeforeEach
     void setUpEach() {
-        underTest = new ServerFileLoader(TestConstants.VERSION, system.getPlanFiles(), system.getConfigSystem().getConfig());
+        underTest = new AtomicServerLoader(
+                new ServerFileLoader(TestConstants.VERSION, system.getPlanFiles(), system.getConfigSystem().getConfig())
+        );
         Optional<Server> loaded = underTest.load(null);
         assertTrue(loaded.isPresent());
 
@@ -55,16 +73,20 @@ class ServerFileLoaderTest {
         ExecutorService executorService = new ScheduledThreadPoolExecutor(6);
 
         AtomicInteger runs = new AtomicInteger(1);
-        int expected = 10000;
+        int expected = 1000;
         AtomicInteger fails = new AtomicInteger(0);
         try {
             for (int i = 0; i < expected; i++) {
                 executorService.submit(() -> {
-                    Optional<Server> load = underTest.load(null);
-                    if (load.isPresent()) {
-                        underTest.save(load.get());
-                    } else {
-                        System.out.println("Failure " + fails.incrementAndGet());
+                    try {
+                        Optional<Server> load = underTest.load(null);
+                        if (load.isPresent()) {
+                            underTest.save(load.get());
+                        } else {
+                            System.out.println("Failure " + fails.incrementAndGet());
+                        }
+                    } finally {
+                        runs.incrementAndGet();
                     }
                 });
             }

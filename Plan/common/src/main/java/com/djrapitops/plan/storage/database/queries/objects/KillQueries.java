@@ -22,6 +22,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.queries.RowExtractors;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
@@ -179,19 +180,9 @@ public class KillQueries {
                 WHERE + KillsTable.SERVER_UUID + "=?" +
                 AND + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?";
-        return new QueryStatement<Long>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-            }
 
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("count") : 0L;
-            }
-        };
+        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID, after, before)
+                .orElse(0L);
     }
 
     public static Query<Double> averageKDR(long after, long before, ServerUUID serverUUID) {
@@ -246,19 +237,10 @@ public class KillQueries {
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-            }
 
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("count") : 0L;
-            }
-        };
+
+        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID, after, before)
+                .orElse(0L);
     }
 
     public static Query<Long> deathCount(long after, long before, ServerUUID serverUUID) {
@@ -267,19 +249,8 @@ public class KillQueries {
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-            }
-
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("count") : 0L;
-            }
-        };
+        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID, after, before)
+                .orElse(0L);
     }
 
     public static Query<List<String>> topWeaponsOfServer(long after, long before, ServerUUID serverUUID, int limit) {
@@ -293,22 +264,7 @@ public class KillQueries {
                 FROM + '(' + innerSQL + ") q1" +
                 ORDER_BY + "kills DESC LIMIT ?";
 
-        return new QueryStatement<List<String>>(sql, limit) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-                statement.setInt(4, limit);
-            }
-
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> weapons = new ArrayList<>();
-                while (set.next()) weapons.add(set.getString(KillsTable.WEAPON));
-                return weapons;
-            }
-        };
+        return db -> db.queryList(sql, RowExtractors.getString(KillsTable.WEAPON), serverUUID, after, before, limit);
     }
 
     public static Query<List<String>> topWeaponsOfPlayer(long after, long before, UUID playerUUID, int limit) {
@@ -322,21 +278,6 @@ public class KillQueries {
                 FROM + '(' + innerSQL + ") q1" +
                 ORDER_BY + "kills DESC LIMIT ?";
 
-        return new QueryStatement<List<String>>(sql, limit) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-                statement.setInt(4, limit);
-            }
-
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> weapons = new ArrayList<>();
-                while (set.next()) weapons.add(set.getString(KillsTable.WEAPON));
-                return weapons;
-            }
-        };
+        return db -> db.queryList(sql, RowExtractors.getString(KillsTable.WEAPON), playerUUID, after, before, limit);
     }
 }

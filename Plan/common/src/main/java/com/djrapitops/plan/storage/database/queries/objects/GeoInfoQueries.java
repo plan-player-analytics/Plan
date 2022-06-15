@@ -20,7 +20,7 @@ import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
-import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.queries.RowExtractors;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
@@ -28,7 +28,6 @@ import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.text.TextStringBuilder;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -59,7 +58,7 @@ public class GeoInfoQueries {
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on g.user_id=u.id";
 
-        return new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 50000) {
+        return new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 10000) {
             @Override
             public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
                 return extractGeoInformation(set);
@@ -93,23 +92,13 @@ public class GeoInfoQueries {
                 WHERE + GeoInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 GROUP_BY + GeoInfoTable.GEOLOCATION;
 
-        return new QueryStatement<List<GeoInfo>>(sql, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-            }
+        return db -> db.queryList(sql, GeoInfoQueries::extractGeoInfo, playerUUID);
+    }
 
-            @Override
-            public List<GeoInfo> processResults(ResultSet set) throws SQLException {
-                List<GeoInfo> geoInfo = new ArrayList<>();
-                while (set.next()) {
-                    String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
-                    long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
-                    geoInfo.add(new GeoInfo(geolocation, lastUsed));
-                }
-                return geoInfo;
-            }
-        };
+    private static GeoInfo extractGeoInfo(ResultSet set) throws SQLException {
+        String geolocation = set.getString(GeoInfoTable.GEOLOCATION);
+        long lastUsed = set.getLong(GeoInfoTable.LAST_USED);
+        return new GeoInfo(geolocation, lastUsed);
     }
 
     public static Query<Map<String, Integer>> networkGeolocationCounts() {
@@ -124,16 +113,14 @@ public class GeoInfoQueries {
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
-        return new QueryAllStatement<Map<String, Integer>>(sql) {
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> geolocationCounts = new HashMap<>();
-                while (set.next()) {
-                    geolocationCounts.put(set.getString(GeoInfoTable.GEOLOCATION), set.getInt("c"));
-                }
-                return geolocationCounts;
-            }
-        };
+        return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts);
+    }
+
+    private static void extractGeolocationCounts(ResultSet set, Map<String, Integer> geolocationCounts) throws SQLException {
+        geolocationCounts.put(
+                set.getString(GeoInfoTable.GEOLOCATION),
+                set.getInt("c")
+        );
     }
 
     public static Query<Map<String, Integer>> networkGeolocationCounts(Collection<Integer> userIds) {
@@ -151,16 +138,7 @@ public class GeoInfoQueries {
                 new TextStringBuilder().appendWithSeparators(userIds, ",").build() + ")" +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
-        return new QueryAllStatement<Map<String, Integer>>(sql) {
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> geolocationCounts = new HashMap<>();
-                while (set.next()) {
-                    geolocationCounts.put(set.getString(GeoInfoTable.GEOLOCATION), set.getInt("c"));
-                }
-                return geolocationCounts;
-            }
-        };
+        return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts);
     }
 
     public static Query<Map<String, Integer>> serverGeolocationCounts(ServerUUID serverUUID) {
@@ -178,34 +156,14 @@ public class GeoInfoQueries {
                 AND + "ui." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
-        return new QueryStatement<Map<String, Integer>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> geolocationCounts = new HashMap<>();
-                while (set.next()) {
-                    geolocationCounts.put(set.getString(GeoInfoTable.GEOLOCATION), set.getInt("c"));
-                }
-                return geolocationCounts;
-            }
-        };
+        return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts, serverUUID);
     }
 
     public static Query<List<String>> uniqueGeolocations() {
         String sql = SELECT + GeoInfoTable.GEOLOCATION + FROM + GeoInfoTable.TABLE_NAME +
                 ORDER_BY + GeoInfoTable.GEOLOCATION + " ASC";
-        return new QueryAllStatement<List<String>>(sql) {
-            @Override
-            public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> geolocations = new ArrayList<>();
-                while (set.next()) geolocations.add(set.getString(GeoInfoTable.GEOLOCATION));
-                return geolocations;
-            }
-        };
+
+        return db -> db.queryList(sql, RowExtractors.getString(GeoInfoTable.GEOLOCATION));
     }
 
     public static Query<Set<Integer>> userIdsOfPlayersWithGeolocations(List<String> selected) {
@@ -216,13 +174,6 @@ public class GeoInfoQueries {
                 " IN ('" +
                 new TextStringBuilder().appendWithSeparators(selected, "','") +
                 "')";
-        return new QueryAllStatement<Set<Integer>>(sql) {
-            @Override
-            public Set<Integer> processResults(ResultSet set) throws SQLException {
-                Set<Integer> geolocations = new HashSet<>();
-                while (set.next()) geolocations.add(set.getInt(UsersTable.ID));
-                return geolocations;
-            }
-        };
+        return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID));
     }
 }

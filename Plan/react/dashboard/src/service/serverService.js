@@ -18,9 +18,33 @@ export const fetchPlayerbaseOverview = async (identifier) => {
     return doGetRequest(url);
 }
 
+export const fetchSessionOverview = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/sessionsOverview?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchPvpPve = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/playerVersus?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
 export const fetchSessions = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/sessions?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchKills = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/kills?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchPlayers = async (identifier) => {
+    const timestamp = Date.now();
+    const url = identifier ? `/v1/players?server=${identifier}&timestamp=${timestamp}` : `/v1/players?timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 
@@ -63,5 +87,11 @@ export const fetchPunchCardGraph = async (identifier) => {
 export const fetchWorldPie = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/graph?type=worldPie&server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchGeolocations = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=geolocation&server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }

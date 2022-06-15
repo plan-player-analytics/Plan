@@ -7,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
+import PlayerbasePie from "../../../graphs/PlayerbasePie";
 
 const CurrentPlayerbaseCard = () => {
     const {t} = useTranslation();
@@ -24,7 +25,7 @@ const CurrentPlayerbaseCard = () => {
                     <Fa icon={faUsers} className="col-amber"/> {t('html.label.currentPlayerbase')}
                 </h6>
             </Card.Header>
-
+            <PlayerbasePie series={data.activity_pie_series}/>
         </Card>
     )
 }

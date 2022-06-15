@@ -179,7 +179,7 @@ public class PlayerOnlineListener implements FabricListener {
 
         FabricAFKListener.afkTracker.performedAction(playerUUID, time);
 
-        String world = player.getServerWorld().getRegistryKey().getValue().toString();
+        String world = player.getWorld().getRegistryKey().getValue().toString();
         String gm = player.interactionManager.getGameMode().name();
 
         Database database = dbSystem.getDatabase();
@@ -188,7 +188,7 @@ public class PlayerOnlineListener implements FabricListener {
         Supplier<String> getHostName = () -> getHostname(player);
 
         String playerName = player.getEntityName();
-        String displayName = player.getDisplayName().asString();
+        String displayName = player.getDisplayName().getString();
 
 
         database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID,
@@ -199,12 +199,12 @@ public class PlayerOnlineListener implements FabricListener {
                         gatherGeolocation(player, playerUUID, time, database);
                     }
 
-                    database.executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, server.getPlayerManager().getOpList().isOp(player.getGameProfile())));
+                    database.executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID, server.getPlayerManager().getOpList().get(player.getGameProfile()) != null));
 
                     ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
                     session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
                     session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
-                    session.getExtraData().put(JoinAddress.class, new JoinAddress(getHostName));
+                    session.getExtraData().put(JoinAddress.class, new JoinAddress(getHostName.get()));
                     sessionCache.cacheSession(playerUUID, session)
                             .ifPresent(previousSession -> database.executeTransaction(new StoreSessionTransaction(previousSession)));
 

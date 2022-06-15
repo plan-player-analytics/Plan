@@ -4,7 +4,7 @@ import End from "./layout/End";
 
 const Datapoint = ({icon, color, name, value, valueLabel, bold, boldTitle, title, trend}) => {
     const displayedValue = bold ? <b>{value}</b> : value;
-    const extraLabel = valueLabel instanceof String ? ` (${valueLabel})` : '';
+    const extraLabel = typeof valueLabel === 'string' ? ` (${valueLabel})` : '';
     const colorClass = color && color.startsWith("col-") ? color : "col-" + color;
     return (
         <p title={title ? title : name + " is " + value}>

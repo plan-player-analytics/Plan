@@ -18,14 +18,10 @@ package com.djrapitops.plan.storage.database.queries.analysis;
 
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Optional;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -49,26 +45,8 @@ public class TopListQueries {
                 LIMIT + "10" +
                 OFFSET + "?";
 
-        return new QueryStatement<Optional<TopListEntry<Long>>>(sql, 10) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-                statement.setInt(4, n - 1);
-            }
-
-            @Override
-            public Optional<TopListEntry<Long>> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(
-                            new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("playtime"))
-                    );
-                }
-                return Optional.empty();
-            }
-        };
-
+        return db -> db.queryOptional(sql, set -> new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("playtime")),
+                serverUUID, after, before, n - 1);
     }
 
     public static Query<Optional<TopListEntry<Long>>> fetchNthTop10ActivePlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
@@ -84,25 +62,8 @@ public class TopListQueries {
                 LIMIT + "10" +
                 OFFSET + "?";
 
-        return new QueryStatement<Optional<TopListEntry<Long>>>(sql, 10) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-                statement.setInt(4, n - 1);
-            }
-
-            @Override
-            public Optional<TopListEntry<Long>> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(
-                            new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("active_playtime"))
-                    );
-                }
-                return Optional.empty();
-            }
-        };
+        return db -> db.queryOptional(sql, set -> new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("active_playtime")),
+                serverUUID, after, before, n - 1);
     }
 
     public static class TopListEntry<T> {

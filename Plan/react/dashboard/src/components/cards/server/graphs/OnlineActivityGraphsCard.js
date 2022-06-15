@@ -16,6 +16,7 @@ import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import ServerCalendar from "../../../calendar/ServerCalendar";
+import {ChartLoader} from "../../../navigation/Loader";
 
 const DayByDayTab = () => {
     const {identifier} = useParams();
@@ -23,7 +24,7 @@ const DayByDayTab = () => {
     const {data, loadingError} = useDataRequest(fetchDayByDayGraph, [identifier])
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
-    if (!data) return <></>;
+    if (!data) return <ChartLoader/>;
 
     return <TimeByTimeGraph data={data}/>
 }
@@ -34,7 +35,7 @@ const HourByHourTab = () => {
     const {data, loadingError} = useDataRequest(fetchHourByHourGraph, [identifier])
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
-    if (!data) return <></>;
+    if (!data) return <ChartLoader/>;
 
     return <TimeByTimeGraph data={data}/>
 }
@@ -45,7 +46,7 @@ const ServerCalendarTab = () => {
     const {data, loadingError} = useDataRequest(fetchServerCalendarGraph, [identifier])
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
-    if (!data) return <></>;
+    if (!data) return <ChartLoader/>;
 
     return <ServerCalendar series={data.data} firstDay={data.firstDay}/>
 }
@@ -56,7 +57,7 @@ const PunchCardTab = () => {
     const {data, loadingError} = useDataRequest(fetchPunchCardGraph, [identifier])
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
-    if (!data) return <></>;
+    if (!data) return <ChartLoader/>;
 
     return <PunchCard series={data.punchCard}/>
 }

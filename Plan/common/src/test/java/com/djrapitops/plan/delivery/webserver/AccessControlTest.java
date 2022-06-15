@@ -211,6 +211,7 @@ class AccessControlTest {
             "/v1/metadata,200",
             "/v1/locale,200",
             "/v1/locale/EN,200",
+            "/v1/locale/NonexistingLanguage,404",
     })
     void levelZeroCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel0);
@@ -280,6 +281,7 @@ class AccessControlTest {
             "/v1/metadata,200",
             "/v1/locale,200",
             "/v1/locale/EN,200",
+            "/v1/locale/NonexistingLanguage,404",
     })
     void levelOneCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel1);
@@ -349,6 +351,7 @@ class AccessControlTest {
             "/v1/metadata,200",
             "/v1/locale,200",
             "/v1/locale/EN,200",
+            "/v1/locale/NonexistingLanguage,404",
     })
     void levelTwoCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel2);
@@ -416,6 +419,7 @@ class AccessControlTest {
             "/v1/metadata,200",
             "/v1/locale,200",
             "/v1/locale/EN,200",
+            "/v1/locale/NonexistingLanguage,404",
     })
     void levelHundredCanNotAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel100);

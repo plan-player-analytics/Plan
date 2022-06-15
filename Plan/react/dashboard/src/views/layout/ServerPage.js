@@ -19,10 +19,10 @@ import {useAuth} from "../../hooks/authenticationHook";
 import {NightModeCss} from "../../hooks/themeHook";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
-import ErrorView from "../ErrorView";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
+import ErrorPage from "./ErrorPage";
 
 const ServerPage = () => {
     const {t, i18n} = useTranslation();
@@ -85,23 +85,7 @@ const ServerPage = () => {
     const {authRequired, user} = useAuth();
     const showBackButton = isProxy && (!authRequired || user.permissions.filter(perm => perm !== 'page.network').length);
 
-    if (error) {
-        return <>
-            <NightModeCss/>
-            <Sidebar items={[]} showBackButton={true}/>
-            <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={error.title ? error.title : 'Unexpected error occurred'}/>
-                <div id="content" style={{display: 'flex'}}>
-                    <main className="container-fluid mt-4">
-                        <ErrorView error={error}/>
-                    </main>
-                    <aside>
-                        <ColorSelectorModal/>
-                    </aside>
-                </div>
-            </div>
-        </>
-    }
+    if (error) return <ErrorPage error={error}/>;
 
     const displayedServerName = !isProxy && serverName && serverName.startsWith('Server') ? "Plan" : serverName;
     return (

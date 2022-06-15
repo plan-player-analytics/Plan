@@ -34,10 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Resolves JSON requests for /v1/locale and /v1/locale/{@link LangCode#toString()}.
@@ -73,8 +70,10 @@ public class LocaleJSONResolver implements NoAuthResolver {
     private Response getResponse(Request request) {
         ResponseBuilder builder = Response.builder();
 
-        String path = request.omitFirstInPath().getPath().asString().replaceAll("^/|/$", "");
-        Map<String, Object> json = "".equals(path) ? getLanguageListJSON() : getLocaleJSON(path);
+        Optional<String> langCode = request.getPath().getPart(1);
+        Map<String, Object> json = langCode
+                .map(this::getLocaleJSON)
+                .orElseGet(this::getLanguageListJSON);
 
         if (!json.isEmpty()) {
             return builder.setJSONContent(json).build();
@@ -112,23 +111,25 @@ public class LocaleJSONResolver implements NoAuthResolver {
     }
 
     private Map<String, Object> getLocaleJSON(String langCode) {
-        LangCode code = LangCode.valueOf(langCode.toUpperCase());
-        Map<String, Object> json = new TreeMap<>();
-        Resource file;
-
-        if (code == LangCode.CUSTOM) {
-            if (locale.getLangCode() != LangCode.CUSTOM || !files.getFileFromPluginFolder("locale.yml").exists()) {
-                return json;
-            }
-            file = files.getResourceFromPluginFolder("locale.yml");
-        } else {
-            file = files.getResourceFromJar("locale/" + code.getFileName());
-        }
-
         try {
+            LangCode code = LangCode.valueOf(langCode.toUpperCase());
+            Map<String, Object> json = new TreeMap<>();
+            Resource file;
+
+            if (code == LangCode.CUSTOM) {
+                if (locale.getLangCode() != LangCode.CUSTOM || !files.getFileFromPluginFolder("locale.yml").exists()) {
+                    return json;
+                }
+                file = files.getResourceFromPluginFolder("locale.yml");
+            } else {
+                file = files.getResourceFromJar("locale/" + code.getFileName());
+            }
+
             return dfs(loadLocale(file), json);
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+        } catch (IllegalArgumentException noSuchEnum) {
+            return Collections.emptyMap();
+        } catch (IOException dfsFileLookupError) {
+            throw new UncheckedIOException(dfsFileLookupError);
         }
     }
 

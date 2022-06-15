@@ -24,6 +24,10 @@ import OnlineActivity from "./views/server/OnlineActivity";
 import ServerSessions from "./views/server/ServerSessions";
 import ServerPvpPve from "./views/server/ServerPvpPve";
 import PlayerbaseOverview from "./views/server/PlayerbaseOverview";
+import ServerPlayers from "./views/server/ServerPlayers";
+import PlayersPage from "./views/layout/PlayersPage";
+import AllPlayers from "./views/players/AllPlayers";
+import ServerGeolocations from "./views/server/ServerGeolocations";
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -64,6 +68,10 @@ function App() {
                                     icon: faMapSigns
                                 }}/>}/>
                             </Route>
+                            <Route path="/players" element={<PlayersPage/>}>
+                                <Route path="" element={<AllPlayers/>}/>
+                                <Route path="*" element={<AllPlayers/>}/>
+                            </Route>
                             <Route path="/server/:identifier" element={<ServerPage/>}>
                                 <Route path="" element={<OverviewRedirect/>}/>
                                 <Route path="overview" element={<ServerOverview/>}/>
@@ -72,8 +80,8 @@ function App() {
                                 <Route path="pvppve" element={<ServerPvpPve/>}/>
                                 <Route path="playerbase" element={<PlayerbaseOverview/>}/>
                                 <Route path="retention" element={<></>}/>
-                                <Route path="players" element={<></>}/>
-                                <Route path="geolocations" element={<></>}/>
+                                <Route path="players" element={<ServerPlayers/>}/>
+                                <Route path="geolocations" element={<ServerGeolocations/>}/>
                                 <Route path="performance" element={<></>}/>
                                 <Route path="plugins-overview" element={<></>}/>
                             </Route>

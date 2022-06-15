@@ -19,7 +19,10 @@ package net.playeranalytics.plan.commands.use;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.MessageBuilder;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.*;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Collection;
@@ -36,7 +39,7 @@ public class FabricMessageBuilder implements MessageBuilder {
 
     FabricMessageBuilder(ServerCommandSource sender, FabricMessageBuilder previous) {
         this.sender = sender;
-        this.builder = new LiteralText("");
+        this.builder = Text.literal("");
         this.previous = previous;
     }
 
@@ -67,19 +70,19 @@ public class FabricMessageBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder hover(String message) {
-        builder.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(message))));
+        builder.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(message))));
         return this;
     }
 
     @Override
     public MessageBuilder hover(String... lines) {
-        builder.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(new TextStringBuilder().appendWithSeparators(lines, "\n").toString()))));
+        builder.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(new TextStringBuilder().appendWithSeparators(lines, "\n").toString()))));
         return this;
     }
 
     @Override
     public MessageBuilder hover(Collection<String> lines) {
-        builder.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText(new TextStringBuilder().appendWithSeparators(lines, "\n").toString()))));
+        builder.styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal(new TextStringBuilder().appendWithSeparators(lines, "\n").toString()))));
         return this;
     }
 
