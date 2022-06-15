@@ -115,22 +115,30 @@ public class TabCompleteCache implements SubSystem {
     }
 
     public List<String> getMatchingServerIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) return serverIdentifiers;
+        if (searchFor == null || searchFor.isEmpty()) {
+            return serverIdentifiers.size() < 100 ? serverIdentifiers : Collections.emptyList();
+        }
         return serverIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
     }
 
     public List<String> getMatchingPlayerIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) return playerIdentifiers;
+        if (searchFor == null || searchFor.isEmpty()) {
+            return playerIdentifiers.size() < 100 ? playerIdentifiers : Collections.emptyList();
+        }
         return playerIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
     }
 
     public List<String> getMatchingUserIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) return userIdentifiers;
+        if (searchFor == null || searchFor.isEmpty()) {
+            return userIdentifiers.size() < 100 ? userIdentifiers : Collections.emptyList();
+        }
         return userIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
     }
 
     public List<String> getMatchingBackupFilenames(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) return backupFileNames;
+        if (searchFor == null || searchFor.isEmpty()) {
+            return backupFileNames.size() < 100 ? backupFileNames : Collections.emptyList();
+        }
         return backupFileNames.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
     }
 }
