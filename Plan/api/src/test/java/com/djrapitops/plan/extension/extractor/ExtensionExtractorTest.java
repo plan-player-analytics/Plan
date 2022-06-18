@@ -265,7 +265,7 @@ class ExtensionExtractorTest {
         }
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
-        assertEquals("Extension.method did not have any associated Provider for Conditional.", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+        assertEquals("Extension class had no methods annotated with a Provider annotation", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
     }
 
     @Test
@@ -489,8 +489,13 @@ class ExtensionExtractorTest {
 
         String expected = Stream.of(extension.getClass().getMethod("method").getAnnotation(Conditional.class))
                 .map(Conditional::value).findFirst().orElseThrow(AssertionError::new);
-        String result = underTest.getMethodAnnotations().getAnnotations(Conditional.class).stream()
-                .map(Conditional::value).findFirst().orElseThrow(AssertionError::new);
+        String result = underTest.getConditionalMethods().stream()
+                .map(method -> new ExtensionMethod(extension, method))
+                .map(extensionMethod -> extensionMethod.getAnnotation(Conditional.class))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(Conditional::value)
+                .findFirst().orElseThrow(AssertionError::new);
         assertEquals(expected, result);
     }
 

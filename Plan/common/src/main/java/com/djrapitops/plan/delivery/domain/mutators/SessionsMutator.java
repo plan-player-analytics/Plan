@@ -27,9 +27,12 @@ import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
+import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
+import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.*;
@@ -99,6 +102,10 @@ public class SessionsMutator {
 
     public List<FinishedSession> all() {
         return sessions;
+    }
+
+    public TimeSegmentsMutator<Integer> onlineTimeSegments() {
+        return TimeSegmentsMutator.sessionClockSegments(sort(new DateHolderOldestComparator()).all());
     }
 
     public SessionsMutator filterPlayedOnServer(ServerUUID serverUUID) {
@@ -289,11 +296,31 @@ public class SessionsMutator {
             WorldPie worldPie = graphs.pie().worldPie(session.getExtraData(WorldTimes.class).orElseGet(WorldTimes::new));
             sessionMap.put("world_series", worldPie.getSlices());
             sessionMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+            sessionMap.put("join_address", session.getExtraData(JoinAddress.class)
+                    .map(JoinAddress::getAddress).orElse("-"));
 
             session.getExtraData(AveragePing.class).ifPresent(averagePing ->
                     sessionMap.put("avg_ping", formatters.decimals().apply(averagePing.getValue()) + " ms")
             );
             return sessionMap;
         });
+    }
+
+    public Optional<FinishedSession> latestSession() {
+        List<FinishedSession> orderedSessions = sort(new DateHolderRecentComparator()).all();
+        return orderedSessions.isEmpty() ? Optional.empty() : Optional.of(orderedSessions.get(0));
+    }
+
+    public Optional<FinishedSession> previousSession() {
+        List<FinishedSession> orderedSessions = sort(new DateHolderRecentComparator()).all();
+        for (FinishedSession session : orderedSessions) {
+            if (session.getExtraData(ActiveSession.class).isPresent()) {
+                continue;
+            }
+            // First non-active session is previous one.
+            return Optional.of(session);
+        }
+
+        return Optional.empty();
     }
 }

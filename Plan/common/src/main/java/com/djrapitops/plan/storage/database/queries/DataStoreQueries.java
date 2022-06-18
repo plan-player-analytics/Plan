@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
@@ -68,6 +69,8 @@ public class DataStoreQueries {
                 statement.setInt(5, session.getMobKillCount());
                 statement.setLong(6, session.getAfkTime());
                 statement.setString(7, session.getServerUUID().toString());
+                statement.setString(8, session.getExtraData(JoinAddress.class)
+                        .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
             }
         };
     }
@@ -146,7 +149,7 @@ public class DataStoreQueries {
      * @param playerName Name of the player.
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable registerBaseUser(UUID playerUUID, long registered, String playerName) {
+    public static ExecStatement registerBaseUser(UUID playerUUID, long registered, String playerName) {
         return new ExecStatement(UsersTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -301,8 +304,8 @@ public class DataStoreQueries {
     public static Executable updateJoinAddress(UUID playerUUID, ServerUUID serverUUID, String joinAddress) {
         String sql = "UPDATE " + UserInfoTable.TABLE_NAME + " SET " +
                 UserInfoTable.JOIN_ADDRESS + "=?" +
-                WHERE + UserInfoTable.USER_UUID + "=?" +
-                AND + UserInfoTable.SERVER_UUID + "=?";
+                WHERE + UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

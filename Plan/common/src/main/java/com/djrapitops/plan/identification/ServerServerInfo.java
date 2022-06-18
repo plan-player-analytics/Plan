@@ -19,6 +19,7 @@ package com.djrapitops.plan.identification;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
+import com.djrapitops.plan.identification.storage.AtomicServerLoader;
 import com.djrapitops.plan.identification.storage.ServerDBLoader;
 import com.djrapitops.plan.identification.storage.ServerFileLoader;
 import com.djrapitops.plan.identification.storage.ServerLoader;
@@ -30,6 +31,7 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Optional;
 
@@ -43,6 +45,8 @@ import java.util.Optional;
 @Singleton
 public class ServerServerInfo extends ServerInfo {
 
+    private final String currentVersion;
+
     private final ServerLoader fromFile;
     private final ServerLoader fromDatabase;
 
@@ -55,6 +59,7 @@ public class ServerServerInfo extends ServerInfo {
 
     @Inject
     public ServerServerInfo(
+            @Named("currentVersion") String currentVersion,
             ServerProperties serverProperties,
             ServerFileLoader fromFile,
             ServerDBLoader fromDatabase,
@@ -65,8 +70,9 @@ public class ServerServerInfo extends ServerInfo {
             PluginLogger logger
     ) {
         super(serverProperties);
-        this.fromFile = fromFile;
-        this.fromDatabase = fromDatabase;
+        this.currentVersion = currentVersion;
+        this.fromFile = new AtomicServerLoader(fromFile);
+        this.fromDatabase = new AtomicServerLoader(fromDatabase);
         this.processing = processing;
         this.addresses = addresses;
         this.config = config;
@@ -79,6 +85,7 @@ public class ServerServerInfo extends ServerInfo {
         logger.info(locale.getString(PluginLang.LOADING_SERVER_INFO));
         Optional<Server> loaded = fromFile.load(null);
         server = loaded.orElseGet(this::registerNew);
+        logger.info(locale.getString(PluginLang.LOADED_SERVER_INFO, server.getUuid().toString()));
         processing.submitNonCritical(this::updateStorage);
     }
 
@@ -100,6 +107,7 @@ public class ServerServerInfo extends ServerInfo {
 
     private Server registerNew(ServerUUID serverUUID) {
         Server server = createServerObject(serverUUID);
+        logger.info("Registering a new server in database with UUID " + serverUUID);
         fromDatabase.save(server);
 
         Server stored = fromDatabase.load(serverUUID)
@@ -111,6 +119,6 @@ public class ServerServerInfo extends ServerInfo {
     private Server createServerObject(ServerUUID serverUUID) {
         String webAddress = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
         String name = config.get(PluginSettings.SERVER_NAME);
-        return new Server(serverUUID, name, webAddress);
+        return new Server(serverUUID, name, webAddress, currentVersion);
     }
 }

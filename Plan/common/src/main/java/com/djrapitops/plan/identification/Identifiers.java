@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -101,8 +102,13 @@ public class Identifiers {
                 .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
     }
 
+    @Nullable
     public UUID getPlayerUUID(String name) {
         return uuidUtility.getUUIDOf(name);
+    }
+
+    public Optional<Integer> getPlayerUserId(UUID playerUUID) {
+        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchUserId(playerUUID));
     }
 
     public static Optional<Long> getTimestamp(Request request) {

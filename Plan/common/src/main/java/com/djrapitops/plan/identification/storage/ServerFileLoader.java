@@ -27,55 +27,67 @@ import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Singleton
-public class ServerFileLoader extends Config implements ServerLoader {
+public class ServerFileLoader implements ServerLoader {
 
+    private final String currentVersion;
     private final PlanFiles files;
     private final PlanConfig config;
 
-    private boolean prepared;
+    private final AtomicReference<Config> serverInfoConfig = new AtomicReference<>();
 
     @Inject
     public ServerFileLoader(
+            @Named("currentVersion") String currentVersion,
             PlanFiles files,
             PlanConfig config
     ) {
-        super(files.getFileFromPluginFolder("ServerInfoFile.yml"));
+        this.currentVersion = currentVersion;
         this.files = files;
         this.config = config;
-
-        prepared = false;
     }
 
-    public void prepare() throws IOException {
+
+    private boolean isNotPrepared() {
+        return serverInfoConfig.get() == null;
+    }
+
+    private void prepare() throws IOException {
+        serverInfoConfig.set(new Config(
+                files.getFileFromPluginFolder("ServerInfoFile.yml"),
+                readDefaults()
+        ));
+    }
+
+    private Config readDefaults() throws IOException {
         try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("DefaultServerInfoFile.yml").asInputStream())) {
-            copyMissing(reader.read());
+            return reader.read();
         }
-        save();
-        prepared = true;
     }
 
     @Override
     public Optional<Server> load(ServerUUID loaded) {
         try {
-            if (!prepared) prepare();
+            if (isNotPrepared()) prepare();
 
-            String serverUUIDString = getString("Server.UUID");
+            String serverUUIDString = serverInfoConfig.get().getString("Server.UUID");
             if (serverUUIDString == null) return Optional.empty();
 
-            Integer id = getInteger("Server.ID");
+            Integer id = serverInfoConfig.get().getInteger("Server.ID");
             ServerUUID serverUUID = ServerUUID.fromString(serverUUIDString);
             String name = config.getNode(PluginSettings.SERVER_NAME.getPath())
                     .map(ConfigNode::getString)
                     .orElse("Proxy");
-            String address = getString("Server.Web_address");
+            String address = serverInfoConfig.get().getString("Server.Web_address");
 
-            return Optional.of(new Server(id, serverUUID, name, address, false));
+            return Optional.of(new Server(id, serverUUID, name, address, false, currentVersion));
         } catch (IOException e) {
             throw new EnableException("Failed to read ServerInfoFile.yml: " + e.getMessage());
         }
@@ -84,15 +96,15 @@ public class ServerFileLoader extends Config implements ServerLoader {
     @Override
     public void save(Server server) {
         try {
-            if (!prepared) prepare();
+            if (isNotPrepared()) prepare();
 
-            server.getId().ifPresent(id -> set("Server.ID", id));
-            set("Server.UUID", server.getUuid());
-            set("Server.Web_address", server.getWebAddress());
+            server.getId().ifPresent(id -> serverInfoConfig.get().set("Server.ID", id));
+            serverInfoConfig.get().set("Server.UUID", server.getUuid().toString());
+            serverInfoConfig.get().set("Server.Web_address", server.getWebAddress());
 
-            save();
+            serverInfoConfig.get().save();
         } catch (IOException e) {
-            throw new EnableException("Failed to write ServerInfoFile.yml: " + e.getMessage());
+            throw new EnableException("Failed to write ServerInfoFile.yml: " + e.getMessage(), e);
         }
     }
 

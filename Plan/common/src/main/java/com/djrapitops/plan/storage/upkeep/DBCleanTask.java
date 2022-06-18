@@ -32,6 +32,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
@@ -124,7 +125,7 @@ public class DBCleanTask extends TaskSystem.Task {
                 // This is needed since the last updated number is updated at reload and it would lead to all data
                 // for plugins being deleted all the time.
                 if (System.currentTimeMillis() - lastReload <= deleteExtensionDataAfter) {
-                    database.executeTransaction(new RemoveOldExtensionsTransaction(deleteExtensionDataAfter, serverInfo.getServerUUID()));
+                    database.executeTransaction(new RemoveOldExtensionsTransaction(config.getExtensionSettings(), deleteExtensionDataAfter, serverInfo.getServerUUID()));
                 }
             }
         } catch (DBOpException e) {
@@ -169,13 +170,15 @@ public class DBCleanTask extends TaskSystem.Task {
     }
 
     private Query<List<UUID>> fetchInactivePlayerUUIDs(long keepActiveAfter) {
-        String sql = SELECT + "uuid, last_seen" + FROM +
-                '(' + SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
-                SessionsTable.USER_UUID +
+        String selectLastSeen = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen, " +
+                SessionsTable.USER_ID +
                 FROM + SessionsTable.TABLE_NAME +
-                GROUP_BY + SessionsTable.USER_UUID + ") as q1" +
+                GROUP_BY + SessionsTable.USER_ID;
+        String sql = SELECT + "uuid, last_seen" +
+                FROM + '(' + selectLastSeen + ") as q1" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + "q1." + SessionsTable.USER_ID +
                 WHERE + "last_seen < ?";
-        return new QueryStatement<List<UUID>>(sql, 20000) {
+        return new QueryStatement<>(sql, 20000) {
 
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

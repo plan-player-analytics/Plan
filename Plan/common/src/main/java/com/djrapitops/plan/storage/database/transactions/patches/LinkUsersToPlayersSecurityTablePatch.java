@@ -60,7 +60,7 @@ public class LinkUsersToPlayersSecurityTablePatch extends Patch {
         String sql = "UPDATE " + SecurityTable.TABLE_NAME + " SET " + SecurityTable.LINKED_TO + "=?" +
                 WHERE + SecurityTable.USERNAME + "=?";
 
-        Map<String, String> byUsername = query(new QueryAllStatement<Map<String, String>>(querySQL) {
+        Map<String, String> byUsername = query(new QueryAllStatement<>(querySQL) {
             @Override
             public Map<String, String> processResults(ResultSet set) throws SQLException {
                 Map<String, String> byUsername = new HashMap<>();

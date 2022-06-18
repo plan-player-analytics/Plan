@@ -108,7 +108,7 @@ public class ServerSettingsManager implements SubSystem {
 
         Database database = dbSystem.getDatabase();
         Optional<ServerUUID> serverUUID = serverInfo.getServerUUIDSafe();
-        if (!serverUUID.isPresent()) {
+        if (serverUUID.isEmpty()) {
             return;
         }
 
@@ -132,7 +132,7 @@ public class ServerSettingsManager implements SubSystem {
         long lastModified = configFile.exists() ? configFile.lastModified() : -1;
 
         Optional<ServerUUID> serverUUID = serverInfo.getServerUUIDSafe();
-        if (!serverUUID.isPresent()) {
+        if (serverUUID.isEmpty()) {
             return;
         }
 

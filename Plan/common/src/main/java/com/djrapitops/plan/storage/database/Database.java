@@ -17,11 +17,16 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.exceptions.database.DBInitException;
-import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
-import java.util.concurrent.Future;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * Interface for interacting with a Plan SQL database.
@@ -52,13 +57,75 @@ public interface Database {
      */
     <T> T query(Query<T> query);
 
+    default <T> Optional<T> queryOptional(String sql, RowExtractor<T> rowExtractor, Object... parameters) {
+        return query(new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                QueryParameterSetter.setParameters(statement, parameters);
+            }
+
+            @Override
+            public Optional<T> processResults(ResultSet set) throws SQLException {
+                return set.next() ? Optional.ofNullable(rowExtractor.extract(set)) : Optional.empty();
+            }
+        });
+    }
+
+    default <T> List<T> queryList(String sql, RowExtractor<T> rowExtractor, Object... parameters) {
+        return queryCollection(sql, rowExtractor, ArrayList::new, parameters);
+    }
+
+    default <T> Set<T> querySet(String sql, RowExtractor<T> rowExtractor, Object... parameters) {
+        return queryCollection(sql, rowExtractor, HashSet::new, parameters);
+    }
+
+    default <C extends Collection<T>, T> C queryCollection(String sql, RowExtractor<T> rowExtractor, Supplier<C> collectionConstructor, Object... parameters) {
+        return query(new QueryStatement<>(sql, 1000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                QueryParameterSetter.setParameters(statement, parameters);
+            }
+
+            @Override
+            public C processResults(ResultSet set) throws SQLException {
+                C collection = collectionConstructor.get();
+                while (set.next()) {
+                    collection.add(rowExtractor.extract(set));
+                }
+                return collection;
+            }
+        });
+    }
+
+    default <K, V> Map<K, V> queryMap(String sql, MapRowExtractor<K, V> rowExtractor, Object... parameters) {
+        return queryMap(sql, rowExtractor, HashMap::new, parameters);
+    }
+
+    default <M extends Map<K, V>, K, V> M queryMap(String sql, MapRowExtractor<K, V> rowExtractor, Supplier<M> mapConstructor, Object... parameters) {
+        return query(new QueryStatement<>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                QueryParameterSetter.setParameters(statement, parameters);
+            }
+
+            @Override
+            public M processResults(ResultSet set) throws SQLException {
+                M map = mapConstructor.get();
+                while (set.next()) {
+                    rowExtractor.extract(set, map);
+                }
+                return map;
+            }
+        });
+    }
+
     /**
      * Execute an SQL Transaction.
      *
      * @param transaction Transaction to execute.
      * @return Future that is finished when the transaction has been executed.
      */
-    Future<?> executeTransaction(Transaction transaction);
+    CompletableFuture<?> executeTransaction(Transaction transaction);
 
     /**
      * Used to get the {@code DBType} of the Database

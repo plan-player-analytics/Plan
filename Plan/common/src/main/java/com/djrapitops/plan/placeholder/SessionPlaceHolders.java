@@ -32,6 +32,7 @@ import com.djrapitops.plan.storage.database.queries.objects.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -137,8 +138,10 @@ public class SessionPlaceHolders implements Placeholders {
         placeholders.registerStatic("sessions_unique_players_day",
                 parameters -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_unique_players_today",
-                parameters -> database.query(PlayerCountQueries.uniquePlayerCounts(dayAgo(), now(), config.getTimeZone().getOffset(now()), getServerUUID(parameters)))
-                        .lastEntry().getValue());
+                parameters -> {
+                    NavigableMap<Long, Integer> playerCounts = database.query(PlayerCountQueries.uniquePlayerCounts(dayAgo(), now(), config.getTimeZone().getOffset(now()), getServerUUID(parameters)));
+                    return playerCounts.isEmpty() ? 0 : playerCounts.lastEntry().getValue();
+                });
         placeholders.registerStatic("sessions_unique_players_week",
                 parameters -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_unique_players_month",
@@ -217,7 +220,9 @@ public class SessionPlaceHolders implements Placeholders {
     }
 
     private ServerUUID getServerUUID(Arguments parameters) {
-        return parameters.get(0).flatMap(this::getServerUUIDForServerIdentifier).orElseGet(serverInfo::getServerUUID);
+        return parameters.get(0)
+                .flatMap(this::getServerUUIDForServerIdentifier)
+                .orElseGet(serverInfo::getServerUUID);
     }
 
     private Optional<ServerUUID> getServerUUIDForServerIdentifier(String serverIdentifier) {

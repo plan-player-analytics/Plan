@@ -19,9 +19,12 @@ package com.djrapitops.plan.storage.database.queries;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.World;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
@@ -153,6 +156,7 @@ public class LargeStoreQueries {
                     statement.setString(3, server.getWebAddress());
                     statement.setBoolean(4, true);
                     statement.setBoolean(5, server.isProxy());
+                    statement.setString(6, server.getPlanVersion());
                     statement.addBatch();
                 }
             }
@@ -284,6 +288,8 @@ public class LargeStoreQueries {
                     statement.setInt(5, session.getMobKillCount());
                     statement.setLong(6, session.getAfkTime());
                     statement.setString(7, session.getServerUUID().toString());
+                    statement.setString(8, session.getExtraData(JoinAddress.class)
+                            .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
                     statement.addBatch();
                 }
             }
@@ -293,6 +299,8 @@ public class LargeStoreQueries {
     public static Executable storeAllSessionsWithKillAndWorldData(Collection<FinishedSession> sessions) {
         return connection -> {
             Set<World> existingWorlds = WorldTimesQueries.fetchWorlds().executeWithConnection(connection);
+            List<String> existingJoinAddresses = JoinAddressQueries.allJoinAddresses().executeWithConnection(connection);
+            storeAllJoinAddresses(sessions, existingJoinAddresses).execute(connection);
             storeAllWorldNames(sessions, existingWorlds).execute(connection);
             storeAllSessionsWithoutKillOrWorldData(sessions).execute(connection);
             storeSessionKillData(sessions).execute(connection);
@@ -300,16 +308,41 @@ public class LargeStoreQueries {
         };
     }
 
+    private static Executable storeAllJoinAddresses(Collection<FinishedSession> sessions, List<String> existingJoinAddresses) {
+        return new ExecBatchStatement(JoinAddressTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+                sessions.stream()
+                        .map(FinishedSession::getExtraData)
+                        .map(extraData -> extraData.get(JoinAddress.class))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .map(JoinAddress::getAddress)
+                        .map(String::toLowerCase)
+                        .filter(address -> !existingJoinAddresses.contains(address))
+                        .distinct()
+                        .forEach(address -> {
+                            try {
+                                statement.setString(1, address);
+                                statement.addBatch();
+                            } catch (SQLException e) {
+                                throw DBOpException.forCause(JoinAddressTable.INSERT_STATEMENT, e);
+                            }
+                        });
+            }
+        };
+    }
+
     private static Executable storeAllWorldNames(Collection<FinishedSession> sessions, Set<World> existingWorlds) {
         Set<World> worlds = sessions.stream().flatMap(session -> {
-            ServerUUID serverUUID = session.getServerUUID();
-            return session.getExtraData(WorldTimes.class)
-                    .map(WorldTimes::getWorldTimes)
-                    .map(Map::keySet)
-                    .orElseGet(Collections::emptySet)
-                    .stream()
-                    .map(worldName -> new World(worldName, serverUUID));
-        }).filter(world -> !existingWorlds.contains(world))
+                    ServerUUID serverUUID = session.getServerUUID();
+                    return session.getExtraData(WorldTimes.class)
+                            .map(WorldTimes::getWorldTimes)
+                            .map(Map::keySet)
+                            .orElseGet(Collections::emptySet)
+                            .stream()
+                            .map(worldName -> new World(worldName, serverUUID));
+                }).filter(world -> !existingWorlds.contains(world))
                 .collect(Collectors.toSet());
 
         if (worlds.isEmpty()) return Executable.empty();

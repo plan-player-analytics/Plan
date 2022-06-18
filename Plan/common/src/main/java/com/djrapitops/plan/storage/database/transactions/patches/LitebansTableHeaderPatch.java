@@ -50,7 +50,7 @@ public class LitebansTableHeaderPatch extends Patch {
                 OR + "pr." + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 OR + "pr." + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 OR + "pr." + ExtensionTableProviderTable.PROVIDER_NAME + "=?)";
-        found = query(new QueryStatement<Set<Integer>>(sql) {
+        found = query(new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, "Litebans");

@@ -1,10 +1,9 @@
-plugins {
-    id "net.kyori.blossom" version "1.3.0"
-}
+import org.spongepowered.gradle.plugin.config.PluginLoaders
+import org.spongepowered.gradle.vanilla.repository.MinecraftPlatform
 
-blossom {
-    replaceTokenIn('src/main/java/com/djrapitops/plan/PlanSponge.java')
-    replaceToken('@version@', '' + project.ext.fullVersion)
+plugins {
+    id "org.spongepowered.gradle.plugin" version "2.0.2"
+    id "org.spongepowered.gradle.vanilla" version "0.2"
 }
 
 dependencies {
@@ -15,14 +14,63 @@ dependencies {
     implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
     implementation "org.bstats:bstats-sponge:$bstatsVersion"
 
-    compileOnly "org.spongepowered:spongeapi:$spongeVersion"
     testImplementation "org.spongepowered:spongeapi:$spongeVersion"
-
     annotationProcessor "org.spongepowered:spongeapi:$spongeVersion"
+    implementation "org.spongepowered:mixin:0.7.11-SNAPSHOT"
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
+sponge {
+    apiVersion(spongeVersion)
+    license("LGPLv3")
+    loader {
+        name(PluginLoaders.JAVA_PLAIN)
+        version("1.0")
+    }
+    plugin("plan") {
+        displayName("Plan")
+        version(fullVersion)
+        entrypoint("com.djrapitops.plan.PlanSponge")
+        description("Player Analytics Plugin by AuroraLS3")
+        contributor("AuroraLS3") {
+            description("Author")
+        }
+
+        // Dependencies
+        // version is a *required* property (empty string works fine)
+        dependency("griefprevention") {
+            optional(true)
+            version("")
+        }
+        dependency("luckperms") {
+            optional(true)
+            version("")
+        }
+        dependency("nucleus") {
+            optional(true)
+            version("")
+        }
+        dependency("redprotect") {
+            optional(true)
+            version("")
+        }
+        dependency("nuvotifier") {
+            optional(true)
+            version("")
+        }
+    }
+}
+
+minecraft {
+    version("1.16.5")
+    platform(MinecraftPlatform.JOINED)
+}
+
+compileJava {
+    options.release = 11
+}
+
 shadowJar {
-    relocate 'org.bstats', 'com.djrapitops.plan.utilities.metrics'
+    relocate "org.bstats", "com.djrapitops.plan.utilities.metrics"
 }

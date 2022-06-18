@@ -20,6 +20,7 @@ Plugin:
     Notify_about_DEV_releases: false
   Configuration:
     Allow_proxy_to_manage_settings: true
+  Frontend_BETA: false
 # -----------------------------------------------------
 # Supported databases: SQLite, MySQL
 # -----------------------------------------------------
@@ -132,6 +133,8 @@ Display_options:
   # More information about Themes:
   # https://github.com/plan-player-analytics/Plan/wiki/Themes
   Theme: default
+  # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
+  Player_head_image_url: "https://crafatar.com/avatars/${playerUUID}?size=120&default=MHF_Steve&overlay"
   Sessions:
     Show_on_page: 50
     # By Default World playtime pie is ordered alphabetically.

@@ -11,25 +11,28 @@ dependencies {
     testImplementation project(path: ":sponge", configuration: 'testArtifacts')
     testImplementation project(path: ":bungeecord", configuration: 'testArtifacts')
     testImplementation project(path: ":velocity", configuration: 'testArtifacts')
-
-    slim "mysql:mysql-connector-java:$mysqlVersion"
-    slim "org.xerial:sqlite-jdbc:$sqliteVersion"
 }
 
-slimJar {
-    relocate 'com.mysql', 'plan.com.mysql'
-    relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
+jar {
+    // Add the sponge mixin into the manifest
+    manifest.attributes([
+            'MixinConfigs': 'plan-sponge.mixins.json'
+    ])
 }
 
 shadowJar {
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
+        exclude 'org/apache/maven/**' // This needs to be unrelocated for Sponge
     }
     relocate 'dagger', 'plan.dagger'
-    // Don't relocate SQLite since the org.sqlite.NativeDB class calls are not relocated properly
+    // Don't relocate MySQL or SQLite since they are loaded with a isolated class loader
     // relocate 'org.sqlite', 'plan.org.sqlite'
+    // relocate 'com.mysql', 'plan.com.mysql'
+    // relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
     relocate 'javax.inject', 'plan.javax.inject'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
+    relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
 
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set('Plan')

@@ -231,7 +231,7 @@ public class DataUtilityCommands {
         }
 
         PlayerContainer player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
-        if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
+        if (player.getValue(PlayerKeys.REGISTERED).isEmpty()) {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND_REGISTER, identifier));
         }
 

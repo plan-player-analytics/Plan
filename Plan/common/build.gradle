@@ -1,3 +1,34 @@
+import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
+    id "com.github.node-gradle.node" version "3.3.0"
+}
+
+configurations {
+    mysqlDriver
+    sqliteDriver
+    testImplementation.extendsFrom mysqlDriver, sqliteDriver
+    compileOnly.extendsFrom mysqlDriver, sqliteDriver
+}
+
+task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.mysqlDriver
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
+
+task generateResourceForSQLiteDriver(type: GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.sqliteDriver
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
+
 dependencies {
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     implementation project(":api")
@@ -5,23 +36,32 @@ dependencies {
     implementation project(path: ":extensions", configuration: 'shadow')
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
+    implementation "commons-codec:commons-codec:$commonsCodecVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    compileOnly "mysql:mysql-connector-java:$mysqlVersion"
-    compileOnly "org.xerial:sqlite-jdbc:$sqliteVersion"
     implementation "com.zaxxer:HikariCP:$hikariVersion"
     implementation "org.slf4j:slf4j-nop:$slf4jVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
+    compileOnly "net.kyori:adventure-api:4.9.3"
+
+    implementation("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
+        // Effectively disables relocating
+        exclude module: "jar-relocator"
+    }
+    mysqlDriver "mysql:mysql-connector-java:$mysqlVersion"
+    sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
     implementation "org.eclipse.jetty:jetty-server:$jettyVersion"
     implementation "org.eclipse.jetty.http2:http2-server:$jettyVersion"
-    implementation slimjar("1.2.5")
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-java:4.2.1"
+    testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
+    testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
+    testImplementation "org.testcontainers:nginx:$testContainersVersion"
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
 task updateVersion(type: Copy) {
     from('src/main/resources') {
         include 'plugin.yml'
@@ -31,6 +71,36 @@ task updateVersion(type: Copy) {
     }
     into 'build/sources/resources/'
     filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+}
+
+node {
+    download = true
+    version = "16.14.2"
+    nodeProjectDir = file("$rootDir/react/dashboard")
+}
+
+task yarnBundle(type: YarnTask) {
+    inputs.files(fileTree("$rootDir/react/dashboard/src"))
+    inputs.file("$rootDir/react/dashboard/package.json")
+
+    outputs.dir("$rootDir/react/dashboard/build")
+
+    dependsOn yarn_install
+    args = ['run', 'build']
+}
+
+task copyYarnBuildResults {
+    inputs.files(fileTree("$rootDir/react/dashboard/build"))
+    outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
+
+    dependsOn yarnBundle
+    doLast {
+        mkdir "$rootDir/common/build/resources/main/assets/plan/web"
+        copy {
+            from "$rootDir/react/dashboard/build"
+            into "$rootDir/common/build/resources/main/assets/plan/web"
+        }
+    }
 }
 
 task determineWebAssetModifications {
@@ -57,7 +127,7 @@ task determineWebAssetModifications {
 }
 
 processResources {
-    dependsOn determineWebAssetModifications
+    dependsOn copyYarnBuildResults, determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     dependsOn updateVersion
     from 'build/sources/resources'

@@ -20,7 +20,6 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,6 +28,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -45,7 +45,7 @@ public class AsyncJSONResolverService {
     private final JSONStorage jsonStorage;
     private final Map<String, Future<JSONStorage.StoredJSON>> currentlyProcessing;
     private final Map<String, Long> previousUpdates;
-    private final UnitSemaphoreAccessLock accessLock; // Access lock prevents double processing same resource
+    private final ReentrantLock accessLock; // Access lock prevents double processing same resource
 
     @Inject
     public AsyncJSONResolverService(
@@ -59,7 +59,7 @@ public class AsyncJSONResolverService {
 
         currentlyProcessing = new ConcurrentHashMap<>();
         previousUpdates = new ConcurrentHashMap<>();
-        accessLock = new UnitSemaphoreAccessLock();
+        accessLock = new ReentrantLock();
     }
 
     public <T> JSONStorage.StoredJSON resolve(
@@ -131,7 +131,7 @@ public class AsyncJSONResolverService {
         long updateThreshold = config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);
 
         Future<JSONStorage.StoredJSON> updatedJSON;
-        accessLock.enter();
+        accessLock.lock();
         try {
             // Check if the json is already being created
             updatedJSON = currentlyProcessing.get(identifier);
@@ -141,7 +141,7 @@ public class AsyncJSONResolverService {
                 currentlyProcessing.put(identifier, updatedJSON);
             }
         } finally {
-            accessLock.exit();
+            accessLock.unlock();
         }
         return updatedJSON;
     }

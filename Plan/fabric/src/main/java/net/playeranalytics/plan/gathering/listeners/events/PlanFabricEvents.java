@@ -28,9 +28,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 import net.playeranalytics.plan.PlanFabric;
+import net.playeranalytics.plan.gathering.FabricPlayerPositionTracker;
 
 import java.net.SocketAddress;
 import java.util.Collection;
+import java.util.UUID;
 
 public class PlanFabricEvents {
 
@@ -48,7 +50,16 @@ public class PlanFabricEvents {
 
     public static final Event<OnMove> ON_MOVE = EventFactory.createArrayBacked(OnMove.class, callbacks -> (handler, packet) -> {
         for (OnMove callback : callbacks) {
-            callback.onMove(handler, packet);
+            UUID playerUUID = handler.player.getUuid();
+            double[] position = FabricPlayerPositionTracker.getPosition(playerUUID);
+            double x = position[0];
+            double y = position[1];
+            double z = position[2];
+            float yaw = (float) position[3];
+            float pitch = (float) position[4];
+            if (FabricPlayerPositionTracker.moved(playerUUID, packet.getX(x), packet.getY(y), packet.getZ(z), packet.getYaw(yaw), packet.getPitch(pitch))) {
+                callback.onMove(handler, packet);
+            }
         }
     });
 

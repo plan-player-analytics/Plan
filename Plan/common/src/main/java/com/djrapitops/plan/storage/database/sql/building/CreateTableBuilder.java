@@ -34,14 +34,18 @@ public class CreateTableBuilder {
     private int columnCount = 0;
     private int constraintCount = 0;
 
-    private CreateTableBuilder(DBType dbType, String tableName) {
+    private CreateTableBuilder(DBType dbType, String tableName, boolean temporaryTable) {
         this.dbType = dbType;
-        columns = new StringBuilder("CREATE TABLE IF NOT EXISTS " + tableName + " (");
+        columns = new StringBuilder("CREATE " + (temporaryTable ? "TEMPORARY " : "") + "TABLE IF NOT EXISTS " + tableName + " (");
         keyConstraints = new StringBuilder();
     }
 
     public static CreateTableBuilder create(String tableName, DBType type) {
-        return new CreateTableBuilder(type, tableName);
+        return new CreateTableBuilder(type, tableName, false);
+    }
+
+    public static CreateTableBuilder createTemporary(String tableName, DBType type) {
+        return new CreateTableBuilder(type, tableName, true);
     }
 
     private void finalizeColumn() {

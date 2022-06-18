@@ -98,8 +98,14 @@ public class NetworkPageExporter extends FileExporter {
 
         // Fixes refreshingJsonRequest ignoring old data of export
         String html = StringUtils.replaceEach(page.toHtml(),
-                new String[]{"loadPlayersOnlineGraph, 'network-overview', true);", "&middot; Performance"},
-                new String[]{"loadPlayersOnlineGraph, 'network-overview');", "&middot; Performance (Unavailable with Export)"});
+                new String[]{"loadPlayersOnlineGraph, 'network-overview', true);",
+                        "&middot; Performance",
+                        "<head>"
+                },
+                new String[]{"loadPlayersOnlineGraph, 'network-overview');",
+                        "&middot; Performance (Unavailable with Export)",
+                        "<head><style>.refresh-element {display: none;}</style>"
+                });
 
         export(to, exportPaths.resolveExportPaths(html));
     }
@@ -141,17 +147,15 @@ public class NetworkPageExporter extends FileExporter {
     }
 
     private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
-        Optional<Response> found = getJSONResponse(resource);
-        if (!found.isPresent()) {
-            throw new NotFoundException(resource + " was not properly exported: not found");
-        }
+        Response response = getJSONResponse(resource)
+                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         String relativePlayerLink = toRelativePathFromRoot("player");
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
-                StringUtils.replaceEach(found.get().getAsString(),
+                StringUtils.replaceEach(response.getAsString(),
                         new String[]{StringEscapeUtils.escapeJson("../player"), StringEscapeUtils.escapeJson("./player")},
                         new String[]{StringEscapeUtils.escapeJson(relativePlayerLink), StringEscapeUtils.escapeJson(relativePlayerLink)}
                 )
@@ -177,9 +181,9 @@ public class NetworkPageExporter extends FileExporter {
                 "./img/Flaticon_circle.png",
                 "./css/sb-admin-2.css",
                 "./css/style.css",
+                "./css/noauth.css",
                 "./vendor/datatables/datatables.min.js",
                 "./vendor/datatables/datatables.min.css",
-                "./vendor/highcharts/modules/stock.js",
                 "./vendor/highcharts/modules/map.js",
                 "./vendor/highcharts/mapdata/world.js",
                 "./vendor/highcharts/modules/drilldown.js",

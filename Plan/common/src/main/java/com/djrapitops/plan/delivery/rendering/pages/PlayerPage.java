@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
@@ -48,11 +49,11 @@ public class PlayerPage implements Page {
     private final PlanConfig config;
     private final PageFactory pageFactory;
     private final Theme theme;
-    private final Locale locale;
     private final ServerInfo serverInfo;
 
     private final Formatter<Long> clockLongFormatter;
     private final Formatter<Long> secondLongFormatter;
+    private final Locale locale;
 
     PlayerPage(
             String templateHtml,
@@ -61,9 +62,9 @@ public class PlayerPage implements Page {
             PlanConfig config,
             PageFactory pageFactory,
             Theme theme,
-            Locale locale,
             Formatters formatters,
-            ServerInfo serverInfo
+            ServerInfo serverInfo,
+            Locale locale
     ) {
         this.templateHtml = templateHtml;
         this.player = player;
@@ -71,16 +72,16 @@ public class PlayerPage implements Page {
         this.config = config;
         this.pageFactory = pageFactory;
         this.theme = theme;
-        this.locale = locale;
         this.serverInfo = serverInfo;
 
         clockLongFormatter = formatters.clockLong();
         secondLongFormatter = formatters.secondLong();
+        this.locale = locale;
     }
 
     @Override
     public String toHtml() {
-        if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
+        if (player.getValue(PlayerKeys.REGISTERED).isEmpty()) {
             throw new IllegalStateException("Player is not registered");
         }
         return createFor(player);
@@ -94,11 +95,14 @@ public class PlayerPage implements Page {
 
         placeholders.put("refresh", clockLongFormatter.apply(now));
         placeholders.put("refreshFull", secondLongFormatter.apply(now));
-        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("versionButton", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("version", versionChecker.getCurrentVersion());
         placeholders.put("updateModal", versionChecker.getUpdateModal());
 
         String playerName = player.getValue(PlayerKeys.NAME).orElse(playerUUID.toString());
         placeholders.put("playerName", playerName);
+        placeholders.put("playerUUID", playerUUID);
+        placeholders.put("playerHeadUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL));
 
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));

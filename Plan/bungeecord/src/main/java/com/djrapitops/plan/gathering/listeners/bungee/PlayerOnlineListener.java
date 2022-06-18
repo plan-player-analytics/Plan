@@ -31,8 +31,8 @@ import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.transactions.events.GeoInfoStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreGeoInfoTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -108,18 +108,20 @@ public class PlayerOnlineListener implements Listener {
         sessionCache.cacheSession(playerUUID, session);
         Database database = dbSystem.getDatabase();
 
-        boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
-        if (gatheringGeolocations) {
-            database.executeTransaction(
-                    new GeoInfoStoreTransaction(playerUUID, address, time, geolocationCache::getCountry)
-            );
-        }
+        database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName))
+                .thenRunAsync(() -> {
+                    boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
+                    if (gatheringGeolocations) {
+                        database.executeTransaction(
+                                new StoreGeoInfoTransaction(playerUUID, address, time, geolocationCache::getCountry)
+                        );
+                    }
 
-        database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> time, playerName));
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
-            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
-        }
+                    processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
+                    if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
+                        processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
+                    }
+                });
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

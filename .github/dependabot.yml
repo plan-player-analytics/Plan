@@ -6,6 +6,9 @@ updates:
     interval: daily
   open-pull-requests-limit: 99
   ignore:
+  - dependency-name: net.fabricmc:fabric-loader
+    versions:
+    - ">=0, < 2"
   - dependency-name: com.djrapitops:Extension-ProtocolSupport
     versions:
     - ">= 4.a, < 5"

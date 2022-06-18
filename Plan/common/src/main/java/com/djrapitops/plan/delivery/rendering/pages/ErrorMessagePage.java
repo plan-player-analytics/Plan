@@ -19,7 +19,6 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.utilities.java.UnaryChain;
 import com.djrapitops.plan.version.VersionChecker;
@@ -36,19 +35,17 @@ public class ErrorMessagePage implements Page {
     private final String errorTitle;
     private final String errorMsg;
 
-    private final Locale locale;
     private final Theme theme;
     private final VersionChecker versionChecker;
 
     public ErrorMessagePage(
             String template, Icon icon, String errorTitle, String errorMsg,
-            Locale locale, Theme theme, VersionChecker versionChecker
+            Theme theme, VersionChecker versionChecker
     ) {
         this.template = template;
         this.icon = icon;
         this.errorTitle = errorTitle;
         this.errorMsg = errorMsg;
-        this.locale = locale;
         this.theme = theme;
         this.versionChecker = versionChecker;
     }
@@ -56,9 +53,8 @@ public class ErrorMessagePage implements Page {
     public ErrorMessagePage(
             String template, String errorTitle, String errorMsg,
             VersionChecker versionChecker,
-            Locale locale,
             Theme theme) {
-        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, locale, theme, versionChecker);
+        this(template, Icon.called("exclamation-circle").build(), errorTitle, errorMsg, theme, versionChecker);
     }
 
     @Override
@@ -67,13 +63,13 @@ public class ErrorMessagePage implements Page {
         placeholders.put("title", icon.toHtml() + " " + errorTitle);
         placeholders.put("titleText", errorTitle);
         placeholders.put("paragraph", errorMsg);
-        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("versionButton", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("version", versionChecker.getCurrentVersion());
         placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
         return UnaryChain.of(template)
                 .chain(theme::replaceThemeColors)
                 .chain(placeholders::apply)
-                .chain(locale::replaceLanguageInHtml)
                 .apply();
     }
 }

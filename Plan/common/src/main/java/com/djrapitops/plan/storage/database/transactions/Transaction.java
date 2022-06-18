@@ -18,12 +18,14 @@ package com.djrapitops.plan.storage.database.transactions;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 
@@ -68,8 +70,8 @@ public abstract class Transaction {
 
         if (db.isUnderHeavyLoad()) {
             try {
-                Thread.sleep(db.getHeavyLoadDelayMs());
                 Thread.yield();
+                Thread.sleep(db.getHeavyLoadDelayMs());
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -78,7 +80,10 @@ public abstract class Transaction {
         try {
             initializeConnection(db);
             if (shouldBeExecuted()) {
-                initializeTransaction(db);
+                initializeTransaction();
+                if (this instanceof Patch) {
+                    db.getLogger().info(db.getLocale().getString(PluginLang.DB_APPLY_PATCH, getName()));
+                }
                 performOperations();
                 if (connection != null) connection.commit();
             }
@@ -107,7 +112,7 @@ public abstract class Transaction {
             if (!db.isUnderHeavyLoad()) {
                 db.getLogger().warn("Database appears to be under heavy load. Dropping some unimportant transactions and adding short pauses for next 10 minutes.");
                 db.getRunnableFactory().create(db::assumeNoMoreHeavyLoad)
-                        .runTaskLaterAsynchronously(TimeAmount.toTicks(10, TimeUnit.MINUTES));
+                        .runTaskLaterAsynchronously(TimeAmount.toTicks(2, TimeUnit.MINUTES));
             }
             db.increaseHeavyLoadDelay();
             executeTransaction(db); // Recurse to attempt again.
@@ -166,7 +171,7 @@ public abstract class Transaction {
         }
     }
 
-    private void initializeTransaction(SQLDB db) {
+    private void initializeTransaction() {
         try {
             createSavePoint();
         } catch (SQLException e) {
@@ -205,6 +210,10 @@ public abstract class Transaction {
 
     protected boolean execute(Executable executable) {
         return executable.execute(connection);
+    }
+
+    protected int executeReturningId(ExecStatement executable) {
+        return executable.executeReturningId(connection);
     }
 
     protected boolean execute(String sql) {
@@ -258,6 +267,11 @@ public abstract class Transaction {
     }
 
     public boolean dbIsNotUnderHeavyLoad() {
-        return !db.isUnderHeavyLoad();
+        return !db.isUnderHeavyLoad() && !db.shouldDropUnimportantTransactions();
+    }
+
+    public String getName() {
+        String simpleName = getClass().getSimpleName();
+        return simpleName.isEmpty() ? getClass().getName() : simpleName;
     }
 }

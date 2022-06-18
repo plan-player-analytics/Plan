@@ -20,6 +20,7 @@ import com.djrapitops.plan.DaggerPlanVelocityComponent;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.PlanVelocity;
 import com.djrapitops.plan.PlanVelocityComponent;
+import com.djrapitops.plan.storage.database.SQLDB;
 
 import java.nio.file.Path;
 
@@ -37,6 +38,7 @@ public class VelocityMockComponent {
 
     public VelocityMockComponent(Path tempDir) {
         this.tempDir = tempDir;
+        SQLDB.setDownloadDriver(false);
     }
 
     public PlanVelocity getPlanMock() throws Exception {

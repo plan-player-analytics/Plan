@@ -10,6 +10,13 @@
         <property name="checks" value="RegexpHeader"/>
         <property name="files" value="package-info.java"/>
     </module>
+    <module name="SuppressionSingleFilter"> <!-- Skip class fan out complexity for SQLDB.java -->
+        <property name="checks" value="ClassFanOutComplexity"/>
+        <!-- These files need refactoring. -->
+        <property name="files"
+                  value="SQLDB.java|ExtensionRegister.java|DataValueGatherer.java|PlayerOnlineListener.java|.*Test.java"/>
+    </module>
+
     <module name="RegexpHeader"> <!-- License check -->
         <property name="headerFile" value="${config_loc}/java.header"/>
     </module>
@@ -69,8 +76,8 @@
 
         <!-- Metrics -->
         <module name="ClassFanOutComplexity">
-            <!-- This value is high. Notable: SQLDB: 61 -->
-            <property name="max" value="65"/>
+            <!-- This value is ok with manual exceptions. -->
+            <property name="max" value="35"/>
         </module>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ThemeConfig: 16 -->

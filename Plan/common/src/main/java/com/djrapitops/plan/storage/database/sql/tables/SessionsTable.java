@@ -32,6 +32,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * {@link Version10Patch}
  * {@link SessionAFKTimePatch}
  * {@link SessionsOptimizationPatch}
+ * {@link com.djrapitops.plan.storage.database.transactions.patches.SessionJoinAddressPatch}
  *
  * @author AuroraLS3
  */
@@ -40,27 +41,29 @@ public class SessionsTable {
     public static final String TABLE_NAME = "plan_sessions";
 
     public static final String ID = "id";
-    public static final String USER_UUID = "uuid";
-    public static final String SERVER_UUID = "server_uuid";
+    public static final String USER_ID = "user_id";
+    public static final String SERVER_ID = "server_id";
     public static final String SESSION_START = "session_start";
     public static final String SESSION_END = "session_end";
     public static final String MOB_KILLS = "mob_kills";
     public static final String DEATHS = "deaths";
     public static final String AFK_TIME = "afk_time";
+    public static final String JOIN_ADDRESS_ID = "join_address_id";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
-            + USER_UUID + ','
+            + USER_ID + ','
             + SESSION_START + ','
             + SESSION_END + ','
             + DEATHS + ','
             + MOB_KILLS + ','
             + AFK_TIME + ','
-            + SERVER_UUID
-            + ") VALUES (?, ?, ?, ?, ?, ?, ?)";
+            + SERVER_ID + ','
+            + JOIN_ADDRESS_ID
+            + ") VALUES (" + UsersTable.SELECT_USER_ID + ", ?, ?, ?, ?, ?, " + ServerTable.SELECT_SERVER_ID + ", " + JoinAddressTable.SELECT_ID + ")";
 
     public static final String SELECT_SESSION_ID_STATEMENT = "(SELECT " + TABLE_NAME + '.' + ID + FROM + TABLE_NAME +
-            WHERE + TABLE_NAME + '.' + USER_UUID + "=?" +
-            AND + TABLE_NAME + '.' + SERVER_UUID + "=?" +
+            WHERE + TABLE_NAME + '.' + USER_ID + "=" + UsersTable.SELECT_USER_ID +
+            AND + TABLE_NAME + '.' + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
             AND + SESSION_START + "=?" +
             AND + SESSION_END + "=? LIMIT 1)";
 
@@ -71,13 +74,16 @@ public class SessionsTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(USER_UUID, Sql.varchar(36)).notNull()
-                .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                .column(USER_ID, Sql.INT).notNull()
+                .column(SERVER_ID, Sql.INT).notNull()
                 .column(SESSION_START, Sql.LONG).notNull()
                 .column(SESSION_END, Sql.LONG).notNull()
                 .column(MOB_KILLS, Sql.INT).notNull()
                 .column(DEATHS, Sql.INT).notNull()
                 .column(AFK_TIME, Sql.LONG).notNull()
+                .column(JOIN_ADDRESS_ID, INT).notNull().defaultValue("1") // References JoinAddressTable.ID, but no foreign key to allow null values.
+                .foreignKey(USER_ID, UsersTable.TABLE_NAME, UsersTable.ID)
+                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }
 }

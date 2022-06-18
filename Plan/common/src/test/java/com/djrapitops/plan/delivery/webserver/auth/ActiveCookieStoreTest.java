@@ -28,7 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
-import utilities.mocks.objects.TestRunnableFactory;
+import utilities.TestPluginLogger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -46,11 +46,11 @@ class ActiveCookieStoreTest {
         when(dbSystem.getDatabase()).thenReturn(db);
 
         underTest = new ActiveCookieStore(
+                Mockito.mock(ActiveCookieExpiryCleanupTask.class),
                 Mockito.mock(PlanConfig.class),
                 dbSystem,
-                new TestRunnableFactory(),
-                Mockito.mock(Processing.class)
-        );
+                Mockito.mock(Processing.class),
+                new TestPluginLogger());
         user = new User(TestConstants.PLAYER_ONE_NAME, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
     }
 

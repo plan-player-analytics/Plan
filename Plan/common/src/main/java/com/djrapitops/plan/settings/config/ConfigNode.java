@@ -178,7 +178,7 @@ public class ConfigNode {
      */
     public boolean moveChild(String oldPath, String newPath) {
         Optional<ConfigNode> found = getNode(oldPath);
-        if (!found.isPresent()) {
+        if (found.isEmpty()) {
             return false;
         }
 
@@ -299,6 +299,25 @@ public class ConfigNode {
                 .collect(Collectors.toMap(node -> node.getKey(fullKeys), ConfigNode::getString));
     }
 
+    /**
+     * @return List of config keys
+     */
+    public List<String> getConfigPaths() {
+        ArrayDeque<ConfigNode> dfs = new ArrayDeque<>();
+        dfs.push(this);
+
+        List<String> configPaths = new ArrayList<>();
+        while (!dfs.isEmpty()) {
+            ConfigNode next = dfs.pop();
+            if (next.isLeafNode()) {
+                configPaths.add(next.getKey(true));
+            } else {
+                dfs.addAll(next.getChildren());
+            }
+        }
+        return configPaths;
+    }
+
     public Integer getInteger(String path) {
         return getNode(path).map(ConfigNode::getInteger).orElse(null);
     }
@@ -326,7 +345,9 @@ public class ConfigNode {
         }
 
         // Override value conditionally
-        if (value == null || value.isEmpty() && from.value != null) {
+        boolean currentValueIsMissing = value == null || value.isEmpty();
+        boolean otherNodeHasValue = from.value != null && !from.value.isEmpty();
+        if (currentValueIsMissing && otherNodeHasValue) {
             value = from.value;
         }
 

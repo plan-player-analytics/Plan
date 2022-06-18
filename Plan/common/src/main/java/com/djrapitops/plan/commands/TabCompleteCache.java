@@ -20,6 +20,7 @@ import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class TabCompleteCache implements SubSystem {
 
+    private final Processing processing;
     private final PlanFiles files;
     private final DBSystem dbSystem;
 
@@ -49,9 +51,11 @@ public class TabCompleteCache implements SubSystem {
 
     @Inject
     public TabCompleteCache(
+            Processing processing,
             PlanFiles files,
             DBSystem dbSystem
     ) {
+        this.processing = processing;
         this.files = files;
         this.dbSystem = dbSystem;
         playerIdentifiers = new ArrayList<>();
@@ -62,15 +66,17 @@ public class TabCompleteCache implements SubSystem {
 
     @Override
     public void enable() {
-        refreshPlayerIdentifiers();
-        refreshServerIdentifiers();
-        refreshUserIdentifiers();
-        refreshBackupFileNames();
+        processing.submitNonCritical(() -> {
+            refreshPlayerIdentifiers();
+            refreshServerIdentifiers();
+            refreshUserIdentifiers();
+            refreshBackupFileNames();
 
-        Collections.sort(playerIdentifiers);
-        Collections.sort(serverIdentifiers);
-        Collections.sort(userIdentifiers);
-        Collections.sort(backupFileNames);
+            Collections.sort(playerIdentifiers);
+            Collections.sort(serverIdentifiers);
+            Collections.sort(userIdentifiers);
+            Collections.sort(backupFileNames);
+        });
     }
 
     private void refreshServerIdentifiers() {
@@ -109,22 +115,30 @@ public class TabCompleteCache implements SubSystem {
     }
 
     public List<String> getMatchingServerIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) return serverIdentifiers;
+        if (searchFor == null || searchFor.isEmpty()) {
+            return serverIdentifiers.size() < 100 ? serverIdentifiers : Collections.emptyList();
+        }
         return serverIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
     }
 
     public List<String> getMatchingPlayerIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) return playerIdentifiers;
+        if (searchFor == null || searchFor.isEmpty()) {
+            return playerIdentifiers.size() < 100 ? playerIdentifiers : Collections.emptyList();
+        }
         return playerIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
     }
 
     public List<String> getMatchingUserIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) return userIdentifiers;
+        if (searchFor == null || searchFor.isEmpty()) {
+            return userIdentifiers.size() < 100 ? userIdentifiers : Collections.emptyList();
+        }
         return userIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
     }
 
     public List<String> getMatchingBackupFilenames(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) return backupFileNames;
+        if (searchFor == null || searchFor.isEmpty()) {
+            return backupFileNames.size() < 100 ? backupFileNames : Collections.emptyList();
+        }
         return backupFileNames.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
     }
 }

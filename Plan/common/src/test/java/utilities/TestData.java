@@ -98,8 +98,8 @@ public class TestData {
         return new Transaction() {
             @Override
             protected void performOperations() {
-                executeOther(new StoreServerInformationTransaction(new Server(serverUUID, "Server 1", "")));
-                executeOther(new StoreServerInformationTransaction(new Server(server2UUID, "Server 2", "")));
+                executeOther(new StoreServerInformationTransaction(new Server(serverUUID, "Server 1", "", TestConstants.VERSION)));
+                executeOther(new StoreServerInformationTransaction(new Server(server2UUID, "Server 2", "", TestConstants.VERSION)));
 
                 for (String worldName : serverWorldNames) {
                     executeOther(new WorldNameStoreTransaction(serverUUID, worldName));
@@ -123,11 +123,11 @@ public class TestData {
                                 playerName, server2UUID, TestConstants.GET_PLAYER_HOSTNAME));
 
                         for (GeoInfo geoInfo : playerGeoInfo) {
-                            executeOther(new GeoInfoStoreTransaction(playerUUID, geoInfo));
+                            executeOther(new StoreGeoInfoTransaction(playerUUID, geoInfo));
                         }
 
                         for (FinishedSession session : playerSessions) {
-                            executeOther(new SessionEndTransaction(session));
+                            executeOther(new StoreSessionTransaction(session));
                         }
                     }
                 }
@@ -146,11 +146,11 @@ public class TestData {
                                 player2Name, server2UUID, TestConstants.GET_PLAYER_HOSTNAME));
 
                         for (GeoInfo geoInfo : playerGeoInfo) {
-                            executeOther(new GeoInfoStoreTransaction(player2UUID, geoInfo));
+                            executeOther(new StoreGeoInfoTransaction(player2UUID, geoInfo));
                         }
 
                         for (FinishedSession session : player2Sessions) {
-                            executeOther(new SessionEndTransaction(session));
+                            executeOther(new StoreSessionTransaction(session));
                         }
                     }
                 }

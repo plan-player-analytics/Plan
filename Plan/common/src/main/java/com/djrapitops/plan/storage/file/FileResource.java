@@ -76,7 +76,7 @@ public class FileResource implements Resource {
     @Override
     public String asString() throws IOException {
         StringBuilder flat = new StringBuilder();
-        try (Scanner scanner = new Scanner(file, "UTF-8")) {
+        try (Scanner scanner = new Scanner(file, StandardCharsets.UTF_8)) {
             while (scanner.hasNextLine()) {
                 flat.append(scanner.nextLine()).append("\r\n");
             }

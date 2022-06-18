@@ -77,7 +77,7 @@ function jsonRequest(address, callback) {
  */
 function jsonPostRequest(address, postBody, callback) {
     setTimeout(function () {
-        const xhr = newConfiguredXHR(callback);
+        const xhr = newConfiguredXHR(callback, address);
 
         xhr.open("POST", address, true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -89,7 +89,7 @@ function jsonPostRequest(address, postBody, callback) {
  * Create new XMLHttpRequest configured for methods such as jsonRequest
  * @param callback function with (json, error) parameters to call after the request.
  */
-function newConfiguredXHR(callback) {
+function newConfiguredXHR(callback, address) {
     const xhr = new XMLHttpRequest();
 
     xhr.withCredentials = true;
@@ -110,13 +110,13 @@ function newConfiguredXHR(callback) {
                     callback(null, "Request did not reach the server. (Server offline / Adblocker?)")
                 }
             } catch (e) {
-                callback(null, e.message + " (See " + address + ")")
+                callback(null, e.message)
             }
         }
     };
     xhr.timeout = 45000;
     xhr.ontimeout = function () {
-        callback(null, "Timed out after 45 seconds. (" + address + ")")
+        callback(null, "Timed out after 45 seconds.")
     };
 
     return xhr;

@@ -19,22 +19,24 @@ package com.djrapitops.plan.delivery.rendering.html.icon;
 import java.util.Optional;
 
 public enum Family {
-    SOLID(" fa fa-", "\"></i>"),
-    REGULAR(" far fa-", "\"></i>"),
-    BRAND(" fab fa-", "\"></i>"),
+    SOLID("fa"),
+    REGULAR("far"),
+    BRAND("fab"),
     @Deprecated
-    LINE(" material-icons\">", "</i>");
+    LINE(" material-icons");
 
-    private final String middle;
-    private final String suffix;
+    private final String familyClass;
 
-    Family(String middle, String suffix) {
-        this.middle = middle;
-        this.suffix = suffix;
+    Family(String familyClass) {
+        this.familyClass = familyClass;
     }
 
     public String appendAround(String color, String name) {
-        return "<i class=\"" + color + middle + name + suffix;
+        return "<i class=\"" + color + " " + familyClass + " fa-" + name + "\"></i>";
+    }
+
+    public String getFamilyClass() {
+        return familyClass;
     }
 
     public static Optional<Family> getByName(String name) {

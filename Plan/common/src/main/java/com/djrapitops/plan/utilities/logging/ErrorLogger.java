@@ -20,20 +20,24 @@ import com.djrapitops.plan.exceptions.ExceptionWithContext;
 
 public interface ErrorLogger {
     default <T extends ExceptionWithContext> void critical(T throwable) {
-        critical((Throwable) throwable, throwable.getContext().orElse(ErrorContext.builder().related("Missing Context").build()));
+        critical((Throwable) throwable, throwable.getContext().orElseGet(this::createMissingContext));
     }
 
     void critical(Throwable throwable, ErrorContext context);
 
     default <T extends ExceptionWithContext> void error(T throwable) {
-        error((Throwable) throwable, throwable.getContext().orElse(ErrorContext.builder().related("Missing Context").build()));
+        error((Throwable) throwable, throwable.getContext().orElseGet(this::createMissingContext));
     }
 
     void error(Throwable throwable, ErrorContext context);
 
     default <T extends ExceptionWithContext> void warn(T throwable) {
-        warn((Throwable) throwable, throwable.getContext().orElse(ErrorContext.builder().related("Missing Context").build()));
+        warn((Throwable) throwable, throwable.getContext().orElseGet(this::createMissingContext));
     }
 
     void warn(Throwable throwable, ErrorContext context);
+
+    default ErrorContext createMissingContext() {
+        return ErrorContext.builder().related("Missing Context").build();
+    }
 }

@@ -18,18 +18,18 @@ package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.gathering.domain.BaseUser;
 import com.djrapitops.plan.gathering.domain.UserInfo;
-import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
-import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.queries.RowExtractors;
 import com.djrapitops.plan.storage.database.sql.building.Select;
-import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import org.apache.commons.text.TextStringBuilder;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -54,25 +54,16 @@ public class BaseUserQueries {
     public static Query<Collection<BaseUser>> fetchAllBaseUsers() {
         String sql = Select.all(UsersTable.TABLE_NAME).toString();
 
-        return new QueryAllStatement<Collection<BaseUser>>(sql, 20000) {
-            @Override
-            public Collection<BaseUser> processResults(ResultSet set) throws SQLException {
-                return extractBaseUsers(set);
-            }
-        };
+        return db -> db.queryList(sql, BaseUserQueries::extractBaseUser);
     }
 
-    private static Collection<BaseUser> extractBaseUsers(ResultSet set) throws SQLException {
-        Collection<BaseUser> users = new HashSet<>();
-        while (set.next()) {
-            UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
-            String name = set.getString(UsersTable.USER_NAME);
-            long registered = set.getLong(UsersTable.REGISTERED);
-            int kicked = set.getInt(UsersTable.TIMES_KICKED);
+    private static BaseUser extractBaseUser(ResultSet set) throws SQLException {
+        UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
+        String name = set.getString(UsersTable.USER_NAME);
+        long registered = set.getLong(UsersTable.REGISTERED);
+        int kicked = set.getInt(UsersTable.TIMES_KICKED);
 
-            users.add(new BaseUser(playerUUID, name, registered, kicked));
-        }
-        return users;
+        return new BaseUser(playerUUID, name, registered, kicked);
     }
 
     /**
@@ -86,96 +77,38 @@ public class BaseUserQueries {
     public static Query<Optional<BaseUser>> fetchBaseUserOfPlayer(UUID playerUUID) {
         String sql = Select.all(UsersTable.TABLE_NAME).where(UsersTable.USER_UUID + "=?").toString();
 
-        return new QueryStatement<Optional<BaseUser>>(sql, 20000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-            }
-
-            @Override
-            public Optional<BaseUser> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
-                    String name = set.getString(UsersTable.USER_NAME);
-                    long registered = set.getLong(UsersTable.REGISTERED);
-                    int kicked = set.getInt(UsersTable.TIMES_KICKED);
-
-                    return Optional.of(new BaseUser(playerUUID, name, registered, kicked));
-                }
-                return Optional.empty();
-            }
-        };
+        return db -> db.queryOptional(sql, BaseUserQueries::extractBaseUser, playerUUID);
     }
 
-    /**
-     * Query database for common user information for players that have played on a specific server.
-     * <p>
-     * Only one {@link BaseUser} per player exists unlike {@link UserInfo} which is available per server.
-     * <p>
-     * This will fetch BaseUsers for which UserInfo object also exists on the server.
-     *
-     * @param serverUUID UUID of the Plan server.
-     * @return Collection: BaseUsers
-     */
-    public static Query<Collection<BaseUser>> fetchServerBaseUsers(ServerUUID serverUUID) {
-        String sql = SELECT +
-                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + ',' +
-                UsersTable.USER_NAME + ',' +
-                UsersTable.TABLE_NAME + '.' + UsersTable.REGISTERED + ',' +
-                UsersTable.TIMES_KICKED +
-                FROM + UsersTable.TABLE_NAME +
-                INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
-                UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_UUID +
-                WHERE + UserInfoTable.SERVER_UUID + "=?";
-        return new QueryStatement<Collection<BaseUser>>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-            }
-
-            @Override
-            public Collection<BaseUser> processResults(ResultSet set) throws SQLException {
-                return extractBaseUsers(set);
-            }
-        };
-    }
-
-    public static Query<Set<UUID>> uuidsOfRegisteredBetween(long after, long before) {
-        String sql = SELECT + DISTINCT + UsersTable.USER_UUID +
+    public static Query<Set<Integer>> userIdsOfRegisteredBetween(long after, long before) {
+        String sql = SELECT + DISTINCT + UsersTable.ID +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.REGISTERED + ">=?" +
                 AND + UsersTable.REGISTERED + "<=?";
-        return new QueryStatement<Set<UUID>>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, after);
-                statement.setLong(2, before);
-            }
 
-            @Override
-            public Set<UUID> processResults(ResultSet set) throws SQLException {
-                Set<UUID> uuids = new HashSet<>();
-                while (set.next()) {
-                    uuids.add(UUID.fromString(set.getString(UsersTable.USER_UUID)));
-                }
-                return uuids;
-            }
-        };
+        return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID), after, before);
     }
 
     public static Query<Optional<Long>> minimumRegisterDate() {
         String sql = SELECT + min(UsersTable.REGISTERED) + " as min" +
                 FROM + UsersTable.TABLE_NAME;
-        return new QueryAllStatement<Optional<Long>>(sql) {
-            @Override
-            public Optional<Long> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    long min = set.getLong("min");
-                    if (!set.wasNull()) return Optional.of(min);
-                }
-                return Optional.empty();
-            }
-        };
+        return db -> db.queryOptional(sql, RowExtractors.getLong("min"));
     }
 
+    // Visible for testing
+    public static Query<Optional<Integer>> fetchUserId(UUID playerUUID) {
+        String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.ID)
+                .where(UsersTable.USER_UUID + "=?")
+                .toString();
+
+        return db -> db.queryOptional(sql, RowExtractors.getInt(UsersTable.ID), playerUUID);
+    }
+
+    public static Query<Set<UUID>> fetchExistingUUIDs(Set<UUID> outOfPlayerUUIDs) {
+        String sql = SELECT + UsersTable.USER_UUID +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.USER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(outOfPlayerUUIDs, "','").build() + "')";
+
+        return db -> db.querySet(sql, RowExtractors.getUUID(UsersTable.USER_UUID));
+    }
 }

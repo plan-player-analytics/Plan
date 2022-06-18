@@ -17,8 +17,10 @@
 package com.djrapitops.plan.modules.bukkit;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.addons.placeholderapi.PlaceholderCacheRefreshTask;
 import com.djrapitops.plan.delivery.web.ResourceWriteTask;
 import com.djrapitops.plan.delivery.web.WebAssetVersionCheckTask;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.ShutdownDataPreservation;
@@ -28,6 +30,7 @@ import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
+import com.djrapitops.plan.storage.upkeep.ExtensionDisableOnGameServerTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
 import dagger.Binds;
@@ -93,4 +96,16 @@ public interface BukkitTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindWebAssetVersionCheckTask(WebAssetVersionCheckTask webAssetVersionCheckTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindActiveCookieStoreExpiryTask(ActiveCookieExpiryCleanupTask activeCookieExpiryCleanupTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindExtensionDisableOnGameServerTask(ExtensionDisableOnGameServerTask extensionDisableOnGameServerTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindPlaceholderWarmupTask(PlaceholderCacheRefreshTask placeholderCacheRefreshTask);
 }

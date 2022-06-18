@@ -28,6 +28,7 @@ import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTa
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         }
 
         for (FinishedSession session : RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID)) {
-            if (save.test(session)) execute(DataStoreQueries.storeSession(session));
+            if (save.test(session)) db().executeTransaction(new StoreSessionTransaction(session));
         }
     }
 
@@ -216,14 +217,14 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         String sql = SELECT +
                 "ux." + UsersTable.USER_UUID + ",COALESCE(active_playtime,0) AS active_playtime" +
                 FROM + UsersTable.TABLE_NAME + " ux" +
-                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_UUID +
+                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_ID +
                 ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + SessionsTable.USER_UUID +
-                ") sx on sx.uuid=ux.uuid";
-        return new QueryStatement<Long>(sql) {
+                GROUP_BY + SessionsTable.USER_ID +
+                ") sx on sx." + SessionsTable.USER_ID + "=ux." + UsersTable.ID;
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);

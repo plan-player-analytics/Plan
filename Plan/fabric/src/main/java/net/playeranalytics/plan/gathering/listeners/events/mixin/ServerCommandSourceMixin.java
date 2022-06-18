@@ -20,7 +20,6 @@ import com.djrapitops.plan.commands.use.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.playeranalytics.plan.commands.CommandManager;
 import net.playeranalytics.plan.commands.use.FabricMessageBuilder;
@@ -41,7 +40,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public boolean supportsChatEvents() {
-        return true;
+        return isPlayer();
     }
 
     @Shadow
@@ -68,12 +67,12 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public Optional<UUID> getUUID() {
-        return Optional.ofNullable(isConsole() ? null : getEntity().getUuid());
+        return getPlayer().map(Entity::getUuid);
     }
 
     @Override
     public void send(String message) {
-        this.sendFeedback(new LiteralText(message), false);
+        this.sendFeedback(Text.literal(message), false);
     }
 
     @Override
@@ -90,5 +89,18 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
             return Optional.of(player);
         }
         return Optional.empty();
+    }
+
+    @Override
+    public int hashCode() {
+        return Boolean.hashCode(isConsole()) + getUUID().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ServerCommandSourceMixin other)) return false;
+
+        return isConsole() == other.isConsole()
+                && getUUID().equals(other.getUUID());
     }
 }

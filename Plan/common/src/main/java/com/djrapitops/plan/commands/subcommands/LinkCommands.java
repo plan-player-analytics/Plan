@@ -125,7 +125,7 @@ public class LinkCommands {
         String serversListed = dbSystem.getDatabase()
                 .query(ServerQueries.fetchPlanServerInformationCollection())
                 .stream().sorted()
-                .map(server -> m + server.getId().orElse(0) + "::" + t + server.getName() + "::" + s + server.getUuid() + "\n")
+                .map(server -> m + server.getId().orElse(0) + "::" + t + server.getName() + "::" + s + server.getUuid() + "::" + s + server.getPlanVersion() + "\n")
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
         sender.buildMessage()
@@ -194,7 +194,7 @@ public class LinkCommands {
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_NETWORK))
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
-        if (!dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation()).isPresent()) {
+        if (dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation()).isEmpty()) {
             throw new IllegalArgumentException(locale.getString(CommandLang.NOTIFY_NO_NETWORK));
         }
     }

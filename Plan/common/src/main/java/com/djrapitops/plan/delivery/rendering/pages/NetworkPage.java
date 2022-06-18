@@ -52,32 +52,31 @@ public class NetworkPage implements Page {
     private final VersionChecker versionChecker;
     private final PlanConfig config;
     private final Theme theme;
-    private final Locale locale;
     private final ServerInfo serverInfo;
     private final JSONStorage jsonStorage;
     private final Formatters formatters;
+    private final Locale locale;
 
     NetworkPage(
             String templateHtml,
-
             DBSystem dbSystem,
             VersionChecker versionChecker,
             PlanConfig config,
             Theme theme,
-            Locale locale,
             ServerInfo serverInfo,
             JSONStorage jsonStorage,
-            Formatters formatters
+            Formatters formatters,
+            Locale locale
     ) {
         this.templateHtml = templateHtml;
         this.dbSystem = dbSystem;
         this.versionChecker = versionChecker;
         this.config = config;
         this.theme = theme;
-        this.locale = locale;
         this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
+        this.locale = locale;
     }
 
     @Override
@@ -98,8 +97,9 @@ public class NetworkPage implements Page {
         placeholders.put("minPingColor", theme.getValue(ThemeVal.GRAPH_MIN_PING));
         placeholders.put("avgPingColor", theme.getValue(ThemeVal.GRAPH_AVG_PING));
         placeholders.put("timeZone", config.getTimeZoneOffsetHours());
-
-        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        
+        placeholders.put("versionButton", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("version", versionChecker.getCurrentVersion());
         placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
 

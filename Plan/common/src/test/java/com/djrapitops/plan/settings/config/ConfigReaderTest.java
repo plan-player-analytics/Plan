@@ -51,8 +51,30 @@ class ConfigReaderTest {
         }
     }
 
+
     @Test
-    void valueAfterAList2() {
+    void valueAfterAListQuoted() {
+        String read = "Test:\n" +
+                "  List:\n" +
+                "    - \"First\"\n" +
+                "    - \"Second\"\n" +
+                "    - \"Third\"\n" +
+                "  Value: \"Example\"";
+
+        try (ConfigReader reader = new ConfigReader(new Scanner(read))) {
+            Config readConfig = reader.read();
+
+            assertTrue(readConfig.getNode("Test.List").isPresent());
+            assertTrue(readConfig.getNode("Test.Value").isPresent());
+            assertFalse(readConfig.getNode("Test.List.Value").isPresent());
+
+            assertEquals("Example", readConfig.getString("Test.Value"));
+            assertEquals(Arrays.asList("First", "Second", "Third"), readConfig.getStringList("Test.List"));
+        }
+    }
+
+    @Test
+    void valueAfterAListRealWorld() {
         String read = "Plugins:\n" +
                 "  Factions:\n" +
                 "    HideFactions:\n" +

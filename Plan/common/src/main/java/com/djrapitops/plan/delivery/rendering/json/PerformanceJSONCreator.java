@@ -104,6 +104,9 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("server_downtime_7d", timeAmount.apply(tpsDataWeek.serverDownTime()));
         numbers.put("server_downtime_24h", timeAmount.apply(tpsDataDay.serverDownTime()));
 
+        numbers.put("players_30d", tpsDataMonth.averagePlayers());
+        numbers.put("players_7d", tpsDataWeek.averagePlayers());
+        numbers.put("players_24h", tpsDataDay.averagePlayers());
         numbers.put("tps_30d", format(tpsDataMonth.averageTPS()));
         numbers.put("tps_7d", format(tpsDataWeek.averageTPS()));
         numbers.put("tps_24h", format(tpsDataDay.averageTPS()));

@@ -47,7 +47,7 @@ public class ServerTableRowPatch extends Patch {
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ROW + "=?" +
                 GROUP_BY + TABLE_ID;
-        return query(new QueryStatement<Boolean>(columnCountPerTableSql) {
+        return query(new QueryStatement<>(columnCountPerTableSql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, 0);
@@ -92,7 +92,7 @@ public class ServerTableRowPatch extends Patch {
 
     public Map<Integer, List<Integer>> fetchTableRowIds() {
         String columnCountPerTableSql = SELECT + TABLE_ID + ',' + ID + FROM + TABLE_NAME;
-        return query(new QueryAllStatement<Map<Integer, List<Integer>>>(columnCountPerTableSql) {
+        return query(new QueryAllStatement<>(columnCountPerTableSql) {
             @Override
             public Map<Integer, List<Integer>> processResults(ResultSet set) throws SQLException {
                 HashMap<Integer, List<Integer>> rowsPerTableId = new HashMap<>();

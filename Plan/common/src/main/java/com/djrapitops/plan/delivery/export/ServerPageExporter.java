@@ -110,13 +110,15 @@ public class ServerPageExporter extends FileExporter {
         String html = StringUtils.replaceEach(page.toHtml(),
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance', true);",
-                        "loadServerCalendar, 'online-activity-overview', true);",
-                        "}, 'playerlist', true);"
+                        "loadserverCalendar, 'online-activity-overview', true);",
+                        "}, 'playerlist', true);",
+                        "<head>"
                 },
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance');",
-                        "loadServerCalendar, 'online-activity-overview');",
-                        "}, 'playerlist');"
+                        "loadserverCalendar, 'online-activity-overview');",
+                        "}, 'playerlist');",
+                        "<head><style>.refresh-element {display: none;}</style>"
                 });
 
         export(to, exportPaths.resolveExportPaths(html));
@@ -164,17 +166,15 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportJSON(Path toDirectory, String resource) throws IOException {
-        Optional<Response> found = getJSONResponse(resource);
-        if (!found.isPresent()) {
-            throw new NotFoundException(resource + " was not properly exported: not found");
-        }
+        Response response = getJSONResponse(resource)
+                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
                 StringUtils.replace(
-                        found.get().getAsString(),
+                        response.getAsString(),
                         StringEscapeUtils.escapeJson("../player"),
                         StringEscapeUtils.escapeJson(toRelativePathFromRoot("player"))
                 )
@@ -203,7 +203,6 @@ public class ServerPageExporter extends FileExporter {
                 "../css/style.css",
                 "../vendor/datatables/datatables.min.js",
                 "../vendor/datatables/datatables.min.css",
-                "../vendor/highcharts/modules/stock.js",
                 "../vendor/highcharts/modules/map.js",
                 "../vendor/highcharts/mapdata/world.js",
                 "../vendor/highcharts/modules/drilldown.js",

@@ -17,8 +17,8 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions;
 
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.icon.IconAccessor;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -67,16 +67,16 @@ public class StorePluginTransaction extends ThrowawayTransaction {
         String sql = "UPDATE " + ExtensionPluginTable.TABLE_NAME +
                 " SET " +
                 ExtensionPluginTable.LAST_UPDATED + "=?," +
-                ExtensionPluginTable.ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
+                ExtensionPluginTable.ICON_ID + "=?" +
                 WHERE + ExtensionPluginTable.PLUGIN_NAME + "=?" +
                 AND + ExtensionPluginTable.SERVER_UUID + "=?";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, time);
-                ExtensionIconTable.set3IconValuesToStatement(statement, 2, icon);
-                statement.setString(5, pluginName);
-                statement.setString(6, serverUUID.toString());
+                statement.setInt(2, IconAccessor.getId(icon));
+                statement.setString(3, pluginName);
+                statement.setString(4, serverUUID.toString());
             }
         };
     }
@@ -87,14 +87,14 @@ public class StorePluginTransaction extends ThrowawayTransaction {
                 ExtensionPluginTable.LAST_UPDATED + "," +
                 ExtensionPluginTable.SERVER_UUID + "," +
                 ExtensionPluginTable.ICON_ID +
-                ") VALUES (?,?,?," + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + ")";
+                ") VALUES (?,?,?,?)";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, pluginName);
                 statement.setLong(2, time);
                 statement.setString(3, serverUUID.toString());
-                ExtensionIconTable.set3IconValuesToStatement(statement, 4, icon);
+                statement.setInt(4, IconAccessor.getId(icon));
             }
         };
     }

@@ -113,15 +113,13 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
-        Optional<Response> found = getJSONResponse(resource);
-        if (!found.isPresent()) {
-            throw new NotFoundException(resource + " was not properly exported: no response");
-        }
+        Response response = getJSONResponse(resource)
+                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: no response"));
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
-        export(toDirectory.resolve(jsonResourceName), found.get().getBytes());
-        exportPaths.put("../v1/player?player=${encodeURIComponent(playerName)}", "./" + jsonResourceName);
+        export(toDirectory.resolve(jsonResourceName), response.getBytes());
+        exportPaths.put("../v1/player?player=${encodeURIComponent(playerUUID)}", "./" + jsonResourceName);
     }
 
     private String toJSONResourceName(String resource) {
@@ -143,9 +141,9 @@ public class PlayerPageExporter extends FileExporter {
                 "../img/Flaticon_circle.png",
                 "../css/sb-admin-2.css",
                 "../css/style.css",
+                "../css/noauth.css",
                 "../vendor/datatables/datatables.min.js",
                 "../vendor/datatables/datatables.min.css",
-                "../vendor/highcharts/modules/stock.js",
                 "../vendor/highcharts/modules/map.js",
                 "../vendor/highcharts/mapdata/world.js",
                 "../vendor/highcharts/modules/drilldown.js",

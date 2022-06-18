@@ -94,13 +94,13 @@ public class SunWebServer implements WebServer {
 
         initServer();
 
-        if (!addresses.getAccessAddress().isPresent()) {
+        if (addresses.getAccessAddress().isEmpty()) {
             logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_BAD_IP));
         }
 
         if (!isEnabled()) {
             if (config.isTrue(WebserverSettings.DISABLED)) {
-                logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
+                logger.info(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
             } else {
                 logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_PORT_BIND, port));
             }
@@ -160,7 +160,7 @@ public class SunWebServer implements WebServer {
             logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), address));
 
             boolean usingAlternativeIP = config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP);
-            if (!usingAlternativeIP && !addresses.getAccessAddress().isPresent()) {
+            if (!usingAlternativeIP && addresses.getAccessAddress().isEmpty()) {
                 logger.info("§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
             }
         } catch (BindException failedToBind) {

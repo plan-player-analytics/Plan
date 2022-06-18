@@ -57,17 +57,17 @@ public class BannedFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(InputFilterDto query) {
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
         List<String> selected = getSelected(query);
-        Set<UUID> uuids = new HashSet<>();
+        Set<Integer> userIds = new HashSet<>();
         String[] options = getOptionsArray();
 
         boolean includeBanned = selected.contains(options[0]);
         boolean includeNotBanned = selected.contains(options[1]);
 
         if (includeBanned && includeNotBanned) throw new CompleteSetException(); // Full set, no need for query
-        if (includeBanned) uuids.addAll(dbSystem.getDatabase().query(UserInfoQueries.uuidsOfBanned()));
-        if (includeNotBanned) uuids.addAll(dbSystem.getDatabase().query(UserInfoQueries.uuidsOfNotBanned()));
-        return uuids;
+        if (includeBanned) userIds.addAll(dbSystem.getDatabase().query(UserInfoQueries.userIdsOfBanned()));
+        if (includeNotBanned) userIds.addAll(dbSystem.getDatabase().query(UserInfoQueries.userIdsOfNotBanned()));
+        return userIds;
     }
 }

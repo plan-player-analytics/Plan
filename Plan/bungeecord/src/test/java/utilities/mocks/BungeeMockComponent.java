@@ -20,6 +20,7 @@ import com.djrapitops.plan.DaggerPlanBungeeComponent;
 import com.djrapitops.plan.PlanBungee;
 import com.djrapitops.plan.PlanBungeeComponent;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.storage.database.SQLDB;
 
 import java.nio.file.Path;
 
@@ -37,9 +38,10 @@ public class BungeeMockComponent {
 
     public BungeeMockComponent(Path tempDir) {
         this.tempDir = tempDir;
+        SQLDB.setDownloadDriver(false);
     }
 
-    public PlanBungee getPlanMock() throws Exception {
+    public PlanBungee getPlanMock() {
         if (planMock == null) {
             planMock = PlanBungeeMocker.setUp()
                     .withDataFolder(tempDir.toFile())
@@ -51,7 +53,7 @@ public class BungeeMockComponent {
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanBungee planMock = getPlanMock();
             component = DaggerPlanBungeeComponent.builder()

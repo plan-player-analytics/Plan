@@ -54,7 +54,7 @@ public class MySQLSchemaQueries {
                 FROM + "INFORMATION_SCHEMA.KEY_COLUMN_USAGE" +
                 WHERE + "REFERENCED_TABLE_SCHEMA = DATABASE()" +
                 AND + "REFERENCED_TABLE_NAME = ?";
-        return new QueryStatement<List<ForeignKeyConstraint>>(keySQL) {
+        return new QueryStatement<>(keySQL) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, referencedTable);
@@ -114,7 +114,7 @@ public class MySQLSchemaQueries {
                 FROM + "information_schema.COLUMNS" +
                 WHERE + "TABLE_NAME=? AND COLUMN_NAME=? AND TABLE_SCHEMA=DATABASE()";
 
-        return new QueryStatement<Integer>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, table);

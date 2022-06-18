@@ -22,8 +22,7 @@ import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
-import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.events.ShutdownDataPreservationTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -87,12 +86,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
     private void storeInDB(List<FinishedSession> finishedSessions) {
         if (!finishedSessions.isEmpty()) {
             try {
-                dbSystem.getDatabase().executeTransaction(new Transaction() {
-                    @Override
-                    protected void performOperations() {
-                        execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(finishedSessions));
-                    }
-                }).get();
+                dbSystem.getDatabase().executeTransaction(new ShutdownDataPreservationTransaction(finishedSessions)).get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             } catch (ExecutionException e) {
@@ -103,7 +97,11 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
 
     @Override
     public void run() {
-        storePreviouslyPreservedSessions();
+        try {
+            storePreviouslyPreservedSessions();
+        } finally {
+            cancel();
+        }
     }
 
     @Override

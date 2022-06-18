@@ -41,6 +41,9 @@ public class DataMap {
         return Optional.ofNullable(ofType.cast(data.get(ofType.getName())));
     }
 
+    public void remove(Class<?> ofType) {
+        data.remove(ofType.getName());
+    }
 
     @Override
     public boolean equals(Object o) {

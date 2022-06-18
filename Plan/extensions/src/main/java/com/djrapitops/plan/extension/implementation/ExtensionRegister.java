@@ -68,25 +68,27 @@ public class ExtensionRegister {
         register(new DKBansExtensionFactory(), DKBansExtensionFactory::createExtension, DKBansExtensionFactory::registerListener);
         register(new DKCoinsExtensionFactory(), DKCoinsExtensionFactory::createExtension, DKCoinsExtensionFactory::registerListener);
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createExtension, EssentialsExtensionFactory::registerUpdateListeners);
+        register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createEcoExtension, EssentialsExtensionFactory::registerEconomyUpdateListeners);
         register(new FactionsExtensionFactory(), FactionsExtensionFactory::createExtension);
         register(new FactionsUUIDExtensionFactory(), FactionsUUIDExtensionFactory::createExtension, FactionsUUIDExtensionFactory::registerExpansion);
         register(new FastLoginExtensionFactory(), FastLoginExtensionFactory::createExtension);
         register(new FloodgateExtensionFactory(), FloodgateExtensionFactory::createExtension, FloodgateExtensionFactory::registerListener);
         register(new GriefDefenderExtensionFactory(), GriefDefenderExtensionFactory::createExtension);
         register(new GriefPreventionExtensionFactory(), GriefPreventionExtensionFactory::createExtension);
-        register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension);
+        //register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension); // TODO: update for Sponge API 8
         register(new HeroesExtensionFactory(), HeroesExtensionFactory::createExtension);
         register(new KingdomsXExtensionFactory(), KingdomsXExtensionFactory::createExtension);
         register(new JobsExtensionFactory(), JobsExtensionFactory::createExtension);
         register(new LandsExtensionFactory(), LandsExtensionFactory::createExtension);
+        register(new LibertyBansExtensionFactory(), LibertyBansExtensionFactory::createExtension, LibertyBansExtensionFactory::registerListener);
         register(new LitebansExtensionFactory(), LitebansExtensionFactory::createExtension, LitebansExtensionFactory::registerEvents);
         register(new LogBlockExtensionFactory(), LogBlockExtensionFactory::createExtension);
-        register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension);
+        register(new LuckPermsExtensionFactory(), LuckPermsExtensionFactory::createExtension, LuckPermsExtensionFactory::registerListeners);
         register(new MarriageMasterExtensionFactory(), MarriageMasterExtensionFactory::createExtension);
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension, McMMOExtensionFactory::registerExpansion);
         registerMany(new MinigameLibExtensionFactory(), MinigameLibExtensionFactory::createExtensions);
         register(new MyPetExtensionFactory(), MyPetExtensionFactory::createExtension);
-        register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
+        //register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension); // TODO: update for Sponge API 8
         register(new NuVotifierExtensionFactory(), NuVotifierExtensionFactory::createExtension);
         register(new PlaceholderAPIExtensionFactory(), PlaceholderAPIExtensionFactory::createExtension);
         register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);

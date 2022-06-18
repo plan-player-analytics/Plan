@@ -96,23 +96,27 @@ public class PlayersPageExporter extends FileExporter {
 
         // Fixes refreshingJsonRequest ignoring old data of export
         String html = StringUtils.replaceEach(page.toHtml(),
-                new String[]{"}, 'playerlist', true);"},
-                new String[]{"}, 'playerlist');"});
+                new String[]{
+                        "}, 'playerlist', true);",
+                        "<head>"
+                },
+                new String[]{
+                        "}, 'playerlist');",
+                        "<head><style>.refresh-element {display: none;}</style>"
+                });
 
         export(to, exportPaths.resolveExportPaths(html));
     }
 
     private void exportJSON(Path toDirectory) throws IOException {
-        Optional<Response> found = getJSONResponse("players");
-        if (!found.isPresent()) {
-            throw new NotFoundException("players page was not properly exported: not found");
-        }
+        Response response = getJSONResponse("players")
+                .orElseThrow(() -> new NotFoundException("players page was not properly exported: not found"));
 
         String jsonResourceName = toFileName(toJSONResourceName("players")) + ".json";
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
-                StringUtils.replace(found.get().getAsString(), "../player", toRelativePathFromRoot("player"))
+                StringUtils.replace(response.getAsString(), "../player", toRelativePathFromRoot("player"))
         );
         exportPaths.put("./v1/players", toRelativePathFromRoot("data/" + jsonResourceName));
     }
@@ -136,6 +140,7 @@ public class PlayersPageExporter extends FileExporter {
                 "img/Flaticon_circle.png",
                 "css/sb-admin-2.css",
                 "css/style.css",
+                "css/noauth.css",
                 "vendor/datatables/datatables.min.js",
                 "vendor/datatables/datatables.min.css",
                 "vendor/fontawesome-free/css/all.min.css",

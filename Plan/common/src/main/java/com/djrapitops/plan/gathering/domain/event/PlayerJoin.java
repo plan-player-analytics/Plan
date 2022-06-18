@@ -16,68 +16,76 @@
  */
 package com.djrapitops.plan.gathering.domain.event;
 
+import com.djrapitops.plan.gathering.domain.PlayerMetadata;
 import com.djrapitops.plan.identification.ServerUUID;
 
-import java.net.InetAddress;
 import java.util.UUID;
 
 public class PlayerJoin {
 
     private final UUID playerUUID;
-    private final String playerName;
-    private final String displayName;
-    private final InetAddress ipAddress;
-
     private final ServerUUID serverUUID;
-    private final String world;
-    private final String gameMode;
+    private final PlayerMetadata playerMetadata;
 
     private final long time;
 
-    public PlayerJoin(
-            UUID playerUUID, String playerName, String displayName, InetAddress ipAddress,
-            ServerUUID serverUUID, String world, String gameMode,
-            long time
-    ) {
+    public PlayerJoin(UUID playerUUID, ServerUUID serverUUID, PlayerMetadata playerMetadata, long time) {
         this.playerUUID = playerUUID;
-        this.playerName = playerName;
-        this.displayName = displayName;
-        this.ipAddress = ipAddress;
         this.serverUUID = serverUUID;
-        this.world = world;
-        this.gameMode = gameMode;
+        this.playerMetadata = playerMetadata;
         this.time = time;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public UUID getPlayerUUID() {
         return playerUUID;
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public InetAddress getIpAddress() {
-        return ipAddress;
-    }
-
     public ServerUUID getServerUUID() {
         return serverUUID;
     }
 
-    public String getWorld() {
-        return world;
-    }
-
-    public String getGameMode() {
-        return gameMode;
+    public PlayerMetadata getPlayerMetadata() {
+        return playerMetadata;
     }
 
     public long getTime() {
         return time;
+    }
+
+    public static final class Builder {
+        private UUID playerUUID;
+        private ServerUUID serverUUID;
+        private PlayerMetadata playerMetadata;
+        private long time;
+
+        private Builder() {}
+
+        public static Builder aPlayerJoin() {return new Builder();}
+
+        public Builder playerUUID(UUID playerUUID) {
+            this.playerUUID = playerUUID;
+            return this;
+        }
+
+        public Builder serverUUID(ServerUUID serverUUID) {
+            this.serverUUID = serverUUID;
+            return this;
+        }
+
+        public Builder playerMetadata(PlayerMetadata playerMetadata) {
+            this.playerMetadata = playerMetadata;
+            return this;
+        }
+
+        public Builder time(long time) {
+            this.time = time;
+            return this;
+        }
+
+        public PlayerJoin build() {return new PlayerJoin(playerUUID, serverUUID, playerMetadata, time);}
     }
 }

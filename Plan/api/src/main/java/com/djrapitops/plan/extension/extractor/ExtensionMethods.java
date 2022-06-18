@@ -142,4 +142,15 @@ public class ExtensionMethods {
                 ", dataBuilderProviders=" + dataBuilderProviders +
                 '}';
     }
+
+    public boolean isEmpty() {
+        return booleanProviders.isEmpty()
+                && numberProviders.isEmpty()
+                && doubleProviders.isEmpty()
+                && percentageProviders.isEmpty()
+                && stringProviders.isEmpty()
+                && tableProviders.isEmpty()
+                && groupProviders.isEmpty()
+                && dataBuilderProviders.isEmpty();
+    }
 }

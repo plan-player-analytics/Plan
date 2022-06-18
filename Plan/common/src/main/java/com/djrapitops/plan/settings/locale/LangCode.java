@@ -25,20 +25,20 @@ public enum LangCode {
 
     CUSTOM("Custom", ""),
     EN("English", "AuroraLS3"),
-    ES("Spanish", "Catalina, itaquito, Elguerrero & 4drian3d"),
-    CN("Simplified Chinese", "f0rb1d (\u4f5b\u58c1\u706f), qsefthuopq, shaokeyibb, Fur_xia, 10935336 & SkipM4"),
-    CS("Czech", "Shadowhackercz, QuakyCZ, MrFriggo & WolverStones"),
+    ES("Español", "Catalina, itaquito, Elguerrero & 4drian3d"),
+    CN("\u6C49\u8BED", "f0rb1d (\u4f5b\u58c1\u706f), qsefthuopq, shaokeyibb, Fur_xia, 10935336 & SkipM4"), // Simplified Chinese
+    CS("čeština", "Shadowhackercz, QuakyCZ, MrFriggo & WolverStones"),
     DE("Deutsch", "Eyremba, fuzzlemann, Morsmorse & hallo1142"),
-    FI("Finnish", "AuroraLS3"),
-    FR("French", "CyanTech, Aurelien & Nogapra"),
-    IT("Italian", "Malachiel & Mastory_Md5"),
-    JA("Japanese", "yukieji"),
-    KO("Korean", "Guinness_Akihiko"),
-    NL("Dutch", "Sander0542"),
-    RU("Russian", "Saph1s, Perhun_Pak & BratishkaErik"),
-    TR("Turkish", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
-    PT_BR("Portuguese (Brazil)", "jvmuller"),
-    ZH_TW("Traditional Chinese", "\u6d1b\u4f0a & zisunny104");
+    FI("suomi", "AuroraLS3, KasperiP"),
+    FR("français", "CyanTech, Aurelien & Nogapra"),
+    IT("Italiano", "Malachiel & Mastory_Md5"),
+    JA("\u65E5\u672C\u8A9E", "yukieji"),
+    KO("\uD55C\uAD6D\uC5B4", "Guinness_Akihiko"),
+    NL("Nederlands", "Sander0542"),
+    RU("русский", "Saph1s, Perhun_Pak & BratishkaErik"),
+    TR("Türkçe", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
+    PT_BR("Português", "jvmuller"),
+    ZH_TW("\u6F22\u8A9E", "\u6d1b\u4f0a & zisunny104");
 
     private final String name;
     private final String authors;
@@ -65,6 +65,6 @@ public enum LangCode {
     }
 
     public String getFileName() {
-        return "locale_" + name() + ".txt";
+        return "locale_" + name() + ".yml";
     }
 }

@@ -253,14 +253,14 @@ function loadservers(json, error) {
         return;
     }
 
-    let navServersHtml = '';
+    let navserversHtml = '';
     let serversHtml = '';
     for (let i = 0; i < servers.length; i++) {
-        navServersHtml += addserverToNav(servers[i]);
+        navserversHtml += addserverToNav(servers[i]);
         serversHtml += createnetworkserverBox(i, servers[i]);
     }
 
-    document.getElementById("navSrvContainer").innerHTML = navServersHtml;
+    document.getElementById("navSrvContainer").innerHTML = navserversHtml;
     document.getElementById("data_server_list").innerHTML = serversHtml;
 
     for (let i = 0; i < servers.length; i++) {
@@ -450,31 +450,31 @@ function loadJoinAddressPie(json, error) {
     }
 }
 
-function loadPerformanceServerOptions() {
+function loadperformanceserverOptions() {
     const refreshElement = document.querySelector(`#performance .refresh-element`);
     refreshElement.querySelector('i').addEventListener('click', () => {
         if (refreshElement.querySelector('.refresh-notice').innerHTML.length) {
             return;
         }
-        onSelectPerformanceServers();
+        onSelectperformanceservers();
         refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
     });
     const selector = document.getElementById('performance-server-selector');
-    jsonRequest('./v1/network/listServers', function (json, error) {
+    jsonRequest('./v1/network/serverOptions', function (json, error) {
         if (json) {
             let options = ``;
             for (let server of json.servers) {
                 options += `<option${server.proxy ? ' selected' : ''} data-plan-server-uuid="${server.serverUUID}">${server.serverName}</option>`
             }
             selector.innerHTML = options;
-            onSelectPerformanceServers();
+            onSelectperformanceservers();
         } else if (error) {
             selector.innerText = `Failed to load server list: ${error}`
         }
     });
 }
 
-async function onSelectPerformanceServers() {
+async function onSelectperformanceservers() {
     const selector = document.getElementById('performance-server-selector');
     const selectedServerUUIDs = [];
 

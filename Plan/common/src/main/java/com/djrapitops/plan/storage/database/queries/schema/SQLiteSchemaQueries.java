@@ -49,7 +49,7 @@ public class SQLiteSchemaQueries {
     }
 
     public static Query<Boolean> doesColumnExist(String tableName, String columnName) {
-        return new QueryAllStatement<Boolean>("PRAGMA table_info(" + tableName + ')') {
+        return new QueryAllStatement<>("PRAGMA table_info(" + tableName + ')') {
             @Override
             public Boolean processResults(ResultSet set) throws SQLException {
                 while (set.next()) {

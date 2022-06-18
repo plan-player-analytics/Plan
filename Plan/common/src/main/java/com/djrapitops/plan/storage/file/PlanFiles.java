@@ -92,7 +92,7 @@ public class PlanFiles implements SubSystem {
     }
 
     public File getLocaleFile() {
-        return getFileFromPluginFolder("locale.txt");
+        return getFileFromPluginFolder("locale.yml");
     }
 
     public File getFileFromPluginFolder(String name) {

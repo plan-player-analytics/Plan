@@ -58,9 +58,12 @@ public class ConfigStoreTask extends TaskSystem.Task {
 
     @Override
     public void run() {
-        long lastModified = files.getConfigFile().lastModified();
-        dbSystem.getDatabase().executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), config, lastModified));
-        cancel();
+        try {
+            long lastModified = files.getConfigFile().lastModified();
+            dbSystem.getDatabase().executeTransaction(new StoreConfigTransaction(serverInfo.getServerUUID(), config, lastModified));
+        } finally {
+            cancel();
+        }
     }
 
     @Override

@@ -58,6 +58,10 @@ public class ExtensionSettings {
         return section.getBoolean(pluginName + ".Enabled");
     }
 
+    public void setEnabled(String pluginName, boolean value) {
+        getPluginsSection().set(pluginName + ".Enabled", value);
+    }
+
     public Set<String> getDisabled() {
         ConfigNode section = getPluginsSection();
 

@@ -54,7 +54,8 @@ public class StoreServerInformationTransaction extends Transaction {
                 statement.setString(3, server.getWebAddress());
                 statement.setBoolean(4, true);
                 statement.setBoolean(5, server.isProxy());
-                statement.setString(6, serverUUIDString);
+                statement.setString(6, server.getPlanVersion());
+                statement.setString(7, serverUUIDString);
             }
         };
     }
@@ -68,6 +69,7 @@ public class StoreServerInformationTransaction extends Transaction {
                 statement.setString(3, server.getWebAddress());
                 statement.setBoolean(4, true);
                 statement.setBoolean(5, server.isProxy());
+                statement.setString(6, server.getPlanVersion());
             }
         };
     }

@@ -66,13 +66,13 @@ public class ConfigWriter {
         if (outputPath == null) throw new IllegalStateException("Output path was null.");
 
         ConfigNode storedParent = writing.parent;
-        writing.updateParent(null);
+        writing.updateParent(null); // Ensure that the node is written as the root node (Paths match)
 
         Path dir = outputPath.getParent();
         if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
         Files.write(outputPath, createLines(writing), StandardCharsets.UTF_8, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 
-        writing.updateParent(storedParent);
+        writing.updateParent(storedParent); // Restore state of the config node
     }
 
     /**
@@ -171,8 +171,6 @@ public class ConfigWriter {
     }
 
     private void indent(int indent, StringBuilder lineBuilder) {
-        for (int i = 0; i < indent; i++) {
-            lineBuilder.append(' ');
-        }
+        lineBuilder.append(" ".repeat(Math.max(0, indent)));
     }
 }

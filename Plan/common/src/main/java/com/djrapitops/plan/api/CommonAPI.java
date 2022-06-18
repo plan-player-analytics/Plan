@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).
  */
 @Singleton
-@Deprecated
+@Deprecated(forRemoval = true, since = "5.0")
 public class CommonAPI implements PlanAPI {
 
     private final DBSystem dbSystem;
@@ -107,7 +107,7 @@ public class CommonAPI implements PlanAPI {
 
     @Override
     public ServerContainer fetchServerContainer(UUID serverUUID) {
-        return new ServerContainer(new com.djrapitops.plan.delivery.domain.container.ServerContainer());
+        return new ServerContainer();
     }
 
     @Override

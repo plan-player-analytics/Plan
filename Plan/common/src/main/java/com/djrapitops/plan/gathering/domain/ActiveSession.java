@@ -32,6 +32,8 @@ public class ActiveSession {
     private final DataMap extraData;
     private long afkTime;
 
+    private long lastMovementForAfkCalculation;
+
     public ActiveSession(UUID playerUUID, ServerUUID serverUUID, long start, String world, String gameMode) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
@@ -43,10 +45,14 @@ public class ActiveSession {
         extraData.put(MobKillCounter.class, new MobKillCounter());
         extraData.put(DeathCounter.class, new DeathCounter());
         extraData.put(PlayerKills.class, new PlayerKills());
+
+        lastMovementForAfkCalculation = start;
     }
 
     public static ActiveSession fromPlayerJoin(PlayerJoin join) {
-        return new ActiveSession(join.getPlayerUUID(), join.getServerUUID(), join.getTime(), join.getWorld(), join.getGameMode());
+        return new ActiveSession(join.getPlayerUUID(), join.getServerUUID(), join.getTime(),
+                join.getPlayerMetadata().getWorld().orElse("Unspecified"),
+                join.getPlayerMetadata().getGameMode().orElse("Unknown"));
     }
 
     public FinishedSession toFinishedSessionFromStillActive() {
@@ -143,6 +149,14 @@ public class ActiveSession {
                 ", afkTime=" + afkTime +
                 ", extraData=" + extraData +
                 '}';
+    }
+
+    public long getLastMovementForAfkCalculation() {
+        return lastMovementForAfkCalculation;
+    }
+
+    public void setLastMovementForAfkCalculation(long lastMovementForAfkCalculation) {
+        this.lastMovementForAfkCalculation = lastMovementForAfkCalculation;
     }
 
     public static class FirstSession {}

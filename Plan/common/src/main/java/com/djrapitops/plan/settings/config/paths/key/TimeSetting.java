@@ -62,7 +62,7 @@ public class TimeSetting extends Setting<Long> {
             TimeUnit unit = TimeUnit.valueOf(unitName.toUpperCase());
             return unit.toMillis(duration);
         } catch (IllegalArgumentException e) {
-            return -1L;
+            throw new IllegalStateException("Config value for " + path + ".Unit has a bad value: " + e.getMessage());
         }
     }
 }

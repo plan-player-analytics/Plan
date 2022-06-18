@@ -17,67 +17,60 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.utilities.java.TriConsumer;
 
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/**
- * Service for sourcing, mapping and consuming data.
- * <p>
- * The service is in charge of two data flows:
- * - push, given to consumers
- * - pull, obtained from sources
- * <p>
- * The mappers facilitate a one way type transformation if needed.
- * <p>
- * The interface is very abstract about how data is obtained,
- * but here are my general ideas of where the abstraction is coming from.
- * - push cause one or multiple consumers to modify stored data
- * - pull cause one or multiple suppliers to fetch stored data
- * - mappers are stateless type transformers in memory
- * <p>
- * Example use-case:
- * - PlayerJoinEvent is mapped to a generic event
- * - that generic event is then consumed and mapped until the data is in a database.
- * <p>
- * - Some kind of data is wanted to place on a web page
- * - It is requested and the suppliers and mappers give the wanted type of data.
- * <p>
- * Further research needed:
- * - Can this limited type system represent types of data that need parameters
- * (such as differentiate between two servers data)
- */
 public interface DataService {
 
-    <M> DataService push(Class<M> type, M data);
-
-    <S> Optional<S> pull(Class<S> type);
-
-    <S, P> Optional<S> pull(Class<S> type, P parameter);
-
-    <A, B> B mapTo(Class<B> toType, A from);
-
-    default <S, P> Optional<S> pull(Class<S> type, Class<P> parameterType) {
-        return pull(type, () -> pull(parameterType).orElse(null));
+    default <K, T> void push(K identifier, T value) {
+        push(identifier, value, (Class<T>) value.getClass());
     }
 
-    default <S, P> Optional<S> pull(Class<S> type, Supplier<P> parameter) {
-        return pull(type, parameter.get());
+    <K, T> void push(K identifier, T value, Class<T> type);
+
+    default <K, A, B> DataService registerOptionalMapper(Class<K> identifierType, Class<A> from, Class<B> to, BiFunction<K, A, Optional<B>> mapper) {
+        return registerMapper(identifierType, from, to, (id, value) -> mapper.apply(id, value).orElse(null));
     }
 
-    <A, B> DataService registerMapper(Class<A> typeA, Class<B> typeB, Function<A, B> mapper);
+    <K, A, B> DataService registerMapper(Class<K> identifierType, Class<A> from, Class<B> to, BiFunction<K, A, B> mapper);
 
-    <M> DataService registerConsumer(Class<M> type, Consumer<M> consumer);
+    <K, A, B> DataService registerMapper(Class<K> identifierType, Class<A> from, Class<B> to, Function<A, B> mapper);
 
-    <S> DataService registerSupplier(Class<S> type, Supplier<S> supplier);
+    default <K, A, B> DataService registerDataServiceMapper(Class<K> identifierType, Class<A> from, Class<B> to, BiFunction<DataService, A, B> mapper) {
+        return registerMapper(identifierType, from, to, value -> mapper.apply(this, value));
+    }
 
-    <P, S> DataService registerSupplier(Class<S> type, Class<P> parameterType, Function<P, S> supplierWithParameter);
+    <K, Y, A, B> DataService registerMapper(Class<K> fromIdentifier, Class<A> from, Class<Y> toIdentifier, Class<B> to, TriConsumer<K, A, BiConsumer<Y, B>> mapper);
 
-    <P, S> DataService registerDBSupplier(Class<S> type, Class<P> parameterType, Function<P, Query<S>> supplierWithParameter);
+    <K, T> DataService registerSink(Class<K> identifierType, Class<T> type, BiConsumer<K, T> consumer);
 
-    interface Mapping {
+    <K, T> DataService registerDatabaseSink(Class<K> identifierType, Class<T> type, BiFunction<K, T, Transaction> consumer);
+
+    <K, T> Optional<T> pull(Class<T> type, K identifier);
+
+    <T> Optional<T> pullWithoutId(Class<T> type);
+
+    <K, T> DataService registerPullSource(Class<K> identifierType, Class<T> type, Function<K, T> source);
+
+    default <K, T> DataService registerOptionalPullSource(Class<K> identifierType, Class<T> type, Function<K, Optional<T>> source) {
+        return registerPullSource(identifierType, type, id -> source.apply(id).orElse(null));
+    }
+
+    <K, T> DataService registerDatabasePullSource(Class<K> identifierType, Class<T> type, Function<K, Query<T>> source);
+
+    <T> DataService registerPullSource(Class<T> type, Supplier<T> source);
+
+    <T> DataService registerDatabasePullSource(Class<T> type, Supplier<Query<T>> source);
+
+    <K, A, B> Optional<B> map(K identifier, A value, Class<B> toType);
+
+    interface Pipeline {
         void register(DataService service);
     }
 

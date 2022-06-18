@@ -632,7 +632,8 @@ function stackChart(id, categories, series, label) {
             tickmarkPlacement: 'on',
             title: {
                 enabled: false
-            }
+            },
+            ordinal: false
         },
         yAxis: {
             title: {

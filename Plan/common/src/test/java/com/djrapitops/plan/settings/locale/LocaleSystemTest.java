@@ -23,6 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class LocaleSystemTest {
 
     @Test
+    void noKeyCollisions() {
+        assertDoesNotThrow(LocaleSystem::getKeys);
+    }
+
+    @Test
     void noIdentifierCollisions() {
         assertDoesNotThrow(LocaleSystem::getIdentifiers);
     }

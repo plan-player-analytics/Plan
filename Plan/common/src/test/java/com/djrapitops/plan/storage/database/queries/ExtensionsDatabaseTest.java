@@ -37,6 +37,8 @@ import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,6 +88,8 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void extensionPlayerValuesAreStored() {
+        db().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
         ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new PlayerExtension());
@@ -118,7 +122,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         // Store a session to check against issue https://github.com/plan-player-analytics/Plan/issues/1039
         ActiveSession session = new ActiveSession(playerUUID, serverUUID(), 32345L, worlds[0], "SURVIVAL");
         session.getExtraData().put(WorldTimes.class, RandomData.randomWorldTimes(worlds));
-        execute(DataStoreQueries.storeSession(session.toFinishedSession(42345L)));
+        db().executeTransaction(new StoreSessionTransaction(session.toFinishedSession(42345L)));
 
         Map<UUID, ExtensionTabData> result = db().query(new ExtensionServerTableDataQuery(serverUUID(), 50));
         assertEquals(1, result.size());

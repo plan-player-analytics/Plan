@@ -193,7 +193,7 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ID + "=?" +
                 AND + SERVER_UUID + "=?";
-        return new QueryStatement<Integer>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, tableID);
@@ -222,7 +222,7 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
                 WHERE + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 AND + ExtensionTableProviderTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
                 " LIMIT 1";
-        return new QueryStatement<Integer>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 ExtensionTableProviderTable.set3PluginValuesToStatement(statement, 1, providerName, pluginName, serverUUID);
