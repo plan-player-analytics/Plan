@@ -51,10 +51,7 @@ public class PlayerKeys {
     public static final Key<WorldTimes> WORLD_TIMES = CommonKeys.WORLD_TIMES;
 
     public static final Key<List<PlayerKill>> PLAYER_KILLS = CommonKeys.PLAYER_KILLS;
-    public static final Key<List<PlayerKill>> PLAYER_DEATHS_KILLS = new Key<>(new Type<>() {
-    }, "player_deaths_kills");
-    @Deprecated(forRemoval = true, since = "5.0")
-    public static final Key<List<PlayerDeath>> PLAYER_DEATHS = CommonKeys.PLAYER_DEATHS;
+    public static final Key<List<PlayerKill>> PLAYER_DEATHS_KILLS = new Key<>(new Type<>() {}, "player_deaths_kills");
     public static final Key<Integer> PLAYER_KILL_COUNT = CommonKeys.PLAYER_KILL_COUNT;
     public static final Key<Integer> MOB_KILL_COUNT = CommonKeys.MOB_KILL_COUNT;
     public static final Key<Integer> DEATH_COUNT = CommonKeys.DEATH_COUNT;

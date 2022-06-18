@@ -17,7 +17,9 @@
 package com.djrapitops.plan.delivery.domain.keys;
 
 import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
-import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.gathering.domain.Ping;
+import com.djrapitops.plan.gathering.domain.WorldTimes;
 
 import java.util.List;
 
@@ -40,16 +42,8 @@ public class PerServerKeys {
     public static final Key<List<FinishedSession>> SESSIONS = CommonKeys.SESSIONS;
     public static final Key<WorldTimes> WORLD_TIMES = CommonKeys.WORLD_TIMES;
 
-    @Deprecated
-    public static final Key<List<PlayerKill>> PLAYER_KILLS = CommonKeys.PLAYER_KILLS;
-    @Deprecated
-    public static final Key<List<PlayerDeath>> PLAYER_DEATHS = CommonKeys.PLAYER_DEATHS;
     public static final Key<Integer> PLAYER_KILL_COUNT = CommonKeys.PLAYER_KILL_COUNT;
-    @Deprecated
-    public static final Key<Integer> PLAYER_DEATH_COUNT = CommonKeys.PLAYER_DEATH_COUNT;
     public static final Key<Integer> MOB_KILL_COUNT = CommonKeys.MOB_KILL_COUNT;
-    @Deprecated
-    public static final Key<Integer> MOB_DEATH_COUNT = CommonKeys.MOB_DEATH_COUNT;
     public static final Key<Integer> DEATH_COUNT = CommonKeys.DEATH_COUNT;
     public static final Key<Long> LAST_SEEN = CommonKeys.LAST_SEEN;
 

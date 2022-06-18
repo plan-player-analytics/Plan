@@ -16,12 +16,13 @@
  */
 package com.djrapitops.plan.delivery.domain.keys;
 
-import com.djrapitops.plan.delivery.domain.mutators.PlayersMutator;
-import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
-import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
-import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.gathering.domain.Ping;
+import com.djrapitops.plan.gathering.domain.PlayerKill;
+import com.djrapitops.plan.gathering.domain.WorldTimes;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Class holding Key objects that are commonly used across multiple DataContainers.
@@ -44,23 +45,13 @@ public class CommonKeys {
     public static final Key<WorldTimes> WORLD_TIMES = new Key<>(WorldTimes.class, "world_times");
     public static final PlaceholderKey<Long> LAST_SEEN = new PlaceholderKey<>(Long.class, "lastSeen");
 
-    @Deprecated(forRemoval = true, since = "5.0")
-    public static final Key<List<PlayerDeath>> PLAYER_DEATHS = new Key<>(new Type<>() {}, "player_deaths");
     public static final Key<List<PlayerKill>> PLAYER_KILLS = new Key<>(new Type<>() {}, "player_kills");
     public static final Key<Integer> PLAYER_KILL_COUNT = new Key<>(Integer.class, "player_kill_count");
-    public static final Key<Integer> PLAYER_DEATH_COUNT = new Key<>(Integer.class, "player_death_count");
     public static final Key<Integer> MOB_KILL_COUNT = new Key<>(Integer.class, "mob_kill_count");
-    public static final Key<Integer> MOB_DEATH_COUNT = new Key<>(Integer.class, "mob_death_count");
     public static final Key<Integer> DEATH_COUNT = new Key<>(Integer.class, "death_count");
 
     public static final Key<Boolean> BANNED = new Key<>(Boolean.class, "banned");
     public static final Key<Boolean> OPERATOR = new Key<>(Boolean.class, "operator");
     public static final Key<String> JOIN_ADDRESS = new Key<>(String.class, "join_address");
-
-    public static final Key<SessionsMutator> SESSIONS_MUTATOR = new Key<>(SessionsMutator.class, "SESSIONS_MUTATOR");
-    public static final Key<TPSMutator> TPS_MUTATOR = new Key<>(TPSMutator.class, "TPS_MUTATOR");
-    public static final Key<PlayersMutator> PLAYERS_MUTATOR = new Key<>(PlayersMutator.class, "PLAYERS_MUTATOR");
-
-    public static final Key<TreeMap<Long, Map<String, Set<UUID>>>> ACTIVITY_DATA = new Key<>(new Type<>() {}, "ACTIVITY_DATA");
 
 }
