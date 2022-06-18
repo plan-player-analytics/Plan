@@ -8,7 +8,7 @@ compileJava {
     options.release = 8
 }
 
-ext.apiVersion = '5.4-R0.1'
+ext.apiVersion = '5.5-R0.1'
 
 publishing {
     repositories {
