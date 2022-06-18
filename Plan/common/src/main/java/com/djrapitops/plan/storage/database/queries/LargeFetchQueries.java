@@ -66,7 +66,7 @@ public class LargeFetchQueries {
                 FROM + TPSTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID;
 
-        return new QueryAllStatement<Map<ServerUUID, List<TPS>>>(sql, 50000) {
+        return new QueryAllStatement<>(sql, 50000) {
             @Override
             public Map<ServerUUID, List<TPS>> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, List<TPS>> serverMap = new HashMap<>();
@@ -101,7 +101,7 @@ public class LargeFetchQueries {
     public static Query<Map<ServerUUID, Collection<String>>> fetchAllWorldNames() {
         String sql = SELECT + '*' + FROM + WorldTable.TABLE_NAME;
 
-        return new QueryAllStatement<Map<ServerUUID, Collection<String>>>(sql, 1000) {
+        return new QueryAllStatement<>(sql, 1000) {
             @Override
             public Map<ServerUUID, Collection<String>> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, Collection<String>> worldMap = new HashMap<>();

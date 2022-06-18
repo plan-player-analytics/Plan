@@ -47,7 +47,7 @@ public class ServerQueries {
 
     public static Query<Collection<Server>> fetchUninstalledServerInformation() {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME + WHERE + ServerTable.INSTALLED + "=?";
-        return new QueryStatement<Collection<Server>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, false);
@@ -78,7 +78,7 @@ public class ServerQueries {
     public static Query<Map<ServerUUID, Server>> fetchPlanServerInformation() {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME + WHERE + ServerTable.INSTALLED + "=?";
 
-        return new QueryStatement<Map<ServerUUID, Server>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);
@@ -118,7 +118,7 @@ public class ServerQueries {
                 OR + ServerTable.ID + "=?)" +
                 AND + ServerTable.INSTALLED + "=?" +
                 LIMIT + '1';
-        return new QueryStatement<Optional<Server>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, identifier);
@@ -150,7 +150,7 @@ public class ServerQueries {
                 WHERE + ServerTable.INSTALLED + "=?" +
                 AND + ServerTable.PROXY + "=?" +
                 LIMIT + '1';
-        return new QueryStatement<Optional<Server>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);
@@ -179,7 +179,7 @@ public class ServerQueries {
                 .where(ServerTable.PROXY + "=0")
                 .toString();
 
-        return new QueryAllStatement<List<String>>(sql) {
+        return new QueryAllStatement<>(sql) {
             @Override
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> names = new ArrayList<>();
@@ -196,7 +196,7 @@ public class ServerQueries {
                         ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME)
                 .toString();
 
-        return new QueryAllStatement<Map<ServerUUID, String>>(sql) {
+        return new QueryAllStatement<>(sql) {
             @Override
             public Map<ServerUUID, String> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, String> names = new HashMap<>();
@@ -219,7 +219,7 @@ public class ServerQueries {
                 OR + ServerTable.ID + "=?)" +
                 AND + ServerTable.INSTALLED + "=?" +
                 LIMIT + '1';
-        return new QueryStatement<List<Server>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, '%' + identifier + '%');
@@ -250,7 +250,7 @@ public class ServerQueries {
     public static Query<Integer> fetchServerCount() {
         String sql = SELECT + "COUNT(1) as c" + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?";
-        return new QueryStatement<Integer>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);
@@ -266,7 +266,7 @@ public class ServerQueries {
     public static Query<Integer> fetchBiggestServerID() {
         String sql = SELECT + "MAX(" + ServerTable.ID + ") as max_id" + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?";
-        return new QueryStatement<Integer>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);

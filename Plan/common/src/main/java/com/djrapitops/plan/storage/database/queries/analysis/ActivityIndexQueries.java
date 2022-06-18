@@ -131,7 +131,7 @@ public class ActivityIndexQueries {
                 WHERE + "i.activity_index>=?" +
                 AND + "i.activity_index<?";
 
-        return new QueryStatement<Integer>(selectCount) {
+        return new QueryStatement<>(selectCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, serverUUID, date);
@@ -157,7 +157,7 @@ public class ActivityIndexQueries {
                 WHERE + "u." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + "u." + UserInfoTable.REGISTERED + "<=?";
 
-        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
+        return new QueryStatement<>(selectIndexes) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, date);
@@ -190,7 +190,7 @@ public class ActivityIndexQueries {
                 AND + "q2.activity_index>=?" +
                 AND + "q2.activity_index<?";
 
-        return new QueryStatement<Integer>(selectActivePlayerCount) {
+        return new QueryStatement<>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, before);
@@ -228,7 +228,7 @@ public class ActivityIndexQueries {
                 AND + "q4.activity_index>=?" +
                 AND + "q4.activity_index<?";
 
-        return new QueryStatement<Integer>(selectActivePlayerCount) {
+        return new QueryStatement<>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, start);
@@ -361,7 +361,7 @@ public class ActivityIndexQueries {
                 FROM + '(' + selectNewUUIDs + ") n" +
                 INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_ID + "=a." + SessionsTable.USER_ID;
 
-        return new QueryStatement<Collection<ActivityIndex>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);
@@ -399,7 +399,7 @@ public class ActivityIndexQueries {
                 INNER_JOIN + '(' + selectUniqueUUIDs + ") u on n." + SessionsTable.USER_ID + "=u." + SessionsTable.USER_ID +
                 INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_ID + "=a." + SessionsTable.USER_ID;
 
-        return new QueryStatement<ActivityIndex>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);
@@ -440,7 +440,7 @@ public class ActivityIndexQueries {
                 INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_ID + "=a." + SessionsTable.USER_ID +
                 WHERE + "n." + SessionsTable.USER_ID + IS_NULL;
 
-        return new QueryStatement<ActivityIndex>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);

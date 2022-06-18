@@ -111,7 +111,7 @@ public class RemoveDanglingUserDataPatch extends Patch {
     private Query<Set<String>> getUuids(String tableName) {
         String sql = "SELECT DISTINCT uuid FROM " + tableName;
 
-        return new QueryAllStatement<Set<String>>(sql) {
+        return new QueryAllStatement<>(sql) {
             @Override
             public Set<String> processResults(ResultSet set) throws SQLException {
                 HashSet<String> uuids = new HashSet<>();

@@ -103,7 +103,7 @@ public class RemoveDanglingServerDataPatch extends Patch {
     private Query<Set<String>> getServerUuids() {
         String sql = "SELECT uuid FROM " + ServerTable.TABLE_NAME;
 
-        return new QueryAllStatement<Set<String>>(sql) {
+        return new QueryAllStatement<>(sql) {
             @Override
             public Set<String> processResults(ResultSet set) throws SQLException {
                 HashSet<String> uuids = new HashSet<>();
@@ -118,7 +118,7 @@ public class RemoveDanglingServerDataPatch extends Patch {
     private Query<Set<String>> getServerUuids(String tableName) {
         String sql = "SELECT DISTINCT server_uuid FROM " + tableName;
 
-        return new QueryAllStatement<Set<String>>(sql) {
+        return new QueryAllStatement<>(sql) {
             @Override
             public Set<String> processResults(ResultSet set) throws SQLException {
                 HashSet<String> uuids = new HashSet<>();

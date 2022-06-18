@@ -80,7 +80,7 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
                 INNER_JOIN + ExtensionTableProviderTable.TABLE_NAME + " on " + ExtensionTableProviderTable.TABLE_NAME + '.' + ExtensionTableProviderTable.ID + '=' + ExtensionServerTableValueTable.TABLE_NAME + '.' + ExtensionServerTableValueTable.TABLE_ID +
                 WHERE + ExtensionServerTableValueTable.SERVER_UUID + "=?";
 
-        return new QueryStatement<QueriedTables>(selectTableValues, 10000) {
+        return new QueryStatement<>(selectTableValues, 10000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -162,7 +162,7 @@ public class ExtensionServerTablesQuery implements Query<Map<Integer, ExtensionD
                 WHERE + "p2." + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + "p1." + ExtensionTableProviderTable.VALUES_FOR + '=' + ExtensionTableProviderTable.VALUES_FOR_SERVER;
 
-        return new QueryStatement<QueriedTables>(selectTables, 100) {
+        return new QueryStatement<>(selectTables, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());

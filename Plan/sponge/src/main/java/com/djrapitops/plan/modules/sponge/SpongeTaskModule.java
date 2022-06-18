@@ -34,14 +34,14 @@ import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.server.ServerWorld;
 
 @Module
 public interface SpongeTaskModule {
 
     @Binds
     @IntoSet
-    TaskSystem.Task bindTPSCounter(ServerTPSCounter<World> tpsCounter);
+    TaskSystem.Task bindTPSCounter(ServerTPSCounter<ServerWorld> tpsCounter);
 
     @Binds
     @IntoSet

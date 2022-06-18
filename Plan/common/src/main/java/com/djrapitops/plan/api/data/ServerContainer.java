@@ -24,23 +24,18 @@ import java.util.Optional;
  * Wrapper for a ServerContainer.
  * <p>
  * The actual object is wrapped to avoid exposing too much API that might change.
- * See {@link com.djrapitops.plan.delivery.domain.keys.ServerKeys} for Key objects.
  * <p>
  * The Keys might change in the future, but the Optional API should help dealing with those cases.
  *
  * @author AuroraLS3
  * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).
  */
-@Deprecated
+@Deprecated(forRemoval = true, since = "5.0")
 public class ServerContainer {
 
-    private final com.djrapitops.plan.delivery.domain.container.ServerContainer container;
-
-    public ServerContainer(com.djrapitops.plan.delivery.domain.container.ServerContainer container) {
-        this.container = container;
-    }
+    public ServerContainer() {/*Empty constructor, no-op derpecated api class*/}
 
     public <T> Optional<T> getValue(Key<T> key) {
-        return container.getValue(key);
+        return Optional.empty();
     }
 }

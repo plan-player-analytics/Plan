@@ -61,7 +61,7 @@ public class ExtensionInformationQueries {
                 ExtensionPluginTable.ICON_ID + "=" + ExtensionIconTable.TABLE_NAME + '.' + ExtensionIconTable.ID +
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?";
 
-        return new QueryStatement<List<ExtensionInformation>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -102,7 +102,7 @@ public class ExtensionInformationQueries {
                 INNER_JOIN + ExtensionIconTable.TABLE_NAME + " on " +
                 ExtensionPluginTable.ICON_ID + "=" + ExtensionIconTable.TABLE_NAME + '.' + ExtensionIconTable.ID;
 
-        return new QueryAllStatement<Map<ServerUUID, List<ExtensionInformation>>>(sql, 100) {
+        return new QueryAllStatement<>(sql, 100) {
             @Override
             public Map<ServerUUID, List<ExtensionInformation>> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, List<ExtensionInformation>> byServerUUID = new HashMap<>();

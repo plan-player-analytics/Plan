@@ -45,7 +45,7 @@ public class WhoAmIJSONResolver implements NoAuthResolver {
 
     private Response getResponse(Request request) {
         Optional<WebUser> foundUser = request.getUser();
-        if (!foundUser.isPresent()) {
+        if (foundUser.isEmpty()) {
             return Response.builder()
                     .setJSONContent(Maps.builder(String.class, Boolean.class)
                             .put("authRequired", webServer.get().isAuthRequired())

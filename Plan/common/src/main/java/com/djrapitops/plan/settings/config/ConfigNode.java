@@ -178,7 +178,7 @@ public class ConfigNode {
      */
     public boolean moveChild(String oldPath, String newPath) {
         Optional<ConfigNode> found = getNode(oldPath);
-        if (!found.isPresent()) {
+        if (found.isEmpty()) {
             return false;
         }
 

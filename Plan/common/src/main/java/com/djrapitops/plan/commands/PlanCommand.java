@@ -369,7 +369,7 @@ public class PlanCommand {
             return DBType.names();
         }
         Optional<String> firstArgument = arguments.get(0);
-        if (!firstArgument.isPresent()) {
+        if (firstArgument.isEmpty()) {
             return tabCompleteCache.getMatchingBackupFilenames(null);
         }
         String part = firstArgument.get();

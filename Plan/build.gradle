@@ -1,6 +1,8 @@
 // Aggregate Javadocs
 buildscript {
-    repositories { mavenCentral() }
+    repositories {
+        mavenCentral()
+    }
     dependencies {
         classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.+'
     }
@@ -31,10 +33,10 @@ def buildVersion = determineBuildVersion()
 allprojects {
 
     group "com.djrapitops"
-    version "5.4-SNAPSHOT"
+    version "5.5-SNAPSHOT"
 
     ext.majorVersion = '5'
-    ext.minorVersion = '4'
+    ext.minorVersion = '5'
     ext.buildVersion = buildVersion
     ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + ' build ' + project.ext.buildVersion
 
@@ -57,18 +59,18 @@ subprojects {
     apply plugin: "jacoco"
 
     compileJava {
-        options.release = 8
+        options.release = 11
     }
 
     ext {
         daggerVersion = "2.42"
 
-        palVersion = "5.0.3"
+        palVersion = "5.1.0"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
         paperVersion = "1.13.2-R0.1-SNAPSHOT"
-        spongeVersion = "7.4.0"
+        spongeVersion = "8.1.0"
         nukkitVersion = "1.0-SNAPSHOT"
         bungeeVersion = "1.16-R0.4"
         velocityVersion = "3.0.0-SNAPSHOT"
@@ -76,16 +78,17 @@ subprojects {
 
         commonsTextVersion = "1.9"
         commonsCompressVersion = "1.21"
-        caffeineVersion = "2.9.2"
+        commonsCodecVersion = "1.15"
+        caffeineVersion = "3.1.1"
         mysqlVersion = "8.0.29"
         sqliteVersion = "3.36.0.3"
-        hikariVersion = "4.0.3"
+        hikariVersion = "5.0.1"
         slf4jVersion = "1.7.36"
-        geoIpVersion = "2.16.1"
+        geoIpVersion = "3.0.1"
         gsonVersion = "2.9.0"
         dependencyDownloadVersion = "1.2.1"
 
-        bstatsVersion = "2.2.1"
+        bstatsVersion = "3.0.0"
         placeholderapiVersion = "2.11.1"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
@@ -164,6 +167,6 @@ sonarqube {
     properties {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
-        property "sonar.coverage.jacoco.xmlReportPaths", "build/report/jacoco/test/jacocoTestReport.xml"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }

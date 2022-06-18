@@ -69,7 +69,7 @@ public interface ConfigChange {
 
         @Override
         public boolean hasBeenApplied(Config config) {
-            return !config.getNode(oldPath).isPresent() || config.getNode(newPath).isPresent();
+            return config.getNode(oldPath).isEmpty() || config.getNode(newPath).isPresent();
         }
 
         @Override
@@ -117,7 +117,7 @@ public interface ConfigChange {
 
         @Override
         public boolean hasBeenApplied(Config config) {
-            return !config.getNode(oldPath).isPresent();
+            return config.getNode(oldPath).isEmpty();
         }
 
         @Override
@@ -143,7 +143,7 @@ public interface ConfigChange {
         @Override
         public boolean hasBeenApplied(Config config) {
             Optional<ConfigNode> node = config.getNode(path);
-            return !node.isPresent() || node.get().getComment().isEmpty();
+            return node.isEmpty() || node.get().getComment().isEmpty();
         }
 
         @Override
@@ -173,7 +173,7 @@ public interface ConfigChange {
         @Override
         public boolean hasBeenApplied(Config config) {
             Optional<ConfigNode> oldNode = config.getNode(oldPath);
-            return !oldNode.isPresent();
+            return oldNode.isEmpty();
         }
 
         @Override

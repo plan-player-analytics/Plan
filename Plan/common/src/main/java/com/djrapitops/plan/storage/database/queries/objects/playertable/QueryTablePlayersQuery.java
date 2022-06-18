@@ -118,7 +118,7 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 WHERE + "u." + UsersTable.ID + userIdsInSet +
                 ORDER_BY + "ses.last_seen DESC";
 
-        return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {
+        return db.query(new QueryStatement<>(selectBaseUsers, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);

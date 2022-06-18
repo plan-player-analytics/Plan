@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.commands.use;
 
-import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.text.Text;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.identity.Identity;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.spongepowered.api.service.permission.Subject;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -25,15 +27,21 @@ import java.util.UUID;
 
 public class SpongeCMDSender implements CMDSender {
 
-    final CommandSource source;
+    final Subject subject;
+    final Audience audience;
 
-    public SpongeCMDSender(CommandSource source) {
-        this.source = source;
+    public <T extends Subject & Audience> SpongeCMDSender(T source) {
+        this(source, source);
+    }
+
+    public SpongeCMDSender(Subject subject, Audience audience) {
+        this.subject = subject;
+        this.audience = audience;
     }
 
     @Override
     public MessageBuilder buildMessage() {
-        return new SpongeMessageBuilder(this);
+        return new AdventureMessageBuilder(this, audience);
     }
 
     @Override
@@ -43,7 +51,7 @@ public class SpongeCMDSender implements CMDSender {
 
     @Override
     public boolean hasPermission(String permission) {
-        return source.hasPermission(permission);
+        return subject.hasPermission(permission);
     }
 
     @Override
@@ -53,7 +61,7 @@ public class SpongeCMDSender implements CMDSender {
 
     @Override
     public void send(String text) {
-        source.sendMessage(Text.of(text));
+        audience.sendMessage(Identity.nil(), LegacyComponentSerializer.legacySection().deserialize(text));
     }
 
     @Override
@@ -66,11 +74,11 @@ public class SpongeCMDSender implements CMDSender {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SpongeCMDSender that = (SpongeCMDSender) o;
-        return source.equals(that.source);
+        return subject.identifier().equals(that.subject.identifier());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(source);
+        return Objects.hash(subject.identifier());
     }
 }

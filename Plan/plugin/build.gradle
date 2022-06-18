@@ -13,9 +13,17 @@ dependencies {
     testImplementation project(path: ":velocity", configuration: 'testArtifacts')
 }
 
+jar {
+    // Add the sponge mixin into the manifest
+    manifest.attributes([
+            'MixinConfigs': 'plan-sponge.mixins.json'
+    ])
+}
+
 shadowJar {
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
+        exclude 'org/apache/maven/**' // This needs to be unrelocated for Sponge
     }
     relocate 'dagger', 'plan.dagger'
     // Don't relocate MySQL or SQLite since they are loaded with a isolated class loader

@@ -86,7 +86,7 @@ public class WorldsServerIDPatch extends Patch {
                 INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + sessionServerIDColumn +
                 WHERE + serverUUIDColumn + "=?";
 
-        return query(new QueryStatement<Set<String>>(sql, 1000) {
+        return query(new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -138,7 +138,7 @@ public class WorldsServerIDPatch extends Patch {
 
     public List<WorldObj> getWorldObjects() {
         String sql = SELECT + '*' + FROM + WorldTable.TABLE_NAME;
-        return query(new QueryAllStatement<List<WorldObj>>(sql, 100) {
+        return query(new QueryAllStatement<>(sql, 100) {
             @Override
             public List<WorldObj> processResults(ResultSet set) throws SQLException {
                 List<WorldObj> objects = new ArrayList<>();

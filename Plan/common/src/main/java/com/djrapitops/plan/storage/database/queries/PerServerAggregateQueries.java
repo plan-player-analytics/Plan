@@ -58,7 +58,7 @@ public class PerServerAggregateQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 GROUP_BY + SessionsTable.SERVER_ID;
-        return new QueryStatement<Map<ServerUUID, Long>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -119,7 +119,7 @@ public class PerServerAggregateQueries {
 
 
     private static QueryStatement<Map<ServerUUID, Integer>> getQueryForCountOf(UUID playerUUID, String sql, String column) {
-        return new QueryStatement<Map<ServerUUID, Integer>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());

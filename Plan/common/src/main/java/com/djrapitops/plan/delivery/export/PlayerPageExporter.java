@@ -113,14 +113,12 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
-        Optional<Response> found = getJSONResponse(resource);
-        if (!found.isPresent()) {
-            throw new NotFoundException(resource + " was not properly exported: no response");
-        }
+        Response response = getJSONResponse(resource)
+                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: no response"));
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
-        export(toDirectory.resolve(jsonResourceName), found.get().getBytes());
+        export(toDirectory.resolve(jsonResourceName), response.getBytes());
         exportPaths.put("../v1/player?player=${encodeURIComponent(playerUUID)}", "./" + jsonResourceName);
     }
 

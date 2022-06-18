@@ -59,7 +59,7 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
                 INNER_JOIN + ExtensionPlayerValueTable.TABLE_NAME + " value on value." + ExtensionPlayerValueTable.PROVIDER_ID + "=provider." + ExtensionProviderTable.ID +
                 WHERE + "value." + ExtensionPlayerValueTable.BOOLEAN_VALUE + " IS NOT NULL" +
                 ORDER_BY + "server_name ASC, plugin_name ASC, provider_text ASC";
-        return new QueryAllStatement<List<PluginBooleanOption>>(selectOptions) {
+        return new QueryAllStatement<>(selectOptions) {
             @Override
             public List<PluginBooleanOption> processResults(ResultSet set) throws SQLException {
                 List<PluginBooleanOption> options = new ArrayList<>();
@@ -115,7 +115,7 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
                 AND + "provider." + ExtensionProviderTable.TEXT + "=?" +
                 AND + "value." + ExtensionPlayerValueTable.BOOLEAN_VALUE + (selectedBoolean == SelectedBoolean.BOTH ? "IS NOT NULL" : "=?");
 
-        return new QueryStatement<Set<Integer>>(selectUUIDsWithBooleanValues) {
+        return new QueryStatement<>(selectUUIDsWithBooleanValues) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());

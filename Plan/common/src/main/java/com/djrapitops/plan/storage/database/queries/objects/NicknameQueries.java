@@ -54,7 +54,7 @@ public class NicknameQueries {
                 NicknamesTable.SERVER_UUID +
                 FROM + NicknamesTable.TABLE_NAME;
 
-        return new QueryAllStatement<Map<ServerUUID, Map<UUID, List<Nickname>>>>(sql, 5000) {
+        return new QueryAllStatement<>(sql, 5000) {
             @Override
             public Map<ServerUUID, Map<UUID, List<Nickname>>> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, Map<UUID, List<Nickname>>> map = new HashMap<>();

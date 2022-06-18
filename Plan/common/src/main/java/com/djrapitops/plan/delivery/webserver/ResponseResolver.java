@@ -181,7 +181,7 @@ public class ResponseResolver {
         for (Resolver resolver : foundResolvers) {
             boolean isAuthRequired = webServer.get().isAuthRequired() && resolver.requiresAuth(request);
             if (isAuthRequired) {
-                if (!user.isPresent()) {
+                if (user.isEmpty()) {
                     if (webServer.get().isUsingHTTPS()) {
                         throw new WebUserAuthException(FailReason.NO_USER_PRESENT);
                     } else {

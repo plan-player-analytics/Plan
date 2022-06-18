@@ -52,7 +52,7 @@ public class UserIdentifierQueries {
     public static Query<Set<UUID>> fetchAllPlayerUUIDs() {
         String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID).toString();
 
-        return new QueryAllStatement<Set<UUID>>(sql, 20000) {
+        return new QueryAllStatement<>(sql, 20000) {
             @Override
             public Set<UUID> processResults(ResultSet set) throws SQLException {
                 Set<UUID> playerUUIDs = new HashSet<>();
@@ -78,7 +78,7 @@ public class UserIdentifierQueries {
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
                 UsersTable.TABLE_NAME + '.' + UsersTable.ID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID +
                 WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
-        return new QueryStatement<Set<UUID>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -104,7 +104,7 @@ public class UserIdentifierQueries {
     public static Query<Map<UUID, String>> fetchAllPlayerNames() {
         String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID, UsersTable.USER_NAME).toString();
 
-        return new QueryAllStatement<Map<UUID, String>>(sql, 20000) {
+        return new QueryAllStatement<>(sql, 20000) {
             @Override
             public Map<UUID, String> processResults(ResultSet set) throws SQLException {
                 Map<UUID, String> names = new HashMap<>();
@@ -130,7 +130,7 @@ public class UserIdentifierQueries {
                 .where("UPPER(" + UsersTable.USER_NAME + ")=UPPER(?)")
                 .toString();
 
-        return new QueryStatement<Optional<UUID>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerName);
@@ -156,7 +156,7 @@ public class UserIdentifierQueries {
     public static Query<Optional<String>> fetchPlayerNameOf(UUID playerUUID) {
         String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_NAME).where(UsersTable.USER_UUID + "=?").toString();
 
-        return new QueryStatement<Optional<String>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -183,7 +183,7 @@ public class UserIdentifierQueries {
                 UsersTable.TABLE_NAME + '.' + UsersTable.USER_UUID + "=" + NicknamesTable.TABLE_NAME + '.' + NicknamesTable.USER_UUID +
                 WHERE + "LOWER(" + NicknamesTable.NICKNAME + ") LIKE LOWER(?)";
 
-        return new QueryStatement<List<String>>(sql, 5000) {
+        return new QueryStatement<>(sql, 5000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, '%' + searchFor + '%');
@@ -207,7 +207,7 @@ public class UserIdentifierQueries {
     public static Query<Set<Integer>> fetchAllUserIds() {
         String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.ID).toString();
 
-        return new QueryAllStatement<Set<Integer>>(sql, 2000) {
+        return new QueryAllStatement<>(sql, 2000) {
             @Override
             public Set<Integer> processResults(ResultSet set) throws SQLException {
                 Set<Integer> playerUUIDs = new HashSet<>();
@@ -222,7 +222,7 @@ public class UserIdentifierQueries {
     public static Query<Optional<Integer>> fetchUserId(UUID playerUUID) {
         String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.ID).where(UsersTable.USER_UUID + "=?").toString();
 
-        return new QueryStatement<Optional<Integer>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());

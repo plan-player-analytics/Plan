@@ -99,7 +99,7 @@ public class SessionQueries {
     public static Query<List<FinishedSession>> fetchAllSessions() {
         String sql = SELECT_SESSIONS_STATEMENT +
                 ORDER_BY_SESSION_START_DESC;
-        return new QueryAllStatement<List<FinishedSession>>(sql, 50000) {
+        return new QueryAllStatement<>(sql, 50000) {
             @Override
             public List<FinishedSession> processResults(ResultSet set) throws SQLException {
                 return extractDataFromSessionSelectStatement(set);
@@ -117,7 +117,7 @@ public class SessionQueries {
         String sql = SELECT_SESSIONS_STATEMENT +
                 WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 ORDER_BY_SESSION_START_DESC;
-        return new QueryStatement<Map<ServerUUID, List<FinishedSession>>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -180,7 +180,7 @@ public class SessionQueries {
                 worldTimes.setGMTimesForWorld(worldName, gmTimes);
             }
 
-            if (!existingWorldTimes.isPresent()) extraData.put(WorldTimes.class, worldTimes);
+            if (existingWorldTimes.isEmpty()) extraData.put(WorldTimes.class, worldTimes);
 
             ServerName serverName = new ServerName(
                     Server.getIdentifiableName(
@@ -210,7 +210,7 @@ public class SessionQueries {
                     playerKills.add(newKill);
                 }
             }
-            if (!existingPlayerKills.isPresent()) extraData.put(PlayerKills.class, playerKills);
+            if (existingPlayerKills.isEmpty()) extraData.put(PlayerKills.class, playerKills);
 
             extraData.put(PlayerName.class, new PlayerName(set.getString("name")));
 
@@ -243,7 +243,7 @@ public class SessionQueries {
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
 
-        return new QueryStatement<List<FinishedSession>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -281,7 +281,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 ORDER_BY_SESSION_START_DESC + " LIMIT ?";
 
-        return new QueryStatement<Long>(sql, limit) {
+        return new QueryStatement<>(sql, limit) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -303,7 +303,7 @@ public class SessionQueries {
         String sql = SELECT + SessionsTable.SESSION_START + FROM + SessionsTable.TABLE_NAME +
                 ORDER_BY_SESSION_START_DESC + " LIMIT ?";
 
-        return new QueryStatement<Long>(sql, limit) {
+        return new QueryStatement<>(sql, limit) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, limit);
@@ -372,7 +372,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -392,7 +392,7 @@ public class SessionQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -455,7 +455,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -478,7 +478,7 @@ public class SessionQueries {
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
                 GROUP_BY + SessionsTable.SERVER_ID;
-        return new QueryStatement<Map<ServerUUID, Long>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -502,7 +502,7 @@ public class SessionQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -718,7 +718,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -738,7 +738,7 @@ public class SessionQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -762,7 +762,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
                 GROUP_BY + "s." + ServerTable.ID;
-        return new QueryStatement<Map<String, Long>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -789,7 +789,7 @@ public class SessionQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -810,7 +810,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -836,7 +836,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
                 (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
-        return new QueryStatement<Set<Integer>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -870,7 +870,7 @@ public class SessionQueries {
                 AND + SessionsTable.USER_ID + uuidsInSet +
                 (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
-        return new QueryStatement<Map<String, Long>>(selectAggregates) {
+        return new QueryStatement<>(selectAggregates) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -905,7 +905,7 @@ public class SessionQueries {
     public static Query<Long> earliestSessionStart() {
         String sql = SELECT + "MIN(" + SessionsTable.SESSION_START + ") as m" +
                 FROM + SessionsTable.TABLE_NAME;
-        return new QueryAllStatement<Long>(sql) {
+        return new QueryAllStatement<>(sql) {
             @Override
             public Long processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getLong("m") : -1L;

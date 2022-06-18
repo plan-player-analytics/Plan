@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators;
 
-import com.djrapitops.plan.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.TPS;
@@ -45,10 +43,6 @@ public class TPSMutator {
 
     public TPSMutator(List<TPS> tpsData) {
         this.tpsData = tpsData;
-    }
-
-    public static TPSMutator forContainer(DataContainer container) {
-        return new TPSMutator(container.getValue(ServerKeys.TPS).orElse(new ArrayList<>()));
     }
 
     public static TPSMutator copyOf(TPSMutator mutator) {

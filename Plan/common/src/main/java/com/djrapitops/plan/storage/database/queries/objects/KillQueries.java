@@ -67,7 +67,7 @@ public class KillQueries {
                 WHERE + "ki." + KillsTable.SERVER_UUID + "=?" +
                 ORDER_BY + KillsTable.DATE + " DESC LIMIT ?";
 
-        return new QueryStatement<List<PlayerKill>>(sql, limit) {
+        return new QueryStatement<>(sql, limit) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -103,7 +103,7 @@ public class KillQueries {
                 WHERE + "ki." + KillsTable.KILLER_UUID + "=?" +
                 ORDER_BY + KillsTable.DATE + " DESC";
 
-        return new QueryStatement<List<PlayerKill>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -138,7 +138,7 @@ public class KillQueries {
                 WHERE + "ki." + KillsTable.VICTIM_UUID + "=?" +
                 ORDER_BY + KillsTable.DATE + " DESC";
 
-        return new QueryStatement<List<PlayerKill>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -205,7 +205,7 @@ public class KillQueries {
                 WHERE + "kills" + IS_NOT_NULL +
                 AND + "deaths" + IS_NOT_NULL;
 
-        return new QueryStatement<Double>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());

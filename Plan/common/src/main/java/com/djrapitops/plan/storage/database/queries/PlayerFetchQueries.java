@@ -50,7 +50,7 @@ public class PlayerFetchQueries {
         String sql = SELECT + UsersTable.USER_NAME +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=?";
-        return new QueryStatement<Optional<String>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -76,7 +76,7 @@ public class PlayerFetchQueries {
         String sql = SELECT + UsersTable.ID +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=?";
-        return new QueryStatement<Boolean>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -115,7 +115,7 @@ public class PlayerFetchQueries {
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=? LIMIT 1";
 
-        return new QueryStatement<Optional<Long>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());

@@ -36,12 +36,14 @@ dependencies {
     implementation project(path: ":extensions", configuration: 'shadow')
     implementation "org.apache.commons:commons-text:$commonsTextVersion"
     implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
+    implementation "commons-codec:commons-codec:$commonsCodecVersion"
     implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     implementation "com.zaxxer:HikariCP:$hikariVersion"
     implementation "org.slf4j:slf4j-nop:$slf4jVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
     implementation "com.google.code.gson:gson:$gsonVersion"
+    compileOnly "net.kyori:adventure-api:4.9.3"
 
     implementation("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating

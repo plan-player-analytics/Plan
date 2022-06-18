@@ -65,7 +65,7 @@ public class ServerUptimeCalculator {
         Optional<Long> latestDataDate = database.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID)).map(TPS::getDate);
         Optional<Long> dataBlockStartDate = database.query(TPSQueries.fetchLatestServerStartTime(serverUUID, dataGapThreshold));
 
-        if (!latestDataDate.isPresent() || !dataBlockStartDate.isPresent()) {
+        if (latestDataDate.isEmpty() || dataBlockStartDate.isEmpty()) {
             return Optional.empty();
         }
 

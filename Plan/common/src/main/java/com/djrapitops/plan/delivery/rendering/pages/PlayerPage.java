@@ -81,7 +81,7 @@ public class PlayerPage implements Page {
 
     @Override
     public String toHtml() {
-        if (!player.getValue(PlayerKeys.REGISTERED).isPresent()) {
+        if (player.getValue(PlayerKeys.REGISTERED).isEmpty()) {
             throw new IllegalStateException("Player is not registered");
         }
         return createFor(player);

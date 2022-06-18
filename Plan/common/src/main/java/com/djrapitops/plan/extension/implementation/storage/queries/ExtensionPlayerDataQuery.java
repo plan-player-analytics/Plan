@@ -137,7 +137,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<Exte
                 WHERE + ExtensionPlayerValueTable.USER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
-        return new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());

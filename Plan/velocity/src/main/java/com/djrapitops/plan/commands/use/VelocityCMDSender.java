@@ -33,7 +33,7 @@ public class VelocityCMDSender implements CMDSender {
 
     @Override
     public MessageBuilder buildMessage() {
-        return new VelocityMessageBuilder(this);
+        return new AdventureMessageBuilder(this, commandSource);
     }
 
     @Override

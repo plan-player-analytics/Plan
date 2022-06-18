@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -61,7 +62,7 @@ public class JarResource implements Resource {
         List<String> lines = new ArrayList<>();
         try (
                 InputStream inputStream = asInputStream();
-                Scanner scanner = new Scanner(inputStream, "UTF-8")
+                Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8)
         ) {
             while (scanner.hasNextLine()) {
                 lines.add(scanner.nextLine());
@@ -75,7 +76,7 @@ public class JarResource implements Resource {
         StringBuilder flat = new StringBuilder();
         try (
                 InputStream inputStream = asInputStream();
-                Scanner scanner = new Scanner(inputStream, "UTF-8")
+                Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8)
         ) {
             while (scanner.hasNextLine()) {
                 flat.append(scanner.nextLine()).append("\r\n");

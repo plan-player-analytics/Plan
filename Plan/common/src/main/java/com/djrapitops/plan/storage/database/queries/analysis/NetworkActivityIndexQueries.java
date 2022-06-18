@@ -134,7 +134,7 @@ public class NetworkActivityIndexQueries {
                 WHERE + "i.activity_index>=?" +
                 AND + "i.activity_index<?";
 
-        return new QueryStatement<Integer>(selectCount) {
+        return new QueryStatement<>(selectCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, date);
@@ -158,7 +158,7 @@ public class NetworkActivityIndexQueries {
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?";
 
-        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
+        return new QueryStatement<>(selectIndexes) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, date);
@@ -188,7 +188,7 @@ public class NetworkActivityIndexQueries {
                 AND + "u." + UsersTable.ID + " IN (" +
                 new TextStringBuilder().appendWithSeparators(userIds, ",").build() + ")";
 
-        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
+        return new QueryStatement<>(selectIndexes) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, date);
@@ -219,7 +219,7 @@ public class NetworkActivityIndexQueries {
                 AND + "q2.activity_index>=?" +
                 AND + "q2.activity_index<?";
 
-        return new QueryStatement<Integer>(selectActivePlayerCount) {
+        return new QueryStatement<>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, before);
@@ -255,7 +255,7 @@ public class NetworkActivityIndexQueries {
                 AND + "q4.activity_index>=?" +
                 AND + "q4.activity_index<?";
 
-        return new QueryStatement<Integer>(selectActivePlayerCount) {
+        return new QueryStatement<>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, end);
@@ -381,7 +381,7 @@ public class NetworkActivityIndexQueries {
                 FROM + '(' + selectNewUUIDs + ") n" +
                 INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + UsersTable.ID + "=a." + SessionsTable.USER_ID;
 
-        return new QueryStatement<Collection<ActivityIndex>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);
@@ -416,7 +416,7 @@ public class NetworkActivityIndexQueries {
                 INNER_JOIN + '(' + selectUniqueUUIDs + ") u on n." + UsersTable.ID + "=u." + SessionsTable.USER_ID +
                 INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + UsersTable.ID + "=a." + SessionsTable.USER_ID;
 
-        return new QueryStatement<ActivityIndex>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);
@@ -438,7 +438,7 @@ public class NetworkActivityIndexQueries {
 
     public static Query<Map<Integer, ActivityIndex>> activityIndexForAllPlayers(long date, long playtimeThreshold) {
         String selectActivityIndex = selectActivityIndexSQL();
-        return new QueryStatement<Map<Integer, ActivityIndex>>(selectActivityIndex, 1000) {
+        return new QueryStatement<>(selectActivityIndex, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, date);

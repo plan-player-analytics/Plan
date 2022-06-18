@@ -58,7 +58,7 @@ public class GeoInfoQueries {
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on g.user_id=u.id";
 
-        return new QueryAllStatement<Map<UUID, List<GeoInfo>>>(sql, 10000) {
+        return new QueryAllStatement<>(sql, 10000) {
             @Override
             public Map<UUID, List<GeoInfo>> processResults(ResultSet set) throws SQLException {
                 return extractGeoInformation(set);

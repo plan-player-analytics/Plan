@@ -101,7 +101,7 @@ public class WorldTimesTable {
         UUID uuid = session.getPlayerUUID();
         ServerUUID serverUUID = session.getServerUUID();
         Optional<WorldTimes> worldTimes = session.getExtraData().get(WorldTimes.class);
-        if (!worldTimes.isPresent()) return;
+        if (worldTimes.isEmpty()) return;
 
         for (Map.Entry<String, GMTimes> worldTimesEntry : worldTimes.get().getWorldTimes().entrySet()) {
             String worldName = worldTimesEntry.getKey();

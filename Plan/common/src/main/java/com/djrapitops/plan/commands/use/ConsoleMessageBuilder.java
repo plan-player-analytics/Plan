@@ -67,9 +67,7 @@ public class ConsoleMessageBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder indent(int spaces) {
-        for (int i = 0; i < spaces; i++) {
-            stringBuilder.append(' ');
-        }
+        stringBuilder.append(" ".repeat(Math.max(0, spaces)));
         return this;
     }
 

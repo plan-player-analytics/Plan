@@ -47,7 +47,7 @@ public class ServerAggregateQueries {
      */
     public static Query<Integer> baseUserCount() {
         String sql = SELECT + "COUNT(1) as c FROM " + UsersTable.TABLE_NAME;
-        return new QueryAllStatement<Integer>(sql) {
+        return new QueryAllStatement<>(sql) {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt("c") : 0;
@@ -64,7 +64,7 @@ public class ServerAggregateQueries {
     public static Query<Integer> serverUserCount(ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
-        return new QueryStatement<Integer>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -91,7 +91,7 @@ public class ServerAggregateQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID +
                 GROUP_BY + UserInfoTable.SERVER_ID;
 
-        return new QueryAllStatement<Map<ServerUUID, Integer>>(sql, 100) {
+        return new QueryAllStatement<>(sql, 100) {
             @Override
             public Map<ServerUUID, Integer> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, Integer> ofServer = new HashMap<>();

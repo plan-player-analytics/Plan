@@ -59,11 +59,9 @@ public abstract class ExecStatement implements Executable {
     }
 
     public boolean execute(PreparedStatement statement) throws SQLException {
-        try {
+        try (statement) {
             prepare(statement);
             return callExecute(statement);
-        } finally {
-            statement.close();
         }
     }
 
