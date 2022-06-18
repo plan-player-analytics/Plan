@@ -115,6 +115,9 @@ class AccessControlTest {
                 .orElseThrow(AssertionError::new);
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 
+        assertTrue(system.getWebServerSystem().getWebServer().isUsingHTTPS());
+        assertTrue(system.getWebServerSystem().getWebServer().isAuthRequired());
+
         address = "https://localhost:" + TEST_PORT_NUMBER;
         cookieLevel0 = login(address, userLevel0.getUsername());
         cookieLevel1 = login(address, userLevel1.getUsername());

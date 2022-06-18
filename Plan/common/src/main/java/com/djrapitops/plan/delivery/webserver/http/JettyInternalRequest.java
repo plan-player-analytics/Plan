@@ -60,12 +60,12 @@ public class JettyInternalRequest implements InternalRequest {
 
     private Map<String, String> getRequestHeaders() {
         return streamHeaderNames()
-                .collect(Collectors.toMap(Function.identity(), request::getHeader,
+                .collect(Collectors.toMap(Function.identity(), baseRequest::getHeader,
                         (one, two) -> one + ';' + two));
     }
 
     private Stream<String> streamHeaderNames() {
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(request.getHeaderNames().asIterator(), 0), false);
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(baseRequest.getHeaderNames().asIterator(), 0), false);
     }
 
     private byte[] readRequestBody() {
@@ -102,6 +102,16 @@ public class JettyInternalRequest implements InternalRequest {
 
     @Override
     public String getRequestedURIString() {
-        return baseRequest.getHttpURI().toURI().toASCIIString();
+        return baseRequest.getRequestURI();
+    }
+
+    @Override
+    public String toString() {
+        return "JettyInternalRequest{" +
+                "baseRequest=" + baseRequest +
+                ", request=" + request +
+                ", webserverConfiguration=" + webserverConfiguration +
+                ", authenticationExtractor=" + authenticationExtractor +
+                '}';
     }
 }

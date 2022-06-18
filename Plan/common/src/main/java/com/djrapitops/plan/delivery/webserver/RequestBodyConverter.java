@@ -37,7 +37,7 @@ public class RequestBodyConverter {
     public static URIQuery formBody(Request request) {
         if (
                 "POST".equalsIgnoreCase(request.getMethod()) &&
-                        "application/x-www-form-urlencoded".equalsIgnoreCase(request.getHeader("Content-type").orElse(""))
+                        "application/x-www-form-urlencoded".equalsIgnoreCase(request.getHeader("Content-Type").orElse(""))
         ) {
             return new URIQuery(new String(request.getRequestBody(), StandardCharsets.UTF_8));
         } else {

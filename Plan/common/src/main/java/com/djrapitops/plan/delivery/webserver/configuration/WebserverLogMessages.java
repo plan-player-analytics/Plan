@@ -20,10 +20,13 @@ import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.nio.file.InvalidPathException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -31,14 +34,16 @@ import java.util.concurrent.atomic.AtomicLong;
 public class WebserverLogMessages {
 
     private final PluginLogger logger;
+    private final ErrorLogger errorLogger;
     private final Locale locale;
     private final Addresses addresses;
 
     private final AtomicLong warnedAboutXForwardedSecurityIssue = new AtomicLong(0L);
 
     @Inject
-    public WebserverLogMessages(PluginLogger logger, Locale locale, Addresses addresses) {
+    public WebserverLogMessages(PluginLogger logger, ErrorLogger errorLogger, Locale locale, Addresses addresses) {
         this.logger = logger;
+        this.errorLogger = errorLogger;
         this.locale = locale;
         this.addresses = addresses;
     }
@@ -64,5 +69,30 @@ public class WebserverLogMessages {
 
     public void warnWebserverDisabledByConfig() {
         logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
+    }
+
+    public void keystoreNotFoundError(InvalidPathException error, String keyStorePath) {
+        String errorMessage = error.getMessage();
+        logger.error("WebServer: Could not find Keystore: " + errorMessage);
+        errorLogger.error(error, ErrorContext.builder()
+                .whatToDo(errorMessage + ", Fix this path to point to a valid keystore file: " + keyStorePath)
+                .related(keyStorePath).build());
+    }
+
+    public void authenticationNotPossible() {
+        logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
+        logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP_USER_AUTH));
+    }
+
+    public void authenticationUsingProxy() {
+        logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_USING_PROXY_MODE));
+    }
+
+    public void invalidCertificate() {
+        logger.warn(locale.getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
+    }
+
+    public void keystoreFileNotFound() {
+        logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE));
     }
 }

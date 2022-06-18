@@ -20,19 +20,25 @@ import com.djrapitops.plan.delivery.webserver.auth.AllowedIpList;
 import com.djrapitops.plan.delivery.webserver.http.AccessAddressPolicy;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.file.PlanFiles;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.File;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 
 @Singleton
 public class WebserverConfiguration {
 
+    private final PlanFiles files;
     private final PlanConfig config;
     private final AllowedIpList allowedIpList;
     private final WebserverLogMessages webserverLogMessages;
 
     @Inject
-    public WebserverConfiguration(PlanConfig config, AllowedIpList allowedIpList, WebserverLogMessages webserverLogMessages) {
+    public WebserverConfiguration(PlanFiles files, PlanConfig config, AllowedIpList allowedIpList, WebserverLogMessages webserverLogMessages) {
+        this.files = files;
         this.config = config;
         this.allowedIpList = allowedIpList;
         this.webserverLogMessages = webserverLogMessages;
@@ -66,5 +72,23 @@ public class WebserverConfiguration {
 
     public boolean isWebserverDisabled() {
         return config.isTrue(WebserverSettings.DISABLED);
+    }
+
+    public String getKeyStorePath() {
+        String keyStorePath = config.get(WebserverSettings.CERTIFICATE_PATH);
+
+        if ("proxy".equalsIgnoreCase(keyStorePath)) {
+            return keyStorePath;
+        }
+
+        try {
+            if (!Paths.get(keyStorePath).isAbsolute()) {
+                keyStorePath = files.getDataFolder() + File.separator + keyStorePath;
+            }
+        } catch (InvalidPathException e) {
+            webserverLogMessages.keystoreNotFoundError(e, keyStorePath);
+        }
+
+        return keyStorePath;
     }
 }
