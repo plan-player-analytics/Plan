@@ -88,7 +88,7 @@ public class KillsTable {
         ServerUUID serverUUID = session.getServerUUID();
 
         Optional<PlayerKills> playerKills = session.getExtraData().get(PlayerKills.class);
-        if (!playerKills.isPresent()) return;
+        if (playerKills.isEmpty()) return;
 
         for (PlayerKill kill : playerKills.get().asList()) {
             // Session ID select statement parameters

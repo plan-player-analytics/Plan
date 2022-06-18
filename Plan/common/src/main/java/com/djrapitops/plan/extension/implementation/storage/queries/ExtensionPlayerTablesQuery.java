@@ -77,7 +77,7 @@ public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionD
                 INNER_JOIN + ExtensionTableProviderTable.TABLE_NAME + " on " + ExtensionTableProviderTable.TABLE_NAME + '.' + ExtensionTableProviderTable.ID + '=' + ExtensionPlayerTableValueTable.TABLE_NAME + '.' + ExtensionPlayerTableValueTable.TABLE_ID +
                 WHERE + ExtensionPlayerTableValueTable.USER_UUID + "=?";
 
-        return new QueryStatement<QueriedTables>(selectTableValues, 10000) {
+        return new QueryStatement<>(selectTableValues, 10000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -152,7 +152,7 @@ public class ExtensionPlayerTablesQuery implements Query<Map<Integer, ExtensionD
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i6 on i6." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
                 WHERE + "v1." + ExtensionPlayerTableValueTable.USER_UUID + "=?";
 
-        return new QueryStatement<QueriedTables>(selectTables, 100) {
+        return new QueryStatement<>(selectTables, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());

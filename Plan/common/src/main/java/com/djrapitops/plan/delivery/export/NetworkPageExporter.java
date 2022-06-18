@@ -147,17 +147,15 @@ public class NetworkPageExporter extends FileExporter {
     }
 
     private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
-        Optional<Response> found = getJSONResponse(resource);
-        if (!found.isPresent()) {
-            throw new NotFoundException(resource + " was not properly exported: not found");
-        }
+        Response response = getJSONResponse(resource)
+                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         String relativePlayerLink = toRelativePathFromRoot("player");
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
-                StringUtils.replaceEach(found.get().getAsString(),
+                StringUtils.replaceEach(response.getAsString(),
                         new String[]{StringEscapeUtils.escapeJson("../player"), StringEscapeUtils.escapeJson("./player")},
                         new String[]{StringEscapeUtils.escapeJson(relativePlayerLink), StringEscapeUtils.escapeJson(relativePlayerLink)}
                 )

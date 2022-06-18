@@ -114,7 +114,7 @@ public class AFKTracker {
         long time = System.currentTimeMillis();
 
         Optional<Long> lastMoved = getLastMovement(playerUUID);
-        if (!lastMoved.isPresent() || lastMoved.get() == IGNORES_AFK) {
+        if (lastMoved.isEmpty() || lastMoved.get() == IGNORES_AFK) {
             return false;
         }
         return time - lastMoved.get() > getAfkThreshold();

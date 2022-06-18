@@ -171,8 +171,6 @@ public class ConfigWriter {
     }
 
     private void indent(int indent, StringBuilder lineBuilder) {
-        for (int i = 0; i < indent; i++) {
-            lineBuilder.append(' ');
-        }
+        lineBuilder.append(" ".repeat(Math.max(0, indent)));
     }
 }

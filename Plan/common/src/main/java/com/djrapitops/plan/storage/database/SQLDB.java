@@ -366,8 +366,10 @@ public abstract class SQLDB extends AbstractDatabase {
                 logger.error("Database failed to open, " + transaction.getClass().getName() + " failed to be executed.");
                 FatalDBException actual = (FatalDBException) throwable.getCause();
                 Optional<String> whatToDo = actual.getContext().flatMap(ErrorContext::getWhatToDo);
-                whatToDo.ifPresent(message -> logger.error("What to do: " + message));
-                if (!whatToDo.isPresent()) logger.error("Error msg: " + actual.getMessage());
+                whatToDo.ifPresentOrElse(
+                        message -> logger.error("What to do: " + message),
+                        () -> logger.error("Error msg: " + actual.getMessage())
+                );
                 setState(State.CLOSED);
             }
             ThrowableUtils.appendEntryPointToCause(throwable, origin);

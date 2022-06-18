@@ -46,7 +46,7 @@ public class SessionJoinAddressPatch extends Patch {
         String sql = SELECT + DISTINCT + "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
                 FROM + UserInfoTable.TABLE_NAME +
                 ORDER_BY + "address ASC";
-        return new QueryStatement<List<String>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
@@ -76,7 +76,7 @@ public class SessionJoinAddressPatch extends Patch {
     }
 
     private Integer getDefaultAddressId() {
-        return query(new QueryStatement<Integer>(SELECT + ID +
+        return query(new QueryStatement<>(SELECT + ID +
                 FROM + JoinAddressTable.TABLE_NAME +
                 WHERE + JoinAddressTable.JOIN_ADDRESS + "=LOWER(?)") {
             @Override
@@ -115,7 +115,7 @@ public class SessionJoinAddressPatch extends Patch {
                 INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on j." + JoinAddressTable.JOIN_ADDRESS + "=u." + UserInfoTable.JOIN_ADDRESS +
                 GROUP_BY + "u." + UserInfoTable.USER_ID + ",u." + UserInfoTable.SERVER_ID;
 
-        Map<Integer, Integer> joinAddressIdsBySessionId = query(new QueryAllStatement<Map<Integer, Integer>>(sql) {
+        Map<Integer, Integer> joinAddressIdsBySessionId = query(new QueryAllStatement<>(sql) {
             @Override
             public Map<Integer, Integer> processResults(ResultSet set) throws SQLException {
                 Map<Integer, Integer> joinAddressBySessionId = new TreeMap<>();

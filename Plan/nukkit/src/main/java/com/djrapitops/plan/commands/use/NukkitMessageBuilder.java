@@ -67,9 +67,7 @@ public class NukkitMessageBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder indent(int amount) {
-        for (int i = 0; i < amount; i++) {
-            builder.append(' ');
-        }
+        builder.append(" ".repeat(Math.max(0, amount)));
         return this;
     }
 

@@ -104,7 +104,7 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
                 AND + "p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?" +
                 AND + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
 
-        return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);                  // Select only values that should be shown
@@ -138,7 +138,7 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 WHERE + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
 
-        return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());

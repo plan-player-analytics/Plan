@@ -127,7 +127,7 @@ public class PlayersMutator {
         Map<String, List<Ping>> pingPerCountry = new HashMap<>();
         for (PlayerContainer player : players) {
             Optional<GeoInfo> mostRecent = GeoInfoMutator.forContainer(player).mostRecent();
-            if (!mostRecent.isPresent()) {
+            if (mostRecent.isEmpty()) {
                 continue;
             }
             List<Ping> pings = player.getValue(PlayerKeys.PING).orElse(new ArrayList<>());

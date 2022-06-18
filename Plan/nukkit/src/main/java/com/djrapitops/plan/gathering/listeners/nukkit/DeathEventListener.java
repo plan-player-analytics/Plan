@@ -74,7 +74,7 @@ public class DeathEventListener implements Listener {
 
         try {
             Optional<Player> foundKiller = findKiller(dead);
-            if (!foundKiller.isPresent()) {
+            if (foundKiller.isEmpty()) {
                 return;
             }
             Player killer = foundKiller.get();
@@ -99,7 +99,7 @@ public class DeathEventListener implements Listener {
 
         try {
             Optional<Player> foundKiller = findKiller(dead);
-            if (!foundKiller.isPresent()) {
+            if (foundKiller.isEmpty()) {
                 return;
             }
             Player killer = foundKiller.get();

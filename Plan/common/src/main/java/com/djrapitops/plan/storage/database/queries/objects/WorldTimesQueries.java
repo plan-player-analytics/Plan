@@ -65,7 +65,7 @@ public class WorldTimesQueries {
                 WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + WORLD_COLUMN;
 
-        return new QueryStatement<WorldTimes>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -100,7 +100,7 @@ public class WorldTimesQueries {
                 WHERE + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 GROUP_BY + WORLD_COLUMN;
 
-        return new QueryStatement<WorldTimes>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -137,7 +137,7 @@ public class WorldTimesQueries {
                 WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 GROUP_BY + WORLD_COLUMN + ',' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID;
 
-        return new QueryStatement<Map<ServerUUID, WorldTimes>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -183,7 +183,7 @@ public class WorldTimesQueries {
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_END + "<=?";
 
-        return new QueryStatement<GMTimes>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -200,7 +200,7 @@ public class WorldTimesQueries {
 
     public static QueryStatement<Set<World>> fetchWorlds() {
         String worldNameSql = SELECT + '*' + FROM + WorldTable.TABLE_NAME;
-        return new QueryAllStatement<Set<World>>(worldNameSql) {
+        return new QueryAllStatement<>(worldNameSql) {
             @Override
             public Set<World> processResults(ResultSet set) throws SQLException {
                 Set<World> worlds = new HashSet<>();

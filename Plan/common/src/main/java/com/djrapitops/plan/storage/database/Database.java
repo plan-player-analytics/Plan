@@ -58,7 +58,7 @@ public interface Database {
     <T> T query(Query<T> query);
 
     default <T> Optional<T> queryOptional(String sql, RowExtractor<T> rowExtractor, Object... parameters) {
-        return query(new QueryStatement<Optional<T>>(sql) {
+        return query(new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 QueryParameterSetter.setParameters(statement, parameters);
@@ -80,7 +80,7 @@ public interface Database {
     }
 
     default <C extends Collection<T>, T> C queryCollection(String sql, RowExtractor<T> rowExtractor, Supplier<C> collectionConstructor, Object... parameters) {
-        return query(new QueryStatement<C>(sql, 1000) {
+        return query(new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 QueryParameterSetter.setParameters(statement, parameters);
@@ -102,7 +102,7 @@ public interface Database {
     }
 
     default <M extends Map<K, V>, K, V> M queryMap(String sql, MapRowExtractor<K, V> rowExtractor, Supplier<M> mapConstructor, Object... parameters) {
-        return query(new QueryStatement<M>(sql, 100) {
+        return query(new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 QueryParameterSetter.setParameters(statement, parameters);

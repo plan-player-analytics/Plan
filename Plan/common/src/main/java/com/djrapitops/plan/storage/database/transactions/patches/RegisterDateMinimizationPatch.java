@@ -62,7 +62,7 @@ public class RegisterDateMinimizationPatch extends Patch {
                 INNER_JOIN + UsersTable.TABLE_NAME + " u1 on u1." + UsersTable.ID + "=u2." + UserInfoTable.USER_ID +
                 WHERE + "u1." + UsersTable.REGISTERED + ">min_registered";
 
-        return new QueryAllStatement<Map<UUID, Long>>(sql, 500) {
+        return new QueryAllStatement<>(sql, 500) {
             @Override
             public Map<UUID, Long> processResults(ResultSet set) throws SQLException {
                 Map<UUID, Long> dates = new HashMap<>();

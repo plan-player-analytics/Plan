@@ -105,7 +105,7 @@ public class TPSQueries {
                 AND + DATE + "<=?" +
                 ORDER_BY + DATE;
 
-        return new QueryStatement<List<TPS>>(sql, 50000) {
+        return new QueryStatement<>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -132,7 +132,7 @@ public class TPSQueries {
                 WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + floor(DATE + "/?");
 
-        return new QueryStatement<List<DateObj<Integer>>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -155,7 +155,7 @@ public class TPSQueries {
                 WHERE + ServerTable.SERVER_UUID + "=?" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<List<DateObj<Integer>>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -184,7 +184,7 @@ public class TPSQueries {
                 AND + ServerTable.INSTALLED + "=?" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Map<Integer, List<TPS>>>(sql, 5000) {
+        return new QueryStatement<>(sql, 5000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 if (leaveOut != null) {
@@ -225,7 +225,7 @@ public class TPSQueries {
                 AND + PLAYERS_ONLINE + "=" + subQuery +
                 ORDER_BY + DATE + " DESC LIMIT 1";
 
-        return new QueryStatement<Optional<DateObj<Integer>>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -257,7 +257,7 @@ public class TPSQueries {
                 WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
                 ORDER_BY + DATE + " DESC LIMIT 1";
 
-        return new QueryStatement<Optional<TPS>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -288,7 +288,7 @@ public class TPSQueries {
                 AND + TPS + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Double>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -309,7 +309,7 @@ public class TPSQueries {
                 AND + CPU_USAGE + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Double>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -330,7 +330,7 @@ public class TPSQueries {
                 AND + RAM_USAGE + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -351,7 +351,7 @@ public class TPSQueries {
                 AND + CHUNKS + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -372,7 +372,7 @@ public class TPSQueries {
                 AND + ENTITIES + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -393,7 +393,7 @@ public class TPSQueries {
                 AND + FREE_DISK + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -414,7 +414,7 @@ public class TPSQueries {
                 AND + FREE_DISK + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -435,7 +435,7 @@ public class TPSQueries {
                 AND + FREE_DISK + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
-        return new QueryStatement<Long>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -456,7 +456,7 @@ public class TPSQueries {
                 AND + DATE + ">=?" +
                 AND + DATE + "<=?" +
                 ORDER_BY + DATE;
-        return new QueryStatement<Map<Integer, List<TPS>>>(sql, 50000) {
+        return new QueryStatement<>(sql, 50000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -503,7 +503,7 @@ public class TPSQueries {
                 WHERE + "d1 - previous_date > ?" +
                 UNION + selectFirstEntryDate;
 
-        return new QueryStatement<Optional<Long>>(selectStartTime) {
+        return new QueryStatement<>(selectStartTime) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());

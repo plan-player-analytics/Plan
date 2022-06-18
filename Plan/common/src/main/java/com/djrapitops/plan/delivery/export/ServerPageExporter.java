@@ -166,17 +166,15 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportJSON(Path toDirectory, String resource) throws IOException {
-        Optional<Response> found = getJSONResponse(resource);
-        if (!found.isPresent()) {
-            throw new NotFoundException(resource + " was not properly exported: not found");
-        }
+        Response response = getJSONResponse(resource)
+                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
                 StringUtils.replace(
-                        found.get().getAsString(),
+                        response.getAsString(),
                         StringEscapeUtils.escapeJson("../player"),
                         StringEscapeUtils.escapeJson(toRelativePathFromRoot("player"))
                 )

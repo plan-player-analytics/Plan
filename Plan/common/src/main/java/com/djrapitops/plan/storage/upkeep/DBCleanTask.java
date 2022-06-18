@@ -178,7 +178,7 @@ public class DBCleanTask extends TaskSystem.Task {
                 FROM + '(' + selectLastSeen + ") as q1" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + "q1." + SessionsTable.USER_ID +
                 WHERE + "last_seen < ?";
-        return new QueryStatement<List<UUID>>(sql, 20000) {
+        return new QueryStatement<>(sql, 20000) {
 
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

@@ -144,7 +144,7 @@ public class WorldAliasSettings {
             long playtime = entry.getValue();
 
             Optional<String> foundAlias = getAlias(worldName);
-            if (!foundAlias.isPresent()) {
+            if (foundAlias.isEmpty()) {
                 addWorld(worldName);
             }
 
@@ -165,7 +165,7 @@ public class WorldAliasSettings {
             GMTimes gmTimes = entry.getValue();
 
             Optional<String> foundAlias = getAlias(worldName);
-            if (!foundAlias.isPresent()) {
+            if (foundAlias.isEmpty()) {
                 addWorld(worldName);
             }
 
@@ -182,7 +182,7 @@ public class WorldAliasSettings {
 
     public String getLongestWorldPlayed(ActiveSession session) {
         Optional<WorldTimes> foundWorldTimes = session.getExtraData(WorldTimes.class);
-        if (!foundWorldTimes.isPresent()) {
+        if (foundWorldTimes.isEmpty()) {
             return locale.get().getString(HtmlLang.UNIT_NO_DATA);
         }
         WorldTimes worldTimes = foundWorldTimes.orElseGet(WorldTimes::new);
@@ -195,7 +195,7 @@ public class WorldAliasSettings {
     public String getLongestWorldPlayed(FinishedSession session) {
 
         Optional<WorldTimes> foundWorldTimes = session.getExtraData(WorldTimes.class);
-        if (!foundWorldTimes.isPresent()) {
+        if (foundWorldTimes.isEmpty()) {
             return locale.get().getString(HtmlLang.UNIT_NO_DATA);
         }
         WorldTimes worldTimes = foundWorldTimes.orElseGet(WorldTimes::new);

@@ -21,8 +21,8 @@ import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -178,9 +178,7 @@ public enum Html {
     }
 
     private static void appendEndTags(StringBuilder result, int placedSpans) {
-        for (int i = 0; i < placedSpans; i++) {
-            result.append("</span>");
-        }
+        result.append("</span>".repeat(Math.max(0, placedSpans)));
     }
 
     /**
@@ -200,13 +198,9 @@ public enum Html {
     }
 
     public static String encodeToURL(String string) {
-        try {
-            return StringUtils.replace(
-                    URLEncoder.encode(string, "UTF-8"),
-                    "+", "%20" // Encoding replaces spaces with +
-            );
-        } catch (UnsupportedEncodingException e) {
-            return string;
-        }
+        return StringUtils.replace(
+                URLEncoder.encode(string, StandardCharsets.UTF_8),
+                "+", "%20" // Encoding replaces spaces with +
+        );
     }
 }

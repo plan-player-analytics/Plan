@@ -18,11 +18,8 @@ package com.djrapitops.plan.processing.processors.player;
 
 import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.processing.CriticalRunnable;
-
-import java.util.Optional;
 
 /**
  * Processor Class for KillEvent information when the killer is a
@@ -50,12 +47,9 @@ public class PlayerKillProcessor implements CriticalRunnable {
 
     @Override
     public void run() {
-        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(killer.getUuid());
-        if (!cachedSession.isPresent()) {
-            return;
-        }
-        ActiveSession session = cachedSession.get();
-
-        session.addPlayerKill(new PlayerKill(killer, victim, server, weaponName, time));
+        SessionCache.getCachedSession(killer.getUuid())
+                .ifPresent(session -> session.addPlayerKill(
+                        new PlayerKill(killer, victim, server, weaponName, time)
+                ));
     }
 }

@@ -411,7 +411,7 @@ public class PlayerCountQueries {
                 AND + SessionsTable.SESSION_END + "<=?" +
                 AND + "s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
 
-        return new QueryStatement<Integer>(selectUniqueUUIDs) {
+        return new QueryStatement<>(selectUniqueUUIDs) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);

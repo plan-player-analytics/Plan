@@ -93,7 +93,7 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
                 ORDER_BY + "ses.last_seen DESC LIMIT ?";
 
-        return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {
+        return db.query(new QueryStatement<>(selectBaseUsers, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, true);

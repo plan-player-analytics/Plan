@@ -49,7 +49,7 @@ public class PlaceholderCacheRefreshTask extends TaskSystem.Task {
 
     @Override
     public void run() {
-        if (!config.getNode("Plugins.PlaceholderAPI").isPresent()) {
+        if (config.getNode("Plugins.PlaceholderAPI").isEmpty()) {
             cancel(); // Cancel the task and don't do anything if PlaceholderAPI is not installed.
             return;
         }

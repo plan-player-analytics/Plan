@@ -66,14 +66,12 @@ public abstract class QueryStatement<T> implements Query<T> {
     }
 
     public T executeQuery(PreparedStatement statement) throws SQLException {
-        try {
+        try (statement) {
             statement.setFetchSize(fetchSize);
             prepare(statement);
             try (ResultSet set = statement.executeQuery()) {
                 return processResults(set);
             }
-        } finally {
-            statement.close();
         }
     }
 

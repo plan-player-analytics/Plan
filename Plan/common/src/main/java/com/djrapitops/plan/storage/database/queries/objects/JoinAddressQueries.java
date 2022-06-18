@@ -80,7 +80,7 @@ public class JoinAddressQueries {
                 FROM + JoinAddressTable.TABLE_NAME +
                 ORDER_BY + JoinAddressTable.JOIN_ADDRESS + " ASC";
 
-        return new QueryAllStatement<List<String>>(sql, 100) {
+        return new QueryAllStatement<>(sql, 100) {
             @Override
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> joinAddresses = new ArrayList<>();

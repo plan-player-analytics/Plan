@@ -94,7 +94,7 @@ public class WebServer implements SubSystem {
 
         initServer();
 
-        if (!addresses.getAccessAddress().isPresent()) {
+        if (addresses.getAccessAddress().isEmpty()) {
             logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_BAD_IP));
         }
 
@@ -160,7 +160,7 @@ public class WebServer implements SubSystem {
             logger.info(locale.getString(PluginLang.ENABLED_WEB_SERVER, server.getAddress().getPort(), address));
 
             boolean usingAlternativeIP = config.isTrue(WebserverSettings.SHOW_ALTERNATIVE_IP);
-            if (!usingAlternativeIP && !addresses.getAccessAddress().isPresent()) {
+            if (!usingAlternativeIP && addresses.getAccessAddress().isEmpty()) {
                 logger.info("§e" + locale.getString(PluginLang.ENABLE_NOTIFY_EMPTY_IP));
             }
         } catch (BindException failedToBind) {

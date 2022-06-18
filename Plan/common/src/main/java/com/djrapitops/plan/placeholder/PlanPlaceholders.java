@@ -126,7 +126,7 @@ public final class PlanPlaceholders {
                 .flatMap(this::getPlayerUUIDForIdentifier);
         UUID playerUUID = foundUUID.orElse(uuid);
         PlayerContainer player;
-        if (givenIdentifier.isPresent() && !foundUUID.isPresent()) {
+        if (givenIdentifier.isPresent() && foundUUID.isEmpty()) {
             player = null; // Don't show other player whose identifier is not found.
         } else if (playerUUID != null) {
             player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));

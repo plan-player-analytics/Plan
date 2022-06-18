@@ -71,7 +71,7 @@ public class SpecialGraphFactory {
     private void prepareGeocodes() {
         try {
             geoCodes = files.getResourceFromJar("geocodes.json")
-                    .asParsed(gson, new TypeToken<Map<String, String>>() {});
+                    .asParsed(gson, new TypeToken<>() {});
         } catch (IOException e) {
             geoCodes = new HashMap<>();
             errorLogger.error(e, ErrorContext.builder().whatToDo("Failed to read geocodes.json from jar. Try restarting the server.").build());

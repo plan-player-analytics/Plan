@@ -99,7 +99,7 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                 WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 ORDER_BY + "ses.last_seen DESC LIMIT ?";
 
-        return db.query(new QueryStatement<List<TablePlayer>>(selectBaseUsers, 1000) {
+        return db.query(new QueryStatement<>(selectBaseUsers, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString()); // Session query

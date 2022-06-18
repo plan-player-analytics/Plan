@@ -64,7 +64,7 @@ public class UserInfoQueries {
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + "ux." + UserInfoTable.USER_ID +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + "ux." + UserInfoTable.SERVER_ID;
 
-        return new QueryAllStatement<Map<ServerUUID, List<UserInfo>>>(sql, 50000) {
+        return new QueryAllStatement<>(sql, 50000) {
             @Override
             public Map<ServerUUID, List<UserInfo>> processResults(ResultSet set) throws SQLException {
                 Map<ServerUUID, List<UserInfo>> serverMap = new HashMap<>();
@@ -103,7 +103,7 @@ public class UserInfoQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID +
                 WHERE + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
 
-        return new QueryStatement<Set<UserInfo>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -136,7 +136,7 @@ public class UserInfoQueries {
                 AND + "ux." + UserInfoTable.REGISTERED + ">=?" +
                 AND + "ux." + UserInfoTable.REGISTERED + "<=?";
 
-        return new QueryStatement<Map<UUID, Long>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -167,7 +167,7 @@ public class UserInfoQueries {
                 FROM + UserInfoTable.TABLE_NAME +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID +
                 WHERE + column + "=?";
-        return new QueryStatement<Set<Integer>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, value);
@@ -215,7 +215,7 @@ public class UserInfoQueries {
                 INNER_JOIN + "(" + selectServerIds + ") sel_server on sel_server." + ServerTable.ID + "=ux." + UserInfoTable.SERVER_ID +
                 WHERE + "ux." + UserInfoTable.REGISTERED + ">=?" +
                 AND + "ux." + UserInfoTable.REGISTERED + "<=?";
-        return new QueryStatement<Set<Integer>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);

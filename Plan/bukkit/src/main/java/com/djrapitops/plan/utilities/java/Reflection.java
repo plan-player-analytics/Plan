@@ -71,7 +71,7 @@ public final class Reflection {
                 field.setAccessible(true);
 
                 // A function for retrieving a specific field value
-                return new FieldAccessor<T>() {
+                return new FieldAccessor<>() {
 
                     @Override
                     @SuppressWarnings("unchecked")

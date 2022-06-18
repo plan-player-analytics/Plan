@@ -61,7 +61,7 @@ public class PingQueries {
                 FROM + PingTable.TABLE_NAME + " p" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=p." + PingTable.USER_ID +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s.id=p." + PingTable.SERVER_ID;
-        return new QueryAllStatement<Map<UUID, List<Ping>>>(sql, 100000) {
+        return new QueryAllStatement<>(sql, 100000) {
             @Override
             public Map<UUID, List<Ping>> processResults(ResultSet set) throws SQLException {
                 return extractUserPings(set);
@@ -101,7 +101,7 @@ public class PingQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + "=p." + PingTable.SERVER_ID +
                 WHERE + PingTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
 
-        return new QueryStatement<List<Ping>>(sql, 10000) {
+        return new QueryStatement<>(sql, 10000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -137,7 +137,7 @@ public class PingQueries {
                 WHERE + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + PingTable.DATE + ">=?" +
                 AND + PingTable.DATE + "<=?";
-        return new QueryStatement<List<Ping>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -181,7 +181,7 @@ public class PingQueries {
                 AND + "sp." + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
-        return new QueryStatement<Map<String, Ping>>(selectPingByGeolocation) {
+        return new QueryStatement<>(selectPingByGeolocation) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -220,7 +220,7 @@ public class PingQueries {
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
-        return new QueryAllStatement<Map<String, Ping>>(selectPingByGeolocation) {
+        return new QueryAllStatement<>(selectPingByGeolocation) {
             @Override
             public Map<String, Ping> processResults(ResultSet set) throws SQLException {
                 // TreeMap to sort alphabetically
@@ -246,7 +246,7 @@ public class PingQueries {
                 AND + PingTable.DATE + ">=?" +
                 AND + PingTable.DATE + "<=?";
 
-        return new QueryStatement<Double>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());

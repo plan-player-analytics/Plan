@@ -34,7 +34,6 @@ import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
-import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.server.ServerWorld;
 
 @Module

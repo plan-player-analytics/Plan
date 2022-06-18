@@ -4,6 +4,10 @@ dependencies {
     compileOnly "com.google.code.gson:gson:$gsonVersion"
 }
 
+compileJava {
+    options.release = 8
+}
+
 ext.apiVersion = '5.4-R0.1'
 
 publishing {

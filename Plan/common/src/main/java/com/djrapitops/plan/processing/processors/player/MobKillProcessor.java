@@ -20,7 +20,6 @@ import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.processing.CriticalRunnable;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -38,7 +37,7 @@ public class MobKillProcessor implements CriticalRunnable {
     /**
      * Constructor.
      *
-     * @param uuid       UUID of the killer.
+     * @param uuid UUID of the killer.
      */
     public MobKillProcessor(UUID uuid) {
         this.uuid = uuid;
@@ -46,12 +45,6 @@ public class MobKillProcessor implements CriticalRunnable {
 
     @Override
     public void run() {
-        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(uuid);
-        if (!cachedSession.isPresent()) {
-            return;
-        }
-        ActiveSession session = cachedSession.get();
-
-        session.addMobKill();
+        SessionCache.getCachedSession(uuid).ifPresent(ActiveSession::addMobKill);
     }
 }

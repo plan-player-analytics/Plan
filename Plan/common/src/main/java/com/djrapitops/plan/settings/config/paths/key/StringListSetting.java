@@ -30,11 +30,11 @@ import java.util.function.Predicate;
 public class StringListSetting extends Setting<List<String>> {
 
     public StringListSetting(String path) {
-        super(path, new Type<List<String>>() {});
+        super(path, new Type<>() {});
     }
 
     public StringListSetting(String path, Predicate<List<String>> validator) {
-        super(path, new Type<List<String>>() {}, validator);
+        super(path, new Type<>() {}, validator);
     }
 
     @Override

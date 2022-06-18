@@ -55,6 +55,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.*;
 
@@ -130,7 +131,7 @@ public class QueryJSONResolver implements Resolver {
     private InputQueryDto parseInputQueryFromQueryParams(Request request) {
         String q = request.getQuery().get("q").orElseThrow(() -> new BadRequestException("'q' parameter not set (expecting json array)"));
         try {
-            String query = URLDecoder.decode(q, "UTF-8");
+            String query = URLDecoder.decode(q, StandardCharsets.UTF_8);
             List<InputFilterDto> queryFilters = InputFilterDto.parse(query, gson);
             ViewDto view = request.getQuery().get("view")
                     .map(viewJson -> gson.fromJson(viewJson, ViewDto.class))

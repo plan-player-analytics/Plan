@@ -129,7 +129,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 FROM + ExtensionProviderTable.TABLE_NAME + " pr" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl on pl." + ExtensionPluginTable.ID + "=pr." + ExtensionProviderTable.PLUGIN_ID +
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?";
-        return new QueryStatement<Collection<Integer>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
@@ -156,7 +156,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl on pl." + ExtensionPluginTable.ID + "=pr." + ExtensionTableProviderTable.PLUGIN_ID +
                 WHERE + ExtensionPluginTable.LAST_UPDATED + "<?" +
                 AND + ExtensionPluginTable.SERVER_UUID + "=?";
-        return new QueryStatement<Collection<Integer>>(sql, 100) {
+        return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, deleteOlder);

@@ -86,7 +86,7 @@ public class ExtensionPlayerGroupsQuery implements Query<Map<Integer, ExtensionD
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?" +
                 ORDER_BY + ExtensionGroupsTable.GROUP_NAME + " ASC";
 
-        return new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
