@@ -20,12 +20,6 @@ import com.djrapitops.plan.delivery.webserver.ResponseResolver;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverLogMessages;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plan.utilities.logging.ErrorContext;
-import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
@@ -34,27 +28,18 @@ import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.SecuredRedirectHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-import java.io.*;
-import java.security.*;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
+import java.io.File;
 import java.util.Optional;
 
 @Singleton
 public class JettyWebserver implements WebServer {
 
     private final PluginLogger logger;
-    private final ErrorLogger errorLogger;
-    private final Locale locale;
-    private final PlanConfig config;
     private final WebserverConfiguration webserverConfiguration;
+    private final LegacyJettySSLContextLoader legacyJettySSLContextLoader;
     private final JettyRequestHandler jettyRequestHandler;
     private final ResponseResolver responseResolver;
     private final WebserverLogMessages webserverLogMessages;
@@ -64,13 +49,11 @@ public class JettyWebserver implements WebServer {
     private Server webserver;
 
     @Inject
-    public JettyWebserver(PluginLogger logger, ErrorLogger errorLogger, Locale locale, PlanConfig config, WebserverConfiguration webserverConfiguration, JettyRequestHandler jettyRequestHandler, ResponseResolver responseResolver) {
+    public JettyWebserver(PluginLogger logger, WebserverConfiguration webserverConfiguration, LegacyJettySSLContextLoader legacyJettySSLContextLoader, JettyRequestHandler jettyRequestHandler, ResponseResolver responseResolver) {
         this.logger = logger;
-        this.errorLogger = errorLogger;
-        this.locale = locale;
-        this.config = config;
         this.webserverConfiguration = webserverConfiguration;
         webserverLogMessages = webserverConfiguration.getWebserverLogMessages();
+        this.legacyJettySSLContextLoader = legacyJettySSLContextLoader;
         this.jettyRequestHandler = jettyRequestHandler;
         this.responseResolver = responseResolver;
     }
@@ -174,11 +157,11 @@ public class JettyWebserver implements WebServer {
             return Optional.empty();
         }
 
-        String storepass = config.get(WebserverSettings.CERTIFICATE_STOREPASS);
-        String keypass = config.get(WebserverSettings.CERTIFICATE_KEYPASS);
-        String alias = config.get(WebserverSettings.CERTIFICATE_ALIAS);
+        String storepass = webserverConfiguration.getKeyStorePassword();
+        String keypass = webserverConfiguration.getKeyManagerPassword();
+        String alias = webserverConfiguration.getAlias();
 
-        if (keyStorePath.endsWith(".jks") && alias.equals("DefaultPlanCert")) {
+        if (keyStorePath.endsWith(".jks") && "DefaultPlanCert".equals(alias)) {
             logger.warn("You're using self-signed PlanCert.jks certificate included with Plan.jar (Considered legacy since 5.5), it has expired and can cause issues.");
             logger.info("Create new self-signed certificate using openssl:");
             logger.info("    openssl req -x509 -newkey rsa:4096 -keyout myKey.pem -out cert.pem -days 3650");
@@ -189,7 +172,7 @@ public class JettyWebserver implements WebServer {
             logger.info("      Key_pass: <password>");
             logger.info("      Store_pass: <password>");
             logger.info("      Alias: alias");
-            return legacySSLContext(keyStorePath, storepass, keypass, alias);
+            return legacyJettySSLContextLoader.load(keyStorePath, storepass, keypass, alias);
         }
 
         SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
@@ -201,55 +184,6 @@ public class JettyWebserver implements WebServer {
         sslContextFactory.setCertAlias(alias);
 
         return Optional.of(sslContextFactory);
-    }
-
-    @NotNull
-    private Optional<SslContextFactory.Server> legacySSLContext(String keyStorePath, String storepass, String keypass, String alias) {
-        String keyStoreKind = keyStorePath.endsWith(".p12") ? "PKCS12" : "JKS";
-        try (FileInputStream fIn = new FileInputStream(keyStorePath)) {
-            KeyStore keystore = KeyStore.getInstance(keyStoreKind);
-
-            keystore.load(fIn, storepass.toCharArray());
-            Certificate cert = keystore.getCertificate(alias);
-
-            if (cert == null) {
-                throw new IllegalStateException("Alias: '" + alias + "' was not found in file " + keyStorePath + ".");
-            }
-
-            logger.info("Certificate: " + cert.getType());
-
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-            keyManagerFactory.init(keystore, keypass.toCharArray());
-
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
-            trustManagerFactory.init(keystore);
-
-            SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-            sslContext.init(keyManagerFactory.getKeyManagers(), null/*trustManagerFactory.getTrustManagers()*/, null);
-
-            SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
-            sslContextFactory.setSslContext(sslContext);
-
-            return Optional.of(sslContextFactory);
-        } catch (IllegalStateException e) {
-            logger.error(e.getMessage());
-        } catch (KeyManagementException | NoSuchAlgorithmException e) {
-            logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_SSL_CONTEXT));
-            errorLogger.error(e, ErrorContext.builder().related(keyStoreKind).build());
-        } catch (EOFException e) {
-            logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_EMPTY_FILE));
-        } catch (FileNotFoundException e) {
-            logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
-            logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_HTTP));
-        } catch (IOException e) {
-            errorLogger.error(e, ErrorContext.builder().related(config.get(WebserverSettings.INTERNAL_IP) + ":" + port).build());
-        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException e) {
-            logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
-            errorLogger.error(e, ErrorContext.builder()
-                    .whatToDo("Make sure the Certificate settings are correct / You can try remaking the keystore without -passin or -passout parameters.")
-                    .related(keyStorePath).build());
-        }
-        return Optional.empty();
     }
 
     @Override
@@ -278,7 +212,7 @@ public class JettyWebserver implements WebServer {
 
     @Override
     public boolean isAuthRequired() {
-        return isUsingHTTPS() && config.isFalse(WebserverSettings.DISABLED_AUTHENTICATION);
+        return isUsingHTTPS() && webserverConfiguration.isAuthenticationEnabled();
     }
 
     @Override

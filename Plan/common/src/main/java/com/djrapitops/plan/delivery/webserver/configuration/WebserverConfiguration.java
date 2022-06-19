@@ -52,6 +52,10 @@ public class WebserverConfiguration {
         return config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION);
     }
 
+    public boolean isAuthenticationEnabled() {
+        return config.isFalse(WebserverSettings.DISABLED_AUTHENTICATION);
+    }
+
     public AccessAddressPolicy getAccessAddressPolicy() {
         return config.isTrue(WebserverSettings.IP_USE_X_FORWARDED_FOR)
                 ? AccessAddressPolicy.X_FORWARDED_FOR_HEADER
@@ -90,5 +94,17 @@ public class WebserverConfiguration {
         }
 
         return keyStorePath;
+    }
+
+    public String getKeyStorePassword() {
+        return config.get(WebserverSettings.CERTIFICATE_STOREPASS);
+    }
+
+    public String getKeyManagerPassword() {
+        return config.get(WebserverSettings.CERTIFICATE_KEYPASS);
+    }
+
+    public String getAlias() {
+        return config.get(WebserverSettings.CERTIFICATE_ALIAS);
     }
 }
