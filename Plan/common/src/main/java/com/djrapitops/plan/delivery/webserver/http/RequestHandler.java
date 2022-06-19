@@ -89,7 +89,6 @@ public class RequestHandler {
         Optional<String> upgrade = request.getHeader(HttpHeader.UPGRADE.asString());
         if (upgrade.isPresent()) {
             String value = upgrade.get();
-            System.out.println("HTTP Request, 'Upgrade'-header: " + value);
             if ("h2c".equals(value) || "h2".equals(value)) {
                 return Optional.of(Response.builder()
                         .setStatus(101)
