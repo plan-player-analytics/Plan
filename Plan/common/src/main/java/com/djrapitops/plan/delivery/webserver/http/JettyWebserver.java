@@ -50,13 +50,13 @@ public class JettyWebserver implements WebServer {
     private final Locale locale;
     private final PlanConfig config;
     private final WebserverConfiguration webserverConfiguration;
-    private final Server webserver;
     private final JettyRequestHandler jettyRequestHandler;
     private final ResponseResolver responseResolver;
     private final WebserverLogMessages webserverLogMessages;
 
     private int port;
     private boolean usingHttps;
+    private Server webserver;
 
     @Inject
     public JettyWebserver(PluginLogger logger, ErrorLogger errorLogger, Locale locale, PlanConfig config, WebserverConfiguration webserverConfiguration, JettyRequestHandler jettyRequestHandler, ResponseResolver responseResolver) {
@@ -68,8 +68,6 @@ public class JettyWebserver implements WebServer {
         webserverLogMessages = webserverConfiguration.getWebserverLogMessages();
         this.jettyRequestHandler = jettyRequestHandler;
         this.responseResolver = responseResolver;
-
-        webserver = new Server();
     }
 
     @Override
@@ -78,7 +76,10 @@ public class JettyWebserver implements WebServer {
 
         if (webserverConfiguration.isWebserverDisabled()) {
             webserverLogMessages.warnWebserverDisabledByConfig();
+            return;
         }
+
+        webserver = new Server();
 
         this.port = webserverConfiguration.getPort();
 
@@ -185,13 +186,13 @@ public class JettyWebserver implements WebServer {
 
     @Override
     public boolean isEnabled() {
-        return webserver.isStarting() || webserver.isStarted();
+        return webserver != null && (webserver.isStarting() || webserver.isStarted());
     }
 
     @Override
     public void disable() {
         try {
-            webserver.stop();
+            if (webserver != null) webserver.stop();
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
