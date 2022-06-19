@@ -28,8 +28,12 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
+import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.SecuredRedirectHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -86,29 +90,43 @@ public class JettyWebserver implements WebServer {
         HttpConfiguration configuration = new HttpConfiguration();
         Optional<SslContextFactory.Server> sslContext = getSslContextFactory();
         sslContext.ifPresent(ssl -> {
-            SecureRequestCustomizer sniCheckSkipper = new SecureRequestCustomizer();
-            sniCheckSkipper.setSniHostCheck(false);
-            configuration.addCustomizer(sniCheckSkipper);
+            configuration.setSecureScheme("https");
+            configuration.setSecurePort(port);
+
+            SecureRequestCustomizer serverNameIdentifierCheckSkipper = new SecureRequestCustomizer();
+            serverNameIdentifierCheckSkipper.setSniHostCheck(false);
+            serverNameIdentifierCheckSkipper.setSniRequired(false);
+            configuration.addCustomizer(serverNameIdentifierCheckSkipper);
 
             usingHttps = true;
-            configuration.setSecureScheme("https");
         });
 
         HttpConnectionFactory httpConnector = new HttpConnectionFactory(configuration);
-        HTTP2CServerConnectionFactory http2Connector = new HTTP2CServerConnectionFactory(configuration);
+
+        HTTP2ServerConnectionFactory http2Connector = new HTTP2ServerConnectionFactory(configuration);
         http2Connector.setConnectProtocolEnabled(true);
+        HTTP2CServerConnectionFactory http2CConnector = new HTTP2CServerConnectionFactory(configuration);
+        http2CConnector.setConnectProtocolEnabled(true);
+
+        // TODO ALPN is protocol upgrade protocol required for upgrading http 1.1 connections to 2
+//        ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
+//        alpn.setDefaultProtocol("http/1.1");
 
         ServerConnector connector = sslContext
-                .map(sslContextFactory -> new ServerConnector(webserver, sslContextFactory, httpConnector, http2Connector))
+                .map(sslContextFactory -> new ServerConnector(webserver, sslContextFactory, httpConnector, http2Connector, http2CConnector))
                 .orElseGet(() -> {
                     webserverLogMessages.authenticationNotPossible();
-                    return new ServerConnector(webserver, httpConnector, http2Connector);
+                    return new ServerConnector(webserver, httpConnector, http2CConnector);
                 });
 
         connector.setPort(port);
         webserver.addConnector(connector);
 
-        webserver.setHandler(jettyRequestHandler);
+        if (usingHttps) {
+            webserver.setHandler(new HandlerList(new SecuredRedirectHandler(), jettyRequestHandler));
+        } else {
+            webserver.setHandler(jettyRequestHandler);
+        }
 
         try {
             webserver.start();
@@ -137,6 +155,33 @@ public class JettyWebserver implements WebServer {
         String keypass = config.get(WebserverSettings.CERTIFICATE_KEYPASS);
         String alias = config.get(WebserverSettings.CERTIFICATE_ALIAS);
 
+        if (keyStorePath.endsWith(".jks") && alias.equals("DefaultPlanCert")) {
+            logger.warn("You're using self-signed PlanCert.jks certificate included with Plan.jar (Considered legacy since 5.5), it has expired and can cause issues.");
+            logger.info("Create new self-signed certificate using openssl:");
+            logger.info("    openssl req -x509 -newkey rsa:4096 -keyout myKey.pem -out cert.pem -days 3650");
+            logger.info("    openssl pkcs12 -export -out keyStore.p12 -inkey myKey.pem -in cert.pem -name alias -passout pass:<password> -passin pass:<password>");
+            logger.info("Then change config settings to match.");
+            logger.info("  SSL_certificate:");
+            logger.info("      KeyStore_path: keyStore.p12");
+            logger.info("      Key_pass: <password>");
+            logger.info("      Store_pass: <password>");
+            logger.info("      Alias: alias");
+            return legacySSLContext(keyStorePath, storepass, keypass, alias);
+        }
+
+        SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
+        sslContextFactory.setSniRequired(false);
+
+        sslContextFactory.setKeyStorePath(keyStorePath);
+        sslContextFactory.setKeyStorePassword(storepass);
+        sslContextFactory.setKeyManagerPassword(keypass);
+        sslContextFactory.setCertAlias(alias);
+
+        return Optional.of(sslContextFactory);
+    }
+
+    @NotNull
+    private Optional<SslContextFactory.Server> legacySSLContext(String keyStorePath, String storepass, String keypass, String alias) {
         String keyStoreKind = keyStorePath.endsWith(".p12") ? "PKCS12" : "JKS";
         try (FileInputStream fIn = new FileInputStream(keyStorePath)) {
             KeyStore keystore = KeyStore.getInstance(keyStoreKind);

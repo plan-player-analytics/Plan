@@ -25,9 +25,11 @@ import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 @Singleton
 public class RequestHandler {
@@ -74,12 +76,29 @@ public class RequestHandler {
         String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
         try {
             Request request = internalRequest.toRequest();
-            Response response = responseResolver.getResponse(request);
+            Response response = protocolUpgradeResponse(request)
+                    .orElseGet(() -> responseResolver.getResponse(request));
             request.getUser().ifPresent(user -> processSuccessfulLogin(response.getCode(), accessAddress));
             return response;
         } catch (WebUserAuthException thrownByAuthentication) {
             return processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
         }
+    }
+
+    private Optional<Response> protocolUpgradeResponse(Request request) {
+        Optional<String> upgrade = request.getHeader(HttpHeader.UPGRADE.asString());
+        if (upgrade.isPresent()) {
+            String value = upgrade.get();
+            System.out.println("HTTP Request, 'Upgrade'-header: " + value);
+            if ("h2c".equals(value) || "h2".equals(value)) {
+                return Optional.of(Response.builder()
+                        .setStatus(101)
+                        .setHeader("Connection", HttpHeader.UPGRADE.asString())
+                        .setHeader(HttpHeader.UPGRADE.asString(), value)
+                        .build());
+            }
+        }
+        return Optional.empty();
     }
 
     private Response processFailedAuthentication(InternalRequest internalRequest, String accessAddress, WebUserAuthException thrownByAuthentication) {
