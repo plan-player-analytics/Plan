@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

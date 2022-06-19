@@ -51,6 +51,9 @@ dependencies {
     }
     mysqlDriver "mysql:mysql-connector-java:$mysqlVersion"
     sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
+    implementation "org.eclipse.jetty:jetty-server:$jettyVersion"
+    implementation "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
+    implementation "org.eclipse.jetty.http2:http2-server:$jettyVersion"
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
@@ -166,4 +169,6 @@ shadowJar {
     exclude "org/jayway/**/*"
     exclude "google/protobuf/**/*"
     exclude "jargs/gnu/**/*"
+
+    mergeServiceFiles()
 }

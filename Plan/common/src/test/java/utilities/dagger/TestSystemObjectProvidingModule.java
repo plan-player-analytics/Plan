@@ -16,6 +16,8 @@
  */
 package utilities.dagger;
 
+import com.djrapitops.plan.delivery.webserver.http.JettyWebserver;
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -37,6 +39,12 @@ import java.util.function.Predicate;
 
 @Module
 public class TestSystemObjectProvidingModule {
+
+    @Provides
+    @Singleton
+    WebServer provideWebserver(JettyWebserver webServer) {
+        return webServer;
+    }
 
     @Provides
     @Singleton

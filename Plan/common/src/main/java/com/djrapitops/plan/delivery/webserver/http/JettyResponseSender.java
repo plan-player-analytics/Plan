@@ -14,11 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver;
+package com.djrapitops.plan.delivery.webserver.http;
 
 import com.djrapitops.plan.delivery.web.resolver.Response;
-import com.sun.net.httpserver.Headers;
-import com.sun.net.httpserver.HttpExchange;
+import com.djrapitops.plan.delivery.webserver.Addresses;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.eclipse.jetty.http.HttpHeader;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,28 +28,25 @@ import java.io.OutputStream;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
-/**
- * Utility for sending a Response to HttpExchange.
- *
- * @author AuroraLS3
- */
-public class ResponseSender {
+public class JettyResponseSender {
 
-    private final Addresses addresses;
-    private final HttpExchange exchange;
     private final Response response;
+    private final HttpServletRequest servletRequest;
+    private final HttpServletResponse servletResponse;
+    private final Addresses addresses;
 
-    public ResponseSender(Addresses addresses, HttpExchange exchange, Response response) {
-        this.addresses = addresses;
-        this.exchange = exchange;
+    public JettyResponseSender(Response response, HttpServletRequest servletRequest, HttpServletResponse servletResponse, Addresses addresses) {
         this.response = response;
+        this.servletRequest = servletRequest;
+        this.servletResponse = servletResponse;
+        this.addresses = addresses;
     }
 
     public void send() throws IOException {
         setResponseHeaders();
-        if ("HEAD".equals(exchange.getRequestMethod()) || response.getCode() == 204) {
+        if ("HEAD".equals(servletRequest.getMethod()) || response.getCode() == 204) {
             sendHeadResponse();
-        } else if ("bytes".equalsIgnoreCase(response.getHeaders().get("Accept-Ranges"))) {
+        } else if ("bytes".equalsIgnoreCase(response.getHeaders().get(HttpHeader.ACCEPT_RANGES.asString()))) {
             sendRawBytes();
         } else {
             sendCompressed();
@@ -56,21 +55,19 @@ public class ResponseSender {
 
     public void sendHeadResponse() throws IOException {
         try {
-            exchange.getResponseHeaders().remove("Content-Length");
+            response.getHeaders().remove(HttpHeader.CONTENT_LENGTH.asString());
             beginSend();
         } finally {
-            exchange.getRequestBody().close();
+            servletResponse.getOutputStream().close();
         }
     }
 
     private void setResponseHeaders() {
-        Headers headers = exchange.getResponseHeaders();
-
         Map<String, String> responseHeaders = response.getHeaders();
         correctRedirect(responseHeaders);
 
         for (Map.Entry<String, String> header : responseHeaders.entrySet()) {
-            headers.set(header.getKey(), header.getValue());
+            servletResponse.setHeader(header.getKey(), header.getValue());
         }
     }
 
@@ -83,26 +80,26 @@ public class ResponseSender {
     }
 
     private void sendCompressed() throws IOException {
-        exchange.getResponseHeaders().set("Content-Encoding", "gzip");
+        servletResponse.setHeader(HttpHeader.CONTENT_ENCODING.asString(), "gzip");
         beginSend();
-        try (OutputStream out = new GZIPOutputStream(exchange.getResponseBody())) {
+        try (OutputStream out = new GZIPOutputStream(servletResponse.getOutputStream())) {
             send(out);
         }
     }
 
     private void beginSend() throws IOException {
-        String length = response.getHeaders().get("Content-Length");
-        if (length == null || "0".equals(length)) {
-            exchange.getResponseHeaders().remove("Content-Length");
+        String length = response.getHeaders().get(HttpHeader.CONTENT_LENGTH.asString());
+        if (length == null || "0".equals(length) || response.getCode() == 204 || "HEAD".equals(servletRequest.getMethod())) {
+            servletResponse.setHeader(HttpHeader.CONTENT_LENGTH.asString(), null);
         }
         // Return a content length of -1 for HTTP code 204 (No content)
         // and HEAD requests to avoid warning messages.
-        exchange.sendResponseHeaders(response.getCode(), (response.getCode() == 204 || "HEAD".equals(exchange.getRequestMethod()) || length == null) ? -1 : Long.parseLong(length));
+        servletResponse.setStatus(response.getCode());
     }
 
     private void sendRawBytes() throws IOException {
         beginSend();
-        try (OutputStream out = exchange.getResponseBody()) {
+        try (OutputStream out = servletResponse.getOutputStream()) {
             send(out);
         }
     }
