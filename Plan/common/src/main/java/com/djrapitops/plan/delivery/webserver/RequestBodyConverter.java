@@ -35,14 +35,7 @@ public class RequestBodyConverter {
      * @return {@link URIQuery}.
      */
     public static URIQuery formBody(Request request) {
-        if (
-                "POST".equalsIgnoreCase(request.getMethod()) &&
-                        "application/x-www-form-urlencoded".equalsIgnoreCase(request.getHeader("Content-Type").orElse(""))
-        ) {
-            return new URIQuery(new String(request.getRequestBody(), StandardCharsets.UTF_8));
-        } else {
-            return new URIQuery("");
-        }
+        return new URIQuery(new String(request.getRequestBody(), StandardCharsets.UTF_8));
     }
 
     public static <T> T bodyJson(Request request, Gson gson, Class<T> ofType) {

@@ -27,6 +27,7 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.server.*;
@@ -103,17 +104,18 @@ public class JettyWebserver implements WebServer {
 
         HttpConnectionFactory httpConnector = new HttpConnectionFactory(configuration);
 
-        HTTP2ServerConnectionFactory http2Connector = new HTTP2ServerConnectionFactory(configuration);
-        http2Connector.setConnectProtocolEnabled(true);
         HTTP2CServerConnectionFactory http2CConnector = new HTTP2CServerConnectionFactory(configuration);
         http2CConnector.setConnectProtocolEnabled(true);
 
-        // TODO ALPN is protocol upgrade protocol required for upgrading http 1.1 connections to 2
-//        ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
-//        alpn.setDefaultProtocol("http/1.1");
 
         ServerConnector connector = sslContext
-                .map(sslContextFactory -> new ServerConnector(webserver, sslContextFactory, httpConnector, http2Connector, http2CConnector))
+                .map(sslContextFactory -> {
+                    HTTP2ServerConnectionFactory http2Connector = new HTTP2ServerConnectionFactory(configuration);
+                    http2Connector.setConnectProtocolEnabled(true);
+                    ALPNServerConnectionFactory alpn = getAlpnServerConnectionFactory(httpConnector.getProtocol());
+
+                    return new ServerConnector(webserver, sslContextFactory, alpn, httpConnector, http2Connector, http2CConnector);
+                })
                 .orElseGet(() -> {
                     webserverLogMessages.authenticationNotPossible();
                     return new ServerConnector(webserver, httpConnector, http2CConnector);
@@ -137,6 +139,27 @@ public class JettyWebserver implements WebServer {
         webserverLogMessages.infoWebserverEnabled(getPort());
 
         responseResolver.registerPages();
+    }
+
+    private ALPNServerConnectionFactory getAlpnServerConnectionFactory(String protocol) {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            ClassLoader pluginClassLoader = getClass().getClassLoader();
+            // Jetty uses Thread context classloader, so we need to change to plugin classloader where the ALPNProcessor is.
+            Thread.currentThread().setContextClassLoader(pluginClassLoader);
+
+            Class.forName("org.eclipse.jetty.alpn.java.server.JDK9ServerALPNProcessor");
+            // ALPN is protocol upgrade protocol required for upgrading http 1.1 connections to 2
+            ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
+            alpn.setDefaultProtocol(protocol);
+
+            return alpn;
+        } catch (ClassNotFoundException ignored) {
+            logger.warn("JDK9ServerALPNProcessor not found. ALPN is not available.");
+            return null;
+        } finally {
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
+        }
     }
 
     private Optional<SslContextFactory.Server> getSslContextFactory() {
