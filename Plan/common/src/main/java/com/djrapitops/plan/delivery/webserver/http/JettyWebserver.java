@@ -100,7 +100,11 @@ public class JettyWebserver implements WebServer {
                     return new ServerConnector(webserver, sslContextFactory, alpn, httpConnector, http2Connector, http2CConnector);
                 })
                 .orElseGet(() -> {
-                    webserverLogMessages.authenticationNotPossible();
+                    if (webserverConfiguration.isProxyModeHttps()) {
+                        webserverLogMessages.authenticationUsingProxy();
+                    } else {
+                        webserverLogMessages.authenticationNotPossible();
+                    }
                     return new ServerConnector(webserver, httpConnector, http2CConnector);
                 });
 
@@ -146,12 +150,11 @@ public class JettyWebserver implements WebServer {
     }
 
     private Optional<SslContextFactory.Server> getSslContextFactory() {
-        String keyStorePath = webserverConfiguration.getKeyStorePath();
-        if ("proxy".equals(keyStorePath)) {
-            webserverLogMessages.authenticationUsingProxy();
+        if (webserverConfiguration.isProxyModeHttps()) {
             return Optional.empty();
         }
 
+        String keyStorePath = webserverConfiguration.getKeyStorePath();
         if (!new File(keyStorePath).exists()) {
             webserverLogMessages.keystoreFileNotFound();
             return Optional.empty();
@@ -207,7 +210,7 @@ public class JettyWebserver implements WebServer {
 
     @Override
     public boolean isUsingHTTPS() {
-        return usingHttps;
+        return usingHttps || webserverConfiguration.isProxyModeHttps();
     }
 
     @Override

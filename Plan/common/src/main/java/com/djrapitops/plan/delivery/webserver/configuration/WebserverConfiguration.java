@@ -107,4 +107,8 @@ public class WebserverConfiguration {
     public String getAlias() {
         return config.get(WebserverSettings.CERTIFICATE_ALIAS);
     }
+
+    public boolean isProxyModeHttps() {
+        return "proxy".equals(config.get(WebserverSettings.CERTIFICATE_PATH));
+    }
 }
