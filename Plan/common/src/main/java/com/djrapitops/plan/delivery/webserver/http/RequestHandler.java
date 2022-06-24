@@ -39,12 +39,14 @@ public class RequestHandler {
     private final ResponseResolver responseResolver;
 
     private final PassBruteForceGuard bruteForceGuard;
+    private final AccessLogger accessLogger;
 
     @Inject
-    public RequestHandler(WebserverConfiguration webserverConfiguration, ResponseFactory responseFactory, ResponseResolver responseResolver) {
+    public RequestHandler(WebserverConfiguration webserverConfiguration, ResponseFactory responseFactory, ResponseResolver responseResolver, AccessLogger accessLogger) {
         this.webserverConfiguration = webserverConfiguration;
         this.responseFactory = responseFactory;
         this.responseResolver = responseResolver;
+        this.accessLogger = accessLogger;
 
         bruteForceGuard = new PassBruteForceGuard();
     }
@@ -52,37 +54,38 @@ public class RequestHandler {
     public Response getResponse(InternalRequest internalRequest) {
         String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
 
+        Response response;
+        Request request = null;
         if (bruteForceGuard.shouldPreventRequest(accessAddress)) {
-            return responseFactory.failedLoginAttempts403();
-        }
-
-        if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
+            response = responseFactory.failedLoginAttempts403();
+        } else if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
             webserverConfiguration.getWebserverLogMessages()
                     .warnAboutWhitelistBlock(accessAddress, internalRequest.getRequestedURIString());
-            return responseFactory.ipWhitelist403(accessAddress);
+            response = responseFactory.ipWhitelist403(accessAddress);
+        } else {
+            try {
+                request = internalRequest.toRequest();
+                response = attemptToResolve(request, accessAddress);
+            } catch (WebUserAuthException thrownByAuthentication) {
+                response = processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
+            }
         }
-
-        Response response = attemptToResolve(internalRequest);
 
         response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", webserverConfiguration.getAllowedCorsOrigin());
         response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
         response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
         response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
 
+        accessLogger.log(internalRequest, request, response);
+
         return response;
     }
 
-    private Response attemptToResolve(InternalRequest internalRequest) {
-        String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
-        try {
-            Request request = internalRequest.toRequest();
-            Response response = protocolUpgradeResponse(request)
-                    .orElseGet(() -> responseResolver.getResponse(request));
-            request.getUser().ifPresent(user -> processSuccessfulLogin(response.getCode(), accessAddress));
-            return response;
-        } catch (WebUserAuthException thrownByAuthentication) {
-            return processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
-        }
+    private Response attemptToResolve(Request request, String accessAddress) {
+        Response response = protocolUpgradeResponse(request)
+                .orElseGet(() -> responseResolver.getResponse(request));
+        request.getUser().ifPresent(user -> processSuccessfulLogin(response.getCode(), accessAddress));
+        return response;
     }
 
     private Optional<Response> protocolUpgradeResponse(Request request) {

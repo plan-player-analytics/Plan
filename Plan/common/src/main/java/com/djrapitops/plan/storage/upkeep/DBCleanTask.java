@@ -24,6 +24,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -35,6 +36,7 @@ import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.RemoveOldAccessLogTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldSampledDataTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -103,6 +105,7 @@ public class DBCleanTask extends TaskSystem.Task {
         try {
             if (database.getState() != Database.State.CLOSED) {
 
+                database.executeTransaction(new RemoveOldAccessLogTransaction(TimeUnit.DAYS.toMillis(config.get(WebserverSettings.REMOVE_ACCESS_LOG_AFTER_DAYS))));
                 database.executeTransaction(new RemoveOldSampledDataTransaction(
                         serverInfo.getServerUUID(),
                         config.get(TimeSettings.DELETE_TPS_DATA_AFTER),

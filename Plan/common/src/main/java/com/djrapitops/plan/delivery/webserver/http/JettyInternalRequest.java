@@ -54,6 +54,12 @@ public class JettyInternalRequest implements InternalRequest {
     }
 
     @Override
+    public long getTimestamp() {return baseRequest.getTimeStamp();}
+
+    @Override
+    public String getMethod() {return baseRequest.getMethod();}
+
+    @Override
     public String getAccessAddressFromSocketIp() {
         return baseRequest.getRemoteAddr();
     }

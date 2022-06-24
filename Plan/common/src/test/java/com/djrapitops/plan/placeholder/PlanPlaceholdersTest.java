@@ -48,8 +48,9 @@ class PlanPlaceholdersTest {
 
     @BeforeAll
     static void prepareSystem(@TempDir Path tempDir) throws Exception {
-        component = new PluginMockComponent(tempDir).getComponent();
-        component.system().enable();
+        PluginMockComponent mockComponent = new PluginMockComponent(tempDir);
+        component = mockComponent.getComponent();
+        mockComponent.getPlanSystem().enable();
         serverUUID = component.system().getServerInfo().getServerUUID();
         underTest = component.placeholders();
 

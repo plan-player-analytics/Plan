@@ -50,6 +50,7 @@ public abstract class Sql {
     public static final String IS_NOT_NULL = " IS NOT NULL";
     public static final String LIMIT = " LIMIT ";
     public static final String OFFSET = " OFFSET ";
+    public static final String TEXT = "TEXT";
 
     private static final String FLOOR = "FLOOR(";
     private static final String MIN = "MIN(";

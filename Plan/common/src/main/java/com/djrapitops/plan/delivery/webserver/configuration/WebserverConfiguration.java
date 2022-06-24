@@ -48,6 +48,10 @@ public class WebserverConfiguration {
         return webserverLogMessages;
     }
 
+    public boolean logAccessToConsole() {
+        return config.isTrue(WebserverSettings.LOG_ACCESS_TO_CONSOLE);
+    }
+
     public boolean isAuthenticationDisabled() {
         return config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION);
     }
