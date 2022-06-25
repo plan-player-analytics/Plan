@@ -34,7 +34,7 @@
     "react-i18next": "^11.16.1",
     "react-router-dom": "6",
     "react-scripts": "5.0.0",
-    "sass": "^1.49.0",
+    "sass": "^1.53.0",
     "source-map-explorer": "^2.5.2",
     "web-vitals": "^2.1.0"
   },
