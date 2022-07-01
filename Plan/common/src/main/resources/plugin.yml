@@ -45,8 +45,11 @@ softdepend:
 commands:
   plan:
     usage: /plan
+    permission: plan.command
 
 permissions:
+  plan.command:
+    default: true
   plan.server:
     default: op
   plan.servers:
