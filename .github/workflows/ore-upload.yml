@@ -1,0 +1,58 @@
+name: Upload artifact to Ore
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  upload_release:
+    if: ${{ github.event.release.prerelease == false }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifact for upload
+        run: |
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          jq -r '.name' asset.txt > name.txt
+          wget -i url.txt
+          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
+      - name: Upload artifact for ore upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: Plan.jar
+          path: ${{ env.JAR_FILENAME }}
+      - name: Upload release to Ore 🚀
+        uses: dualspiral/ore-upload-action@v1
+        with:
+          plugin: ${{ github.event.release.name }}
+          description: ${{ github.event.release.body }}
+          apiKey: ${{ secrets.ORE_API_TOKEN }}
+          channel: Release
+          pluginId: plan
+          createForumPost: true
+
+  upload_prerelease:
+    if: ${{ github.event.release.prerelease == true }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifact for upload
+        run: |
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          jq -r '.name' asset.txt > name.txt
+          wget -i url.txt
+          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
+      - name: Upload artifact for ore upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: Plan.jar
+          path: ${{ env.JAR_FILENAME }}
+      - name: Upload release to Ore 🚀
+        uses: dualspiral/ore-upload-action@v1
+        with:
+          plugin: ${{ github.event.release.name }}
+          description: ${{ github.event.release.body }}
+          apiKey: ${{ secrets.ORE_API_TOKEN }}
+          channel: DEV
+          pluginId: plan
+          createForumPost: false
