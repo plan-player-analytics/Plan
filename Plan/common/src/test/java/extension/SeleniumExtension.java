@@ -27,15 +27,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import utilities.CIProperties;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Level;
-
-import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
 
 /**
  * Selenium JUnit 5 Extension.
@@ -75,8 +71,8 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
 
     private ChromeDriver getChromeWebDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setCapability(ChromeOptions.CAPABILITY, getDesiredCapabilities());
-        chromeOptions.setCapability(SUPPORTS_JAVASCRIPT, true);
+        chromeOptions.addArguments("--enable-javascript");
+        chromeOptions.setCapability(ChromeOptions.LOGGING_PREFS, getLoggingPreferences());
 
         // Using environment variable assumes linux
         if (System.getenv(CIProperties.CHROME_DRIVER) != null) {
@@ -87,16 +83,14 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         return new ChromeDriver(chromeOptions);
     }
 
-    private DesiredCapabilities getDesiredCapabilities() {
-        DesiredCapabilities caps = new DesiredCapabilities();
+    private LoggingPreferences getLoggingPreferences() {
         LoggingPreferences logPrefs = new LoggingPreferences();
         logPrefs.enable(LogType.PERFORMANCE, Level.INFO);
         logPrefs.enable(LogType.PROFILER, Level.INFO);
         logPrefs.enable(LogType.BROWSER, Level.INFO);
         logPrefs.enable(LogType.CLIENT, Level.INFO);
         logPrefs.enable(LogType.DRIVER, Level.INFO);
-        caps.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
-        return caps;
+        return logPrefs;
     }
 
     private String getChromeDriverLocation() {
