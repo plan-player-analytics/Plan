@@ -34,6 +34,8 @@ import java.util.Optional;
  */
 public interface InternalRequest {
 
+    long getTimestamp();
+
     default String getAccessAddress(WebserverConfiguration webserverConfiguration) {
         AccessAddressPolicy accessAddressPolicy = webserverConfiguration.getAccessAddressPolicy();
         if (accessAddressPolicy == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
@@ -51,6 +53,8 @@ public interface InternalRequest {
     Request toRequest();
 
     List<Cookie> getCookies();
+
+    String getMethod();
 
     String getAccessAddressFromSocketIp();
 

@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
-    id "com.github.node-gradle.node" version "3.3.0"
+    id "com.github.node-gradle.node" version "3.4.0"
 }
 
 configurations {
@@ -140,6 +140,7 @@ shadowJar {
     // Exclude these files
     exclude "**/*.svg"
     exclude "**/*.psd"
+    exclude "**/*.map"
 
     exclude "**/module-info.class"
     exclude "module-info.class"

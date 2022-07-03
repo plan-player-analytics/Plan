@@ -55,6 +55,10 @@ shadowJar {
     relocate 'javax.inject', 'plan.javax.inject'
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
     relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
+
+    relocate 'org.eclipse.jetty', 'plan.org.eclipse.jetty'
+    relocate 'jakarta.servlet', 'plan.jakarta.servlet'
+    relocate 'javax.servlet', 'plan.javax.servlet'
 }
 
 remapJar {

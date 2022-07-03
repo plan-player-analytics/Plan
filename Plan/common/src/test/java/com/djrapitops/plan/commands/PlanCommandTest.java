@@ -27,7 +27,6 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
-import utilities.dagger.PlanPluginComponent;
 import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
@@ -45,10 +44,10 @@ class PlanCommandTest {
 
     @BeforeEach
     void preparePlanCommand(@TempDir Path tempDir) throws Exception {
-        PlanPluginComponent component = new PluginMockComponent(tempDir).getComponent();
-        underTest = component.planCommand();
-        system = component.system();
+        PluginMockComponent mockComponent = new PluginMockComponent(tempDir);
+        system = mockComponent.getPlanSystem();
         system.enable();
+        underTest = mockComponent.getComponent().planCommand();
     }
 
     @AfterEach

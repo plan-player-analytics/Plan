@@ -42,6 +42,7 @@ public class WebserverSettings {
     public static final Setting<List<String>> WHITELIST = new StringListSetting("Webserver.Security.IP_whitelist.Whitelist");
     public static final Setting<Boolean> DISABLED = new BooleanSetting("Webserver.Disable_Webserver");
     public static final Setting<Boolean> DISABLED_AUTHENTICATION = new BooleanSetting("Webserver.Security.Disable_authentication");
+    public static final Setting<Boolean> LOG_ACCESS_TO_CONSOLE = new BooleanSetting("Webserver.Security.Access_log.Print_to_console");
     public static final Setting<String> EXTERNAL_LINK = new StringSetting("Webserver.External_Webserver_address");
 
     public static final Setting<Long> REDUCED_REFRESH_BARRIER = new TimeSetting("Webserver.Cache.Reduced_refresh_barrier");
@@ -49,7 +50,7 @@ public class WebserverSettings {
     public static final Setting<Long> INVALIDATE_DISK_CACHE = new TimeSetting("Webserver.Cache.Invalidate_disk_cache_after");
     public static final Setting<Long> INVALIDATE_MEMORY_CACHE = new TimeSetting("Webserver.Cache.Invalidate_memory_cache_after", TimeUnit.MINUTES.toMillis(5L));
     public static final Setting<Long> COOKIES_EXPIRE_AFTER = new TimeSetting("Webserver.Security.Cookies_expire_after", TimeUnit.HOURS.toMillis(2L));
-
+    public static final Setting<Integer> REMOVE_ACCESS_LOG_AFTER_DAYS = new IntegerSetting("Webserver.Security.Access_log.Remove_logs_after_days");
     private WebserverSettings() {
         /* static variable class */
     }

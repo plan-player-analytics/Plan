@@ -47,10 +47,9 @@ public class LogoutResolver implements NoAuthResolver {
             if (cookie.isEmpty()) continue;
             String[] split = cookie.split("=");
             String name = split[0];
-            String value = split[1];
-            if ("auth".equals(name)) {
-                foundCookie = value;
-                activeCookieStore.removeCookie(value);
+            if ("auth".equals(name) && split.length > 1) {
+                foundCookie = split[1];
+                activeCookieStore.removeCookie(foundCookie);
             }
         }
 

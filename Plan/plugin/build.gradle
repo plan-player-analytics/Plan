@@ -34,6 +34,10 @@ shadowJar {
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
     relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
 
+    relocate 'org.eclipse.jetty', 'plan.org.eclipse.jetty'
+    relocate 'jakarta.servlet', 'plan.jakarta.servlet'
+    relocate 'javax.servlet', 'plan.javax.servlet'
+
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set('Plan')
     archiveClassifier.set('')

@@ -96,6 +96,8 @@ public final class URIQuery {
     }
 
     public String asString() {
+        if (byKey.isEmpty()) return "";
+
         StringBuilder builder = new StringBuilder("?");
         int i = 0;
         int max = byKey.size();
