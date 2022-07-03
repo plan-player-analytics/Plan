@@ -1,0 +1,45 @@
+name: Java CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Build with Gradle
+        run: |
+          cd Plan
+          ./gradlew shadowJar snapshotVersion jarNameVersion
+          git_hash=$(git rev-parse --short "$GITHUB_SHA")
+          echo "git_hash=$git_hash" >> $GITHUB_ENV
+          echo "snapshotVersion=$(cat build/versions/snapshot.txt)" >> $GITHUB_ENV
+          echo "versionString=$(cat build/versions/jar.txt)" >> $GITHUB_ENV
+      - name: Upload Plan.jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: Plan-${{ env.versionString }}-${{ env.git_hash }}.jar
+          path: ${{ env.artifactPath }}/Plan-${{ env.snapshotVersion }}
+      - name: Upload PlanFabric.jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: PlanFabric-${{ env.versionString }}-${{ env.git_hash }}.jar
+          path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}
