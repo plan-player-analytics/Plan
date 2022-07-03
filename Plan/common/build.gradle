@@ -140,6 +140,7 @@ shadowJar {
     // Exclude these files
     exclude "**/*.svg"
     exclude "**/*.psd"
+    exclude "**/*.map"
 
     exclude "**/module-info.class"
     exclude "module-info.class"
