@@ -1,3 +1,5 @@
+import java.nio.file.Files
+
 // Aggregate Javadocs
 buildscript {
     repositories {
@@ -122,7 +124,8 @@ subprojects {
         testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"      // JUnit 5
         testImplementation "org.mockito:mockito-core:$mockitoVersion"           // Mockito Core
         testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"  // Mockito JUnit 5 Extension
-        testImplementation "com.jayway.awaitility:awaitility:1.7.0"             // Awaitility (Concurrent wait conditions)
+        testImplementation "com.jayway.awaitility:awaitility:1.7.0"
+        // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
         testImplementation "org.xerial:sqlite-jdbc:$sqliteVersion"    // SQLite
@@ -173,3 +176,44 @@ sonarqube {
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
+
+abstract class PrintSnapshotVersionTask extends DefaultTask {
+    @TaskAction
+    def print() {
+        def versionsDir = project.file("$project.buildDir/versions")
+        def textFile = project.file("$project.buildDir/versions/snapshot.txt")
+        versionsDir.mkdirs()
+        Files.deleteIfExists(textFile.toPath())
+        textFile.createNewFile()
+        textFile << "$project.version"
+    }
+}
+
+abstract class PrintJarNameVersionTask extends DefaultTask {
+    @TaskAction
+    def print() {
+        def versionsDir = project.file("$project.buildDir/versions")
+        def textFile = project.file("$project.buildDir/versions/jar.txt")
+        versionsDir.mkdirs()
+        Files.deleteIfExists(textFile.toPath())
+        textFile.createNewFile()
+        textFile << "$project.majorVersion.$project.minorVersion-build-$project.buildVersion"
+    }
+}
+
+abstract class PrintHumanReadableVersionTask extends DefaultTask {
+    @TaskAction
+    def print() {
+        def versionsDir = project.file("$project.buildDir/versions")
+        def textFile = project.file("$project.buildDir/versions/human.txt")
+        versionsDir.mkdirs()
+        Files.deleteIfExists(textFile.toPath())
+        textFile.createNewFile()
+        textFile << "$project.fullVersion"
+    }
+}
+
+// Create a task using the task type
+tasks.register('snapshotVersion', PrintSnapshotVersionTask)
+tasks.register('jarNameVersion', PrintJarNameVersionTask)
+tasks.register('humanReadableVersion', PrintHumanReadableVersionTask)
