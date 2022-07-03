@@ -208,6 +208,6 @@ class JSErrorRegressionTest {
     private void assertNoLogs(String testName, List<LogEntry> logs) {
         assertTrue(logs.isEmpty(), () -> testName + "Browser console included " + logs.size() + " logs: " + logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
-                .collect(Collectors.toList()));
+                .toList());
     }
 }
