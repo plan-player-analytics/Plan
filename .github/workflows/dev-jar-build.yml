@@ -33,13 +33,14 @@ jobs:
           echo "git_hash=$git_hash" >> $GITHUB_ENV
           echo "snapshotVersion=$(cat build/versions/snapshot.txt)" >> $GITHUB_ENV
           echo "versionString=$(cat build/versions/jar.txt)" >> $GITHUB_ENV
+          echo "artifactPath=$(pwd)/builds" >> $GITHUB_ENV
       - name: Upload Plan.jar
         uses: actions/upload-artifact@v3
         with:
           name: Plan-${{ env.versionString }}-${{ env.git_hash }}.jar
-          path: ${{ env.artifactPath }}/Plan-${{ env.snapshotVersion }}
+          path: ${{ env.artifactPath }}/Plan-${{ env.snapshotVersion }}.jar
       - name: Upload PlanFabric.jar
         uses: actions/upload-artifact@v3
         with:
           name: PlanFabric-${{ env.versionString }}-${{ env.git_hash }}.jar
-          path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}
+          path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}.jar
