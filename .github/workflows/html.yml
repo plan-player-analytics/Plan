@@ -21,7 +21,9 @@ jobs:
       - name: Copy assets 🔧 
         run: |
           mkdir -p workingdir/Plan/src/main/resources/assets/plan
+          mkdir -p workingdir/react/dashboard
           cp -r Plan/common/src/main/resources/assets/plan workingdir/Plan/src/main/resources/assets/plan
+          cp -r react/dashboard workingdir/react/dashboard
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
