@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Set up JDK
+      - name: Setup JDK
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
