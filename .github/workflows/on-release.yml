@@ -5,6 +5,36 @@ on:
     types: [ published ]
 
 jobs:
+  update_versions_txt:
+    name: Update version.txt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+      - name: Get Download URL
+        run: |
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          echo "RELEASE_DOWNLOAD_URL=$(cat url.txt)" >> $GITHUB_ENV
+      - name: Write REL release line
+        if: ${{ github.event.release.prerelease == false }}
+        run: |
+          echo "REL|${{ env.RELEASE_DOWNLOAD_URL }}|https://github.com/plan-player-analytics/Plan/releases" > release_line.txt
+      - name: Write DEV release line
+        if: ${{ github.event.release.prerelease == true }}
+        run: |
+          echo "DEV|${{ env.RELEASE_DOWNLOAD_URL }}|${{ github.event.release.url }}" > release_line.txt
+      - name: Append to version.txt
+        run: |
+          cat release_line.txt version.txt > version.txt
+      - name: Commit and push changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          committer_name: GitHub Actions
+          committer_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: Update version.txt ${{ github.event.release.name }}
+          add: version.txt
+
   update_html:
     name: Update html-branch
     runs-on: ubuntu-latest
