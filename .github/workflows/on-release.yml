@@ -1,0 +1,106 @@
+name: Release Tasks
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  update_html:
+    name: Update html-branch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+      - name: Get git TAG
+        id: tagName
+        uses: olegtarasov/get-tag@v2.1
+      - name: Copy assets 🔧 
+        run: |
+          mkdir -p workingdir/Plan/src/main/resources/assets/plan
+          mkdir -p workingdir/react/dashboard
+          cp -r Plan/common/src/main/resources/assets/plan workingdir/Plan/src/main/resources/assets/plan
+          cp -r react/dashboard workingdir/react/dashboard
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: html # The branch the action should deploy to.
+          folder: workingdir # The folder the action should deploy.
+          commit-message: ${{ steps.tagName.outputs.tag }}
+
+  upload_release_ore:
+    name: Upload artifact to Ore
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifact for upload
+        run: |
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          jq -r '.name' asset.txt > name.txt
+          wget -i url.txt
+          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
+      - name: Upload artifact for ore upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: Plan.jar
+          path: ${{ env.JAR_FILENAME }}
+      - name: Upload release to Ore 🚀
+        if: ${{ github.event.release.prerelease == false }}
+        uses: dualspiral/ore-upload-action@v1
+        with:
+          plugin: ${{ github.event.release.name }}
+          description: ${{ github.event.release.body }}
+          apiKey: ${{ secrets.ORE_API_TOKEN }}
+          channel: Release
+          pluginId: plan
+          createForumPost: true
+      - name: Upload DEV release to Ore 🚀
+        if: ${{ github.event.release.prerelease == true }}
+        uses: dualspiral/ore-upload-action@v1
+        with:
+          plugin: ${{ github.event.release.name }}
+          description: ${{ github.event.release.body }}
+          apiKey: ${{ secrets.ORE_API_TOKEN }}
+          channel: DEV
+          pluginId: plan
+          createForumPost: false
+
+  upload_release_curseforge:
+    name: Upload artifact to CurseForge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifact for upload
+        run: |
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric"))' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          jq -r '.name' asset.txt > name.txt
+          wget -i url.txt
+          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
+      - name: Upload release to CurseForge 🚀
+        if: ${{ github.event.release.prerelease == false }}
+        uses: itsmeow/curseforge-upload@master
+        with:
+          token: ${{ secrets.CF_API_TOKEN }}
+          project_id: 508727
+          game_endpoint: minecraft
+          file_path: ${{ env.JAR_FILENAME }}
+          changelog: ${{ github.event.release.body }}
+          changelog_type: markdown
+          display_name: ${{ github.event.release.name }}
+          game_versions: "2:Java 17,73407:1.19,Fabric"
+          release_type: release
+          relations: fabric-api:requiredDependency,luckperms:optionalDependency
+      - name: Upload prerelease to CurseForge 🚀
+        if: ${{ github.event.release.prerelease == true }}
+        uses: itsmeow/curseforge-upload@master
+        with:
+          token: ${{ secrets.CF_API_TOKEN }}
+          project_id: 508727
+          game_endpoint: minecraft
+          file_path: ${{ env.JAR_FILENAME }}
+          changelog: ${{ github.event.release.body }}
+          changelog_type: markdown
+          display_name: ${{ github.event.release.name }}
+          game_versions: "2:Java 17,73407:1.19,Fabric"
+          release_type: beta
+          relations: fabric-api:requiredDependency,luckperms:optionalDependency
