@@ -64,13 +64,14 @@ jobs:
           cd Plan
           ./gradlew build
       - name: SonarCloud
-        if: github.event_name != 'pull_request'
-        run: |
-          cd Plan
-          ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: "${{ env.SONAR_TOKEN != '' }}"
+        run: |
+          cd Plan
+          ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan
+
 
   build_dev_jars:
     name: Build DEV jars
