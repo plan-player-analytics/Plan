@@ -73,7 +73,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build_dev_jars:
-    name: Build DEV-release jars
+    name: Build DEV jars
     runs-on: ubuntu-latest
 
     steps:

@@ -1,4 +1,4 @@
-name: Release Tasks
+name: Release
 
 on:
   release:
@@ -29,7 +29,7 @@ jobs:
           commit-message: ${{ steps.tagName.outputs.tag }}
 
   upload_release_ore:
-    name: Upload artifact to Ore
+    name: Ore Upload
     runs-on: ubuntu-latest
     steps:
       - name: Download release artifact for upload
@@ -66,7 +66,7 @@ jobs:
           createForumPost: false
 
   upload_release_curseforge:
-    name: Upload artifact to CurseForge
+    name: CurseForge Upload
     runs-on: ubuntu-latest
     steps:
       - name: Download release artifact for upload
