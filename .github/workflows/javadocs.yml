@@ -16,7 +16,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
 
-      - name: Set up JDK 1.16 🍵
+      - name: Set up JDK 🍵
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
