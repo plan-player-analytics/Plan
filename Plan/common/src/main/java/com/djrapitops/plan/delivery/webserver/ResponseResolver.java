@@ -35,6 +35,10 @@ import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,6 +56,11 @@ import java.util.regex.Pattern;
  * @author AuroraLS3
  */
 @Singleton
+@OpenAPIDefinition(info = @Info(
+        title = "Plan API endpoints",
+        contact = @Contact(name = "Github Discussions", url = "https://github.com/plan-player-analytics/Plan/discussions/categories/apis-and-development"),
+        license = @License(name = "GNU Lesser General Public License v3.0 (LGPLv3.0)", url = "https://github.com/plan-player-analytics/Plan/blob/master/LICENSE")
+))
 public class ResponseResolver {
 
     private final QueryPageResolver queryPageResolver;

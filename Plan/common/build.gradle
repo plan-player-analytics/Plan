@@ -4,6 +4,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
     id "com.github.node-gradle.node" version "3.4.0"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.1"
 }
 
 configurations {
@@ -54,6 +55,11 @@ dependencies {
     implementation "org.eclipse.jetty:jetty-server:$jettyVersion"
     implementation "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
     implementation "org.eclipse.jetty.http2:http2-server:$jettyVersion"
+
+    // Swagger annotations
+    implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.1'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.1'
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
@@ -127,10 +133,27 @@ task determineWebAssetModifications {
     }
 }
 
+resolve { // Swagger json generation task
+    outputFileName = 'swagger'
+    outputFormat = 'JSON'
+    prettyPrint = 'TRUE'
+    classpath = sourceSets.main.runtimeClasspath
+    buildClasspath = classpath
+    resourcePackages = [
+            'com.djrapitops.plan.delivery.webserver',
+            'com.djrapitops.plan.delivery.webserver.resolver.auth',
+            'com.djrapitops.plan.delivery.webserver.resolver.json',
+    ]
+    outputDir = file('build/sources/resources/assets/plan/web/')
+}
+
 processResources {
-    dependsOn copyYarnBuildResults, determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    dependsOn copyYarnBuildResults
+    dependsOn determineWebAssetModifications
+    dependsOn generateResourceForMySQLDriver
+    dependsOn generateResourceForSQLiteDriver
     dependsOn updateVersion
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from 'build/sources/resources'
 }
 

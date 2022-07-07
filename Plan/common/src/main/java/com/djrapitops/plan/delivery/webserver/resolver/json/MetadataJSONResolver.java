@@ -27,12 +27,17 @@ import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.java.Maps;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
+@Path("/v1/metadata")
 public class MetadataJSONResolver implements NoAuthResolver {
 
     private final PlanConfig config;
@@ -47,6 +52,11 @@ public class MetadataJSONResolver implements NoAuthResolver {
         this.serverInfo = serverInfo;
     }
 
+    @GET
+    @Operation(
+            description = "Get metadata required for displaying Plan React frontend",
+            requestBody = @RequestBody()
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse());

@@ -22,12 +22,18 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
+@Path("/auth/logout")
 public class LogoutResolver implements NoAuthResolver {
 
     private final ActiveCookieStore activeCookieStore;
@@ -39,6 +45,15 @@ public class LogoutResolver implements NoAuthResolver {
         this.activeCookieStore = activeCookieStore;
     }
 
+    @GET
+    @Operation(
+            description = "Logout the user by removing cookie",
+            responses = {
+                    @ApiResponse(responseCode = "302", description = "Logout successful, redirects to /login"),
+                    @ApiResponse(responseCode = "302", description = "Cookie had already expired, redirects to /login"),
+            },
+            requestBody = @RequestBody()
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         String cookies = request.getHeader("Cookie").orElse("");

@@ -29,6 +29,12 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,6 +47,7 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 @Singleton
+@Path("/v1/graph")
 public class GraphsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
@@ -70,6 +77,34 @@ public class GraphsJSONResolver implements Resolver {
      * @throws BadRequestException If 'type' parameter is not defined or supported.
      * @throws BadRequestException If 'server' parameter is not defined or server is not found in database.
      */
+    @GET
+    @Operation(
+            description = "Get graph data",
+            parameters = {
+                    @Parameter(name = "type", required = true, examples = {
+                            @ExampleObject(value = "performance", description = "Deprecated, use optimizedPerformance"),
+                            @ExampleObject("optimizedPerformance"),
+                            @ExampleObject("playersOnline"),
+                            @ExampleObject("uniqueAndNew"),
+                            @ExampleObject("hourlyUniqueAndNew"),
+                            @ExampleObject("serverCalendar"),
+                            @ExampleObject("worldPie"),
+                            @ExampleObject("activity"),
+                            @ExampleObject("geolocation"),
+                            @ExampleObject("aggregatedPing"),
+                            @ExampleObject("punchCard"),
+                            @ExampleObject("serverPie"),
+                            @ExampleObject("joinAddressPie"),
+                    }),
+                    @Parameter(name = "server", description = "Server identifier to get data for", examples = {
+                            @ExampleObject("Server 1"),
+                            @ExampleObject("1"),
+                            @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
+                    }),
+                    @Parameter(name = "timestamp", description = "Epoch millisecond for the request, newer value is wanted")
+            },
+            requestBody = @RequestBody()
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse(request));

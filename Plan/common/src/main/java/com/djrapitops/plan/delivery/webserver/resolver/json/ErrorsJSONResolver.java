@@ -22,6 +22,14 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,6 +44,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Singleton
+@Path("/v1/errors")
 public class ErrorsJSONResolver implements Resolver {
 
     private final PlanFiles files;
@@ -50,6 +59,14 @@ public class ErrorsJSONResolver implements Resolver {
         return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
     }
 
+    @GET
+    @Operation(
+            description = "Get list of Plan error logs",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of error files and their contents", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorFile.class))))
+            },
+            requestBody = @RequestBody()
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse());
@@ -79,7 +96,7 @@ public class ErrorsJSONResolver implements Resolver {
         try (Stream<String> lines = Files.lines(file.toPath())) {
             return lines.collect(Collectors.toList());
         } catch (IOException e) {
-            return Collections.singletonList("Failed to read " + file.getAbsolutePath() + ": " + e.toString());
+            return Collections.singletonList("Failed to read " + file.getAbsolutePath() + ": " + e);
         }
     }
 
