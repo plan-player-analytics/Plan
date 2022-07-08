@@ -58,9 +58,9 @@ dependencies {
     shadow "org.eclipse.jetty.http2:http2-server:$jettyVersion"
 
     // Swagger annotations
-    implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
-    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.1'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.1'
+    implementation "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
+    implementation "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
+    implementation "io.swagger.core.v3:swagger-jaxrs2-jakarta:$swaggerVersion"
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
