@@ -149,6 +149,8 @@ public class ResponseResolver {
         resolverService.registerResolverForMatches(plugin, Pattern.compile(StaticResourceResolver.PATH_REGEX), staticResourceResolver);
 
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
+        resolverService.registerResolver(plugin, "/docs/swagger.json", fileResolver(() -> responseFactory.jsonFileResponse("swagger.json")));
+        resolverService.registerResolver(plugin, "/docs", fileResolver(responseFactory::reactPageResponse));
     }
 
     private NoAuthResolver fileResolver(Supplier<Response> response) {
