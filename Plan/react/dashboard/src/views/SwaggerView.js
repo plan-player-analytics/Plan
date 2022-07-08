@@ -7,7 +7,7 @@ const SwaggerView = () => {
         SwaggerUI({
             dom_id: "#swagger-ui"
         });
-    }, [SwaggerUI]);
+    }, []);
 
     return (
         <main id="swagger-ui"></main>
