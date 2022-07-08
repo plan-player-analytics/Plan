@@ -58,9 +58,9 @@ dependencies {
     shadow "org.eclipse.jetty.http2:http2-server:$jettyVersion"
 
     // Swagger annotations
-    compileOnly 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
-    compileOnly 'io.swagger.core.v3:swagger-core-jakarta:2.2.1'
-    compileOnly 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.1'
+    implementation 'jakarta.ws.rs:jakarta.ws.rs-api:3.1.0'
+    implementation 'io.swagger.core.v3:swagger-core-jakarta:2.2.1'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.1'
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
@@ -145,7 +145,7 @@ resolve { // Swagger json generation task
             'com.djrapitops.plan.delivery.webserver.resolver.auth',
             'com.djrapitops.plan.delivery.webserver.resolver.json',
     ]
-    outputDir = file('build/sources/resources/assets/plan/web/')
+    outputDir = file('build/resources/assets/plan/web/')
 }
 
 processResources {
@@ -157,6 +157,7 @@ processResources {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from 'build/sources/resources'
 }
+processResources.finalizedBy(resolve)
 
 shadowJar {
     configurations = [project.configurations.shadow]
