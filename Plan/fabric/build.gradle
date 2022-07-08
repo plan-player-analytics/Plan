@@ -1,15 +1,16 @@
 apply plugin: 'fabric-loom'
 
 dependencies {
+    shadow project(path: ":api")
+    shadow project(path: ":extensions")
+    shadow project(path: ":common")
+
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    implementation project(path: ":common", configuration: 'shadow')
-    shadow project(path: ":common", configuration: 'shadow')
-    compileOnly project(":api")
-    modImplementation('me.lucko:fabric-permissions-api:0.1-SNAPSHOT')
 
     minecraft "com.mojang:minecraft:1.19"
     mappings "net.fabricmc:yarn:1.19+build.1:v2"
     modImplementation "net.fabricmc:fabric-loader:0.14.7"
+    modImplementation('me.lucko:fabric-permissions-api:0.1-SNAPSHOT')
 
     // Fabric API
     Set<String> apiModules = [
@@ -44,6 +45,22 @@ shadowJar {
     exclude('net.fabricmc:*')
     exclude('/mappings/')
 
+    // Exclude these files
+    exclude "**/*.svg"
+    exclude "**/*.psd"
+    exclude "**/*.map"
+
+    exclude "**/module-info.class"
+    exclude "module-info.class"
+    exclude 'META-INF/versions/' // Causes Sponge to crash
+    exclude 'mozilla/**/*'
+
+    // Exclude extra dependencies
+    exclude 'org/apache/http/**/*' // Unnecessary http client depended on by geolite2 implementation
+    exclude "org/junit/**/*" // see extensions/build.gradle
+    exclude "org/opentest4j/**/*" // see extensions/build.gradle
+    exclude "org/checkerframework/**/*" // Dagger compiler
+
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
     }
@@ -56,9 +73,20 @@ shadowJar {
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
     relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
 
+    relocate 'com.maxmind', 'plan.com.maxmind'
+    relocate 'com.fasterxml', 'plan.com.fasterxml'
+    relocate 'com.zaxxer', 'plan.com.zaxxer'
+    relocate 'com.google.gson', 'plan.com.google.gson'
+    relocate 'com.google.errorprone', 'plan.com.google.errorprone'
+    relocate 'org.bstats', 'plan.org.bstats'
+
     relocate 'org.eclipse.jetty', 'plan.org.eclipse.jetty'
     relocate 'jakarta.servlet', 'plan.jakarta.servlet'
     relocate 'javax.servlet', 'plan.javax.servlet'
+}
+
+prepareRemapJar {
+    dependsOn tasks.shadowJar
 }
 
 remapJar {

@@ -13,6 +13,7 @@ buildscript {
 plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2" apply false
     id "java"
+    id 'java-library'
     id "jacoco"
     id "checkstyle"
     id "org.sonarqube" version "3.4.0.2513"
@@ -54,6 +55,7 @@ subprojects {
     // Build plugins
     apply plugin: "com.github.johnrengelman.shadow"
     apply plugin: "java"
+    apply plugin: "java-library"
     apply plugin: "maven-publish"
 
     // Report plugins
@@ -116,8 +118,9 @@ subprojects {
 
     dependencies {
         // Dependency Injection used across the project
-        implementation "com.google.dagger:dagger:$daggerVersion"
+        shadow "com.google.dagger:dagger:$daggerVersion"
         annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+        testImplementation "com.google.dagger:dagger:$daggerVersion"
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
         // Test Tooling Dependencies
@@ -133,7 +136,11 @@ subprojects {
     }
 
     configurations {
-        testArtifacts.extendsFrom testRuntimeOnly
+        // Include shadowed dependencies in compile classpath of dependent modules
+        api.extendsFrom shadow
+
+        testArtifacts.extendsFrom testRuntimeOnly // Test classes available to other modules
+        testImplementation.extendsFrom shadow // Include shadowed dependencies in test classpath
     }
     // Test classes available to other modules
     task testJar(type: Jar) {

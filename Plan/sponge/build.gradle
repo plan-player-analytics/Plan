@@ -7,17 +7,17 @@ plugins {
 }
 
 dependencies {
-    compileOnly project(":common")
-    implementation project(path: ":common", configuration: 'shadow')
-    compileOnly project(":api")
+    implementation project(":api")
+    implementation project(":common")
 
+    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     shadow "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
     shadow "org.bstats:bstats-sponge:$bstatsVersion"
 
-    testImplementation "org.spongepowered:spongeapi:$spongeVersion"
     annotationProcessor "org.spongepowered:spongeapi:$spongeVersion"
     shadow "org.spongepowered:mixin:0.7.11-SNAPSHOT"
 
+    testImplementation "org.spongepowered:spongeapi:$spongeVersion"
     testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
