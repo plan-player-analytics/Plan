@@ -30,6 +30,8 @@ import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
 import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerJsonResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerPageResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -76,6 +78,8 @@ public class ResponseResolver {
     private final LogoutResolver logoutResolver;
     private final RegisterResolver registerResolver;
     private final ErrorsPageResolver errorsPageResolver;
+    private final SwaggerJsonResolver swaggerJsonResolver;
+    private final SwaggerPageResolver swaggerPageResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
@@ -103,6 +107,9 @@ public class ResponseResolver {
             RegisterResolver registerResolver,
             ErrorsPageResolver errorsPageResolver,
 
+            SwaggerJsonResolver swaggerJsonResolver,
+            SwaggerPageResolver swaggerPageResolver,
+
             ErrorLogger errorLogger
     ) {
         this.resolverService = resolverService;
@@ -121,6 +128,8 @@ public class ResponseResolver {
         this.logoutResolver = logoutResolver;
         this.registerResolver = registerResolver;
         this.errorsPageResolver = errorsPageResolver;
+        this.swaggerJsonResolver = swaggerJsonResolver;
+        this.swaggerPageResolver = swaggerPageResolver;
         this.errorLogger = errorLogger;
     }
 
@@ -149,8 +158,8 @@ public class ResponseResolver {
         resolverService.registerResolverForMatches(plugin, Pattern.compile(StaticResourceResolver.PATH_REGEX), staticResourceResolver);
 
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
-        resolverService.registerResolver(plugin, "/docs/swagger.json", fileResolver(() -> responseFactory.jsonFileResponse("swagger.json")));
-        resolverService.registerResolver(plugin, "/docs", fileResolver(responseFactory::reactPageResponse));
+        resolverService.registerResolver(plugin, "/docs/swagger.json", swaggerJsonResolver);
+        resolverService.registerResolver(plugin, "/docs", swaggerPageResolver);
     }
 
     private NoAuthResolver fileResolver(Supplier<Response> response) {
