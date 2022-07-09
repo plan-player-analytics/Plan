@@ -16,11 +16,18 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plan.version.VersionInfo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -33,6 +40,7 @@ import java.util.Optional;
  *
  * @author Kopo942
  */
+@Path("/v1/version")
 public class VersionJSONResolver implements Resolver {
 
     private final VersionChecker versionChecker;
@@ -52,6 +60,14 @@ public class VersionJSONResolver implements Resolver {
         return true;
     }
 
+    @GET
+    @Operation(
+            description = "Get Plan version and update information",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
+            },
+            requestBody = @RequestBody()
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse());

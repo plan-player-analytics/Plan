@@ -95,7 +95,7 @@ public class FiltersJSONResolver implements Resolver {
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, schema = @Schema(implementation = FilterResponseDto.class)))
             },
-            requestBody = @RequestBody
+            requestBody = @RequestBody()
     )
     @Override
     public Optional<Response> resolve(Request request) {

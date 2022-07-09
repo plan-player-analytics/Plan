@@ -49,6 +49,14 @@ import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.google.gson.Gson;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 
 import javax.inject.Inject;
@@ -60,6 +68,7 @@ import java.text.ParseException;
 import java.util.*;
 
 @Singleton
+@Path("/v1/query")
 public class QueryJSONResolver implements Resolver {
 
     private final QueryFilters filters;
@@ -101,6 +110,21 @@ public class QueryJSONResolver implements Resolver {
         return user.hasPermission("page.players");
     }
 
+    @GET
+    @Operation(
+            description = "Perform a query or get cached results",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
+                    @ApiResponse(responseCode = "400", description = "If 'view' date formats does not match afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm"),
+                    @ApiResponse(responseCode = "400", description = "If request body is empty and 'q' request parameter is not given"),
+                    @ApiResponse(responseCode = "400", description = "If request body is empty and 'q' json request parameter doesn't contain 'view' property"),
+            },
+            parameters = {
+                    @Parameter(name = "timestamp", description = "Epoch millisecond for cached query"),
+                    @Parameter(name = "q", description = "URI encoded json, alternative is to POST in request body", schema = @Schema(implementation = InputQueryDto.class))
+            },
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = InputQueryDto.class)))
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse(request));
