@@ -29,6 +29,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test to check that configs contain all values required to run the plugin.
@@ -56,6 +59,32 @@ class ConfigSettingKeyTest {
     void proxyConfigHasValidDefaultValues() throws IOException, IllegalAccessException {
         PlanConfig config = createConfig("bungeeconfig.yml");
         TestSettings.assertValidDefaultValuesForAllSettings(config, TestSettings.getProxySettings());
+    }
+
+    @Test
+    @DisplayName("config.yml key paths don't overlap")
+    void serverConfigHasUniqueKeyPaths() throws IOException {
+        PlanConfig config = createConfig("config.yml");
+        checkConfigPathConflicts(config);
+    }
+
+    @Test
+    @DisplayName("bungeeconfig.yml key paths don't overlap")
+    void proxyConfigHasUniqueKeyPaths() throws IOException {
+        PlanConfig config = createConfig("bungeeconfig.yml");
+        checkConfigPathConflicts(config);
+    }
+
+    private void checkConfigPathConflicts(PlanConfig config) {
+        List<Object> result = config.dfs((node, results) -> {
+            String value = node.getString();
+            boolean hasChildren = node.getChildren().isEmpty();
+            boolean hasValue = value != null && !value.isEmpty();
+            if (!hasChildren && hasValue) {
+                results.add(node.getKey(true));
+            }
+        });
+        assertTrue(result.isEmpty(), () -> "Following nodes have values and children: " + result);
     }
 
     private PlanConfig createConfig(String copyDefaultSettingsFrom) throws IOException {

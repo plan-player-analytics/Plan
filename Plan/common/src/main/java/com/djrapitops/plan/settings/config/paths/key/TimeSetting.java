@@ -48,7 +48,7 @@ public class TimeSetting extends Setting<Long> {
 
     @Override
     public Long getValueFrom(ConfigNode node) {
-        Long duration = node.getLong(path);
+        Long duration = node.getLong(path + ".Time");
         if (duration == null) {
             return null;
         }

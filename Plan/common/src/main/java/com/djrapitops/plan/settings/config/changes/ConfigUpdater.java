@@ -149,7 +149,29 @@ public class ConfigUpdater {
                 new ConfigChange.Removed("Database.H2.Password"),
                 new ConfigChange.Removed("Database.H2"),
 
-                new ConfigChange.MoveLevelDown("World_aliases", "World_aliases.List")
+                new ConfigChange.MoveLevelDown("World_aliases", "World_aliases.List"),
+
+                new ConfigChange.MovedValue("Webserver.Alternative_IP", "Webserver.Alternative_IP.Enabled"),
+                new ConfigChange.MovedValue("Webserver.Security.IP_whitelist", "Webserver.Security.IP_whitelist.Enabled"),
+                new ConfigChange.Moved("Formatting.Dates.Show_recent_day_names.DatePattern", "Formatting.Dates.Show_recent_day_names_date_pattern"),
+                new ConfigChange.MovedValue("Export.Server_refresh_period", "Export.Server_refresh_period.Time"),
+                new ConfigChange.MovedValue("Webserver.Security.Cookies_expire_after", "Webserver.Security.Cookies_expire_after.Time"),
+                new ConfigChange.MovedValue("Webserver.Cache.Reduced_refresh_barrier", "Webserver.Cache.Reduced_refresh_barrier.Time"),
+                new ConfigChange.MovedValue("Webserver.Cache.Invalidate_disk_cache_after", "Webserver.Cache.Invalidate_disk_cache_after.Time"),
+                new ConfigChange.MovedValue("Webserver.Cache.Invalidate_memory_cache_after", "Webserver.Cache.Invalidate_memory_cache_after.Time"),
+                new ConfigChange.MovedValue("Webserver.Cache.Invalidate_query_results_on_disk_after", "Webserver.Cache.Invalidate_query_results_on_disk_after.Time"),
+                new ConfigChange.MovedValue("Time.Thresholds.Remove_disabled_extension_data_after", "Time.Thresholds.Remove_disabled_extension_data_after.Time"),
+                new ConfigChange.MovedValue("Time.Thresholds.Remove_time_series_data_after", "Time.Thresholds.Remove_time_series_data_after.Time"),
+                new ConfigChange.MovedValue("Time.Thresholds.Remove_ping_data_after", "Time.Thresholds.Remove_ping_data_after.Time"),
+                new ConfigChange.MovedValue("Time.Thresholds.AFK_threshold", "Time.Thresholds.AFK_threshold.Time"),
+                new ConfigChange.MovedValue("Time.Thresholds.Remove_inactive_player_data_after", "Time.Thresholds.Remove_inactive_player_data_after.Time"),
+                new ConfigChange.MovedValue("Time.Periodic_tasks.Extension_data_refresh_every", "Time.Periodic_tasks.Extension_data_refresh_every.Time"),
+                new ConfigChange.MovedValue("Time.Periodic_tasks.Check_DB_for_server_config_files_every", "Time.Periodic_tasks.Check_DB_for_server_config_files_every.Time"),
+                new ConfigChange.MovedValue("Time.Periodic_tasks.Clean_Database_every", "Time.Periodic_tasks.Clean_Database_every.Time"),
+                new ConfigChange.MovedValue("Time.Delays.Ping_server_enable_delay", "Time.Delays.Ping_server_enable_delay.Time"),
+                new ConfigChange.MovedValue("Time.Delays.Ping_player_join_delay", "Time.Delays.Ping_player_join_delay.Time"),
+                new ConfigChange.MovedValue("Time.Delays.Wait_for_DB_Transactions_on_disable", "Time.Delays.Wait_for_DB_Transactions_on_disable.Time"),
+                new ConfigChange.MovedValue("Time.Thresholds.Activity_index.Playtime_threshold", "Time.Thresholds.Activity_index.Playtime_threshold.Time"),
         };
     }
 

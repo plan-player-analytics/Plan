@@ -19,6 +19,7 @@ package com.djrapitops.plan.settings.config.changes;
 import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.ConfigNode;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -79,6 +80,44 @@ public interface ConfigChange {
             }
             if (!config.moveChild("Temp." + oldPath, newPath)) {
                 throw new IllegalStateException("Failed to move config node from 'Temp." + oldPath + "' to '" + newPath + "' while moving from '" + oldPath + "'");
+            }
+        }
+
+        @Override
+        public String getAppliedMessage() {
+            return "Moved " + oldPath + " to " + newPath;
+        }
+    }
+
+    class MovedValue implements ConfigChange {
+
+        final String oldPath;
+        final String newPath;
+
+        public MovedValue(String oldPath, String newPath) {
+            this.oldPath = oldPath;
+            this.newPath = newPath;
+        }
+
+        @Override
+        public boolean hasBeenApplied(Config config) {
+            return config.getNode(oldPath)
+                    .map(ConfigNode::getString)
+                    .isEmpty()
+                    && config.getNode(newPath).isPresent();
+        }
+
+        @Override
+        public void apply(Config config) {
+            Optional<ConfigNode> oldNode = config.getNode(oldPath);
+            if (oldNode.isPresent()) {
+                ConfigNode node = oldNode.get();
+                config.getNode(newPath)
+                        .orElseGet(() -> config.addNode(newPath))
+                        .copyValue(node);
+                // Set value to null
+                node.set(null);
+                node.setComment(new ArrayList<>());
             }
         }
 

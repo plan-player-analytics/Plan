@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 /**
@@ -239,7 +240,9 @@ public class ConfigNode {
     }
 
     public <T> void set(T value) {
-        if (value instanceof ConfigNode) {
+        if (value == null) {
+            this.value = null;
+        } else if (value instanceof ConfigNode) {
             copyAll((ConfigNode) value);
         } else {
             ConfigValueParser<T> parser = ConfigValueParser.getParserFor(value.getClass());
@@ -277,7 +280,7 @@ public class ConfigNode {
 
     public Double getDouble() {
         return value == null ? null
-            : new ConfigValueParser.DoubleParser().compose(value);
+                : new ConfigValueParser.DoubleParser().compose(value);
     }
 
     public boolean getBoolean() {
@@ -316,6 +319,19 @@ public class ConfigNode {
             }
         }
         return configPaths;
+    }
+
+    public <T> List<T> dfs(BiConsumer<ConfigNode, List<T>> accessVisitor) {
+        ArrayDeque<ConfigNode> dfs = new ArrayDeque<>();
+        dfs.push(this);
+
+        List<T> result = new ArrayList<>();
+        while (!dfs.isEmpty()) {
+            ConfigNode next = dfs.pop();
+            accessVisitor.accept(next, result);
+            dfs.addAll(next.getChildren());
+        }
+        return result;
     }
 
     public Integer getInteger(String path) {
@@ -374,6 +390,11 @@ public class ConfigNode {
             ConfigNode created = addNode(childKey);
             created.copyAll(newChild);
         }
+    }
+
+    public void copyValue(ConfigNode from) {
+        comment = from.comment;
+        value = from.value;
     }
 
     protected int getNodeDepth() {

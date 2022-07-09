@@ -132,4 +132,17 @@ class ConfigChangeTest {
         assertFalse(config.contains("Test"), "Old node was not removed");
     }
 
+    @Test
+    void valueIsMoved() {
+        config = prepareConfig("Test: \"value\"");
+        config.addNode("Test.Child").set("anotherValue");
+
+        new ConfigChange.MovedValue("Test", "Test.SecondChild").apply(config);
+
+        assertNull(config.getString("Test"));
+        assertNull(config.getString("Test.SecondChild.Child"));
+        assertEquals("value", config.getString("Test.SecondChild"));
+        assertEquals("anotherValue", config.getString("Test.Child"));
+    }
+
 }

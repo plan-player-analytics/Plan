@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class WebserverSettings {
 
     public static final Setting<Integer> PORT = new IntegerSetting("Webserver.Port");
-    public static final Setting<Boolean> SHOW_ALTERNATIVE_IP = new BooleanSetting("Webserver.Alternative_IP");
+    public static final Setting<Boolean> SHOW_ALTERNATIVE_IP = new BooleanSetting("Webserver.Alternative_IP.Enabled");
     public static final Setting<String> ALTERNATIVE_IP = new StringSetting("Webserver.Alternative_IP.Address");
     public static final Setting<String> INTERNAL_IP = new StringSetting("Webserver.Internal_IP");
     public static final Setting<String> CORS_ALLOW_ORIGIN = new StringSetting("Webserver.Security.CORS.Allow_origin");
@@ -38,7 +38,7 @@ public class WebserverSettings {
     public static final Setting<String> CERTIFICATE_STOREPASS = new StringSetting("Webserver.Security.SSL_certificate.Store_pass");
     public static final Setting<String> CERTIFICATE_ALIAS = new StringSetting("Webserver.Security.SSL_certificate.Alias");
     public static final Setting<Boolean> IP_USE_X_FORWARDED_FOR = new BooleanSetting("Webserver.Security.Use_X-Forwarded-For_Header");
-    public static final Setting<Boolean> IP_WHITELIST = new BooleanSetting("Webserver.Security.IP_whitelist");
+    public static final Setting<Boolean> IP_WHITELIST = new BooleanSetting("Webserver.Security.IP_whitelist.Enabled");
     public static final Setting<List<String>> WHITELIST = new StringListSetting("Webserver.Security.IP_whitelist.Whitelist");
     public static final Setting<Boolean> DISABLED = new BooleanSetting("Webserver.Disable_Webserver");
     public static final Setting<Boolean> DISABLED_AUTHENTICATION = new BooleanSetting("Webserver.Security.Disable_authentication");
