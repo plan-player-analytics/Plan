@@ -19,11 +19,11 @@ jobs:
       - name: Write REL release line
         if: ${{ github.event.release.prerelease == false }}
         run: |
-          echo "REL|${{ env.RELEASE_DOWNLOAD_URL }}|https://github.com/plan-player-analytics/Plan/releases" > release_line.txt
+          echo "REL|${{ github.event.release.tag_name }}|${{ env.RELEASE_DOWNLOAD_URL }}|https://github.com/plan-player-analytics/Plan/releases" > release_line.txt
       - name: Write DEV release line
         if: ${{ github.event.release.prerelease == true }}
         run: |
-          echo "DEV|${{ env.RELEASE_DOWNLOAD_URL }}|${{ github.event.release.url }}" > release_line.txt
+          echo "DEV|${{ github.event.release.tag_name }}|${{ env.RELEASE_DOWNLOAD_URL }}|${{ github.event.release.url }}" > release_line.txt
       - name: Append to version.txt
         run: |
           cat release_line.txt version.txt > version.txt
