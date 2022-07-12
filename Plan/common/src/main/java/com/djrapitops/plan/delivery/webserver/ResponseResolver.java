@@ -60,6 +60,7 @@ import java.util.regex.Pattern;
 @Singleton
 @OpenAPIDefinition(info = @Info(
         title = "Plan API endpoints",
+        description = "If authentication is enabled (see response of /v1/whoami) logging in is required for endpoints (/auth/login). Pass 'Cookie' header in the requests after login.",
         contact = @Contact(name = "Github Discussions", url = "https://github.com/plan-player-analytics/Plan/discussions/categories/apis-and-development"),
         license = @License(name = "GNU Lesser General Public License v3.0 (LGPLv3.0)", url = "https://github.com/plan-player-analytics/Plan/blob/master/LICENSE")
 ))

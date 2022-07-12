@@ -68,7 +68,6 @@ public class RegisterResolver implements NoAuthResolver {
             requestBody = @RequestBody(
                     description = "Register a new user",
                     content = @Content(
-                            mediaType = "application/x-www-form-urlencoded",
                             examples = @ExampleObject("user=username&password=password")
                     )
             )

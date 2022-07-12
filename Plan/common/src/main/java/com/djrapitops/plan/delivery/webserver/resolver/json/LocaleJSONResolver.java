@@ -35,7 +35,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -83,9 +82,8 @@ public class LocaleJSONResolver implements NoAuthResolver {
                     @ApiResponse(responseCode = "404", description = "Language by langCode was not found")
             },
             parameters = {
-                    @Parameter(in = ParameterIn.PATH, name = "langCode", example = "/v1/locale/EN")
-            },
-            requestBody = @RequestBody()
+                    @Parameter(in = ParameterIn.PATH, name = "langCode", required = false, example = "/v1/locale/EN")
+            }
     )
     @Override
     public Optional<Response> resolve(Request request) {

@@ -31,7 +31,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -84,8 +83,7 @@ public class PlayerKillsJSONResolver implements Resolver {
                     @ExampleObject("dade56b7-366a-495a-a087-5bf0178536d4"),
                     @ExampleObject("Server 1"),
                     @ExampleObject("1"),
-            }),
-            requestBody = @RequestBody()
+            })
     )
     @Override
     public Optional<Response> resolve(Request request) {

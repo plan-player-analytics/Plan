@@ -24,7 +24,6 @@ import com.djrapitops.plan.version.VersionChecker;
 import com.djrapitops.plan.version.VersionInfo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -65,8 +64,7 @@ public class VersionJSONResolver implements Resolver {
             description = "Get Plan version and update information",
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
-            },
-            requestBody = @RequestBody()
+            }
     )
     @Override
     public Optional<Response> resolve(Request request) {

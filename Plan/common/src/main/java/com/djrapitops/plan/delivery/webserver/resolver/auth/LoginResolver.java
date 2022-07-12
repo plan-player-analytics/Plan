@@ -61,16 +61,15 @@ public class LoginResolver implements NoAuthResolver {
 
     @POST
     @Operation(
-            description = "Log in as user",
+            description = "Log in as user. Pass user=username&password=password in response body.",
             requestBody = @RequestBody(
                     required = true,
                     content = @Content(
-                            mediaType = "application/x-www-form-urlencoded",
-                            examples = @ExampleObject("user=username&password=password")
+                            examples = {@ExampleObject("user=username&password=password")}
                     )
             ),
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Login success, see Set-Cookie header"),
+                    @ApiResponse(responseCode = "200", description = "Login success, read Set-Cookie header for cookie"),
                     @ApiResponse(responseCode = "400", description = "Bad input user details"),
                     @ApiResponse(responseCode = "403", description = "Too many attempts, wait"),
             }

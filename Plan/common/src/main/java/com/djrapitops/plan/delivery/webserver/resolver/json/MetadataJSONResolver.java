@@ -28,7 +28,6 @@ import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.java.Maps;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
@@ -54,8 +53,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
 
     @GET
     @Operation(
-            description = "Get metadata required for displaying Plan React frontend",
-            requestBody = @RequestBody()
+            description = "Get metadata required for displaying Plan React frontend"
     )
     @Override
     public Optional<Response> resolve(Request request) {

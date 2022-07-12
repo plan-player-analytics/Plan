@@ -145,7 +145,7 @@ resolve { // Swagger json generation task
             'com.djrapitops.plan.delivery.webserver.resolver.auth',
             'com.djrapitops.plan.delivery.webserver.resolver.json',
     ]
-    outputDir = file('build/resources/assets/plan/web/')
+    outputDir = file('build/sources/resources/assets/plan/web/')
 }
 
 processResources {

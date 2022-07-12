@@ -41,7 +41,6 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -94,8 +93,7 @@ public class FiltersJSONResolver implements Resolver {
             description = "Get list of available filters, view and graph points for visualizing the view",
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, schema = @Schema(implementation = FilterResponseDto.class)))
-            },
-            requestBody = @RequestBody()
+            }
     )
     @Override
     public Optional<Response> resolve(Request request) {

@@ -32,7 +32,6 @@ import com.djrapitops.plan.identification.ServerUUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
@@ -102,8 +101,7 @@ public class GraphsJSONResolver implements Resolver {
                             @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
                     }),
                     @Parameter(name = "timestamp", description = "Epoch millisecond for the request, newer value is wanted")
-            },
-            requestBody = @RequestBody()
+            }
     )
     @Override
     public Optional<Response> resolve(Request request) {

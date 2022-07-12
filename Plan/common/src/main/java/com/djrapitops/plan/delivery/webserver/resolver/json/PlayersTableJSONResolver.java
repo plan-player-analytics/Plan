@@ -31,7 +31,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -84,8 +83,7 @@ public class PlayersTableJSONResolver implements Resolver {
                     @ExampleObject("Server 1"),
                     @ExampleObject("1"),
                     @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
-            }),
-            requestBody = @RequestBody()
+            })
     )
     @Override
     public Optional<Response> resolve(Request request) {

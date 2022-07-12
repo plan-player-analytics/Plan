@@ -39,7 +39,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -103,8 +102,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
             },
             parameters = {
                     @Parameter(name = "servers", required = true, description = "JSON list of server uuids (URI encoded)", example = "%5B%22a779e107-0474-4d9f-8f4d-f1efb068d32e%22%5D (is [\"a779e107-0474-4d9f-8f4d-f1efb068d32e\"])")
-            },
-            requestBody = @RequestBody()
+            }
     )
     @Override
     public Optional<Response> resolve(Request request) {
