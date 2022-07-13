@@ -2,6 +2,7 @@ dependencies {
     shadow project(path: ":api")
     shadow project(path: ":extensions")
     shadow project(path: ":common")
+    shadow project(path: ":common", configuration: "swaggerJson")
     shadow project(path: ":bukkit")
     shadow project(path: ":nukkit")
     shadow project(path: ":sponge")

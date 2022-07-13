@@ -12,7 +12,9 @@ configurations {
     mysqlDriver
     sqliteDriver
     testImplementation.extendsFrom mysqlDriver, sqliteDriver
-    compileOnly.extendsFrom mysqlDriver, sqliteDriver
+    compileOnly.extendsFrom mysqlDriver, sqliteDriver,
+
+            swaggerJson // swagger.json configuration
 }
 
 task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {
@@ -145,7 +147,15 @@ resolve { // Swagger json generation task
             'com.djrapitops.plan.delivery.webserver.resolver.auth',
             'com.djrapitops.plan.delivery.webserver.resolver.json',
     ]
-    outputDir = file('build/sources/resources/assets/plan/web/')
+    outputDir = file('build/generated-resources/swagger/assets/plan/web/')
+}
+task swaggerJsonJar(type: Jar) {
+    dependsOn resolve
+    archiveClassifier.set("resolve")
+    from 'build/generated-resources/swagger'
+}
+artifacts {
+    swaggerJson swaggerJsonJar
 }
 
 processResources {
@@ -157,7 +167,6 @@ processResources {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from 'build/sources/resources'
 }
-processResources.finalizedBy(resolve)
 
 shadowJar {
     configurations = [project.configurations.shadow]

@@ -4,6 +4,7 @@ dependencies {
     shadow project(path: ":api")
     shadow project(path: ":extensions")
     shadow project(path: ":common")
+    shadow project(path: ":common", configuration: "swaggerJson")
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
