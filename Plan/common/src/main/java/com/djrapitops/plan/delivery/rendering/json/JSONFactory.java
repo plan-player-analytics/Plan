@@ -169,7 +169,7 @@ public class JSONFactory {
         }
     }
 
-    public List<Map<String, Object>> serverPlayerKillsAsJSONMap(ServerUUID serverUUID) {
+    public List<Map<String, Object>> serverPlayerKillsAsJSONMaps(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         List<PlayerKill> kills = db.query(KillQueries.fetchPlayerKillsOnServer(serverUUID, 100));
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);

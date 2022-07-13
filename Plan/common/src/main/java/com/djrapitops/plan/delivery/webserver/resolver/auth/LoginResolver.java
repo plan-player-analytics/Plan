@@ -30,6 +30,13 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,6 +44,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 @Singleton
+@Path("/auth/login")
 public class LoginResolver implements NoAuthResolver {
 
     private final DBSystem dbSystem;
@@ -51,6 +59,21 @@ public class LoginResolver implements NoAuthResolver {
         this.activeCookieStore = activeCookieStore;
     }
 
+    @POST
+    @Operation(
+            description = "Log in as user. Pass user=username&password=password in response body.",
+            requestBody = @RequestBody(
+                    required = true,
+                    content = @Content(
+                            examples = {@ExampleObject("user=username&password=password")}
+                    )
+            ),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Login success, read Set-Cookie header for cookie"),
+                    @ApiResponse(responseCode = "400", description = "Bad input user details"),
+                    @ApiResponse(responseCode = "403", description = "Too many attempts, wait"),
+            }
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         try {

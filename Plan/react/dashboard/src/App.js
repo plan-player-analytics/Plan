@@ -29,6 +29,8 @@ import PlayersPage from "./views/layout/PlayersPage";
 import AllPlayers from "./views/players/AllPlayers";
 import ServerGeolocations from "./views/server/ServerGeolocations";
 
+const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
+
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
 }
@@ -85,6 +87,9 @@ function App() {
                                 <Route path="performance" element={<></>}/>
                                 <Route path="plugins-overview" element={<></>}/>
                             </Route>
+                            <Route path="docs" element={<React.Suspense fallback={<></>}>
+                                <SwaggerView/>
+                            </React.Suspense>}/>
                         </Routes>
                     </BrowserRouter>
                 </div>

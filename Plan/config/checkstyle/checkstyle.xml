@@ -76,8 +76,8 @@
 
         <!-- Metrics -->
         <module name="ClassFanOutComplexity">
-            <!-- This value is ok with manual exceptions. -->
-            <property name="max" value="35"/>
+            <!-- This value is a bit high. -->
+            <property name="max" value="40"/>
         </module>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ThemeConfig: 16 -->
