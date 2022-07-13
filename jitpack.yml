@@ -1,8 +1,8 @@
 jdk:
-  - openjdk16
+  - openjdk18
 before_install:
-   - sdk install java 16.0.1-open
-   - sdk use java 16.0.1-open
+   - sdk install java 18.0.1.1-open
+   - sdk use java 18.0.1.1-open
    - apt-get install -y nodejs
 install:
   - cd Plan
