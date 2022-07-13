@@ -31,7 +31,11 @@ import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
@@ -80,7 +84,7 @@ public class GraphsJSONResolver implements Resolver {
     @Operation(
             description = "Get graph data",
             parameters = {
-                    @Parameter(name = "type", required = true, examples = {
+                    @Parameter(in = ParameterIn.QUERY, name = "type", description = "Type of the graph, see https://github.com/plan-player-analytics/Plan/blob/master/Plan/common/src/main/java/com/djrapitops/plan/delivery/webserver/resolver/json/GraphsJSONResolver.java", required = true, examples = {
                             @ExampleObject(value = "performance", description = "Deprecated, use optimizedPerformance"),
                             @ExampleObject("optimizedPerformance"),
                             @ExampleObject("playersOnline"),
@@ -95,13 +99,20 @@ public class GraphsJSONResolver implements Resolver {
                             @ExampleObject("serverPie"),
                             @ExampleObject("joinAddressPie"),
                     }),
-                    @Parameter(name = "server", description = "Server identifier to get data for", examples = {
+                    @Parameter(in = ParameterIn.QUERY, name = "server", description = "Server identifier to get data for", examples = {
                             @ExampleObject("Server 1"),
                             @ExampleObject("1"),
                             @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
                     }),
-                    @Parameter(name = "timestamp", description = "Epoch millisecond for the request, newer value is wanted")
-            }
+                    @Parameter(in = ParameterIn.QUERY, name = "timestamp", description = "Epoch millisecond for the request, newer value is wanted")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Graph data json", content = @Content()),
+                    @ApiResponse(responseCode = "400", description = "'type' parameter not given", content = @Content(examples = {
+                            @ExampleObject("{\"status\": 400, \"error\": \"'type' parameter was not defined.\"}")
+                    })),
+            },
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
     public Optional<Response> resolve(Request request) {

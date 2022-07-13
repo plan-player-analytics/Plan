@@ -51,6 +51,7 @@ import com.djrapitops.plan.utilities.java.Maps;
 import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -112,16 +113,16 @@ public class QueryJSONResolver implements Resolver {
 
     @GET
     @Operation(
-            description = "Perform a query or get cached results",
+            description = "Perform a query or get cached results. Use q to do new query, timestamp to see cached query.",
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
-                    @ApiResponse(responseCode = "400", description = "If 'view' date formats does not match afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm"),
-                    @ApiResponse(responseCode = "400", description = "If request body is empty and 'q' request parameter is not given"),
-                    @ApiResponse(responseCode = "400", description = "If request body is empty and 'q' json request parameter doesn't contain 'view' property"),
+                    @ApiResponse(responseCode = "400 (invalid view)", description = "If 'view' date formats does not match afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm"),
+                    @ApiResponse(responseCode = "400 (no query)", description = "If request body is empty and 'q' request parameter is not given"),
+                    @ApiResponse(responseCode = "400 (invalid query)", description = "If request body is empty and 'q' json request parameter doesn't contain 'view' property"),
             },
             parameters = {
-                    @Parameter(name = "timestamp", description = "Epoch millisecond for cached query"),
-                    @Parameter(name = "q", description = "URI encoded json, alternative is to POST in request body", schema = @Schema(implementation = InputQueryDto.class))
+                    @Parameter(in = ParameterIn.QUERY, name = "timestamp", description = "Epoch millisecond for cached query"),
+                    @Parameter(in = ParameterIn.QUERY, name = "q", description = "URI encoded json, alternative is to POST in request body", schema = @Schema(implementation = InputQueryDto.class))
             },
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = InputQueryDto.class)))
     )

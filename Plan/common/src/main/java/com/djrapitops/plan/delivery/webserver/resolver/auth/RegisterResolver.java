@@ -30,6 +30,7 @@ import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.java.Maps;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -55,15 +56,15 @@ public class RegisterResolver implements NoAuthResolver {
 
     @GET
     @Operation(
-            description = "Check if registration is complete",
+            description = "Start new registration and check if registration is complete. POST user=username&password=password to start new registration.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "New registration started", content = @Content(mediaType = MimeType.JSON, examples = @ExampleObject("{\"success\": true, \"code\": \"474AF76D5362\"}"))),
-                    @ApiResponse(responseCode = "200", description = "Registration completed (when given code as parameter)", content = @Content(mediaType = MimeType.JSON, examples = @ExampleObject("{\"success\": true}"))),
-                    @ApiResponse(responseCode = "200", description = "Registration not yet completed (when given code as parameter)", content = @Content(mediaType = MimeType.JSON, examples = @ExampleObject("{\"success\": false}"))),
+                    @ApiResponse(responseCode = "200 (new)", description = "New registration started (when given request body details)", content = @Content(mediaType = MimeType.JSON, examples = @ExampleObject("{\"success\": true, \"code\": \"474AF76D5362\"}"))),
+                    @ApiResponse(responseCode = "200 (unfinished)", description = "Registration not yet completed (when given code as parameter)", content = @Content(mediaType = MimeType.JSON, examples = @ExampleObject("{\"success\": false}"))),
+                    @ApiResponse(responseCode = "200 (completed)", description = "Registration completed (when given code as parameter)", content = @Content(mediaType = MimeType.JSON, examples = @ExampleObject("{\"success\": true}"))),
                     @ApiResponse(responseCode = "400", description = "Given username has already been registered", content = @Content(mediaType = MimeType.JSON, examples = @ExampleObject("{\"status\": 400, \"error\": \"User already exists!\"}"))),
             },
             parameters = {
-                    @Parameter(name = "code", description = "Registration code for finishing registration, Check if registration is complete - success: true if yes.")
+                    @Parameter(in = ParameterIn.QUERY, name = "code", description = "Registration code for finishing registration, Check if registration is complete - success: true if yes.")
             },
             requestBody = @RequestBody(
                     description = "Register a new user",

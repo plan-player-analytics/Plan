@@ -27,6 +27,7 @@ import dagger.Lazy;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -55,7 +56,8 @@ public class WhoAmIJSONResolver implements NoAuthResolver {
                             @ExampleObject(value = "{\"authRequired\": true, \"loggedIn\": false}", description = "Not logged in"),
                             @ExampleObject(value = "{\"authRequired\": true, \"loggedIn\": true, \"user\": {}}", description = "Logged in as user"),
                     })),
-            }
+            },
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
     public Optional<Response> resolve(Request request) {

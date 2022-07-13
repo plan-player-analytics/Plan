@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -75,15 +76,16 @@ public class LocaleJSONResolver implements NoAuthResolver {
     @GET
     @Operation(
             responses = {
-                    @ApiResponse(responseCode = "200", description = "List of available locales", content = @Content(mediaType = MimeType.JSON, examples = {
-                            @ExampleObject("{\"defaultLanguage\": \"EN\", \"languages\": {\"EN\": \"English\"}, \"languageVersions\": {\"EN\": 1657189514266}}")
+                    @ApiResponse(responseCode = "200 (/locale)", description = "List of available locales", content = @Content(mediaType = MimeType.JSON, examples = {
+                            @ExampleObject("{\"defaultLanguage\": \"EN\", \"languages\": {\"EN\": \"English\", \"FI\": \"Finnish\"}, \"languageVersions\": {\"EN\": 1657189514266, \"FI\": 1657189514266}}")
                     })),
-                    @ApiResponse(responseCode = "200", description = "Contents of the locale.json file matching given langCode"),
+                    @ApiResponse(responseCode = "200 (/locale/{langCode})", description = "Contents of the locale.json file matching given langCode"),
                     @ApiResponse(responseCode = "404", description = "Language by langCode was not found")
             },
             parameters = {
-                    @Parameter(in = ParameterIn.PATH, name = "langCode", required = false, example = "/v1/locale/EN")
-            }
+                    @Parameter(in = ParameterIn.PATH, name = "langCode", description = "Language code. NOT REQUIRED. /v1/locale lists available language codes.", allowEmptyValue = true, example = "/v1/locale/EN")
+            },
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
     public Optional<Response> resolve(Request request) {

@@ -26,8 +26,10 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.identification.Identifiers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -73,10 +75,11 @@ public class PlayerJSONResolver implements Resolver {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
                     @ApiResponse(responseCode = "400", description = "If 'player' parameter is not given")
             },
-            parameters = @Parameter(name = "player", description = "Identifier for the player", examples = {
+            parameters = @Parameter(in = ParameterIn.QUERY, name = "player", description = "Identifier for the player", examples = {
                     @ExampleObject("dade56b7-366a-495a-a087-5bf0178536d4"),
                     @ExampleObject("AuroraLS3"),
-            })
+            }),
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
     public Optional<Response> resolve(Request request) {

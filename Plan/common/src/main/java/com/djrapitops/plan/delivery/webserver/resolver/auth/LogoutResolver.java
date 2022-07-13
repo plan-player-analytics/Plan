@@ -23,6 +23,9 @@ import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -48,9 +51,10 @@ public class LogoutResolver implements NoAuthResolver {
     @Operation(
             description = "Logout the user by removing cookie",
             responses = {
-                    @ApiResponse(responseCode = "302", description = "Logout successful, redirects to /login"),
-                    @ApiResponse(responseCode = "302", description = "Cookie had already expired, redirects to /login"),
-            }
+                    @ApiResponse(responseCode = "302 (success)", description = "Logout successful, redirects to /login"),
+                    @ApiResponse(responseCode = "302 (failure)", description = "Cookie had already expired, redirects to /login"),
+            },
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
     public Optional<Response> resolve(Request request) {

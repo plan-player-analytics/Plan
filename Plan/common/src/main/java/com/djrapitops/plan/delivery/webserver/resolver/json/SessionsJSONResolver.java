@@ -29,8 +29,10 @@ import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -76,11 +78,12 @@ public class SessionsJSONResolver implements Resolver {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
                     @ApiResponse(responseCode = "400", description = "If 'server' parameter is not an existing server")
             },
-            parameters = @Parameter(name = "server", description = "Server identifier to get data for (optional)", examples = {
+            parameters = @Parameter(in = ParameterIn.QUERY, name = "server", description = "Server identifier to get data for (optional)", examples = {
                     @ExampleObject("Server 1"),
                     @ExampleObject("1"),
                     @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
-            })
+            }),
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
     public Optional<Response> resolve(Request request) {

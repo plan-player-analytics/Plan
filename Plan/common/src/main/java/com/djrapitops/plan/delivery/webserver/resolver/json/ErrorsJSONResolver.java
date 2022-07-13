@@ -25,7 +25,9 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -63,7 +65,8 @@ public class ErrorsJSONResolver implements Resolver {
             description = "Get list of Plan error logs",
             responses = {
                     @ApiResponse(responseCode = "200", description = "List of error files and their contents", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ErrorFile.class))))
-            }
+            },
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
     public Optional<Response> resolve(Request request) {
