@@ -66,7 +66,7 @@ public class UserInfoTable {
                 .column(ID, Sql.INT).primaryKey()
                 .column(USER_ID, Sql.INT).notNull()
                 .column(SERVER_ID, Sql.INT).notNull()
-                .column(JOIN_ADDRESS, Sql.varchar(255))
+                .column(JOIN_ADDRESS, Sql.varchar(JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH))
                 .column(REGISTERED, Sql.LONG).notNull()
                 .column(OP, Sql.BOOL).notNull().defaultValue(false)
                 .column(BANNED, Sql.BOOL).notNull().defaultValue(false)

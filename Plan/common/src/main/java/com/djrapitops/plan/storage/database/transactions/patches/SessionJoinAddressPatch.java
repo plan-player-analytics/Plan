@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -98,7 +99,7 @@ public class SessionJoinAddressPatch extends Patch {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (String joinAddress : joinAddresses) {
-                    statement.setString(1, joinAddress.toLowerCase());
+                    statement.setString(1, StringUtils.truncate(joinAddress.toLowerCase(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                     statement.addBatch();
                 }
             }

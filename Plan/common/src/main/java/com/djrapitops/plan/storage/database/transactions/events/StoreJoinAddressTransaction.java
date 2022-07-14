@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -53,10 +54,14 @@ public class StoreJoinAddressTransaction extends Transaction {
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                String address = joinAddress.get();
-                statement.setString(1, address.toLowerCase());
+                String address = getAddress();
+                statement.setString(1, address);
             }
         };
+    }
+
+    private String getAddress() {
+        return StringUtils.truncate(joinAddress.get().toLowerCase(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
     }
 
     @Override
@@ -64,7 +69,7 @@ public class StoreJoinAddressTransaction extends Transaction {
         execute(new ExecStatement(JoinAddressTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, joinAddress.get().toLowerCase());
+                statement.setString(1, getAddress());
             }
         });
     }

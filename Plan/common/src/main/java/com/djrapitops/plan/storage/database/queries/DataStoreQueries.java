@@ -196,7 +196,7 @@ public class DataStoreQueries {
                 statement.setLong(2, registered);
                 statement.setString(3, serverUUID.toString());
                 statement.setBoolean(4, false); // Banned
-                statement.setString(5, joinAddress);
+                statement.setString(5, StringUtils.truncate(joinAddress, JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                 statement.setBoolean(6, false); // Operator
             }
         };
