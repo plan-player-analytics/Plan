@@ -1,10 +1,13 @@
 dependencies {
-    implementation project(path: ":common", configuration: 'shadow')
-    implementation project(path: ":bukkit", configuration: 'shadow')
-    implementation project(path: ":nukkit", configuration: 'shadow')
-    implementation project(path: ":sponge", configuration: 'shadow')
-    implementation project(path: ":bungeecord", configuration: 'shadow')
-    implementation project(path: ":velocity", configuration: 'shadow')
+    shadow project(path: ":api")
+    shadow project(path: ":extensions")
+    shadow project(path: ":common")
+    shadow project(path: ":common", configuration: "swaggerJson")
+    shadow project(path: ":bukkit")
+    shadow project(path: ":nukkit")
+    shadow project(path: ":sponge")
+    shadow project(path: ":bungeecord")
+    shadow project(path: ":velocity")
     testImplementation project(path: ":common", configuration: 'testArtifacts')
     testImplementation project(path: ":bukkit", configuration: 'testArtifacts')
     testImplementation project(path: ":nukkit", configuration: 'testArtifacts')
@@ -21,6 +24,38 @@ jar {
 }
 
 shadowJar {
+    dependsOn processResources
+    configurations = [project.configurations.shadow]
+
+    // Exclude these files
+    exclude "**/*.svg"
+    exclude "**/*.psd"
+    exclude "**/*.map"
+
+    exclude "**/module-info.class"
+    exclude "module-info.class"
+    exclude 'META-INF/versions/' // Causes Sponge to crash
+    exclude 'mozilla/**/*'
+
+    // Exclude extra dependencies
+    exclude 'org/apache/http/**/*' // Unnecessary http client depended on by geolite2 implementation
+    exclude "org/junit/**/*" // see extensions/build.gradle
+    exclude "org/opentest4j/**/*" // see extensions/build.gradle
+    exclude "org/checkerframework/**/*" // Dagger compiler
+    exclude "com/google/common/**/*"
+    exclude "com/google/thirdparty/**/*"
+    // Exclude swagger
+    exclude "org/yaml/**/*"
+    exclude "nonapi/**/*"
+    exclude "io/github/classgraph/**/*"
+    exclude "io/swagger/**/*"
+    exclude "com/sun/activation/**/*"
+    exclude "jakarta/activation/**/*"
+    exclude "jakarta/validation/**/*"
+    exclude "jakarta/ws/**/*"
+    exclude "jakarta/xml/**/*"
+    exclude "javassist/**/*"
+
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
         exclude 'org/apache/maven/**' // This needs to be unrelocated for Sponge
@@ -34,6 +69,13 @@ shadowJar {
     relocate 'com.github.benmanes', 'plan.com.github.benmanes'
     relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
 
+    relocate 'com.maxmind', 'plan.com.maxmind'
+    relocate 'com.fasterxml', 'plan.com.fasterxml'
+    relocate 'com.zaxxer', 'plan.com.zaxxer'
+    relocate 'com.google.gson', 'plan.com.google.gson'
+    relocate 'com.google.errorprone', 'plan.com.google.errorprone'
+    relocate 'org.bstats', 'plan.org.bstats'
+
     relocate 'org.eclipse.jetty', 'plan.org.eclipse.jetty'
     relocate 'jakarta.servlet', 'plan.jakarta.servlet'
     relocate 'javax.servlet', 'plan.javax.servlet'
@@ -41,6 +83,8 @@ shadowJar {
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set('Plan')
     archiveClassifier.set('')
+
+    mergeServiceFiles()
 
     build {
         dependsOn tasks.named("shadowJar")

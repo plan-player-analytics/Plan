@@ -38,6 +38,14 @@ import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,6 +54,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Singleton
+@Path("/v1/filters")
 public class FiltersJSONResolver implements Resolver {
 
     private final ServerInfo serverInfo;
@@ -81,6 +90,14 @@ public class FiltersJSONResolver implements Resolver {
         return user.hasPermission("page.players");
     }
 
+    @GET
+    @Operation(
+            description = "Get list of available filters, view and graph points for visualizing the view",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, schema = @Schema(implementation = FilterResponseDto.class)))
+            },
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse());

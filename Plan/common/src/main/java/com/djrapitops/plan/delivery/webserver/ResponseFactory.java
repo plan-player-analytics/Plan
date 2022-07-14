@@ -185,7 +185,7 @@ public class ResponseFactory {
                     .setStatus(200)
                     .build();
         } catch (UncheckedIOException e) {
-            return notFound404("JS File not found from jar: " + fileName + ", " + e.toString());
+            return notFound404("JS File not found from jar: " + fileName + ", " + e);
         }
     }
 
@@ -204,7 +204,7 @@ public class ResponseFactory {
                     .setStatus(200)
                     .build();
         } catch (UncheckedIOException e) {
-            return notFound404("CSS File not found from jar: " + fileName + ", " + e.toString());
+            return notFound404("CSS File not found from jar: " + fileName + ", " + e);
         }
     }
 
@@ -216,7 +216,7 @@ public class ResponseFactory {
                     .setStatus(200)
                     .build();
         } catch (UncheckedIOException e) {
-            return notFound404("Image File not found from jar: " + fileName + ", " + e.toString());
+            return notFound404("Image File not found from jar: " + fileName + ", " + e);
         }
     }
 
@@ -239,7 +239,7 @@ public class ResponseFactory {
                     .setContent(getResource(fileName))
                     .build();
         } catch (UncheckedIOException e) {
-            return notFound404("Font File not found from jar: " + fileName + ", " + e.toString());
+            return notFound404("Font File not found from jar: " + fileName + ", " + e);
         }
     }
 
@@ -452,6 +452,17 @@ public class ResponseFactory {
                     .build();
         } catch (UncheckedIOException e) {
             return forInternalError(e, "Could not read " + file);
+        }
+    }
+
+    public Response reactPageResponse() {
+        try {
+            return Response.builder()
+                    .setMimeType(MimeType.HTML)
+                    .setContent(getResource("index.html"))
+                    .build();
+        } catch (UncheckedIOException e) {
+            return forInternalError(e, "Could not read index.html");
         }
     }
 }

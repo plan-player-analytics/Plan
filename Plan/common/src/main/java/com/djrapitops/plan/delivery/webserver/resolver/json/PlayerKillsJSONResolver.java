@@ -27,6 +27,15 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -39,6 +48,7 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 @Singleton
+@Path("/v1/kills")
 public class PlayerKillsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
@@ -61,6 +71,23 @@ public class PlayerKillsJSONResolver implements Resolver {
         return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
     }
 
+    @GET
+    @Operation(
+            description = "Get player kill data for a server",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, examples = {
+                            @ExampleObject("{\"player_kills\": []}")
+                    })),
+                    @ApiResponse(responseCode = "400 (no parameter)", description = "If 'server' parameter is not given"),
+                    @ApiResponse(responseCode = "400 (no match)", description = "If 'server' parameter does not match an existing server")
+            },
+            parameters = @Parameter(in = ParameterIn.QUERY, name = "server", description = "Identifier for the server", examples = {
+                    @ExampleObject("dade56b7-366a-495a-a087-5bf0178536d4"),
+                    @ExampleObject("Server 1"),
+                    @ExampleObject("1"),
+            }),
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse(request));
@@ -70,7 +97,7 @@ public class PlayerKillsJSONResolver implements Resolver {
         ServerUUID serverUUID = identifiers.getServerUUID(request);
         Optional<Long> timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON = jsonResolverService.resolve(timestamp, DataID.KILLS, serverUUID,
-                theUUID -> Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMap(theUUID))
+                theUUID -> Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMaps(theUUID))
         );
         return Response.builder()
                 .setMimeType(MimeType.JSON)

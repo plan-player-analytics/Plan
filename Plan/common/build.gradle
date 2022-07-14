@@ -4,13 +4,17 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
     id "com.github.node-gradle.node" version "3.4.0"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.1"
 }
 
 configurations {
+    // Runtime downloading scopes
     mysqlDriver
     sqliteDriver
     testImplementation.extendsFrom mysqlDriver, sqliteDriver
-    compileOnly.extendsFrom mysqlDriver, sqliteDriver
+    compileOnly.extendsFrom mysqlDriver, sqliteDriver,
+
+            swaggerJson // swagger.json configuration
 }
 
 task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {
@@ -30,30 +34,35 @@ task generateResourceForSQLiteDriver(type: GenerateDependencyDownloadResourceTas
 }
 
 dependencies {
-    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     implementation project(":api")
-    compileOnly project(":extensions")
-    implementation project(path: ":extensions", configuration: 'shadow')
-    implementation "org.apache.commons:commons-text:$commonsTextVersion"
-    implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
-    implementation "commons-codec:commons-codec:$commonsCodecVersion"
-    implementation "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    implementation "com.zaxxer:HikariCP:$hikariVersion"
-    implementation "org.slf4j:slf4j-nop:$slf4jVersion"
-    implementation "org.slf4j:slf4j-api:$slf4jVersion"
-    implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
-    implementation "com.google.code.gson:gson:$gsonVersion"
-    compileOnly "net.kyori:adventure-api:4.9.3"
+    shadow project(":extensions")
 
-    implementation("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
+    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    compileOnly "net.kyori:adventure-api:4.9.3"
+    shadow("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
     mysqlDriver "mysql:mysql-connector-java:$mysqlVersion"
     sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
-    implementation "org.eclipse.jetty:jetty-server:$jettyVersion"
-    implementation "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
-    implementation "org.eclipse.jetty.http2:http2-server:$jettyVersion"
+
+    shadow "org.apache.commons:commons-text:$commonsTextVersion"
+    shadow "org.apache.commons:commons-compress:$commonsCompressVersion"
+    shadow "commons-codec:commons-codec:$commonsCodecVersion"
+    shadow "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+    shadow "com.zaxxer:HikariCP:$hikariVersion"
+    shadow "org.slf4j:slf4j-nop:$slf4jVersion"
+    shadow "org.slf4j:slf4j-api:$slf4jVersion"
+    shadow "com.maxmind.geoip2:geoip2:$geoIpVersion"
+    shadow "com.google.code.gson:gson:$gsonVersion"
+    shadow "org.eclipse.jetty:jetty-server:$jettyVersion"
+    shadow "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
+    shadow "org.eclipse.jetty.http2:http2-server:$jettyVersion"
+
+    // Swagger annotations
+    implementation "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
+    implementation "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
+    implementation "io.swagger.core.v3:swagger-jaxrs2-jakarta:$swaggerVersion"
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
@@ -127,49 +136,40 @@ task determineWebAssetModifications {
     }
 }
 
+resolve { // Swagger json generation task
+    outputFileName = 'swagger'
+    outputFormat = 'JSON'
+    prettyPrint = 'TRUE'
+    classpath = sourceSets.main.runtimeClasspath
+    buildClasspath = classpath
+    resourcePackages = [
+            'com.djrapitops.plan.delivery.webserver',
+            'com.djrapitops.plan.delivery.webserver.resolver.auth',
+            'com.djrapitops.plan.delivery.webserver.resolver.json',
+    ]
+    outputDir = file('build/generated-resources/swagger/assets/plan/web/')
+}
+task swaggerJsonJar(type: Jar) {
+    dependsOn resolve
+    archiveClassifier.set("resolve")
+    from 'build/generated-resources/swagger'
+}
+artifacts {
+    swaggerJson swaggerJsonJar
+}
+
 processResources {
-    dependsOn copyYarnBuildResults, determineWebAssetModifications, generateResourceForMySQLDriver, generateResourceForSQLiteDriver
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    dependsOn copyYarnBuildResults
+    dependsOn determineWebAssetModifications
+    dependsOn generateResourceForMySQLDriver
+    dependsOn generateResourceForSQLiteDriver
     dependsOn updateVersion
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from 'build/sources/resources'
 }
 
 shadowJar {
-    dependsOn processResources
+    configurations = [project.configurations.shadow]
 
-    // Exclude these files
-    exclude "**/*.svg"
-    exclude "**/*.psd"
-    exclude "**/*.map"
-
-    exclude "**/module-info.class"
-    exclude "module-info.class"
-    exclude 'META-INF/versions/' // Causes Sponge to crash
-    exclude 'org/apache/http/**/*' // Unnecessary http client depended on by geolite2 implementation
-    exclude 'mozilla/**/*'
-
-    // Exclude unnecessary SQLite drivers
-    exclude '**/Linux/android-arm/libsqlitejdbc.so'
-    exclude '**/DragonFlyBSD/**/libsqlitejdbc.so'
-
-    relocate 'com.maxmind', 'plan.com.maxmind'
-    relocate 'com.fasterxml', 'plan.com.fasterxml'
-    relocate 'com.zaxxer', 'plan.com.zaxxer'
-    relocate 'com.google.gson', 'plan.com.google.gson'
-    relocate 'com.google.errorprone', 'plan.com.google.errorprone'
-    relocate 'org.bstats', 'plan.org.bstats'
     relocate 'org.slf4j', 'plan.org.slf4j'
-
-    // Exclude test dependencies
-    exclude "org/junit/**/*"
-    exclude "org/opentest4j/**/*"
-    exclude "org/checkerframework/**/*"
-    exclude "org/apiguardian/**/*"
-    exclude "org/mockito/**/*"
-    exclude "org/selenium/**/*"
-    exclude "org/jayway/**/*"
-    exclude "google/protobuf/**/*"
-    exclude "jargs/gnu/**/*"
-
-    mergeServiceFiles()
 }
