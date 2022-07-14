@@ -142,6 +142,10 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 context.related(CONSTRAINT_VIOLATION)
                         .whatToDo("Report this error. NOT NULL constraint violation occurred.");
                 break;
+            case 1071:
+                context.related("column byte length exceeded")
+                        .whatToDo("Update your MySQL, column key size was exceeded (max key length is 767 bytes in 5.6) - MySQL 5.7 increases the limit.");
+                break;
             default:
                 context.related("Unknown SQL Error code");
         }

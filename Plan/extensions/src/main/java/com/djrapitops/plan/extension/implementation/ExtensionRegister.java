@@ -16,11 +16,53 @@
  */
 package com.djrapitops.plan.extension.implementation;
 
-import com.djrapitops.extension.*;
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionService;
 import com.djrapitops.plan.extension.NotReadyException;
+import net.playeranalytics.extension.aac.AACExtensionFactory;
+import net.playeranalytics.extension.advancedachievements.AdvancedAchievementsExtensionFactory;
+import net.playeranalytics.extension.advancedban.AdvancedBanExtensionFactory;
+import net.playeranalytics.extension.askyblock.ASkyBlockExtensionFactory;
+import net.playeranalytics.extension.authme.AuthMeExtensionFactory;
+import net.playeranalytics.extension.banmanager.BanManagerExtensionFactory;
+import net.playeranalytics.extension.bentobox.BentoBoxExtensionFactory;
+import net.playeranalytics.extension.discordsrv.DiscordSRVExtensionFactory;
+import net.playeranalytics.extension.dkbans.DKBansExtensionFactory;
+import net.playeranalytics.extension.dkcoins.DKCoinsExtensionFactory;
+import net.playeranalytics.extension.essentials.EssentialsExtensionFactory;
+import net.playeranalytics.extension.factions.FactionsExtensionFactory;
+import net.playeranalytics.extension.factionsuuid.FactionsUUIDExtensionFactory;
+import net.playeranalytics.extension.fastlogin.FastLoginExtensionFactory;
+import net.playeranalytics.extension.floodgate.FloodgateExtensionFactory;
+import net.playeranalytics.extension.griefdefender.GriefDefenderExtensionFactory;
+import net.playeranalytics.extension.griefprevention.GriefPreventionExtensionFactory;
+import net.playeranalytics.extension.griefprevention.sponge.GriefPreventionSpongeExtensionFactory;
+import net.playeranalytics.extension.heroes.HeroesExtensionFactory;
+import net.playeranalytics.extension.jobs.JobsExtensionFactory;
+import net.playeranalytics.extension.kingdomsx.KingdomsXExtensionFactory;
+import net.playeranalytics.extension.lands.LandsExtensionFactory;
+import net.playeranalytics.extension.libertybans.LibertyBansExtensionFactory;
+import net.playeranalytics.extension.litebans.LitebansExtensionFactory;
+import net.playeranalytics.extension.logblock.LogBlockExtensionFactory;
+import net.playeranalytics.extension.luckperms.LuckPermsExtensionFactory;
+import net.playeranalytics.extension.marriagemaster.MarriageMasterExtensionFactory;
+import net.playeranalytics.extension.mcmmo.McMMOExtensionFactory;
+import net.playeranalytics.extension.minigameslib.MinigameLibExtensionFactory;
+import net.playeranalytics.extension.mypet.MyPetExtensionFactory;
+import net.playeranalytics.extension.nuvotifier.NuVotifierExtensionFactory;
+import net.playeranalytics.extension.placeholderapi.PlaceholderAPIExtensionFactory;
+import net.playeranalytics.extension.plotsquared.PlotSquaredExtensionFactory;
+import net.playeranalytics.extension.protectionstones.ProtectionStonesExtensionFactory;
+import net.playeranalytics.extension.protocolsupport.ProtocolSupportExtensionFactory;
+import net.playeranalytics.extension.quests.QuestsExtensionFactory;
+import net.playeranalytics.extension.react.ReactExtensionFactory;
+import net.playeranalytics.extension.spongeeconomy.SpongeEconomyExtensionFactory;
+import net.playeranalytics.extension.superbvote.SuperbVoteExtensionFactory;
+import net.playeranalytics.extension.tebex.BuycraftExtensionFactory;
+import net.playeranalytics.extension.towny.TownyExtensionFactory;
+import net.playeranalytics.extension.vault.VaultExtensionFactory;
+import net.playeranalytics.extension.viaversion.ViaVersionExtensionFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -75,7 +117,7 @@ public class ExtensionRegister {
         register(new FloodgateExtensionFactory(), FloodgateExtensionFactory::createExtension, FloodgateExtensionFactory::registerListener);
         register(new GriefDefenderExtensionFactory(), GriefDefenderExtensionFactory::createExtension);
         register(new GriefPreventionExtensionFactory(), GriefPreventionExtensionFactory::createExtension);
-        //register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension); // TODO: update for Sponge API 8
+        register(new GriefPreventionSpongeExtensionFactory(), GriefPreventionSpongeExtensionFactory::createExtension);
         register(new HeroesExtensionFactory(), HeroesExtensionFactory::createExtension);
         register(new KingdomsXExtensionFactory(), KingdomsXExtensionFactory::createExtension);
         register(new JobsExtensionFactory(), JobsExtensionFactory::createExtension);
@@ -96,7 +138,7 @@ public class ExtensionRegister {
         register(new ProtocolSupportExtensionFactory(), ProtocolSupportExtensionFactory::createExtension);
         register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension);
         register(new ReactExtensionFactory(), ReactExtensionFactory::createExtension);
-        register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
+//        register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension); // TODO: update for Sponge API 8
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
         register(new SuperbVoteExtensionFactory(), SuperbVoteExtensionFactory::createExtension);
         register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);

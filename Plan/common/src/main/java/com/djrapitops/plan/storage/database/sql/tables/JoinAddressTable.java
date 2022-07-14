@@ -27,6 +27,8 @@ public class JoinAddressTable {
     public static final String TABLE_NAME = "plan_join_address";
     public static final String ID = "id";
     public static final String JOIN_ADDRESS = "join_address";
+    public static final int JOIN_ADDRESS_MAX_LENGTH = 250;
+
     public static final String SELECT_ID = '(' + SELECT + ID + FROM + TABLE_NAME + WHERE + JOIN_ADDRESS + "=LOWER(?))";
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME +
             " (" + JOIN_ADDRESS + ") VALUES (LOWER(?))";
@@ -37,7 +39,7 @@ public class JoinAddressTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(JOIN_ADDRESS, Sql.varchar(255)).unique()
+                .column(JOIN_ADDRESS, Sql.varchar(JOIN_ADDRESS_MAX_LENGTH)).unique()
                 .toString();
     }
 
