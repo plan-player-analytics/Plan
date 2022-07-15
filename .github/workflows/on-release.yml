@@ -23,10 +23,11 @@ jobs:
       - name: Write DEV release line
         if: ${{ github.event.release.prerelease == true }}
         run: |
-          echo "DEV|${{ github.event.release.tag_name }}|${{ env.RELEASE_DOWNLOAD_URL }}|${{ github.event.release.url }}" > release_line.txt
+          echo "DEV|${{ github.event.release.tag_name }}|${{ env.RELEASE_DOWNLOAD_URL }}|${{ github.event.release.html_url }}" > release_line.txt
       - name: Append to version.txt
         run: |
-          cat release_line.txt version.txt > version.txt
+          cat version.txt > temp.txt
+          cat release_line.txt temp.txt > version.txt
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with:
@@ -50,7 +51,7 @@ jobs:
           mkdir -p workingdir/Plan/src/main/resources/assets/plan
           mkdir -p workingdir/react/dashboard
           cp -r Plan/common/src/main/resources/assets/plan workingdir/Plan/src/main/resources/assets/plan
-          cp -r react/dashboard workingdir/react/dashboard
+          cp -r Plan/react/dashboard workingdir/react/dashboard
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.0.0
         with:
@@ -72,7 +73,7 @@ jobs:
       - name: Upload artifact for ore upload
         uses: actions/upload-artifact@v3
         with:
-          name: Plan.jar
+          name: ${{ github.event.release.name }}
           path: ${{ env.JAR_FILENAME }}
       - name: Upload release to Ore 🚀
         if: ${{ github.event.release.prerelease == false }}
