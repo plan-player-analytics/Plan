@@ -23,6 +23,7 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.playeranalytics.plugin.BungeePlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -61,7 +62,7 @@ public class PlanBungee extends Plugin implements PlanPlugin {
                 .abstractionLayer(abstractionLayer)
                 .build();
         try {
-            system = component.system();
+            system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 

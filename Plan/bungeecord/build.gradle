@@ -17,5 +17,4 @@ dependencies {
 shadowJar {
     configurations = [project.configurations.shadow]
     relocate 'org.bstats', 'net.playeranalytics.bstats.utilities.metrics'
-    relocate 'org.slf4j', 'plan.org.slf4j'
 }

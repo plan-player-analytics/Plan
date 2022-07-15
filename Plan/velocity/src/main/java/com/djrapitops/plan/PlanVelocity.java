@@ -23,6 +23,7 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -106,7 +107,7 @@ public class PlanVelocity implements PlanPlugin {
                 .abstractionLayer(abstractionLayer)
                 .build();
         try {
-            system = component.system();
+            system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 

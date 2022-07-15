@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.webserver.ResponseResolver;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverLogMessages;
 import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
@@ -129,24 +130,19 @@ public class JettyWebserver implements WebServer {
     }
 
     private ALPNServerConnectionFactory getAlpnServerConnectionFactory(String protocol) {
-        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            ClassLoader pluginClassLoader = getClass().getClassLoader();
-            // Jetty uses Thread context classloader, so we need to change to plugin classloader where the ALPNProcessor is.
-            Thread.currentThread().setContextClassLoader(pluginClassLoader);
-
-            Class.forName("org.eclipse.jetty.alpn.java.server.JDK9ServerALPNProcessor");
-            // ALPN is protocol upgrade protocol required for upgrading http 1.1 connections to 2
-            ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
-            alpn.setDefaultProtocol(protocol);
-
-            return alpn;
-        } catch (ClassNotFoundException ignored) {
-            logger.warn("JDK9ServerALPNProcessor not found. ALPN is not available.");
-            return null;
-        } finally {
-            Thread.currentThread().setContextClassLoader(contextClassLoader);
-        }
+        ClassLoader pluginClassLoader = getClass().getClassLoader();
+        return ThreadContextClassLoaderSwap.performOperation(pluginClassLoader, () -> {
+            try {
+                Class.forName("org.eclipse.jetty.alpn.java.server.JDK9ServerALPNProcessor");
+                // ALPN is protocol upgrade protocol required for upgrading http 1.1 connections to 2
+                ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
+                alpn.setDefaultProtocol(protocol);
+                return alpn;
+            } catch (ClassNotFoundException ignored) {
+                logger.warn("JDK9ServerALPNProcessor not found. ALPN is not available.");
+                return null;
+            }
+        });
     }
 
     private Optional<SslContextFactory.Server> getSslContextFactory() {

@@ -24,6 +24,7 @@ import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.SpongePlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -104,7 +105,7 @@ public class PlanSponge implements PlanPlugin {
 
         catchStartupErrors(() -> {
             component = makeComponent();
-            system = component.system();
+            system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
             system.enableForCommands();
         });
     }
@@ -120,7 +121,7 @@ public class PlanSponge implements PlanPlugin {
             if (!firstBoot) {
                 // Reinitialize component & system
                 component = makeComponent();
-                system = component.system();
+                system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
             }
 
             serverShutdownSave = component.serverShutdownSave();

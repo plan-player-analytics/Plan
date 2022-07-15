@@ -50,6 +50,8 @@ shadowJar {
     exclude "**/*.svg"
     exclude "**/*.psd"
     exclude "**/*.map"
+    exclude "LICENSE*.txt"
+    exclude "jetty-dir.css"
 
     exclude "**/module-info.class"
     exclude "module-info.class"

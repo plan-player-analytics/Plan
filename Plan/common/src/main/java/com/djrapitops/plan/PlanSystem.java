@@ -152,6 +152,7 @@ public class PlanSystem implements SubSystem {
 
     /**
      * Enables only the systems that are required for {@link com.djrapitops.plan.commands.PlanCommand}.
+     *
      * @see #enableOtherThanCommands()
      */
     public void enableForCommands() {
