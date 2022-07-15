@@ -317,17 +317,6 @@ public class PlanSystem implements SubSystem {
         return extensionService;
     }
 
-    /**
-     * Originally visible for testing purposes.
-     *
-     * @return the error logger of the system
-     * @deprecated A smell, dagger should be used to construct things instead.
-     */
-    @Deprecated
-    public ErrorLogger getErrorLogger() {
-        return errorLogger;
-    }
-
     public static long getServerEnableTime() {
         return SERVER_ENABLE_TIME;
     }

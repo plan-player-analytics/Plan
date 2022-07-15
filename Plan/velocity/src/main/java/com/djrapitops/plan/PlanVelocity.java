@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -72,6 +73,7 @@ public class PlanVelocity implements PlanPlugin {
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
+    private ErrorLogger errorLogger;
 
     @com.google.inject.Inject
     public PlanVelocity(
@@ -108,6 +110,7 @@ public class PlanVelocity implements PlanPlugin {
                 .build();
         try {
             system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
+            errorLogger = component.errorLogger();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
@@ -160,7 +163,7 @@ public class PlanVelocity implements PlanPlugin {
                 commandManager.metaBuilder(command.getPrimaryAlias())
                         .aliases(command.getAliases().toArray(new String[0]))
                         .build(),
-                new VelocityCommand(runnableFactory, system.getErrorLogger(), command)
+                new VelocityCommand(runnableFactory, errorLogger, command)
         );
     }
 

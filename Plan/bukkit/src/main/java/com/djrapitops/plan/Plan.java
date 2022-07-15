@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.BukkitPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -56,6 +57,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
     private PluginLogger pluginLogger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
+    private ErrorLogger errorLogger;
 
     @Override
     public void onLoad() {
@@ -73,6 +75,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
                 .build();
         try {
             system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
+            errorLogger = component.errorLogger();
             serverShutdownSave = component.serverShutdownSave();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
@@ -171,7 +174,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
                 pluginLogger.warn("Attempted to register '" + name + "'-command, but it is not in plugin.yml!");
                 continue;
             }
-            registering.setExecutor(new BukkitCommand(runnableFactory, system.getErrorLogger(), command));
+            registering.setExecutor(new BukkitCommand(runnableFactory, errorLogger, command));
         }
     }
 

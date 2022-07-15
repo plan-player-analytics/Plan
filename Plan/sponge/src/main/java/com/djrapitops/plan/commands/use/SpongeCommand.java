@@ -55,7 +55,7 @@ public class SpongeCommand implements Command.Raw {
         this.runnableFactory = runnableFactory;
         this.componentSupplier = componentSupplier;
         this.commandComponent = componentSupplier.get();
-        this.errorLogger = commandComponent.system().getErrorLogger();
+        this.errorLogger = commandComponent.errorLogger();
         this.subcommand = initialCommand;
     }
 
@@ -63,7 +63,7 @@ public class SpongeCommand implements Command.Raw {
         PlanSpongeComponent component = componentSupplier.get();
         // Check if the component has changed, if it has, update the command and error logger.
         if (commandComponent != component) {
-            errorLogger = component.system().getErrorLogger();
+            errorLogger = component.errorLogger();
             subcommand = component.planCommand().build();
             commandComponent = component;
         }

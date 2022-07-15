@@ -12,9 +12,9 @@ configurations {
     mysqlDriver
     sqliteDriver
     testImplementation.extendsFrom mysqlDriver, sqliteDriver
-    compileOnly.extendsFrom mysqlDriver, sqliteDriver,
+    compileOnly.extendsFrom mysqlDriver, sqliteDriver
 
-            swaggerJson // swagger.json configuration
+    swaggerJson // swagger.json configuration
 }
 
 task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {

@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestErrorLogger;
 import utilities.TestPluginLogger;
 import utilities.mocks.PluginMockComponent;
 
@@ -80,7 +81,7 @@ class ShutdownSaveTest {
         when(dbSystemMock.getDatabase()).thenReturn(database);
 
         TestPluginLogger logger = new TestPluginLogger();
-        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, system.getErrorLogger()) {
+        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, new TestErrorLogger()) {
             @Override
             protected boolean checkServerShuttingDownStatus() {
                 return shutdownStatus;

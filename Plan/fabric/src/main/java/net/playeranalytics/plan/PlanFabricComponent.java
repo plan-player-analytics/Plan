@@ -24,6 +24,7 @@ import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlatformAbstractionLayerModule;
 import com.djrapitops.plan.modules.ServerCommandModule;
 import com.djrapitops.plan.modules.SystemObjectProvidingModule;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.BindsInstance;
 import dagger.Component;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
@@ -58,6 +59,8 @@ public interface PlanFabricComponent {
     PlanSystem system();
 
     ServerShutdownSave serverShutdownSave();
+
+    ErrorLogger errorLogger();
 
     @Component.Builder
     interface Builder {

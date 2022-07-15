@@ -21,6 +21,7 @@ import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.CommandWithSubcommands;
 import com.djrapitops.plan.commands.use.Subcommand;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -44,10 +45,12 @@ public class CommandManager {
     private RunnableFactory runnableFactory;
     private LiteralArgumentBuilder<ServerCommandSource> root;
     private final PlanFabric plugin;
+    private final ErrorLogger errorLogger;
 
-    public CommandManager(CommandDispatcher<ServerCommandSource> dispatcher, PlanFabric plugin) {
+    public CommandManager(CommandDispatcher<ServerCommandSource> dispatcher, PlanFabric plugin, ErrorLogger errorLogger) {
         this.dispatcher = dispatcher;
         this.plugin = plugin;
+        this.errorLogger = errorLogger;
     }
 
     public static boolean checkPermission(ServerCommandSource src, String permission) {
@@ -57,7 +60,8 @@ public class CommandManager {
             return true;
         } else {
             return switch (permission) {
-                case "plan.player.self", "plan.ingame.self", "plan.register.self", "plan.unregister.self", "plan.json.self" -> true;
+                case "plan.player.self", "plan.ingame.self", "plan.register.self", "plan.unregister.self", "plan.json.self" ->
+                        true;
                 default -> false;
             };
         }
@@ -80,16 +84,14 @@ public class CommandManager {
         runnableFactory.create(() -> {
             try {
                 subcommand.getExecutor().accept((CMDSender) ctx.getSource(), new Arguments(getCommandArguments(ctx)));
+            } catch (IllegalArgumentException e) {
+                ctx.getSource().sendError(Text.literal(e.getMessage()));
             } catch (Exception e) {
-                if (e instanceof IllegalArgumentException) {
-                    ctx.getSource().sendError(Text.literal(e.getMessage()));
-                } else {
-                    ctx.getSource().sendError(Text.literal("An internal error occurred, see the console for details."));
-                    plugin.getSystem().getErrorLogger().error(e, ErrorContext.builder()
-                            .related(ctx.getSource().getClass())
-                            .related(subcommand.getPrimaryAlias() + " " + getCommandArguments(ctx))
-                            .build());
-                }
+                ctx.getSource().sendError(Text.literal("An internal error occurred, see the console for details."));
+                errorLogger.error(e, ErrorContext.builder()
+                        .related(ctx.getSource().getClass())
+                        .related(subcommand.getPrimaryAlias() + " " + getCommandArguments(ctx))
+                        .build());
             }
         }).runTaskAsynchronously();
         return 1;

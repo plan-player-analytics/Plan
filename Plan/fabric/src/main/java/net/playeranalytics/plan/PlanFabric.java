@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -63,6 +64,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
     private FabricPluginLogger pluginLogger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
+    private ErrorLogger errorLogger;
 
     @Override
     public InputStream getResource(String resource) {
@@ -95,6 +97,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
         try {
             system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
+            errorLogger = component.errorLogger();
             serverShutdownSave = component.serverShutdownSave();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
@@ -164,7 +167,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             onEnable();
         });
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> commandManager = new CommandManager(dispatcher, this));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> commandManager = new CommandManager(dispatcher, this, errorLogger));
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }

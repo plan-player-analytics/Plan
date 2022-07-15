@@ -30,6 +30,7 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.NukkitPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -61,6 +62,7 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
+    private ErrorLogger errorLogger;
 
     @Override
     public void onLoad() {
@@ -77,6 +79,7 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
                 .build();
         try {
             system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
+            errorLogger = component.errorLogger();
             serverShutdownSave = component.serverShutdownSave();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
@@ -159,10 +162,12 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
             try {
                 command.getExecutor().accept(sender, new Arguments(args));
             } catch (Exception e) {
-                system.getErrorLogger().error(e, ErrorContext.builder()
-                        .related(sender.getClass())
-                        .related(label + " " + Arrays.toString(args))
-                        .build());
+                if (errorLogger != null) {
+                    errorLogger.error(e, ErrorContext.builder()
+                            .related(sender.getClass())
+                            .related(label + " " + Arrays.toString(args))
+                            .build());
+                }
             }
         }).runTaskAsynchronously();
         return true;

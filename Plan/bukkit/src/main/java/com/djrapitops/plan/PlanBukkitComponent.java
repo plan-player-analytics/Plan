@@ -24,6 +24,7 @@ import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
 import com.djrapitops.plan.modules.bukkit.BukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.bukkit.BukkitSuperClassBindingModule;
 import com.djrapitops.plan.modules.bukkit.BukkitTaskModule;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.BindsInstance;
 import dagger.Component;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -58,6 +59,8 @@ public interface PlanBukkitComponent {
     BukkitPlaceholderRegistrar placeholders();
 
     ServerShutdownSave serverShutdownSave();
+
+    ErrorLogger errorLogger();
 
     @Component.Builder
     interface Builder {

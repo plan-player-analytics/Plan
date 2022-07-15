@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import utilities.RandomData;
+import utilities.TestErrorLogger;
 import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
@@ -46,7 +47,7 @@ class ShutdownDataPreservationTest {
                 system.getLocaleSystem().getLocale(),
                 system.getDatabaseSystem(),
                 abstractionLayer.getPluginLogger(),
-                system.getErrorLogger()
+                new TestErrorLogger()
         );
     }
 
