@@ -63,6 +63,21 @@ shadowJar {
     exclude "org/junit/**/*" // see extensions/build.gradle
     exclude "org/opentest4j/**/*" // see extensions/build.gradle
     exclude "org/checkerframework/**/*" // Dagger compiler
+    exclude "com/google/common/**/*"
+    exclude "com/google/thirdparty/**/*"
+    // Exclude swagger
+    exclude "org/yaml/**/*"
+    exclude "nonapi/**/*"
+    exclude "io/github/classgraph/**/*"
+    exclude "io/swagger/**/*"
+    exclude "com/sun/activation/**/*"
+    exclude "jakarta/activation/**/*"
+    exclude "jakarta/validation/**/*"
+    exclude "jakarta/ws/**/*"
+    exclude "jakarta/xml/**/*"
+    exclude "javassist/**/*"
+
+    relocate 'org.slf4j', 'plan.org.slf4j'
 
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'
