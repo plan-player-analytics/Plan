@@ -49,6 +49,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * Object that can be called to place data about players to the database.
@@ -293,6 +294,14 @@ public class DataValueGatherer {
     }
 
     public void updateValues(UUID playerUUID, String playerName) {
+        try {
+            tryToUpdateValues(playerUUID, playerName);
+        } catch (RejectedExecutionException ignore) {
+            // Database has shut down
+        }
+    }
+
+    private void tryToUpdateValues(UUID playerUUID, String playerName) {
         Parameters parameters = Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
         ExtensionDataBuilder dataBuilder = extension.getExtension().newExtensionDataBuilder();
 
@@ -305,6 +314,14 @@ public class DataValueGatherer {
     }
 
     public void updateValues() {
+        try {
+            tryToUpdateValues();
+        } catch (RejectedExecutionException ignore) {
+            // Database has shut down
+        }
+    }
+
+    private void tryToUpdateValues() {
         Parameters parameters = Parameters.server(serverInfo.getServerUUID());
         ExtensionDataBuilder dataBuilder = extension.getExtension().newExtensionDataBuilder();
 
@@ -362,15 +379,19 @@ public class DataValueGatherer {
 
     private void logFailure(Throwable cause, String pluginName, String methodName) {
         ErrorContext.Builder context = ErrorContext.builder()
-                .whatToDo("Report and/or disable " + pluginName + " extension in the Plan config.")
+                .whatToDo(getWhatToDoMessage(pluginName))
                 .related(pluginName)
                 .related("Method:" + methodName);
         errorLogger.warn(cause, context.build());
     }
 
+    private String getWhatToDoMessage(String pluginName) {
+        return "Report and/or disable " + pluginName + " extension in the Plan config.";
+    }
+
     private void logFailure(DataExtensionMethodCallException methodCallFailed) {
         ErrorContext.Builder context = ErrorContext.builder()
-                .whatToDo("Report and/or disable " + methodCallFailed.getPluginName() + " extension in the Plan config.")
+                .whatToDo(getWhatToDoMessage(methodCallFailed.getPluginName()))
                 .related(methodCallFailed.getPluginName())
                 .related("Method:" + methodCallFailed.getMethodName().orElse("-"));
         errorLogger.warn(methodCallFailed, context.build());
@@ -378,7 +399,7 @@ public class DataValueGatherer {
 
     private void logFailure(Throwable unexpectedError) {
         ErrorContext.Builder context = ErrorContext.builder()
-                .whatToDo("Report and/or disable " + extension.getPluginName() + " extension in the Plan config.")
+                .whatToDo(getWhatToDoMessage(extension.getPluginName()))
                 .related(extension.getPluginName());
         errorLogger.warn(unexpectedError, context.build());
     }

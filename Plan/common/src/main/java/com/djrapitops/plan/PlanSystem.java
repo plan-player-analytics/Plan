@@ -222,6 +222,9 @@ public class PlanSystem implements SubSystem {
     public void disable() {
         enabled = false;
         Formatters.clearSingleton();
+
+        extensionService.disableUpdates();
+
         disableSystems(
                 taskSystem,
                 cacheSystem,

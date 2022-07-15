@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Implementation for {@link ExtensionService}.
@@ -58,6 +59,7 @@ public class ExtensionSvc implements ExtensionService {
     private final ErrorLogger errorLogger;
 
     private final Map<String, DataValueGatherer> extensionGatherers;
+    private final AtomicBoolean enabled;
 
     @Inject
     public ExtensionSvc(
@@ -80,6 +82,7 @@ public class ExtensionSvc implements ExtensionService {
         this.errorLogger = errorLogger;
 
         extensionGatherers = new HashMap<>();
+        enabled = new AtomicBoolean(true);
     }
 
     public void register() {
@@ -152,12 +155,14 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     public void updatePlayerValues(UUID playerUUID, String playerName, CallEvents event) {
+        if (!enabled.get()) return; // Plugin is disabling
         for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         }
     }
 
     public void updatePlayerValues(DataValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
+        if (!enabled.get()) return; // Plugin is disabling
         if (gatherer.shouldSkipEvent(event)) return;
         if (playerUUID == null && playerName == null) return;
 
@@ -172,14 +177,20 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     public void updateServerValues(CallEvents event) {
+        if (!enabled.get()) return; // Plugin is disabling
         for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updateServerValues(gatherer, event);
         }
     }
 
     public void updateServerValues(DataValueGatherer gatherer, CallEvents event) {
+        if (!enabled.get()) return; // Plugin is disabling
         if (gatherer.shouldSkipEvent(event)) return;
 
         gatherer.updateValues();
+    }
+
+    public void disableUpdates() {
+        enabled.set(false);
     }
 }
