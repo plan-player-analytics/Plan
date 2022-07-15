@@ -2643,7 +2643,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/playeranalytics/plan/commands/CommandManager.html" class="type-name-link" title="class in net.playeranalytics.plan.commands">CommandManager</a> - Class in <a href="net/playeranalytics/plan/commands/package-summary.html">net.playeranalytics.plan.commands</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/playeranalytics/plan/commands/CommandManager.html#%3Cinit%3E(com.mojang.brigadier.CommandDispatcher,net.playeranalytics.plan.PlanFabric)" class="member-name-link">CommandManager(CommandDispatcher&lt;ServerCommandSource&gt;, PlanFabric)</a> - Constructor for class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/CommandManager.html" title="class in net.playeranalytics.plan.commands">CommandManager</a></dt>
+<dt><a href="net/playeranalytics/plan/commands/CommandManager.html#%3Cinit%3E(com.mojang.brigadier.CommandDispatcher,net.playeranalytics.plan.PlanFabric,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">CommandManager(CommandDispatcher&lt;ServerCommandSource&gt;, PlanFabric, ErrorLogger)</a> - Constructor for class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/CommandManager.html" title="class in net.playeranalytics.plan.commands">CommandManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/CommandUsageTableRemovalPatch.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.patches">CommandUsageTableRemovalPatch</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/patches/package-summary.html">com.djrapitops.plan.storage.database.transactions.patches</a></dt>
 <dd>
@@ -4451,6 +4451,18 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/storage/database/SQLDB.html#errorLogger" class="member-name-link">errorLogger</a> - Variable in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/version/VersionChecker.html#errorLogger" class="member-name-link">errorLogger</a> - Variable in class com.djrapitops.plan.version.<a href="com/djrapitops/plan/version/VersionChecker.html" title="class in com.djrapitops.plan.version">VersionChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/PlanBukkitComponent.html#errorLogger()" class="member-name-link">errorLogger()</a> - Method in interface com.djrapitops.plan.<a href="com/djrapitops/plan/PlanBukkitComponent.html" title="interface in com.djrapitops.plan">PlanBukkitComponent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/PlanBungeeComponent.html#errorLogger()" class="member-name-link">errorLogger()</a> - Method in interface com.djrapitops.plan.<a href="com/djrapitops/plan/PlanBungeeComponent.html" title="interface in com.djrapitops.plan">PlanBungeeComponent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/PlanNukkitComponent.html#errorLogger()" class="member-name-link">errorLogger()</a> - Method in interface com.djrapitops.plan.<a href="com/djrapitops/plan/PlanNukkitComponent.html" title="interface in com.djrapitops.plan">PlanNukkitComponent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/PlanSpongeComponent.html#errorLogger()" class="member-name-link">errorLogger()</a> - Method in interface com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSpongeComponent.html" title="interface in com.djrapitops.plan">PlanSpongeComponent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/PlanVelocityComponent.html#errorLogger()" class="member-name-link">errorLogger()</a> - Method in interface com.djrapitops.plan.<a href="com/djrapitops/plan/PlanVelocityComponent.html" title="interface in com.djrapitops.plan">PlanVelocityComponent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/PlanFabricComponent.html#errorLogger()" class="member-name-link">errorLogger()</a> - Method in interface net.playeranalytics.plan.<a href="net/playeranalytics/plan/PlanFabricComponent.html" title="interface in net.playeranalytics.plan">PlanFabricComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/logging/ErrorLogger.html" class="type-name-link" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a> - Interface in <a href="com/djrapitops/plan/utilities/logging/package-summary.html">com.djrapitops.plan.utilities.logging</a></dt>
 <dd>&nbsp;</dd>
@@ -6546,12 +6558,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/special/WorldMap.html#getEntries()" class="member-name-link">getEntries()</a> - Method in class com.djrapitops.plan.delivery.rendering.json.graphs.special.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/special/WorldMap.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.special">WorldMap</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/PlanSystem.html#getErrorLogger()" class="member-name-link">getErrorLogger()</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSystem.html" title="class in com.djrapitops.plan">PlanSystem</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">A smell, dagger should be used to construct things instead.</div>
-</div>
-</dd>
 <dt><a href="com/djrapitops/plan/commands/use/Subcommand.html#getExecutor()" class="member-name-link">getExecutor()</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/extractor/ExtensionMethod.html#getExistingAnnotation(java.lang.Class)" class="member-name-link">getExistingAnnotation(Class&lt;T&gt;)</a> - Method in class com.djrapitops.plan.extension.extractor.<a href="com/djrapitops/plan/extension/extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a></dt>
