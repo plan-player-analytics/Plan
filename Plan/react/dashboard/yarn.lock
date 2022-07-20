@@ -1009,15 +1009,7 @@
     "@babel/helper-validator-option" "^7.16.7"
     "@babel/plugin-transform-typescript" "^7.16.7"
 
-"@babel/runtime-corejs3@^7.10.2":
-  version "7.17.9"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.17.9.tgz#3d02d0161f0fbf3ada8e88159375af97690f4055"
-  integrity sha512-WxYHHUWF2uZ7Hp1K+D1xQgbgkGUfA+5UPOegEXGt2Y5SMog/rYCVaifLZDbw8UkNXozEqqrZTy6bglL7xTaCOw==
-  dependencies:
-    core-js-pure "^3.20.2"
-    regenerator-runtime "^0.13.4"
-
-"@babel/runtime-corejs3@^7.11.2", "@babel/runtime-corejs3@^7.16.8":
+"@babel/runtime-corejs3@^7.10.2", "@babel/runtime-corejs3@^7.11.2", "@babel/runtime-corejs3@^7.16.8":
   version "7.18.6"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.18.6.tgz#6f02c5536911f4b445946a2179554b95c8838635"
   integrity sha512-cOu5wH2JFBgMjje+a+fz2JNIWU4GzYpl05oSob3UDvBEh6EuIn+TXFHMmBbhSb+k/4HMzgKCQfEEDArAWNF9Cw==
@@ -8732,10 +8724,10 @@ swagger-client@^3.18.5:
     traverse "~0.6.6"
     url "~0.11.0"
 
-swagger-ui@^4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-4.12.0.tgz#8294d17fc20d26197aaffe001da57e8d58cceee4"
-  integrity sha512-ffNcDTQFWu5dEzJywQ4QEcgQZlBaHaeYCjifuWePds8anzqCZXVpeJSD7RCirUs+8D051YevRSu3ZjqNUNyvrQ==
+swagger-ui@^4.13.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-4.13.0.tgz#0991b931b701c3c5a15af2e68b41a4d88516e468"
+  integrity sha512-anpsAEVpWczGM9cnlt2Y/un9HnWq0fUhEEj04usK5ynpDStFJa42f/aXv2EADe8ymHrpdm32uxaEQedh0snBmA==
   dependencies:
     "@babel/runtime-corejs3" "^7.16.8"
     "@braintree/sanitize-url" "=6.0.0"
