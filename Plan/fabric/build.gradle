@@ -8,10 +8,10 @@ dependencies {
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    minecraft "com.mojang:minecraft:1.19"
-    mappings "net.fabricmc:yarn:1.19+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.14.7"
-    modImplementation('me.lucko:fabric-permissions-api:0.1-SNAPSHOT')
+    minecraft "com.mojang:minecraft:1.19.1"
+    mappings "net.fabricmc:yarn:1.19.1+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.14.8"
+    modImplementation('me.lucko:fabric-permissions-api:0.2-SNAPSHOT')
 
     // Fabric API
     Set<String> apiModules = [
@@ -19,18 +19,19 @@ dependencies {
             'fabric-command-api-v2',
             'fabric-entity-events-v1',
             'fabric-lifecycle-events-v1',
-            'fabric-networking-api-v1'
+            'fabric-networking-api-v1',
+            'fabric-message-api-v1'
     ]
 
     apiModules.forEach {
-        modImplementation(fabricApi.module(it, "0.55.3+1.19"))
+        modImplementation(fabricApi.module(it, "0.58.5+1.19.1"))
     }
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release = 17
+    options.release.set(17)
 }
 
 processResources {
@@ -76,8 +77,6 @@ shadowJar {
     exclude "jakarta/ws/**/*"
     exclude "jakarta/xml/**/*"
     exclude "javassist/**/*"
-
-    relocate 'org.slf4j', 'plan.org.slf4j'
 
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'

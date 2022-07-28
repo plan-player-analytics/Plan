@@ -26,6 +26,7 @@ import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -58,6 +59,9 @@ public class DeathEventListener implements FabricListener {
 
     @Override
     public void register() {
+        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) -> {
+            PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
+        });
         PlanFabricEvents.ON_KILLED.register((victim, killer) -> {
             if (!this.isEnabled) {
                 return;
