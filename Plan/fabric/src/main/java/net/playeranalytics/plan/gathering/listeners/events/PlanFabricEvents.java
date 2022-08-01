@@ -42,9 +42,9 @@ public class PlanFabricEvents {
         }
     });
 
-    public static final Event<OnChat> ON_CHAT = EventFactory.createArrayBacked(OnChat.class, callbacks -> (handler, message) -> {
-        for (OnChat callback : callbacks) {
-            callback.onChat(handler, message);
+    public static final Event<OnCommand> ON_COMMAND = EventFactory.createArrayBacked(OnCommand.class, callbacks -> (handler, command) -> {
+        for (OnCommand callback : callbacks) {
+            callback.onCommand(handler, command);
         }
     });
 
@@ -113,14 +113,14 @@ public class PlanFabricEvents {
     }
 
     @FunctionalInterface
-    public interface OnChat {
+    public interface OnCommand {
         /**
          * Called when a player sends a chat message / command
          *
          * @param handler the handler of the sending player
          * @param message the message sent (starts with "/" if it is a command)
          */
-        void onChat(ServerPlayNetworkHandler handler, String message);
+        void onCommand(ServerPlayNetworkHandler handler, String message);
     }
 
     @FunctionalInterface

@@ -23,10 +23,9 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.NicknameStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
-import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -59,18 +58,17 @@ public class ChatListener implements FabricListener {
         this.errorLogger = errorLogger;
     }
 
-    public void onChat(ServerPlayNetworkHandler handler, String message) {
+    public void onChat(ServerPlayerEntity player, String message) {
 
         try {
-            actOnChatEvent(handler);
+            actOnChatEvent(player);
         } catch (Exception e) {
-            errorLogger.error(e, ErrorContext.builder().related(handler, message).build());
+            errorLogger.error(e, ErrorContext.builder().related(player, message).build());
         }
     }
 
-    private void actOnChatEvent(ServerPlayNetworkHandler handler) {
+    private void actOnChatEvent(ServerPlayerEntity player) {
         long time = System.currentTimeMillis();
-        ServerPlayerEntity player = handler.player;
         UUID uuid = player.getUuid();
         String displayName = player.getDisplayName().getString();
 
@@ -82,12 +80,11 @@ public class ChatListener implements FabricListener {
 
     @Override
     public void register() {
-        PlanFabricEvents.ON_CHAT.register((handler, message) -> {
+        ServerMessageEvents.CHAT_MESSAGE.register((message, sender, params) -> {
             if (!isEnabled) {
                 return;
             }
-            onChat(handler, message);
-
+            onChat(sender, message.getContent().getString());
         });
 
         this.enable();
