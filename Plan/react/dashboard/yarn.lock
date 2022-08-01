@@ -1196,18 +1196,18 @@
   dependencies:
     prop-types "^15.8.1"
 
-"@fullcalendar/bootstrap@^5.10.1":
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-5.11.0.tgz#94670430b485775df4a696a0b1cf7ccd66ff9524"
-  integrity sha512-F7Ks7IHSPuPkfAse5c1/T8ToDoTAzhr0VIc+2RIiwjMuV+CcdtAgnpQGY9aHWvld1x25zLSTfqCYzxmI/8d80g==
+"@fullcalendar/bootstrap@^5.11.2":
+  version "5.11.2"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-5.11.2.tgz#f5ebcf815fd11ba37585fcd7eff00a779898abf7"
+  integrity sha512-oJl2hEZ0AJjVAVPz7zHNARHRh5w/kYHE85QilYdGzk7RXdWhB9aiDxp4Z7x8fSUwrfyHEDGa6V9APyMde4vJOQ==
   dependencies:
-    "@fullcalendar/common" "~5.11.0"
+    "@fullcalendar/common" "~5.11.2"
     tslib "^2.1.0"
 
-"@fullcalendar/common@~5.11.0":
-  version "5.11.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.11.0.tgz#d7e47b4272ba6824f95581fb7fb630c5880f4212"
-  integrity sha512-gWjbMAnN1u73Oqlgjbyky7i+3bY0hvFSnGT0YBPx44n874AkQa9e9OU12PMLTMOPy0tXPb8DEwRelFQ7CJNbcw==
+"@fullcalendar/common@~5.11.0", "@fullcalendar/common@~5.11.2":
+  version "5.11.2"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.11.2.tgz#2b198a56d315b0f4d4197d730f9303a9ba8954f8"
+  integrity sha512-2YBRs4IFrZlo7UL7hEHK+QgnuQnVIfwSspCOy0Qe+DtU2hu3myPrxsW0Tt/8RaoWsRndRDw5jeJzpjcVHDSSGQ==
   dependencies:
     tslib "^2.1.0"
 
@@ -8991,12 +8991,7 @@ tslib@^1.8.1:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tslib@^2.0.3, tslib@^2.1.0:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
-  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
-
-tslib@^2.3.0:
+tslib@^2.0.3, tslib@^2.1.0, tslib@^2.3.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==

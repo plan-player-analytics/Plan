@@ -10,7 +10,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@fullcalendar/bootstrap": "^5.10.1",
+    "@fullcalendar/bootstrap": "^5.11.2",
     "@fullcalendar/daygrid": "^5.10.1",
     "@fullcalendar/react": "^5.10.1",
     "@highcharts/map-collection": "^2.0.1",
