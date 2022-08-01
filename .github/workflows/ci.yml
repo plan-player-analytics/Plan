@@ -5,7 +5,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    name: Run Tests
+    name: Test, Build & Upload
 
     runs-on: ubuntu-latest
 
@@ -63,42 +63,10 @@ jobs:
         run: |
           cd Plan
           ./gradlew build
-      - name: SonarCloud
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: "${{ env.SONAR_TOKEN != '' }}"
+      - name: Get versions
         run: |
           cd Plan
-          ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan
-
-
-  build_dev_jars:
-    name: Build DEV jars
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Setup JDK
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Build with Gradle
-        run: |
-          cd Plan
-          ./gradlew shadowJar snapshotVersion jarNameVersion
+          ./gradlew snapshotVersion jarNameVersion
           git_hash=$(git rev-parse --short "$GITHUB_SHA")
           echo "git_hash=$git_hash" >> $GITHUB_ENV
           echo "snapshotVersion=$(cat build/versions/snapshot.txt)" >> $GITHUB_ENV
@@ -114,3 +82,11 @@ jobs:
         with:
           name: PlanFabric-${{ env.versionString }}-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}.jar
+      - name: SonarCloud
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: "${{ env.SONAR_TOKEN != '' }}"
+        run: |
+          cd Plan
+          ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan
