@@ -92,7 +92,7 @@ subprojects {
         hikariVersion = "5.0.1"
         slf4jVersion = "2.0.0-alpha7"
         geoIpVersion = "3.0.1"
-        gsonVersion = "2.9.0"
+        gsonVersion = "2.9.1"
         dependencyDownloadVersion = "1.2.1"
 
         bstatsVersion = "3.0.0"
