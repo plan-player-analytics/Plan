@@ -69,6 +69,7 @@ public class JettyWebserver implements WebServer {
         }
 
         webserver = new Server();
+        webserver.setStopAtShutdown(true);
 
         this.port = webserverConfiguration.getPort();
 
@@ -193,7 +194,12 @@ public class JettyWebserver implements WebServer {
     @Override
     public void disable() {
         try {
-            if (webserver != null) webserver.stop();
+            if (webserver != null) {
+                webserver.stop();
+                webserver.destroy();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
