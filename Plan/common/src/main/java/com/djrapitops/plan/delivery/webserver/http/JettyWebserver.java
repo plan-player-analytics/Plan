@@ -139,8 +139,8 @@ public class JettyWebserver implements WebServer {
                 ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
                 alpn.setDefaultProtocol(protocol);
                 return alpn;
-            } catch (ClassNotFoundException ignored) {
-                logger.warn("JDK9ServerALPNProcessor not found. ALPN is not available.");
+            } catch (IllegalStateException | ClassNotFoundException ignored) {
+                logger.warn("JDK9ServerALPNProcessor not found. ALPN (HTTP/2 upgrade protocol) is not available.");
                 return null;
             }
         });
