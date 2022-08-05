@@ -34,7 +34,7 @@
     "react-i18next": "^11.18.3",
     "react-router-dom": "6",
     "react-scripts": "5.0.1",
-    "sass": "^1.54.2",
+    "sass": "^1.54.3",
     "source-map-explorer": "^2.5.2",
     "swagger-ui": "^4.13.2",
     "web-vitals": "^2.1.0"
