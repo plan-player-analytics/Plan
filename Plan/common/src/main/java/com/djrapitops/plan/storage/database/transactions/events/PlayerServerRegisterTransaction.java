@@ -43,6 +43,10 @@ public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
         this.getJoinAddress = getJoinAddress;
     }
 
+    public PlayerServerRegisterTransaction(UUID playerUUID, long registerDate, String name, ServerUUID serverUUID, String joinAddress) {
+        this(playerUUID, () -> registerDate, name, serverUUID, () -> joinAddress);
+    }
+
     @Override
     protected void performOperations() {
         super.performOperations();

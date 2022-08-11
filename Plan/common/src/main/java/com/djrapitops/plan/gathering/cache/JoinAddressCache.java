@@ -45,8 +45,11 @@ public class JoinAddressCache {
     }
 
     public Optional<JoinAddress> get(UUID playerUUID) {
-        return Optional.ofNullable(joinAddresses.get(playerUUID))
-                .map(JoinAddress::new);
+        return Optional.ofNullable(getNullableString(playerUUID)).map(JoinAddress::new);
+    }
+
+    public String getNullableString(UUID playerUUID) {
+        return joinAddresses.get(playerUUID);
     }
 
     public void remove(UUID playerUUID, PlayerLeave leave) {
