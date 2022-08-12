@@ -41,6 +41,11 @@ public class BanStatusTransaction extends Transaction {
     private final ServerUUID serverUUID;
     private final BooleanSupplier banStatus;
 
+    public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, boolean banStatus) {
+        this(playerUUID, serverUUID, () -> banStatus);
+    }
+
+    @Deprecated
     public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, BooleanSupplier banStatus) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;

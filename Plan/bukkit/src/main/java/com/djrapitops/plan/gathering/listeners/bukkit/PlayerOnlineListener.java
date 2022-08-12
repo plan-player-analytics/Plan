@@ -16,28 +16,20 @@
  */
 package com.djrapitops.plan.gathering.listeners.bukkit;
 
-import com.djrapitops.plan.delivery.export.Exporter;
-import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.JoinAddressCache;
-import com.djrapitops.plan.gathering.cache.NicknameCache;
-import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.BukkitPlayerData;
 import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
+import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
 import com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer;
+import com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer;
 import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -57,45 +49,29 @@ import java.util.UUID;
 public class PlayerOnlineListener implements Listener {
 
     private final PlayerJoinEventConsumer playerJoinEventConsumer;
+    private final PlayerLeaveEventConsumer playerLeaveEventConsumer;
     private final JoinAddressCache joinAddressCache;
 
-    private final PlanConfig config;
-    private final Processing processing;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
-    private final ExtensionSvc extensionService;
-    private final Exporter exporter;
-    private final NicknameCache nicknameCache;
-    private final SessionCache sessionCache;
     private final ErrorLogger errorLogger;
     private final Status status;
 
     @Inject
     public PlayerOnlineListener(
             PlayerJoinEventConsumer playerJoinEventConsumer,
+            PlayerLeaveEventConsumer playerLeaveEventConsumer,
             JoinAddressCache joinAddressCache,
-
-            PlanConfig config,
-            Processing processing,
             ServerInfo serverInfo,
             DBSystem dbSystem,
-            ExtensionSvc extensionService,
-            Exporter exporter,
-            NicknameCache nicknameCache,
-            SessionCache sessionCache,
             Status status,
             ErrorLogger errorLogger
     ) {
         this.playerJoinEventConsumer = playerJoinEventConsumer;
+        this.playerLeaveEventConsumer = playerLeaveEventConsumer;
         this.joinAddressCache = joinAddressCache;
-        this.config = config;
-        this.processing = processing;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
-        this.extensionService = extensionService;
-        this.exporter = exporter;
-        this.nicknameCache = nicknameCache;
-        this.sessionCache = sessionCache;
         this.status = status;
         this.errorLogger = errorLogger;
     }
@@ -103,17 +79,16 @@ public class PlayerOnlineListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerLogin(PlayerLoginEvent event) {
         try {
-            PlayerLoginEvent.Result result = event.getResult();
             UUID playerUUID = event.getPlayer().getUniqueId();
             ServerUUID serverUUID = serverInfo.getServerUUID();
-            boolean banned = result == PlayerLoginEvent.Result.KICK_BANNED;
+            boolean banned = PlayerLoginEvent.Result.KICK_BANNED == event.getResult();
 
             String joinAddress = event.getHostname();
             if (!joinAddress.isEmpty()) {
                 joinAddress = joinAddress.substring(0, joinAddress.lastIndexOf(':'));
                 joinAddressCache.put(playerUUID, joinAddress);
             }
-            dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> banned));
+            dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, banned));
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, event.getResult()).build());
         }
@@ -167,10 +142,15 @@ public class PlayerOnlineListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void beforePlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
-        String playerName = player.getName();
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_LEAVE));
+        try {
+            playerLeaveEventConsumer.beforeLeave(PlayerLeave.builder()
+                    .server(serverInfo.getServer())
+                    .player(new BukkitPlayerData(event.getPlayer(), null))
+                    .time(System.currentTimeMillis())
+                    .build());
+        } catch (Exception e) {
+            errorLogger.error(e, ErrorContext.builder().related(event).build());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -184,23 +164,13 @@ public class PlayerOnlineListener implements Listener {
 
     private void actOnQuitEvent(PlayerQuitEvent event) {
         long time = System.currentTimeMillis();
-        Player player = event.getPlayer();
-        String playerName = player.getName();
-        UUID playerUUID = player.getUniqueId();
-        ServerUUID serverUUID = serverInfo.getServerUUID();
-
+        UUID playerUUID = event.getPlayer().getUniqueId();
         BukkitAFKListener.afkTracker.loggedOut(playerUUID, time);
 
-        joinAddressCache.remove(playerUUID);
-        nicknameCache.removeDisplayName(playerUUID);
-
-        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, player::isBanned));
-
-        sessionCache.endSession(playerUUID, time)
-                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new StoreSessionTransaction(endedSession)));
-
-        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
-            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
-        }
+        playerLeaveEventConsumer.onLeaveGameServer(PlayerLeave.builder()
+                .server(serverInfo.getServer())
+                .player(new BukkitPlayerData(event.getPlayer(), null))
+                .time(System.currentTimeMillis())
+                .build());
     }
 }

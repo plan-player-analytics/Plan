@@ -16,23 +16,22 @@
  */
 package com.djrapitops.plan.gathering.domain.event;
 
-import com.djrapitops.plan.gathering.domain.PlayerMetadata;
+import com.djrapitops.plan.gathering.domain.PlatformPlayerData;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.UUID;
 
 public class PlayerLeave {
 
-    private final UUID playerUUID;
-    private final ServerUUID serverUUID;
-    private final PlayerMetadata playerMetadata;
+    private final Server server;
+    private final PlatformPlayerData player;
 
     private final long time;
 
-    public PlayerLeave(UUID playerUUID, ServerUUID serverUUID, PlayerMetadata playerMetadata, long time) {
-        this.playerUUID = playerUUID;
-        this.serverUUID = serverUUID;
-        this.playerMetadata = playerMetadata;
+    private PlayerLeave(Server server, PlatformPlayerData player, long time) {
+        this.server = server;
+        this.player = player;
         this.time = time;
     }
 
@@ -41,15 +40,19 @@ public class PlayerLeave {
     }
 
     public UUID getPlayerUUID() {
-        return playerUUID;
+        return player.getUUID();
+    }
+
+    public String getPlayerName() {
+        return player.getName();
     }
 
     public ServerUUID getServerUUID() {
-        return serverUUID;
+        return server.getUuid();
     }
 
-    public PlayerMetadata getPlayerMetadata() {
-        return playerMetadata;
+    public PlatformPlayerData getPlayer() {
+        return player;
     }
 
     public long getTime() {
@@ -57,27 +60,21 @@ public class PlayerLeave {
     }
 
     public static final class Builder {
-        private UUID playerUUID;
-        private ServerUUID serverUUID;
-        private PlayerMetadata playerMetadata;
+        private Server server;
+        private PlatformPlayerData player;
         private long time;
 
         private Builder() {}
 
         public static Builder aPlayerLeave() {return new Builder();}
 
-        public Builder playerUUID(UUID playerUUID) {
-            this.playerUUID = playerUUID;
+        public Builder player(PlatformPlayerData player) {
+            this.player = player;
             return this;
         }
 
-        public Builder serverUUID(ServerUUID serverUUID) {
-            this.serverUUID = serverUUID;
-            return this;
-        }
-
-        public Builder playerMetadata(PlayerMetadata playerMetadata) {
-            this.playerMetadata = playerMetadata;
+        public Builder server(Server server) {
+            this.server = server;
             return this;
         }
 
@@ -86,6 +83,6 @@ public class PlayerLeave {
             return this;
         }
 
-        public PlayerLeave build() {return new PlayerLeave(playerUUID, serverUUID, playerMetadata, time);}
+        public PlayerLeave build() {return new PlayerLeave(server, player, time);}
     }
 }

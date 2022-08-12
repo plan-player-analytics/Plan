@@ -150,7 +150,7 @@ public class PlayerJoinEventConsumer {
                 .ifPresent(dbSystem.getDatabase()::executeTransaction);
     }
 
-    private Optional<FinishedSession> cacheActiveSession(PlayerJoin join) {
+    Optional<FinishedSession> cacheActiveSession(PlayerJoin join) {
         ActiveSession session = mapToActiveSession(join);
         return sessionCache.cacheSession(join.getPlayerUUID(), session);
     }
@@ -186,7 +186,7 @@ public class PlayerJoinEventConsumer {
         );
     }
 
-    private void updateExport(PlayerJoin join) {
+    void updateExport(PlayerJoin join) {
         if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
             processing.submitNonCritical(() -> exporter.exportPlayerPage(join.getPlayerUUID(), join.getPlayerName()));
         }
