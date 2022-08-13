@@ -39,6 +39,7 @@ import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -57,7 +58,7 @@ public class PlayerJoinEventConsumer {
     private final ExtensionSvc extensionService;
     private final Exporter exporter;
 
-    @Singleton
+    @Inject
     public PlayerJoinEventConsumer(
             Processing processing,
             PlanConfig config,

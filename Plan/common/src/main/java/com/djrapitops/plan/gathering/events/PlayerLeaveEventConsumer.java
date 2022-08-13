@@ -31,6 +31,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,6 +50,7 @@ public class PlayerLeaveEventConsumer {
     private final ExtensionSvc extensionService;
     private final Exporter exporter;
 
+    @Inject
     public PlayerLeaveEventConsumer(Processing processing, PlanConfig config, DBSystem dbSystem, JoinAddressCache joinAddressCache, NicknameCache nicknameCache, SessionCache sessionCache, ExtensionSvc extensionService, Exporter exporter) {
         this.processing = processing;
         this.config = config;
