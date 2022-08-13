@@ -47,7 +47,7 @@ public class BadFabricJoinAddressValuePatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        execute(new ExecStatement("UPDATE plan_user_info SET join_address=?" +
+        execute(new ExecStatement("UPDATE " + UserInfoTable.TABLE_NAME + " SET " + UserInfoTable.JOIN_ADDRESS + "=?" +
                 WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -61,6 +61,7 @@ public class BadFabricJoinAddressValuePatch extends Patch {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+                statement.setString(2, serverUUID.toString());
             }
         });
         execute("DELETE FROM " + JoinAddressTable.TABLE_NAME +
