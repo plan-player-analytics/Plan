@@ -75,7 +75,7 @@ public class FabricPlayerData implements PlatformPlayerData {
         try {
             SocketAddress socketAddress = player.networkHandler.connection.getAddress();
             if (socketAddress instanceof InetSocketAddress inetSocketAddress) {
-                return Optional.of((inetSocketAddress).getAddress());
+                return Optional.of(inetSocketAddress.getAddress());
             } else if (socketAddress instanceof UnixDomainSocketAddress) {
                 // These connections come from the same physical machine
                 return Optional.of(InetAddress.getLocalHost());
