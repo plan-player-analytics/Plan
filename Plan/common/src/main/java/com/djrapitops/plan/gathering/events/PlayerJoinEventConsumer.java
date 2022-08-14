@@ -96,16 +96,14 @@ public class PlayerJoinEventConsumer {
     }
 
     public void onJoinProxyServer(PlayerJoin join) {
-        processing.submitCritical(() -> {
-            storeWorldInformation(join);
-            storeProxyPlayer(join)
-                    .thenRunAsync(() -> {
-                        cacheActiveSession(join);
-                        storeGeolocation(join);
-                        updatePlayerDataExtensionValues(join);
-                        updateExport(join);
-                    }, processing.getCriticalExecutor());
-        });
+        processing.submitCritical(() -> storeProxyPlayer(join)
+                .thenRunAsync(() -> {
+                    cacheActiveSession(join);
+                    storeGeolocation(join);
+                    updatePlayerDataExtensionValues(join);
+                    updateExport(join);
+                }, processing.getCriticalExecutor())
+        );
     }
 
     private void storeJoinAddress(PlayerJoin join) {

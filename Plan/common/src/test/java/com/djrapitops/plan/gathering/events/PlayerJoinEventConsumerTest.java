@@ -124,6 +124,19 @@ class PlayerJoinEventConsumerTest {
     }
 
     @Test
+    void joiningProxyServerStartsSession() {
+        PlayerJoin join = createPlayerJoin(createTestPlayer());
+
+        underTest.onJoinProxyServer(join);
+        Awaitility.await()
+                .atMost(1, TimeUnit.SECONDS)
+                .until(() -> SessionCache.getCachedSession(TestConstants.PLAYER_ONE_UUID).isPresent());
+
+        Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(TestConstants.PLAYER_ONE_UUID);
+        assertTrue(cachedSession.isPresent());
+    }
+
+    @Test
     void joiningGameServerStoresWorldName(Database database) {
         PlayerJoin join = createPlayerJoin(createTestPlayer()
                 .setCurrentWorld("World")
@@ -160,6 +173,18 @@ class PlayerJoinEventConsumerTest {
         waitUntilDatabaseIsDone(database);
 
         Collection<BaseUser> expected = List.of(new BaseUser(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, 1234L, 0));
+        Collection<BaseUser> result = database.query(BaseUserQueries.fetchAllBaseUsers());
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void joiningProxyServerStoresUser(Database database) {
+        PlayerJoin join = createPlayerJoin(createTestPlayer());
+
+        underTest.onJoinProxyServer(join);
+        waitUntilDatabaseIsDone(database);
+
+        Collection<BaseUser> expected = List.of(new BaseUser(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, join.getTime(), 0));
         Collection<BaseUser> result = database.query(BaseUserQueries.fetchAllBaseUsers());
         assertEquals(expected, result);
     }
@@ -218,6 +243,24 @@ class PlayerJoinEventConsumerTest {
     }
 
     @Test
+    void joiningProxyServerStoresGeolocation(PlanSystem system, Database database) throws Exception {
+        GeolocationCache geolocationCache = system.getCacheSystem().getGeolocationCache();
+        Awaitility.await()
+                .atMost(5, TimeUnit.SECONDS)
+                .until(geolocationCache::canGeolocate);
+
+        PlayerJoin join = createPlayerJoin(createTestPlayer()
+                .setIp(InetAddress.getByName("156.53.159.86")));
+
+        underTest.onJoinProxyServer(join);
+        waitUntilDatabaseIsDone(database);
+
+        List<String> expected = List.of("United States");
+        List<String> result = database.query(GeoInfoQueries.uniqueGeolocations());
+        assertEquals(expected, result);
+    }
+
+    @Test
     void joiningGameServerStoresOperatorStatus(Database database) {
         PlayerJoin join = createPlayerJoin(createTestPlayer()
                 .setOperator(true));
@@ -239,6 +282,24 @@ class PlayerJoinEventConsumerTest {
         PlayerJoin join = createPlayerJoin(createTestPlayer());
 
         underTest.onJoinGameServer(join);
+
+        File playerExportDir = config.getPageExportPath().resolve("player/" + TestConstants.PLAYER_ONE_UUID).toFile();
+        Awaitility.await()
+                .atMost(2, TimeUnit.SECONDS)
+                .until(playerExportDir::exists);
+
+        assertTrue(playerExportDir.exists());
+        assertTrue(playerExportDir.isDirectory());
+    }
+
+    @Test
+    void joiningProxyServerExportsPlayerPage(PlanConfig config) {
+        config.set(ExportSettings.PLAYER_PAGES, true);
+        config.set(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE, true);
+
+        PlayerJoin join = createPlayerJoin(createTestPlayer());
+
+        underTest.onJoinProxyServer(join);
 
         File playerExportDir = config.getPageExportPath().resolve("player/" + TestConstants.PLAYER_ONE_UUID).toFile();
         Awaitility.await()
