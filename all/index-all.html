@@ -167,8 +167,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html#actOnLogin(com.velocitypowered.api.event.connection.PostLoginEvent)" class="member-name-link">actOnLogin(PostLoginEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.velocity.<a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.velocity">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html#actOnLogout(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">actOnLogout(DisconnectEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.velocity.<a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.velocity">PlayerOnlineListener</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html#actOnServerSwitch(com.velocitypowered.api.event.player.ServerConnectedEvent)" class="member-name-link">actOnServerSwitch(ServerConnectedEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.velocity.<a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.velocity">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/Counter.html#add()" class="member-name-link">add()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/Counter.html" title="class in com.djrapitops.plan.gathering.domain">Counter</a></dt>
@@ -377,6 +375,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds a new World to the config section.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/GMTimes.html#ADVENTURE" class="member-name-link">ADVENTURE</a> - Static variable in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/GMTimes.html" title="class in com.djrapitops.plan.gathering.domain">GMTimes</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#ADVENTURE" class="member-name-link">ADVENTURE</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTimesTable</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/AdventureMessageBuilder.html" class="type-name-link" title="class in com.djrapitops.plan.commands.use">AdventureMessageBuilder</a> - Class in <a href="com/djrapitops/plan/commands/use/package-summary.html">com.djrapitops.plan.commands.use</a></dt>
@@ -592,6 +592,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/init/RemoveIncorrectTebexPackageDataPatch.html#applyPatch()" class="member-name-link">applyPatch()</a> - Method in class com.djrapitops.plan.storage.database.transactions.init.<a href="com/djrapitops/plan/storage/database/transactions/init/RemoveIncorrectTebexPackageDataPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.init">RemoveIncorrectTebexPackageDataPatch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadAFKThresholdValuePatch.html#applyPatch()" class="member-name-link">applyPatch()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/BadAFKThresholdValuePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadAFKThresholdValuePatch</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadFabricJoinAddressValuePatch.html#applyPatch()" class="member-name-link">applyPatch()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/BadFabricJoinAddressValuePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadFabricJoinAddressValuePatch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadNukkitRegisterValuePatch.html#applyPatch()" class="member-name-link">applyPatch()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/BadNukkitRegisterValuePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadNukkitRegisterValuePatch</a></dt>
 <dd>&nbsp;</dd>
@@ -946,6 +948,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadAFKThresholdValuePatch.html#%3Cinit%3E()" class="member-name-link">BadAFKThresholdValuePatch()</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/BadAFKThresholdValuePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadAFKThresholdValuePatch</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadFabricJoinAddressValuePatch.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadFabricJoinAddressValuePatch</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/patches/package-summary.html">com.djrapitops.plan.storage.database.transactions.patches</a></dt>
+<dd>
+<div class="block">Patch that removes player IPs that were gathered as join address on Fabric.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadFabricJoinAddressValuePatch.html#%3Cinit%3E(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">BadFabricJoinAddressValuePatch(ServerUUID)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/BadFabricJoinAddressValuePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadFabricJoinAddressValuePatch</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadNukkitRegisterValuePatch.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadNukkitRegisterValuePatch</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/patches/package-summary.html">com.djrapitops.plan.storage.database.transactions.patches</a></dt>
 <dd>
 <div class="block">Patch to fix incorrect register dates for nukkit.</div>
@@ -990,6 +998,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Transaction to update a player's ban status.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/events/BanStatusTransaction.html#%3Cinit%3E(java.util.UUID,com.djrapitops.plan.identification.ServerUUID,boolean)" class="member-name-link">BanStatusTransaction(UUID, ServerUUID, boolean)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/BanStatusTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">BanStatusTransaction</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/BanStatusTransaction.html#%3Cinit%3E(java.util.UUID,com.djrapitops.plan.identification.ServerUUID,java.util.function.BooleanSupplier)" class="member-name-link">BanStatusTransaction(UUID, ServerUUID, BooleanSupplier)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/BanStatusTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">BanStatusTransaction</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/Graphs.html#bar()" class="member-name-link">bar()</a> - Method in class com.djrapitops.plan.delivery.rendering.json.graphs.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/Graphs.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">Graphs</a></dt>
@@ -1029,6 +1039,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html#basicAuth()" class="member-name-link">basicAuth()</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html" title="class in com.djrapitops.plan.delivery.webserver">ResponseFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html#basicAuthFail(com.djrapitops.plan.exceptions.WebUserAuthException)" class="member-name-link">basicAuthFail(WebUserAuthException)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html" title="class in com.djrapitops.plan.delivery.webserver">ResponseFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html#beforeLeave(com.djrapitops.plan.gathering.domain.event.PlayerLeave)" class="member-name-link">beforeLeave(PlayerLeave)</a> - Method in class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html#beforeLogout(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">beforeLogout(DisconnectEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.velocity.<a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.velocity">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
@@ -1676,10 +1688,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/storage/database/BukkitDBSystem.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.MySQLDB,com.djrapitops.plan.storage.database.SQLiteDB.Factory,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger)" class="member-name-link">BukkitDBSystem(Locale, MySQLDB, SQLiteDB.Factory, PlanConfig, PluginLogger)</a> - Constructor for class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/BukkitDBSystem.html" title="class in com.djrapitops.plan.storage.database">BukkitDBSystem</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/modules/bukkit/BukkitEventPipelineModule.html" class="type-name-link" title="class in com.djrapitops.plan.modules.bukkit">BukkitEventPipelineModule</a> - Class in <a href="com/djrapitops/plan/modules/bukkit/package-summary.html">com.djrapitops.plan.modules.bukkit</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/modules/bukkit/BukkitEventPipelineModule.html#%3Cinit%3E()" class="member-name-link">BukkitEventPipelineModule()</a> - Constructor for class com.djrapitops.plan.modules.bukkit.<a href="com/djrapitops/plan/modules/bukkit/BukkitEventPipelineModule.html" title="class in com.djrapitops.plan.modules.bukkit">BukkitEventPipelineModule</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/importers/BukkitImporter.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.importing.importers">BukkitImporter</a> - Class in <a href="com/djrapitops/plan/gathering/importing/importers/package-summary.html">com.djrapitops.plan.gathering.importing.importers</a></dt>
 <dd>
 <div class="block">Generic importer for user data into Plan on the Bukkit platform.</div>
@@ -1707,6 +1715,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/commands/use/BukkitPlayerCMDSender.html" class="type-name-link" title="class in com.djrapitops.plan.commands.use">BukkitPlayerCMDSender</a> - Class in <a href="com/djrapitops/plan/commands/use/package-summary.html">com.djrapitops.plan.commands.use</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/BukkitPlayerCMDSender.html#%3Cinit%3E(org.bukkit.entity.Player)" class="member-name-link">BukkitPlayerCMDSender(Player)</a> - Constructor for class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/BukkitPlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">BukkitPlayerCMDSender</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a> - Class in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#%3Cinit%3E(org.bukkit.entity.Player,java.lang.String)" class="member-name-link">BukkitPlayerData(Player, String)</a> - Constructor for class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/BukkitSensor.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">BukkitSensor</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
 <dd>&nbsp;</dd>
@@ -1771,6 +1783,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/command/use/BungeePlayerCMDSender.html" class="type-name-link" title="class in com.djrapitops.plan.command.use">BungeePlayerCMDSender</a> - Class in <a href="com/djrapitops/plan/command/use/package-summary.html">com.djrapitops.plan.command.use</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/command/use/BungeePlayerCMDSender.html#%3Cinit%3E(net.md_5.bungee.api.connection.ProxiedPlayer)" class="member-name-link">BungeePlayerCMDSender(ProxiedPlayer)</a> - Constructor for class com.djrapitops.plan.command.use.<a href="com/djrapitops/plan/command/use/BungeePlayerCMDSender.html" title="class in com.djrapitops.plan.command.use">BungeePlayerCMDSender</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain">BungeePlayerData</a> - Class in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html#%3Cinit%3E(net.md_5.bungee.api.connection.ProxiedPlayer)" class="member-name-link">BungeePlayerData(ProxiedPlayer)</a> - Constructor for class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BungeePlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/BungeeSensor.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">BungeeSensor</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
 <dd>&nbsp;</dd>
@@ -2116,6 +2132,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Clears the cache</div>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/formatting/Formatters.html#clearSingleton()" class="member-name-link">clearSingleton()</a> - Static method in class com.djrapitops.plan.delivery.formatting.<a href="com/djrapitops/plan/delivery/formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ClientToServerHandshakePacketMixin.html" class="type-name-link" title="class in net.playeranalytics.plan.gathering.listeners.events.mixin">ClientToServerHandshakePacketMixin</a> - Class in <a href="net/playeranalytics/plan/gathering/listeners/events/mixin/package-summary.html">net.playeranalytics.plan.gathering.listeners.events.mixin</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ClientToServerHandshakePacketMixin.html#%3Cinit%3E()" class="member-name-link">ClientToServerHandshakePacketMixin()</a> - Constructor for class net.playeranalytics.plan.gathering.listeners.events.mixin.<a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ClientToServerHandshakePacketMixin.html" title="class in net.playeranalytics.plan.gathering.listeners.events.mixin">ClientToServerHandshakePacketMixin</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/formatting/Formatters.html#clock()" class="member-name-link">clock()</a> - Method in class com.djrapitops.plan.delivery.formatting.<a href="com/djrapitops/plan/delivery/formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a></dt>
 <dd>&nbsp;</dd>
@@ -2476,6 +2496,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/gathering/domain/builders/package-summary.html">com.djrapitops.plan.gathering.domain.builders</a> - package com.djrapitops.plan.gathering.domain.builders</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/event/package-summary.html">com.djrapitops.plan.gathering.domain.event</a> - package com.djrapitops.plan.gathering.domain.event</dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/package-summary.html">com.djrapitops.plan.gathering.events</a> - package com.djrapitops.plan.gathering.events</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/geolocation/package-summary.html">com.djrapitops.plan.gathering.geolocation</a> - package com.djrapitops.plan.gathering.geolocation</dt>
 <dd>&nbsp;</dd>
@@ -2919,6 +2941,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html#CONFIRM_FAIL_DENY" class="member-name-link">CONFIRM_FAIL_DENY</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">CommandLang</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html#CONFIRM_JOIN_ADDRESS_REMOVAL" class="member-name-link">CONFIRM_JOIN_ADDRESS_REMOVAL</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">CommandLang</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html#CONFIRM_OVERWRITE" class="member-name-link">CONFIRM_OVERWRITE</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">CommandLang</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html#CONFIRM_OVERWRITE_DB" class="member-name-link">CONFIRM_OVERWRITE_DB</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">CommandLang</a></dt>
@@ -3205,6 +3229,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#createUniqueAndNewJSON(com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraphFactory,java.util.NavigableMap,java.util.NavigableMap,long)" class="member-name-link">createUniqueAndNewJSON(LineGraphFactory, NavigableMap&lt;Long, Integer&gt;, NavigableMap&lt;Long, Integer&gt;, long)</a> - Method in class com.djrapitops.plan.delivery.rendering.json.graphs.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">GraphJSONCreator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/GMTimes.html#CREATIVE" class="member-name-link">CREATIVE</a> - Static variable in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/GMTimes.html" title="class in com.djrapitops.plan.gathering.domain">GMTimes</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#CREATIVE" class="member-name-link">CREATIVE</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTimesTable</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/logging/ErrorLogger.html#critical(java.lang.Throwable,com.djrapitops.plan.utilities.logging.ErrorContext)" class="member-name-link">critical(Throwable, ErrorContext)</a> - Method in interface com.djrapitops.plan.utilities.logging.<a href="com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a></dt>
@@ -3324,10 +3350,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/gathering/domain/DataMap.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain">DataMap</a> - Class in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/DataMap.html#%3Cinit%3E()" class="member-name-link">DataMap()</a> - Constructor for class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DataMap.html" title="class in com.djrapitops.plan.gathering.domain">DataMap</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/modules/DataPipelineModule.html" class="type-name-link" title="class in com.djrapitops.plan.modules">DataPipelineModule</a> - Class in <a href="com/djrapitops/plan/modules/package-summary.html">com.djrapitops.plan.modules</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/modules/DataPipelineModule.html#%3Cinit%3E()" class="member-name-link">DataPipelineModule()</a> - Constructor for class com.djrapitops.plan.modules.<a href="com/djrapitops/plan/modules/DataPipelineModule.html" title="class in com.djrapitops.plan.modules">DataPipelineModule</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/providers/DataProvider.html" class="type-name-link" title="class in com.djrapitops.plan.extension.implementation.providers">DataProvider</a>&lt;<a href="com/djrapitops/plan/extension/implementation/providers/DataProvider.html" title="type parameter in DataProvider">T</a>&gt; - Class in <a href="com/djrapitops/plan/extension/implementation/providers/package-summary.html">com.djrapitops.plan.extension.implementation.providers</a></dt>
 <dd>
@@ -4206,8 +4228,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">End a session and save it to database.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/gathering/cache/SessionCache.html#endSession(java.util.UUID,com.djrapitops.plan.gathering.domain.event.PlayerLeave)" class="member-name-link">endSession(UUID, PlayerLeave)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/SessionCache.html" title="class in com.djrapitops.plan.gathering.cache">SessionCache</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html#endsWith(java.lang.String)" class="member-name-link">endsWith(String)</a> - Method in class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIPath</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html#ensureNoForeignKeyConstraints(java.lang.String)" class="member-name-link">ensureNoForeignKeyConstraints(String)</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Patch</a></dt>
@@ -5095,6 +5115,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plugin/FabricPlatformLayer.html#%3Cinit%3E(net.playeranalytics.plan.PlanFabric)" class="member-name-link">FabricPlatformLayer(PlanFabric)</a> - Constructor for class net.playeranalytics.plugin.<a href="net/playeranalytics/plugin/FabricPlatformLayer.html" title="class in net.playeranalytics.plugin">FabricPlatformLayer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" class="type-name-link" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a> - Class in <a href="net/playeranalytics/plan/gathering/domain/package-summary.html">net.playeranalytics.plan.gathering.domain</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#%3Cinit%3E(net.minecraft.server.network.ServerPlayerEntity,net.minecraft.server.dedicated.MinecraftDedicatedServer,java.lang.String)" class="member-name-link">FabricPlayerData(ServerPlayerEntity, MinecraftDedicatedServer, String)</a> - Constructor for class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/FabricPlayerPositionTracker.html" class="type-name-link" title="class in net.playeranalytics.plan.gathering">FabricPlayerPositionTracker</a> - Class in <a href="net/playeranalytics/plan/gathering/package-summary.html">net.playeranalytics.plan.gathering</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/FabricPlayerPositionTracker.html#%3Cinit%3E()" class="member-name-link">FabricPlayerPositionTracker()</a> - Constructor for class net.playeranalytics.plan.gathering.<a href="net/playeranalytics/plan/gathering/FabricPlayerPositionTracker.html" title="class in net.playeranalytics.plan.gathering">FabricPlayerPositionTracker</a></dt>
@@ -5847,8 +5871,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/PlayerJSONCreator.ConnectionInfo.html#fromGeoInfo(java.util.List,com.djrapitops.plan.delivery.formatting.Formatter)" class="member-name-link">fromGeoInfo(List&lt;GeoInfo&gt;, Formatter&lt;Long&gt;)</a> - Static method in class com.djrapitops.plan.delivery.rendering.json.<a href="com/djrapitops/plan/delivery/rendering/json/PlayerJSONCreator.ConnectionInfo.html" title="class in com.djrapitops.plan.delivery.rendering.json">PlayerJSONCreator.ConnectionInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/ActiveSession.html#fromPlayerJoin(com.djrapitops.plan.gathering.domain.event.PlayerJoin)" class="member-name-link">fromPlayerJoin(PlayerJoin)</a> - Static method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/ActiveSession.html" title="class in com.djrapitops.plan.gathering.domain">ActiveSession</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/datatransfer/ServerDto.html#fromServer(com.djrapitops.plan.identification.Server)" class="member-name-link">fromServer(Server)</a> - Static method in class com.djrapitops.plan.delivery.domain.datatransfer.<a href="com/djrapitops/plan/delivery/domain/datatransfer/ServerDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">ServerDto</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/ServerUUID.html#fromString(java.lang.String)" class="member-name-link">fromString(String)</a> - Static method in class com.djrapitops.plan.identification.<a href="com/djrapitops/plan/identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a></dt>
@@ -5968,7 +5990,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">This class contains the geolocation cache.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/gathering/geolocation/GeolocationCache.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.gathering.geolocation.GeoLite2Geolocator,net.playeranalytics.plugin.server.PluginLogger,net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">GeolocationCache(Locale, PlanConfig, GeoLite2Geolocator, PluginLogger, RunnableFactory)</a> - Constructor for class com.djrapitops.plan.gathering.geolocation.<a href="com/djrapitops/plan/gathering/geolocation/GeolocationCache.html" title="class in com.djrapitops.plan.gathering.geolocation">GeolocationCache</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/geolocation/GeolocationCache.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.gathering.geolocation.GeoLite2Geolocator,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.processing.Processing)" class="member-name-link">GeolocationCache(Locale, PlanConfig, GeoLite2Geolocator, PluginLogger, Processing)</a> - Constructor for class com.djrapitops.plan.gathering.geolocation.<a href="com/djrapitops/plan/gathering/geolocation/GeolocationCache.html" title="class in com.djrapitops.plan.gathering.geolocation">GeolocationCache</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html#geolocationGraphsJSONAsMap()" class="member-name-link">geolocationGraphsJSONAsMap()</a> - Method in class com.djrapitops.plan.delivery.rendering.json.graphs.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/GraphJSONCreator.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">GraphJSONCreator</a></dt>
 <dd>&nbsp;</dd>
@@ -6356,13 +6378,35 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Retrieve a class in the org.bukkit.craftbukkit.VERSION.* package.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/processing/Processing.html#getCriticalExecutor()" class="member-name-link">getCriticalExecutor()</a> - Method in class com.djrapitops.plan.processing.<a href="com/djrapitops/plan/processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/TablePlayer.html#getCurrentActivityIndex()" class="member-name-link">getCurrentActivityIndex()</a> - Method in class com.djrapitops.plan.delivery.domain.<a href="com/djrapitops/plan/delivery/domain/TablePlayer.html" title="class in com.djrapitops.plan.delivery.domain">TablePlayer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#getCurrentGameMode()" class="member-name-link">getCurrentGameMode()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#getCurrentGameMode()" class="member-name-link">getCurrentGameMode()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#getCurrentGameMode()" class="member-name-link">getCurrentGameMode()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#getCurrentGameMode()" class="member-name-link">getCurrentGameMode()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#getCurrentGameMode()" class="member-name-link">getCurrentGameMode()</a> - Method in class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/version/VersionChecker.html#getCurrentVersion()" class="member-name-link">getCurrentVersion()</a> - Method in class com.djrapitops.plan.version.<a href="com/djrapitops/plan/version/VersionChecker.html" title="class in com.djrapitops.plan.version">VersionChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/version/VersionChecker.html#getCurrentVersionButton()" class="member-name-link">getCurrentVersionButton()</a> - Method in class com.djrapitops.plan.version.<a href="com/djrapitops/plan/version/VersionChecker.html" title="class in com.djrapitops.plan.version">VersionChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#getCurrentWorld()" class="member-name-link">getCurrentWorld()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#getCurrentWorld()" class="member-name-link">getCurrentWorld()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#getCurrentWorld()" class="member-name-link">getCurrentWorld()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#getCurrentWorld()" class="member-name-link">getCurrentWorld()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/WorldTimes.html#getCurrentWorld()" class="member-name-link">getCurrentWorld()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#getCurrentWorld()" class="member-name-link">getCurrentWorld()</a> - Method in class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/file/PlanFiles.html#getCustomizableResource(java.lang.String)" class="member-name-link">getCustomizableResource(String)</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a></dt>
 <dd>&nbsp;</dd>
@@ -6510,7 +6554,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/config/ExtensionSettings.html#getDisabled()" class="member-name-link">getDisabled()</a> - Method in class com.djrapitops.plan.settings.config.<a href="com/djrapitops/plan/settings/config/ExtensionSettings.html" title="class in com.djrapitops.plan.settings.config">ExtensionSettings</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/cache/NicknameCache.html#getDisplayName(java.util.UUID)" class="member-name-link">getDisplayName(UUID)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/NicknameCache.html" title="class in com.djrapitops.plan.gathering.cache">NicknameCache</a></dt>
 <dd>
@@ -6886,9 +6940,31 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html#getIpAddress()" class="member-name-link">getIpAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#getIPAddress()" class="member-name-link">getIPAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html#getIPAddress()" class="member-name-link">getIPAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BungeePlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#getIPAddress()" class="member-name-link">getIPAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#getIPAddress()" class="member-name-link">getIPAddress()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#getIPAddress()" class="member-name-link">getIPAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html#getIPAddress()" class="member-name-link">getIPAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">VelocityPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#getIPAddress()" class="member-name-link">getIPAddress()</a> - Method in class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html#getIps()" class="member-name-link">getIps()</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/UserInfo.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a></dt>
 <dd>
@@ -6896,7 +6972,11 @@ loadScripts(document, 'script');</script>
 <div class="deprecation-comment">Join address is now stored in <a href="com/djrapitops/plan/gathering/domain/FinishedSession.html#getExtraData()"><code>FinishedSession.getExtraData()</code></a>, this method may become unreliable in the future.</div>
 </div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">VelocityPlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#getJoinAddress()" class="member-name-link">getJoinAddress()</a> - Method in class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/config/PlanConfig.html#getJSONExportPath()" class="member-name-link">getJSONExportPath()</a> - Method in class com.djrapitops.plan.settings.config.<a href="com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a></dt>
 <dd>&nbsp;</dd>
@@ -7202,6 +7282,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/BaseUser.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BungeePlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#getName()" class="member-name-link">getName()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">VelocityPlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/importers/BukkitImporter.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.gathering.importing.importers.<a href="com/djrapitops/plan/gathering/importing/importers/BukkitImporter.html" title="class in com.djrapitops.plan.gathering.importing.importers">BukkitImporter</a></dt>
@@ -7223,6 +7315,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/version/ore/OreTagDto.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.version.ore.<a href="com/djrapitops/plan/version/ore/OreTagDto.html" title="class in com.djrapitops.plan.version.ore">OreTagDto</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/version/ore/OreVersionDto.html#getName()" class="member-name-link">getName()</a> - Method in class com.djrapitops.plan.version.ore.<a href="com/djrapitops/plan/version/ore/OreVersionDto.html" title="class in com.djrapitops.plan.version.ore">OreVersionDto</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#getName()" class="member-name-link">getName()</a> - Method in class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/UUIDUtility.html#getNameOf(java.lang.String)" class="member-name-link">getNameOf(String)</a> - Method in class com.djrapitops.plan.identification.<a href="com/djrapitops/plan/identification/UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a></dt>
 <dd>&nbsp;</dd>
@@ -7251,6 +7345,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/settings/config/ConfigNode.html#getNodeOrder()" class="member-name-link">getNodeOrder()</a> - Method in class com.djrapitops.plan.settings.config.<a href="com/djrapitops/plan/settings/config/ConfigNode.html" title="class in com.djrapitops.plan.settings.config">ConfigNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/Locale.html#getNonDefault(java.lang.Object)" class="member-name-link">getNonDefault(Object)</a> - Method in class com.djrapitops.plan.settings.locale.<a href="com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/JoinAddressCache.html#getNullableString(java.util.UUID)" class="member-name-link">getNullableString(UUID)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/JoinAddressCache.html" title="class in com.djrapitops.plan.gathering.cache">JoinAddressCache</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/results/ExtensionTabData.html#getNumber(java.lang.String)" class="member-name-link">getNumber(String)</a> - Method in class com.djrapitops.plan.extension.implementation.results.<a href="com/djrapitops/plan/extension/implementation/results/ExtensionTabData.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionTabData</a></dt>
 <dd>&nbsp;</dd>
@@ -7374,6 +7470,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/Server.html#getPlanVersion()" class="member-name-link">getPlanVersion()</a> - Method in class com.djrapitops.plan.identification.<a href="com/djrapitops/plan/identification/Server.html" title="class in com.djrapitops.plan.identification">Server</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html#getPlayer()" class="member-name-link">getPlayer()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerDeaths.html#getPlayerCausedDeathCount()" class="member-name-link">getPlayerCausedDeathCount()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerDeaths.html" title="class in com.djrapitops.plan.gathering.domain">PlayerDeaths</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/data/plugin/PluginData.html#getPlayerData(java.util.UUID,com.djrapitops.plan.data.element.InspectContainer)" class="member-name-link">getPlayerData(UUID, InspectContainer)</a> - Method in class com.djrapitops.plan.data.plugin.<a href="com/djrapitops/plan/data/plugin/PluginData.html" title="class in com.djrapitops.plan.data.plugin">PluginData</a></dt>
@@ -7400,10 +7500,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/event/MobKill.html#getPlayerMetadata()" class="member-name-link">getPlayerMetadata()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/MobKill.html" title="class in com.djrapitops.plan.gathering.domain.event">MobKill</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html#getPlayerMetadata()" class="member-name-link">getPlayerMetadata()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html#getPlayerMetadata()" class="member-name-link">getPlayerMetadata()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/command/use/BungeeCMDSender.html#getPlayerName()" class="member-name-link">getPlayerName()</a> - Method in class com.djrapitops.plan.command.use.<a href="com/djrapitops/plan/command/use/BungeeCMDSender.html" title="class in com.djrapitops.plan.command.use">BungeeCMDSender</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/command/use/BungeePlayerCMDSender.html#getPlayerName()" class="member-name-link">getPlayerName()</a> - Method in class com.djrapitops.plan.command.use.<a href="com/djrapitops/plan/command/use/BungeePlayerCMDSender.html" title="class in com.djrapitops.plan.command.use">BungeePlayerCMDSender</a></dt>
@@ -7425,6 +7521,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/commands/use/VelocityCMDSender.html#getPlayerName()" class="member-name-link">getPlayerName()</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/VelocityCMDSender.html" title="class in com.djrapitops.plan.commands.use">VelocityCMDSender</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/VelocityPlayerCMDSender.html#getPlayerName()" class="member-name-link">getPlayerName()</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/VelocityPlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">VelocityPlayerCMDSender</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html#getPlayerName()" class="member-name-link">getPlayerName()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html#getPlayerName()" class="member-name-link">getPlayerName()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html#getPlayerName()" class="member-name-link">getPlayerName()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata</a></dt>
 <dd>&nbsp;</dd>
@@ -7594,6 +7694,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/schema/MySQLSchemaQueries.ForeignKeyConstraint.html#getReferencedTable()" class="member-name-link">getReferencedTable()</a> - Method in class com.djrapitops.plan.storage.database.queries.schema.<a href="com/djrapitops/plan/storage/database/queries/schema/MySQLSchemaQueries.ForeignKeyConstraint.html" title="class in com.djrapitops.plan.storage.database.queries.schema">MySQLSchemaQueries.ForeignKeyConstraint</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#getRegisterDate()" class="member-name-link">getRegisterDate()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#getRegisterDate()" class="member-name-link">getRegisterDate()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#getRegisterDate()" class="member-name-link">getRegisterDate()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#getRegisterDate()" class="member-name-link">getRegisterDate()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/TablePlayer.html#getRegistered()" class="member-name-link">getRegistered()</a> - Method in class com.djrapitops.plan.delivery.domain.<a href="com/djrapitops/plan/delivery/domain/TablePlayer.html" title="class in com.djrapitops.plan.delivery.domain">TablePlayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/BaseUser.html#getRegistered()" class="member-name-link">getRegistered()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a></dt>
@@ -7717,6 +7825,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/storage/database/queries/filter/filters/MultiOptionFilter.html#getSelected(com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto)" class="member-name-link">getSelected(InputFilterDto)</a> - Method in class com.djrapitops.plan.storage.database.queries.filter.filters.<a href="com/djrapitops/plan/storage/database/queries/filter/filters/MultiOptionFilter.html" title="class in com.djrapitops.plan.storage.database.queries.filter.filters">MultiOptionFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/TabInformation.html#getSerializedTabElementOrder()" class="member-name-link">getSerializedTabElementOrder()</a> - Method in class com.djrapitops.plan.extension.implementation.<a href="com/djrapitops/plan/extension/implementation/TabInformation.html" title="class in com.djrapitops.plan.extension.implementation">TabInformation</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html#getServer()" class="member-name-link">getServer()</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#getServer()" class="member-name-link">getServer()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a></dt>
 <dd>&nbsp;</dd>
@@ -8056,6 +8166,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/ServerImportData.html#getTpsData()" class="member-name-link">getTpsData()</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/ServerImportData.html" title="class in com.djrapitops.plan.gathering.importing.data">ServerImportData</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/SQLDB.html#getTransactionQueueSize()" class="member-name-link">getTransactionQueueSize()</a> - Method in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/datatransfer/extension/ExtensionValueDataDto.html#getType()" class="member-name-link">getType()</a> - Method in class com.djrapitops.plan.delivery.domain.datatransfer.extension.<a href="com/djrapitops/plan/delivery/domain/datatransfer/extension/ExtensionValueDataDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer.extension">ExtensionValueDataDto</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/keys/Key.html#getType()" class="member-name-link">getType()</a> - Method in class com.djrapitops.plan.delivery.domain.keys.<a href="com/djrapitops/plan/delivery/domain/keys/Key.html" title="class in com.djrapitops.plan.delivery.domain.keys">Key</a></dt>
@@ -8151,6 +8263,20 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/commands/use/VelocityPlayerCMDSender.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/VelocityPlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">VelocityPlayerCMDSender</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/request/WebUser.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/WebUser.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">WebUser</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BungeePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BungeePlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#getUUID()" class="member-name-link">getUUID()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">VelocityPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ServerCommandSourceMixin.html#getUUID()" class="member-name-link">getUUID()</a> - Method in class net.playeranalytics.plan.gathering.listeners.events.mixin.<a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ServerCommandSourceMixin.html" title="class in net.playeranalytics.plan.gathering.listeners.events.mixin">ServerCommandSourceMixin</a></dt>
 <dd>&nbsp;</dd>
@@ -8518,6 +8644,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/init/RemoveIncorrectTebexPackageDataPatch.html#hasBeenApplied()" class="member-name-link">hasBeenApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.init.<a href="com/djrapitops/plan/storage/database/transactions/init/RemoveIncorrectTebexPackageDataPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.init">RemoveIncorrectTebexPackageDataPatch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadAFKThresholdValuePatch.html#hasBeenApplied()" class="member-name-link">hasBeenApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/BadAFKThresholdValuePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadAFKThresholdValuePatch</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadFabricJoinAddressValuePatch.html#hasBeenApplied()" class="member-name-link">hasBeenApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/BadFabricJoinAddressValuePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadFabricJoinAddressValuePatch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/BadNukkitRegisterValuePatch.html#hasBeenApplied()" class="member-name-link">hasBeenApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/BadNukkitRegisterValuePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">BadNukkitRegisterValuePatch</a></dt>
 <dd>&nbsp;</dd>
@@ -9509,6 +9637,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/TablePlayer.html#isBanned()" class="member-name-link">isBanned()</a> - Method in class com.djrapitops.plan.delivery.domain.<a href="com/djrapitops/plan/delivery/domain/TablePlayer.html" title="class in com.djrapitops.plan.delivery.domain">TablePlayer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#isBanned()" class="member-name-link">isBanned()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#isBanned()" class="member-name-link">isBanned()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#isBanned()" class="member-name-link">isBanned()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#isBanned()" class="member-name-link">isBanned()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/UserInfo.html#isBanned()" class="member-name-link">isBanned()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html#isBanned()" class="member-name-link">isBanned()</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData</a></dt>
@@ -9611,7 +9747,15 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/PerServerMutator.html#isOperator()" class="member-name-link">isOperator()</a> - Method in class com.djrapitops.plan.delivery.domain.mutators.<a href="com/djrapitops/plan/delivery/domain/mutators/PerServerMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">PerServerMutator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html#isOperator()" class="member-name-link">isOperator()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#isOperator()" class="member-name-link">isOperator()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html#isOperator()" class="member-name-link">isOperator()</a> - Method in interface com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/UserInfo.html#isOperator()" class="member-name-link">isOperator()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html#isOperator()" class="member-name-link">isOperator()</a> - Method in class net.playeranalytics.plan.gathering.domain.<a href="net/playeranalytics/plan/gathering/domain/FabricPlayerData.html" title="class in net.playeranalytics.plan.gathering.domain">FabricPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/BukkitSensor.html#isPaperAvailable()" class="member-name-link">isPaperAvailable()</a> - Static method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/BukkitSensor.html" title="class in com.djrapitops.plan.gathering">BukkitSensor</a></dt>
 <dd>&nbsp;</dd>
@@ -9763,6 +9907,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html#JOIN_ADDRESS_ID" class="member-name-link">JOIN_ADDRESS_ID</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/SessionsTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">SessionsTable</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/JoinAddressTable.html#JOIN_ADDRESS_MAX_LENGTH" class="member-name-link">JOIN_ADDRESS_MAX_LENGTH</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/JoinAddressTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">JoinAddressTable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/settings/locale/lang/HelpLang.html#JOIN_ADDRESS_REMOVAL" class="member-name-link">JOIN_ADDRESS_REMOVAL</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/HelpLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">HelpLang</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.Builder.html#joinAddress(java.lang.String)" class="member-name-link">joinAddress(String)</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.Builder.html" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -10777,6 +10923,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/package-summary.html">net.playeranalytics.plan.gathering</a> - package net.playeranalytics.plan.gathering</dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/domain/package-summary.html">net.playeranalytics.plan.gathering.domain</a> - package net.playeranalytics.plan.gathering.domain</dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/package-summary.html">net.playeranalytics.plan.gathering.listeners</a> - package net.playeranalytics.plan.gathering.listeners</dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/package-summary.html">net.playeranalytics.plan.gathering.listeners.events</a> - package net.playeranalytics.plan.gathering.listeners.events</dt>
@@ -11123,6 +11271,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/NukkitPlayerCMDSender.html#%3Cinit%3E(cn.nukkit.Player)" class="member-name-link">NukkitPlayerCMDSender(Player)</a> - Constructor for class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/NukkitPlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">NukkitPlayerCMDSender</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a> - Class in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html#%3Cinit%3E(cn.nukkit.Player)" class="member-name-link">NukkitPlayerData(Player)</a> - Constructor for class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/NukkitSensor.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">NukkitSensor</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/NukkitSensor.html#%3Cinit%3E(com.djrapitops.plan.PlanNukkit)" class="member-name-link">NukkitSensor(PlanNukkit)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/NukkitSensor.html" title="class in com.djrapitops.plan.gathering">NukkitSensor</a></dt>
@@ -11264,6 +11416,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html#ON_GAMEMODE_CHANGE" class="member-name-link">ON_GAMEMODE_CHANGE</a> - Static variable in class net.playeranalytics.plan.gathering.listeners.events.<a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html" title="class in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html#ON_HANDSHAKE" class="member-name-link">ON_HANDSHAKE</a> - Static variable in class net.playeranalytics.plan.gathering.listeners.events.<a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html" title="class in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html#ON_KICKED" class="member-name-link">ON_KICKED</a> - Static variable in class net.playeranalytics.plan.gathering.listeners.events.<a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html" title="class in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html#ON_KILLED" class="member-name-link">ON_KILLED</a> - Static variable in class net.playeranalytics.plan.gathering.listeners.events.<a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html" title="class in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents</a></dt>
@@ -11287,6 +11441,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/ChatListener.html#onChat(org.bukkit.event.player.AsyncPlayerChatEvent)" class="member-name-link">onChat(AsyncPlayerChatEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/ChatListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">ChatListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html#onClear(java.lang.String,com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onClear(String, CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.subcommands.<a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DatabaseCommands</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ClientToServerHandshakePacketMixin.html#onClienthandshakeFromLocal(net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket)" class="member-name-link">onClienthandshakeFromLocal(HandshakeC2SPacket)</a> - Static method in class net.playeranalytics.plan.gathering.listeners.events.mixin.<a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ClientToServerHandshakePacketMixin.html" title="class in net.playeranalytics.plan.gathering.listeners.events.mixin">ClientToServerHandshakePacketMixin</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ClientToServerHandshakePacketMixin.html#onClientHandshakeFromNetwork(net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket)" class="member-name-link">onClientHandshakeFromNetwork(HandshakeC2SPacket)</a> - Static method in class net.playeranalytics.plan.gathering.listeners.events.mixin.<a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ClientToServerHandshakePacketMixin.html" title="class in net.playeranalytics.plan.gathering.listeners.events.mixin">ClientToServerHandshakePacketMixin</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/PlanNukkit.html#onCommand(cn.nukkit.command.CommandSender,cn.nukkit.command.Command,java.lang.String,java.lang.String%5B%5D)" class="member-name-link">onCommand(CommandSender, Command, String, String[])</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanNukkit.html" title="class in com.djrapitops.plan">PlanNukkit</a></dt>
 <dd>&nbsp;</dd>
@@ -11346,6 +11504,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/subcommands/DataUtilityCommands.html#onExport(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onExport(CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.subcommands.<a href="com/djrapitops/plan/commands/subcommands/DataUtilityCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DataUtilityCommands</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html#onFixFabricJoinAddresses(java.lang.String,com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onFixFabricJoinAddresses(String, CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.subcommands.<a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DatabaseCommands</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/nukkit/GameModeChangeListener.html#onGameModeChange(cn.nukkit.event.player.PlayerGameModeChangeEvent)" class="member-name-link">onGameModeChange(PlayerGameModeChangeEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.nukkit.<a href="com/djrapitops/plan/gathering/listeners/nukkit/GameModeChangeListener.html" title="class in com.djrapitops.plan.gathering.listeners.nukkit">GameModeChangeListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnGameModeChange.html#onGameModeChange(net.minecraft.server.network.ServerPlayerEntity,net.minecraft.world.GameMode)" class="member-name-link">onGameModeChange(ServerPlayerEntity, GameMode)</a> - Method in interface net.playeranalytics.plan.gathering.listeners.events.<a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnGameModeChange.html" title="interface in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents.OnGameModeChange</a></dt>
@@ -11358,6 +11518,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ServerPlayerEntityMixin.html#onGameModeChanged(net.minecraft.world.GameMode,org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable)" class="member-name-link">onGameModeChanged(GameMode, CallbackInfoReturnable&lt;Boolean&gt;)</a> - Method in class net.playeranalytics.plan.gathering.listeners.events.mixin.<a href="net/playeranalytics/plan/gathering/listeners/events/mixin/ServerPlayerEntityMixin.html" title="class in net.playeranalytics.plan.gathering.listeners.events.mixin">ServerPlayerEntityMixin</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnClientHandshake.html#onHandshake(net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket)" class="member-name-link">onHandshake(HandshakeC2SPacket)</a> - Method in interface net.playeranalytics.plan.gathering.listeners.events.<a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnClientHandshake.html" title="interface in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents.OnClientHandshake</a></dt>
+<dd>
+<div class="block">Called when a player attempts to login</div>
+</dd>
 <dt><a href="com/djrapitops/plan/commands/use/CommandWithSubcommands.html#onHelp(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onHelp(CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/CommandWithSubcommands.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html#onHotswap(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onHotswap(CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.subcommands.<a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DatabaseCommands</a></dt>
@@ -11373,6 +11537,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/playeranalytics/plan/PlanFabric.html#onInitializeServer()" class="member-name-link">onInitializeServer()</a> - Method in class net.playeranalytics.plan.<a href="net/playeranalytics/plan/PlanFabric.html" title="class in net.playeranalytics.plan">PlanFabric</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/sponge/PlayerOnlineListener.html#onJoin(org.spongepowered.api.event.network.ServerSideConnectionEvent.Join)" class="member-name-link">onJoin(ServerSideConnectionEvent.Join)</a> - Method in class com.djrapitops.plan.gathering.listeners.sponge.<a href="com/djrapitops/plan/gathering/listeners/sponge/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">PlayerOnlineListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html#onJoinGameServer(com.djrapitops.plan.gathering.domain.event.PlayerJoin)" class="member-name-link">onJoinGameServer(PlayerJoin)</a> - Method in class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html#onJoinProxyServer(com.djrapitops.plan.gathering.domain.event.PlayerJoin)" class="member-name-link">onJoinProxyServer(PlayerJoin)</a> - Method in class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/subcommands/LinkCommands.html#onJson(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onJson(CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.subcommands.<a href="com/djrapitops/plan/commands/subcommands/LinkCommands.html" title="class in com.djrapitops.plan.commands.subcommands">LinkCommands</a></dt>
 <dd>&nbsp;</dd>
@@ -11393,6 +11561,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/BukkitAFKListener.html#onLeave(org.bukkit.event.player.PlayerQuitEvent)" class="member-name-link">onLeave(PlayerQuitEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/BukkitAFKListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">BukkitAFKListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeAFKListener.html#onLeave(org.spongepowered.api.event.network.ServerSideConnectionEvent.Disconnect)" class="member-name-link">onLeave(ServerSideConnectionEvent.Disconnect)</a> - Method in class com.djrapitops.plan.gathering.listeners.sponge.<a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeAFKListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeAFKListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html#onLeaveGameServer(com.djrapitops.plan.gathering.domain.event.PlayerLeave)" class="member-name-link">onLeaveGameServer(PlayerLeave)</a> - Method in class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html#onLeaveProxyServer(com.djrapitops.plan.gathering.domain.event.PlayerLeave)" class="member-name-link">onLeaveProxyServer(PlayerLeave)</a> - Method in class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/HtmlLang.html#ONLINE" class="member-name-link">ONLINE</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/HtmlLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">HtmlLang</a></dt>
 <dd>&nbsp;</dd>
@@ -11565,6 +11737,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/PlanSponge.html#onServerStart(org.spongepowered.api.event.lifecycle.StartingEngineEvent)" class="member-name-link">onServerStart(StartingEngineEvent&lt;Server&gt;)</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSponge.html" title="class in com.djrapitops.plan">PlanSponge</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/PlanSponge.html#onServerStop(org.spongepowered.api.event.lifecycle.StoppingEngineEvent)" class="member-name-link">onServerStop(StoppingEngineEvent&lt;Server&gt;)</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSponge.html" title="class in com.djrapitops.plan">PlanSponge</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerSwitchServerEventConsumer.html#onServerSwitch(com.djrapitops.plan.gathering.domain.PlatformPlayerData,long)" class="member-name-link">onServerSwitch(PlatformPlayerData, long)</a> - Method in class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerSwitchServerEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerSwitchServerEventConsumer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html#onServerSwitch(com.velocitypowered.api.event.player.ServerConnectedEvent)" class="member-name-link">onServerSwitch(ServerConnectedEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.velocity.<a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.velocity">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
@@ -12219,6 +12393,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html#%3Cinit%3E()" class="member-name-link">PlanFabricEvents()</a> - Constructor for class net.playeranalytics.plan.gathering.listeners.events.<a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.html" title="class in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnClientHandshake.html" class="type-name-link" title="interface in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents.OnClientHandshake</a> - Interface in <a href="net/playeranalytics/plan/gathering/listeners/events/package-summary.html">net.playeranalytics.plan.gathering.listeners.events</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnCommand.html" class="type-name-link" title="interface in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents.OnCommand</a> - Interface in <a href="net/playeranalytics/plan/gathering/listeners/events/package-summary.html">net.playeranalytics.plan.gathering.listeners.events</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnEnable.html" class="type-name-link" title="interface in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents.OnEnable</a> - Interface in <a href="net/playeranalytics/plan/gathering/listeners/events/package-summary.html">net.playeranalytics.plan.gathering.listeners.events</a></dt>
@@ -12317,6 +12493,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/modules/PlatformAbstractionLayerModule.html#%3Cinit%3E()" class="member-name-link">PlatformAbstractionLayerModule()</a> - Constructor for class com.djrapitops.plan.modules.<a href="com/djrapitops/plan/modules/PlatformAbstractionLayerModule.html" title="class in com.djrapitops.plan.modules">PlatformAbstractionLayerModule</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlatformPlayerData.html" class="type-name-link" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a> - Interface in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/api/data/PlayerContainer.html#playedBetween(long,long)" class="member-name-link">playedBetween(long, long)</a> - Method in class com.djrapitops.plan.api.data.<a href="com/djrapitops/plan/api/data/PlayerContainer.html" title="class in com.djrapitops.plan.api.data">PlayerContainer</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
@@ -12332,6 +12510,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/storage/database/queries/filter/filters/PlayedOnServerFilter.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.queries.filter.filters">PlayedOnServerFilter</a> - Class in <a href="com/djrapitops/plan/storage/database/queries/filter/filters/package-summary.html">com.djrapitops.plan.storage.database.queries.filter.filters</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/filter/filters/PlayedOnServerFilter.html#%3Cinit%3E(com.djrapitops.plan.storage.database.DBSystem)" class="member-name-link">PlayedOnServerFilter(DBSystem)</a> - Constructor for class com.djrapitops.plan.storage.database.queries.filter.filters.<a href="com/djrapitops/plan/storage/database/queries/filter/filters/PlayedOnServerFilter.html" title="class in com.djrapitops.plan.storage.database.queries.filter.filters">PlayedOnServerFilter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html#player(com.djrapitops.plan.gathering.domain.PlatformPlayerData)" class="member-name-link">player(PlatformPlayerData)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin.Builder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html#player(com.djrapitops.plan.gathering.domain.PlatformPlayerData)" class="member-name-link">player(PlatformPlayerData)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/providers/Parameters.html#player(com.djrapitops.plan.identification.ServerUUID,java.util.UUID,java.lang.String)" class="member-name-link">player(ServerUUID, UUID, String)</a> - Static method in interface com.djrapitops.plan.extension.implementation.providers.<a href="com/djrapitops/plan/extension/implementation/providers/Parameters.html" title="interface in com.djrapitops.plan.extension.implementation.providers">Parameters</a></dt>
 <dd>&nbsp;</dd>
@@ -12445,9 +12627,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin</a> - Class in <a href="com/djrapitops/plan/gathering/domain/event/package-summary.html">com.djrapitops.plan.gathering.domain.event</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html#%3Cinit%3E(java.util.UUID,com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.PlayerMetadata,long)" class="member-name-link">PlayerJoin(UUID, ServerUUID, PlayerMetadata, long)</a> - Constructor for class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin.Builder</a> - Class in <a href="com/djrapitops/plan/gathering/domain/event/package-summary.html">com.djrapitops.plan.gathering.domain.event</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a> - Class in <a href="com/djrapitops/plan/gathering/events/package-summary.html">com.djrapitops.plan.gathering.events</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html#%3Cinit%3E(com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter)" class="member-name-link">PlayerJoinEventConsumer(Processing, PlanConfig, DBSystem, GeolocationCache, SessionCache, NicknameCache, ExtensionSvc, Exporter)</a> - Constructor for class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/PlayerJSONCreator.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.rendering.json">PlayerJSONCreator</a> - Class in <a href="com/djrapitops/plan/delivery/rendering/json/package-summary.html">com.djrapitops.plan.delivery.rendering.json</a></dt>
 <dd>&nbsp;</dd>
@@ -12526,19 +12710,17 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave</a> - Class in <a href="com/djrapitops/plan/gathering/domain/event/package-summary.html">com.djrapitops.plan.gathering.domain.event</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html#%3Cinit%3E(java.util.UUID,com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.PlayerMetadata,long)" class="member-name-link">PlayerLeave(UUID, ServerUUID, PlayerMetadata, long)</a> - Constructor for class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave.Builder</a> - Class in <a href="com/djrapitops/plan/gathering/domain/event/package-summary.html">com.djrapitops.plan.gathering.domain.event</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a> - Class in <a href="com/djrapitops/plan/gathering/events/package-summary.html">com.djrapitops.plan.gathering.events</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html#%3Cinit%3E(com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter)" class="member-name-link">PlayerLeaveEventConsumer(Processing, PlanConfig, DBSystem, JoinAddressCache, NicknameCache, SessionCache, ExtensionSvc, Exporter)</a> - Constructor for class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/mixin/PlayerManagerMixin.html" class="type-name-link" title="class in net.playeranalytics.plan.gathering.listeners.events.mixin">PlayerManagerMixin</a> - Class in <a href="net/playeranalytics/plan/gathering/listeners/events/mixin/package-summary.html">net.playeranalytics.plan.gathering.listeners.events.mixin</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/mixin/PlayerManagerMixin.html#%3Cinit%3E()" class="member-name-link">PlayerManagerMixin()</a> - Constructor for class net.playeranalytics.plan.gathering.listeners.events.mixin.<a href="net/playeranalytics/plan/gathering/listeners/events/mixin/PlayerManagerMixin.html" title="class in net.playeranalytics.plan.gathering.listeners.events.mixin">PlayerManagerMixin</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/event/MobKill.Builder.html#playerMetadata(com.djrapitops.plan.gathering.domain.PlayerMetadata)" class="member-name-link">playerMetadata(PlayerMetadata)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/MobKill.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">MobKill.Builder</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html#playerMetadata(com.djrapitops.plan.gathering.domain.PlayerMetadata)" class="member-name-link">playerMetadata(PlayerMetadata)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin.Builder</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html#playerMetadata(com.djrapitops.plan.gathering.domain.PlayerMetadata)" class="member-name-link">playerMetadata(PlayerMetadata)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata</a> - Class in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
 <dd>&nbsp;</dd>
@@ -12590,17 +12772,17 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/fabric/PlayerOnlineListener.html" class="type-name-link" title="class in net.playeranalytics.plan.gathering.listeners.fabric">PlayerOnlineListener</a> - Class in <a href="net/playeranalytics/plan/gathering/listeners/fabric/package-summary.html">net.playeranalytics.plan.gathering.listeners.fabric</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlanConfig, Processing, ServerInfo, DBSystem, ExtensionSvc, Exporter, GeolocationCache, NicknameCache, SessionCache, Status, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">PlayerOnlineListener</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlayerJoinEventConsumer, PlayerLeaveEventConsumer, JoinAddressCache, ServerInfo, DBSystem, Status, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/listeners/nukkit/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlanConfig, Processing, ServerInfo, DBSystem, ExtensionSvc, Exporter, GeolocationCache, NicknameCache, SessionCache, Status, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.nukkit.<a href="com/djrapitops/plan/gathering/listeners/nukkit/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.nukkit">PlayerOnlineListener</a></dt>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/fabric/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)" class="member-name-link">PlayerOnlineListener(PlayerJoinEventConsumer, PlayerLeaveEventConsumer, JoinAddressCache, ServerInfo, DBSystem, ErrorLogger, MinecraftDedicatedServer)</a> - Constructor for class net.playeranalytics.plan.gathering.listeners.fabric.<a href="net/playeranalytics/plan/gathering/listeners/fabric/PlayerOnlineListener.html" title="class in net.playeranalytics.plan.gathering.listeners.fabric">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/listeners/sponge/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlanConfig, Processing, ServerInfo, DBSystem, ExtensionSvc, Exporter, GeolocationCache, NicknameCache, SessionCache, Status, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.sponge.<a href="com/djrapitops/plan/gathering/listeners/sponge/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">PlayerOnlineListener</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/listeners/bungee/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.events.PlayerSwitchServerEventConsumer,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlayerJoinEventConsumer, PlayerLeaveEventConsumer, PlayerSwitchServerEventConsumer, ServerInfo, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.bungee.<a href="com/djrapitops/plan/gathering/listeners/bungee/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.bungee">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/playeranalytics/plan/gathering/listeners/fabric/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)" class="member-name-link">PlayerOnlineListener(PlanConfig, Processing, ServerInfo, DBSystem, ExtensionSvc, Exporter, GeolocationCache, NicknameCache, SessionCache, ErrorLogger, MinecraftDedicatedServer)</a> - Constructor for class net.playeranalytics.plan.gathering.listeners.fabric.<a href="net/playeranalytics/plan/gathering/listeners/fabric/PlayerOnlineListener.html" title="class in net.playeranalytics.plan.gathering.listeners.fabric">PlayerOnlineListener</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.events.PlayerSwitchServerEventConsumer,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlayerJoinEventConsumer, PlayerLeaveEventConsumer, PlayerSwitchServerEventConsumer, ServerInfo, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.velocity.<a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.velocity">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/listeners/bungee/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlanConfig, Processing, DBSystem, ExtensionSvc, Exporter, GeolocationCache, SessionCache, ServerInfo, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.bungee.<a href="com/djrapitops/plan/gathering/listeners/bungee/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.bungee">PlayerOnlineListener</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/listeners/nukkit/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlayerJoinEventConsumer, PlayerLeaveEventConsumer, ServerInfo, DBSystem, Status, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.nukkit.<a href="com/djrapitops/plan/gathering/listeners/nukkit/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.nukkit">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlanConfig, Processing, DBSystem, ExtensionSvc, Exporter, GeolocationCache, SessionCache, ServerInfo, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.velocity.<a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.velocity">PlayerOnlineListener</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/listeners/sponge/PlayerOnlineListener.html#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener(PlayerJoinEventConsumer, PlayerLeaveEventConsumer, ServerInfo, DBSystem, Status, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.sponge.<a href="com/djrapitops/plan/gathering/listeners/sponge/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">PlayerOnlineListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/pages/PageFactory.html#playerPage(java.util.UUID)" class="member-name-link">playerPage(UUID)</a> - Method in class com.djrapitops.plan.delivery.rendering.pages.<a href="com/djrapitops/plan/delivery/rendering/pages/PageFactory.html" title="class in com.djrapitops.plan.delivery.rendering.pages">PageFactory</a></dt>
 <dd>&nbsp;</dd>
@@ -12682,6 +12864,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Transaction for registering player's BaseUser and UserInfo to the database.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/events/PlayerServerRegisterTransaction.html#%3Cinit%3E(java.util.UUID,long,java.lang.String,com.djrapitops.plan.identification.ServerUUID,java.lang.String)" class="member-name-link">PlayerServerRegisterTransaction(UUID, long, String, ServerUUID, String)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/PlayerServerRegisterTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">PlayerServerRegisterTransaction</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/PlayerServerRegisterTransaction.html#%3Cinit%3E(java.util.UUID,java.util.function.LongSupplier,java.lang.String,com.djrapitops.plan.identification.ServerUUID,java.util.function.Supplier)" class="member-name-link">PlayerServerRegisterTransaction(UUID, LongSupplier, String, ServerUUID, Supplier&lt;String&gt;)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/PlayerServerRegisterTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">PlayerServerRegisterTransaction</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/PlayersMutator.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.domain.mutators">PlayersMutator</a> - Class in <a href="com/djrapitops/plan/delivery/domain/mutators/package-summary.html">com.djrapitops.plan.delivery.domain.mutators</a></dt>
@@ -12738,6 +12922,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/resolver/json/PlayersTableJSONResolver.html#%3Cinit%3E(com.djrapitops.plan.identification.Identifiers,com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService,com.djrapitops.plan.delivery.rendering.json.JSONFactory)" class="member-name-link">PlayersTableJSONResolver(Identifiers, AsyncJSONResolverService, JSONFactory)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.resolver.json.<a href="com/djrapitops/plan/delivery/webserver/resolver/json/PlayersTableJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json">PlayersTableJSONResolver</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerSwitchServerEventConsumer.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.events">PlayerSwitchServerEventConsumer</a> - Class in <a href="com/djrapitops/plan/gathering/events/package-summary.html">com.djrapitops.plan.gathering.events</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/events/PlayerSwitchServerEventConsumer.html#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.identification.ServerInfo)" class="member-name-link">PlayerSwitchServerEventConsumer(PlayerJoinEventConsumer, ServerInfo)</a> - Constructor for class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerSwitchServerEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerSwitchServerEventConsumer</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/PlayerTableRowPatch.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.patches">PlayerTableRowPatch</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/patches/package-summary.html">com.djrapitops.plan.storage.database.transactions.patches</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/PlayerTableRowPatch.html#%3Cinit%3E()" class="member-name-link">PlayerTableRowPatch()</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/PlayerTableRowPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">PlayerTableRowPatch</a></dt>
@@ -12749,10 +12937,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/PlayerRegisterTransaction.html#playerUUID" class="member-name-link">playerUUID</a> - Variable in class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/PlayerRegisterTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">PlayerRegisterTransaction</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/event/MobKill.Builder.html#playerUUID(java.util.UUID)" class="member-name-link">playerUUID(UUID)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/MobKill.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">MobKill.Builder</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html#playerUUID(java.util.UUID)" class="member-name-link">playerUUID(UUID)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin.Builder</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html#playerUUID(java.util.UUID)" class="member-name-link">playerUUID(UUID)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/PlayerVersusMutator.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.domain.mutators">PlayerVersusMutator</a> - Class in <a href="com/djrapitops/plan/delivery/domain/mutators/package-summary.html">com.djrapitops.plan.delivery.domain.mutators</a></dt>
 <dd>&nbsp;</dd>
@@ -13796,8 +13980,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/cache/JoinAddressCache.html#remove(java.util.UUID)" class="member-name-link">remove(UUID)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/JoinAddressCache.html" title="class in com.djrapitops.plan.gathering.cache">JoinAddressCache</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/cache/JoinAddressCache.html#remove(java.util.UUID,com.djrapitops.plan.gathering.domain.event.PlayerLeave)" class="member-name-link">remove(UUID, PlayerLeave)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/JoinAddressCache.html" title="class in com.djrapitops.plan.gathering.cache">JoinAddressCache</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/config/paths/WebserverSettings.html#REMOVE_ACCESS_LOG_AFTER_DAYS" class="member-name-link">REMOVE_ACCESS_LOG_AFTER_DAYS</a> - Static variable in class com.djrapitops.plan.settings.config.paths.<a href="com/djrapitops/plan/settings/config/paths/WebserverSettings.html" title="class in com.djrapitops.plan.settings.config.paths">WebserverSettings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieStore.html#removeAll()" class="member-name-link">removeAll()</a> - Method in class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieStore.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieStore</a></dt>
@@ -14411,6 +14593,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/identification/ServerInfo.html#server" class="member-name-link">server</a> - Variable in class com.djrapitops.plan.identification.<a href="com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html#server(com.djrapitops.plan.identification.Server)" class="member-name-link">server(Server)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin.Builder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html#server(com.djrapitops.plan.identification.Server)" class="member-name-link">server(Server)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/providers/Parameters.html#server(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">server(ServerUUID)</a> - Static method in interface com.djrapitops.plan.extension.implementation.providers.<a href="com/djrapitops/plan/extension/implementation/providers/Parameters.html" title="interface in com.djrapitops.plan.extension.implementation.providers">Parameters</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/PlanFabricComponent.Builder.html#server(net.minecraft.server.dedicated.MinecraftDedicatedServer)" class="member-name-link">server(MinecraftDedicatedServer)</a> - Method in interface net.playeranalytics.plan.<a href="net/playeranalytics/plan/PlanFabricComponent.Builder.html" title="interface in net.playeranalytics.plan">PlanFabricComponent.Builder</a></dt>
@@ -14743,10 +14929,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Count how many users are on each server in the network.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/importers/BukkitImporter.html#serverUUID" class="member-name-link">serverUUID</a> - Variable in class com.djrapitops.plan.gathering.importing.importers.<a href="com/djrapitops/plan/gathering/importing/importers/BukkitImporter.html" title="class in com.djrapitops.plan.gathering.importing.importers">BukkitImporter</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html#serverUUID(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">serverUUID(ServerUUID)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerJoin.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerJoin.Builder</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html#serverUUID(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">serverUUID(ServerUUID)</a> - Method in class com.djrapitops.plan.gathering.domain.event.<a href="com/djrapitops/plan/gathering/domain/event/PlayerLeave.Builder.html" title="class in com.djrapitops.plan.gathering.domain.event">PlayerLeave.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/ServerUUID.html" class="type-name-link" title="class in com.djrapitops.plan.identification">ServerUUID</a> - Class in <a href="com/djrapitops/plan/identification/package-summary.html">com.djrapitops.plan.identification</a></dt>
 <dd>&nbsp;</dd>
@@ -15304,6 +15486,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/special/SpecialGraphFactory.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.google.gson.Gson,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">SpecialGraphFactory(PlanFiles, PlanConfig, Gson, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.delivery.rendering.json.graphs.special.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/special/SpecialGraphFactory.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.special">SpecialGraphFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/GMTimes.html#SPECTATOR" class="member-name-link">SPECTATOR</a> - Static variable in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/GMTimes.html" title="class in com.djrapitops.plan.gathering.domain">GMTimes</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#SPECTATOR" class="member-name-link">SPECTATOR</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTimesTable</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/Base64Util.html#split(java.lang.String,long)" class="member-name-link">split(String, long)</a> - Static method in class com.djrapitops.plan.utilities.<a href="com/djrapitops/plan/utilities/Base64Util.html" title="class in com.djrapitops.plan.utilities">Base64Util</a></dt>
@@ -15377,6 +15561,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/commands/use/SpongePlayerCMDSender.html#%3Cinit%3E(org.spongepowered.api.service.permission.Subject,net.kyori.adventure.audience.Audience)" class="member-name-link">SpongePlayerCMDSender(Subject, Audience)</a> - Constructor for class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/SpongePlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">SpongePlayerCMDSender</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/SpongePlayerCMDSender.html#%3Cinit%3E(T)" class="member-name-link">SpongePlayerCMDSender(T)</a> - Constructor for class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/SpongePlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">SpongePlayerCMDSender</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a> - Class in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html#%3Cinit%3E(org.spongepowered.api.entity.living.player.server.ServerPlayer)" class="member-name-link">SpongePlayerData(ServerPlayer)</a> - Constructor for class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/SpongeSensor.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">SpongeSensor</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
 <dd>&nbsp;</dd>
@@ -15870,6 +16058,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Used to check if the <code>DBType</code> supports <b>most</b> MySQL MySQLSchemaQueries.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/GMTimes.html#SURVIVAL" class="member-name-link">SURVIVAL</a> - Static variable in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/GMTimes.html" title="class in com.djrapitops.plan.gathering.domain">GMTimes</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html#SURVIVAL" class="member-name-link">SURVIVAL</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/WorldTimesTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTimesTable</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/resolver/swagger/SwaggerJsonResolver.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver.resolver.swagger">SwaggerJsonResolver</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/resolver/swagger/package-summary.html">com.djrapitops.plan.delivery.webserver.resolver.swagger</a></dt>
@@ -17728,6 +17918,10 @@ the order they are declared.</div>
 <dt><a href="com/djrapitops/plan/commands/use/VelocityPlayerCMDSender.html" class="type-name-link" title="class in com.djrapitops.plan.commands.use">VelocityPlayerCMDSender</a> - Class in <a href="com/djrapitops/plan/commands/use/package-summary.html">com.djrapitops.plan.commands.use</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/VelocityPlayerCMDSender.html#%3Cinit%3E(com.velocitypowered.api.proxy.Player)" class="member-name-link">VelocityPlayerCMDSender(Player)</a> - Constructor for class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/VelocityPlayerCMDSender.html" title="class in com.djrapitops.plan.commands.use">VelocityPlayerCMDSender</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.domain">VelocityPlayerData</a> - Class in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html#%3Cinit%3E(com.velocitypowered.api.proxy.Player)" class="member-name-link">VelocityPlayerData(Player)</a> - Constructor for class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/VelocityPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">VelocityPlayerData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/VelocitySensor.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">VelocitySensor</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
 <dd>&nbsp;</dd>

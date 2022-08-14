@@ -95,15 +95,11 @@ implements org.bukkit.event.Listener</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener</a><wbr>(<a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
- <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener</a><wbr>(<a href="../../events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;playerJoinEventConsumer,
+ <a href="../../events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a>&nbsp;playerLeaveEventConsumer,
+ <a href="../../cache/JoinAddressCache.html" title="class in com.djrapitops.plan.gathering.cache">JoinAddressCache</a>&nbsp;joinAddressCache,
  <a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../../../extension/ExtensionSvc.html" title="class in com.djrapitops.plan.extension">ExtensionSvc</a>&nbsp;extensionService,
- <a href="../../../delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a>&nbsp;exporter,
- <a href="../../geolocation/GeolocationCache.html" title="class in com.djrapitops.plan.gathering.geolocation">GeolocationCache</a>&nbsp;geolocationCache,
- <a href="../../cache/NicknameCache.html" title="class in com.djrapitops.plan.gathering.cache">NicknameCache</a>&nbsp;nicknameCache,
- <a href="../../cache/SessionCache.html" title="class in com.djrapitops.plan.gathering.cache">SessionCache</a>&nbsp;sessionCache,
  <a href="../Status.html" title="class in com.djrapitops.plan.gathering.listeners">Status</a>&nbsp;status,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -156,18 +152,14 @@ implements org.bukkit.event.Listener</span></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.listeners.Status,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>PlayerOnlineListener</h3>
 <div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerOnlineListener</span><wbr><span class="parameters">(<a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
- <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerOnlineListener</span><wbr><span class="parameters">(<a href="../../events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;playerJoinEventConsumer,
+ <a href="../../events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a>&nbsp;playerLeaveEventConsumer,
+ <a href="../../cache/JoinAddressCache.html" title="class in com.djrapitops.plan.gathering.cache">JoinAddressCache</a>&nbsp;joinAddressCache,
  <a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../../../extension/ExtensionSvc.html" title="class in com.djrapitops.plan.extension">ExtensionSvc</a>&nbsp;extensionService,
- <a href="../../../delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a>&nbsp;exporter,
- <a href="../../geolocation/GeolocationCache.html" title="class in com.djrapitops.plan.gathering.geolocation">GeolocationCache</a>&nbsp;geolocationCache,
- <a href="../../cache/NicknameCache.html" title="class in com.djrapitops.plan.gathering.cache">NicknameCache</a>&nbsp;nicknameCache,
- <a href="../../cache/SessionCache.html" title="class in com.djrapitops.plan.gathering.cache">SessionCache</a>&nbsp;sessionCache,
  <a href="../Status.html" title="class in com.djrapitops.plan.gathering.listeners">Status</a>&nbsp;status,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
 </section>

@@ -93,13 +93,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener</a><wbr>(<a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
- <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
- <a href="../../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../../../extension/ExtensionSvc.html" title="class in com.djrapitops.plan.extension">ExtensionSvc</a>&nbsp;extensionService,
- <a href="../../../delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a>&nbsp;exporter,
- <a href="../../geolocation/GeolocationCache.html" title="class in com.djrapitops.plan.gathering.geolocation">GeolocationCache</a>&nbsp;geolocationCache,
- <a href="../../cache/SessionCache.html" title="class in com.djrapitops.plan.gathering.cache">SessionCache</a>&nbsp;sessionCache,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.events.PlayerSwitchServerEventConsumer,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">PlayerOnlineListener</a><wbr>(<a href="../../events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;joinEventConsumer,
+ <a href="../../events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a>&nbsp;leaveEventConsumer,
+ <a href="../../events/PlayerSwitchServerEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerSwitchServerEventConsumer</a>&nbsp;switchServerEventConsumer,
  <a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -121,23 +117,20 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#actOnLogin(com.velocitypowered.api.event.connection.PostLoginEvent)" class="member-name-link">actOnLogin</a><wbr>(com.velocitypowered.api.event.connection.PostLoginEvent&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#actOnLogout(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">actOnLogout</a><wbr>(com.velocitypowered.api.event.connection.DisconnectEvent&nbsp;event)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#actOnServerSwitch(com.velocitypowered.api.event.player.ServerConnectedEvent)" class="member-name-link">actOnServerSwitch</a><wbr>(com.velocitypowered.api.event.player.ServerConnectedEvent&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#actOnServerSwitch(com.velocitypowered.api.event.player.ServerConnectedEvent)" class="member-name-link">actOnServerSwitch</a><wbr>(com.velocitypowered.api.event.player.ServerConnectedEvent&nbsp;event)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#beforeLogout(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">beforeLogout</a><wbr>(com.velocitypowered.api.event.connection.DisconnectEvent&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#beforeLogout(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">beforeLogout</a><wbr>(com.velocitypowered.api.event.connection.DisconnectEvent&nbsp;event)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLogout(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">onLogout</a><wbr>(com.velocitypowered.api.event.connection.DisconnectEvent&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLogout(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">onLogout</a><wbr>(com.velocitypowered.api.event.connection.DisconnectEvent&nbsp;event)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPostLogin(com.velocitypowered.api.event.connection.PostLoginEvent)" class="member-name-link">onPostLogin</a><wbr>(com.velocitypowered.api.event.connection.PostLoginEvent&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPostLogin(com.velocitypowered.api.event.connection.PostLoginEvent)" class="member-name-link">onPostLogin</a><wbr>(com.velocitypowered.api.event.connection.PostLoginEvent&nbsp;event)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onServerSwitch(com.velocitypowered.api.event.player.ServerConnectedEvent)" class="member-name-link">onServerSwitch</a><wbr>(com.velocitypowered.api.event.player.ServerConnectedEvent&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onServerSwitch(com.velocitypowered.api.event.player.ServerConnectedEvent)" class="member-name-link">onServerSwitch</a><wbr>(com.velocitypowered.api.event.player.ServerConnectedEvent&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -156,16 +149,12 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.events.PlayerSwitchServerEventConsumer,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>PlayerOnlineListener</h3>
 <div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerOnlineListener</span><wbr><span class="parameters">(<a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
- <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
- <a href="../../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../../../extension/ExtensionSvc.html" title="class in com.djrapitops.plan.extension">ExtensionSvc</a>&nbsp;extensionService,
- <a href="../../../delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a>&nbsp;exporter,
- <a href="../../geolocation/GeolocationCache.html" title="class in com.djrapitops.plan.gathering.geolocation">GeolocationCache</a>&nbsp;geolocationCache,
- <a href="../../cache/SessionCache.html" title="class in com.djrapitops.plan.gathering.cache">SessionCache</a>&nbsp;sessionCache,
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerOnlineListener</span><wbr><span class="parameters">(<a href="../../events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;joinEventConsumer,
+ <a href="../../events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a>&nbsp;leaveEventConsumer,
+ <a href="../../events/PlayerSwitchServerEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerSwitchServerEventConsumer</a>&nbsp;switchServerEventConsumer,
  <a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
 </section>
@@ -200,12 +189,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onLogout(com.velocitypowered.api.event.connection.DisconnectEvent)">
 <h3>onLogout</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onLogout</span><wbr><span class="parameters">(com.velocitypowered.api.event.connection.DisconnectEvent&nbsp;event)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="actOnLogout(com.velocitypowered.api.event.connection.DisconnectEvent)">
-<h3>actOnLogout</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">actOnLogout</span><wbr><span class="parameters">(com.velocitypowered.api.event.connection.DisconnectEvent&nbsp;event)</span></div>
 </section>
 </li>
 <li>

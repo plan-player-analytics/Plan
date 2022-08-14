@@ -15,7 +15,11 @@
 <script type="text/javascript" src="../../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="package-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../../../../";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -81,8 +85,9 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="caption"><span>Classes</span></div>
-<div class="summary-table two-column-summary">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button></div>
+<div id="class-summary.tabpanel" role="tabpanel">
+<div class="summary-table two-column-summary" aria-labelledby="class-summary-tab0">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ActiveSession.html" title="class in com.djrapitops.plan.gathering.domain">ActiveSession</a></div>
@@ -93,6 +98,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Represents user information stored in plan_users.</div>
 </div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="BukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BukkitPlayerData</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="BungeePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">BungeePlayerData</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Counter.html" title="class in com.djrapitops.plan.gathering.domain">Counter</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="DataMap.html" title="class in com.djrapitops.plan.gathering.domain">DataMap</a></div>
@@ -113,8 +122,12 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="MobKillCounter.html" title="class in com.djrapitops.plan.gathering.domain">MobKillCounter</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Ping.html" title="class in com.djrapitops.plan.gathering.domain">Ping</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="NukkitPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">NukkitPlayerData</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Ping.html" title="class in com.djrapitops.plan.gathering.domain">Ping</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="PlatformPlayerData.html" title="interface in com.djrapitops.plan.gathering.domain">PlatformPlayerData</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">&nbsp;</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="PlayerDeaths.html" title="class in com.djrapitops.plan.gathering.domain">PlayerDeaths</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a></div>
@@ -131,21 +144,26 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="PlayerMetadata.Builder.html" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata.Builder</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TimeKeeper.html" title="class in com.djrapitops.plan.gathering.domain">TimeKeeper</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="SpongePlayerData.html" title="class in com.djrapitops.plan.gathering.domain">SpongePlayerData</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TimeKeeper.html" title="class in com.djrapitops.plan.gathering.domain">TimeKeeper</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Keeps track of time spent in each state.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Class containing single datapoint of TPS / Players online / CPU Usage / Used Memory / Entity Count / Chunks loaded.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="UserInfo.html" title="class in com.djrapitops.plan.gathering.domain">UserInfo</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Represents user information stored in plan_user_info.</div>
 </div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="VelocityPlayerData.html" title="class in com.djrapitops.plan.gathering.domain">VelocityPlayerData</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Class that tracks the time spent in each World based on GMTimes.</div>
+</div>
 </div>
 </div>
 </div>

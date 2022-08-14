@@ -73,6 +73,7 @@ com.djrapitops.plan.gathering.cache
 com.djrapitops.plan.gathering.domain
 com.djrapitops.plan.gathering.domain.builders
 com.djrapitops.plan.gathering.domain.event
+com.djrapitops.plan.gathering.events
 com.djrapitops.plan.gathering.geolocation
 com.djrapitops.plan.gathering.importing
 com.djrapitops.plan.gathering.importing.data
@@ -139,6 +140,7 @@ net.playeranalytics.plan
 net.playeranalytics.plan.commands
 net.playeranalytics.plan.commands.use
 net.playeranalytics.plan.gathering
+net.playeranalytics.plan.gathering.domain
 net.playeranalytics.plan.gathering.listeners
 net.playeranalytics.plan.gathering.listeners.events
 net.playeranalytics.plan.gathering.listeners.events.mixin
