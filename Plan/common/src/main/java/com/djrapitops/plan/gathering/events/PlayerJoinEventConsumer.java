@@ -91,7 +91,7 @@ public class PlayerJoinEventConsumer {
                         storeNickname(join);
                         updatePlayerDataExtensionValues(join);
                         updateExport(join);
-                    });
+                    }, processing.getCriticalExecutor());
         });
     }
 
@@ -104,7 +104,7 @@ public class PlayerJoinEventConsumer {
                         storeGeolocation(join);
                         updatePlayerDataExtensionValues(join);
                         updateExport(join);
-                    });
+                    }, processing.getCriticalExecutor());
         });
     }
 

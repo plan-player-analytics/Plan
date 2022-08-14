@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.gathering.geolocation;
 
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,8 +30,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import utilities.TestErrorLogger;
 import utilities.TestPluginLogger;
-import utilities.mocks.objects.TestRunnableFactory;
+import utilities.mocks.TestProcessing;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,7 +89,10 @@ class GeolocationTest {
         assertTrue(config.isTrue(DataGatheringSettings.GEOLOCATIONS));
 
         GeoLite2Geolocator geoLite2Geolocator = new GeoLite2Geolocator(files, config);
-        underTest = new GeolocationCache(new Locale(), config, geoLite2Geolocator, new TestPluginLogger(), TestRunnableFactory.forSameThread());
+        PluginLogger logger = new TestPluginLogger();
+        Processing processing = new TestProcessing(Locale::new, logger, new TestErrorLogger());
+
+        underTest = new GeolocationCache(new Locale(), config, geoLite2Geolocator, logger, processing);
         underTest.enable();
 
         assertTrue(underTest.canGeolocate());
