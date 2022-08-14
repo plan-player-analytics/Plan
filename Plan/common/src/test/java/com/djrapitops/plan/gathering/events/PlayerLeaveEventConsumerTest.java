@@ -17,6 +17,10 @@
 package com.djrapitops.plan.gathering.events;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.annotation.NumberProvider;
+import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
@@ -50,8 +54,10 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -204,4 +210,29 @@ class PlayerLeaveEventConsumerTest {
                 .join(); // Wait until complete
     }
 
+    @Test
+    void extensionDataIsUpdatedBeforeLeave() {
+        AtomicBoolean called = new AtomicBoolean(false);
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @NumberProvider(text = "Value")
+            public long value(UUID playerUUID) {
+                called.set(true);
+                return 0L;
+            }
+        }
+        Extension extension = new Extension();
+        try {
+            ExtensionService.getInstance().register(extension);
+
+            underTest.beforeLeave(createPlayerLeave(createTestPlayer()));
+
+            Awaitility.await()
+                    .atMost(2, TimeUnit.SECONDS)
+                    .until(called::get);
+            assertTrue(called.get());
+        } finally {
+            ExtensionService.getInstance().unregister(extension);
+        }
+    }
 }
