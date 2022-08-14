@@ -124,6 +124,7 @@ public enum CommandLang implements Lang {
     IMPORTERS("command.database.manage.importers", "Manage - List Importers", "Importers: "),
     CONFIRM_OVERWRITE("command.database.manage.confirmOverwrite", "Manage - Confirm Overwrite", "Data in ${0} will be overwritten!"),
     CONFIRM_REMOVAL("command.database.manage.confirmRemoval", "Manage - Confirm Removal", "Data in ${0} will be removed!"),
+    CONFIRM_JOIN_ADDRESS_REMOVAL("command.database.manage.confirmPartialRemoval", "Manage - Confirm Partial Removal", "Join Address Data for Server ${0} in ${1} will be removed!"),
     FAIL_SAME_DB("command.database.manage.failSameDB", "Manage - Fail Same Database", "> §cCan not operate on to and from the same database!"),
     FAIL_INCORRECT_DB("command.database.manage.failIncorrectDB", "Manage - Fail Incorrect Database", "> §c'${0}' is not a supported database."),
     FAIL_FILE_NOT_FOUND("command.database.manage.failFileNotFound", "Manage - Fail File not found", "> §cNo File found at ${0}"),

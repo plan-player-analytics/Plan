@@ -70,19 +70,19 @@ public class Processing implements SubSystem {
         submitNonCritical(runnable);
     }
 
-    public void submitNonCritical(Runnable runnable) {
+    public CompletableFuture<Boolean> submitNonCritical(Runnable runnable) {
         if (runnable == null || nonCriticalExecutor.isShutdown()) {
-            return;
+            return null;
         }
-        CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
             runnable.run();
             return true;
         }, nonCriticalExecutor).handle(this::exceptionHandlerNonCritical);
     }
 
-    public void submitCritical(Runnable runnable) {
-        if (runnable == null) return;
-        CompletableFuture.supplyAsync(() -> {
+    public CompletableFuture<Boolean> submitCritical(Runnable runnable) {
+        if (runnable == null) return null;
+        return CompletableFuture.supplyAsync(() -> {
             runnable.run();
             return true;
         }, criticalExecutor).handle(this::exceptionHandlerCritical);
@@ -163,15 +163,19 @@ public class Processing implements SubSystem {
                 logger.info(locale.get().getString(PluginLang.DISABLED_PROCESSING, criticalTasks.size()));
                 for (Runnable runnable : criticalTasks) {
                     if (runnable == null) continue;
-                    try {
-                        runnable.run();
-                    } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
-                        errorLogger.warn(e, ErrorContext.builder().build());
-                    }
+                    tryFinishCriticalTask(runnable);
                 }
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        }
+    }
+
+    private void tryFinishCriticalTask(Runnable runnable) {
+        try {
+            runnable.run();
+        } catch (Exception | NoClassDefFoundError | NoSuchMethodError | NoSuchFieldError e) {
+            errorLogger.warn(e, ErrorContext.builder().build());
         }
     }
 
@@ -189,5 +193,9 @@ public class Processing implements SubSystem {
             criticalExecutor.shutdownNow();
             Thread.currentThread().interrupt();
         }
+    }
+
+    public Executor getCriticalExecutor() {
+        return criticalExecutor;
     }
 }

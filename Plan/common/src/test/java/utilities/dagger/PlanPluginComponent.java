@@ -19,6 +19,9 @@ package utilities.dagger;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer;
+import com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer;
+import com.djrapitops.plan.gathering.events.PlayerSwitchServerEventConsumer;
 import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlaceholderModule;
 import com.djrapitops.plan.modules.PlatformAbstractionLayerModule;
@@ -58,6 +61,12 @@ public interface PlanPluginComponent {
     PluginErrorLogger pluginErrorLogger();
 
     PlanPlaceholders placeholders();
+
+    PlayerJoinEventConsumer joinConsumer();
+
+    PlayerLeaveEventConsumer leaveConsumer();
+
+    PlayerSwitchServerEventConsumer serverSwitchConsumer();
 
     @Component.Builder
     interface Builder {

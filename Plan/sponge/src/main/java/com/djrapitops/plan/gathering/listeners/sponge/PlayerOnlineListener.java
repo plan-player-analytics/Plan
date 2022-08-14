@@ -16,48 +16,33 @@
  */
 package com.djrapitops.plan.gathering.listeners.sponge;
 
-import com.djrapitops.plan.delivery.domain.Nickname;
-import com.djrapitops.plan.delivery.domain.PlayerName;
-import com.djrapitops.plan.delivery.domain.ServerName;
-import com.djrapitops.plan.delivery.export.Exporter;
-import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.ExtensionSvc;
-import com.djrapitops.plan.gathering.cache.NicknameCache;
-import com.djrapitops.plan.gathering.cache.SessionCache;
-import com.djrapitops.plan.gathering.domain.ActiveSession;
-import com.djrapitops.plan.gathering.domain.event.JoinAddress;
-import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
+import com.djrapitops.plan.gathering.domain.SpongePlayerData;
+import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
+import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
+import com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer;
+import com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer;
 import com.djrapitops.plan.gathering.listeners.Status;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
-import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.entity.living.player.KickPlayerEvent;
 import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 import org.spongepowered.api.profile.GameProfile;
-import org.spongepowered.api.registry.RegistryTypes;
 import org.spongepowered.api.service.ban.Ban;
 import org.spongepowered.api.service.ban.BanService;
 
 import javax.inject.Inject;
-import java.net.InetAddress;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 /**
  * Listener for Player Join/Leave on Sponge.
@@ -66,40 +51,27 @@ import java.util.function.Supplier;
  */
 public class PlayerOnlineListener {
 
-    private final PlanConfig config;
-    private final Processing processing;
+    private final PlayerJoinEventConsumer joinEventConsumer;
+    private final PlayerLeaveEventConsumer leaveEventConsumer;
+
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
-    private final ExtensionSvc extensionService;
-    private final Exporter exporter;
-    private final GeolocationCache geolocationCache;
-    private final NicknameCache nicknameCache;
-    private final SessionCache sessionCache;
     private final Status status;
     private final ErrorLogger errorLogger;
 
     @Inject
     public PlayerOnlineListener(
-            PlanConfig config,
-            Processing processing,
+            PlayerJoinEventConsumer joinEventConsumer,
+            PlayerLeaveEventConsumer leaveEventConsumer,
             ServerInfo serverInfo,
             DBSystem dbSystem,
-            ExtensionSvc extensionService,
-            Exporter exporter, GeolocationCache geolocationCache,
-            NicknameCache nicknameCache,
-            SessionCache sessionCache,
             Status status,
             ErrorLogger errorLogger
     ) {
-        this.config = config;
-        this.processing = processing;
+        this.joinEventConsumer = joinEventConsumer;
+        this.leaveEventConsumer = leaveEventConsumer;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
-        this.extensionService = extensionService;
-        this.exporter = exporter;
-        this.geolocationCache = geolocationCache;
-        this.nicknameCache = nicknameCache;
-        this.sessionCache = sessionCache;
         this.status = status;
         this.errorLogger = errorLogger;
     }
@@ -149,65 +121,25 @@ public class PlayerOnlineListener {
     }
 
     private void actOnJoinEvent(ServerSideConnectionEvent.Join event) {
-        ServerPlayer player = event.player();
-
-        UUID playerUUID = player.uniqueId();
-        ServerUUID serverUUID = serverInfo.getServerUUID();
         long time = System.currentTimeMillis();
-
+        ServerPlayer player = event.player();
+        UUID playerUUID = player.uniqueId();
         SpongeAFKListener.afkTracker.performedAction(playerUUID, time);
 
-        String world = Sponge.game().server().worldManager().worldDirectory(player.world().key())
-                .map(path -> path.getFileName().toString()).orElse("Unknown");
-        GameMode gameMode = player.gameMode().get();
-        String gm = gameMode.key(RegistryTypes.GAME_MODE).value().toUpperCase();
-
-        Database database = dbSystem.getDatabase();
-        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, world));
-
-        InetAddress address = player.connection().address().getAddress();
-        Supplier<String> getHostName = () -> player.connection().virtualHost().getHostString();
-
-        String playerName = player.name();
-        String displayName = LegacyComponentSerializer.legacyAmpersand().serialize(player.displayName().get());
-
-        database.executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time,
-                        playerName, serverUUID, getHostName))
-                .thenRunAsync(() -> {
-                    boolean gatheringGeolocations = config.isTrue(DataGatheringSettings.GEOLOCATIONS);
-                    if (gatheringGeolocations) {
-                        database.executeTransaction(
-                                new StoreGeoInfoTransaction(playerUUID, address, time, geolocationCache::getCountry)
-                        );
-                    }
-                    database.executeTransaction(new StoreJoinAddressTransaction(getHostName));
-
-                    ActiveSession session = new ActiveSession(playerUUID, serverUUID, time, world, gm);
-                    session.getExtraData().put(PlayerName.class, new PlayerName(playerName));
-                    session.getExtraData().put(ServerName.class, new ServerName(serverInfo.getServer().getIdentifiableName()));
-                    session.getExtraData().put(JoinAddress.class, new JoinAddress(getHostName.get()));
-                    sessionCache.cacheSession(playerUUID, session)
-                            .map(StoreSessionTransaction::new)
-                            .ifPresent(database::executeTransaction);
-
-                    database.executeTransaction(new NicknameStoreTransaction(
-                            playerUUID, new Nickname(displayName, time, serverUUID),
-                            (uuid, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
-                    ));
-
-                    processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_JOIN));
-                    if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
-                        processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
-                    }
-                });
+        joinEventConsumer.onJoinGameServer(PlayerJoin.builder()
+                .server(serverInfo.getServer())
+                .player(new SpongePlayerData(player))
+                .time(time)
+                .build());
     }
 
     @Listener(order = Order.DEFAULT)
     public void beforeQuit(ServerSideConnectionEvent.Disconnect event) {
-        Player player = event.player();
-        UUID playerUUID = player.uniqueId();
-        String playerName = player.name();
-        processing.submitNonCritical(() -> extensionService.updatePlayerValues(playerUUID, playerName, CallEvents.PLAYER_LEAVE));
+        leaveEventConsumer.beforeLeave(PlayerLeave.builder()
+                .server(serverInfo.getServer())
+                .player(new SpongePlayerData(event.player()))
+                .time(System.currentTimeMillis())
+                .build());
     }
 
     @Listener(order = Order.POST)
@@ -222,21 +154,13 @@ public class PlayerOnlineListener {
     private void actOnQuitEvent(ServerSideConnectionEvent.Disconnect event) {
         long time = System.currentTimeMillis();
         Player player = event.player();
-        String playerName = player.name();
         UUID playerUUID = player.uniqueId();
-        ServerUUID serverUUID = serverInfo.getServerUUID();
 
         SpongeAFKListener.afkTracker.loggedOut(playerUUID, time);
-
-        nicknameCache.removeDisplayName(playerUUID);
-
-        dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(player.profile())));
-
-        sessionCache.endSession(playerUUID, time)
-                .ifPresent(endedSession -> dbSystem.getDatabase().executeTransaction(new StoreSessionTransaction(endedSession)));
-
-        if (config.isTrue(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE)) {
-            processing.submitNonCritical(() -> exporter.exportPlayerPage(playerUUID, playerName));
-        }
+        leaveEventConsumer.onLeaveGameServer(PlayerLeave.builder()
+                .server(serverInfo.getServer())
+                .player(new SpongePlayerData(event.player()))
+                .time(System.currentTimeMillis())
+                .build());
     }
 }

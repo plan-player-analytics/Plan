@@ -88,6 +88,7 @@ class PlanCommandTest {
             "db clear SQLite",
             "db remove Test",
             "db uninstalled 1",
+            "db removejoinaddresses 1",
     })
     void commandWithoutPermissionsReturnsPermissionDenied(String command) {
         CMDSender sender = runCommand(command);

@@ -332,9 +332,21 @@ public class PlanCommand {
                 .subcommand(clearCommand())
                 .subcommand(removeCommand())
                 .subcommand(uninstalledCommand())
+                .subcommand(removeJoinAddressesCommand())
                 .requirePermission(Permissions.DATA_BASE)
                 .description(locale.getString(HelpLang.DB))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB))
+                .build();
+    }
+
+    private Subcommand removeJoinAddressesCommand() {
+        return Subcommand.builder()
+                .aliases("removejoinaddresses")
+                .requirePermission(Permissions.DATA_CLEAR)
+                .requiredArgument(locale.getString(HelpLang.ARG_SERVER), locale.getString(HelpLang.DESC_ARG_SERVER_IDENTIFIER))
+                .description(locale.getString(HelpLang.JOIN_ADDRESS_REMOVAL))
+                .onCommand((sender, arguments) -> databaseCommands.onFixFabricJoinAddresses(commandName, sender, arguments))
+                .onTabComplete(this::serverNames)
                 .build();
     }
 

@@ -16,23 +16,23 @@
  */
 package com.djrapitops.plan.gathering.domain.event;
 
-import com.djrapitops.plan.gathering.domain.PlayerMetadata;
+import com.djrapitops.plan.gathering.domain.PlatformPlayerData;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 
 import java.util.UUID;
 
 public class PlayerJoin {
 
-    private final UUID playerUUID;
-    private final ServerUUID serverUUID;
-    private final PlayerMetadata playerMetadata;
+    private final Server server;
+    private final PlatformPlayerData player;
 
     private final long time;
 
-    public PlayerJoin(UUID playerUUID, ServerUUID serverUUID, PlayerMetadata playerMetadata, long time) {
-        this.playerUUID = playerUUID;
-        this.serverUUID = serverUUID;
-        this.playerMetadata = playerMetadata;
+    private PlayerJoin(Server server, PlatformPlayerData player, long time) {
+        this.server = server;
+        this.player = player;
         this.time = time;
     }
 
@@ -41,43 +41,49 @@ public class PlayerJoin {
     }
 
     public UUID getPlayerUUID() {
-        return playerUUID;
+        return player.getUUID();
+    }
+
+    public String getPlayerName() {
+        return player.getName();
     }
 
     public ServerUUID getServerUUID() {
-        return serverUUID;
+        return server.getUuid();
     }
 
-    public PlayerMetadata getPlayerMetadata() {
-        return playerMetadata;
+    public Server getServer() {
+        return server;
+    }
+
+    public PlatformPlayerData getPlayer() {
+        return player;
     }
 
     public long getTime() {
         return time;
     }
 
+    public String getJoinAddress() {
+        return player.getJoinAddress().orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+    }
+
     public static final class Builder {
-        private UUID playerUUID;
-        private ServerUUID serverUUID;
-        private PlayerMetadata playerMetadata;
+        private Server server;
+        private PlatformPlayerData player;
         private long time;
 
         private Builder() {}
 
         public static Builder aPlayerJoin() {return new Builder();}
 
-        public Builder playerUUID(UUID playerUUID) {
-            this.playerUUID = playerUUID;
+        public Builder server(Server server) {
+            this.server = server;
             return this;
         }
 
-        public Builder serverUUID(ServerUUID serverUUID) {
-            this.serverUUID = serverUUID;
-            return this;
-        }
-
-        public Builder playerMetadata(PlayerMetadata playerMetadata) {
-            this.playerMetadata = playerMetadata;
+        public Builder player(PlatformPlayerData player) {
+            this.player = player;
             return this;
         }
 
@@ -86,6 +92,6 @@ public class PlayerJoin {
             return this;
         }
 
-        public PlayerJoin build() {return new PlayerJoin(playerUUID, serverUUID, playerMetadata, time);}
+        public PlayerJoin build() {return new PlayerJoin(server, player, time);}
     }
 }

@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
-import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
 import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.Objects;
@@ -47,12 +46,6 @@ public class ActiveSession {
         extraData.put(PlayerKills.class, new PlayerKills());
 
         lastMovementForAfkCalculation = start;
-    }
-
-    public static ActiveSession fromPlayerJoin(PlayerJoin join) {
-        return new ActiveSession(join.getPlayerUUID(), join.getServerUUID(), join.getTime(),
-                join.getPlayerMetadata().getWorld().orElse("Unspecified"),
-                join.getPlayerMetadata().getGameMode().orElse("Unknown"));
     }
 
     public FinishedSession toFinishedSessionFromStillActive() {

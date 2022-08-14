@@ -18,7 +18,6 @@ package com.djrapitops.plan.gathering.cache;
 
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
-import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -96,10 +95,6 @@ public class SessionCache {
         }
         ACTIVE_SESSIONS.remove(playerUUID);
         return Optional.of(activeSession.toFinishedSession(time));
-    }
-
-    public Optional<FinishedSession> endSession(UUID playerUUID, PlayerLeave leave) {
-        return endSession(playerUUID, leave.getTime());
     }
 
     public Optional<FinishedSession> endSession(UUID playerUUID, long time) {

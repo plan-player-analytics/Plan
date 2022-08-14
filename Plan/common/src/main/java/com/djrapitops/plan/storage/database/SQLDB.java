@@ -430,4 +430,8 @@ public abstract class SQLDB extends AbstractDatabase {
     public boolean shouldDropUnimportantTransactions() {
         return dropUnimportantTransactions.get();
     }
+
+    public int getTransactionQueueSize() {
+        return transactionQueueSize.get();
+    }
 }

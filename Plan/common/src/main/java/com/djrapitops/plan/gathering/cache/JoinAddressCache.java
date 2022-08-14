@@ -17,7 +17,6 @@
 package com.djrapitops.plan.gathering.cache;
 
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
-import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,12 +44,11 @@ public class JoinAddressCache {
     }
 
     public Optional<JoinAddress> get(UUID playerUUID) {
-        return Optional.ofNullable(joinAddresses.get(playerUUID))
-                .map(JoinAddress::new);
+        return Optional.ofNullable(getNullableString(playerUUID)).map(JoinAddress::new);
     }
 
-    public void remove(UUID playerUUID, PlayerLeave leave) {
-        remove(playerUUID);
+    public String getNullableString(UUID playerUUID) {
+        return joinAddresses.get(playerUUID);
     }
 
     public void remove(UUID playerUUID) {

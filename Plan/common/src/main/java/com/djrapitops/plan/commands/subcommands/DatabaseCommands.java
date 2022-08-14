@@ -25,6 +25,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
@@ -40,6 +41,7 @@ import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.SetServerAsUninstalledTransaction;
+import com.djrapitops.plan.storage.database.transactions.patches.BadFabricJoinAddressValuePatch;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -48,6 +50,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -320,6 +323,56 @@ public class DatabaseCommands {
         } catch (DBOpException | ExecutionException e) {
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
             errorLogger.error(e, ErrorContext.builder().related(sender, fromDB.getName()).build());
+        }
+    }
+
+    public void onFixFabricJoinAddresses(String mainCommand, CMDSender sender, Arguments arguments) {
+        String identifier = arguments.concatenate(" ");
+        Optional<ServerUUID> serverUUID = identifiers.getServerUUID(identifier);
+        if (serverUUID.isEmpty()) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier));
+        }
+
+        Database database = dbSystem.getDatabase();
+
+        if (sender.supportsChatEvents()) {
+            sender.buildMessage()
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_JOIN_ADDRESS_REMOVAL, identifier, database.getType().getName())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
+                    .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
+                    .addPart(" ")
+                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover(locale.getString(CommandLang.CONFIRM_DENY))
+                    .send();
+        } else {
+            sender.buildMessage()
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_JOIN_ADDRESS_REMOVAL, identifier, database.getType().getName())).newLine()
+                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
+                    .addPart(" ")
+                    .addPart("§c/" + mainCommand + " cancel")
+                    .send();
+        }
+
+        confirmation.confirm(sender, choice -> {
+            if (Boolean.TRUE.equals(choice)) {
+                performJoinAddressRemoval(sender, serverUUID.get(), database);
+            } else {
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
+            }
+        });
+    }
+
+    private void performJoinAddressRemoval(CMDSender sender, ServerUUID serverUUID, Database database) {
+        try {
+            sender.send(locale.getString(CommandLang.DB_WRITE, database.getType().getName()));
+            database.executeTransaction(new BadFabricJoinAddressValuePatch(serverUUID))
+                    .thenRunAsync(() -> sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS)))
+                    .exceptionally(error -> {
+                        sender.send(locale.getString(CommandLang.PROGRESS_FAIL, error.getMessage()));
+                        return null;
+                    });
+        } catch (DBOpException e) {
+            sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
+            errorLogger.error(e, ErrorContext.builder().related(sender, database.getType().getName()).build());
         }
     }
 

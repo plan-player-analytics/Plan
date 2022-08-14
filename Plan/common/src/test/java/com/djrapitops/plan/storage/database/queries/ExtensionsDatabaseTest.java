@@ -41,6 +41,7 @@ import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTr
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utilities.OptionalAssert;
 import utilities.RandomData;
@@ -361,6 +362,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @Disabled("Flaky test, possibly due to some kind of concurrent execution - one extra exception is sometimes caught")
     default void extensionExceptionsAreCaught() {
         TestErrorLogger.throwErrors(false);
         ExtensionSvc extensionService = extensionService();

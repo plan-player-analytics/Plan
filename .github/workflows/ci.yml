@@ -53,16 +53,10 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - name: Build with Gradle
-        env:
-          MYSQL_DB: test
-          MYSQL_USER: user
-          MYSQL_PASS: password
-          MYSQL_PORT: ${{ job.services.mariadb.ports[3306] }}
-          CHROMEDRIVER: /usr/local/bin/chromedriver
+      - name: Build jars
         run: |
           cd Plan
-          ./gradlew build
+          ./gradlew shadowJar
       - name: Get versions
         run: |
           cd Plan
@@ -82,6 +76,16 @@ jobs:
         with:
           name: PlanFabric-${{ env.versionString }}-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}.jar
+      - name: Test
+        env:
+          MYSQL_DB: test
+          MYSQL_USER: user
+          MYSQL_PASS: password
+          MYSQL_PORT: ${{ job.services.mariadb.ports[3306] }}
+          CHROMEDRIVER: /usr/local/bin/chromedriver
+        run: |
+          cd Plan
+          ./gradlew build
       - name: SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
