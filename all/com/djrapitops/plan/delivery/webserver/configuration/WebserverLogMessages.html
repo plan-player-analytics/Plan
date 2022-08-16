@@ -90,7 +90,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.delivery.webserver.Addresses)" class="member-name-link">WebserverLogMessages</a><wbr>(net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.formatting.Formatters,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.delivery.webserver.Addresses)" class="member-name-link">WebserverLogMessages</a><wbr>(<a href="../../formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a>&nbsp;formatters,
+ net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
  <a href="../../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses)</code></div>
@@ -114,6 +115,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#authenticationUsingProxy()" class="member-name-link">authenticationUsingProxy</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#certificateExpiryIn(long)" class="member-name-link">certificateExpiryIn</a><wbr>(long&nbsp;expires)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#certificateExpiryIsNear(long)" class="member-name-link">certificateExpiryIsNear</a><wbr>(long&nbsp;timeMillisToExpiry)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#infoWebserverEnabled(int)" class="member-name-link">infoWebserverEnabled</a><wbr>(int&nbsp;port)</code></div>
@@ -156,10 +163,11 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.delivery.webserver.Addresses)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.delivery.formatting.Formatters,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.delivery.webserver.Addresses)">
 <h3>WebserverLogMessages</h3>
 <div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">WebserverLogMessages</span><wbr><span class="parameters">(net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">WebserverLogMessages</span><wbr><span class="parameters">(<a href="../../formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a>&nbsp;formatters,
+ net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
  <a href="../../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses)</span></div>
@@ -227,6 +235,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="keystoreFileNotFound()">
 <h3>keystoreFileNotFound</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">keystoreFileNotFound</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="certificateExpiryIn(long)">
+<h3>certificateExpiryIn</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">certificateExpiryIn</span><wbr><span class="parameters">(long&nbsp;expires)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="certificateExpiryIsNear(long)">
+<h3>certificateExpiryIsNear</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">certificateExpiryIsNear</span><wbr><span class="parameters">(long&nbsp;timeMillisToExpiry)</span></div>
 </section>
 </li>
 </ul>
