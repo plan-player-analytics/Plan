@@ -128,7 +128,7 @@ Time:
         Time: 30
         Unit: MINUTES
     Remove_inactive_player_data_after:
-      Time: 180
+      Time: 3650
       Unit: DAYS
     # Includes players online, tps and performance time series
     Remove_time_series_data_after:
