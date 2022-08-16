@@ -33,6 +33,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -130,14 +131,14 @@ public class JettyWebserver implements WebServer {
         }
 
         webserverLogMessages.infoWebserverEnabled(getPort());
-        sslContext.ifPresent(this::logCertificateExpiryInformation);
+        sslContext.map(SslContextFactory::getKeyStore).ifPresent(this::logCertificateExpiryInformation);
 
         responseResolver.registerPages();
     }
 
-    private void logCertificateExpiryInformation(SslContextFactory.Server sslContext) {
+    private void logCertificateExpiryInformation(KeyStore keyStore) {
         try {
-            Certificate certificate = sslContext.getKeyStore().getCertificate(webserverConfiguration.getAlias());
+            Certificate certificate = keyStore.getCertificate(webserverConfiguration.getAlias());
             if (certificate instanceof X509Certificate) {
                 long expires = ((X509Certificate) certificate).getNotAfter().getTime();
                 long timeLeft = expires - System.currentTimeMillis();
