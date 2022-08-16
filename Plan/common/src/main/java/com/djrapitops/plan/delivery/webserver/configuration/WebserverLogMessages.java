@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.configuration;
 
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -33,6 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Singleton
 public class WebserverLogMessages {
 
+    private final Formatters formatters;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
     private final Locale locale;
@@ -41,7 +43,8 @@ public class WebserverLogMessages {
     private final AtomicLong warnedAboutXForwardedSecurityIssue = new AtomicLong(0L);
 
     @Inject
-    public WebserverLogMessages(PluginLogger logger, ErrorLogger errorLogger, Locale locale, Addresses addresses) {
+    public WebserverLogMessages(Formatters formatters, PluginLogger logger, ErrorLogger errorLogger, Locale locale, Addresses addresses) {
+        this.formatters = formatters;
         this.logger = logger;
         this.errorLogger = errorLogger;
         this.locale = locale;
@@ -94,5 +97,17 @@ public class WebserverLogMessages {
 
     public void keystoreFileNotFound() {
         logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE));
+    }
+
+    public void certificateExpiryIn(long expires) {
+        logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE, formatters.yearLong().apply(expires)));
+    }
+
+    public void certificateExpiryIsNear(long timeMillisToExpiry) {
+        if (timeMillisToExpiry > 0) {
+            logger.warn(locale.getString(PluginLang.WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE_SOON, formatters.timeAmount().apply(timeMillisToExpiry)));
+        } else {
+            logger.warn(locale.getString(PluginLang.WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE_PASSED));
+        }
     }
 }

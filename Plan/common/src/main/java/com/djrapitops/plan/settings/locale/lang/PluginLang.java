@@ -51,6 +51,9 @@ public enum PluginLang implements Lang {
     WEB_SERVER_NOTIFY_HTTPS_USER_AUTH("plugin.webserver.notify.authDisabledConfig", "WebServer - Notify HTTPS User Auth", "WebServer: User Authorization Disabled! (Disabled in config)"),
     WEB_SERVER_NOTIFY_IP_WHITELIST("plugin.webserver.notify.ipWhitelist", "Webserver - Notify IP Whitelist", "Webserver: IP Whitelist is enabled."),
     WEB_SERVER_NOTIFY_IP_WHITELIST_BLOCK("plugin.webserver.notify.ipWhitelistBlock", "Webserver - Notify IP Whitelist Block", "Webserver: ${0} was denied access to '${1}'. (not whitelisted)"),
+    WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE("plugin.webserver.notify.certificateExpiresOn", "Webserver notify - Cert expiry", "Webserver: Loaded certificate is valid until ${0}."),
+    WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE_SOON("plugin.webserver.notify.certificateExpiresSoon", "Webserver notify - Cert expiry soon", "Webserver: Certificate expires in ${0}, consider renewing the certificate."),
+    WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE_PASSED("plugin.webserver.notify.certificateExpiresPassed", "Webserver notify - Cert expiry passed", "Webserver: Certificate has expired, consider renewing the certificate."),
 
     DISABLED("plugin.disable.disabled", "Disable", "Player Analytics Disabled."),
     DISABLED_WEB_SERVER("plugin.disable.webserver", "Disable - WebServer", "Webserver has been disabled."),

@@ -33,7 +33,11 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
+import java.security.KeyStoreException;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class JettyWebserver implements WebServer {
@@ -126,8 +130,25 @@ public class JettyWebserver implements WebServer {
         }
 
         webserverLogMessages.infoWebserverEnabled(getPort());
+        sslContext.ifPresent(this::logCertificateExpiryInformation);
 
         responseResolver.registerPages();
+    }
+
+    private void logCertificateExpiryInformation(SslContextFactory.Server sslContext) {
+        try {
+            Certificate certificate = sslContext.getKeyStore().getCertificate(webserverConfiguration.getAlias());
+            if (certificate instanceof X509Certificate) {
+                long expires = ((X509Certificate) certificate).getNotAfter().getTime();
+                long timeLeft = expires - System.currentTimeMillis();
+                webserverLogMessages.certificateExpiryIn(expires);
+                if (timeLeft < TimeUnit.DAYS.toMillis(7L)) {
+                    webserverLogMessages.certificateExpiryIsNear(timeLeft);
+                }
+            }
+        } catch (KeyStoreException ignored) {
+            // Don't care, just warning the user.
+        }
     }
 
     private ALPNServerConnectionFactory getAlpnServerConnectionFactory(String protocol) {
@@ -182,7 +203,6 @@ public class JettyWebserver implements WebServer {
         sslContextFactory.setKeyStorePassword(storepass);
         sslContextFactory.setKeyManagerPassword(keypass);
         sslContextFactory.setCertAlias(alias);
-
         return Optional.of(sslContextFactory);
     }
 
