@@ -29,6 +29,7 @@ public class TPSTable {
 
     public static final String TABLE_NAME = "plan_tps";
 
+    public static final String ID = "id";
     public static final String SERVER_ID = "server_id";
     public static final String DATE = "date";
     public static final String TPS = "tps";
@@ -59,6 +60,7 @@ public class TPSTable {
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
                 .column(SERVER_ID, Sql.INT).notNull()
                 .column(DATE, Sql.LONG).notNull()
                 .column(TPS, Sql.DOUBLE).notNull()

@@ -32,6 +32,7 @@ public class CookieTable {
 
     public static final String TABLE_NAME = "plan_cookies";
 
+    public static final String ID = "id";
     public static final String WEB_USERNAME = "web_username";
     public static final String COOKIE = "cookie";
     public static final String EXPIRES = "expires";
@@ -59,6 +60,7 @@ public class CookieTable {
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
                 .column(WEB_USERNAME, Sql.varchar(100)).notNull()
                 .column(EXPIRES, Sql.LONG).notNull()
                 .column(COOKIE, Sql.varchar(64)).notNull()
