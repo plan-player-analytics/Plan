@@ -58,11 +58,11 @@ shadowJar {
     exclude "jakarta/xml/**/*"
     exclude "javassist/**/*"
 
-    relocate('org.slf4j', 'plan.org.slf4j') {
-        exclude 'com.djrapitops.plan.PlanVelocity'
-        exclude 'net.playeranalytics.plugin.VelocityPlatformLayer'
-        exclude 'net.playeranalytics.plugin.server.VelocityPluginLogger'
-    }
+    relocate('org.slf4j', 'plan.org.slf4j')
+
+    // Unrelocate a package to use platform version of some libraries that were relocated in Plan
+    exclude "com/djrapitops/plan/unrelocate/**/*"
+    relocate('com.djrapitops.plan.unrelocate.', '')
 
     relocate('org.apache', 'plan.org.apache') {
         exclude 'org/apache/logging/**'

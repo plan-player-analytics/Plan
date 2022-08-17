@@ -23,6 +23,7 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.unrelocate.org.slf4j.Logger;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.velocitypowered.api.command.CommandManager;
@@ -37,8 +38,6 @@ import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.VelocityPlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
-import org.bstats.velocity.Metrics;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
@@ -64,7 +63,6 @@ import java.util.logging.Level;
 )
 public class PlanVelocity implements PlanPlugin {
 
-    private final Metrics.Factory metricsFactory;
     private final ProxyServer proxy;
     private final Logger slf4jLogger;
     private final Path dataFolderPath;
@@ -79,18 +77,16 @@ public class PlanVelocity implements PlanPlugin {
     public PlanVelocity(
             ProxyServer proxy,
             Logger slf4jLogger,
-            @DataDirectory Path dataFolderPath,
-            Metrics.Factory metricsFactory
+            @DataDirectory Path dataFolderPath
     ) {
         this.proxy = proxy;
         this.slf4jLogger = slf4jLogger;
         this.dataFolderPath = dataFolderPath;
-        this.metricsFactory = metricsFactory;
     }
 
     @Subscribe
     public void onProxyStart(ProxyInitializeEvent event) {
-        abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
+        abstractionLayer = new VelocityPlatformLayer(this, proxy, new Slf4jLoggerWrapper(slf4jLogger), dataFolderPath);
         logger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
 
@@ -113,12 +109,6 @@ public class PlanVelocity implements PlanPlugin {
             errorLogger = component.errorLogger();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
-
-            int pluginId = 10326;
-            new BStatsVelocity(
-                    system.getDatabaseSystem().getDatabase(),
-                    metricsFactory.make(this, pluginId)
-            ).registerMetrics();
 
             logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
