@@ -3,7 +3,8 @@ updates:
 - package-ecosystem: gradle
   directory: "/Plan"
   schedule:
-    interval: daily
+    interval: weekly
+    day: friday
   open-pull-requests-limit: 99
   ignore:
   - dependency-name: net.fabricmc:fabric-loader
@@ -21,5 +22,6 @@ updates:
 - package-ecosystem: npm
   directory: "/Plan/react/dashboard"
   schedule:
-    interval: daily
+    interval: weekly
+    day: friday
   open-pull-requests-limit: 99
