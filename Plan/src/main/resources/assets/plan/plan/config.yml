@@ -41,20 +41,25 @@ Database:
 # -----------------------------------------------------
 Webserver:
   Port: 8804
-  Alternative_IP: false
+  Alternative_IP:
+    Enabled: false
     # %port% is replaced automatically with Webserver.Port
     Address: your.domain.here:%port%
   # InternalIP usually does not need to be changed, only change it if you know what you're doing!
   # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
   Internal_IP: 0.0.0.0
   Cache:
-    Reduced_refresh_barrier: 15
+    Reduced_refresh_barrier:
+      Time: 15
       Unit: SECONDS
-    Invalidate_query_results_on_disk_after: 7
+    Invalidate_query_results_on_disk_after:
+      Time: 7
       Unit: DAYS
-    Invalidate_disk_cache_after: 2
+    Invalidate_disk_cache_after:
+      Time: 2
       Unit: DAYS
-    Invalidate_memory_cache_after: 5
+    Invalidate_memory_cache_after:
+      Time: 5
       Unit: MINUTES
   Security:
     SSL_certificate:
@@ -71,12 +76,17 @@ Webserver:
     # Allows using the whitelist with a reverse-proxy.
     # ! Make sure non-proxy access is not possible, it would allow IP spoofing !
     Use_X-Forwarded-For_Header: false
-    IP_whitelist: false
+    Access_log:
+      Print_to_console: false
+      Remove_logs_after_days: 30
+    IP_whitelist:
+      Enabled: false
       Whitelist:
         - "192.168.0.0"
         - "0:0:0:0:0:0:0:1"
     # Does not affect existing cookies
-    Cookies_expire_after: 2
+    Cookies_expire_after:
+      Time: 2
       Unit: HOURS
   Disable_Webserver: false
   External_Webserver_address: https://www.example.address
@@ -96,37 +106,49 @@ Data_gathering:
 # -----------------------------------------------------
 Time:
   Delays:
-    Ping_server_enable_delay: 300
+    Ping_server_enable_delay:
+      Time: 300
       Unit: SECONDS
-    Ping_player_join_delay: 30
+    Ping_player_join_delay:
+      Time: 30
       Unit: SECONDS
-    Wait_for_DB_Transactions_on_disable: 20
+    Wait_for_DB_Transactions_on_disable:
+      Time: 20
       Unit: SECONDS
   Thresholds:
     # How long player needs to be idle until Plan considers them AFK
-    AFK_threshold: 3
+    AFK_threshold:
+      Time: 3
       Unit: MINUTES
     # Activity Index considers last 3 weeks and uses these thresholds in the calculation
     # The index is a number from 0 to 5.
     # These numbers were calibrated with data of 250 players (Small sample size).
     Activity_index:
-      Playtime_threshold: 30
+      Playtime_threshold:
+        Time: 30
         Unit: MINUTES
-    Remove_inactive_player_data_after: 180
+    Remove_inactive_player_data_after:
+      Time: 3650
       Unit: DAYS
     # Includes players online, tps and performance time series
-    Remove_time_series_data_after: 90
+    Remove_time_series_data_after:
+      Time: 90
       Unit: DAYS
-    Remove_ping_data_after: 14
+    Remove_ping_data_after:
+      Time: 14
       Unit: DAYS
-    Remove_disabled_extension_data_after: 2
+    Remove_disabled_extension_data_after:
+      Time: 2
       Unit: DAYS
   Periodic_tasks:
-    Extension_data_refresh_every: 1
+    Extension_data_refresh_every:
+      Time: 1
       Unit: HOURS
-    Check_DB_for_server_config_files_every: 1
+    Check_DB_for_server_config_files_every:
+      Time: 1
       Unit: MINUTES
-    Clean_Database_every: 1
+    Clean_Database_every:
+      Time: 1
       Unit: HOURS
 # -----------------------------------------------------
 Display_options:
@@ -176,8 +198,8 @@ Formatting:
   Dates:
     # Show_recent_day_names replaces day number with Today, Yesterday, Wednesday etc.
     Show_recent_day_names: true
-      # Non-regex pattern to replace
-      DatePattern: 'MMM d YYYY'
+    # Non-regex pattern to replace
+    Show_recent_day_names_date_pattern: 'MMM d YYYY'
     Full: 'MMM d YYYY, HH:mm:ss'
     NoSeconds: 'MMM d YYYY, HH:mm'
     JustClock: HH:mm:ss
@@ -215,7 +237,8 @@ Export:
   Export_player_on_login_and_logout: false
   # If there are multiple servers the period is divided evenly to avoid export of all servers at once
   # Also affects Players page export
-  Server_refresh_period: 20
+  Server_refresh_period:
+    Time: 20
     Unit: MINUTES
 # -----------------------------------------------------
 # These settings affect Plugin data integration.
