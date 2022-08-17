@@ -100,6 +100,8 @@ shadowJar {
     relocate 'org.eclipse.jetty', 'plan.org.eclipse.jetty'
     relocate 'jakarta.servlet', 'plan.jakarta.servlet'
     relocate 'javax.servlet', 'plan.javax.servlet'
+
+    mergeServiceFiles()
 }
 
 prepareRemapJar {
