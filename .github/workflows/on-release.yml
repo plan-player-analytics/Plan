@@ -6,7 +6,7 @@ on:
 
 jobs:
   update_versions_txt:
-    name: Update version.txt
+    name: Update versions.txt
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -24,17 +24,17 @@ jobs:
         if: ${{ github.event.release.prerelease == true }}
         run: |
           echo "DEV|${{ github.event.release.tag_name }}|${{ env.RELEASE_DOWNLOAD_URL }}|${{ github.event.release.html_url }}" > release_line.txt
-      - name: Append to version.txt
+      - name: Append to versions.txt
         run: |
-          cat version.txt > temp.txt
-          cat release_line.txt temp.txt > version.txt
+          cat versions.txt > temp.txt
+          cat release_line.txt temp.txt > versions.txt
       - name: Commit and push changes
         uses: EndBug/add-and-commit@v9
         with:
           committer_name: GitHub Actions
           committer_email: 41898282+github-actions[bot]@users.noreply.github.com
-          message: Update version.txt ${{ github.event.release.name }}
-          add: version.txt
+          message: Update versions.txt ${{ github.event.release.name }}
+          add: versions.txt
 
   update_html:
     name: Update html-branch
