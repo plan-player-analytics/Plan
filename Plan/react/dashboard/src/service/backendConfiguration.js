@@ -11,9 +11,17 @@ const isCurrentAddress = (address) => {
 export const baseAddress = "PLAN_BASE_ADDRESS" === toBeReplaced || !isCurrentAddress(toBeReplaced) ? "" : toBeReplaced;
 
 export const doSomeGetRequest = async (url, statusOptions) => {
+    return doSomeRequest(url, statusOptions, async () => axios.get(url));
+}
+
+export const doSomePostRequest = async (url, statusOptions, body) => {
+    return doSomeRequest(url, statusOptions, async () => axios.post(url, body));
+}
+
+export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
     let response = undefined;
     try {
-        response = await axios.get(baseAddress + url);
+        response = await axiosFunction.call();
 
         for (const statusOption of statusOptions) {
             if (response.status === statusOption.status) {

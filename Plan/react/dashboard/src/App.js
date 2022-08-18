@@ -28,6 +28,7 @@ import ServerPlayers from "./views/server/ServerPlayers";
 import PlayersPage from "./views/layout/PlayersPage";
 import AllPlayers from "./views/players/AllPlayers";
 import ServerGeolocations from "./views/server/ServerGeolocations";
+import LoginPage from "./views/layout/LoginPage";
 
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
 
@@ -57,6 +58,8 @@ function App() {
                     <BrowserRouter>
                         <Routes>
                             <Route path="" element={<MainPageRedirect/>}/>
+                            <Route path="/" element={<MainPageRedirect/>}/>
+                            <Route path="/login" element={<LoginPage/>}/>
                             <Route path="/player/:identifier" element={<PlayerPage/>}>
                                 <Route path="" element={<OverviewRedirect/>}/>
                                 <Route path="overview" element={<PlayerOverview/>}/>
@@ -86,8 +89,13 @@ function App() {
                                 <Route path="geolocations" element={<ServerGeolocations/>}/>
                                 <Route path="performance" element={<></>}/>
                                 <Route path="plugins-overview" element={<></>}/>
+                                <Route path="*" element={<ErrorView error={{
+                                    message: 'Unknown tab address, please correct the address',
+                                    title: 'No such tab',
+                                    icon: faMapSigns
+                                }}/>}/>
                             </Route>
-                            <Route path="docs" element={<React.Suspense fallback={<></>}>
+                            <Route path="/docs" element={<React.Suspense fallback={<></>}>
                                 <SwaggerView/>
                             </React.Suspense>}/>
                         </Routes>

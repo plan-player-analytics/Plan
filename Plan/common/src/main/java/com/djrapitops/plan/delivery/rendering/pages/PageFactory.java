@@ -222,6 +222,11 @@ public class PageFactory {
     }
 
     public Page loginPage() throws IOException {
+        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+            String reactHtml = getResource("index.html");
+            return () -> reactHtml;
+        }
+
         return new LoginPage(getResource("login.html"), serverInfo.get(), locale.get(), theme.get(), versionChecker.get());
     }
 

@@ -24,7 +24,7 @@ const ColorSelectorModal = () => {
                aria-labelledby="colorChooserModalLabel"
                show={theme.colorChooserOpen}
                onHide={theme.toggleColorChooser}>
-            <Modal.Header>
+            <Modal.Header className="bg-white">
                 <Modal.Title id="colorChooserModalLabel">
                     <Fa icon={faPalette}/> {t('html.label.themeSelect')}
                 </Modal.Title>

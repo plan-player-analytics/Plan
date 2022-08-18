@@ -35,6 +35,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Optional;
 
@@ -42,12 +43,19 @@ import java.util.Optional;
 @Path("/v1/metadata")
 public class MetadataJSONResolver implements NoAuthResolver {
 
+    private final String mainCommand;
     private final PlanConfig config;
     private final Theme theme;
     private final ServerInfo serverInfo;
 
     @Inject
-    public MetadataJSONResolver(PlanConfig config, Theme theme, ServerInfo serverInfo) {
+    public MetadataJSONResolver(
+            @Named("mainCommandName") String mainCommand,
+            PlanConfig config,
+            Theme theme,
+            ServerInfo serverInfo
+    ) {
+        this.mainCommand = mainCommand;
         this.config = config;
         // Dagger inject constructor
         this.theme = theme;
@@ -74,6 +82,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("isProxy", serverInfo.getServer().isProxy())
                         .put("serverName", serverInfo.getServer().getIdentifiableName())
                         .put("networkName", serverInfo.getServer().isProxy() ? config.get(ProxySettings.NETWORK_NAME) : null)
+                        .put("mainCommand", mainCommand)
                         .build())
                 .build();
     }

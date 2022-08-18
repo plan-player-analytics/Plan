@@ -23,15 +23,6 @@ export const AuthenticationContextProvider = ({children}) => {
         }
     }, [])
 
-    const login = useCallback(async (username, password) => {
-        // TODO implement later when login page is done with React
-        await updateLoginDetails();
-    }, [updateLoginDetails]);
-
-    const logout = useCallback(() => {
-        // TODO implement later when login page is done with React
-    }, []);
-
     const hasPermission = useCallback(permission => {
         return !authRequired || (loggedIn && user && user.permissions.filter(perm => perm === permission).length);
     }, [authRequired, loggedIn, user]);
@@ -49,11 +40,10 @@ export const AuthenticationContextProvider = ({children}) => {
         authRequired,
         loggedIn,
         user,
-        login,
-        logout,
         loginError,
         hasPermission,
-        hasPermissionOtherThan
+        hasPermissionOtherThan,
+        updateLoginDetails
     }
     return (<AuthenticationContext.Provider value={sharedState}>
             {children}

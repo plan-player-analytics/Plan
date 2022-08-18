@@ -49,19 +49,18 @@ const MainPageRedirect = () => {
     const {authLoaded, authRequired, loggedIn, user} = useAuth();
     const {isProxy, serverName} = useMetadata();
 
-    console.log(authLoaded, authRequired, loggedIn, user)
 
     if (!authLoaded || !serverName) {
         return <RedirectPlaceholder/>
     }
 
     if (authRequired && !loggedIn) {
-        return (<Navigate to={"login"} replace={true}/>)
+        return (<Navigate to="login" replace={true}/>)
     } else if (authRequired && loggedIn) {
         if (isProxy && user.permissions.includes('page.network')) {
             return (<Navigate to={"network/overview"} replace={true}/>)
         } else if (user.permissions.includes('page.server')) {
-            return (<Navigate to={"server/overview"} replace={true}/>)
+            return (<Navigate to={"server/" + encodeURIComponent(serverName) + "/overview"} replace={true}/>)
         } else if (user.permissions.includes('page.player.other')) {
             return (<Navigate to={"players"} replace={true}/>)
         } else if (user.permissions.includes('page.player.self')) {

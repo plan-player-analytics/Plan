@@ -14,8 +14,6 @@ const ServerPvpPve = () => {
     const {data, loadingError} = useDataRequest(fetchPvpPve, [identifier]);
     const {data: killsData, loadingError: killsLoadingError} = useDataRequest(fetchKills, [identifier]);
 
-    console.log(killsData)
-
     if (!data || !killsData) return <></>;
     if (loadingError) return <ErrorView error={loadingError}/>
     if (killsLoadingError) return <ErrorView error={killsLoadingError}/>
