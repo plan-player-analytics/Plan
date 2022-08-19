@@ -12,8 +12,7 @@ import {
     faInfoCircle,
     faSearch,
     faUserGroup,
-    faUsers,
-    faUsersViewfinder
+    faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
 import {NightModeCss} from "../../hooks/themeHook";
@@ -23,6 +22,7 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import ErrorPage from "./ErrorPage";
+import {SwitchTransition} from "react-transition-group";
 
 const ServerPage = () => {
     const {t, i18n} = useTranslation();
@@ -62,7 +62,7 @@ const ServerPage = () => {
                         icon: faChartLine,
                         href: "playerbase"
                     },
-                    {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
+                    // {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
                     {name: 'html.label.playerList', icon: faUserGroup, href: "players"},
                     {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
                 ]
@@ -96,7 +96,9 @@ const ServerPage = () => {
                 <Header page={displayedServerName} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
-                        <Outlet context={{}}/>
+                        <SwitchTransition>
+                            <Outlet context={{}}/>
+                        </SwitchTransition>
                     </main>
                     <aside>
                         <ColorSelectorModal/>

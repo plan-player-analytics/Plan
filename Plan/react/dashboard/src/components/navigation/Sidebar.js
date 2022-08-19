@@ -222,17 +222,17 @@ const Sidebar = ({items, showBackButton}) => {
     return (
         <>
             {sidebarExpanded &&
-            <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
-                <Logo/>
-                <Divider/>
-                {showBackButton && <>
-                    <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
-                    <Divider showMargin={!items[0].contents && items[0].href === undefined}/>
-                </>}
-                {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t))}
-                <Divider/>
-                <FooterButtons/>
-            </ul>}
+                <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
+                    <Logo/>
+                    <Divider/>
+                    {showBackButton && <>
+                        <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
+                        <Divider showMargin={!items[0].contents && items[0].href === undefined}/>
+                    </>}
+                    {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t))}
+                    <Divider/>
+                    <FooterButtons/>
+                </ul>}
         </>
     )
 }

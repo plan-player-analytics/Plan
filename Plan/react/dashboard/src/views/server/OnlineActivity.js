@@ -5,33 +5,35 @@ import OnlineActivityAsNumbersCard from "../../components/cards/server/tables/On
 import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchOnlineActivityOverview} from "../../service/serverService";
-import {ErrorViewBody} from "../ErrorView";
+import ErrorView from "../ErrorView";
 import OnlineActivityInsightsCard from "../../components/cards/server/insights/OnlineActivityInsightsCard";
+import LoadIn from "../../components/animation/LoadIn";
 
 const OnlineActivity = () => {
     const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchOnlineActivityOverview, [identifier])
 
-    if (loadingError) return <ErrorViewBody error={loadingError}/>
-    if (!data) return <></>;
+    if (loadingError) return <ErrorView error={loadingError}/>
 
     return (
-        <section className="server_online_activity_overview">
-            <Row>
-                <Col lg={12}>
-                    <OnlineActivityGraphsCard/>
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={8}>
-                    <OnlineActivityAsNumbersCard data={data?.numbers}/>
-                </Col>
-                <Col lg={4}>
-                    <OnlineActivityInsightsCard data={data?.insights}/>
-                </Col>
-            </Row>
-        </section>
+        <LoadIn>
+            <section className="server_online_activity_overview">
+                <Row>
+                    <Col lg={12}>
+                        <OnlineActivityGraphsCard/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={8}>
+                        <OnlineActivityAsNumbersCard data={data?.numbers}/>
+                    </Col>
+                    <Col lg={4}>
+                        <OnlineActivityInsightsCard data={data?.insights}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 

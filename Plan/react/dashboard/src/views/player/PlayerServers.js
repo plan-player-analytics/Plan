@@ -9,6 +9,7 @@ import ServerAccordion from "../../components/accordion/ServerAccordion";
 import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
 import PingGraph from "../../components/graphs/PingGraph";
+import LoadIn from "../../components/animation/LoadIn";
 
 const PingGraphCard = ({player}) => {
     const {t} = useTranslation();
@@ -68,21 +69,23 @@ const ServerPieCard = ({player}) => {
 const PlayerServers = () => {
     const {player} = usePlayer();
     return (
-        <section className="player_sessions">
-            <Row>
-                <Col lg={12}>
-                    <PingGraphCard player={player}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={8}>
-                    <ServersCard player={player}/>
-                </Col>
-                <Col lg={4}>
-                    <ServerPieCard player={player}/>
-                </Col>
-            </Row>
-        </section>
+        <LoadIn>
+            <section className="player_sessions">
+                <Row>
+                    <Col lg={12}>
+                        <PingGraphCard player={player}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={8}>
+                        <ServersCard player={player}/>
+                    </Col>
+                    <Col lg={4}>
+                        <ServerPieCard player={player}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 

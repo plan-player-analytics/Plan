@@ -7,6 +7,9 @@ import React from "react";
 
 const WorldPieCard = ({worldSeries, gmSeries}) => {
     const {t} = useTranslation();
+
+    if (!worldSeries || !gmSeries) return <></>
+
     return (
         <Card>
             <Card.Header>

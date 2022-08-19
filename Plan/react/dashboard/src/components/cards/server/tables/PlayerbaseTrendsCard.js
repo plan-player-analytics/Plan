@@ -7,10 +7,11 @@ import BigTrend from "../../../trend/BigTrend";
 import React from "react";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import {TableRow} from "../../../table/TableRow";
+import {CardLoader} from "../../../navigation/Loader";
 
 const PlayerbaseTrendsCard = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
     return (
         <Card>
             <Card.Header>

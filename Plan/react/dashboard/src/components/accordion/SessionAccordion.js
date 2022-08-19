@@ -88,6 +88,8 @@ const SessionAccordion = (
 ) => {
     const {t} = useTranslation();
 
+    if (!sessions) return <></>
+
     const firstColumn = isPlayer ? (<><Fa icon={faUser}/> {t('html.label.player')}</>)
         : (<><Fa icon={faServer}/> {t('html.label.server')}</>)
 

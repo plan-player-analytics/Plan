@@ -28,6 +28,7 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {useTranslation} from "react-i18next";
 import NicknamesCard from "../../components/cards/player/NicknamesCard";
 import {TableRow} from "../../components/table/TableRow";
+import LoadIn from "../../components/animation/LoadIn";
 
 const PlayerOverviewCard = ({player}) => {
     const {t} = useTranslation();
@@ -220,19 +221,21 @@ const PlayerOverview = () => {
     const {player} = usePlayer();
 
     return (
-        <section className="player_overview">
-            <Row>
-                <Col lg={6}>
-                    <PlayerOverviewCard player={player}/>
-                    <NicknamesCard player={player}/>
-                    <ConnectionsCard player={player}/>
-                </Col>
-                <Col lg={6}>
-                    <PunchCardCard player={player}/>
-                    <OnlineActivityCard player={player}/>
-                </Col>
-            </Row>
-        </section>
+        <LoadIn>
+            <section className="player_overview">
+                <Row>
+                    <Col lg={6}>
+                        <PlayerOverviewCard player={player}/>
+                        <NicknamesCard player={player}/>
+                        <ConnectionsCard player={player}/>
+                    </Col>
+                    <Col lg={6}>
+                        <PunchCardCard player={player}/>
+                        <OnlineActivityCard player={player}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 

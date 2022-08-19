@@ -4,6 +4,7 @@ import {Card, Row} from "react-bootstrap-v5";
 import {useParams} from "react-router-dom";
 import Masonry from "masonry-layout";
 import {usePlayer} from "../layout/PlayerPage";
+import LoadIn from "../../components/animation/LoadIn";
 
 const PlayerPluginData = () => {
     const {player} = usePlayer();
@@ -23,29 +24,35 @@ const PlayerPluginData = () => {
     }, [])
 
     if (!extensions) {
-        return <section className="player_plugin_data">
-            <Row style={{overflowY: 'hidden'}}>
-                <Card>
-                    <Card.Body>
-                        <p>No Extension data for {serverName}</p>
-                    </Card.Body>
-                </Card>
-            </Row>
-        </section>
+        return (
+            <LoadIn>
+                <section className="player_plugin_data">
+                    <Row style={{overflowY: 'hidden'}}>
+                        <Card>
+                            <Card.Body>
+                                <p>No Extension data for {serverName}</p>
+                            </Card.Body>
+                        </Card>
+                    </Row>
+                </section>
+            </LoadIn>
+        )
     }
 
     return (
-        <section className="player_plugin_data">
-            <Row id="extension-masonry-row"
-                 data-masonry='{"percentPosition": true, "itemSelector": ".extension-wrapper"}'
-                 style={{overflowY: 'hidden'}}>
-                {extensions.extensionData.map((extension, i) =>
-                    <ExtensionCardWrapper key={'ext-' + i} extension={extension}>
-                        <ExtensionCard extension={extension}/>
-                    </ExtensionCardWrapper>
-                )}
-            </Row>
-        </section>
+        <LoadIn>
+            <section className="player_plugin_data">
+                <Row id="extension-masonry-row"
+                     data-masonry='{"percentPosition": true, "itemSelector": ".extension-wrapper"}'
+                     style={{overflowY: 'hidden'}}>
+                    {extensions.extensionData.map((extension, i) =>
+                        <ExtensionCardWrapper key={'ext-' + i} extension={extension}>
+                            <ExtensionCard extension={extension}/>
+                        </ExtensionCardWrapper>
+                    )}
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 

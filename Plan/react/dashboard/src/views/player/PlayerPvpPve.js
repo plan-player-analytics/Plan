@@ -9,6 +9,7 @@ import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
 import PvpPveAsNumbersCard from "../../components/cards/player/PvpPveAsNumbersCard";
 import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
+import LoadIn from "../../components/animation/LoadIn";
 
 const InsightsCard = ({player}) => {
     const {t} = useTranslation();
@@ -48,24 +49,26 @@ const PvpDeathsTableCard = ({player}) => {
 const PlayerPvpPve = () => {
     const {player} = usePlayer();
     return (
-        <section className="player_pvp_pve">
-            <Row>
-                <Col lg={8}>
-                    <PvpPveAsNumbersCard player={player}/>
-                </Col>
-                <Col lg={4}>
-                    <InsightsCard player={player}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={6}>
-                    <PvpKillsTableCard player_kills={player.player_kills}/>
-                </Col>
-                <Col lg={6}>
-                    <PvpDeathsTableCard player={player}/>
-                </Col>
-            </Row>
-        </section>
+        <LoadIn>
+            <section className="player_pvp_pve">
+                <Row>
+                    <Col lg={8}>
+                        <PvpPveAsNumbersCard player={player}/>
+                    </Col>
+                    <Col lg={4}>
+                        <InsightsCard player={player}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={6}>
+                        <PvpKillsTableCard player_kills={player.player_kills}/>
+                    </Col>
+                    <Col lg={6}>
+                        <PvpDeathsTableCard player={player}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 

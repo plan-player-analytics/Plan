@@ -7,6 +7,8 @@ import {faKhanda} from "@fortawesome/free-solid-svg-icons";
 const PvpPveInsightsCard = ({data}) => {
     const {t} = useTranslation();
 
+    if (!data) return <></>
+
     return (
         <InsightsFor30DaysCard>
             <Datapoint name={t('html.label.deadliestWeapon')} icon={faKhanda} color="amber"

@@ -4,19 +4,22 @@ import {fetchPlayers} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import {Col, Row} from "react-bootstrap-v5";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
+import LoadIn from "../../components/animation/LoadIn";
+import {CardLoader} from "../../components/navigation/Loader";
 
 const AllPlayers = () => {
     const {data, loadingError} = useDataRequest(fetchPlayers, [null]);
 
-    if (!data) return <></>;
     if (loadingError) return <ErrorView error={loadingError}/>
 
     return (
-        <Row>
-            <Col md={12}>
-                <PlayerListCard data={data}/>
-            </Col>
-        </Row>
+        <LoadIn>
+            <Row>
+                <Col md={12}>
+                    {data ? <PlayerListCard data={data}/> : <CardLoader/>}
+                </Col>
+            </Row>
+        </LoadIn>
     )
 };
 

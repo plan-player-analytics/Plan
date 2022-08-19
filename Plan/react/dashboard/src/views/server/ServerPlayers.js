@@ -5,21 +5,25 @@ import {fetchPlayers} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import {Col, Row} from "react-bootstrap-v5";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
+import LoadIn from "../../components/animation/LoadIn";
 
 const ServerPlayers = () => {
     const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchPlayers, [identifier]);
 
-    if (!data) return <></>;
     if (loadingError) return <ErrorView error={loadingError}/>
 
     return (
-        <Row>
-            <Col md={12}>
-                <PlayerListCard data={data}/>
-            </Col>
-        </Row>
+        <LoadIn>
+            <section className="server_players">
+                <Row>
+                    <Col md={12}>
+                        <PlayerListCard data={data}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 };
 

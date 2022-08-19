@@ -5,21 +5,25 @@ import {fetchGeolocations} from "../../service/serverService";
 import {Col, Row} from "react-bootstrap-v5";
 import ErrorView from "../ErrorView";
 import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
+import LoadIn from "../../components/animation/LoadIn";
 
 const ServerGeolocations = () => {
     const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchGeolocations, [identifier]);
 
-    if (!data) return <></>;
     if (loadingError) return <ErrorView error={loadingError}/>
 
     return (
-        <Row>
-            <Col md={12}>
-                <GeolocationsCard data={data}/>
-            </Col>
-        </Row>
+        <LoadIn>
+            <section className="server_geolocations">
+                <Row>
+                    <Col md={12}>
+                        <GeolocationsCard data={data}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 };
 

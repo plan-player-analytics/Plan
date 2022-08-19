@@ -7,6 +7,7 @@ import {faLongArrowAltRight, faUser} from "@fortawesome/free-solid-svg-icons";
 import SmallTrend from "../../../trend/SmallTrend";
 import End from "../../../layout/End";
 import ComparingLabel from "../../../trend/ComparingLabel";
+import {CardLoader} from "../../../navigation/Loader";
 
 const TwoPlayerChange = ({colorBefore, labelBefore, colorAfter, labelAfter}) => {
     return (
@@ -20,7 +21,7 @@ const TwoPlayerChange = ({colorBefore, labelBefore, colorAfter, labelAfter}) => 
 
 const PlayerbaseInsightsCard = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
     return (
         <InsightsFor30DaysCard>
             <Datapoint name={<TwoPlayerChange colorBefore={'light-green'}
