@@ -48,6 +48,12 @@ export const fetchPlayers = async (identifier) => {
     return doGetRequest(url);
 }
 
+export const fetchPingTable = async (identifier) => {
+    const timestamp = Date.now();
+    const url = identifier ? `/v1/pingTable?server=${identifier}&timestamp=${timestamp}` : `/v1/pingTable?timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
 export const fetchPlayersOnlineGraph = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/graph?type=playersOnline&server=${identifier}&timestamp=${timestamp}`;
