@@ -88,7 +88,7 @@ subprojects {
         jettyVersion = "11.0.11"
         caffeineVersion = "2.9.2"
         mysqlVersion = "8.0.26"
-        sqliteVersion = "3.36.0.3"
+        sqliteVersion = "3.39.2.0"
         hikariVersion = "5.0.1"
         slf4jVersion = "2.0.0-alpha7"
         geoIpVersion = "3.0.1"
