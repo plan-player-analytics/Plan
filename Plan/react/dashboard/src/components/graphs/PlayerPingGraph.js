@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {tooltip} from "../../util/graphs";
 import LineGraph from "./LineGraph";
 
-const PingGraph = ({data}) => {
+const PlayerPingGraph = ({data}) => {
     const {t} = useTranslation();
     const [series, setSeries] = useState([]);
 
@@ -37,4 +37,4 @@ const PingGraph = ({data}) => {
     )
 }
 
-export default PingGraph
+export default PlayerPingGraph

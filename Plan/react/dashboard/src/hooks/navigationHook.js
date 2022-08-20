@@ -19,8 +19,10 @@ export const NavigationContextProvider = ({children}) => {
 
     const finishUpdate = useCallback((date, formatted) => {
         // TODO Logic to retry if received data is too old
-        setLastUpdate({date, formatted});
-        setUpdating(false);
+        if (date) {
+            setLastUpdate({date, formatted});
+            setUpdating(false);
+        }
     }, [setLastUpdate, setUpdating]);
 
     const toggleSidebar = useCallback(() => {

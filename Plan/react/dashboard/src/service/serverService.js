@@ -119,3 +119,9 @@ export const fetchOptimizedPerformance = async (identifier) => {
     const url = `/v1/graph?type=optimizedPerformance&server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
+
+export const fetchPingGraph = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=aggregatedPing&server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
