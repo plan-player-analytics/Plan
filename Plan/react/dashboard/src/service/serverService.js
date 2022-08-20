@@ -36,6 +36,12 @@ export const fetchPvpPve = async (identifier) => {
     return doGetRequest(url);
 }
 
+export const fetchPerformanceOverview = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/performanceOverview?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
 export const fetchSessions = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/sessions?server=${identifier}&timestamp=${timestamp}`;
@@ -105,5 +111,11 @@ export const fetchWorldPie = async (identifier) => {
 export const fetchGeolocations = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/graph?type=geolocation&server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchOptimizedPerformance = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/graph?type=optimizedPerformance&server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }

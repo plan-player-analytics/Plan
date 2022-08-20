@@ -29,6 +29,7 @@ import PlayersPage from "./views/layout/PlayersPage";
 import AllPlayers from "./views/players/AllPlayers";
 import ServerGeolocations from "./views/server/ServerGeolocations";
 import LoginPage from "./views/layout/LoginPage";
+import ServerPerformance from "./views/server/ServerPerformance";
 
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
 
@@ -87,7 +88,7 @@ function App() {
                                 <Route path="retention" element={<></>}/>
                                 <Route path="players" element={<ServerPlayers/>}/>
                                 <Route path="geolocations" element={<ServerGeolocations/>}/>
-                                <Route path="performance" element={<></>}/>
+                                <Route path="performance" element={<ServerPerformance/>}/>
                                 <Route path="plugins-overview" element={<></>}/>
                                 <Route path="*" element={<ErrorView error={{
                                     message: 'Unknown tab address, please correct the address',
