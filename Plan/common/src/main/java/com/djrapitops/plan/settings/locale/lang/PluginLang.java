@@ -54,6 +54,7 @@ public enum PluginLang implements Lang {
     WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE("plugin.webserver.notify.certificateExpiresOn", "Webserver notify - Cert expiry", "Webserver: Loaded certificate is valid until ${0}."),
     WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE_SOON("plugin.webserver.notify.certificateExpiresSoon", "Webserver notify - Cert expiry soon", "Webserver: Certificate expires in ${0}, consider renewing the certificate."),
     WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE_PASSED("plugin.webserver.notify.certificateExpiresPassed", "Webserver notify - Cert expiry passed", "Webserver: Certificate has expired, consider renewing the certificate."),
+    WEB_SERVER_NOTIFY_CERT_NO_SUCH_ALIAS("plugin.webserver.notify.certificateNoSuchAlias", "Webserver notify - Cert no alias", "Webserver: Certificate with alias '${0}' was not found inside the keystore file '${1}'."),
 
     DISABLED("plugin.disable.disabled", "Disable", "Player Analytics Disabled."),
     DISABLED_WEB_SERVER("plugin.disable.webserver", "Disable - WebServer", "Webserver has been disabled."),

@@ -205,7 +205,7 @@ public class PluginErrorLogger implements ErrorLogger {
         String errorMsg = throwable.getMessage();
         String errorLocation = errorLog.toString();
         return new String[]{
-                "Ran into " + errorName + " - logged to " + errorLocation,
+                "Ran into " + errorName + (context.shouldLogErrorMessage() ? ": " + throwable.getMessage() : "") + " - logged to " + errorLocation,
                 "(INCLUDE CONTENTS OF THE FILE IN ANY REPORTS)",
                 context.getWhatToDo().map(td -> "What to do: " + td).orElse("Error msg: \"" + errorMsg + "\"")
         };

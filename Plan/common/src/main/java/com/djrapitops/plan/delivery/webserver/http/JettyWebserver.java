@@ -32,10 +32,15 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -197,6 +202,10 @@ public class JettyWebserver implements WebServer {
             return legacyJettySSLContextLoader.load(keyStorePath, storepass, keypass, alias);
         }
 
+        if (!verifyAliasIsInKeystore(keyStorePath, storepass, alias)) {
+            return Optional.empty();
+        }
+
         SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
         sslContextFactory.setSniRequired(false);
 
@@ -205,6 +214,29 @@ public class JettyWebserver implements WebServer {
         sslContextFactory.setKeyManagerPassword(keypass);
         sslContextFactory.setCertAlias(alias);
         return Optional.of(sslContextFactory);
+    }
+
+    private boolean verifyAliasIsInKeystore(String keyStorePath, String storepass, String alias) {
+        String keyStoreKind = keyStorePath.endsWith(".p12") ? "PKCS12" : "JKS";
+        try (FileInputStream fIn = new FileInputStream(keyStorePath)) {
+            KeyStore keystore = KeyStore.getInstance(keyStoreKind);
+
+            keystore.load(fIn, storepass.toCharArray());
+            Certificate cert = keystore.getCertificate(alias);
+
+            if (cert == null) {
+                webserverLogMessages.invalidCertificateMissingAlias(alias, keyStorePath);
+                return false;
+            }
+            return true;
+        } catch (KeyStoreException | CertificateException e) {
+            webserverLogMessages.unableToLoadKeystore(e, keyStorePath);
+        } catch (EOFException e) {
+            webserverLogMessages.wrongCertFileFormat();
+        } catch (NoSuchAlgorithmException | IOException e) {
+            webserverLogMessages.keystoreLoadingError(e);
+        }
+        return false;
     }
 
     @Override

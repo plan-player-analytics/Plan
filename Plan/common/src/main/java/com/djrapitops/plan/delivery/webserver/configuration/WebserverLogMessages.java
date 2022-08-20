@@ -110,4 +110,26 @@ public class WebserverLogMessages {
             logger.warn(locale.getString(PluginLang.WEB_SERVER_NOTIFY_CERT_EXPIRE_DATE_PASSED));
         }
     }
+
+    public void invalidCertificateMissingAlias(String alias, String keystorePath) {
+        logger.error(locale.getString(PluginLang.WEB_SERVER_NOTIFY_CERT_NO_SUCH_ALIAS, alias, keystorePath));
+    }
+
+    public void unableToLoadKeystore(Exception e, String keystorePath) {
+        logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
+        errorLogger.error(e, ErrorContext.builder()
+                .whatToDo("Make sure the Certificate settings are correct / You can try remaking the keystore without -passin or -passout parameters.")
+                .related(keystorePath).build());
+    }
+
+    public void wrongCertFileFormat() {
+        logger.error(locale.getString(PluginLang.WEB_SERVER_FAIL_EMPTY_FILE));
+    }
+
+    public void keystoreLoadingError(Exception e) {
+        errorLogger.error(e, ErrorContext.builder()
+                .logErrorMessage()
+                .whatToDo("Make sure the Certificate settings are correct / You can try remaking the keystore without -passin or -passout parameters.")
+                .build());
+    }
 }
