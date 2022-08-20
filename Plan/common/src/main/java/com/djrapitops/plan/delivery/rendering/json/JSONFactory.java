@@ -175,6 +175,12 @@ public class JSONFactory {
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
     }
 
+    public Optional<ServerDto> serverForIdentifier(String identifier) {
+        return dbSystem.getDatabase()
+                .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
+                .map(ServerDto::fromServer);
+    }
+
     public Map<String, Object> serversAsJSONMaps() {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();

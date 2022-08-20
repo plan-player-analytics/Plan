@@ -1,5 +1,11 @@
 import {doGetRequest} from "./backendConfiguration";
 
+
+export const fetchServerIdentity = async (identifier) => {
+    const url = `/v1/serverIdentity?server=${identifier}`;
+    return doGetRequest(url);
+}
+
 export const fetchServerOverview = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/serverOverview?server=${identifier}&timestamp=${timestamp}`;

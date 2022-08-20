@@ -55,19 +55,19 @@ const MainPageRedirect = () => {
     }
 
     if (authRequired && !loggedIn) {
-        return (<Navigate to="login" replace={true}/>)
+        return (<Navigate to="/login" replace={true}/>)
     } else if (authRequired && loggedIn) {
         if (isProxy && user.permissions.includes('page.network')) {
-            return (<Navigate to={"network/overview"} replace={true}/>)
+            return (<Navigate to={"/network/overview"} replace={true}/>)
         } else if (user.permissions.includes('page.server')) {
-            return (<Navigate to={"server/" + encodeURIComponent(serverName) + "/overview"} replace={true}/>)
+            return (<Navigate to={"/server/" + encodeURIComponent(serverName) + "/overview"} replace={true}/>)
         } else if (user.permissions.includes('page.player.other')) {
-            return (<Navigate to={"players"} replace={true}/>)
+            return (<Navigate to={"/players"} replace={true}/>)
         } else if (user.permissions.includes('page.player.self')) {
-            return (<Navigate to={"player/" + user.linkedToUuid} replace={true}/>)
+            return (<Navigate to={"/player/" + user.linkedToUuid} replace={true}/>)
         }
     } else {
-        return (<Navigate to={isProxy ? "network/overview" : "server/" + encodeURIComponent(serverName) + "/overview"}
+        return (<Navigate to={isProxy ? "/network/overview" : "/server/" + encodeURIComponent(serverName) + "/overview"}
                           replace={true}/>)
     }
 }

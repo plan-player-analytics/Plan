@@ -26,6 +26,7 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
         for (const statusOption of statusOptions) {
             if (response.status === statusOption.status) {
                 return {
+                    status: response.status,
                     data: statusOption.get(response),
                     error: undefined
                 };
@@ -37,6 +38,7 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
             for (const statusOption of statusOptions) {
                 if (e.response.status === statusOption.status) {
                     return {
+                        status: e.response.status,
                         data: undefined,
                         error: statusOption.get(response, e)
                     };
@@ -45,6 +47,7 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
             return {
                 data: undefined,
                 error: {
+                    status: e.response.status,
                     message: e.message,
                     url,
                     data: e.response.data
@@ -54,6 +57,7 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
         return {
             data: undefined,
             error: {
+                status: undefined,
                 message: e.message,
                 url
             }

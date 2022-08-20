@@ -217,8 +217,6 @@ const Sidebar = ({items, showBackButton}) => {
     const collapseSidebar = () => setSidebarExpanded(windowWidth > 1350);
     useEffect(collapseSidebar, [windowWidth, currentTab, setSidebarExpanded]);
 
-    if (!items.length) return <></>
-
     return (
         <>
             {sidebarExpanded &&
@@ -227,9 +225,9 @@ const Sidebar = ({items, showBackButton}) => {
                     <Divider/>
                     {showBackButton && <>
                         <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
-                        <Divider showMargin={!items[0].contents && items[0].href === undefined}/>
+                        <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>
                     </>}
-                    {items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t))}
+                    {items.length ? items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t)) : ''}
                     <Divider/>
                     <FooterButtons/>
                 </ul>}

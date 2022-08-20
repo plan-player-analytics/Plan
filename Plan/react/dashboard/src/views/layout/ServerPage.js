@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Outlet} from "react-router-dom";
+import {Outlet, useParams} from "react-router-dom";
 import {useNavigation} from "../../hooks/navigationHook";
 import {
     faCampground,
@@ -23,10 +23,16 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import ErrorPage from "./ErrorPage";
 import {SwitchTransition} from "react-transition-group";
+import MainPageRedirect from "../../components/navigation/MainPageRedirect";
+import {useDataRequest} from "../../hooks/dataFetchHook";
+import {fetchServerIdentity} from "../../service/serverService";
 
 const ServerPage = () => {
     const {t, i18n} = useTranslation();
+    const {identifier} = useParams();
     const {isProxy, serverName} = useMetadata();
+
+    const {data: serverIdentity, loadingError: identityLoadingError} = useDataRequest(fetchServerIdentity, [identifier])
 
     const [error] = useState(undefined);
     const [sidebarItems, setSidebarItems] = useState([]);
@@ -82,12 +88,32 @@ const ServerPage = () => {
         window.document.title = `Plan | Server Analysis`;
     }, [t, i18n])
 
-    const {authRequired, user} = useAuth();
+    const {authRequired, loggedIn, user} = useAuth();
+    if (authRequired && !loggedIn) return <MainPageRedirect/>
+
     const showBackButton = isProxy && (!authRequired || user.permissions.filter(perm => perm !== 'page.network').length);
 
-    if (error) return <ErrorPage error={error}/>;
 
-    const displayedServerName = !isProxy && serverName && serverName.startsWith('Server') ? "Plan" : serverName;
+    const getDisplayedServerName = () => {
+        if (serverIdentity) {
+            return serverIdentity.serverName;
+        }
+
+        if (isProxy) {
+            return identifier;
+        } else {
+            return serverName && serverName.startsWith('Server') ? "Plan" : serverName
+        }
+    }
+    const displayedServerName = getDisplayedServerName();
+
+    if (error) return <ErrorPage error={error}/>;
+    if (identityLoadingError) {
+        if (identityLoadingError.status === 404) return <ErrorPage
+            error={{title: t('html.error.404NotFound'), message: t('html.error.serverNotSeen')}}/>
+        return <ErrorPage error={identityLoadingError}/>
+    }
+
     return (
         <>
             <NightModeCss/>

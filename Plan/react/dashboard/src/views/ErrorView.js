@@ -9,7 +9,7 @@ export const ErrorViewText = ({error}) => {
         <>
             <p>{error.message} {error.url && <a href={error.url}>{error.url}</a>}</p>
             {error.data && <><br/>
-                <pre>{error.data}</pre>
+                <pre>{JSON.stringify(error.data)}</pre>
             </>}
         </>
     )

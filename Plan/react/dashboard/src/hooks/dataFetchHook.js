@@ -13,6 +13,7 @@ export const useDataRequest = (fetchMethod, parameters) => {
                 setData(json);
                 finishUpdate(json.timestamp, json.timestamp_f);
             } else if (error) {
+                console.warn(error);
                 setLoadingError(error);
             }
         });
