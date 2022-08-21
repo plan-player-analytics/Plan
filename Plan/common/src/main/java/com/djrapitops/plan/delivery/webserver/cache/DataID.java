@@ -50,6 +50,7 @@ public enum DataID {
     PERFORMANCE_OVERVIEW,
     EXTENSION_NAV,
     EXTENSION_TABS,
+    EXTENSION_JSON,
     LIST_SERVERS;
 
     public String of(ServerUUID serverUUID) {
