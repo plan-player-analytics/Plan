@@ -75,6 +75,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
     private Response getResponse() {
         return Response.builder()
                 .setJSONContent(Maps.builder(String.class, Object.class)
+                        .put("timestamp", System.currentTimeMillis())
                         .put("contributors", Contributors.getContributors())
                         .put("defaultTheme", config.get(DisplaySettings.THEME))
                         .put("gmPieColors", theme.getPieColors(ThemeVal.GRAPH_GM_PIE))
