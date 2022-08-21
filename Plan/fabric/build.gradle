@@ -103,6 +103,8 @@ shadowJar {
 
     relocate 'org.slf4j', 'plan.org.slf4j'
 
+    relocate 'org.json.simple', 'plan.org.json.simple'
+
     mergeServiceFiles()
 }
 

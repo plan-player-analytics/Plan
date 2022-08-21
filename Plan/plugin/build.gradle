@@ -88,6 +88,8 @@ shadowJar {
     relocate 'jakarta.servlet', 'plan.jakarta.servlet'
     relocate 'javax.servlet', 'plan.javax.servlet'
 
+    relocate 'org.json.simple', 'plan.org.json.simple'
+
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set('Plan')
     archiveClassifier.set('')

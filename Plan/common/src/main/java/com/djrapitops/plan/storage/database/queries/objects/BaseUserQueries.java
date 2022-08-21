@@ -26,10 +26,7 @@ import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -55,6 +52,15 @@ public class BaseUserQueries {
         String sql = Select.all(UsersTable.TABLE_NAME).toString();
 
         return db -> db.queryList(sql, BaseUserQueries::extractBaseUser);
+    }
+
+    public static Query<Map<UUID, BaseUser>> fetchAllBaseUsersByUUID() {
+        String sql = Select.all(UsersTable.TABLE_NAME).toString();
+
+        return db -> db.queryMap(sql, (results, map) -> {
+            BaseUser baseUser = extractBaseUser(results);
+            map.put(baseUser.getUuid(), baseUser);
+        }, HashMap::new);
     }
 
     private static BaseUser extractBaseUser(ResultSet set) throws SQLException {

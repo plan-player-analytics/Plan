@@ -71,7 +71,8 @@ public enum HelpLang implements Lang {
     IMPORT("command.help.import.description", "Command Help - /plan import", "Import data"),
     JSON("command.help.json.description", "Command Help - /plan json", "View json of Player's raw data."),
     LOGOUT("command.help.logout.description", "Command Help - /plan logout", "Log out other users from the panel."),
-    JOIN_ADDRESS_REMOVAL("command.help.removejoinaddresses.description", "Command Help - /plan db removejoinaddresses", "Remove join addresses of a specified server");
+    JOIN_ADDRESS_REMOVAL("command.help.removejoinaddresses.description", "Command Help - /plan db removejoinaddresses", "Remove join addresses of a specified server"),
+    ONLINE_UUID_MIGRATION("command.help.migrateToOnlineUuids.description", "Command Help - /plan db migratetoonlineuuids", "Migrate offline uuid data to online uuids");
 
     private final String identifier;
     private final String key;

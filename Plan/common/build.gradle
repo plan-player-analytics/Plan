@@ -58,6 +58,7 @@ dependencies {
     shadow "org.eclipse.jetty:jetty-server:$jettyVersion"
     shadow "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
     shadow "org.eclipse.jetty.http2:http2-server:$jettyVersion"
+    shadow 'com.googlecode.json-simple:json-simple:1.1.1' // json simple used by UUIDFetcher
 
     // Swagger annotations
     implementation "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"

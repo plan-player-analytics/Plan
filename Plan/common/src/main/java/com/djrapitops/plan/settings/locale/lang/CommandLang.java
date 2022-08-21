@@ -118,6 +118,7 @@ public enum CommandLang implements Lang {
     HOTSWAP_REMINDER("command.database.manage.hotswap", "Manage - Remind HotSwap", "§eRemember to swap to the new database (/plan db hotswap ${0}) & reload the plugin."),
     PROGRESS_START("command.database.manage.start", "Manage - Start", "> §2Processing data.."),
     PROGRESS("command.database.manage.progress", "Manage - Progress", "${0} / ${1} processed.."),
+    PROGRESS_PREPARING("command.database.manage.preparing", "Manage - preparing", "Preparing.."),
     PROGRESS_SUCCESS("command.database.manage.success", "Manage - Success", "> §aSuccess!"),
     PROGRESS_FAIL("command.database.manage.fail", "Manage - Fail", "> §cSomething went wrong: ${0}"),
     CONFIRMATION("command.database.manage.confirm", "Manage - Fail, Confirmation", "> §cAdd '-a' argument to confirm execution: ${0}"),
@@ -131,7 +132,8 @@ public enum CommandLang implements Lang {
     FAIL_IMPORTER_NOT_FOUND("command.general.failNoImporter", "Manage - Fail No Importer", "§eImporter '${0}' doesn't exist"),
     FAIL_EXPORTER_NOT_FOUND("command.general.failNoExporter", "Manage - Fail No Exporter", "§eExporter '${0}' doesn't exist"),
     NO_SERVER("command.database.manage.failNoServer", "Manage - Fail No Server", "No server found with given parameters."),
-    UNINSTALLING_SAME_SERVER("command.database.manage.failSameServer", "Manage - Fail Same server", "Can not mark this server as uninstalled (You are on it)");
+    UNINSTALLING_SAME_SERVER("command.database.manage.failSameServer", "Manage - Fail Same server", "Can not mark this server as uninstalled (You are on it)"),
+    ;
 
     private final String key;
     private final String identifier;
@@ -149,7 +151,7 @@ public enum CommandLang implements Lang {
     }
 
     @Override
-    public String getKey() { return key; }
+    public String getKey() {return key;}
 
     @Override
     public String getDefault() {

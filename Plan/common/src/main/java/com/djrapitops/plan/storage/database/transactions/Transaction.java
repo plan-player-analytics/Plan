@@ -25,6 +25,8 @@ import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
+import com.djrapitops.plan.storage.database.queries.schema.SQLiteSchemaQueries;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -273,5 +275,16 @@ public abstract class Transaction {
     public String getName() {
         String simpleName = getClass().getSimpleName();
         return simpleName.isEmpty() ? getClass().getName() : simpleName;
+    }
+
+    protected boolean hasTable(String tableName) {
+        switch (dbType) {
+            case SQLITE:
+                return query(SQLiteSchemaQueries.doesTableExist(tableName));
+            case MYSQL:
+                return query(MySQLSchemaQueries.doesTableExist(tableName));
+            default:
+                throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
+        }
     }
 }

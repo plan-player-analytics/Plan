@@ -72,17 +72,6 @@ public abstract class Patch extends OperationCriticalTransaction {
         execute("SET FOREIGN_KEY_CHECKS=0");
     }
 
-    protected boolean hasTable(String tableName) {
-        switch (dbType) {
-            case SQLITE:
-                return query(SQLiteSchemaQueries.doesTableExist(tableName));
-            case MYSQL:
-                return query(MySQLSchemaQueries.doesTableExist(tableName));
-            default:
-                throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
-        }
-    }
-
     protected boolean hasColumn(String tableName, String columnName) {
         switch (dbType) {
             case MYSQL:
