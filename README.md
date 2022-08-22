@@ -7,7 +7,7 @@
 
 [API, Documentation & Tutorials](https://github.com/plan-player-analytics/Plan/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [DEV builds](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml?query=branch%3Amaster) | [Issues & Suggestions](https://github.com/plan-player-analytics/Plan/issues)
 
-Player Analytics is a fully-fledged solution for the analytics needs of your Minecraft server. A built-in web server displays insights into different aspects of the server such as Online activity, Playerbase, and how these change over time.
+Player Analytics is a fully-fledged solution for the analytics needs of your Minecraft server. A built-in webserver displays insights into different aspects of the server such as Online activity, Playerbase, and how these change over time.
 
 Plan supports multiple different platforms and versions; Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives - One jar for all platforms.
 
