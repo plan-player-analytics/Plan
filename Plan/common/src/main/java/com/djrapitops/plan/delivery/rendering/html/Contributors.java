@@ -97,6 +97,7 @@ public class Contributors {
             new Contributor("ahdg6", CODE),
             new Contributor("BratishkaErik", LANG),
             new Contributor("Pingger", CODE)
+            new Contributor("BabyM0le, LANG),
     };
 
     private Contributors() {
