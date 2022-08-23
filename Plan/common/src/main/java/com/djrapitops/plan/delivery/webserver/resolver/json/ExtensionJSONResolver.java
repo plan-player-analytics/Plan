@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
@@ -66,7 +67,8 @@ public class ExtensionJSONResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return false;
+        WebUser permissions = request.getUser().orElse(new WebUser(""));
+        return permissions.hasPermission("page.server") || permissions.hasPermission("page.network");
     }
 
     @GET

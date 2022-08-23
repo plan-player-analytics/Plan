@@ -4,6 +4,7 @@ import ExtensionIcon from "./ExtensionIcon";
 import Datapoint from "../Datapoint";
 import Masonry from 'masonry-layout'
 import {useTheme} from "../../hooks/themeHook";
+import {useTranslation} from "react-i18next";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -51,17 +52,29 @@ const ExtensionValue = ({data}) => {
     />);
 }
 
-const ExtensionValues = ({tab}) => (
-    <Card.Body>
-        {tab.values.map((data, i) => {
-                return (<ExtensionValue key={i} data={data}/>);
-            }
-        )}
-    </Card.Body>
-)
+const ExtensionValues = ({tab}) => {
+    return (
+        <>
+            {Boolean(tab.values.length) && <Card.Body>
+                {tab.values.map((data, i) => {
+                        return (<ExtensionValue key={i} data={data}/>);
+                    }
+                )}
+            </Card.Body>}
+        </>
+    )
+}
 
 const ExtensionTable = ({table}) => {
     const {nightModeEnabled} = useTheme();
+    const {t} = useTranslation();
+
+    const columns = table.table.rows.length ? table.table.rows.map((row, i) => <tr key={i}>{row.map((value, j) => <td
+            key={i + '' + j}>{value}</td>)}</tr>) :
+        <tr>{table.table.columns.map((column, i) =>
+            <td key={i}>{i === 0 ? t('generic.noData') : '-'}</td>)}
+        </tr>
+
     return (
         <table className={"table table-striped" + (nightModeEnabled ? " table-dark" : '')}>
             <thead className={table.tableColorClass}>
@@ -72,11 +85,10 @@ const ExtensionTable = ({table}) => {
             </tr>
             </thead>
             <tbody>
-            {table.table.rows.map((row, i) => <tr key={i}>{row.map((value, j) => <td
-                key={i + '' + j}>{value}</td>)}</tr>)}
+            {columns}
             </tbody>
         </table>
-    );
+    )
 }
 
 const ExtensionTables = ({tab}) => {
@@ -113,7 +125,7 @@ const ExtensionCard = ({extension}) => {
             {extension.onlyGenericTab ? '' :
                 extension.tabs.map((tab, i) => <li key={i} role="presentation" className="nav-item col-black">
                     <button className={"nav-link col-black"
-                    + (openTabIndex === i ? ' active' : '')} onClick={() => toggleTabIndex(i)}>
+                        + (openTabIndex === i ? ' active' : '')} onClick={() => toggleTabIndex(i)}>
                         <ExtensionIcon icon={tab.tabInformation.icon}/> {tab.tabInformation.tabName}
                     </button>
                 </li>)

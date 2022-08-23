@@ -42,6 +42,12 @@ export const fetchPerformanceOverview = async (identifier) => {
     return doGetRequest(url);
 }
 
+export const fetchExtensionData = async (identifier) => {
+    const timestamp = Date.now();
+    const url = `/v1/extensionData?server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
 export const fetchSessions = async (identifier) => {
     const timestamp = Date.now();
     const url = `/v1/sessions?server=${identifier}&timestamp=${timestamp}`;

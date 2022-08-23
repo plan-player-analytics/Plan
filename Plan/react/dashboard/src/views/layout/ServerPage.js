@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Outlet, useParams} from "react-router-dom";
+import {Outlet, useOutletContext, useParams} from "react-router-dom";
 import {useNavigation} from "../../hooks/navigationHook";
 import {
     faCampground,
@@ -25,14 +25,22 @@ import ErrorPage from "./ErrorPage";
 import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchServerIdentity} from "../../service/serverService";
+import {fetchExtensionData, fetchServerIdentity} from "../../service/serverService";
+import ExtensionIcon from "../../components/extensions/ExtensionIcon";
 
 const ServerPage = () => {
     const {t, i18n} = useTranslation();
     const {identifier} = useParams();
     const {isProxy, serverName} = useMetadata();
 
-    const {data: serverIdentity, loadingError: identityLoadingError} = useDataRequest(fetchServerIdentity, [identifier])
+    const {
+        data: serverIdentity,
+        loadingError: identityLoadingError
+    } = useDataRequest(fetchServerIdentity, [identifier]);
+    const {
+        data: extensionData,
+        loadingError: extensionDataLoadingError
+    } = useDataRequest(fetchExtensionData, [identifier]);
 
     const [error] = useState(undefined);
     const [sidebarItems, setSidebarItems] = useState([]);
@@ -76,17 +84,30 @@ const ServerPage = () => {
             {name: 'html.label.performance', icon: faCogs, href: "performance"},
             {},
             {name: 'html.label.plugins'},
-            {name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"},
-            {},
-            {name: 'html.label.links'},
-            {name: 'html.label.query', icon: faSearch, href: "/query"},
         ]
 
-        // TODO Extensions
+        if (extensionData) {
+            items.push({name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"})
+            extensionData.extensions.filter(extension => extension.wide)
+                .map(extension => extension.extensionInformation)
+                .map(info => {
+                    return {
+                        name: info.pluginName,
+                        icon: <ExtensionIcon icon={info.icon}/>,
+                        href: `plugins/${encodeURIComponent(info.pluginName)}`
+                    }
+                }).forEach(item => items.push(item))
+        }
+
+        items.push(
+            {},
+            {name: 'html.label.links'},
+            {name: 'html.label.query', icon: faSearch, href: "/query"}
+        );
 
         setSidebarItems(items);
         window.document.title = `Plan | Server Analysis`;
-    }, [t, i18n])
+    }, [t, i18n, extensionData])
 
     const {authRequired, loggedIn, user} = useAuth();
     if (authRequired && !loggedIn) return <MainPageRedirect/>
@@ -113,6 +134,10 @@ const ServerPage = () => {
             error={{title: t('html.error.404NotFound'), message: t('html.error.serverNotSeen')}}/>
         return <ErrorPage error={identityLoadingError}/>
     }
+    if (extensionDataLoadingError) {
+        return <ErrorPage error={extensionDataLoadingError}/>
+    }
+    if (!extensionData) return <></>
 
     return (
         <>
@@ -123,7 +148,7 @@ const ServerPage = () => {
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
                         <SwitchTransition>
-                            <Outlet context={{}}/>
+                            <Outlet context={extensionData}/>
                         </SwitchTransition>
                     </main>
                     <aside>
@@ -133,6 +158,10 @@ const ServerPage = () => {
             </div>
         </>
     )
+}
+
+export const useServer = () => {
+    return useOutletContext();
 }
 
 export default ServerPage;
