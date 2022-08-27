@@ -47,11 +47,10 @@ const LoginForm = ({login}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const onLogin = async event => {
+    const onLogin = useCallback(event => {
         event.preventDefault();
-        await login(username, password);
-        setPassword('');
-    }
+        login(username, password).then(() => setPassword(''));
+    }, [username, password, setPassword, login]);
 
     return (
         <form className="user">

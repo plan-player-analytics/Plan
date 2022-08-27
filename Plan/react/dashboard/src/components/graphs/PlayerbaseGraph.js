@@ -4,6 +4,7 @@ import {useTheme} from "../../hooks/themeHook";
 import NoDataDisplay from "highcharts/modules/no-data-to-display";
 import Highcharts from "highcharts/highstock";
 import {withReducedSaturation} from "../../util/colors";
+import Accessibility from "highcharts/modules/accessibility";
 
 const PlayerbaseGraph = ({data}) => {
     const {t} = useTranslation()
@@ -17,6 +18,7 @@ const PlayerbaseGraph = ({data}) => {
         });
 
         NoDataDisplay(Highcharts);
+        Accessibility(Highcharts);
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
 
