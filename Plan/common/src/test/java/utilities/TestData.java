@@ -102,10 +102,10 @@ public class TestData {
                 executeOther(new StoreServerInformationTransaction(new Server(server2UUID, "Server 2", "", TestConstants.VERSION)));
 
                 for (String worldName : serverWorldNames) {
-                    executeOther(new WorldNameStoreTransaction(serverUUID, worldName));
+                    executeOther(new StoreWorldNameTransaction(serverUUID, worldName));
                 }
                 for (String worldName : server2WorldNames) {
-                    executeOther(new WorldNameStoreTransaction(server2UUID, worldName));
+                    executeOther(new StoreWorldNameTransaction(server2UUID, worldName));
                 }
             }
         };
@@ -117,9 +117,9 @@ public class TestData {
                 new Transaction() {
                     @Override
                     protected void performOperations() {
-                        executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerFirstJoin,
+                        executeOther(new StoreServerPlayerTransaction(playerUUID, () -> playerFirstJoin,
                                 playerName, serverUUID, TestConstants.GET_PLAYER_HOSTNAME));
-                        executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerSecondJoin,
+                        executeOther(new StoreServerPlayerTransaction(playerUUID, () -> playerSecondJoin,
                                 playerName, server2UUID, TestConstants.GET_PLAYER_HOSTNAME));
 
                         for (GeoInfo geoInfo : playerGeoInfo) {
@@ -140,9 +140,9 @@ public class TestData {
                 new Transaction() {
                     @Override
                     protected void performOperations() {
-                        executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerFirstJoin,
+                        executeOther(new StoreServerPlayerTransaction(player2UUID, () -> playerFirstJoin,
                                 player2Name, serverUUID, TestConstants.GET_PLAYER_HOSTNAME));
-                        executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerSecondJoin,
+                        executeOther(new StoreServerPlayerTransaction(player2UUID, () -> playerSecondJoin,
                                 player2Name, server2UUID, TestConstants.GET_PLAYER_HOSTNAME));
 
                         for (GeoInfo geoInfo : playerGeoInfo) {

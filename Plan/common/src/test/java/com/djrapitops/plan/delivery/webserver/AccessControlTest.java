@@ -26,7 +26,7 @@ import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
-import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.compress.utils.IOUtils;
@@ -99,10 +99,10 @@ class AccessControlTest {
         User userLevel1 = new User("test1", "console", null, PassEncryptUtil.createHash("testPass"), 1, Collections.emptyList());
         User userLevel2 = new User("test2", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), 2, Collections.emptyList());
         User userLevel100 = new User("test100", "console", null, PassEncryptUtil.createHash("testPass"), 100, Collections.emptyList());
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(userLevel0));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(userLevel1));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(userLevel2));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(userLevel100));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel0));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel1));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel2));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel100));
 
         system.getDatabaseSystem().getDatabase().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
         system.getDatabaseSystem().getDatabase().executeTransaction(new StoreServerInformationTransaction(new Server(

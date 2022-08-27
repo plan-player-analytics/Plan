@@ -51,6 +51,7 @@ public class TestConstants {
 
     public static final Supplier<String> GET_PLAYER_HOSTNAME = () -> "play.example.com";
 
+    public static final String WEAPON_SWORD = "Diamond Sword";
     public static final String WORLD_ONE_NAME = "World One";
     public static final String[] WORLDS = new String[]{WORLD_ONE_NAME};
     public static final Long REGISTER_TIME = RandomData.randomTime();

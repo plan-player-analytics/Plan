@@ -31,19 +31,19 @@ import java.util.function.Supplier;
  *
  * @author AuroraLS3
  */
-public class PlayerServerRegisterTransaction extends PlayerRegisterTransaction {
+public class StoreServerPlayerTransaction extends PlayerRegisterTransaction {
 
     private final ServerUUID serverUUID;
     private final Supplier<String> getJoinAddress;
 
-    public PlayerServerRegisterTransaction(UUID playerUUID, LongSupplier registered,
-                                           String playerName, ServerUUID serverUUID, Supplier<String> getJoinAddress) {
+    public StoreServerPlayerTransaction(UUID playerUUID, LongSupplier registered,
+                                        String playerName, ServerUUID serverUUID, Supplier<String> getJoinAddress) {
         super(playerUUID, registered, playerName);
         this.serverUUID = serverUUID;
         this.getJoinAddress = getJoinAddress;
     }
 
-    public PlayerServerRegisterTransaction(UUID playerUUID, long registerDate, String name, ServerUUID serverUUID, String joinAddress) {
+    public StoreServerPlayerTransaction(UUID playerUUID, long registerDate, String name, ServerUUID serverUUID, String joinAddress) {
         this(playerUUID, () -> registerDate, name, serverUUID, () -> joinAddress);
     }
 

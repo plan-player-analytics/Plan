@@ -14,11 +14,14 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.queries;
+package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueriesTest;
+import com.djrapitops.plan.storage.database.transactions.commands.ChangeUserUUIDTransactionTest;
+import com.djrapitops.plan.storage.database.transactions.commands.CombineUserTransactionTest;
 
-public interface QueriesTestAggregate extends
+public interface DatabaseTestAggregate extends
         ActivityIndexQueriesTest,
         DatabaseBackupTest,
         ExtensionsDatabaseTest,
@@ -32,6 +35,8 @@ public interface QueriesTestAggregate extends
         UserInfoQueriesTest,
         WebUserQueriesTest,
         FilterQueryTest,
-        JoinAddressQueriesTest {
+        JoinAddressQueriesTest,
+        ChangeUserUUIDTransactionTest,
+        CombineUserTransactionTest {
     /* Collects all query tests together so its easier to implement database tests */
 }

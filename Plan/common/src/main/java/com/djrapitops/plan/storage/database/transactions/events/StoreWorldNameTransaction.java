@@ -33,12 +33,12 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  *
  * @author AuroraLS3
  */
-public class WorldNameStoreTransaction extends Transaction {
+public class StoreWorldNameTransaction extends Transaction {
 
     private final ServerUUID serverUUID;
     private final String worldName;
 
-    public WorldNameStoreTransaction(ServerUUID serverUUID, String worldName) {
+    public StoreWorldNameTransaction(ServerUUID serverUUID, String worldName) {
         this.serverUUID = serverUUID;
         this.worldName = worldName;
     }

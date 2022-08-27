@@ -41,7 +41,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     @Test
     default void userInfoTableStoresCorrectUserInformation() {
         assertFalse(db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID)).isPresent());
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> TestConstants.REGISTER_TIME, TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), false));
@@ -52,7 +52,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userInfoTableUpdatesBanStatus() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         db().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID(), () -> true));
@@ -65,7 +65,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userInfoTableUpdatesOperatorStatus() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         db().executeTransaction(new OperatorStatusTransaction(playerUUID, serverUUID(), true));
@@ -78,7 +78,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void playerNameIsUpdatedWhenPlayerLogsIn() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         OptionalAssert.equals(playerUUID, db().query(UserIdentifierQueries.fetchPlayerUUIDOf(TestConstants.PLAYER_ONE_NAME)));
@@ -137,7 +137,7 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void playerIsRegisteredToBothTables() {
         assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertFalse(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));

@@ -18,9 +18,9 @@ package com.djrapitops.plan.storage.database.queries.analysis;
 
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -30,11 +30,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public interface TopListQueriesTest extends DatabaseTestPreparer {
 
     private void storeSessionForTopListQueries() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));

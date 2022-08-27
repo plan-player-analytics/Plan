@@ -21,7 +21,7 @@ import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.minecraft.world.entity.player.Player;
@@ -126,7 +126,7 @@ public class SpongeGMChangeListener {
         String worldName = Sponge.game().server().worldManager().worldDirectory(player.world().key())
                 .map(path -> path.getFileName().toString()).orElse("Unknown");
 
-        dbSystem.getDatabase().executeTransaction(new WorldNameStoreTransaction(serverInfo.getServerUUID(), worldName));
+        dbSystem.getDatabase().executeTransaction(new StoreWorldNameTransaction(serverInfo.getServerUUID(), worldName));
         worldAliasSettings.addWorld(worldName);
 
         Optional<ActiveSession> cachedSession = SessionCache.getCachedSession(uuid);

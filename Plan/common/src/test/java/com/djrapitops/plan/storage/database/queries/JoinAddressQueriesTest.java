@@ -26,7 +26,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -63,8 +63,8 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void joinAddressCanBeUnknown() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
         db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
@@ -103,8 +103,8 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
 
         db().executeTransaction(TestData.storeServers());
 
-        db().executeTransaction(new WorldNameStoreTransaction(TestConstants.SERVER_TWO_UUID, worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(TestConstants.SERVER_TWO_UUID, worlds[1]));
+        db().executeTransaction(new StoreWorldNameTransaction(TestConstants.SERVER_TWO_UUID, worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(TestConstants.SERVER_TWO_UUID, worlds[1]));
         FinishedSession session = RandomData.randomSession(TestConstants.SERVER_TWO_UUID, worlds, playerUUID, player2UUID);
         String expectedAddress = TestConstants.GET_PLAYER_HOSTNAME.get();
         session.getExtraData().put(JoinAddress.class, new JoinAddress(expectedAddress));

@@ -52,9 +52,9 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void sessionStoreTransactionOutOfOrderDoesNotFailDueToMissingMainUser() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
@@ -72,9 +72,9 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void sessionStoreTransactionOutOfOrderDoesNotFailDueToMissingKilledUser() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
@@ -96,9 +96,9 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void shutdownDataPreservationTransactionOutOfOrderDoesNotFailDueToMissingMainUser() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
@@ -116,9 +116,9 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void shutdownDataPreservationTransactionOutOfOrderDoesNotFailDueToMissingKilledUser() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
@@ -135,14 +135,14 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void killsAreAvailableAfter2ndUserRegisterEvenIfOutOfOrder() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
         // killed user is registered after session already ended.
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         Map<ServerUUID, List<FinishedSession>> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID));
@@ -156,8 +156,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void sessionStoreTransactionOutOfOrderUpdatesUserInformation() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
 
@@ -194,11 +194,11 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     }
 
     default void prepareForSessionSave() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
     }
 
@@ -399,7 +399,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     default void worldNamesAreStored() {
         String[] expected = {"Test", "Test2", "Test3"};
         for (String worldName : expected) {
-            db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worldName));
+            db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worldName));
         }
 
         forcePersistenceCheck();
@@ -473,8 +473,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         ServerUUID serverTwoUuid = TestConstants.SERVER_TWO_UUID;
         executeTransactions(new StoreServerInformationTransaction(new Server(serverTwoUuid, TestConstants.SERVER_TWO_NAME, "", TestConstants.VERSION)));
-        db().executeTransaction(new WorldNameStoreTransaction(serverTwoUuid, worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverTwoUuid, worlds[1]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverTwoUuid, worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverTwoUuid, worlds[1]));
         List<FinishedSession> server2Sessions = RandomData.randomSessions(serverTwoUuid, worlds, playerUUID, player2UUID);
         server2Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
 

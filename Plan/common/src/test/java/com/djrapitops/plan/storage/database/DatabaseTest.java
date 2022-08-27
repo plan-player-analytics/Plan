@@ -78,7 +78,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public interface DatabaseTest extends DatabaseTestPreparer {
 
     default void saveUserOne() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new KickStoreTransaction(playerUUID));
     }
@@ -88,7 +88,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     default void saveWorld(String worldName) {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worldName));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worldName));
     }
 
     default void saveWorlds(String... worldNames) {
@@ -105,14 +105,14 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     default void testRemovalSingleUser() {
         saveUserTwo();
 
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         saveTwoWorlds();
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
 
         db().executeTransaction(new StoreSessionTransaction(session));
-        db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("TestNick", RandomData.randomTime(), serverUUID()), (uuid, name) -> false /* Not cached */));
+        db().executeTransaction(new StoreNicknameTransaction(playerUUID, new Nickname("TestNick", RandomData.randomTime(), serverUUID()), (uuid, name) -> false /* Not cached */));
         db().executeTransaction(new StoreGeoInfoTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
 
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
@@ -165,7 +165,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         saveTwoWorlds();
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
-        db().executeTransaction(new NicknameStoreTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */));
+        db().executeTransaction(new StoreNicknameTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */));
         saveGeoInfo(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime()));
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         db().executeTransaction(new PingStoreTransaction(playerUUID, serverUUID(), RandomData.randomIntDateObjects()));
@@ -299,7 +299,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     @Test
     default void registerDateIsMinimized() {
         executeTransactions(
-                new PlayerServerRegisterTransaction(playerUUID, () -> 1000,
+                new StoreServerPlayerTransaction(playerUUID, () -> 1000,
                         TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME)
                 , new Transaction() {
                     @Override
@@ -327,11 +327,11 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void serverTablePlayersQueryQueriesAtLeastOnePlayer() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new StoreSessionTransaction(RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID)));
 
@@ -342,11 +342,11 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void networkTablePlayersQueryQueriesAtLeastOnePlayer() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new StoreSessionTransaction(RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID)));
 
@@ -359,8 +359,8 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     default void badFabricJoinAddressPatchRemovesJoinAddressesOfOneServer() throws ExecutionException, InterruptedException {
         ServerUUID randomSecondServer = ServerUUID.randomUUID();
         db().executeTransaction(new StoreServerInformationTransaction(new Server(randomSecondServer, "", "", ""))).get();
-        db().executeTransaction(new WorldNameStoreTransaction(randomSecondServer, "World"));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), "World"));
+        db().executeTransaction(new StoreWorldNameTransaction(randomSecondServer, "World"));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), "World"));
 
         DataMap extraData1 = new DataMap();
         extraData1.put(JoinAddress.class, new JoinAddress("test1"));
@@ -405,8 +405,8 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         db().executeTransaction(new StoreServerInformationTransaction(new Server(randomSecondServer, "", "", "")));
 
         long time = System.currentTimeMillis();
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time, "", serverUUID(), () -> "test1"));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, () -> time, "", randomSecondServer, () -> "test2"));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> time, "", serverUUID(), () -> "test1"));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> time, "", randomSecondServer, () -> "test2"));
 
         db().executeTransaction(new BadFabricJoinAddressValuePatch(randomSecondServer));
 

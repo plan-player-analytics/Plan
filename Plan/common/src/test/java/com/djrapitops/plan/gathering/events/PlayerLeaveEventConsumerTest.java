@@ -37,8 +37,8 @@ import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import extension.FullSystemExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -118,7 +118,7 @@ class PlayerLeaveEventConsumerTest {
         SessionCache sessionCache = system.getCacheSystem().getSessionCache();
         long sessionStart = System.currentTimeMillis();
         sessionCache.cacheSession(TestConstants.PLAYER_ONE_UUID, new ActiveSession(TestConstants.PLAYER_ONE_UUID, serverUUID, sessionStart, "World", GMTimes.SURVIVAL));
-        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, "World"));
+        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "World"));
 
         PlayerLeave leave = createPlayerLeave(createTestPlayer());
 
@@ -206,7 +206,7 @@ class PlayerLeaveEventConsumerTest {
     }
 
     private void registerPlayer(Database database, ServerUUID serverUUID) {
-        database.executeTransaction(new PlayerServerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME, serverUUID, () -> null))
+        database.executeTransaction(new StoreServerPlayerTransaction(TestConstants.PLAYER_ONE_UUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME, serverUUID, () -> null))
                 .join(); // Wait until complete
     }
 

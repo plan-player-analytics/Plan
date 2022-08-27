@@ -25,7 +25,7 @@ import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.transactions.events.NicknameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreNicknameTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
@@ -76,7 +76,7 @@ public class ChatListener implements Listener {
         UUID uuid = player.getUniqueId();
         String displayName = player.getDisplayName();
 
-        dbSystem.getDatabase().executeTransaction(new NicknameStoreTransaction(
+        dbSystem.getDatabase().executeTransaction(new StoreNicknameTransaction(
                 uuid, new Nickname(displayName, time, serverInfo.getServerUUID()),
                 (playerUUID, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
         ));

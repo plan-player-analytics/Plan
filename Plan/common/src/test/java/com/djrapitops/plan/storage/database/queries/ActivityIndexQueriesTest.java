@@ -27,9 +27,9 @@ import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkT
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
@@ -51,12 +51,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
     default void storeSessions(Predicate<FinishedSession> save) {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         for (String world : worlds) {
-            db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), world));
+            db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), world));
         }
 
         for (FinishedSession session : RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID)) {

@@ -30,7 +30,7 @@ import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -106,7 +106,7 @@ class ShutdownSaveTest {
 
         database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, "-", "", TestConstants.VERSION)));
         database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
-        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName))
+        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, worldName))
                 .get();
     }
 

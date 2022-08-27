@@ -25,7 +25,7 @@ import com.djrapitops.plan.storage.database.queries.objects.PingQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public interface PingQueriesTest extends DatabaseTestPreparer {
 
     private void prepareForPingStorage() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
     }
 

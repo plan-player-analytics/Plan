@@ -31,8 +31,8 @@ import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
-import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -158,7 +158,7 @@ public class RegistrationCommands {
             boolean userExists = database.query(WebUserQueries.fetchUser(username)).isPresent();
             if (userExists) throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
 
-            database.executeTransaction(new RegisterWebUserTransaction(user))
+            database.executeTransaction(new StoreWebUserTransaction(user))
                     .get(); // Wait for completion
 
             sender.send(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, username));

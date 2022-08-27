@@ -30,11 +30,11 @@ import java.sql.Types;
  *
  * @author AuroraLS3
  */
-public class RegisterWebUserTransaction extends Transaction {
+public class StoreWebUserTransaction extends Transaction {
 
     private final User user;
 
-    public RegisterWebUserTransaction(User user) {
+    public StoreWebUserTransaction(User user) {
         this.user = user;
     }
 

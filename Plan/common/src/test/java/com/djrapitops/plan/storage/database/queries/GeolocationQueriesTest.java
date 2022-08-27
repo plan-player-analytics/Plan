@@ -28,8 +28,8 @@ import com.djrapitops.plan.storage.database.queries.objects.PingQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreGeoInfoTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -70,7 +70,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void geoInformationIsStored() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         List<GeoInfo> expected = RandomData.randomGeoInfo();
@@ -133,7 +133,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
 
         Database db = db();
         for (UUID uuid : uuids) {
-            db.executeTransaction(new PlayerServerRegisterTransaction(uuid, () -> 0L, "", serverUUID(),
+            db.executeTransaction(new StoreServerPlayerTransaction(uuid, () -> 0L, "", serverUUID(),
                     TestConstants.GET_PLAYER_HOSTNAME));
         }
 
@@ -182,7 +182,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void filterOptionGeolocationsAreUnique() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         List<GeoInfo> savedData = RandomData.randomGeoInfo();
@@ -198,7 +198,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void geolocationFilterResultsGetThePlayer() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         List<GeoInfo> savedData = RandomData.randomGeoInfo();

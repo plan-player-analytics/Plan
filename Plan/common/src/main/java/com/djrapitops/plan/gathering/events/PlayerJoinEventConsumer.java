@@ -123,14 +123,14 @@ public class PlayerJoinEventConsumer {
     private void storeWorldInformation(PlayerJoin join) {
         ServerUUID serverUUID = join.getServerUUID();
         join.getPlayer().getCurrentWorld()
-                .map(world -> new WorldNameStoreTransaction(serverUUID, world))
+                .map(world -> new StoreWorldNameTransaction(serverUUID, world))
                 .ifPresent(dbSystem.getDatabase()::executeTransaction);
     }
 
     private CompletableFuture<?> storeGamePlayer(PlayerJoin join) {
         long registerDate = join.getPlayer().getRegisterDate().orElseGet(join::getTime);
         String joinAddress = join.getPlayer().getJoinAddress().orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
-        Transaction transaction = new PlayerServerRegisterTransaction(
+        Transaction transaction = new StoreServerPlayerTransaction(
                 join.getPlayerUUID(), registerDate, join.getPlayer().getName(), join.getServerUUID(), joinAddress
         );
         return dbSystem.getDatabase().executeTransaction(transaction);
@@ -171,7 +171,7 @@ public class PlayerJoinEventConsumer {
     private void storeNickname(PlayerJoin join) {
         join.getPlayer().getDisplayName()
                 .map(displayName -> new Nickname(displayName, join.getTime(), join.getServerUUID()))
-                .map(nickname -> new NicknameStoreTransaction(
+                .map(nickname -> new StoreNicknameTransaction(
                         join.getPlayerUUID(), nickname,
                         (uuid, name) -> nicknameCache.getDisplayName(join.getPlayerUUID())
                                 .map(name::equals)

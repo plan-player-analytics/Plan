@@ -14,7 +14,7 @@
         <property name="checks" value="ClassFanOutComplexity"/>
         <!-- These files need refactoring. -->
         <property name="files"
-                  value="SQLDB.java|ExtensionRegister.java|DataValueGatherer.java|PlayerOnlineListener.java|.*Test.java"/>
+                  value="SQLDB.java|ExtensionRegister.java|DataValueGatherer.java|PlayerOnlineListener.java|DatabaseCommands.java|.*Test.java"/>
     </module>
 
     <module name="RegexpHeader"> <!-- License check -->

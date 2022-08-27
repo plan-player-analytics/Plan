@@ -55,6 +55,7 @@ public class CombineUserTransaction extends ChangeUserUUIDTransaction {
 
         execute(updateUserInfo(newId, oldId));
         execute(DELETE_FROM + UserInfoTable.TABLE_NAME + WHERE + UserInfoTable.USER_ID + "=" + oldId);
+        execute(DELETE_FROM + UsersTable.TABLE_NAME + WHERE + UsersTable.ID + "=" + oldId);
 
         super.performOperations(); // Change UUID fields to match where user_id is not used
     }

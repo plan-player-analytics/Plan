@@ -19,9 +19,9 @@ package com.djrapitops.plan.placeholder;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 import utilities.RandomData;
@@ -88,14 +88,14 @@ class PlanPlaceholdersTest {
 
     private static void storeSomeData() {
         Database database = component.system().getDatabaseSystem().getDatabase();
-        database.executeTransaction(new PlayerServerRegisterTransaction(
+        database.executeTransaction(new StoreServerPlayerTransaction(
                 playerUUID,
                 System::currentTimeMillis,
                 RandomData.randomString(5),
                 serverUUID,
                 () -> RandomData.randomString(5)
         ));
-        database.executeTransaction(new PlayerServerRegisterTransaction(
+        database.executeTransaction(new StoreServerPlayerTransaction(
                 TestConstants.PLAYER_TWO_UUID,
                 System::currentTimeMillis,
                 TestConstants.PLAYER_TWO_NAME,
@@ -103,7 +103,7 @@ class PlanPlaceholdersTest {
                 () -> RandomData.randomString(5)
         ));
         String worldName = RandomData.randomString(10);
-        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName));
+        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, worldName));
         database.executeTransaction(new StoreSessionTransaction(RandomData.randomSession(serverUUID, new String[]{worldName}, playerUUID, TestConstants.PLAYER_TWO_UUID)));
     }
 

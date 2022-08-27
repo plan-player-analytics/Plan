@@ -28,13 +28,13 @@ import java.util.function.BiPredicate;
  *
  * @author AuroraLS3
  */
-public class NicknameStoreTransaction extends ThrowawayTransaction {
+public class StoreNicknameTransaction extends ThrowawayTransaction {
 
     private final UUID playerUUID;
     private final Nickname nickname;
     private final BiPredicate<UUID, String> isNicknameCachedCheck;
 
-    public NicknameStoreTransaction(UUID playerUUID, Nickname nickname, BiPredicate<UUID, String> isNicknameCachedCheck) {
+    public StoreNicknameTransaction(UUID playerUUID, Nickname nickname, BiPredicate<UUID, String> isNicknameCachedCheck) {
         this.playerUUID = playerUUID;
         this.nickname = nickname;
         this.isNicknameCachedCheck = isNicknameCachedCheck;

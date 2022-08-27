@@ -31,7 +31,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import extension.SeleniumExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -100,7 +100,7 @@ class JSErrorRegressionTest {
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
         database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME));
         FinishedSession session = new FinishedSession(uuid, serverUUID, 1000L, 11000L, 500L, new DataMap());
-        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, "world"));
+        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "world"));
         database.executeTransaction(new StoreSessionTransaction(session));
     }
 
