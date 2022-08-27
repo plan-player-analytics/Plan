@@ -16,13 +16,13 @@ const DiskPerformanceGraph = ({id, data, dataSeries}) => {
         const zones = {
             disk: [{
                 value: data.zones.diskThresholdMed,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.low) : data.colors.low
+                color: data.colors.low
             }, {
                 value: data.zones.diskThresholdHigh,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.med) : data.colors.med
+                color: data.colors.med
             }, {
                 value: Number.MAX_VALUE,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.high) : data.colors.high
+                color: data.colors.high
             }]
         };
 
@@ -57,7 +57,7 @@ const DiskPerformanceGraph = ({id, data, dataSeries}) => {
             title: {text: ''},
             plotOptions: {
                 areaspline: {
-                    fillOpacity: 0.4
+                    fillOpacity: nightModeEnabled ? 0.2 : 0.4
                 }
             },
             legend: {

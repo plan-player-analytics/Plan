@@ -23,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+@Deprecated
 public class DynamicHtmlTable implements HtmlTable {
     private final Header[] headers;
     private final List<Object[]> rows;

@@ -11,4 +11,8 @@ const ExtensionIcon = ({icon}) => (
     />
 )
 
+export const toExtensionIconHtmlString = ({icon}) => {
+    return icon ? `<i class="${iconTypeToFontAwesomeClass(icon.family)} ${icon.iconName} ${icon.colorClass}"></i>` : '';
+}
+
 export default ExtensionIcon;

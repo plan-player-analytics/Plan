@@ -9,6 +9,7 @@ import KillsTable from "../table/KillsTable";
 import Accordion from "./Accordion";
 import {useTranslation} from "react-i18next";
 import {baseAddress} from "../../service/backendConfiguration";
+import {ChartLoader} from "../navigation/Loader";
 
 const SessionHeader = ({session}) => {
     return (
@@ -88,7 +89,7 @@ const SessionAccordion = (
 ) => {
     const {t} = useTranslation();
 
-    if (!sessions) return <></>
+    if (!sessions) return <ChartLoader/>
 
     const firstColumn = isPlayer ? (<><Fa icon={faUser}/> {t('html.label.player')}</>)
         : (<><Fa icon={faServer}/> {t('html.label.server')}</>)

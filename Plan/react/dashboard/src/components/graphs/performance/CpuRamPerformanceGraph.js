@@ -21,7 +21,7 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries}) => {
                 type: 'areaspline',
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.playersOnline,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.playersOnline) : data.colors.playersOnline,
+                color: data.colors.playersOnline,
                 yAxis: 0
             }, cpu: {
                 name: t('html.label.cpu'),
@@ -76,7 +76,7 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries}) => {
             title: {text: ''},
             plotOptions: {
                 areaspline: {
-                    fillOpacity: 0.4
+                    fillOpacity: nightModeEnabled ? 0.2 : 0.4
                 }
             },
             legend: {

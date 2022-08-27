@@ -30,7 +30,7 @@ public class TableDto {
     private final List<String> columns;
     private final List<IconDto> icons;
 
-    private final List<List<Object>> rows;
+    private final List<List<TableCellDto>> rows;
 
     public TableDto(Table table) {
         columns = Arrays.stream(table.getColumns())
@@ -46,17 +46,17 @@ public class TableDto {
                 .collect(Collectors.toList());
     }
 
-    private List<Object> constructRow(List<String> columns, Object[] row) {
-        List<Object> constructedRow = new ArrayList<>();
+    private List<TableCellDto> constructRow(List<String> columns, TableCellDto[] row) {
+        List<TableCellDto> constructedRow = new ArrayList<>();
 
         int headerLength = row.length - 1;
         int columnCount = columns.size();
         for (int i = 0; i < columnCount; i++) {
             if (i > headerLength) {
-                constructedRow.add("-");
+                constructedRow.add(new TableCellDto("-"));
             } else {
-                Object value = row[i];
-                constructedRow.add(value != null ? value : '-');
+                TableCellDto cell = row[i];
+                constructedRow.add(cell != null ? cell : new TableCellDto("-"));
             }
         }
         return constructedRow;
@@ -70,7 +70,7 @@ public class TableDto {
         return icons;
     }
 
-    public List<List<Object>> getRows() {
+    public List<List<TableCellDto>> getRows() {
         return rows;
     }
 

@@ -16,17 +16,19 @@
  */
 package com.djrapitops.plan.delivery.rendering.html.structure;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.extension.TableCellDto;
 import com.djrapitops.plan.delivery.rendering.html.icon.Color;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.util.List;
 
+@Deprecated
 public class HtmlTableWithColoredHeader implements HtmlTable {
     private final Header[] headers;
     private final Color headerColor;
-    private final List<Object[]> rows;
+    private final List<TableCellDto[]> rows;
 
-    public HtmlTableWithColoredHeader(Header[] headers, Color headerColor, List<Object[]> rows) {
+    public HtmlTableWithColoredHeader(Header[] headers, Color headerColor, List<TableCellDto[]> rows) {
         this.headers = headers;
         this.headerColor = headerColor;
         this.rows = rows;
@@ -63,15 +65,15 @@ public class HtmlTableWithColoredHeader implements HtmlTable {
         StringBuilder builtBody = new StringBuilder();
         builtBody.append("<tbody>");
         if (rows.isEmpty()) {
-            appendRow(builtBody, "No Data");
+            appendRow(builtBody, new TableCellDto("No Data"));
         }
-        for (Object[] row : rows) {
+        for (TableCellDto[] row : rows) {
             appendRow(builtBody, row);
         }
         return builtBody.append("</tbody>").toString();
     }
 
-    private void appendRow(StringBuilder builtBody, Object... row) {
+    private void appendRow(StringBuilder builtBody, TableCellDto... row) {
         int headerLength = row.length - 1;
         builtBody.append("<tr>");
         for (int i = 0; i < headers.length; i++) {
@@ -80,8 +82,8 @@ public class HtmlTableWithColoredHeader implements HtmlTable {
                     builtBody.append("<td>-");
                 } else {
                     builtBody.append("<td>");
-                    Object value = row[i];
-                    builtBody.append(value != null ? value : '-');
+                    TableCellDto cell = row[i];
+                    builtBody.append(cell != null ? cell.getValue() : '-');
                 }
                 builtBody.append("</td>");
             } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {

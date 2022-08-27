@@ -181,6 +181,7 @@ div.scrollbar {
 .color-chooser {
     margin-right: 0.15rem;
     margin-bottom: 0.2rem;
+    border-color: transparent !important;
 }
 
 /* Navbar ====================================== */
@@ -767,111 +768,133 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 
 .bg-red, body.theme-red .fc-toolbar-chunk .btn.btn-primary {
     background-color: #F44336;
+    --bs-btn-disabled-bg: #F44336;
     color: #fff;
 }
 
 .bg-pink, body.theme-pink .fc-toolbar-chunk .btn.btn-primary {
     background-color: #E91E63;
+    --bs-btn-disabled-bg: #E91E63;
     color: #fff;
 }
 
 .bg-purple, body.theme-purple .fc-toolbar-chunk .btn.btn-primary {
     background-color: #9C27B0;
+    --bs-btn-disabled-bg: #9C27B0;
     color: #fff;
 }
 
 .bg-deep-purple, body.theme-deep-purple .fc-toolbar-chunk .btn.btn-primary {
     background-color: #673AB7;
+    --bs-btn-disabled-bg: #673AB7;
     color: #fff;
 }
 
 .bg-indigo, body.theme-indigo .fc-toolbar-chunk .btn.btn-primary {
     background-color: #3F51B5;
+    --bs-btn-disabled-bg: #3F51B5;
     color: #fff;
 }
 
 .bg-blue, body.theme-blue .fc-toolbar-chunk .btn.btn-primary {
     background-color: #2196F3;
+    --bs-btn-disabled-bg: #2196F3;
     color: #fff;
 }
 
 .bg-light-blue, body.theme-light-blue .fc-toolbar-chunk .btn.btn-primary {
     background-color: #03A9F4;
+    --bs-btn-disabled-bg: #03A9F4;
     color: #fff;
 }
 
 .bg-cyan, body.theme-cyan .fc-toolbar-chunk .btn.btn-primary {
     background-color: #00BCD4;
+    --bs-btn-disabled-bg: #00BCD4;
     color: #fff;
 }
 
 .bg-teal, body.theme-teal .fc-toolbar-chunk .btn.btn-primary {
     background-color: #009688;
+    --bs-btn-disabled-bg: #009688;
     color: #fff;
 }
 
 .bg-green, body.theme-green .fc-toolbar-chunk .btn.btn-primary {
     background-color: #4CAF50;
+    --bs-btn-disabled-bg: #4CAF50;
     color: #fff;
 }
 
 .bg-light-green, body.theme-light-green .fc-toolbar-chunk .btn.btn-primary {
     background-color: #8BC34A;
+    --bs-btn-disabled-bg: #8BC34A;
     color: #fff;
 }
 
 .bg-lime, body.theme-lime .fc-toolbar-chunk .btn.btn-primary {
     background-color: #CDDC39;
+    --bs-btn-disabled-bg: #CDDC39;
     color: #fff;
 }
 
 .bg-yellow, body.theme-yellow .fc-toolbar-chunk .btn.btn-primary {
     background-color: #ffe821;
+    --bs-btn-disabled-bg: #ffe821;
     color: #fff;
 }
 
 .bg-amber, body.theme-amber .fc-toolbar-chunk .btn.btn-primary {
     background-color: #FFC107;
+    --bs-btn-disabled-bg: #FFC107;
     color: #fff;
 }
 
 .bg-orange, body.theme-orange .fc-toolbar-chunk .btn.btn-primary {
     background-color: #FF9800;
+    --bs-btn-disabled-bg: #FF9800;
     color: #fff;
 }
 
 .bg-deep-orange, body.theme-deep-orange .fc-toolbar-chunk .btn.btn-primary {
     background-color: #FF5722;
+    --bs-btn-disabled-bg: #FF5722;
     color: #fff;
 }
 
 .bg-brown, body.theme-brown .fc-toolbar-chunk .btn.btn-primary {
     background-color: #795548;
+    --bs-btn-disabled-bg: #795548;
     color: #fff;
 }
 
 .bg-grey, body.theme-grey .fc-toolbar-chunk .btn.btn-primary {
     background-color: #9E9E9E;
+    --bs-btn-disabled-bg: #9E9E9E;
     color: #fff;
 }
 
 .bg-blue-grey, body.theme-blue-grey .fc-toolbar-chunk .btn.btn-primary {
     background-color: #607D8B;
+    --bs-btn-disabled-bg: #607D8B;
     color: #fff;
 }
 
 .bg-black, body.theme-black .fc-toolbar-chunk .btn.btn-primary {
     background-color: #555555;
+    --bs-btn-disabled-bg: #555555;
     color: #fff;
 }
 
 .bg-white, body.theme-white .fc-toolbar-chunk .btn.btn-primary {
     background-color: #ffffff;
+    --bs-btn-disabled-bg: #ffffff;
     color: #333;
 }
 
 .bg-plan, body.theme-plan .fc-toolbar-chunk .btn.btn-primary {
     background-color: #368F17;
+    --bs-btn-disabled-bg: #368F17;
     color: #fff;
 }
 
@@ -902,6 +925,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 
 .bg-night, body.theme-night .fc-toolbar-chunk .btn.btn-primary {
     background-color: #44475a;
+    --bs-btn-disabled-bg: #44475a;
     color: #eee8d5;
 }
 

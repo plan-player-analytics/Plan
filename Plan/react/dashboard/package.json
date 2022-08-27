@@ -1,4 +1,5 @@
 {
+  "license": "LGPL-3.0-or-later",
   "name": "dashboard",
   "version": "0.1.0",
   "private": true,

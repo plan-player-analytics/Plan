@@ -7,7 +7,7 @@ import {Modal} from "react-bootstrap-v5";
 import {useTranslation} from "react-i18next";
 
 const ColorSelectorButton = ({color, setColor, disabled}) =>
-    <button className={"btn color-chooser " + colorEnumToBgClass(color)}
+    <button className={"btn color-chooser " + colorEnumToBgClass(color) + (disabled ? " disabled" : '')}
             id={"choose-" + color}
             disabled={disabled}
             onClick={() => setColor(color)}

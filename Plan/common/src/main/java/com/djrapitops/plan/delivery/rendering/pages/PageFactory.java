@@ -107,6 +107,12 @@ public class PageFactory {
     public Page serverPage(ServerUUID serverUUID) throws IOException {
         Server server = dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
                 .orElseThrow(() -> new NotFoundException("Server not found in the database"));
+
+        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+            String reactHtml = getResource("index.html");
+            return () -> reactHtml;
+        }
+
         return new ServerPage(
                 getResource("server.html"),
                 server,

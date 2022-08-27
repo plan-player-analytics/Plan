@@ -8,7 +8,7 @@ import {useTranslation} from "react-i18next";
 
 const LineGraph = ({id, series}) => {
     const {t} = useTranslation()
-    const {graphTheming} = useTheme();
+    const {graphTheming, nightModeEnabled} = useTheme();
 
     useEffect(() => {
         NoDataDisplay(Highcharts);
@@ -27,12 +27,12 @@ const LineGraph = ({id, series}) => {
             title: {text: ''},
             plotOptions: {
                 areaspline: {
-                    fillOpacity: 0.4
+                    fillOpacity: nightModeEnabled ? 0.2 : 0.4
                 }
             },
             series: series
         })
-    }, [series, graphTheming, id, t])
+    }, [series, graphTheming, id, t, nightModeEnabled])
 
     return (
         <div className="chart-area" id={id}>
