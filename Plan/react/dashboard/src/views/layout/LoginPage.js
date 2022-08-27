@@ -50,7 +50,7 @@ const LoginForm = ({login}) => {
     const onLogin = useCallback(event => {
         event.preventDefault();
         login(username, password).then(() => setPassword(''));
-    }, [username, password, setPassword])
+    }, [username, password, setPassword, login]);
 
     return (
         <form className="user">
