@@ -4,6 +4,7 @@ import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import Highcharts from 'highcharts/highmaps.js';
 import map from '@highcharts/map-collection/custom/world.geo.json';
+import Accessibility from "highcharts/modules/accessibility";
 
 const GeolocationWorldMap = ({series, colors}) => {
     const {t} = useTranslation();
@@ -18,6 +19,7 @@ const GeolocationWorldMap = ({series, colors}) => {
             joinBy: ['iso-a3', 'code']
         };
 
+        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.mapChart('countryWorldMap', {
             chart: {

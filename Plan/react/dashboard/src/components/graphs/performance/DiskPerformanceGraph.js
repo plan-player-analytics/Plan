@@ -6,6 +6,7 @@ import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
 import {withReducedSaturation} from "../../../util/colors";
+import Accessibility from "highcharts/modules/accessibility";
 
 const DiskPerformanceGraph = ({id, data, dataSeries}) => {
     const {t} = useTranslation();
@@ -37,6 +38,7 @@ const DiskPerformanceGraph = ({id, data, dataSeries}) => {
         };
 
         NoDataDisplay(Highcharts);
+        Accessibility(Highcharts);
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
         Highcharts.stockChart(id, {
