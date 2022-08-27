@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -110,7 +111,9 @@ class ExportJSErrorRegressionTest {
         planSystem.enable();
         serverUUID = planSystem.getServerInfo().getServerUUID();
         savePlayerData();
+    }
 
+    private static void export() throws ExportException, IOException {
         Exporter exporter = planSystem.getExportSystem().getExporter();
         exporter.exportServerPage(planSystem.getServerInfo().getServer());
         exporter.exportPlayerPage(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
@@ -123,7 +126,6 @@ class ExportJSErrorRegressionTest {
                     .map(File::getAbsolutePath)
                     .forEach(System.out::println);
         }
-        System.out.println("Now running tests \n");
     }
 
     private static void savePlayerData() {
@@ -167,13 +169,13 @@ class ExportJSErrorRegressionTest {
 
         return Arrays.stream(endpointsToTest).map(
                 endpoint -> DynamicTest.dynamicTest("Exported page does not log errors to js console " + endpoint, () -> {
-                    String address = nginx.getBaseUrl("http", 80).toURI().resolve(endpoint).toString();
-
                     // Avoid accidentally DDoS:ing head image service during tests.
                     planSystem.getConfigSystem().getConfig()
                             .set(DisplaySettings.PLAYER_HEAD_IMG_URL, nginx.getBaseUrl("http", 80).toURI()
                                     .resolve("/img/Flaticon_circle.png").toString());
+                    export();
 
+                    String address = nginx.getBaseUrl("http", 80).toURI().resolve(endpoint).toString();
                     driver.get(address);
 
                     List<LogEntry> logs = new ArrayList<>();
