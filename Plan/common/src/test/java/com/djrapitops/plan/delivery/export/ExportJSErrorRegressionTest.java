@@ -105,6 +105,8 @@ class ExportJSErrorRegressionTest {
         config.set(ExportSettings.SERVER_PAGE, true);
         config.set(ExportSettings.PLAYERS_PAGE, true);
 
+        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "localhost");
+
         planSystem.enable();
         serverUUID = planSystem.getServerInfo().getServerUUID();
         savePlayerData();
