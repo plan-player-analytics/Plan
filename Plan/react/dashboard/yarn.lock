@@ -1196,18 +1196,18 @@
   dependencies:
     prop-types "^15.8.1"
 
-"@fullcalendar/bootstrap@^5.11.2":
-  version "5.11.2"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-5.11.2.tgz#f5ebcf815fd11ba37585fcd7eff00a779898abf7"
-  integrity sha512-oJl2hEZ0AJjVAVPz7zHNARHRh5w/kYHE85QilYdGzk7RXdWhB9aiDxp4Z7x8fSUwrfyHEDGa6V9APyMde4vJOQ==
+"@fullcalendar/bootstrap@^5.11.3":
+  version "5.11.3"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-5.11.3.tgz#12b0cc736562075b2270e2735ba970c9b16294e2"
+  integrity sha512-qCcNIz4F5YcTfpc1l2kKMtNpC2Lu/Al5/WaCASoLgqx1ukOunGuSh6WmooYrHCg/fwUJR4NOp85Qe4lggyEuSg==
   dependencies:
-    "@fullcalendar/common" "~5.11.2"
+    "@fullcalendar/common" "~5.11.3"
     tslib "^2.1.0"
 
-"@fullcalendar/common@~5.11.2":
-  version "5.11.2"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.11.2.tgz#2b198a56d315b0f4d4197d730f9303a9ba8954f8"
-  integrity sha512-2YBRs4IFrZlo7UL7hEHK+QgnuQnVIfwSspCOy0Qe+DtU2hu3myPrxsW0Tt/8RaoWsRndRDw5jeJzpjcVHDSSGQ==
+"@fullcalendar/common@~5.11.2", "@fullcalendar/common@~5.11.3":
+  version "5.11.3"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.11.3.tgz#6d555a06925b8a6d1556570c9f039960539908d5"
+  integrity sha512-welVwyfQOXQQGfDwBMSfYEPbiO1cPfUD+C7jd3ZoweJR+dSO11ddFugxIQ7dGfABAGZ63oq/+LW9FsmAJezVNg==
   dependencies:
     tslib "^2.1.0"
 
