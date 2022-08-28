@@ -31,6 +31,7 @@ import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -71,14 +72,14 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void singlePingIsStored() {
+    default void singlePingIsStored() throws ExecutionException, InterruptedException {
         prepareForPingStorage();
 
-        DateObj<Integer> saved = RandomData.randomIntDateObject();
+        DateObj<Integer> saved = RandomData.randomIntDateObject(1, 4001); // accepted ping range 1-4000 ms
         int value = saved.getValue();
         db().executeTransaction(new PingStoreTransaction(playerUUID, serverUUID(),
                 Collections.singletonList(saved)
-        ));
+        )).get();
         Map<UUID, List<Ping>> expected = Collections.singletonMap(playerUUID, Collections.singletonList(
                 new Ping(saved.getDate(), serverUUID(), value, value, value)
         ));

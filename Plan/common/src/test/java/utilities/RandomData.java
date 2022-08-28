@@ -201,6 +201,10 @@ public class RandomData {
         return new DateObj<>(randomTime(), randomInt(0, 500));
     }
 
+    public static DateObj<Integer> randomIntDateObject(int rangeStart, int rangeEnd) {
+        return new DateObj<>(randomTime(), randomInt(rangeStart, rangeEnd));
+    }
+
     public static double randomDouble() {
         return ThreadLocalRandom.current().nextDouble();
     }
