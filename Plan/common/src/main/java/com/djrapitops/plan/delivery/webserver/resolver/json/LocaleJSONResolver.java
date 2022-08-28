@@ -119,12 +119,13 @@ public class LocaleJSONResolver implements NoAuthResolver {
         Map<String, Object> languages = new TreeMap<>();
         Map<String, Object> languageVersions = new TreeMap<>();
 
-        long localeVersion = localeSystem.getLocaleVersion();
+        long maxLocaleVersion = localeSystem.getMaxLocaleVersion();
         Optional<Long> customLocaleVersion = localeSystem.getCustomLocaleVersion();
 
         for (LangCode lang : LangCode.values()) {
             if (lang == LangCode.CUSTOM && locale.getLangCode() != LangCode.CUSTOM) continue;
             languages.put(lang.toString(), lang.getName());
+            long localeVersion = localeSystem.getLocaleVersion(lang).orElse(maxLocaleVersion);
             languageVersions.put(lang.toString(), localeVersion);
         }
         customLocaleVersion.ifPresent(version -> languageVersions.put(LangCode.CUSTOM.toString(), version));

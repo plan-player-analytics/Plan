@@ -42,7 +42,7 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
     private final PlanConfig config;
     private final PlanFiles files;
     private final PluginLogger logger;
-    private final WebAssetVersions webAssetVersions;
+    private final AssetVersions assetVersions;
     private final Formatters formatters;
 
     @Inject
@@ -50,13 +50,13 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
             PlanConfig config,
             PlanFiles files,
             PluginLogger logger,
-            WebAssetVersions webAssetVersions,
+            AssetVersions assetVersions,
             Formatters formatters
     ) {
         this.config = config;
         this.files = files;
         this.logger = logger;
-        this.webAssetVersions = webAssetVersions;
+        this.assetVersions = assetVersions;
         this.formatters = formatters;
     }
 
@@ -78,7 +78,7 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
         Optional<ConfigNode> planCustomizationNode = getPlanCustomizationNode();
         if (planCustomizationNode.isPresent()) {
             try {
-                webAssetVersions.prepare();
+                assetVersions.prepare();
             } catch (IOException e) {
                 logger.warn(String.format("Could not read web asset versions, %s", e.toString()));
                 logger.warn("Web asset version check will be skipped!");
@@ -111,7 +111,7 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
 
     private Optional<AssetInfo> findOutdatedResource(String resource) {
         Optional<File> resourceFile = files.attemptToFind(resource);
-        Optional<Long> webAssetVersion = webAssetVersions.getWebAssetVersion(resource);
+        Optional<Long> webAssetVersion = assetVersions.getAssetVersion(resource);
         if (resourceFile.isPresent() && webAssetVersion.isPresent() && webAssetVersion.get() > resourceFile.get().lastModified()) {
             return Optional.of(new AssetInfo(
                     resource,

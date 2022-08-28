@@ -17,7 +17,7 @@
 package com.djrapitops.plan.settings.locale;
 
 import com.djrapitops.plan.SubSystem;
-import com.djrapitops.plan.delivery.web.WebAssetVersions;
+import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
@@ -48,7 +48,7 @@ public class LocaleSystem implements SubSystem {
 
     private final PlanFiles files;
     private final PlanConfig config;
-    private final WebAssetVersions webAssetVersions;
+    private final AssetVersions assetVersions;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
@@ -58,13 +58,13 @@ public class LocaleSystem implements SubSystem {
     public LocaleSystem(
             PlanFiles files,
             PlanConfig config,
-            WebAssetVersions webAssetVersions,
+            AssetVersions assetVersions,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
         this.files = files;
         this.config = config;
-        this.webAssetVersions = webAssetVersions;
+        this.assetVersions = assetVersions;
         this.logger = logger;
         this.errorLogger = errorLogger;
         this.locale = new Locale();
@@ -221,8 +221,12 @@ public class LocaleSystem implements SubSystem {
         return locale;
     }
 
-    public long getLocaleVersion() {
-        return webAssetVersions.getLatestWebAssetVersion().orElse(0L);
+    public long getMaxLocaleVersion() {
+        return assetVersions.getLatestWebAssetVersion().orElse(0L);
+    }
+
+    public Optional<Long> getLocaleVersion(LangCode langCode) {
+        return assetVersions.getAssetVersion(langCode.getFileName());
     }
 
     public Optional<Long> getCustomLocaleVersion() {

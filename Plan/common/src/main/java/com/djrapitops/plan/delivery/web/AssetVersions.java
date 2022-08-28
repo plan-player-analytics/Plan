@@ -27,25 +27,25 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Singleton
-public class WebAssetVersions {
+public class AssetVersions {
 
     private final PlanFiles files;
     private Config webAssetConfig;
 
     @Inject
-    public WebAssetVersions(
+    public AssetVersions(
             PlanFiles files
     ) {
         this.files = files;
     }
 
     public void prepare() throws IOException {
-        try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("WebAssetVersion.yml").asInputStream())) {
+        try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("AssetVersion.yml").asInputStream())) {
             webAssetConfig = reader.read();
         }
     }
 
-    public Optional<Long> getWebAssetVersion(String resource) {
+    public Optional<Long> getAssetVersion(String resource) {
         if (webAssetConfig == null) return Optional.empty();
 
         return webAssetConfig.getNode(resource.replace('.', ',')).map(ConfigNode::getLong);
