@@ -18,7 +18,6 @@ package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.delivery.webserver.http.InternalRequest;
 import com.djrapitops.plan.storage.database.sql.tables.AccessLogTable;
@@ -28,8 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Optional;
 
 public class StoreRequestTransaction extends Transaction {
 
@@ -48,37 +45,17 @@ public class StoreRequestTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        if (request == null || request.getUser().isEmpty()) { // login failed / auth disabled
-            execute(new ExecStatement(AccessLogTable.INSERT_NO_USER) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setLong(1, internalRequest.getTimestamp());
-                    statement.setString(2, internalRequest.getAccessAddress(webserverConfiguration));
-                    String method = internalRequest.getMethod();
-                    statement.setString(3, method != null ? method : "?");
-                    statement.setString(4, getTruncatedURI());
-                    statement.setInt(5, response.getCode());
-                }
-            });
-        } else {
-            execute(new ExecStatement(AccessLogTable.INSERT_WITH_USER) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setLong(1, internalRequest.getTimestamp());
-                    statement.setString(2, internalRequest.getAccessAddress(webserverConfiguration));
-                    statement.setString(3, request.getMethod());
-                    statement.setString(4, getTruncatedURI());
-                    statement.setInt(5, response.getCode());
-
-                    Optional<String> webUsername = request.getUser().map(WebUser::getUsername);
-                    if (webUsername.isPresent()) {
-                        statement.setString(6, webUsername.get());
-                    } else {
-                        statement.setNull(6, Types.VARCHAR);
-                    }
-                }
-            });
-        }
+        execute(new ExecStatement(AccessLogTable.INSERT_NO_USER) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, internalRequest.getTimestamp());
+                statement.setString(2, internalRequest.getAccessAddress(webserverConfiguration));
+                String method = internalRequest.getMethod();
+                statement.setString(3, method != null ? method : "?");
+                statement.setString(4, getTruncatedURI());
+                statement.setInt(5, response.getCode());
+            }
+        });
     }
 
     private String getTruncatedURI() {

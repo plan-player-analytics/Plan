@@ -29,10 +29,6 @@ public class AccessLogTable {
     public static final String REQUEST_METHOD = "request_method";
     public static final String REQUEST_URI = "request_uri";
     public static final String RESPONSE_CODE = "response_code";
-    public static final String USERNAME = "username";
-    public static final String INSERT_WITH_USER = "INSERT INTO " + TABLE_NAME + " (" +
-            TIME + ',' + FROM_IP + ',' + REQUEST_METHOD + ',' + REQUEST_URI + ',' + RESPONSE_CODE + ',' + USERNAME +
-            ") VALUES (?, ?, ?, ?, ?, ?)";
     public static final String INSERT_NO_USER = "INSERT INTO " + TABLE_NAME + " (" +
             TIME + ',' + FROM_IP + ',' + REQUEST_METHOD + ',' + REQUEST_URI + ',' + RESPONSE_CODE +
             ") VALUES (?, ?, ?, ?, ?)";
@@ -49,7 +45,6 @@ public class AccessLogTable {
                 .column(REQUEST_METHOD, Sql.varchar(8)).notNull()
                 .column(REQUEST_URI, Sql.TEXT).notNull()
                 .column(RESPONSE_CODE, Sql.INT)
-                .column(USERNAME, Sql.varchar(100))
                 .build();
     }
 }
