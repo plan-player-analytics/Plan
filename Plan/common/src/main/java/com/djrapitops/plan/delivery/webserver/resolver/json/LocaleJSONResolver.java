@@ -28,6 +28,7 @@ import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.locale.LangCode;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
+import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import io.swagger.v3.oas.annotations.Operation;
@@ -160,7 +161,17 @@ public class LocaleJSONResolver implements NoAuthResolver {
 
     private Config loadLocale(Resource resource) throws IOException {
         try (ConfigReader reader = new ConfigReader(resource.asInputStream())) {
-            return reader.read();
+            Config config = reader.read();
+            addMissingKeys(config);
+            return config;
+        }
+    }
+
+    private void addMissingKeys(Config config) {
+        for (Map.Entry<String, Lang> entry : LocaleSystem.getKeys().entrySet()) {
+            String key = entry.getKey();
+            if (config.contains(key)) continue;
+            config.set(key, locale.getString(entry.getValue()));
         }
     }
 

@@ -35,6 +35,7 @@ public enum HtmlLang implements Lang {
     SIDE_GEOLOCATIONS("html.label.geolocations", "Geolocations"),
     SIDE_LINKS("html.label.links", "LINKS"),
     SIDE_PERFORMANCE("html.label.performance", "Performance"),
+    SIDE_PLUGINS_OVERVIEW("html.label.pluginsOverview", "Plugins Overview"),
     QUERY_MAKE("html.label.query", "Make a query"),
     UNIT_NO_DATA("generic.noData", "No Data"), // Generic
     GRAPH_NO_DATA("html.label.noDataToDisplay", "No Data to Display"),

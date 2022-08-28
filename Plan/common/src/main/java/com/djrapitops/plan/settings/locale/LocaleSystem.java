@@ -70,12 +70,22 @@ public class LocaleSystem implements SubSystem {
         this.locale = new Locale();
     }
 
+    /**
+     * Get the txt keys of all Lang entries (legacy locale files that need yml conversion).
+     *
+     * @return Map of txt key (eg {@code "HTML - LOGIN_CREATE_ACCOUNT"}) - Lang (eg. {@link HtmlLang#LOGIN_CREATE_ACCOUNT})
+     */
     public static Map<String, Lang> getIdentifiers() {
         return Arrays.stream(getValuesArray())
                 .flatMap(Arrays::stream)
                 .collect(Collectors.toMap(Lang::getIdentifier, Function.identity()));
     }
 
+    /**
+     * Get the yml keys of all Lang entries.
+     *
+     * @return Map of yml key (eg. {@code "html.login.register"}) - Lang (eg. {@link HtmlLang#LOGIN_CREATE_ACCOUNT})
+     */
     public static Map<String, Lang> getKeys() {
         return Arrays.stream(getValuesArray())
                 .flatMap(Arrays::stream)

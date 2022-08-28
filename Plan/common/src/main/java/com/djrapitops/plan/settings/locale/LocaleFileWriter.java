@@ -41,6 +41,7 @@ public class LocaleFileWriter {
 
         Config writing = new Config(file);
         locale.forEach((lang, message) -> writing.set(lang.getKey(), message.toString()));
+        writing.dfs((node, result) -> node.sort());
 
         new ConfigWriter(file.toPath()).write(writing);
     }
