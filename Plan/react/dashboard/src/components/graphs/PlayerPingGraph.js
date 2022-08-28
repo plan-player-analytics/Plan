@@ -32,8 +32,8 @@ const PlayerPingGraph = ({data}) => {
             data: data.min_ping_series,
             color: nightModeEnabled ? withReducedSaturation(data.colors.min) : data.colors.min
         }
-        setSeries([avgPingSeries, maxPingSeries, minPingSeries, nightModeEnabled]);
-    }, [data, t])
+        setSeries([avgPingSeries, maxPingSeries, minPingSeries]);
+    }, [data, t, nightModeEnabled])
 
     return (
         <LineGraph id="ping-graph" series={series}/>

@@ -25,8 +25,8 @@ const TimeByTimeGraph = ({data}) => {
             data: data.newPlayers,
             color: nightModeEnabled ? withReducedSaturation(data.colors.newPlayers) : data.colors.newPlayers
         };
-        setSeries([uniquePlayers, newPlayers, nightModeEnabled]);
-    }, [data, t])
+        setSeries([uniquePlayers, newPlayers]);
+    }, [data, t, nightModeEnabled])
 
     return (
         <LineGraph id="day-by-day-graph" series={series}/>
