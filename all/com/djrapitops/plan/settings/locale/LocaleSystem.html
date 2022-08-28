@@ -131,10 +131,14 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getIdentifiers()" class="member-name-link">getIdentifiers</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get the txt keys of all Lang entries (legacy locale files that need yml conversion).</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getKeys()" class="member-name-link">getKeys</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get the yml keys of all Lang entries.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLocale()" class="member-name-link">getLocale</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -181,12 +185,22 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <section class="detail" id="getIdentifiers()">
 <h3>getIdentifiers</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a>&gt;</span>&nbsp;<span class="element-name">getIdentifiers</span>()</div>
+<div class="block">Get the txt keys of all Lang entries (legacy locale files that need yml conversion).</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Map of txt key (eg <code>"HTML - LOGIN_CREATE_ACCOUNT"</code>) - Lang (eg. <a href="lang/HtmlLang.html#LOGIN_CREATE_ACCOUNT"><code>HtmlLang.LOGIN_CREATE_ACCOUNT</code></a>)</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getKeys()">
 <h3>getKeys</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a>&gt;</span>&nbsp;<span class="element-name">getKeys</span>()</div>
+<div class="block">Get the yml keys of all Lang entries.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Map of yml key (eg. <code>"html.login.register"</code>) - Lang (eg. <a href="lang/HtmlLang.html#LOGIN_CREATE_ACCOUNT"><code>HtmlLang.LOGIN_CREATE_ACCOUNT</code></a>)</dd>
+</dl>
 </section>
 </li>
 <li>
