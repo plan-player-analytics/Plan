@@ -15,7 +15,7 @@ dependencies {
     shadow 'net.playeranalytics:Extension-Factions:2.14.0-R1.1'
     shadow 'net.playeranalytics:Extension-FactionsUUID:1.6.9.5-U0.5.25-R1.1'
     shadow 'net.playeranalytics:Extension-FastLogin:R1.1'
-    shadow 'net.playeranalytics:Extension-Floodgate:2.0-R1.2'
+    shadow 'net.playeranalytics:Extension-Floodgate:2.2.0-R1.3'
     shadow 'net.playeranalytics:Extension-GriefDefender:2.1.0-R1.1'
     shadow 'net.playeranalytics:Extension-GriefPrevention:16.11.6-R1.2'
     shadow 'net.playeranalytics:Extension-GriefPrevention-Sponge:4.0.1-R1.2'
