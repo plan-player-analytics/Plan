@@ -34,7 +34,7 @@ dependencies {
 //    shadow 'net.playeranalytics:Extension-Nucleus:2.3.0-R1.1' // TODO Update to sponge 8
     shadow 'net.playeranalytics:Extension-nuVotifier:2.3.4-R1.3'
     shadow 'net.playeranalytics:Extension-PlaceholderAPI:2.10.9-R1.5'
-    shadow 'net.playeranalytics:Extension-PlotSquared:5.13.11-R1.2'
+    shadow 'net.playeranalytics:Extension-PlotSquared:6.9.4-R1.3'
     shadow 'net.playeranalytics:Extension-ProtectionStones:2.8.2-R1.2'
     shadow 'net.playeranalytics:Extension-ProtocolSupport:1.16.4-R1.3'
     shadow 'net.playeranalytics:Extension-Quests:4.0.5-R1.1'
