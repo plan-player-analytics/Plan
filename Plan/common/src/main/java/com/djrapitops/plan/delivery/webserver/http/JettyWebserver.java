@@ -121,6 +121,8 @@ public class JettyWebserver implements WebServer {
                 });
 
         connector.setPort(port);
+        String internalIP = webserverConfiguration.getInternalIP();
+        connector.setHost(internalIP);
         webserver.addConnector(connector);
 
         if (usingHttps) {
@@ -129,10 +131,19 @@ public class JettyWebserver implements WebServer {
             webserver.setHandler(jettyRequestHandler);
         }
 
+        String startFailure = "Failed to start Jetty webserver: ";
         try {
             webserver.start();
+        } catch (IOException e) {
+            if (e.getMessage().contains("Failed to bind")) {
+                boolean defaultInternalIp = "0.0.0.0".equals(internalIP);
+                String causeHelp = defaultInternalIp ? ", is the port (" + port + ") in use?" : ", is the Internal_IP (" + internalIP + ") invalid? (Use 0.0.0.0 for automatic)";
+                throw new EnableException(startFailure + e.getMessage() + causeHelp, e);
+            } else {
+                throw new EnableException(startFailure + e.toString(), e);
+            }
         } catch (Exception e) {
-            throw new EnableException("Failed to start Jetty webserver: " + e.toString(), e);
+            throw new EnableException(startFailure + e.toString(), e);
         }
 
         webserverLogMessages.infoWebserverEnabled(getPort());

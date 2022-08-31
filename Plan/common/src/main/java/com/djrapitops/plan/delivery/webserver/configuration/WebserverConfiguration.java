@@ -78,6 +78,10 @@ public class WebserverConfiguration {
         return config.get(WebserverSettings.PORT);
     }
 
+    public String getInternalIP() {
+        return config.get(WebserverSettings.INTERNAL_IP);
+    }
+
     public boolean isWebserverDisabled() {
         return config.isTrue(WebserverSettings.DISABLED);
     }
