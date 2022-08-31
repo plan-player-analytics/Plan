@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Outlet, useOutletContext, useParams} from "react-router-dom";
+import {Outlet, useParams} from "react-router-dom";
 import {useNavigation} from "../../hooks/navigationHook";
 import {
     faCampground,
@@ -25,27 +25,19 @@ import ErrorPage from "./ErrorPage";
 import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchExtensionData, fetchServerIdentity} from "../../service/serverService";
+import {fetchServerIdentity} from "../../service/serverService";
 import ExtensionIcon from "../../components/extensions/ExtensionIcon";
+import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 
-const ServerPage = () => {
+const ServerSidebar = () => {
     const {t, i18n} = useTranslation();
-    const {identifier} = useParams();
-    const {isProxy, serverName} = useMetadata();
-
-    const {
-        data: serverIdentity,
-        loadingError: identityLoadingError
-    } = useDataRequest(fetchServerIdentity, [identifier]);
-    const {
-        data: extensionData,
-        loadingError: extensionDataLoadingError
-    } = useDataRequest(fetchExtensionData, [identifier]);
-
-    const [error] = useState(undefined);
     const [sidebarItems, setSidebarItems] = useState([]);
+    const {extensionData} = useServerExtensionContext();
+    const {authRequired, loggedIn, user} = useAuth();
 
-    const {currentTab} = useNavigation();
+    const {isProxy} = useMetadata();
+    const showBackButton = isProxy
+        && (!authRequired || (loggedIn && user.permissions.filter(perm => perm !== 'page.network').length));
 
     useEffect(() => {
         const items = [
@@ -84,10 +76,10 @@ const ServerPage = () => {
             {name: 'html.label.performance', icon: faCogs, href: "performance"},
             {},
             {name: 'html.label.plugins'},
+            {name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"}
         ]
 
         if (extensionData) {
-            items.push({name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"})
             extensionData.extensions.filter(extension => extension.wide)
                 .map(extension => extension.extensionInformation)
                 .map(info => {
@@ -109,11 +101,26 @@ const ServerPage = () => {
         window.document.title = `Plan | Server Analysis`;
     }, [t, i18n, extensionData])
 
-    const {authRequired, loggedIn, user} = useAuth();
+    return (
+        <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
+    )
+}
+
+const ServerPage = () => {
+    const {t} = useTranslation();
+    const {identifier} = useParams();
+    const {isProxy, serverName} = useMetadata();
+
+    const {
+        data: serverIdentity,
+        loadingError: identityLoadingError
+    } = useDataRequest(fetchServerIdentity, [identifier]);
+    const [error] = useState(undefined);
+
+    const {currentTab} = useNavigation();
+
+    const {authRequired, loggedIn} = useAuth();
     if (authRequired && !loggedIn) return <MainPageRedirect/>
-
-    const showBackButton = isProxy && (!authRequired || user.permissions.filter(perm => perm !== 'page.network').length);
-
 
     const getDisplayedServerName = () => {
         if (serverIdentity) {
@@ -134,34 +141,28 @@ const ServerPage = () => {
             error={{title: t('html.error.404NotFound'), message: t('html.error.serverNotSeen')}}/>
         return <ErrorPage error={identityLoadingError}/>
     }
-    if (extensionDataLoadingError) {
-        return <ErrorPage error={extensionDataLoadingError}/>
-    }
-    if (!extensionData) return <></>
 
     return (
         <>
             <NightModeCss/>
-            <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
-            <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={displayedServerName} tab={currentTab}/>
-                <div id="content" style={{display: 'flex'}}>
-                    <main className="container-fluid mt-4">
-                        <SwitchTransition>
-                            <Outlet context={extensionData}/>
-                        </SwitchTransition>
-                    </main>
-                    <aside>
-                        <ColorSelectorModal/>
-                    </aside>
+            <ServerExtensionContextProvider>
+                <ServerSidebar/>
+                <div className="d-flex flex-column" id="content-wrapper">
+                    <Header page={displayedServerName} tab={currentTab}/>
+                    <div id="content" style={{display: 'flex'}}>
+                        <main className="container-fluid mt-4">
+                            <SwitchTransition>
+                                <Outlet/>
+                            </SwitchTransition>
+                        </main>
+                        <aside>
+                            <ColorSelectorModal/>
+                        </aside>
+                    </div>
                 </div>
-            </div>
+            </ServerExtensionContextProvider>
         </>
     )
-}
-
-export const useServer = () => {
-    return useOutletContext();
 }
 
 export default ServerPage;

@@ -1,13 +1,16 @@
 import React, {useEffect} from 'react';
-import {useServer} from "../layout/ServerPage";
 import Masonry from "masonry-layout";
 import LoadIn from "../../components/animation/LoadIn";
 import {Card, Col, Row} from "react-bootstrap-v5";
 import ExtensionCard, {ExtensionCardWrapper} from "../../components/extensions/ExtensionCard";
+import Loader from "../../components/navigation/Loader";
+import {useTranslation} from "react-i18next";
+import {useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
+import ErrorView from "../ErrorView";
 
 const ServerPluginData = () => {
-    const extensionData = useServer();
-    console.log(extensionData);
+    const {t} = useTranslation();
+    const {extensionData, extensionDataLoadingError} = useServerExtensionContext();
     const extensions = extensionData ? extensionData.extensions.filter(extension => !extension.wide) : [];
 
     useEffect(() => {
@@ -23,6 +26,8 @@ const ServerPluginData = () => {
         }
     }, [])
 
+    if (extensionDataLoadingError) return <ErrorView error={extensionDataLoadingError}/>;
+
     if (!extensions || !extensions.length) {
         return (
             <LoadIn>
@@ -31,7 +36,7 @@ const ServerPluginData = () => {
                         <Col md={12}>
                             <Card>
                                 <Card.Body>
-                                    <p>No Extension data</p>
+                                    <p>{extensionData ? t('html.text.noExtensionData') : <Loader/>}</p>
                                 </Card.Body>
                             </Card>
                         </Col>
