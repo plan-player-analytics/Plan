@@ -20,6 +20,7 @@ import com.djrapitops.plan.commands.use.MessageBuilder;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.util.Arrays;
@@ -68,7 +69,7 @@ class BungeePartBuilder implements MessageBuilder {
 
     @Override
     public MessageBuilder hover(String text) {
-        part.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(text).create()));
+        part.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text)));
         return this;
     }
 
@@ -81,7 +82,7 @@ class BungeePartBuilder implements MessageBuilder {
     public MessageBuilder hover(Collection<String> lines) {
         ComponentBuilder hoverMsg = new ComponentBuilder("");
         hoverMsg.append(new TextStringBuilder().appendWithSeparators(lines, "\n").build());
-        part.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverMsg.create()));
+        part.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hoverMsg.create())));
         return this;
     }
 
