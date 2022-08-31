@@ -25,6 +25,7 @@ import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.plugin.PluginManager;
 import org.mockito.Mockito;
 import utilities.TestConstants;
+import utilities.TestResources;
 import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
@@ -38,9 +39,10 @@ import static org.mockito.Mockito.when;
  *
  * @author AuroraLS3
  */
-public class PlanBungeeMocker extends Mocker {
+public class PlanBungeeMocker {
 
     private PlanBungee planMock;
+    private File tempFolder;
 
     private PlanBungeeMocker() {
     }
@@ -51,7 +53,6 @@ public class PlanBungeeMocker extends Mocker {
 
     private PlanBungeeMocker mockPlugin() {
         planMock = Mockito.mock(PlanBungee.class);
-        super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
 
@@ -63,7 +64,8 @@ public class PlanBungeeMocker extends Mocker {
     }
 
     PlanBungeeMocker withDataFolder(File tempFolder) {
-        when(planMock.getDataFolder()).thenReturn(tempFolder);
+        this.tempFolder = tempFolder;
+        when(planMock.getDataFolder()).thenReturn(this.tempFolder);
         return this;
     }
 
@@ -91,7 +93,8 @@ public class PlanBungeeMocker extends Mocker {
     }
 
     PlanBungeeMocker withPluginDescription() {
-        File pluginYml = getFile("/bungee.yml");
+        File pluginYml = tempFolder.toPath().resolve("jar").resolve("bungee.yml").toFile();
+        TestResources.copyResourceIntoFile(pluginYml, "/bungee.yml");
         HashSet<String> empty = new HashSet<>();
         PluginDescription pluginDescription = new PluginDescription("Plan", "", "9.9.9", "AuroraLS3", empty, empty, pluginYml, "");
         when(planMock.getDescription()).thenReturn(pluginDescription);

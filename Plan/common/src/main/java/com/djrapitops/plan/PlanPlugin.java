@@ -18,6 +18,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.commands.use.Subcommand;
+import net.playeranalytics.plugin.PluginInformation;
 
 import java.io.File;
 import java.io.InputStream;
@@ -45,7 +46,10 @@ public interface PlanPlugin {
 
     void onDisable();
 
-    @Deprecated
+    /**
+     * @deprecated Use {@code @Named("dataFolder") File}, or {@link PluginInformation#getDataFolder()}
+     */
+    @Deprecated(since = "2021-03-09")
     File getDataFolder();
 
 }

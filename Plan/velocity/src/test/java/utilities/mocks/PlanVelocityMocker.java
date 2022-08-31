@@ -32,7 +32,7 @@ import static org.mockito.Mockito.doReturn;
  *
  * @author AuroraLS3
  */
-public class PlanVelocityMocker extends Mocker {
+public class PlanVelocityMocker {
 
     private PlanVelocity planMock;
 
@@ -45,7 +45,6 @@ public class PlanVelocityMocker extends Mocker {
 
     private PlanVelocityMocker mockPlugin() {
         planMock = Mockito.mock(PlanVelocity.class);
-        super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
 
@@ -53,7 +52,6 @@ public class PlanVelocityMocker extends Mocker {
     }
 
     public PlanVelocityMocker withDataFolder(File tempFolder) {
-        doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 

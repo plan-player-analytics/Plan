@@ -30,7 +30,7 @@ import static org.mockito.Mockito.doReturn;
  * @author AuroraLS3
  * @author Kopo942
  */
-public class PlanFabricMocker extends Mocker {
+public class PlanFabricMocker {
 
     private PlanFabric planMock;
 
@@ -43,7 +43,6 @@ public class PlanFabricMocker extends Mocker {
 
     private PlanFabricMocker mockPlugin() {
         planMock = Mockito.mock(PlanFabric.class);
-        super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
 
