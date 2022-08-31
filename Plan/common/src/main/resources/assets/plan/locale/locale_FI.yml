@@ -459,9 +459,9 @@ html:
     forgotPassword4: "Komennon jälkeen,"
     login: "Kirjaudu"
     logout: "Kirjaudu ulos"
-    password: '"Salasana"'
+    password: "Salasana"
     register: "Luo käyttäjä!"
-    username: '"Käyttäjänimi"'
+    username: "Käyttäjänimi"
   modal:
     info:
       bugs: "Ilmoita ongelmista"

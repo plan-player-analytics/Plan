@@ -451,7 +451,7 @@ html:
         worldPlaytime: "Herní čas světa"
         worstPing: "Nejhorší ping"
     login:
-        failed: "Přihlašování selhalo: "
+      failed: "Přihlašování selhalo: "
         forgotPassword: "Zapomněl jste heslo?"
         forgotPassword1: "Zapomněl jste heslo? Odregistruj se a registruj se znovu."
         forgotPassword2: "Pro odstranění aktuálního uživatele použij následující příkaz ve hře:"
@@ -459,9 +459,9 @@ html:
         forgotPassword4: "Po vykonání příkazu, "
         login: "Přihlásit se"
         logout: "Odhlásit se"
-        password: '"Heslo"'
+        password: "Heslo"
         register: "Vytvořte si účet!"
-        username: '"Uživatelské jméno"'
+      username: "Uživatelské jméno"
     modal:
         info:
             bugs: "Nahlásit potíže"

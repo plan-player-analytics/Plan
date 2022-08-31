@@ -451,7 +451,7 @@ html:
         worldPlaytime: "Jugabilidad de mundo"
         worstPing: "Peor ping"
     login:
-        failed: "Ingreso fallido: "
+      failed: "Ingreso fallido: "
         forgotPassword: "Contraseña Olvidada?"
         forgotPassword1: "Contraseña Olvidada? Elimina tu registro y vuelve a registrarte."
         forgotPassword2: "Usa el siguiente comando en el juego para remover tu usuario actual:"
@@ -459,9 +459,9 @@ html:
         forgotPassword4: "Después de usar el comando, "
         login: "Ingresar"
         logout: "Cerrar Sesión"
-        password: '"Contraseña"'
+        password: "Contraseña"
         register: "Crear una cuenta!"
-        username: '"Usuario"'
+      username: "Usuario"
     modal:
         info:
             bugs: "Reportar errores"

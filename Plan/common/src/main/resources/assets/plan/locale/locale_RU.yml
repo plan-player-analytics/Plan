@@ -459,9 +459,9 @@ html:
     forgotPassword4: "После использования команды, "
     login: "Вход"
     logout: "Выход"
-    password: '"Пароль"'
+    password: "Пароль"
     register: "Создайте аккаунт!"
-    username: '"Имя пользователя"'
+    username: "Имя пользователя"
   modal:
     info:
       bugs: "Сообщить о проблемах"

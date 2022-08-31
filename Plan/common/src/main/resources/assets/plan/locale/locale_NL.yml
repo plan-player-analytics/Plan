@@ -459,9 +459,9 @@ html:
     forgotPassword4: "Na gebruik van de opdracht, "
     login: "Inloggen"
     logout: "Uitloggen"
-    password: '"Wachtwoord"'
+    password: "Wachtwoord"
     register: "Maak een account!"
-    username: '"Gebruikersnaam"'
+    username: "Gebruikersnaam"
   modal:
     info:
       bugs: "Problemen melden"

@@ -451,7 +451,7 @@ html:
         worldPlaytime: "World Playtime"
         worstPing: "Worst Ping"
     login:
-        failed: "Login failed: "
+      failed: "Login failed: "
         forgotPassword: "Forgot Password?"
         forgotPassword1: "Forgot password? Unregister and register again."
         forgotPassword2: "Use the following command in game to remove your current user:"
@@ -459,9 +459,9 @@ html:
         forgotPassword4: "After using the command, "
         login: "Login"
         logout: "Logout"
-        password: '"Password"'
+        password: "Password"
         register: "Create an Account!"
-        username: '"Username"'
+      username: "Username"
     modal:
         info:
             bugs: "Report Issues"

@@ -245,8 +245,8 @@ public enum HtmlLang implements Lang {
 
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),
-    LOGIN_USERNAME("html.login.username", "\"Username\""),
-    LOGIN_PASSWORD("html.login.password", "\"Password\""),
+    LOGIN_USERNAME("html.login.username", "Username"),
+    LOGIN_PASSWORD("html.login.password", "Password"),
     LOGIN_FORGOT_PASSWORD("html.login.forgotPassword", "Forgot Password?"),
     LOGIN_CREATE_ACCOUNT("html.login.register", "Create an Account!"),
     LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_1("html.login.forgotPassword1", "Forgot password? Unregister and register again."),

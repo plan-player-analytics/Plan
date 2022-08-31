@@ -459,9 +459,9 @@ html:
     forgotPassword4: "Komutu kullandıktan sonra, "
     login: "Oturum aç"
     logout: "Çıkış Yap"
-    password: '"Parola"'
+    password: "Parola"
     register: "Hesap oluştur!"
-    username: '"Kullanıcı adı"'
+    username: "Kullanıcı adı"
   modal:
     info:
       bugs: "Sorunları Bildir"

@@ -459,9 +459,9 @@ html:
     forgotPassword4: "After using the command, "
     login: "Login"
     logout: "Logout"
-    password: '"Password"'
+    password: "Password"
     register: "Create an Account!"
-    username: '"Username"'
+    username: "Username"
   modal:
     info:
       bugs: "문제 보고"

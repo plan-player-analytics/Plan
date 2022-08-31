@@ -459,9 +459,9 @@ html:
     forgotPassword4: "Après avoir utilisé la commande, "
     login: "Connexion"
     logout: "Déconnexion"
-    password: '"Mot de Passe"'
+    password: "Mot de Passe"
     register: "Créer un compte !"
-    username: '"Nom d'Utilisateur"'
+    username: "Nom d'Utilisateur"
   modal:
     info:
       bugs: "Rapport de bugs"

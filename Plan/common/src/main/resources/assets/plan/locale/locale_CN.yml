@@ -459,9 +459,9 @@ html:
         forgotPassword4: "使用命令后，"
         login: "登录"
         logout: "登出"
-        password: '"密码"'
+        password: "密码"
         register: "创建一个账户！"
-        username: '"用户名"'
+        username: "用户名"
     modal:
         info:
             bugs: "报告问题"
