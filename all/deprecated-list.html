@@ -76,6 +76,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="deprecation-comment">Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).</div>
 </div>
+<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/delivery/domain/auth/User.html#getPermissionLevel()">com.djrapitops.plan.delivery.domain.auth.User.getPermissionLevel()</a></div>
+<div class="col-last even-row-color">
+<div class="deprecation-comment">Permission list should be used instead.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/delivery/domain/auth/User.html#setPermissionLevel(int)">com.djrapitops.plan.delivery.domain.auth.User.setPermissionLevel<wbr>(int)</a></div>
+<div class="col-last odd-row-color">
+<div class="deprecation-comment">Permission list should be used instead.</div>
+</div>
 </div>
 </div>
 </li>
@@ -96,7 +104,9 @@ loadScripts(document, 'script');</script>
 <div class="deprecation-comment">PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/delivery/rendering/html/structure/HtmlTable.html" title="interface in com.djrapitops.plan.delivery.rendering.html.structure">com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable</a></div>
-<div class="col-last even-row-color"></div>
+<div class="col-last even-row-color">
+<div class="deprecation-comment">Table html generation is to be done in frontend in the future.</div>
+</div>
 </div>
 </div>
 </li>
@@ -145,11 +155,18 @@ loadScripts(document, 'script');</script>
 <div class="deprecation-comment">AnalysisContainer can no longer be obtained, so this is deprecated.</div>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/delivery/domain/WebUser.html" title="class in com.djrapitops.plan.delivery.domain">com.djrapitops.plan.delivery.domain.WebUser</a></div>
-<div class="col-last odd-row-color"></div>
+<div class="col-last odd-row-color">
+<div class="deprecation-comment">Use <a href="com/djrapitops/plan/delivery/domain/auth/User.html" title="class in com.djrapitops.plan.delivery.domain.auth"><code>User</code></a> instead
+ TODO Rewrite Authentication stuff</div>
+</div>
 <div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/delivery/rendering/html/structure/DynamicHtmlTable.html" title="class in com.djrapitops.plan.delivery.rendering.html.structure">com.djrapitops.plan.delivery.rendering.html.structure.DynamicHtmlTable</a></div>
-<div class="col-last even-row-color"></div>
+<div class="col-last even-row-color">
+<div class="deprecation-comment">Table html generation is to be done in frontend in the future.</div>
+</div>
 <div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/delivery/rendering/html/structure/HtmlTableWithColoredHeader.html" title="class in com.djrapitops.plan.delivery.rendering.html.structure">com.djrapitops.plan.delivery.rendering.html.structure.HtmlTableWithColoredHeader</a></div>
-<div class="col-last odd-row-color"></div>
+<div class="col-last odd-row-color">
+<div class="deprecation-comment">Table html generation is to be done in frontend in the future.</div>
+</div>
 <div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/extension/extractor/MethodAnnotations.html" title="class in com.djrapitops.plan.extension.extractor">com.djrapitops.plan.extension.extractor.MethodAnnotations</a></div>
 <div class="col-last even-row-color">
 <div class="deprecation-comment">Old implementation used this.</div>
@@ -236,9 +253,13 @@ loadScripts(document, 'script');</script>
 <div class="deprecation-comment">Use <code>setPluginIcon(Icon)</code> instead</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/delivery/domain/auth/User.html#getPermissionLevel()">com.djrapitops.plan.delivery.domain.auth.User.getPermissionLevel()</a></div>
-<div class="col-last even-row-color"></div>
+<div class="col-last even-row-color">
+<div class="deprecation-comment">Permission list should be used instead.</div>
+</div>
 <div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/delivery/domain/auth/User.html#setPermissionLevel(int)">com.djrapitops.plan.delivery.domain.auth.User.setPermissionLevel<wbr>(int)</a></div>
-<div class="col-last odd-row-color"></div>
+<div class="col-last odd-row-color">
+<div class="deprecation-comment">Permission list should be used instead.</div>
+</div>
 <div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/extension/extractor/ExtensionExtractor.html#extractAnnotationInformation()">com.djrapitops.plan.extension.extractor.ExtensionExtractor.extractAnnotationInformation()</a></div>
 <div class="col-last even-row-color">
 <div class="deprecation-comment">No longer used anywhere, no-op.</div>
@@ -251,14 +272,6 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="deprecation-comment">Use <a href="com/djrapitops/plan/extension/DataExtension.html#getPluginName()"><code>DataExtension.getPluginName()</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#getKillerName()">com.djrapitops.plan.gathering.domain.PlayerKill.getKillerName()</a></div>
-<div class="col-last odd-row-color"></div>
-<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#getKillerUUID()">com.djrapitops.plan.gathering.domain.PlayerKill.getKillerUUID()</a></div>
-<div class="col-last even-row-color"></div>
-<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#getVictimName()">com.djrapitops.plan.gathering.domain.PlayerKill.getVictimName()</a></div>
-<div class="col-last odd-row-color"></div>
-<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#getVictimUUID()">com.djrapitops.plan.gathering.domain.PlayerKill.getVictimUUID()</a></div>
-<div class="col-last even-row-color"></div>
 <div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/gathering/domain/UserInfo.html#getJoinAddress()">com.djrapitops.plan.gathering.domain.UserInfo.getJoinAddress()</a></div>
 <div class="col-last odd-row-color">
 <div class="deprecation-comment">Join address is now stored in <a href="com/djrapitops/plan/gathering/domain/FinishedSession.html#getExtraData()"><code>FinishedSession.getExtraData()</code></a>, this method may become unreliable in the future.</div>
@@ -280,29 +293,31 @@ loadScripts(document, 'script');</script>
 <div class="deprecation-comment">Deprecated due to use of custom Config</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/PlanPlugin.html#getDataFolder()">com.djrapitops.plan.PlanPlugin.getDataFolder()</a></div>
-<div class="col-last even-row-color"></div>
+<div class="col-last even-row-color">
+<div class="deprecation-comment">Use <code>@Named("dataFolder") File</code>, or <code>PluginInformation.getDataFolder()</code></div>
+</div>
 <div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/PlanSystem.html#getMainAddress()">com.djrapitops.plan.PlanSystem.getMainAddress()</a></div>
-<div class="col-last odd-row-color"></div>
-<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/storage/file/PlanFiles.html#getCustomizationDirectory()">com.djrapitops.plan.storage.file.PlanFiles.getCustomizationDirectory()</a></div>
-<div class="col-last even-row-color"></div>
-<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Color.html#getByName(java.lang.String)">com.djrapitops.plan.utilities.html.icon.Color.getByName<wbr>(String)</a></div>
 <div class="col-last odd-row-color">
-<div class="deprecation-comment">This Class exists to keep plugins that used PluginData from breaking.</div>
+<div class="deprecation-comment">Use <a href="com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver"><code>Addresses</code></a> instead.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Color.html#matchString(java.lang.String)">com.djrapitops.plan.utilities.html.icon.Color.matchString<wbr>(String)</a></div>
+<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Color.html#getByName(java.lang.String)">com.djrapitops.plan.utilities.html.icon.Color.getByName<wbr>(String)</a></div>
 <div class="col-last even-row-color">
 <div class="deprecation-comment">This Class exists to keep plugins that used PluginData from breaking.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Family.html#appendAround(java.lang.String,java.lang.String)">com.djrapitops.plan.utilities.html.icon.Family.appendAround<wbr>(String, String)</a></div>
+<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Color.html#matchString(java.lang.String)">com.djrapitops.plan.utilities.html.icon.Color.matchString<wbr>(String)</a></div>
 <div class="col-last odd-row-color">
 <div class="deprecation-comment">This Class exists to keep plugins that used PluginData from breaking.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Family.html#getByName(java.lang.String)">com.djrapitops.plan.utilities.html.icon.Family.getByName<wbr>(String)</a></div>
+<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Family.html#appendAround(java.lang.String,java.lang.String)">com.djrapitops.plan.utilities.html.icon.Family.appendAround<wbr>(String, String)</a></div>
 <div class="col-last even-row-color">
 <div class="deprecation-comment">This Class exists to keep plugins that used PluginData from breaking.</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Icon.html#called(java.lang.String)">com.djrapitops.plan.utilities.html.icon.Icon.called<wbr>(String)</a></div>
+<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Family.html#getByName(java.lang.String)">com.djrapitops.plan.utilities.html.icon.Family.getByName<wbr>(String)</a></div>
 <div class="col-last odd-row-color">
+<div class="deprecation-comment">This Class exists to keep plugins that used PluginData from breaking.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Icon.html#called(java.lang.String)">com.djrapitops.plan.utilities.html.icon.Icon.called<wbr>(String)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">This Class exists to keep plugins that used PluginData from breaking.</div>
 </div>
 </div>
@@ -324,14 +339,8 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="deprecation-comment">WebUser now stores the UUID of the linked user</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#%3Cinit%3E(java.util.UUID,java.util.UUID,java.lang.String,long)">com.djrapitops.plan.gathering.domain.PlayerKill<wbr>(UUID, UUID, String, long)</a></div>
-<div class="col-last even-row-color"></div>
-<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#%3Cinit%3E(java.util.UUID,java.util.UUID,java.lang.String,long,java.lang.String)">com.djrapitops.plan.gathering.domain.PlayerKill<wbr>(UUID, UUID, String, long, String)</a></div>
-<div class="col-last odd-row-color"></div>
-<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#%3Cinit%3E(java.util.UUID,java.util.UUID,java.lang.String,long,java.lang.String,java.lang.String)">com.djrapitops.plan.gathering.domain.PlayerKill<wbr>(UUID, UUID, String, long, String, String)</a></div>
-<div class="col-last even-row-color"></div>
-<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Icon.html#%3Cinit%3E(com.djrapitops.plan.utilities.html.icon.Family,java.lang.String,com.djrapitops.plan.utilities.html.icon.Color)">com.djrapitops.plan.utilities.html.icon.Icon<wbr>(Family, String, Color)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Icon.html#%3Cinit%3E(com.djrapitops.plan.utilities.html.icon.Family,java.lang.String,com.djrapitops.plan.utilities.html.icon.Color)">com.djrapitops.plan.utilities.html.icon.Icon<wbr>(Family, String, Color)</a></div>
+<div class="col-last even-row-color">
 <div class="deprecation-comment">This Class exists to keep plugins that used PluginData from breaking.</div>
 </div>
 </div>
@@ -346,10 +355,6 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Enum Constant</div>
 <div class="table-header col-last">Description</div>
 <div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/delivery/rendering/html/icon/Family.html#LINE">com.djrapitops.plan.delivery.rendering.html.icon.Family.LINE</a></div>
-<div class="col-last even-row-color"></div>
-<div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/settings/theme/ThemeVal.html#PARSED_SERVER_ACCORDION">com.djrapitops.plan.settings.theme.ThemeVal.PARSED_SERVER_ACCORDION</a></div>
-<div class="col-last odd-row-color"></div>
-<div class="col-summary-item-name even-row-color"><a href="com/djrapitops/plan/settings/theme/ThemeVal.html#PARSED_SESSION_ACCORDION">com.djrapitops.plan.settings.theme.ThemeVal.PARSED_SESSION_ACCORDION</a></div>
 <div class="col-last even-row-color"></div>
 <div class="col-summary-item-name odd-row-color"><a href="com/djrapitops/plan/utilities/html/icon/Family.html#LINE">com.djrapitops.plan.utilities.html.icon.Family.LINE</a></div>
 <div class="col-last odd-row-color"></div>
