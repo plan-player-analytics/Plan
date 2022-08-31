@@ -151,7 +151,10 @@ class PlayerLeaveEventConsumerTest {
     }
 
     @Test
-    void leavingGameServerSavesBanStatus(Database database, ServerUUID serverUUID) {
+    void leavingGameServerSavesBanStatus(PlanSystem system, Database database, ServerUUID serverUUID) {
+        SessionCache sessionCache = system.getCacheSystem().getSessionCache();
+        long sessionStart = System.currentTimeMillis();
+        sessionCache.cacheSession(TestConstants.PLAYER_ONE_UUID, new ActiveSession(TestConstants.PLAYER_ONE_UUID, serverUUID, sessionStart, "World", GMTimes.SURVIVAL));
         registerPlayer(database, serverUUID);
         PlayerLeave leave = createPlayerLeave(createTestPlayer()
                 .setBanned(true));
