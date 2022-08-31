@@ -66,6 +66,11 @@ public class ResponseBuilder {
         return this;
     }
 
+    protected ResponseBuilder removeHeader(String header) {
+        response.headers.remove(header);
+        return this;
+    }
+
     /**
      * Utility method for building redirects.
      *
@@ -103,7 +108,8 @@ public class ResponseBuilder {
             }
         }
 
-        return setContent(content.getBytes(charset));
+        return setContent(content.getBytes(charset))
+                .removeHeader("Accept-Ranges"); // Can compress
     }
 
     /**
