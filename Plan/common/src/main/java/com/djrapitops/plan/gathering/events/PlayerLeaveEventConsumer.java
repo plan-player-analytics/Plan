@@ -75,7 +75,7 @@ public class PlayerLeaveEventConsumer {
         Optional<ActiveSession> activeSession = SessionCache.getCachedSession(leave.getPlayerUUID());
         if (activeSession.isEmpty() && attempt < 50) {
             // Quit event processed before Join event, delay processing
-            processing.submitCritical(() -> onLeaveGameServer(leave, attempt + 1));
+            processing.submitNonCritical(() -> onLeaveGameServer(leave, attempt + 1));
             return;
         }
 
