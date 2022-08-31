@@ -90,10 +90,13 @@ public class SessionCache {
      * @return Optional: ended session. Recipients of this object should decide if it needs to be saved.
      */
     public Optional<FinishedSession> endSession(UUID playerUUID, long time, ActiveSession activeSession) {
-        if (activeSession == null || activeSession.getStart() > time) {
+        if (activeSession == null) {
             return Optional.empty();
         }
         ACTIVE_SESSIONS.remove(playerUUID);
+        if (activeSession.getStart() > time) {
+            return Optional.empty();
+        }
         return Optional.of(activeSession.toFinishedSession(time));
     }
 

@@ -80,12 +80,13 @@ public class PlayerJoinEventConsumer {
     }
 
     public void onJoinGameServer(PlayerJoin join) {
+        Optional<FinishedSession> interruptedSession = cacheActiveSession(join);
         processing.submitCritical(() -> {
             storeWorldInformation(join);
             storeGamePlayer(join)
                     .thenRunAsync(() -> {
                         storeJoinAddress(join);
-                        cacheActiveSession(join).ifPresent(this::storeInterruptedSession);
+                        interruptedSession.ifPresent(this::storeInterruptedSession);
                         storeGeolocation(join);
                         storeOperatorStatus(join);
                         storeNickname(join);
@@ -96,9 +97,9 @@ public class PlayerJoinEventConsumer {
     }
 
     public void onJoinProxyServer(PlayerJoin join) {
+        cacheActiveSession(join);
         processing.submitCritical(() -> storeProxyPlayer(join)
                 .thenRunAsync(() -> {
-                    cacheActiveSession(join);
                     storeGeolocation(join);
                     updatePlayerDataExtensionValues(join);
                     updateExport(join);

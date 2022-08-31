@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.JoinAddressCache;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
 import com.djrapitops.plan.processing.Processing;
@@ -67,6 +68,13 @@ public class PlayerLeaveEventConsumer {
     }
 
     public void onLeaveGameServer(PlayerLeave leave) {
+        Optional<ActiveSession> activeSession = SessionCache.getCachedSession(leave.getPlayerUUID());
+        if (activeSession.isEmpty()) {
+            // Quit event processed before Join event, delay processing
+            processing.submitCritical(() -> onLeaveGameServer(leave));
+            return;
+        }
+
         endSession(leave).ifPresent(this::storeFinishedSession);
         storeBanStatus(leave);
         updateExport(leave);
