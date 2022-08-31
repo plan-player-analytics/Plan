@@ -55,11 +55,6 @@ public class PlanVelocityMocker {
         return this;
     }
 
-    @Deprecated
-    public PlanVelocityMocker withLogging() {
-        return this;
-    }
-
     public PlanVelocityMocker withProxy() {
         ProxyServer server = Mockito.mock(ProxyServer.class);
 

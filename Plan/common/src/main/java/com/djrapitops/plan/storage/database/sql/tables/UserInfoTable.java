@@ -45,7 +45,7 @@ public class UserInfoTable {
     /**
      * @deprecated Join address is now stored in {@link JoinAddressTable}, this column may become unreliable in the future.
      */
-    @Deprecated
+    @Deprecated(since = "5.4 build 1722")
     public static final String JOIN_ADDRESS = "join_address";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +

@@ -22,7 +22,10 @@ import com.djrapitops.plan.extension.table.Table;
 
 import java.util.List;
 
-@Deprecated
+/**
+ * @deprecated Table html generation is to be done in frontend in the future.
+ */
+@Deprecated(since = "5.5")
 public class HtmlTableWithColoredHeader implements HtmlTable {
     private final Header[] headers;
     private final Color headerColor;

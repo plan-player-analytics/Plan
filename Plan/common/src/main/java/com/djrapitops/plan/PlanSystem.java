@@ -145,7 +145,10 @@ public class PlanSystem implements SubSystem {
         logger.info("§2");
     }
 
-    @Deprecated
+    /**
+     * @deprecated Use {@link com.djrapitops.plan.delivery.webserver.Addresses} instead.
+     */
+    @Deprecated(since = "Addresses.java")
     public String getMainAddress() {
         return webServerSystem.getAddresses().getMainAddress().orElse(webServerSystem.getAddresses().getFallbackLocalhostAddress());
     }

@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.domain.PlayerIdentifier;
 import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -37,67 +36,12 @@ public class PlayerKill implements DateHolder {
     private final long date;
     private final ServerIdentifier server;
 
-    /**
-     * Creates a PlayerKill object with given parameters.
-     *
-     * @param killer UUID of the killer.
-     * @param victim UUID of the victim.
-     * @param weapon Weapon used.
-     * @param date   Epoch millisecond at which the kill occurred.
-     */
-    @Deprecated
-    public PlayerKill(UUID killer, UUID victim, String weapon, long date) {
-        this.killer = new Killer(killer, null);
-        this.victim = new Victim(victim, null);
-        this.weapon = weapon;
-        this.date = date;
-        this.server = new ServerIdentifier(null, "");
-    }
-
-    @Deprecated
-    public PlayerKill(UUID killer, UUID victim, String weapon, long date, String victimName) {
-        this.killer = new Killer(killer, null);
-        this.victim = new Victim(victim, victimName);
-        this.weapon = weapon;
-        this.date = date;
-        this.server = new ServerIdentifier(null, "");
-    }
-
-    @Deprecated
-    public PlayerKill(UUID killer, UUID victim, String weapon, long date, String victimName, String killerName) {
-        this.killer = new Killer(killer, killerName);
-        this.victim = new Victim(victim, victimName);
-        this.weapon = weapon;
-        this.date = date;
-        this.server = new ServerIdentifier(null, "");
-    }
-
     public PlayerKill(Killer killer, Victim victim, ServerIdentifier server, String weapon, long date) {
         this.killer = killer;
         this.victim = victim;
         this.weapon = weapon;
         this.date = date;
         this.server = server;
-    }
-
-    @Deprecated
-    public UUID getKillerUUID() {
-        return killer.getUuid();
-    }
-
-    @Deprecated
-    public UUID getVictimUUID() {
-        return victim.getUuid();
-    }
-
-    @Deprecated
-    public Optional<String> getVictimName() {
-        return Optional.ofNullable(victim.getName());
-    }
-
-    @Deprecated
-    public Optional<String> getKillerName() {
-        return Optional.ofNullable(killer.getName());
     }
 
     public Killer getKiller() {

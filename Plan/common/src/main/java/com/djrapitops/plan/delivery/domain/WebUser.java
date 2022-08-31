@@ -24,10 +24,10 @@ import java.util.Objects;
  * Object containing webserver security user information.
  *
  * @author AuroraLS3
- * <p>
+ * @deprecated Use {@link com.djrapitops.plan.delivery.domain.auth.User} instead
  * TODO Rewrite Authentication stuff
  */
-@Deprecated
+@Deprecated(since = "2022-02-12, User.java")
 public class WebUser {
 
     private final String username;

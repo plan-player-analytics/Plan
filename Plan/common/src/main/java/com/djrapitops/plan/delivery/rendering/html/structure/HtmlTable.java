@@ -29,7 +29,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Deprecated
+/**
+ * @deprecated Table html generation is to be done in frontend in the future.
+ */
+@Deprecated(since = "5.5")
 public interface HtmlTable {
 
     static HtmlTable fromExtensionTable(Table table, com.djrapitops.plan.extension.icon.Color tableColor) {

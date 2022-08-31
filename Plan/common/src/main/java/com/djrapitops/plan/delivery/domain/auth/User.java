@@ -70,12 +70,18 @@ public class User implements Comparable<User> {
         return passwordHash;
     }
 
-    @Deprecated
+    /**
+     * @deprecated Permission list should be used instead.
+     */
+    @Deprecated(since = "2022-05-04", forRemoval = true)
     public int getPermissionLevel() {
         return permissionLevel;
     }
 
-    @Deprecated
+    /**
+     * @deprecated Permission list should be used instead.
+     */
+    @Deprecated(since = "2022-05-04", forRemoval = true)
     public void setPermissionLevel(int permissionLevel) {
         this.permissionLevel = permissionLevel;
     }

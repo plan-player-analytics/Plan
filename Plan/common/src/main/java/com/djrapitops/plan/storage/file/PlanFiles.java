@@ -67,11 +67,6 @@ public class PlanFiles implements SubSystem {
         return dataFolder.toPath();
     }
 
-    @Deprecated
-    public Path getCustomizationDirectory() {
-        return config.get().getResourceSettings().getCustomizationDirectory();
-    }
-
     public File getLogsFolder() {
         try {
             File folder = getFileFromPluginFolder("logs");

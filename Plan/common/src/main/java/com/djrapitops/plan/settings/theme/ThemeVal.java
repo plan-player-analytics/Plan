@@ -67,12 +67,7 @@ public enum ThemeVal {
     GRAPH_MAX_PING("GraphColors.Ping.Max", "#ffa000"),
     GRAPH_MIN_PING("GraphColors.Ping.Min", "#ffd54f"),
     WORLD_MAP_HIGH("GraphColors.WorldMap_High", "#267f00"),
-    WORLD_MAP_LOW("GraphColors.WorldMap_Low", "#EEFFEE"),
-
-    @Deprecated
-    PARSED_SESSION_ACCORDION("ParsedElements.SessionAccordion", "teal"),
-    @Deprecated
-    PARSED_SERVER_ACCORDION("ParsedElements.ServerAccordion", "light-green");
+    WORLD_MAP_LOW("GraphColors.WorldMap_Low", "#EEFFEE");
 
     private final String themePath;
     private final String defaultValue;

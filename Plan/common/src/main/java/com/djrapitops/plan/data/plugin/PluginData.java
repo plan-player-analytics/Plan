@@ -35,7 +35,7 @@ import java.util.UUID;
  * @author AuroraLS3
  * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
  */
-@Deprecated
+@Deprecated(since = "5.0")
 public abstract class PluginData {
 
     private final ContainerSize size;

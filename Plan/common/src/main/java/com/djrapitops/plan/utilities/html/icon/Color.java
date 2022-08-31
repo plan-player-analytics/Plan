@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * @deprecated This Class exists to keep plugins that used PluginData from breaking.
  */
-@Deprecated
+@Deprecated(since = "5.0")
 public enum Color {
     RED("col-red"),
     PINK("col-pink"),

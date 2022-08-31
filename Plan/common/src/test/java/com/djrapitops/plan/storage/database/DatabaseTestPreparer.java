@@ -41,6 +41,9 @@ public interface DatabaseTestPreparer {
 
     ServerUUID serverUUID();
 
+    /**
+     * @deprecated Dependencies may not include the full system in the future.
+     */
     @Deprecated
     PlanSystem system();
 

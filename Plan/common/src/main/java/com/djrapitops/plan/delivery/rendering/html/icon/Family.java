@@ -22,7 +22,7 @@ public enum Family {
     SOLID("fa"),
     REGULAR("far"),
     BRAND("fab"),
-    @Deprecated
+    @Deprecated(since = "5.0")
     LINE(" material-icons");
 
     private final String familyClass;
