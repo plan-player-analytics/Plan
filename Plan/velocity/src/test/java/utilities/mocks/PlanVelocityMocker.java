@@ -52,6 +52,7 @@ public class PlanVelocityMocker {
     }
 
     public PlanVelocityMocker withDataFolder(File tempFolder) {
+        doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 
