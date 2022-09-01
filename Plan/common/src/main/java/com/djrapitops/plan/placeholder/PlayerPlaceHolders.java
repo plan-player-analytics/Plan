@@ -158,10 +158,10 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         placeholders.register("player_activity_index",
-                player -> player.getActivityIndex(
+                player -> decimals.apply(player.getActivityIndex(
                         now(),
                         config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
-                ).getValue()
+                ).getValue())
         );
         placeholders.register("player_activity_group",
                 player -> player.getActivityIndex(
@@ -209,6 +209,7 @@ public class PlayerPlaceHolders implements Placeholders {
     }
 
     private void registerKillPlaceholders(PlanPlaceholders placeholders) {
+        Formatter<Double> decimals = formatters.decimals();
         placeholders.register("player_player_caused_deaths",
                 player -> PlayerVersusMutator.forContainer(player).toPlayerDeathCount()
         );
@@ -219,10 +220,10 @@ public class PlayerPlaceHolders implements Placeholders {
                 player -> PlayerVersusMutator.forContainer(player).toMobDeathCount()
         );
         placeholders.register("player_kdr",
-                player -> PlayerVersusMutator.forContainer(player).toKillDeathRatio()
+                player -> decimals.apply(PlayerVersusMutator.forContainer(player).toKillDeathRatio())
         );
         placeholders.register("player_mob_kdr",
-                player -> PlayerVersusMutator.forContainer(player).toMobKillDeathRatio()
+                player -> decimals.apply(PlayerVersusMutator.forContainer(player).toMobKillDeathRatio())
         );
         for (int i = 1; i <= 10; i++) {
             final int index = i;

@@ -184,13 +184,13 @@ public class ServerPlaceHolders implements Placeholders {
                 parameters -> database.query(TPSQueries.minFreeDisk(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("server_average_free_disk_day",
-                parameters -> database.query(TPSQueries.averageFreeDisk(dayAgo(), now(), getServerUUID(parameters))));
+                parameters -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageFreeDisk(dayAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_average_free_disk_week",
-                parameters -> database.query(TPSQueries.averageFreeDisk(weekAgo(), now(), getServerUUID(parameters))));
+                parameters -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageFreeDisk(weekAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_average_free_disk_month",
-                parameters -> database.query(TPSQueries.averageFreeDisk(monthAgo(), now(), getServerUUID(parameters))));
+                parameters -> formatters.byteSizeLong().apply(database.query(TPSQueries.averageFreeDisk(monthAgo(), now(), getServerUUID(parameters)))));
 
         placeholders.registerStatic("server_name",
                 () -> serverInfo.getServer().getName());
