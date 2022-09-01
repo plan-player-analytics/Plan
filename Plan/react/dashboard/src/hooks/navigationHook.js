@@ -8,7 +8,21 @@ export const NavigationContextProvider = ({children}) => {
     const [updating, setUpdating] = useState(false);
     const [lastUpdate, setLastUpdate] = useState({date: 0, formatted: ""});
 
+    const [items, setItems] = useState([]);
     const [sidebarExpanded, setSidebarExpanded] = useState(window.innerWidth > 1350);
+
+    const setSidebarItems = useCallback((items) => {
+        const pathname = window.location.href;
+        setItems(items);
+        for (const item of items) {
+            if ('/' !== item.href && pathname.includes(item.href)) setCurrentTab(item.name);
+            if (item.contents) {
+                for (const subItem of item.contents) {
+                    if ('/' !== subItem.href && pathname.includes(subItem.href)) setCurrentTab(subItem.name);
+                }
+            }
+        }
+    }, [setItems]);
 
     const requestUpdate = useCallback(() => {
         if (!updating) {
@@ -32,7 +46,7 @@ export const NavigationContextProvider = ({children}) => {
     const sharedState = {
         currentTab, setCurrentTab,
         lastUpdate, updateRequested, updating, requestUpdate, finishUpdate,
-        sidebarExpanded, setSidebarExpanded, toggleSidebar
+        sidebarExpanded, setSidebarExpanded, toggleSidebar, sidebarItems: items, setSidebarItems
     }
     return (<NavigationContext.Provider value={sharedState}>
             {children}

@@ -31,7 +31,7 @@ import {ServerExtensionContextProvider, useServerExtensionContext} from "../../h
 
 const ServerSidebar = () => {
     const {t, i18n} = useTranslation();
-    const [sidebarItems, setSidebarItems] = useState([]);
+    const {sidebarItems, setSidebarItems} = useNavigation();
     const {extensionData} = useServerExtensionContext();
     const {authRequired, loggedIn, user} = useAuth();
 
@@ -99,7 +99,7 @@ const ServerSidebar = () => {
 
         setSidebarItems(items);
         window.document.title = `Plan | Server Analysis`;
-    }, [t, i18n, extensionData])
+    }, [t, i18n, extensionData, setSidebarItems])
 
     return (
         <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
