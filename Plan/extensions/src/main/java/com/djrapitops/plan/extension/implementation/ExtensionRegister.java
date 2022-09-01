@@ -50,6 +50,7 @@ import net.playeranalytics.extension.marriagemaster.MarriageMasterExtensionFacto
 import net.playeranalytics.extension.mcmmo.McMMOExtensionFactory;
 import net.playeranalytics.extension.minigameslib.MinigameLibExtensionFactory;
 import net.playeranalytics.extension.mypet.MyPetExtensionFactory;
+import net.playeranalytics.extension.nucleus.extension.NucleusExtensionFactory;
 import net.playeranalytics.extension.nuvotifier.NuVotifierExtensionFactory;
 import net.playeranalytics.extension.placeholderapi.PlaceholderAPIExtensionFactory;
 import net.playeranalytics.extension.plotsquared.PlotSquaredExtensionFactory;
@@ -130,7 +131,7 @@ public class ExtensionRegister {
         register(new McMMOExtensionFactory(), McMMOExtensionFactory::createExtension, McMMOExtensionFactory::registerExpansion);
         registerMany(new MinigameLibExtensionFactory(), MinigameLibExtensionFactory::createExtensions);
         register(new MyPetExtensionFactory(), MyPetExtensionFactory::createExtension);
-        //register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension); // TODO: update for Sponge API 8
+        register(new NucleusExtensionFactory(), NucleusExtensionFactory::createExtension);
         register(new NuVotifierExtensionFactory(), NuVotifierExtensionFactory::createExtension);
         register(new PlaceholderAPIExtensionFactory(), PlaceholderAPIExtensionFactory::createExtension);
         register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);

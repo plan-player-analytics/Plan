@@ -31,7 +31,7 @@ dependencies {
     shadow 'net.playeranalytics:Extension-McMMO:2.1.149-R2.5'
     shadow 'net.playeranalytics:Extension-MinigamesLib:1.14.17-R1.2'
     shadow 'net.playeranalytics:Extension-MyPet:3.10-R1.2'
-//    shadow 'net.playeranalytics:Extension-Nucleus:2.3.0-R1.1' // TODO Update to sponge 8
+    shadow 'net.playeranalytics:Extension-Nucleus:3.0.0-R1.0'
     shadow 'net.playeranalytics:Extension-nuVotifier:2.3.4-R1.3'
     shadow 'net.playeranalytics:Extension-PlaceholderAPI:2.10.9-R1.5'
     shadow 'net.playeranalytics:Extension-PlotSquared:6.9.4-R1.3'
