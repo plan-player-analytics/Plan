@@ -248,6 +248,7 @@ public class PageFactory {
     }
 
     public Page errorsPage() throws IOException {
-        return new ErrorsPage(getResource("error.html"), locale.get(), theme.get(), versionChecker.get());
+        String reactHtml = getResource("index.html");
+        return () -> reactHtml;
     }
 }

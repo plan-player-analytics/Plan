@@ -32,6 +32,7 @@ import LoginPage from "./views/layout/LoginPage";
 import ServerPerformance from "./views/server/ServerPerformance";
 import ServerPluginData from "./views/server/ServerPluginData";
 import ServerWidePluginData from "./views/server/ServerWidePluginData";
+import ErrorsPage from "./views/layout/ErrorsPage";
 
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
 
@@ -99,6 +100,7 @@ function App() {
                                     icon: faMapSigns
                                 }}/>}/>
                             </Route>
+                            <Route path="/errors" element={<ErrorsPage/>}/>
                             <Route path="/docs" element={<React.Suspense fallback={<></>}>
                                 <SwaggerView/>
                             </React.Suspense>}/>
