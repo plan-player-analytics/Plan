@@ -58,6 +58,7 @@ import net.playeranalytics.extension.protectionstones.ProtectionStonesExtensionF
 import net.playeranalytics.extension.protocolsupport.ProtocolSupportExtensionFactory;
 import net.playeranalytics.extension.quests.QuestsExtensionFactory;
 import net.playeranalytics.extension.react.ReactExtensionFactory;
+import net.playeranalytics.extension.redprotect.RedProtectExtensionFactory;
 import net.playeranalytics.extension.spongeeconomy.SpongeEconomyExtensionFactory;
 import net.playeranalytics.extension.superbvote.SuperbVoteExtensionFactory;
 import net.playeranalytics.extension.tebex.BuycraftExtensionFactory;
@@ -139,7 +140,7 @@ public class ExtensionRegister {
         register(new ProtocolSupportExtensionFactory(), ProtocolSupportExtensionFactory::createExtension);
         register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension);
         register(new ReactExtensionFactory(), ReactExtensionFactory::createExtension);
-//        register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension); // TODO: update for Sponge API 8
+        register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
         register(new SuperbVoteExtensionFactory(), SuperbVoteExtensionFactory::createExtension);
         register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);
