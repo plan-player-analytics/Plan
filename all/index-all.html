@@ -2849,6 +2849,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/ConfigSystem.html#config" class="member-name-link">config</a> - Variable in class com.djrapitops.plan.settings.<a href="com/djrapitops/plan/settings/ConfigSystem.html" title="class in com.djrapitops.plan.settings">ConfigSystem</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/DBSystem.html#config" class="member-name-link">config</a> - Variable in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/SQLDB.html#config" class="member-name-link">config</a> - Variable in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/version/VersionChecker.html#config" class="member-name-link">config</a> - Variable in class com.djrapitops.plan.version.<a href="com/djrapitops/plan/version/VersionChecker.html" title="class in com.djrapitops.plan.version">VersionChecker</a></dt>
@@ -3619,6 +3621,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/storage/upkeep/DBCleanTask.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.query.QuerySvc,com.djrapitops.plan.identification.ServerInfo,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">DBCleanTask(PlanConfig, Locale, DBSystem, QuerySvc, ServerInfo, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.storage.upkeep.<a href="com/djrapitops/plan/storage/upkeep/DBCleanTask.html" title="class in com.djrapitops.plan.storage.upkeep">DBCleanTask</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/exceptions/database/DBClosedException.html" class="type-name-link" title="class in com.djrapitops.plan.exceptions.database">DBClosedException</a> - Exception in <a href="com/djrapitops/plan/exceptions/database/package-summary.html">com.djrapitops.plan.exceptions.database</a></dt>
+<dd>
+<div class="block">Database is closed and exception is needed to stop execution, not to be logged.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/exceptions/database/DBClosedException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">DBClosedException(String)</a> - Constructor for exception com.djrapitops.plan.exceptions.database.<a href="com/djrapitops/plan/exceptions/database/DBClosedException.html" title="class in com.djrapitops.plan.exceptions.database">DBClosedException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/exceptions/database/DBInitException.html" class="type-name-link" title="class in com.djrapitops.plan.exceptions.database">DBInitException</a> - Exception in <a href="com/djrapitops/plan/exceptions/database/package-summary.html">com.djrapitops.plan.exceptions.database</a></dt>
 <dd>
 <div class="block">Thrown when something goes wrong with <code>Database#init</code>.</div>
@@ -3653,7 +3661,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">System that holds the active databases.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/storage/database/DBSystem.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.SQLiteDB.Factory,net.playeranalytics.plugin.server.PluginLogger)" class="member-name-link">DBSystem(Locale, SQLiteDB.Factory, PluginLogger)</a> - Constructor for class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a></dt>
+<dt><a href="com/djrapitops/plan/storage/database/DBSystem.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.SQLiteDB.Factory,net.playeranalytics.plugin.server.PluginLogger)" class="member-name-link">DBSystem(PlanConfig, Locale, SQLiteDB.Factory, PluginLogger)</a> - Constructor for class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/Transaction.html#dbType" class="member-name-link">dbType</a> - Variable in class com.djrapitops.plan.storage.database.transactions.<a href="com/djrapitops/plan/storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a></dt>
 <dd>&nbsp;</dd>
@@ -13344,7 +13352,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Bungee Database system that initializes MySQL object.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/storage/database/ProxyDBSystem.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.MySQLDB,com.djrapitops.plan.storage.database.SQLiteDB.Factory,net.playeranalytics.plugin.server.PluginLogger)" class="member-name-link">ProxyDBSystem(Locale, MySQLDB, SQLiteDB.Factory, PluginLogger)</a> - Constructor for class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/ProxyDBSystem.html" title="class in com.djrapitops.plan.storage.database">ProxyDBSystem</a></dt>
+<dt><a href="com/djrapitops/plan/storage/database/ProxyDBSystem.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.MySQLDB,com.djrapitops.plan.storage.database.SQLiteDB.Factory,net.playeranalytics.plugin.server.PluginLogger)" class="member-name-link">ProxyDBSystem(PlanConfig, Locale, MySQLDB, SQLiteDB.Factory, PluginLogger)</a> - Constructor for class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/ProxyDBSystem.html" title="class in com.djrapitops.plan.storage.database">ProxyDBSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/config/paths/ProxySettings.html" class="type-name-link" title="class in com.djrapitops.plan.settings.config.paths">ProxySettings</a> - Class in <a href="com/djrapitops/plan/settings/config/paths/package-summary.html">com.djrapitops.plan.settings.config.paths</a></dt>
 <dd>
