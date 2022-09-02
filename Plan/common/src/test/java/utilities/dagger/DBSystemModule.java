@@ -16,7 +16,6 @@
  */
 package utilities.dagger;
 
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -40,9 +39,9 @@ public class DBSystemModule {
             MySQLDB mySQLDB,
             PluginLogger logger
     ) {
-        return new DBSystem(locale, sqLiteDB, logger) {
+        return new DBSystem(config, locale, sqLiteDB, logger) {
             @Override
-            public void enable() throws EnableException {
+            public void enable() {
                 databases.add(sqLiteDB.usingDefaultFile());
                 databases.add(mySQLDB);
                 String dbType = config.get(DatabaseSettings.TYPE).toLowerCase().trim();

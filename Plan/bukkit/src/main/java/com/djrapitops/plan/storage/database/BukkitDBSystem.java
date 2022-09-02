@@ -32,7 +32,6 @@ import javax.inject.Singleton;
 @Singleton
 public class BukkitDBSystem extends DBSystem {
 
-    private final PlanConfig config;
 
     @Inject
     public BukkitDBSystem(
@@ -42,8 +41,7 @@ public class BukkitDBSystem extends DBSystem {
             PlanConfig config,
             PluginLogger logger
     ) {
-        super(locale, sqLiteDB, logger);
-        this.config = config;
+        super(config, locale, sqLiteDB, logger);
 
         databases.add(mySQLDB);
         databases.add(sqLiteDB.usingDefaultFile());

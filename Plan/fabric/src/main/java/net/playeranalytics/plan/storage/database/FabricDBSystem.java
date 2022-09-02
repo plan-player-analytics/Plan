@@ -36,8 +36,6 @@ import javax.inject.Singleton;
 @Singleton
 public class FabricDBSystem extends DBSystem {
 
-    private final PlanConfig config;
-
     @Inject
     public FabricDBSystem(
             Locale locale,
@@ -46,8 +44,7 @@ public class FabricDBSystem extends DBSystem {
             PlanConfig config,
             PluginLogger logger
     ) {
-        super(locale, sqLiteDB, logger);
-        this.config = config;
+        super(config, locale, sqLiteDB, logger);
 
         databases.add(mySQLDB);
         databases.add(sqLiteDB.usingDefaultFile());

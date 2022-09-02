@@ -32,8 +32,6 @@ import javax.inject.Singleton;
 @Singleton
 public class NukkitDBSystem extends DBSystem {
 
-    private final PlanConfig config;
-
     @Inject
     public NukkitDBSystem(
             Locale locale,
@@ -42,8 +40,7 @@ public class NukkitDBSystem extends DBSystem {
             PlanConfig config,
             PluginLogger logger
     ) {
-        super(locale, sqLiteDB, logger);
-        this.config = config;
+        super(config, locale, sqLiteDB, logger);
 
         databases.add(mySQLDB);
         databases.add(sqLiteDB.usingDefaultFile());

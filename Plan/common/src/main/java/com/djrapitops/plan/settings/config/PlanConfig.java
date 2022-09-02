@@ -98,7 +98,7 @@ public class PlanConfig extends Config {
     }
 
     public boolean isTrue(Setting<Boolean> setting) {
-        return get(setting);
+        return Boolean.TRUE.equals(get(setting));
     }
 
     public boolean isFalse(Setting<Boolean> setting) {

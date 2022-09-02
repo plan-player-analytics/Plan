@@ -14,33 +14,16 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database;
-
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.locale.Locale;
-import net.playeranalytics.plugin.server.PluginLogger;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
+package com.djrapitops.plan.exceptions.database;
 
 /**
- * Bungee Database system that initializes MySQL object.
+ * Database is closed and exception is needed to stop execution, not to be logged.
  *
  * @author AuroraLS3
  */
-@Singleton
-public class ProxyDBSystem extends DBSystem {
+public class DBClosedException extends DBOpException {
 
-    @Inject
-    public ProxyDBSystem(
-            PlanConfig config,
-            Locale locale,
-            MySQLDB mySQLDB,
-            SQLiteDB.Factory sqLiteDB,
-            PluginLogger logger
-    ) {
-        super(config, locale, sqLiteDB, logger);
-        databases.add(mySQLDB);
-        db = mySQLDB;
+    public DBClosedException(String message) {
+        super(message);
     }
 }

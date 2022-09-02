@@ -19,6 +19,7 @@ package com.djrapitops.plan.utilities.logging;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.ExceptionWithContext;
+import com.djrapitops.plan.exceptions.database.DBClosedException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.Lists;
@@ -92,6 +93,10 @@ public class PluginErrorLogger implements ErrorLogger {
     }
 
     private void log(Consumer<String> logMethod, Throwable throwable, ErrorContext context) {
+        if (isExceptionThatShouldNotBeLogged(throwable)) {
+            return;
+        }
+
         String errorName = throwable.getClass().getSimpleName();
         String hash = hash(throwable);
         Path logsDir = files.getLogsDirectory();
@@ -103,6 +108,10 @@ public class PluginErrorLogger implements ErrorLogger {
         for (String message : buildConsoleMessage(errorLog, throwable, context)) {
             logMethod.accept(message);
         }
+    }
+
+    private boolean isExceptionThatShouldNotBeLogged(Throwable throwable) {
+        return throwable instanceof DBClosedException || (throwable.getCause() != null && isExceptionThatShouldNotBeLogged(throwable.getCause()));
     }
 
     private void logToFile(Path errorLog, Throwable throwable, ErrorContext context, String hash) {

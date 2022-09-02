@@ -19,13 +19,21 @@ package com.djrapitops.plan.storage.database;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.database.DBInitException;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Singleton;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * System that holds the active databases.
@@ -35,6 +43,7 @@ import java.util.Set;
 @Singleton
 public class DBSystem implements SubSystem {
 
+    protected final PlanConfig config;
     protected final Locale locale;
     private final SQLiteDB.Factory sqLiteFactory;
     protected final PluginLogger logger;
@@ -43,10 +52,12 @@ public class DBSystem implements SubSystem {
     protected final Set<Database> databases;
 
     public DBSystem(
+            PlanConfig config,
             Locale locale,
             SQLiteDB.Factory sqLiteDB,
             PluginLogger logger
     ) {
+        this.config = config;
         this.locale = locale;
         this.sqLiteFactory = sqLiteDB;
         this.logger = logger;
@@ -94,7 +105,30 @@ public class DBSystem implements SubSystem {
         } catch (DBInitException e) {
             Throwable cause = e.getCause();
             String message = cause == null ? e.getMessage() : cause.getMessage();
-            throw new EnableException(db.getType().getName() + " init failure: " + message, cause);
+            if (message.contains("The driver has not received any packets from the server.")) {
+                throw new EnableException(getMySQLConnectionFailureMessage());
+            } else {
+                throw new EnableException("Failed to start " + db.getType().getName() + ": " + message, cause);
+            }
+        }
+    }
+
+    @NotNull
+    private String getMySQLConnectionFailureMessage() {
+        return "Failed to start " + db.getType().getName() + ": Communications link failure. Plan could not connect to MySQL-" +
+                "\n- Check that database address '" + config.get(DatabaseSettings.MYSQL_HOST) + ":" + config.get(DatabaseSettings.MYSQL_PORT) + "' accessible." +
+                "\n- Check that database called '" + config.get(DatabaseSettings.MYSQL_DATABASE) + "' exists inside MySQL." +
+                "\n- Check that MySQL user '" + config.get(DatabaseSettings.MYSQL_USER) + "' has privileges to access the database." +
+                "\n- Check that other MySQL settings in Plan config correct." +
+                (isInsideDocker() ? "\n- Check that your docker container networking is set up correctly https://pterodactyl.io/tutorials/mysql_setup.html (Since your server is running inside a docker)" : "") +
+                "\n  More help: https://github.com/plan-player-analytics/Plan/wiki/Bungee-Set-Up#step-2-create-a-mysql-database-for-plan";
+    }
+
+    private boolean isInsideDocker() {
+        try (Stream<String> stream = Files.lines(Paths.get("/proc/1/cgroup"))) {
+            return stream.anyMatch(line -> line.contains("/docker"));
+        } catch (IOException | InvalidPathException | SecurityException e) {
+            return false;
         }
     }
 
