@@ -111,7 +111,8 @@ public class PluginErrorLogger implements ErrorLogger {
     }
 
     private boolean isExceptionThatShouldNotBeLogged(Throwable throwable) {
-        return throwable instanceof DBClosedException || (throwable.getCause() != null && isExceptionThatShouldNotBeLogged(throwable.getCause()));
+        return throwable instanceof DBClosedException
+                || throwable.getCause() != null && isExceptionThatShouldNotBeLogged(throwable.getCause());
     }
 
     private void logToFile(Path errorLog, Throwable throwable, ErrorContext context, String hash) {
