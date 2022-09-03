@@ -44,7 +44,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 public class SessionJoinAddressPatch extends Patch {
 
     public static Query<List<String>> uniqueJoinAddressesOld() {
-        String sql = SELECT + DISTINCT + "LOWER(COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?)) as address" +
+        String sql = SELECT + DISTINCT + "COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?) as address" +
                 FROM + UserInfoTable.TABLE_NAME +
                 ORDER_BY + "address ASC";
         return new QueryStatement<>(sql, 100) {
@@ -79,7 +79,7 @@ public class SessionJoinAddressPatch extends Patch {
     private Integer getDefaultAddressId() {
         return query(new QueryStatement<>(SELECT + ID +
                 FROM + JoinAddressTable.TABLE_NAME +
-                WHERE + JoinAddressTable.JOIN_ADDRESS + "=LOWER(?)") {
+                WHERE + JoinAddressTable.JOIN_ADDRESS + "=?") {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
@@ -99,7 +99,7 @@ public class SessionJoinAddressPatch extends Patch {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (String joinAddress : joinAddresses) {
-                    statement.setString(1, StringUtils.truncate(joinAddress.toLowerCase(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
+                    statement.setString(1, StringUtils.truncate(joinAddress, JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                     statement.addBatch();
                 }
             }

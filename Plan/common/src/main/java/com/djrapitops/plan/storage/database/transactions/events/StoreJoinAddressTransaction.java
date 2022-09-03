@@ -61,7 +61,7 @@ public class StoreJoinAddressTransaction extends Transaction {
     }
 
     private String getAddress() {
-        return StringUtils.truncate(joinAddress.get().toLowerCase(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
+        return StringUtils.truncate(joinAddress.get(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
     }
 
     @Override

@@ -38,6 +38,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -109,6 +110,7 @@ public class PlayerJoinEventConsumer {
 
     private void storeJoinAddress(PlayerJoin join) {
         join.getPlayer().getJoinAddress()
+                .map(joinAddress -> config.isTrue(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE) ? joinAddress : StringUtils.lowerCase(joinAddress))
                 .map(StoreJoinAddressTransaction::new)
                 .ifPresent(dbSystem.getDatabase()::executeTransaction);
     }
@@ -165,7 +167,7 @@ public class PlayerJoinEventConsumer {
                 join.getPlayer().getCurrentGameMode().orElse(null));
         session.getExtraData().put(PlayerName.class, new PlayerName(join.getPlayer().getName()));
         session.getExtraData().put(ServerName.class, new ServerName(join.getServer().isProxy() ? join.getServer().getName() : "Proxy Server"));
-        session.getExtraData().put(JoinAddress.class, new JoinAddress(join.getJoinAddress()));
+        session.getExtraData().put(JoinAddress.class, new JoinAddress(config.isTrue(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE) ? join.getJoinAddress() : StringUtils.lowerCase(join.getJoinAddress())));
         return session;
     }
 

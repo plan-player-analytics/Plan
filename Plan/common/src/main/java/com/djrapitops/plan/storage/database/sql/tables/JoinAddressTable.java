@@ -29,9 +29,9 @@ public class JoinAddressTable {
     public static final String JOIN_ADDRESS = "join_address";
     public static final int JOIN_ADDRESS_MAX_LENGTH = 191;
 
-    public static final String SELECT_ID = '(' + SELECT + ID + FROM + TABLE_NAME + WHERE + JOIN_ADDRESS + "=LOWER(?))";
+    public static final String SELECT_ID = '(' + SELECT + ID + FROM + TABLE_NAME + WHERE + JOIN_ADDRESS + "=?)";
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME +
-            " (" + JOIN_ADDRESS + ") VALUES (LOWER(?))";
+            " (" + JOIN_ADDRESS + ") VALUES (?)";
     public static final String DEFAULT_VALUE_FOR_LOOKUP = "unknown";
 
     private JoinAddressTable() {}

@@ -108,8 +108,6 @@ public class JoinAddressQueries {
                 new TextStringBuilder().appendWithSeparators(joinAddresses.stream().map(item -> '?').iterator(), ",") +
                 ')'; // Don't append addresses directly, SQL injection hazard
 
-        return db -> db.querySet(sql, RowExtractors.getInt(SessionsTable.USER_ID), joinAddresses
-                .stream().map(String::toLowerCase)
-                .toArray());
+        return db -> db.querySet(sql, RowExtractors.getInt(SessionsTable.USER_ID), joinAddresses.toArray());
     }
 }

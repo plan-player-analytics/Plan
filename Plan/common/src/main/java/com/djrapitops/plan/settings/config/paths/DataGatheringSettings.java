@@ -32,6 +32,7 @@ public class DataGatheringSettings {
     public static final Setting<Boolean> DISK_SPACE = new BooleanSetting("Data_gathering.Disk_space");
     public static final Setting<Boolean> LOG_UNKNOWN_COMMANDS = new BooleanSetting("Data_gathering.Commands.Log_unknown");
     public static final Setting<Boolean> COMBINE_COMMAND_ALIASES = new BooleanSetting("Data_gathering.Commands.Log_aliases_as_main_command");
+    public static final Setting<Boolean> PRESERVE_JOIN_ADDRESS_CASE = new BooleanSetting("Data_gathering.Preserve_join_address_case");
 
     private DataGatheringSettings() {
         /* static variable class */

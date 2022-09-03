@@ -17,11 +17,14 @@
 package com.djrapitops.plan.delivery.domain.datatransfer;
 
 import com.djrapitops.plan.identification.Server;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * Represents outgoing server information json.
  */
-public class ServerDto {
+public class ServerDto implements Comparable<ServerDto> {
 
     private final String serverUUID;
     private final String serverName;
@@ -47,6 +50,24 @@ public class ServerDto {
 
     public boolean isProxy() {
         return proxy;
+    }
+
+    @Override
+    public int compareTo(@NotNull ServerDto other) {
+        return String.CASE_INSENSITIVE_ORDER.compare(this.serverName, other.serverName);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        ServerDto serverDto = (ServerDto) other;
+        return isProxy() == serverDto.isProxy() && Objects.equals(getServerUUID(), serverDto.getServerUUID()) && Objects.equals(getServerName(), serverDto.getServerName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getServerUUID(), getServerName(), isProxy());
     }
 
     @Override
