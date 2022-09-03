@@ -191,7 +191,7 @@ public class JettyWebserver implements WebServer {
 
         String keyStorePath = webserverConfiguration.getKeyStorePath();
         if (!new File(keyStorePath).exists()) {
-            webserverLogMessages.keystoreFileNotFound();
+            webserverLogMessages.keystoreFileNotFound(keyStorePath);
             return Optional.empty();
         }
 

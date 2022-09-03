@@ -95,8 +95,8 @@ public class WebserverLogMessages {
         logger.warn(locale.getString(PluginLang.WEB_SERVER_FAIL_STORE_LOAD));
     }
 
-    public void keystoreFileNotFound() {
-        logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE));
+    public void keystoreFileNotFound(String keyStorePath) {
+        logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_NO_CERT_FILE, keyStorePath));
     }
 
     public void certificateExpiryIn(long expires) {
