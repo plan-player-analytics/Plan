@@ -24,6 +24,10 @@ const Divider = ({showMargin}) => (
 )
 
 const InnerItem = ({href, icon, name, nameShort}) => {
+    if (!href) {
+        return (<hr className={"nav-servers dropdown-divider mx-3 my-2"}/>)
+    }
+
     if (href.startsWith('/')) {
         return (
             <a href={href} className="collapse-item nav-button">

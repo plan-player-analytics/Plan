@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import ErrorView from "../ErrorView";
 import LoadIn from "../../components/animation/LoadIn";
 import {Card, Col, Row} from "react-bootstrap-v5";
@@ -8,14 +8,16 @@ import {useTranslation} from "react-i18next";
 import Loader from "../../components/navigation/Loader";
 import {useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 
-const ServerWidePluginData = () => {
+const PluginData = ({plugin}) => {
     const {t} = useTranslation();
-    const {plugin} = useParams();
     const {extensionData, extensionDataLoadingError} = useServerExtensionContext();
+    const [extension, setExtension] = useState(undefined);
+
+    useEffect(() => {
+        setExtension(extensionData?.extensions?.find(extension => extension.extensionInformation.pluginName === plugin))
+    }, [setExtension, extensionData, plugin])
 
     if (extensionDataLoadingError) return <ErrorView error={extensionDataLoadingError}/>;
-
-    const extension = extensionData?.find(extension => extension.extensionInformation.pluginName === plugin)
 
     if (!extension) {
         return (
@@ -47,6 +49,22 @@ const ServerWidePluginData = () => {
             </section>
         </LoadIn>
     )
+}
+
+const ServerWidePluginData = () => {
+    const {plugin} = useParams();
+    const [previousPlugin, setPreviousPlugin] = useState(undefined);
+
+    // Prevents React from reusing the extension component of two different plugins, leading to DataTables errors.
+    useEffect(() => {
+        setPreviousPlugin(plugin);
+    }, [plugin, setPreviousPlugin]);
+
+    if (plugin !== previousPlugin) {
+        return <></>
+    }
+
+    return (<PluginData plugin={plugin}/>)
 };
 
 export default ServerWidePluginData

@@ -116,6 +116,7 @@ public class ExtensionJSONResolver implements Resolver {
         List<ExtensionData> extensionData = dbSystem.getDatabase().query(new ExtensionServerDataQuery(serverUUID));
         return Map.of(
                 "extensions", extensionData.stream()
+                        .sorted()
                         .map(ExtensionDataDto::new)
                         .collect(Collectors.toList())
         );

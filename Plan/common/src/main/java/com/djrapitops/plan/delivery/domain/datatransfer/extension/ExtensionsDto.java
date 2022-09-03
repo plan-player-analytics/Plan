@@ -33,7 +33,7 @@ public class ExtensionsDto {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
         this.serverName = serverName;
-        this.extensionData = extensionData.stream().map(ExtensionDataDto::new).collect(Collectors.toList());
+        this.extensionData = extensionData.stream().sorted().map(ExtensionDataDto::new).collect(Collectors.toList());
     }
 
     public String getServerUUID() {

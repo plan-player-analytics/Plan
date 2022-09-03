@@ -1,13 +1,10 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import {useDataRequest} from "./dataFetchHook";
 import {fetchExtensionData} from "../service/serverService";
-import {useParams} from "react-router-dom";
 
 const ServerExtensionContext = createContext({});
 
-export const ServerExtensionContextProvider = ({children}) => {
-    const {identifier} = useParams();
-
+export const ServerExtensionContextProvider = ({identifier, children}) => {
     const [extensionData, setExtensionData] = useState(undefined);
     const [extensionDataLoadingError, setExtensionDataLoadingError] = useState(undefined);
 

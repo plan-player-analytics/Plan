@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useTranslation} from "react-i18next";
-import {Outlet, useParams} from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import {useNavigation} from "../../hooks/navigationHook";
 import {
-    faCampground,
-    faChartArea,
     faChartLine,
     faCogs,
     faCubes,
     faGlobe,
     faInfoCircle,
+    faNetworkWired,
     faSearch,
+    faServer,
     faUserGroup,
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
@@ -21,41 +21,32 @@ import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
-import ErrorPage from "./ErrorPage";
 import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
-import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchServerIdentity} from "../../service/serverService";
 import ExtensionIcon from "../../components/extensions/ExtensionIcon";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 
-const ServerSidebar = () => {
+const NetworkSidebar = () => {
     const {t, i18n} = useTranslation();
     const {sidebarItems, setSidebarItems} = useNavigation();
     const {extensionData} = useServerExtensionContext();
-    const {authRequired, loggedIn, user} = useAuth();
-
-    const {isProxy} = useMetadata();
-    const showBackButton = isProxy
-        && (!authRequired || (loggedIn && user.permissions.filter(perm => perm !== 'page.network').length));
 
     useEffect(() => {
+        const servers = []
         const items = [
-            {name: 'html.label.serverOverview', icon: faInfoCircle, href: "overview"},
+            {name: 'html.label.networkOverview', icon: faInfoCircle, href: "overview"},
             {},
-            {name: 'html.label.information'},
             {
-                name: 'html.label.onlineActivity',
-                icon: faChartArea,
+                name: 'html.label.servers',
+                icon: faServer,
                 contents: [
-                    {
-                        nameShort: 'html.label.overview',
-                        name: 'html.label.playersOnlineOverview',
-                        icon: faChartArea,
-                        href: "online-activity"
-                    },
+                    {name: 'html.label.overview', icon: faNetworkWired, href: "serversOverview"},
                     {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions"},
-                    {name: 'html.label.pvpPve', icon: faCampground, href: "pvppve"}
+                    {name: 'html.label.performance', icon: faCogs, href: "performance"},
+                    {},
+                    ...servers.map(server => {
+                        return {name: server.serverName, icon: faServer, href: "/server/" + server.serverUUID}
+                    })
                 ]
             },
             {
@@ -73,7 +64,6 @@ const ServerSidebar = () => {
                     {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
                 ]
             },
-            {name: 'html.label.performance', icon: faCogs, href: "performance"},
             {},
             {name: 'html.label.plugins'},
             {name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"}
@@ -98,57 +88,31 @@ const ServerSidebar = () => {
         );
 
         setSidebarItems(items);
-        window.document.title = `Plan | Server Analysis`;
+        window.document.title = `Plan | Network`;
     }, [t, i18n, extensionData, setSidebarItems])
 
     return (
-        <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
+        <Sidebar items={sidebarItems} showBackButton={false}/>
     )
 }
 
 const ServerPage = () => {
-    const {t} = useTranslation();
-    const {identifier} = useParams();
-    const {isProxy, serverName} = useMetadata();
-
-    const {
-        data: serverIdentity,
-        loadingError: identityLoadingError
-    } = useDataRequest(fetchServerIdentity, [identifier]);
-    const [error] = useState(undefined);
+    const {networkName, serverUUID} = useMetadata();
 
     const {currentTab} = useNavigation();
 
     const {authRequired, loggedIn} = useAuth();
     if (authRequired && !loggedIn) return <MainPageRedirect/>
 
-    const getDisplayedServerName = () => {
-        if (serverIdentity) {
-            return serverIdentity.serverName;
-        }
-
-        if (isProxy) {
-            return identifier;
-        } else {
-            return serverName && serverName.startsWith('Server') ? "Plan" : serverName
-        }
-    }
-    const displayedServerName = getDisplayedServerName();
-
-    if (error) return <ErrorPage error={error}/>;
-    if (identityLoadingError) {
-        if (identityLoadingError.status === 404) return <ErrorPage
-            error={{title: t('html.error.404NotFound'), message: t('html.error.serverNotSeen')}}/>
-        return <ErrorPage error={identityLoadingError}/>
-    }
+    if (!serverUUID) return <></>
 
     return (
         <>
             <NightModeCss/>
-            <ServerExtensionContextProvider identifier={identifier}>
-                <ServerSidebar/>
+            <ServerExtensionContextProvider identifier={serverUUID}>
+                <NetworkSidebar/>
                 <div className="d-flex flex-column" id="content-wrapper">
-                    <Header page={displayedServerName} tab={currentTab}/>
+                    <Header page={networkName} tab={currentTab}/>
                     <div id="content" style={{display: 'flex'}}>
                         <main className="container-fluid mt-4">
                             <SwitchTransition>

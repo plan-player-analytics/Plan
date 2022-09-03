@@ -67,7 +67,7 @@ const ExtensionColoredTable = ({table}) => {
 const ExtensionTable = ({table}) => {
     const tableLength = table.table.rows.length;
 
-    if (tableLength > 25) {
+    if (tableLength > 10) {
         return <ExtensionDataTable table={table}/>
     } else {
         return <ExtensionColoredTable table={table}/>

@@ -25,9 +25,13 @@ const DataTablesTable = ({id, options}) => {
         };
     }, [id, options, dataTableRef]);
 
+    // The surrounding div is required: jquery Datatables changes the DOM around table and React needs to have a node
+    // that wasn't changed.
     return (
-        <table id={id} className={"table table-bordered table-striped" + (nightModeEnabled ? " table-dark" : '')}
-               style={{width: "100%"}}/>
+        <div>
+            <table id={id} className={"table table-bordered table-striped" + (nightModeEnabled ? " table-dark" : '')}
+                   style={{width: "100%"}}/>
+        </div>
     )
 };
 

@@ -16,16 +16,14 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
-import com.djrapitops.plan.delivery.rendering.html.Contributors;
-import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
+import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.settings.config.paths.ProxySettings;
-import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.java.Maps;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,36 +33,34 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+/**
+ * @author AuroraLS3
+ */
 @Singleton
-@Path("/v1/metadata")
-public class MetadataJSONResolver implements NoAuthResolver {
+@Path("/v1/networkMetadata")
+public class NetworkMetadataJSONResolver implements Resolver {
 
-    private final String mainCommand;
-    private final PlanConfig config;
-    private final Theme theme;
     private final ServerInfo serverInfo;
+    private final DBSystem dbSystem;
 
     @Inject
-    public MetadataJSONResolver(
-            @Named("mainCommandName") String mainCommand,
-            PlanConfig config,
-            Theme theme,
-            ServerInfo serverInfo
-    ) {
-        this.mainCommand = mainCommand;
-        this.config = config;
-        // Dagger inject constructor
-        this.theme = theme;
+    public NetworkMetadataJSONResolver(ServerInfo serverInfo, DBSystem dbSystem) {
         this.serverInfo = serverInfo;
+        this.dbSystem = dbSystem;
+    }
+
+    @Override
+    public boolean canAccess(Request request) {
+        return request.getUser().orElse(new WebUser("")).hasPermission("page.network");
     }
 
     @GET
     @Operation(
-            description = "Get metadata required for displaying Plan React frontend",
+            description = "Get metadata about the network such as list of servers.",
             requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
@@ -75,16 +71,11 @@ public class MetadataJSONResolver implements NoAuthResolver {
     private Response getResponse() {
         return Response.builder()
                 .setJSONContent(Maps.builder(String.class, Object.class)
-                        .put("timestamp", System.currentTimeMillis())
-                        .put("contributors", Contributors.getContributors())
-                        .put("defaultTheme", config.get(DisplaySettings.THEME))
-                        .put("gmPieColors", theme.getPieColors(ThemeVal.GRAPH_GM_PIE))
-                        .put("playerHeadImageUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL))
-                        .put("isProxy", serverInfo.getServer().isProxy())
-                        .put("serverName", serverInfo.getServer().getIdentifiableName())
-                        .put("serverUUID", serverInfo.getServer().getUuid().toString())
-                        .put("networkName", serverInfo.getServer().isProxy() ? config.get(ProxySettings.NETWORK_NAME) : null)
-                        .put("mainCommand", mainCommand)
+                        .put("servers", dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection())
+                                .stream().map(ServerDto::fromServer)
+                                .sorted()
+                                .collect(Collectors.toList()))
+                        .put("currentServer", ServerDto.fromServer(serverInfo.getServer()))
                         .build())
                 .build();
     }

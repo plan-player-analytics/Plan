@@ -19,3 +19,8 @@ export const fetchErrorLogs = async () => {
     const url = '/v1/errors';
     return doGetRequest(url);
 }
+
+export const fetchNetworkMetadata = async () => {
+    const url = '/v1/networkMetadata';
+    return doGetRequest(url);
+}

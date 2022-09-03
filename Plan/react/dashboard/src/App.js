@@ -33,6 +33,8 @@ const ServerPerformance = React.lazy(() => import("./views/server/ServerPerforma
 const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginData"));
 const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
 
+const NetworkPage = React.lazy(() => import("./views/layout/NetworkPage"));
+
 const PlayersPage = React.lazy(() => import("./views/layout/PlayersPage"));
 const AllPlayers = React.lazy(() => import("./views/players/AllPlayers"));
 
@@ -101,6 +103,17 @@ function App() {
                                 <Route path="players" element={<Lazy><ServerPlayers/></Lazy>}/>
                                 <Route path="geolocations" element={<Lazy><ServerGeolocations/></Lazy>}/>
                                 <Route path="performance" element={<Lazy><ServerPerformance/></Lazy>}/>
+                                <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
+                                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
+                                <Route path="*" element={<ErrorView error={{
+                                    message: 'Unknown tab address, please correct the address',
+                                    title: 'No such tab',
+                                    icon: faMapSigns
+                                }}/>}/>
+                            </Route>
+                            <Route path="/network" element={<Lazy><NetworkPage/></Lazy>}>
+                                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
+                                <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
                                 <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
                                 <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
                                 <Route path="*" element={<ErrorView error={{
