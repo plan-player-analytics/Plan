@@ -10,6 +10,8 @@ import {CardLoader} from "../../navigation/Loader";
 const GeolocationsCard = ({data}) => {
     const {t} = useTranslation();
 
+    if (!data) return <CardLoader/>
+
     if (!data?.geolocations_enabled) {
         return (
             <div className="alert alert-warning mb-0" id="geolocation-warning">
@@ -18,8 +20,6 @@ const GeolocationsCard = ({data}) => {
             </div>
         )
     }
-
-    if (!data) return <CardLoader/>
 
     return (
         <Card>

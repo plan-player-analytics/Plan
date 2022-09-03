@@ -23,7 +23,7 @@ const Divider = ({showMargin}) => (
     <hr className={"sidebar-divider" + (showMargin ? '' : " my-0")}/>
 )
 
-const InnerItem = ({href, icon, name, nameShort}) => {
+const InnerItem = ({href, icon, name, nameShort, color}) => {
     if (!href) {
         return (<hr className={"nav-servers dropdown-divider mx-3 my-2"}/>)
     }
@@ -31,7 +31,8 @@ const InnerItem = ({href, icon, name, nameShort}) => {
     if (href.startsWith('/')) {
         return (
             <a href={href} className="collapse-item nav-button">
-                <Fa icon={icon}/> <span>{nameShort ? nameShort : name}</span>
+                <Fa icon={icon} className={color ? "col-" + color : undefined}/>
+                <span>{nameShort ? nameShort : name}</span>
             </a>
         )
     }
@@ -39,11 +40,11 @@ const InnerItem = ({href, icon, name, nameShort}) => {
     return <NavLink to={href} className={({isActive}) => {
         return isActive ? "collapse-item nav-button active" : "collapse-item nav-button"
     }}>
-        <Fa icon={icon}/> <span>{nameShort ? nameShort : name}</span>
+        <Fa icon={icon} className={color ? "col-" + color : undefined}/> <span>{nameShort ? nameShort : name}</span>
     </NavLink>
 }
 
-const Item = ({href, icon, name, nameShort, inner}) => {
+const Item = ({href, icon, name, nameShort, color, inner}) => {
     const {setCurrentTab} = useNavigation();
     const {pathname} = useLocation();
     const {t} = useTranslation();
@@ -53,14 +54,15 @@ const Item = ({href, icon, name, nameShort, inner}) => {
     }, [pathname, href, setCurrentTab, name])
 
     if (inner) {
-        return (<InnerItem href={href} icon={icon} name={t(name)} nameShort={t(nameShort)}/>)
+        return (<InnerItem href={href} icon={icon} name={t(name)} nameShort={t(nameShort)} color={color}/>)
     }
 
     if (href.startsWith('/')) {
         return (
             <li className={"nav-item nav-button"}>
                 <a href={baseAddress + href} className="nav-link">
-                    <Fa icon={icon}/> <span>{t(nameShort ? nameShort : name)}</span>
+                    <Fa icon={icon} className={color ? "col-" + color : undefined}/>
+                    <span>{t(nameShort ? nameShort : name)}</span>
                 </a>
             </li>
         )
@@ -71,7 +73,7 @@ const Item = ({href, icon, name, nameShort, inner}) => {
             <NavLink to={href} className={({isActive}) => {
                 return isActive ? "nav-link active" : "nav-link"
             }}>
-                <Fa icon={icon}/> <span>{t(name)}</span>
+                <Fa icon={icon} className={color ? "col-" + color : undefined}/> <span>{t(name)}</span>
             </NavLink>
         </li>
     );
@@ -155,7 +157,8 @@ const SidebarCollapse = ({item, open, setOpen}) => {
                     aria-expanded={open}
                     data-bs-toggle="collapse"
             >
-                <Fa icon={item.icon}/> <span>{t(item.name)}</span>
+                <Fa icon={item.icon} className={item?.color ? "col-" + item?.color : undefined}/>
+                <span>{t(item.name)}</span>
             </button>
             <Collapse in={open}>
                 <div id={item.name + "-collapse"}>
@@ -168,6 +171,7 @@ const SidebarCollapse = ({item, open, setOpen}) => {
                                   icon={content.icon}
                                   name={content.name}
                                   nameShort={content.nameShort}
+                                  color={content.color}
                             />)}
                     </div>
                 </div>
@@ -190,6 +194,7 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t) => {
                      href={item.href}
                      icon={item.icon}
                      name={item.name}
+                     color={item.color}
                      nameShort={item.nameShort}
         />
     }

@@ -13,11 +13,12 @@ import {
 import Datapoint from "../../../Datapoint";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
+import {CardLoader} from "../../../navigation/Loader";
 
 const ServerAsNumbersCard = ({data}) => {
     const {t} = useTranslation();
 
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
 
     return (
         <Card>

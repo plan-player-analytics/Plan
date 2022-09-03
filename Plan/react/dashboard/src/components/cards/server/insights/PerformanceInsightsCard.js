@@ -3,10 +3,11 @@ import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
 import {useTranslation} from "react-i18next";
 import Datapoint from "../../../Datapoint";
 import {faDragon, faMap, faTachometerAlt, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {CardLoader} from "../../../navigation/Loader";
 
 const PerformanceInsightsCard = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <></>
+    if (!data) return <CardLoader/>;
 
     return (
         <InsightsFor30DaysCard>

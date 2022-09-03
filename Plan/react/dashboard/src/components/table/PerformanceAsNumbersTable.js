@@ -14,10 +14,11 @@ import {TableRow} from "./TableRow";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faEye} from "@fortawesome/free-regular-svg-icons";
 import AsNumbersTable from "./AsNumbersTable";
+import {CardLoader} from "../navigation/Loader";
 
 const PerformanceAsNumbersTable = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
 
     return (
         <AsNumbersTable

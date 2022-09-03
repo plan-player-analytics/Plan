@@ -12,11 +12,12 @@ import OnlineActivityCard from "../../components/cards/server/graphs/OnlineActiv
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
 import LoadIn from "../../components/animation/LoadIn";
+import {CardLoader} from "../../components/navigation/Loader";
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
 
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
 
     return (
         <Card>

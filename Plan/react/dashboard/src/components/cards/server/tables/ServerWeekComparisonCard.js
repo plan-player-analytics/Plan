@@ -7,10 +7,11 @@ import BigTrend from "../../../trend/BigTrend";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import {TableRow} from "../../../table/TableRow";
+import {CardLoader} from "../../../navigation/Loader";
 
 const ServerWeekComparisonCard = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
     return (
         <Card>
             <Card.Header>

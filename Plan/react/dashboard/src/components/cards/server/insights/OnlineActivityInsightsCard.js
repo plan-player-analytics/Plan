@@ -7,10 +7,11 @@ import SmallTrend from "../../../trend/SmallTrend";
 import {faCalendar, faCalendarPlus} from "@fortawesome/free-regular-svg-icons";
 import ComparingLabel from "../../../trend/ComparingLabel";
 import End from "../../../layout/End";
+import {CardLoader} from "../../../navigation/Loader";
 
 const OnlineActivityInsightsCard = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <></>
+    if (!data) return <CardLoader/>;
 
     return (
         <InsightsFor30DaysCard>
