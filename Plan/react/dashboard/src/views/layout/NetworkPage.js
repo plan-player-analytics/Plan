@@ -25,14 +25,18 @@ import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import ExtensionIcon from "../../components/extensions/ExtensionIcon";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
+import {useDataRequest} from "../../hooks/dataFetchHook";
+import {fetchNetworkMetadata} from "../../service/metadataService";
 
 const NetworkSidebar = () => {
     const {t, i18n} = useTranslation();
     const {sidebarItems, setSidebarItems} = useNavigation();
     const {extensionData} = useServerExtensionContext();
 
+    const {data: networkMetadata} = useDataRequest(fetchNetworkMetadata, [])
+
     useEffect(() => {
-        const servers = []
+        const servers = networkMetadata?.servers || [];
         const items = [
             {name: 'html.label.networkOverview', icon: faInfoCircle, href: "overview"},
             {},
@@ -45,7 +49,12 @@ const NetworkSidebar = () => {
                     {name: 'html.label.performance', icon: faCogs, href: "performance"},
                     {},
                     ...servers.map(server => {
-                        return {name: server.serverName, icon: faServer, href: "/server/" + server.serverUUID}
+                        return {
+                            name: server.serverName,
+                            icon: faServer,
+                            href: "/server/" + server.serverUUID,
+                            color: 'light-green'
+                        }
                     })
                 ]
             },
@@ -89,7 +98,7 @@ const NetworkSidebar = () => {
 
         setSidebarItems(items);
         window.document.title = `Plan | Network`;
-    }, [t, i18n, extensionData, setSidebarItems])
+    }, [t, i18n, extensionData, setSidebarItems, networkMetadata])
 
     return (
         <Sidebar items={sidebarItems} showBackButton={false}/>
