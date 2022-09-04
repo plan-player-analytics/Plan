@@ -5,13 +5,34 @@
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 [![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=coverage)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 
-[API, Documentation & Tutorials](https://github.com/plan-player-analytics/Plan/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [DEV builds](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml?query=branch%3Amaster) | [Issues & Suggestions](https://github.com/plan-player-analytics/Plan/issues)
+[Documentation & Tutorials](https://github.com/plan-player-analytics/Plan/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [DEV builds](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml?query=branch%3Amaster) | [Issues & Suggestions](https://github.com/plan-player-analytics/Plan/issues)
 
 Player Analytics is a fully-fledged solution for the analytics needs of your Minecraft server. A built-in webserver displays insights into different aspects of the server such as Online activity, Playerbase, and how these change over time.
 
 Plan supports multiple different platforms and versions; Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives - One jar for all platforms.
 
 - [Version 5 Release trailer on Youtube](https://www.youtube.com/watch?v=BS_Ti9zkoRc)
+
+## API
+
+- [Javadocs](https://plan-player-analytics.github.io/Plan/)
+- [API documentation](https://github.com/plan-player-analytics/Plan/wiki/APIv5)
+
+[![](https://jitpack.io/v/plan-player-analytics/Plan.svg)](https://jitpack.io/#plan-player-analytics/Plan)
+
+```xml
+<repository>
+    <id>jitpack</id>
+    <url>https://jitpack.io</url>
+</repository>
+
+<dependency>
+    <groupId>com.github.plan-player-analytics</groupId>
+    <artifactId>Plan</artifactId>
+    <version>{jitpack version}</version>
+    <scope>provided</scope>
+</dependency>
+```
 
 ## Building
 
