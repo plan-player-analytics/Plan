@@ -28,14 +28,16 @@ import java.util.Optional;
 public class AuthenticationExtractor {
 
     private final ActiveCookieStore activeCookieStore;
+    private final AuthTokenStore authTokenStore;
 
     @Inject
-    public AuthenticationExtractor(ActiveCookieStore activeCookieStore) {
+    public AuthenticationExtractor(ActiveCookieStore activeCookieStore, AuthTokenStore authTokenStore) {
         this.activeCookieStore = activeCookieStore;
+        this.authTokenStore = authTokenStore;
     }
 
     public Optional<Authentication> extractAuthentication(InternalRequest internalRequest) {
-        return getCookieAuthentication(internalRequest.getCookies());
+        return getCookieAuthentication(internalRequest);
     }
 
     private Optional<Authentication> getCookieAuthentication(@Untrusted List<Cookie> cookies) {
@@ -44,6 +46,12 @@ public class AuthenticationExtractor {
                 return Optional.of(new CookieAuthentication(activeCookieStore, cookie.getValue()));
             }
         }
-        return Optional.empty();
+
+        return internalRequest.getHeader("X-Plan-Token")
+                .map(token -> {
+                    List<String> permissions = authTokenStore.getPermissions(token);
+                    if (permissions.isEmpty()) return null;
+                    return new TokenAuthentication(token, permissions);
+                });
     }
 }
