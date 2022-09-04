@@ -137,7 +137,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 CompletableFuture<Void> result = results[i];
                 Repository repository = DRIVER_REPOSITORIES.get(i);
                 result.exceptionally(error -> {
-                    logger.warn("Failed to download " + getType().getName() + " from " + repository.getHost() + ": " + error.getMessage() + ", " + error.getCause());
+                    logger.warn("Failed to download " + getType().getName() + "-driver from " + repository.getHost() + ": " + error.getMessage() + ", " + error.getCause());
                     return null;
                 });
             }
