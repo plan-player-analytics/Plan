@@ -3,6 +3,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faAngleRight, faSkullCrossbones} from "@fortawesome/free-solid-svg-icons";
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
+import Scrollable from "../Scrollable";
 
 const KillRow = ({kill}) => {
     const killSeparator = <Fa
@@ -23,16 +24,18 @@ const KillsTable = ({kills}) => {
     const {nightModeEnabled} = useTheme();
 
     return (
-        <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
-            <tbody>
-            {kills.length ? kills.map((kill, i) => <KillRow key={i} kill={kill}/>) : <tr>
-                <td>{t('html.generic.none')}</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-            </tr>}
-            </tbody>
-        </table>
+        <Scrollable>
+            <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
+                <tbody>
+                {kills.length ? kills.map((kill, i) => <KillRow key={i} kill={kill}/>) : <tr>
+                    <td>{t('html.generic.none')}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>}
+                </tbody>
+            </table>
+        </Scrollable>
     )
 };
 

@@ -20,9 +20,9 @@ const PlayerPage = () => {
     const {sidebarItems, setSidebarItems} = useNavigation();
 
     const {identifier} = useParams();
-    const {currentTab, updateRequested, finishUpdate} = useNavigation();
+    const {currentTab, finishUpdate} = useNavigation();
 
-    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier, updateRequested])
+    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier])
 
     useEffect(() => {
         if (!player) return;

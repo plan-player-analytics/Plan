@@ -3,6 +3,8 @@ import React from "react";
 import End from "./layout/End";
 
 const Datapoint = ({icon, color, name, value, valueLabel, bold, boldTitle, title, trend}) => {
+    if (value === undefined && valueLabel === undefined) return <></>;
+
     const displayedValue = bold ? <b>{value}</b> : value;
     const extraLabel = typeof valueLabel === 'string' ? ` (${valueLabel})` : '';
     const colorClass = color && color.startsWith("col-") ? color : "col-" + color;

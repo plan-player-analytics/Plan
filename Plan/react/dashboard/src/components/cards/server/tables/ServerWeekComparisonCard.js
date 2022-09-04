@@ -31,6 +31,10 @@ const ServerWeekComparisonCard = ({data}) => {
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                           values={[data.average_playtime_before, data.average_playtime_after,
                               <BigTrend trend={data.average_playtime_trend}/>]}/>
+                <TableRow icon={faClock} color="teal"
+                          text={t('html.label.averageSessionLength')}
+                          values={[data.session_length_average_before, data.session_length_average_after,
+                              <BigTrend trend={data.session_length_average_trend}/>]}/>
                 <TableRow icon={faCalendarCheck} color="teal" text={t('html.label.sessions')}
                           values={[data.sessions_before, data.sessions_after,
                               <BigTrend trend={data.sessions_trend}/>]}/>

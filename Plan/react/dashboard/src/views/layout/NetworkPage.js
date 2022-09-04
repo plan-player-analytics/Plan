@@ -44,7 +44,12 @@ const NetworkSidebar = () => {
                 name: 'html.label.servers',
                 icon: faServer,
                 contents: [
-                    {name: 'html.label.overview', icon: faNetworkWired, href: "serversOverview"},
+                    {
+                        nameShort: 'html.label.overview',
+                        name: 'html.label.servers',
+                        icon: faNetworkWired,
+                        href: "serversOverview"
+                    },
                     {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions"},
                     {name: 'html.label.performance', icon: faCogs, href: "performance"},
                     {},

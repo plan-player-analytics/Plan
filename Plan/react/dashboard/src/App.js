@@ -34,6 +34,7 @@ const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginDat
 const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
 
 const NetworkPage = React.lazy(() => import("./views/layout/NetworkPage"));
+const NetworkOverview = React.lazy(() => import("./views/network/NetworkOverview"));
 
 const PlayersPage = React.lazy(() => import("./views/layout/PlayersPage"));
 const AllPlayers = React.lazy(() => import("./views/players/AllPlayers"));
@@ -113,6 +114,7 @@ function App() {
                             </Route>
                             <Route path="/network" element={<Lazy><NetworkPage/></Lazy>}>
                                 <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
+                                <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
                                 <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
                                 <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
                                 <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
