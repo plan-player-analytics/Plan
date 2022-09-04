@@ -96,7 +96,8 @@ public class Contributors {
             new Contributor("SkipM4", LANG),
             new Contributor("ahdg6", CODE),
             new Contributor("BratishkaErik", LANG),
-            new Contributor("Pingger", CODE)
+            new Contributor("Pingger", CODE),
+            new Contributor("stashenko", LANG),
     };
 
     private Contributors() {
