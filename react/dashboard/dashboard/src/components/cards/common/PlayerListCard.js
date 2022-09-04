@@ -11,6 +11,7 @@ const PlayerListCard = ({data}) => {
     const [options, setOptions] = useState(undefined);
 
     useEffect(() => {
+        if (!data) return;
         for (const row of data.data) {
             row.name = row.name.replace('../player/', '../../player/');
         }

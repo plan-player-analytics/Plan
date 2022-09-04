@@ -5,6 +5,7 @@ import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
+import Accessibility from "highcharts/modules/accessibility";
 
 const ServerPie = ({colors, series}) => {
     const {t} = useTranslation();
@@ -20,6 +21,7 @@ const ServerPie = ({colors, series}) => {
             data: series
         };
 
+        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart('server-pie', {
             chart: {

@@ -2,16 +2,19 @@ import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
+import Accessibility from "highcharts/modules/accessibility";
+import {withReducedSaturation} from "../../util/colors";
 
 const PunchCard = ({series}) => {
     const {t} = useTranslation();
-    const {graphTheming} = useTheme();
+    const {graphTheming, nightModeEnabled} = useTheme();
     useEffect(() => {
         const punchCard = {
             name: t('html.label.relativeJoinActivity'),
-            color: '#222',
+            color: nightModeEnabled ? withReducedSaturation('#222') : '#222',
             data: series
         };
+        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         setTimeout(() => Highcharts.chart('punchcard', {
             chart: {
@@ -44,7 +47,7 @@ const PunchCard = ({series}) => {
             },
             series: [punchCard]
         }), 25)
-    }, [series, graphTheming, t])
+    }, [series, graphTheming, t, nightModeEnabled])
 
     return (
         <div className="chart-area" id="punchcard">

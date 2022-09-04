@@ -8,6 +8,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartLine} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import PlayerbaseGraph from "../../../graphs/PlayerbaseGraph";
+import {CardLoader} from "../../../navigation/Loader";
 
 const PlayerbaseDevelopmentCard = () => {
     const {t} = useTranslation();
@@ -17,8 +18,8 @@ const PlayerbaseDevelopmentCard = () => {
         fetchPlayerbaseDevelopmentGraph,
         [identifier])
 
-    if (!data) return <></>;
     if (loadingError) return <ErrorViewCard error={loadingError}/>
+    if (!data) return <CardLoader/>;
 
     return (
         <Card>

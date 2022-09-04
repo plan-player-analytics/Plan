@@ -8,7 +8,8 @@ import ServerPie from "../../components/graphs/ServerPie";
 import ServerAccordion from "../../components/accordion/ServerAccordion";
 import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
-import PingGraph from "../../components/graphs/PingGraph";
+import PlayerPingGraph from "../../components/graphs/PlayerPingGraph";
+import LoadIn from "../../components/animation/LoadIn";
 
 const PingGraphCard = ({player}) => {
     const {t} = useTranslation();
@@ -22,7 +23,7 @@ const PingGraphCard = ({player}) => {
                     <Fa icon={faSignal} className="col-amber"/> {t('html.label.ping')}
                 </h6>
             </Card.Header>
-            {hasPingData && <PingGraph data={player.ping_graph}/>}
+            {hasPingData && <PlayerPingGraph data={player.ping_graph}/>}
             {!hasPingData && <Card.Body><p>{t('generic.noData')}</p></Card.Body>}
         </Card>
     )
@@ -68,21 +69,23 @@ const ServerPieCard = ({player}) => {
 const PlayerServers = () => {
     const {player} = usePlayer();
     return (
-        <section className="player_sessions">
-            <Row>
-                <Col lg={12}>
-                    <PingGraphCard player={player}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={8}>
-                    <ServersCard player={player}/>
-                </Col>
-                <Col lg={4}>
-                    <ServerPieCard player={player}/>
-                </Col>
-            </Row>
-        </section>
+        <LoadIn>
+            <section className="player_sessions">
+                <Row>
+                    <Col lg={12}>
+                        <PingGraphCard player={player}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={8}>
+                        <ServersCard player={player}/>
+                    </Col>
+                    <Col lg={4}>
+                        <ServerPieCard player={player}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 

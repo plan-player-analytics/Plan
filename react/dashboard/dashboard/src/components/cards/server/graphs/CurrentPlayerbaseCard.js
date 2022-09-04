@@ -2,12 +2,13 @@ import React from "react";
 import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchPlayerbaseDevelopmentGraph} from "../../../../service/serverService";
-import {ErrorViewBody} from "../../../../views/ErrorView";
+import {ErrorViewCard} from "../../../../views/ErrorView";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import PlayerbasePie from "../../../graphs/PlayerbasePie";
+import {CardLoader} from "../../../navigation/Loader";
 
 const CurrentPlayerbaseCard = () => {
     const {t} = useTranslation();
@@ -15,8 +16,8 @@ const CurrentPlayerbaseCard = () => {
 
     const {data, loadingError} = useDataRequest(fetchPlayerbaseDevelopmentGraph, [identifier]);
 
-    if (loadingError) return <ErrorViewBody error={loadingError}/>
-    if (!data) return <></>;
+    if (loadingError) return <ErrorViewCard error={loadingError}/>
+    if (!data) return <CardLoader/>;
 
     return (
         <Card>

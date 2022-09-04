@@ -6,10 +6,11 @@ import ComparisonTable from "./ComparisonTable";
 import SmallTrend from "../trend/SmallTrend";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCalendarCheck, faClock, faEye} from "@fortawesome/free-regular-svg-icons";
+import {CardLoader} from "../navigation/Loader";
 
 const OnlineActivityAsNumbersTable = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
 
     return (
         <ComparisonTable

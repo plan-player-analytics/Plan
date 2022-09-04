@@ -11,11 +11,13 @@ import {useDataRequest} from "../../hooks/dataFetchHook";
 import OnlineActivityCard from "../../components/cards/server/graphs/OnlineActivityCard";
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
+import LoadIn from "../../components/animation/LoadIn";
+import {CardLoader} from "../../components/navigation/Loader";
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
 
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
 
     return (
         <Card>
@@ -65,24 +67,26 @@ const ServerOverview = () => {
     }
 
     return (
-        <section className="server_overview">
-            <Row>
-                <Col lg={9}>
-                    <OnlineActivityCard/>
-                </Col>
-                <Col lg={3}>
-                    <Last7DaysCard data={data?.last_7_days}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={4}>
-                    <ServerAsNumbersCard data={data?.numbers}/>
-                </Col>
-                <Col lg={8}>
-                    <ServerWeekComparisonCard data={data?.weeks}/>
-                </Col>
-            </Row>
-        </section>
+        <LoadIn>
+            <section className="server_overview">
+                <Row>
+                    <Col lg={9}>
+                        <OnlineActivityCard/>
+                    </Col>
+                    <Col lg={3}>
+                        <Last7DaysCard data={data?.last_7_days}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={4}>
+                        <ServerAsNumbersCard data={data?.numbers}/>
+                    </Col>
+                    <Col lg={8}>
+                        <ServerWeekComparisonCard data={data?.weeks}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 

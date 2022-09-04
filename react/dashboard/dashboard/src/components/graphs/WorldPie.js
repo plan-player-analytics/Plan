@@ -7,6 +7,7 @@ import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import {useMetadata} from "../../hooks/metadataHook";
 import {useTranslation} from "react-i18next";
+import Accessibility from "highcharts/modules/accessibility";
 
 const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {t} = useTranslation();
@@ -33,6 +34,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
 
         const defaultTitle = '';
         const defaultSubtitle = t('html.text.clickToExpand');
+        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         setTimeout(() => {
             const chart = Highcharts.chart(id, {

@@ -11,13 +11,22 @@ const isCurrentAddress = (address) => {
 export const baseAddress = "PLAN_BASE_ADDRESS" === toBeReplaced || !isCurrentAddress(toBeReplaced) ? "" : toBeReplaced;
 
 export const doSomeGetRequest = async (url, statusOptions) => {
+    return doSomeRequest(url, statusOptions, async () => axios.get(url));
+}
+
+export const doSomePostRequest = async (url, statusOptions, body) => {
+    return doSomeRequest(url, statusOptions, async () => axios.post(url, body));
+}
+
+export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
     let response = undefined;
     try {
-        response = await axios.get(baseAddress + url);
+        response = await axiosFunction.call();
 
         for (const statusOption of statusOptions) {
             if (response.status === statusOption.status) {
                 return {
+                    status: response.status,
                     data: statusOption.get(response),
                     error: undefined
                 };
@@ -29,6 +38,7 @@ export const doSomeGetRequest = async (url, statusOptions) => {
             for (const statusOption of statusOptions) {
                 if (e.response.status === statusOption.status) {
                     return {
+                        status: e.response.status,
                         data: undefined,
                         error: statusOption.get(response, e)
                     };
@@ -37,6 +47,7 @@ export const doSomeGetRequest = async (url, statusOptions) => {
             return {
                 data: undefined,
                 error: {
+                    status: e.response.status,
                     message: e.message,
                     url,
                     data: e.response.data
@@ -46,6 +57,7 @@ export const doSomeGetRequest = async (url, statusOptions) => {
         return {
             data: undefined,
             error: {
+                status: undefined,
                 message: e.message,
                 url
             }

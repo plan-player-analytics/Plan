@@ -46,6 +46,7 @@ function drawSine(canvasId) {
 
     function draw() {
         const canvas = document.getElementById(canvasId);
+        if (canvas == null) return;
         const context = canvas.getContext("2d");
 
         context.clearRect(0, 0, 1000, 150);
@@ -60,6 +61,7 @@ function drawSine(canvasId) {
 
     function fix_dpi() {
         const canvas = document.getElementById(canvasId);
+        if (canvas == null) return;
         let dpi = window.devicePixelRatio;
         canvas.getContext('2d');
         const style_width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);

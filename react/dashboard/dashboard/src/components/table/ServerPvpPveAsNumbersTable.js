@@ -6,6 +6,9 @@ import {TableRow} from "./TableRow";
 
 const ServerPvpPveAsNumbersTable = ({killData}) => {
     const {t} = useTranslation();
+
+    if (!killData) return <></>
+
     return (
         <AsNumbersTable
             headers={[t('html.label.allTime'), t('html.label.last30days'), t('html.label.last7days')]}

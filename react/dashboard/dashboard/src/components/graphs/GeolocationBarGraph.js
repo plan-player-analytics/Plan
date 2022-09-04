@@ -3,6 +3,7 @@ import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import Highcharts from "highcharts";
+import Accessibility from "highcharts/modules/accessibility";
 
 const GeolocationBarGraph = ({series, color}) => {
     const {t} = useTranslation();
@@ -17,6 +18,7 @@ const GeolocationBarGraph = ({series, color}) => {
             data: bars
         };
 
+        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart("countryBarChart", {
             chart: {type: 'bar'},

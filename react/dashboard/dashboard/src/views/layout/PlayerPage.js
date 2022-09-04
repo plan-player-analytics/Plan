@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import Sidebar from "../../components/navigation/Sidebar";
 import {Outlet, useOutletContext, useParams} from "react-router-dom";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
@@ -17,12 +17,12 @@ import ErrorPage from "./ErrorPage";
 const PlayerPage = () => {
     const {t, i18n} = useTranslation();
 
-    const [sidebarItems, setSidebarItems] = useState([]);
+    const {sidebarItems, setSidebarItems} = useNavigation();
 
     const {identifier} = useParams();
-    const {currentTab, updateRequested, finishUpdate} = useNavigation();
+    const {currentTab, finishUpdate} = useNavigation();
 
-    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier, updateRequested])
+    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier])
 
     useEffect(() => {
         if (!player) return;
@@ -46,7 +46,7 @@ const PlayerPage = () => {
         window.document.title = `Plan | ${player.info.name}`;
 
         finishUpdate(player.timestamp, player.timestamp_f);
-    }, [player, t, i18n, finishUpdate])
+    }, [player, t, i18n, finishUpdate, setSidebarItems])
 
     const {hasPermissionOtherThan} = useAuth();
     const showBackButton = hasPermissionOtherThan('page.player.self');

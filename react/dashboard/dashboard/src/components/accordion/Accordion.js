@@ -40,7 +40,7 @@ const NoDataRow = ({width}) => {
     </tr>);
 }
 
-const Accordion = ({headers, slices, open}) => {
+const Accordion = ({headers, slices, open, style}) => {
     const [openSlice, setOpenSlice] = useState(open ? 0 : -1);
     const {nightModeEnabled} = useTheme();
 
@@ -51,7 +51,8 @@ const Accordion = ({headers, slices, open}) => {
     const width = headers.length;
 
     return (
-        <table className={"table accordion-striped" + (nightModeEnabled ? " table-dark" : '')} id="tableAccordion">
+        <table className={"table accordion-striped" + (nightModeEnabled ? " table-dark" : '')} id="tableAccordion"
+               style={style}>
             <thead>
             <tr>
                 {headers.map((header, i) => <th key={i}>{header}</th>)}

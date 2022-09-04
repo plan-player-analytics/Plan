@@ -181,7 +181,7 @@ const createNightModeColorCss = () => {
             return `.bg-${color.name}{background-color: ${desaturatedColor} !important;color: ${nightColors.yellow};}` +
                 `.bg-${color.name}-outline{outline-color: ${desaturatedColor};border-color: ${desaturatedColor};}` +
                 `.col-${color.name}{color: ${desaturatedColor} !important;}`
-        }).join();
+        }).join('');
 }
 
 export const createNightModeCss = () => {

@@ -3,7 +3,7 @@ import {Card, Col} from "react-bootstrap-v5";
 import ExtensionIcon from "./ExtensionIcon";
 import Datapoint from "../Datapoint";
 import Masonry from 'masonry-layout'
-import {useTheme} from "../../hooks/themeHook";
+import ExtensionTable from "./ExtensionTable";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -51,32 +51,17 @@ const ExtensionValue = ({data}) => {
     />);
 }
 
-const ExtensionValues = ({tab}) => (
-    <Card.Body>
-        {tab.values.map((data, i) => {
-                return (<ExtensionValue key={i} data={data}/>);
-            }
-        )}
-    </Card.Body>
-)
-
-const ExtensionTable = ({table}) => {
-    const {nightModeEnabled} = useTheme();
+const ExtensionValues = ({tab}) => {
     return (
-        <table className={"table table-striped" + (nightModeEnabled ? " table-dark" : '')}>
-            <thead className={table.tableColorClass}>
-            <tr>
-                {table.table.columns.map((column, i) => <th key={i}><ExtensionIcon
-                    icon={table.table.icons[i]}/> {column}
-                </th>)}
-            </tr>
-            </thead>
-            <tbody>
-            {table.table.rows.map((row, i) => <tr key={i}>{row.map((value, j) => <td
-                key={i + '' + j}>{value}</td>)}</tr>)}
-            </tbody>
-        </table>
-    );
+        <>
+            {Boolean(tab.values.length) && <Card.Body>
+                {tab.values.map((data, i) => {
+                        return (<ExtensionValue key={i} data={data}/>);
+                    }
+                )}
+            </Card.Body>}
+        </>
+    )
 }
 
 const ExtensionTables = ({tab}) => {
@@ -113,7 +98,7 @@ const ExtensionCard = ({extension}) => {
             {extension.onlyGenericTab ? '' :
                 extension.tabs.map((tab, i) => <li key={i} role="presentation" className="nav-item col-black">
                     <button className={"nav-link col-black"
-                    + (openTabIndex === i ? ' active' : '')} onClick={() => toggleTabIndex(i)}>
+                        + (openTabIndex === i ? ' active' : '')} onClick={() => toggleTabIndex(i)}>
                         <ExtensionIcon icon={tab.tabInformation.icon}/> {tab.tabInformation.tabName}
                     </button>
                 </li>)

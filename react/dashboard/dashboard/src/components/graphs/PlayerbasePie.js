@@ -3,6 +3,7 @@ import Highcharts from 'highcharts';
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
+import Accessibility from "highcharts/modules/accessibility";
 
 const PlayerbasePie = ({series}) => {
     const {t} = useTranslation();
@@ -19,6 +20,7 @@ const PlayerbasePie = ({series}) => {
             data: nightModeEnabled ? reduceColors(series) : series
         };
 
+        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart('playerbase-pie', {
             chart: {

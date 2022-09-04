@@ -10,6 +10,7 @@ import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
 import {localeService} from "../../service/localeService";
 import {useTranslation} from "react-i18next";
 import {useNavigation} from "../../hooks/navigationHook";
+import {baseAddress} from "../../service/backendConfiguration";
 
 const LanguageSelector = () => {
     const languages = localeService.getLanguages();
@@ -84,7 +85,7 @@ const Header = ({page, tab}) => {
                     <DropdownItem onClick={toggleColorChooser}>
                         <Fa icon={faPalette}/> {t('html.label.themeSelect')}
                     </DropdownItem>
-                    {authRequired ? <DropdownItem href="./auth/logout">
+                    {authRequired ? <DropdownItem href={baseAddress + "/auth/logout"}>
                         <Fa icon={faDoorOpen}/> {t('html.login.logout')}
                     </DropdownItem> : ''}
                 </DropdownMenu>

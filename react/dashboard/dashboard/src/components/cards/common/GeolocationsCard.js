@@ -5,9 +5,12 @@ import React from "react";
 import {faExclamationTriangle, faGlobe} from "@fortawesome/free-solid-svg-icons";
 import GeolocationBarGraph from "../../graphs/GeolocationBarGraph";
 import GeolocationWorldMap from "../../graphs/GeolocationWorldMap";
+import {CardLoader} from "../../navigation/Loader";
 
 const GeolocationsCard = ({data}) => {
     const {t} = useTranslation();
+
+    if (!data) return <CardLoader/>
 
     if (!data?.geolocations_enabled) {
         return (

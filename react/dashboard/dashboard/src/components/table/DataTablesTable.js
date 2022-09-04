@@ -4,9 +4,11 @@ import 'datatables.net-bs5'
 import 'datatables.net-responsive-bs5'
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css';
+import {useTheme} from "../../hooks/themeHook";
 
 const DataTablesTable = ({id, options}) => {
     const dataTableRef = useRef(null);
+    const {nightModeEnabled} = useTheme();
 
     useEffect(() => {
         const idSelector = `#${id}`;
@@ -23,8 +25,13 @@ const DataTablesTable = ({id, options}) => {
         };
     }, [id, options, dataTableRef]);
 
+    // The surrounding div is required: jquery Datatables changes the DOM around table and React needs to have a node
+    // that wasn't changed.
     return (
-        <table id={id} className="table table-bordered table-striped" style={{width: "100%"}}/>
+        <div>
+            <table id={id} className={"table table-bordered table-striped" + (nightModeEnabled ? " table-dark" : '')}
+                   style={{width: "100%"}}/>
+        </div>
     )
 };
 

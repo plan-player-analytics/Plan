@@ -15,7 +15,7 @@ const PlayersPage = () => {
     const {isProxy, serverName} = useMetadata();
 
     const [error] = useState(undefined);
-    const [sidebarItems, setSidebarItems] = useState([]);
+    const {sidebarItems, setSidebarItems} = useNavigation();
 
     const {currentTab, setCurrentTab} = useNavigation();
 
@@ -28,7 +28,7 @@ const PlayersPage = () => {
         setSidebarItems(items);
         window.document.title = `Plan | Player list`;
         setCurrentTab('html.label.players')
-    }, [t, i18n, setCurrentTab])
+    }, [t, i18n, setCurrentTab, setSidebarItems])
 
     // const {authRequired, user} = useAuth();
     const showBackButton = true; // TODO

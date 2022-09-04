@@ -4,12 +4,6 @@ import './style/style.css';
 
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import React from "react";
-import PlayerPage from "./views/layout/PlayerPage";
-import PlayerOverview from "./views/player/PlayerOverview";
-import PlayerSessions from "./views/player/PlayerSessions";
-import PlayerPvpPve from "./views/player/PlayerPvpPve";
-import PlayerServers from "./views/player/PlayerServers";
-import PlayerPluginData from "./views/player/PlayerPluginData";
 import {ThemeContextProvider} from "./hooks/themeHook";
 import axios from "axios";
 import ErrorView from "./views/ErrorView";
@@ -17,18 +11,35 @@ import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
 import {MetadataContextProvider} from "./hooks/metadataHook";
 import {AuthenticationContextProvider} from "./hooks/authenticationHook";
 import {NavigationContextProvider} from "./hooks/navigationHook";
-import ServerPage from "./views/layout/ServerPage";
-import ServerOverview from "./views/server/ServerOverview";
 import MainPageRedirect from "./components/navigation/MainPageRedirect";
-import OnlineActivity from "./views/server/OnlineActivity";
-import ServerSessions from "./views/server/ServerSessions";
-import ServerPvpPve from "./views/server/ServerPvpPve";
-import PlayerbaseOverview from "./views/server/PlayerbaseOverview";
-import ServerPlayers from "./views/server/ServerPlayers";
-import PlayersPage from "./views/layout/PlayersPage";
-import AllPlayers from "./views/players/AllPlayers";
-import ServerGeolocations from "./views/server/ServerGeolocations";
 
+const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
+const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
+const PlayerSessions = React.lazy(() => import("./views/player/PlayerSessions"));
+const PlayerPvpPve = React.lazy(() => import("./views/player/PlayerPvpPve"));
+const PlayerServers = React.lazy(() => import("./views/player/PlayerServers"));
+const PlayerPluginData = React.lazy(() => import("./views/player/PlayerPluginData"));
+
+const ServerPage = React.lazy(() => import("./views/layout/ServerPage"));
+const ServerOverview = React.lazy(() => import("./views/server/ServerOverview"));
+const OnlineActivity = React.lazy(() => import("./views/server/OnlineActivity"));
+const ServerSessions = React.lazy(() => import("./views/server/ServerSessions"));
+const ServerPvpPve = React.lazy(() => import("./views/server/ServerPvpPve"));
+const PlayerbaseOverview = React.lazy(() => import("./views/server/PlayerbaseOverview"));
+const ServerPlayers = React.lazy(() => import("./views/server/ServerPlayers"));
+const ServerGeolocations = React.lazy(() => import("./views/server/ServerGeolocations"));
+const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
+const ServerPerformance = React.lazy(() => import("./views/server/ServerPerformance"));
+const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginData"));
+const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
+
+const NetworkPage = React.lazy(() => import("./views/layout/NetworkPage"));
+const NetworkOverview = React.lazy(() => import("./views/network/NetworkOverview"));
+
+const PlayersPage = React.lazy(() => import("./views/layout/PlayersPage"));
+const AllPlayers = React.lazy(() => import("./views/players/AllPlayers"));
+
+const ErrorsPage = React.lazy(() => import("./views/layout/ErrorsPage"));
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
 
 const OverviewRedirect = () => {
@@ -47,6 +58,12 @@ const ContextProviders = ({children}) => (
     </AuthenticationContextProvider>
 )
 
+const Lazy = ({children}) => (
+    <React.Suspense fallback={<></>}>
+        {children}
+    </React.Suspense>
+)
+
 function App() {
     axios.defaults.withCredentials = true;
 
@@ -57,39 +74,58 @@ function App() {
                     <BrowserRouter>
                         <Routes>
                             <Route path="" element={<MainPageRedirect/>}/>
-                            <Route path="/player/:identifier" element={<PlayerPage/>}>
-                                <Route path="" element={<OverviewRedirect/>}/>
-                                <Route path="overview" element={<PlayerOverview/>}/>
-                                <Route path="sessions" element={<PlayerSessions/>}/>
-                                <Route path="pvppve" element={<PlayerPvpPve/>}/>
-                                <Route path="servers" element={<PlayerServers/>}/>
-                                <Route path="plugins/:serverName" element={<PlayerPluginData/>}/>
+                            <Route path="/" element={<MainPageRedirect/>}/>
+                            <Route path="/login" element={<Lazy><LoginPage/></Lazy>}/>
+                            <Route path="/player/:identifier" element={<Lazy><PlayerPage/></Lazy>}>
+                                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
+                                <Route path="overview" element={<Lazy><PlayerOverview/></Lazy>}/>
+                                <Route path="sessions" element={<Lazy><PlayerSessions/></Lazy>}/>
+                                <Route path="pvppve" element={<Lazy><PlayerPvpPve/></Lazy>}/>
+                                <Route path="servers" element={<Lazy><PlayerServers/></Lazy>}/>
+                                <Route path="plugins/:serverName" element={<Lazy><PlayerPluginData/></Lazy>}/>
                                 <Route path="*" element={<ErrorView error={{
                                     message: 'Unknown tab address, please correct the address',
                                     title: 'No such tab',
                                     icon: faMapSigns
                                 }}/>}/>
                             </Route>
-                            <Route path="/players" element={<PlayersPage/>}>
-                                <Route path="" element={<AllPlayers/>}/>
-                                <Route path="*" element={<AllPlayers/>}/>
+                            <Route path="/players" element={<Lazy><PlayersPage/></Lazy>}>
+                                <Route path="" element={<Lazy><AllPlayers/></Lazy>}/>
+                                <Route path="*" element={<Lazy><AllPlayers/></Lazy>}/>
                             </Route>
-                            <Route path="/server/:identifier" element={<ServerPage/>}>
-                                <Route path="" element={<OverviewRedirect/>}/>
-                                <Route path="overview" element={<ServerOverview/>}/>
-                                <Route path="online-activity" element={<OnlineActivity/>}/>
-                                <Route path="sessions" element={<ServerSessions/>}/>
-                                <Route path="pvppve" element={<ServerPvpPve/>}/>
-                                <Route path="playerbase" element={<PlayerbaseOverview/>}/>
+                            <Route path="/server/:identifier" element={<Lazy><ServerPage/></Lazy>}>
+                                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
+                                <Route path="overview" element={<Lazy><ServerOverview/></Lazy>}/>
+                                <Route path="online-activity" element={<Lazy><OnlineActivity/></Lazy>}/>
+                                <Route path="sessions" element={<Lazy><ServerSessions/></Lazy>}/>
+                                <Route path="pvppve" element={<Lazy><ServerPvpPve/></Lazy>}/>
+                                <Route path="playerbase" element={<Lazy><PlayerbaseOverview/></Lazy>}/>
                                 <Route path="retention" element={<></>}/>
-                                <Route path="players" element={<ServerPlayers/>}/>
-                                <Route path="geolocations" element={<ServerGeolocations/>}/>
-                                <Route path="performance" element={<></>}/>
-                                <Route path="plugins-overview" element={<></>}/>
+                                <Route path="players" element={<Lazy><ServerPlayers/></Lazy>}/>
+                                <Route path="geolocations" element={<Lazy><ServerGeolocations/></Lazy>}/>
+                                <Route path="performance" element={<Lazy><ServerPerformance/></Lazy>}/>
+                                <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
+                                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
+                                <Route path="*" element={<ErrorView error={{
+                                    message: 'Unknown tab address, please correct the address',
+                                    title: 'No such tab',
+                                    icon: faMapSigns
+                                }}/>}/>
                             </Route>
-                            <Route path="docs" element={<React.Suspense fallback={<></>}>
-                                <SwaggerView/>
-                            </React.Suspense>}/>
+                            <Route path="/network" element={<Lazy><NetworkPage/></Lazy>}>
+                                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
+                                <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
+                                <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
+                                <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
+                                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
+                                <Route path="*" element={<ErrorView error={{
+                                    message: 'Unknown tab address, please correct the address',
+                                    title: 'No such tab',
+                                    icon: faMapSigns
+                                }}/>}/>
+                            </Route>
+                            <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>
+                            <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>
                         </Routes>
                     </BrowserRouter>
                 </div>

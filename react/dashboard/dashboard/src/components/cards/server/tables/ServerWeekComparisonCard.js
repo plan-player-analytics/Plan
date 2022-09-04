@@ -7,10 +7,11 @@ import BigTrend from "../../../trend/BigTrend";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import {TableRow} from "../../../table/TableRow";
+import {CardLoader} from "../../../navigation/Loader";
 
 const ServerWeekComparisonCard = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
     return (
         <Card>
             <Card.Header>
@@ -30,6 +31,10 @@ const ServerWeekComparisonCard = ({data}) => {
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                           values={[data.average_playtime_before, data.average_playtime_after,
                               <BigTrend trend={data.average_playtime_trend}/>]}/>
+                <TableRow icon={faClock} color="teal"
+                          text={t('html.label.averageSessionLength')}
+                          values={[data.session_length_average_before, data.session_length_average_after,
+                              <BigTrend trend={data.session_length_average_trend}/>]}/>
                 <TableRow icon={faCalendarCheck} color="teal" text={t('html.label.sessions')}
                           values={[data.sessions_before, data.sessions_after,
                               <BigTrend trend={data.sessions_trend}/>]}/>

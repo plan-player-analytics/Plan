@@ -7,6 +7,7 @@ import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchKills, fetchPvpPve} from "../../service/serverService";
 import ErrorView from "../ErrorView";
+import LoadIn from "../../components/animation/LoadIn";
 
 const ServerPvpPve = () => {
     const {identifier} = useParams();
@@ -14,29 +15,27 @@ const ServerPvpPve = () => {
     const {data, loadingError} = useDataRequest(fetchPvpPve, [identifier]);
     const {data: killsData, loadingError: killsLoadingError} = useDataRequest(fetchKills, [identifier]);
 
-    console.log(killsData)
-
-    if (!data || !killsData) return <></>;
     if (loadingError) return <ErrorView error={loadingError}/>
     if (killsLoadingError) return <ErrorView error={killsLoadingError}/>
 
     return (
-        <section className="server_pvp_pve">
-            <Row>
-                <Col lg={8}>
-                    <PvpPveAsNumbersCard kill_data={data?.numbers}/>
-                </Col>
-                <Col lg={4}>
-                    <PvpPveInsightsCard data={data?.insights}/>
-                </Col>
-            </Row>
-            <Row>
-                <Col lg={8}>
-                    <PvpKillsTableCard player_kills={killsData?.player_kills}/>
-                </Col>
-            </Row>
-        </section>
-
+        <LoadIn show={data && killsData}>
+            <section className="server_pvp_pve">
+                <Row>
+                    <Col lg={8}>
+                        <PvpPveAsNumbersCard kill_data={data?.numbers}/>
+                    </Col>
+                    <Col lg={4}>
+                        <PvpPveInsightsCard data={data?.insights}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col lg={8}>
+                        <PvpKillsTableCard player_kills={killsData?.player_kills}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 

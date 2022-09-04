@@ -14,8 +14,8 @@ export const CardLoader = () => {
     )
 }
 
-export const ChartLoader = () => {
-    return <div className="chart-area loading">
+export const ChartLoader = ({style}) => {
+    return <div className="chart-area loading" style={style}>
         <Loader/>
     </div>
 }

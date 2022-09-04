@@ -14,3 +14,13 @@ export const fetchAvailableLocales = async () => {
     const url = '/v1/locale';
     return doGetRequest(url);
 }
+
+export const fetchErrorLogs = async () => {
+    const url = '/v1/errors';
+    return doGetRequest(url);
+}
+
+export const fetchNetworkMetadata = async () => {
+    const url = '/v1/networkMetadata';
+    return doGetRequest(url);
+}

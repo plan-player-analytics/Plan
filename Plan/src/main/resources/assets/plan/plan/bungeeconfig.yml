@@ -96,6 +96,8 @@ Data_gathering:
   Accept_GeoLite2_EULA: false
   Ping: true
   Disk_space: true
+  # Does not affect already gathered data
+  Preserve_join_address_case: false
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------

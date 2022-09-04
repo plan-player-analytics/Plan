@@ -8,11 +8,12 @@ export const useDataRequest = (fetchMethod, parameters) => {
 
     /*eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
-        fetchMethod(...parameters, updateRequested).then(({data: json, error}) => {
+        fetchMethod(updateRequested, ...parameters).then(({data: json, error}) => {
             if (json) {
                 setData(json);
                 finishUpdate(json.timestamp, json.timestamp_f);
             } else if (error) {
+                console.warn(error);
                 setLoadingError(error);
             }
         });

@@ -7,7 +7,7 @@ import {Modal} from "react-bootstrap-v5";
 import {useTranslation} from "react-i18next";
 
 const ColorSelectorButton = ({color, setColor, disabled}) =>
-    <button className={"btn color-chooser " + colorEnumToBgClass(color)}
+    <button className={"btn color-chooser " + colorEnumToBgClass(color) + (disabled ? " disabled" : '')}
             id={"choose-" + color}
             disabled={disabled}
             onClick={() => setColor(color)}
@@ -24,7 +24,7 @@ const ColorSelectorModal = () => {
                aria-labelledby="colorChooserModalLabel"
                show={theme.colorChooserOpen}
                onHide={theme.toggleColorChooser}>
-            <Modal.Header>
+            <Modal.Header className="bg-white">
                 <Modal.Title id="colorChooserModalLabel">
                     <Fa icon={faPalette}/> {t('html.label.themeSelect')}
                 </Modal.Title>

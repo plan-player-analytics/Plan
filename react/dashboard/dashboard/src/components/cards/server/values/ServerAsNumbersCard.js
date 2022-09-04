@@ -13,17 +13,18 @@ import {
 import Datapoint from "../../../Datapoint";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
+import {CardLoader} from "../../../navigation/Loader";
 
 const ServerAsNumbersCard = ({data}) => {
     const {t} = useTranslation();
 
-    if (!data) return <></>;
+    if (!data) return <CardLoader/>;
 
     return (
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faBookOpen}/> {t('html.label.serverAsNumberse')}
+                    <Fa icon={faBookOpen}/> {data.player_kills ? t('html.label.serverAsNumberse') : t('html.label.networkAsNumbers')}
                 </h6>
             </Card.Header>
             <Card.Body>
@@ -54,10 +55,13 @@ const ServerAsNumbersCard = ({data}) => {
                 <Datapoint name={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                            color={'green'} icon={faClock}
                            value={data.player_playtime}/>
+                <Datapoint name={t('html.label.averageSessionLength')}
+                           color={'teal'} icon={faClock}
+                           value={data.session_length_avg}/>
                 <Datapoint name={t('html.label.sessions')}
                            color={'teal'} icon={faCalendarCheck}
                            value={data.sessions} bold/>
-                <hr/>
+                {data.player_kills && <hr/>}
                 <Datapoint name={t('html.label.playerKills')}
                            color={'red'} icon={faCrosshairs}
                            value={data.player_kills} bold/>

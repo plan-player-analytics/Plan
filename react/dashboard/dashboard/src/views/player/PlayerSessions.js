@@ -7,6 +7,7 @@ import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
 import PlayerWorldPieCard from "../../components/cards/player/PlayerWorldPieCard";
 import PlayerRecentSessionsCard from "../../components/cards/player/PlayerRecentSessionsCard";
+import LoadIn from "../../components/animation/LoadIn";
 
 const SessionCalendarCard = ({player}) => {
     const {t} = useTranslation();
@@ -25,17 +26,19 @@ const SessionCalendarCard = ({player}) => {
 const PlayerSessions = () => {
     const {player} = usePlayer();
     return (
-        <section className="player_sessions">
-            <Row>
-                <Col lg={8}>
-                    <SessionCalendarCard player={player}/>
-                    <PlayerRecentSessionsCard player={player}/>
-                </Col>
-                <Col lg={4}>
-                    <PlayerWorldPieCard player={player}/>
-                </Col>
-            </Row>
-        </section>
+        <LoadIn>
+            <section className="player_sessions">
+                <Row>
+                    <Col lg={8}>
+                        <SessionCalendarCard player={player}/>
+                        <PlayerRecentSessionsCard player={player}/>
+                    </Col>
+                    <Col lg={4}>
+                        <PlayerWorldPieCard player={player}/>
+                    </Col>
+                </Row>
+            </section>
+        </LoadIn>
     )
 }
 
