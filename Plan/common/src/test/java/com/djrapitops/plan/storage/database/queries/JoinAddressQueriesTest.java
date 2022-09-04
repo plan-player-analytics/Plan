@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
@@ -95,6 +96,26 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
         Map<String, Integer> result = db().query(JoinAddressQueries.latestJoinAddresses());
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    default void joinAddressPreservesCase() {
+        joinAddressCanBeUnknown();
+        config().set(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE, true);
+
+        try {
+            FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+            String expectedAddress = "PLAY.UPPERCASE.COM";
+            session.getExtraData().put(JoinAddress.class, new JoinAddress(expectedAddress));
+            db().executeTransaction(new StoreSessionTransaction(session));
+
+            Map<String, Integer> expected = Map.of(expectedAddress, 1);
+            Map<String, Integer> result = db().query(JoinAddressQueries.latestJoinAddresses());
+
+            assertEquals(expected, result);
+        } finally {
+            config().set(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE, false);
+        }
     }
 
     @Test

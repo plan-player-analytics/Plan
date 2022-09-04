@@ -318,7 +318,6 @@ public class LargeStoreQueries {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .map(JoinAddress::getAddress)
-//                        .map(String::toLowerCase)
                         .filter(address -> !existingJoinAddresses.contains(address))
                         .distinct()
                         .forEach(address -> {

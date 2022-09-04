@@ -32,6 +32,7 @@ import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -211,7 +212,10 @@ public class PlayerJSONCreator {
         info.put("activity_index", decimals.apply(activityIndex.getValue()));
         info.put("activity_index_group", activityIndex.getGroup());
         info.put("favorite_server", perServer.favoriteServer().map(favoriteServer -> serverNames.getOrDefault(favoriteServer, favoriteServer.toString())).orElse(locale.getString(GenericLang.UNKNOWN)));
-        info.put("latest_join_address", perServer.latestJoinAddress().orElse("-"));
+        info.put("latest_join_address", sessions.latestSession()
+                .flatMap(session -> session.getExtraData(JoinAddress.class))
+                .map(JoinAddress::getAddress)
+                .orElse("-"));
         double averagePing = ping.average();
         int worstPing = ping.max();
         int bestPing = ping.min();

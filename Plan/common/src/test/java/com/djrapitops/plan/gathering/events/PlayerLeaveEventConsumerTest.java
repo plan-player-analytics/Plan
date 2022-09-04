@@ -32,11 +32,13 @@ import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import extension.FullSystemExtension;
@@ -90,6 +92,7 @@ class PlayerLeaveEventConsumerTest {
 
         config.set(ExportSettings.PLAYER_PAGES, false);
         config.set(ExportSettings.EXPORT_ON_ONLINE_STATUS_CHANGE, false);
+        config.set(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE, false);
 
         database.executeTransaction(new RemoveEverythingTransaction());
         database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, TestConstants.SERVER_NAME, "", TestConstants.VERSION)));
@@ -237,5 +240,37 @@ class PlayerLeaveEventConsumerTest {
         } finally {
             ExtensionService.getInstance().unregister(extension);
         }
+    }
+
+    @Test
+    void joinAddressCaseIsPreserved(PlanSystem system, PlanConfig config, Database database, ServerUUID serverUUID) {
+        config.set(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE, true);
+
+        SessionCache sessionCache = system.getCacheSystem().getSessionCache();
+        long sessionStart = System.currentTimeMillis();
+        ActiveSession activeSession = new ActiveSession(TestConstants.PLAYER_ONE_UUID, serverUUID, sessionStart, "World", GMTimes.SURVIVAL);
+        activeSession.getExtraData().put(JoinAddress.class, new JoinAddress("PLAY.UPPERCASE.COM"));
+        sessionCache.cacheSession(TestConstants.PLAYER_ONE_UUID, activeSession);
+
+        database.executeTransaction(new StoreJoinAddressTransaction("play.uppercase.com")); // The wrong address
+        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "World"));
+
+        PlayerLeave leave = createPlayerLeave(createTestPlayer()
+                .setJoinAddress("PLAY.UPPERCASE.COM"));
+
+        underTest.onLeaveGameServer(leave);
+        waitUntilDatabaseIsDone(database);
+
+        List<String> expected = List.of("PLAY.UPPERCASE.COM", "play.uppercase.com", JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+        List<String> result = database.query(JoinAddressQueries.allJoinAddresses());
+        assertEquals(expected, result);
+
+        Map<String, Integer> expectedMap = Map.of("PLAY.UPPERCASE.COM", 1);
+        Map<String, Integer> resultMap = database.query(JoinAddressQueries.latestJoinAddresses(serverUUID));
+        assertEquals(expectedMap, resultMap);
+
+        expectedMap = Map.of("PLAY.UPPERCASE.COM", 1);
+        resultMap = database.query(JoinAddressQueries.latestJoinAddresses());
+        assertEquals(expectedMap, resultMap);
     }
 }
