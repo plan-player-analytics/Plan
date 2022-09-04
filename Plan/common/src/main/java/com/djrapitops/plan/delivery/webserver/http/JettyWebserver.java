@@ -138,7 +138,7 @@ public class JettyWebserver implements WebServer {
             if (e.getMessage().contains("Failed to bind")) {
                 boolean defaultInternalIp = "0.0.0.0".equals(internalIP);
                 String causeHelp = defaultInternalIp ? ", is the port (" + port + ") in use?" : ", is the Internal_IP (" + internalIP + ") invalid? (Use 0.0.0.0 for automatic)";
-                throw new EnableException(startFailure + e.getMessage() + causeHelp, e);
+                throw new EnableException(startFailure + e.getMessage().replace("0.0.0.0", "") + causeHelp, e);
             } else {
                 throw new EnableException(startFailure + e.toString(), e);
             }
