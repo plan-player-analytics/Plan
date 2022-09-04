@@ -132,7 +132,15 @@ public abstract class SQLDB extends AbstractDatabase {
         if (downloadDriver) {
             DependencyManager dependencyManager = new DependencyManager(files.getDataDirectory().resolve("libraries"));
             dependencyManager.loadFromResource(getDependencyResource());
-            dependencyManager.download(null, DRIVER_REPOSITORIES);
+            CompletableFuture<Void>[] results = dependencyManager.download(null, DRIVER_REPOSITORIES);
+            for (int i = 0; i < results.length; i++) {
+                CompletableFuture<Void> result = results[i];
+                Repository repository = DRIVER_REPOSITORIES.get(i);
+                result.exceptionally(error -> {
+                    logger.warn("Failed to download " + getType().getName() + " from " + repository.getHost() + ": " + error.getMessage() + ", " + error.getCause());
+                    return null;
+                });
+            }
 
             IsolatedClassLoader classLoader = new IsolatedClassLoader();
             dependencyManager.load(null, classLoader);
