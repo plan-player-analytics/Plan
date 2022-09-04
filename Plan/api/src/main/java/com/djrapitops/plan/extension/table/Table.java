@@ -185,22 +185,52 @@ public final class Table {
             return this;
         }
 
+        /**
+         * Apply formatting to column one.
+         *
+         * @param tableColumnFormat Format to apply
+         * @return Factory.
+         */
         public Factory columnOneFormat(TableColumnFormat tableColumnFormat) {
             return columnFormat(0, tableColumnFormat);
         }
 
+        /**
+         * Apply formatting to column two.
+         *
+         * @param tableColumnFormat Format to apply
+         * @return Factory.
+         */
         public Factory columnTwoFormat(TableColumnFormat tableColumnFormat) {
             return columnFormat(1, tableColumnFormat);
         }
 
+        /**
+         * Apply formatting to column three.
+         *
+         * @param tableColumnFormat Format to apply
+         * @return Factory.
+         */
         public Factory columnThreeFormat(TableColumnFormat tableColumnFormat) {
             return columnFormat(2, tableColumnFormat);
         }
 
+        /**
+         * Apply formatting to column four.
+         *
+         * @param tableColumnFormat Format to apply
+         * @return Factory.
+         */
         public Factory columnFourFormat(TableColumnFormat tableColumnFormat) {
             return columnFormat(3, tableColumnFormat);
         }
 
+        /**
+         * Apply formatting to column five.
+         *
+         * @param tableColumnFormat Format to apply
+         * @return Factory.
+         */
         public Factory columnFiveFormat(TableColumnFormat tableColumnFormat) {
             return columnFormat(4, tableColumnFormat);
         }

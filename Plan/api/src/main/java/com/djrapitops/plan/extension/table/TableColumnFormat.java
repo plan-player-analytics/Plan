@@ -17,10 +17,28 @@
 package com.djrapitops.plan.extension.table;
 
 public enum TableColumnFormat {
+    /**
+     * String variables to be formatted as links to player page.
+     */
     PLAYER_NAME,
+    /**
+     * String variables to be formatted as colored (using § character).
+     */
     CHAT_COLORED,
+    /**
+     * Number variables to be formatted as time amount (eg. 1h 30m 25s).
+     */
     TIME_MILLISECONDS,
+    /**
+     * Number epoch millisecond to be formatted as date without second indicator.
+     */
     DATE_YEAR,
+    /**
+     * Number epoch millisecond to be formatted as date with second indicator.
+     */
     DATE_SECOND,
+    /**
+     * Default formatting, no extra formatting applied.
+     */
     NONE
 }

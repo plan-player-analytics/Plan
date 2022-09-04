@@ -24,8 +24,17 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 public enum Family {
+    /**
+     * 'fas' (solid) Font awesome family.
+     */
     SOLID,
+    /**
+     * 'far' (regular) Font awesome family.
+     */
     REGULAR,
+    /**
+     * 'fab' (brand) Font awesome family.
+     */
     BRAND;
 
     public static Optional<Family> getByName(String name) {
