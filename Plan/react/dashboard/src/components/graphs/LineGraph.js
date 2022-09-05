@@ -9,7 +9,6 @@ import {useTranslation} from "react-i18next";
 const LineGraph = ({id, series}) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
-    console.log(series)
 
     useEffect(() => {
         NoDataDisplay(Highcharts);
