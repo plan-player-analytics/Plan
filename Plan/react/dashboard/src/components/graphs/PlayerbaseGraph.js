@@ -7,6 +7,7 @@ import {withReducedSaturation} from "../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 
 const PlayerbaseGraph = ({data}) => {
+    console.log(data);
     const {t} = useTranslation()
     const {nightModeEnabled, graphTheming} = useTheme();
 

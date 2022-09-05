@@ -16,19 +16,23 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
+import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.RowExtractors;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import org.apache.commons.text.TextStringBuilder;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -109,5 +113,49 @@ public class JoinAddressQueries {
                 ')'; // Don't append addresses directly, SQL injection hazard
 
         return db -> db.querySet(sql, RowExtractors.getInt(SessionsTable.USER_ID), joinAddresses.toArray());
+    }
+
+    public static Query<List<DateObj<Map<String, Integer>>>> joinAddressesPerDay(ServerUUID serverUUID, long timezoneOffset, long after, long before) {
+        return db -> {
+            Sql sql = db.getSql();
+
+            String selectAddresses = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    JoinAddressTable.JOIN_ADDRESS +
+                    ", COUNT(1) as count" +
+                    FROM + SessionsTable.TABLE_NAME + " s" +
+                    LEFT_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
+                    WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + SessionsTable.SESSION_START + ">?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    GROUP_BY + "date,j." + JoinAddressTable.ID;
+
+            return db.query(new QueryStatement<>(selectAddresses, 1000) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timezoneOffset);
+                    statement.setString(2, serverUUID.toString());
+                    statement.setLong(3, after);
+                    statement.setLong(4, before);
+                }
+
+                @Override
+                public List<DateObj<Map<String, Integer>>> processResults(ResultSet set) throws SQLException {
+                    Map<Long, Map<String, Integer>> addressesByDate = new HashMap<>();
+                    while (set.next()) {
+                        long date = set.getLong("date");
+                        String joinAddress = set.getString(JoinAddressTable.JOIN_ADDRESS);
+                        int count = set.getInt("count");
+                        Map<String, Integer> joinAddresses = addressesByDate.computeIfAbsent(date, k -> new TreeMap<>());
+                        joinAddresses.put(joinAddress, count);
+                    }
+
+                    return addressesByDate.entrySet()
+                            .stream().map(entry -> new DateObj<>(entry.getKey(), entry.getValue()))
+                            .collect(Collectors.toList());
+                }
+            });
+        };
     }
 }

@@ -122,6 +122,7 @@ public enum HtmlLang implements Lang {
     TITLE_PLAYERBASE_DEVELOPMENT("html.label.playerbaseDevelopment", "Playerbase development"),
     TITLE_CURRENT_PLAYERBASE("html.label.currentPlayerbase", "Current Playerbase"),
     TITLE_JOIN_ADDRESSES("html.label.joinAddresses", "Join Addresses"),
+    TITLE_LATEST_JOIN_ADDRESSES("html.label.latestJoinAddresses", "Latest Join Addresses"),
     COMPARING_60_DAYS("html.text.comparing30daysAgo", "Comparing 30d ago to Now"),
     TITLE_30_DAYS_AGO("html.label.thirtyDaysAgo", "30 days ago"),
     TITLE_NOW("html.label.now", "Now"),

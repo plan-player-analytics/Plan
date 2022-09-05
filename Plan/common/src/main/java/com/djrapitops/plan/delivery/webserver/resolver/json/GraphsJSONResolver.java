@@ -98,6 +98,7 @@ public class GraphsJSONResolver implements Resolver {
                             @ExampleObject("punchCard"),
                             @ExampleObject("serverPie"),
                             @ExampleObject("joinAddressPie"),
+                            @ExampleObject("joinAddressByDay"),
                     }),
                     @Parameter(in = ParameterIn.QUERY, name = "server", description = "Server identifier to get data for", examples = {
                             @ExampleObject("Server 1"),
@@ -178,6 +179,8 @@ public class GraphsJSONResolver implements Resolver {
                 return DataID.GRAPH_SERVER_PIE;
             case "joinAddressPie":
                 return DataID.GRAPH_HOSTNAME_PIE;
+            case "joinAddressByDay":
+                return DataID.JOIN_ADDRESSES_BY_DAY;
             default:
                 throw new BadRequestException("unknown 'type' parameter.");
         }
@@ -188,7 +191,7 @@ public class GraphsJSONResolver implements Resolver {
             case GRAPH_PERFORMANCE:
                 return graphJSON.performanceGraphJSON(serverUUID);
             case GRAPH_OPTIMIZED_PERFORMANCE:
-                return graphJSON.optimizedPerformanceGraphJSON(serverUUID, query);
+                return graphJSON.optimizedPerformanceGraphJSON(serverUUID);
             case GRAPH_ONLINE:
                 return graphJSON.playersOnlineGraph(serverUUID);
             case GRAPH_UNIQUE_NEW:
@@ -209,6 +212,15 @@ public class GraphsJSONResolver implements Resolver {
                 return graphJSON.pingGraphsJSON(serverUUID);
             case GRAPH_PUNCHCARD:
                 return graphJSON.punchCardJSONAsMap(serverUUID);
+            case JOIN_ADDRESSES_BY_DAY:
+                try {
+                    return graphJSON.joinAddressesByDay(serverUUID,
+                            query.get("after").map(Long::parseLong).orElse(0L),
+                            query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis())
+                    );
+                } catch (NumberFormatException e) {
+                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number) " + e.getMessage());
+                }
             default:
                 return Collections.singletonMap("error", "Undefined ID: " + id.name());
         }

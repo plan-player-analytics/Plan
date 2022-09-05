@@ -1,0 +1,44 @@
+import React from 'react';
+import {useTranslation} from "react-i18next";
+import {useTheme} from "../../hooks/themeHook";
+import {withReducedSaturation} from "../../util/colors";
+
+const GroupRow = ({group, color}) => {
+    return (
+        <tr>
+            <td style={{color}}>{group.name}</td>
+            <td>{group.y}</td>
+        </tr>
+    )
+}
+
+const GroupTable = ({groups, colors}) => {
+    const {t} = useTranslation();
+    const {nightModeEnabled} = useTheme();
+
+    function getColor(i) {
+        if (groups[i].color) {
+            return nightModeEnabled ? withReducedSaturation(groups[i].color) : groups[i].color;
+        }
+        return nightModeEnabled ? withReducedSaturation(colors[i]) : colors[i];
+    }
+
+    return (
+        <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
+            <tbody>
+            {groups.length ? groups.map((group, i) =>
+                    <GroupRow key={i}
+                              group={group}
+                              color={getColor(i)}/>) :
+                <tr>
+                    <td>{t('generic.noData')}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>}
+            </tbody>
+        </table>
+    )
+};
+
+export default GroupTable

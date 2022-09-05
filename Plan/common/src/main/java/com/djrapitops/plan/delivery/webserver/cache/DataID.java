@@ -51,7 +51,8 @@ public enum DataID {
     EXTENSION_NAV,
     EXTENSION_TABS,
     EXTENSION_JSON,
-    LIST_SERVERS;
+    LIST_SERVERS,
+    JOIN_ADDRESSES_BY_DAY;
 
     public String of(ServerUUID serverUUID) {
         return name() + '-' + serverUUID;

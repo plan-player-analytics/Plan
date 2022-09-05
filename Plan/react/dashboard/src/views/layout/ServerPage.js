@@ -10,6 +10,7 @@ import {
     faCubes,
     faGlobe,
     faInfoCircle,
+    faLocationArrow,
     faSearch,
     faUserGroup,
     faUsers
@@ -68,6 +69,7 @@ const ServerSidebar = () => {
                         icon: faChartLine,
                         href: "playerbase"
                     },
+                    {name: 'html.label.joinAddresses', icon: faLocationArrow, href: "join-addresses"},
                     // {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
                     {name: 'html.label.playerList', icon: faUserGroup, href: "players"},
                     {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},

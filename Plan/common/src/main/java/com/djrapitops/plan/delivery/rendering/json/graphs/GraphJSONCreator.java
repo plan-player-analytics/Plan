@@ -17,6 +17,9 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs;
 
 import com.djrapitops.plan.delivery.domain.DateMap;
+import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.JoinAddressCount;
+import com.djrapitops.plan.delivery.domain.JoinAddressCounts;
 import com.djrapitops.plan.delivery.domain.mutators.MutatorFunctions;
 import com.djrapitops.plan.delivery.domain.mutators.PingMutator;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
@@ -29,8 +32,6 @@ import com.djrapitops.plan.delivery.rendering.json.graphs.pie.Pie;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.delivery.rendering.json.graphs.special.WorldMap;
 import com.djrapitops.plan.delivery.rendering.json.graphs.stack.StackGraph;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
-import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
@@ -51,6 +52,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityInde
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
+import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -62,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Creates Graph related Data JSON.
@@ -123,9 +126,7 @@ public class GraphJSONCreator {
                 "}}";
     }
 
-    public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID, URIQuery query) {
-//        long after = getAfter(query); // TODO Implement if performance issues become apparent.
-
+    public Map<String, Object> optimizedPerformanceGraphJSON(ServerUUID serverUUID) {
         long now = System.currentTimeMillis();
         long twoMonthsAgo = now - TimeUnit.DAYS.toMillis(60);
         long monthAgo = now - TimeUnit.DAYS.toMillis(30);
@@ -185,16 +186,6 @@ public class GraphJSONCreator {
                 .put("serverName", serverName)
                 .put("serverUUID", serverUUID)
                 .build();
-    }
-
-    private long getAfter(URIQuery query) {
-        try {
-            return query.get("after")
-                    .map(Long::parseLong)
-                    .orElse(0L) - 500L; // Some headroom for out-of-sync clock.
-        } catch (NumberFormatException badType) {
-            throw new BadRequestException("'after': " + badType.toString());
-        }
     }
 
     public String playersOnlineGraph(ServerUUID serverUUID) {
@@ -401,7 +392,7 @@ public class GraphJSONCreator {
         long now = System.currentTimeMillis();
         List<Ping> pings = db.query(PingQueries.fetchPingDataOfServer(now - TimeUnit.DAYS.toMillis(180L), now, serverUUID));
 
-        PingGraph pingGraph = graphs.line().pingGraph(new PingMutator(pings).mutateToByMinutePings().all());// TODO Optimize in query
+        PingGraph pingGraph = graphs.line().pingGraph(new PingMutator(pings).mutateToByMinutePings().all());
 
         return "{\"min_ping_series\":" + pingGraph.getMinGraph().toHighChartsSeries() +
                 ",\"avg_ping_series\":" + pingGraph.getAvgGraph().toHighChartsSeries() +
@@ -467,5 +458,30 @@ public class GraphJSONCreator {
             joinAddresses.remove(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
             joinAddresses.put(locale.getString(GenericLang.UNKNOWN).toLowerCase(), unknown);
         }
+    }
+
+    public Map<String, Object> joinAddressesByDay(ServerUUID serverUUID, long after, long before) {
+        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(serverUUID, config.getTimeZone().getOffset(System.currentTimeMillis()), after, before));
+
+        for (DateObj<Map<String, Integer>> addressesByDate : joinAddresses) {
+            translateUnknown(addressesByDate.getValue());
+        }
+
+        List<JoinAddressCounts> joinAddressCounts = joinAddresses.stream()
+                .map(addressesOnDay -> new JoinAddressCounts(
+                        addressesOnDay.getDate(),
+                        addressesOnDay.getValue().entrySet()
+                                .stream()
+                                .map(JoinAddressCount::new)
+                                .sorted()
+                                .collect(Collectors.toList())))
+                .sorted(new DateHolderOldestComparator())
+                .collect(Collectors.toList());
+
+        return Maps.builder(String.class, Object.class)
+                .put("colors", pieColors)
+                .put("join_addresses_by_date", joinAddressCounts)
+                .build();
     }
 }
