@@ -27,8 +27,8 @@ import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServerIdentity} from "../../service/serverService";
-import ExtensionIcon from "../../components/extensions/ExtensionIcon";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
+import {iconTypeToFontAwesomeClass} from "../../util/icons";
 
 const ServerSidebar = () => {
     const {t, i18n} = useTranslation();
@@ -87,7 +87,7 @@ const ServerSidebar = () => {
                 .map(info => {
                     return {
                         name: info.pluginName,
-                        icon: <ExtensionIcon icon={info.icon}/>,
+                        icon: [iconTypeToFontAwesomeClass(info.icon.family), info.icon.iconName],
                         href: `plugins/${encodeURIComponent(info.pluginName)}`
                     }
                 }).forEach(item => items.push(item))

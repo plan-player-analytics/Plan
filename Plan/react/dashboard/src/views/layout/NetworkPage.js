@@ -23,10 +23,10 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
-import ExtensionIcon from "../../components/extensions/ExtensionIcon";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchNetworkMetadata} from "../../service/metadataService";
+import {iconTypeToFontAwesomeClass} from "../../util/icons";
 
 const NetworkSidebar = () => {
     const {t, i18n} = useTranslation();
@@ -89,7 +89,7 @@ const NetworkSidebar = () => {
                 .map(info => {
                     return {
                         name: info.pluginName,
-                        icon: <ExtensionIcon icon={info.icon}/>,
+                        icon: [iconTypeToFontAwesomeClass(info.icon.family), info.icon.iconName],
                         href: `plugins/${encodeURIComponent(info.pluginName)}`
                     }
                 }).forEach(item => items.push(item))
