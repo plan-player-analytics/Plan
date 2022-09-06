@@ -48,7 +48,27 @@ public class AccessLogger {
 
     public void log(InternalRequest internalRequest, Request request, Response response) {
         if (webserverConfiguration.logAccessToConsole()) {
-            logger.info("Access Log: " + internalRequest.getMethod() + " " + getRequestURI(internalRequest, request) + " (from " + internalRequest.getAccessAddress(webserverConfiguration) + ") - " + response.getCode());
+            int code = response.getCode();
+            String message = "Access Log: " + internalRequest.getMethod() + " " +
+                    getRequestURI(internalRequest, request) +
+                    " (from " + internalRequest.getAccessAddress(webserverConfiguration) + ") - " +
+                    code;
+
+            int codeFamily = code - (code % 100); // 5XX, 4XX etc
+            switch (codeFamily) {
+                case 500:
+                    logger.error(message);
+                    break;
+                case 400:
+                    logger.warn(message);
+                    break;
+                case 300:
+                case 200:
+                case 100:
+                default:
+                    logger.info(message);
+                    break;
+            }
         }
         try {
             dbSystem.getDatabase().executeTransaction(
