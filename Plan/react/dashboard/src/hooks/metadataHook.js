@@ -6,6 +6,7 @@ import terminal from '../Terminal-icon.png'
 const MetadataContext = createContext({});
 
 export const MetadataContextProvider = ({children}) => {
+    const [datastore] = useState({});
     const [metadata, setMetadata] = useState({});
 
     const updateMetadata = useCallback(async () => {
@@ -34,7 +35,7 @@ export const MetadataContextProvider = ({children}) => {
         updateMetadata();
     }, [updateMetadata]);
 
-    const sharedState = {...metadata, getPlayerHeadImageUrl}
+    const sharedState = {...metadata, getPlayerHeadImageUrl, datastore}
     return (<MetadataContext.Provider value={sharedState}>
             {children}
         </MetadataContext.Provider>

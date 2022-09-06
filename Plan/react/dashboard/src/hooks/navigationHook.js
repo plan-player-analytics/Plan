@@ -5,8 +5,8 @@ const NavigationContext = createContext({});
 export const NavigationContextProvider = ({children}) => {
     const [currentTab, setCurrentTab] = useState(undefined);
     const [updateRequested, setUpdateRequested] = useState(Date.now());
-    const [updating, setUpdating] = useState(false);
-    const [lastUpdate, setLastUpdate] = useState({date: 0, formatted: ""});
+    const [updating, setUpdating] = useState({});
+    const [lastUpdate, setLastUpdate] = useState({});
 
     const [items, setItems] = useState([]);
     const [sidebarExpanded, setSidebarExpanded] = useState(window.innerWidth > 1350);
@@ -31,13 +31,17 @@ export const NavigationContextProvider = ({children}) => {
         }
     }, [updating, setUpdateRequested, setUpdating]);
 
-    const finishUpdate = useCallback((date, formatted) => {
-        // TODO Logic to retry if received data is too old
+    // TODO currently not possible due to extensionData getting updated off-tab
+    // useEffect(requestUpdate, [currentTab]); // Force data to update when changing tab
+
+    const finishUpdate = useCallback((date, formatted, isStillUpdating) => {
         if (date) {
-            setLastUpdate({date, formatted});
-            setUpdating(false);
+            if (!lastUpdate.date || date > lastUpdate.date) {
+                setLastUpdate({date, formatted});
+            }
+            setUpdating(isStillUpdating);
         }
-    }, [setLastUpdate, setUpdating]);
+    }, [setLastUpdate, setUpdating, lastUpdate]);
 
     const toggleSidebar = useCallback(() => {
         setSidebarExpanded(!sidebarExpanded);

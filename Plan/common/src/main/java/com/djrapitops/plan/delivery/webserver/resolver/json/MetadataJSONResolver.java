@@ -24,6 +24,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -85,6 +86,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("serverUUID", serverInfo.getServer().getUuid().toString())
                         .put("networkName", serverInfo.getServer().isProxy() ? config.get(ProxySettings.NETWORK_NAME) : null)
                         .put("mainCommand", mainCommand)
+                        .put("refreshBarrierMs", config.get(WebserverSettings.REDUCED_REFRESH_BARRIER))
                         .build())
                 .build();
     }

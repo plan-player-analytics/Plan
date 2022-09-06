@@ -36,7 +36,7 @@ const Header = ({page, tab}) => {
     const {toggleColorChooser} = useTheme();
     const {t} = useTranslation();
 
-    const {requestUpdate, updating, lastUpdate, toggleSidebar} = useNavigation();
+    const {requestUpdate, lastUpdate, updating, toggleSidebar} = useNavigation();
 
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.linkedToUuid) : undefined
