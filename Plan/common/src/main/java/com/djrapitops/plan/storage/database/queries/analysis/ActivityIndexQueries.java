@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.utilities.Benchmark;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -74,6 +75,7 @@ public class ActivityIndexQueries {
         // Static method class
     }
 
+    @Benchmark.Slow("407ms")
     public static Query<Integer> fetchRegularPlayerCount(long date, ServerUUID serverUUID, long playtimeThreshold) {
         return fetchActivityGroupCount(date, serverUUID, playtimeThreshold, ActivityIndex.REGULAR, 5.1);
     }
@@ -120,16 +122,13 @@ public class ActivityIndexQueries {
     public static Query<Integer> fetchActivityGroupCount(long date, ServerUUID serverUUID, long playtimeThreshold, double above, double below) {
         String selectActivityIndex = selectActivityIndexSQL();
 
-        String selectIndexes = SELECT + "COALESCE(activity_index, 0) as activity_index" +
+        String selectCount = SELECT + "COUNT(1) as count, COALESCE(activity_index, 0) as activity_index" +
                 FROM + UserInfoTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") q2 on q2." + SessionsTable.USER_ID + "=u." + UserInfoTable.USER_ID +
                 WHERE + "u." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + "u." + UserInfoTable.REGISTERED + "<=?";
-
-        String selectCount = SELECT + "COUNT(1) as count" +
-                FROM + '(' + selectIndexes + ") i" +
-                WHERE + "i.activity_index>=?" +
-                AND + "i.activity_index<?";
+                AND + "u." + UserInfoTable.REGISTERED + "<=?" +
+                AND + "activity_index>=?" +
+                AND + "activity_index<?";
 
         return new QueryStatement<>(selectCount) {
             @Override

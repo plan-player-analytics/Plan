@@ -63,17 +63,15 @@ public class ServerUptimeCalculator {
         long dataGapThreshold = TimeUnit.MINUTES.toMillis(3);
         Database database = dbSystem.getDatabase();
         Optional<Long> latestDataDate = database.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID)).map(TPS::getDate);
-        Optional<Long> dataBlockStartDate = database.query(TPSQueries.fetchLatestServerStartTime(serverUUID, dataGapThreshold));
-
-        if (latestDataDate.isEmpty() || dataBlockStartDate.isEmpty()) {
+        if (latestDataDate.isEmpty() // No tps data
+                || System.currentTimeMillis() - latestDataDate.get() > dataGapThreshold // Server has been offline for a while
+        ) {
             return Optional.empty();
         }
 
-        if (System.currentTimeMillis() - latestDataDate.get() > dataGapThreshold) {
-            return Optional.empty();
-        }
-
-        return Optional.of(System.currentTimeMillis() - dataBlockStartDate.get());
+        Optional<Long> serverStartDate = database.query(TPSQueries.fetchLatestServerStartTime(serverUUID, dataGapThreshold));
+        return serverStartDate
+                .map(serverStarted -> System.currentTimeMillis() - serverStarted);
     }
 
 }

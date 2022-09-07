@@ -247,4 +247,21 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         assertNotNull(result);
     }
 
+    @RepeatedTest(25)
+    default void countRegularPlayers() {
+        storeSessions(session -> true);
+        long playtimeThreshold = TimeUnit.SECONDS.toMillis(1L);
+        Integer expected = 1; // All players are very active
+        Integer result = db().query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), serverUUID(), playtimeThreshold));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void noRegularPlayers() {
+        storeSessions(session -> true);
+        long playtimeThreshold = System.currentTimeMillis(); // Threshold is so high it's impossible to be regular
+        Integer expected = 0;
+        Integer result = db().query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), serverUUID(), playtimeThreshold));
+        assertEquals(expected, result);
+    }
 }

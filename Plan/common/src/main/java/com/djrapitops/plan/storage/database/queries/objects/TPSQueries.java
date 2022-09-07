@@ -23,6 +23,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.utilities.Benchmark;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
@@ -247,6 +248,7 @@ public class TPSQueries {
         };
     }
 
+    @Benchmark.Slow("1s")
     public static Query<Optional<DateObj<Integer>>> fetchAllTimePeakPlayerCount(ServerUUID serverUUID) {
         return fetchPeakPlayerCount(serverUUID, 0);
     }
@@ -476,6 +478,7 @@ public class TPSQueries {
         };
     }
 
+    @Benchmark.Slow("1s")
     public static Query<Optional<Long>> fetchLatestServerStartTime(ServerUUID serverUUID, long dataGapThreshold) {
         String selectPreviousRowNumber = SELECT +
                 "-1+ROW_NUMBER() over (ORDER BY " + DATE + ") AS previous_rn, " +

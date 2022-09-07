@@ -73,7 +73,7 @@ public class RandomData {
 
     public static List<TPS> randomTPS() {
         List<TPS> test = new ArrayList<>();
-        for (int i = 0; i < randomInt(5, 100); i++) {
+        for (int i = 0; i < randomInt(5, 1000000); i++) {
             int randInt = r.nextInt();
             long randLong = Math.abs(r.nextLong());
             test.add(new TPS(randLong, randLong, randInt, randLong, randLong, randInt, randInt, randLong));

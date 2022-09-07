@@ -26,6 +26,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.java.Lists;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 
@@ -59,7 +60,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         assertTrue(db().query(TPSQueries.fetchTPSDataOfAllServersBut(0, System.currentTimeMillis(), ServerUUID.randomUUID())).isEmpty());
     }
 
-    @Test
+    @RepeatedTest(100)
     default void playerMaxPeakIsCorrect() {
         List<TPS> tpsData = RandomData.randomTPS();
 
