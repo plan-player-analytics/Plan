@@ -250,8 +250,10 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
     @RepeatedTest(25)
     default void countRegularPlayers() {
         storeSessions(session -> true);
-        long playtimeThreshold = TimeUnit.SECONDS.toMillis(1L);
+        long playtimeThreshold = TimeUnit.MILLISECONDS.toMillis(1L);
         Integer expected = 1; // All players are very active
+        FinishedSession randomSession = RandomData.randomSession(serverUUID(), worlds, System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1L), playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(randomSession));
         Integer result = db().query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), serverUUID(), playtimeThreshold));
         assertEquals(expected, result);
     }

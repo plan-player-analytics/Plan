@@ -112,9 +112,13 @@ public class RandomData {
     }
 
     public static FinishedSession randomSession(ServerUUID serverUUID, String[] worlds, UUID... uuids) {
+        long start = RandomData.randomTime();
+        return randomSession(serverUUID, worlds, start, uuids);
+    }
+
+    public static FinishedSession randomSession(ServerUUID serverUUID, String[] worlds, long start, UUID... uuids) {
         DataMap extraData = new DataMap();
         extraData.put(WorldTimes.class, RandomData.randomWorldTimes(worlds));
-        long start = RandomData.randomTime();
         long end = RandomData.randomTimeAfter(start);
 
         if (uuids.length >= 2) {
