@@ -243,6 +243,8 @@ public enum HtmlLang implements Lang {
     LABEL_MAX_FREE_DISK("html.label.maxFreeDisk", "Max Free Disk"),
     LABEL_MIN_FREE_DISK("html.label.minFreeDisk", "Min Free Disk"),
     LABEL_CURRENT_UPTIME("html.label.currentUptime", "Current Uptime"),
+    LABEL_TOTAL("html.label.total", "Total"),
+    LABEL_ALPHABETICAL("html.label.alphabetical", "Alphabetical"),
 
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),

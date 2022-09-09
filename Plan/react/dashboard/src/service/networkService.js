@@ -4,3 +4,8 @@ export const fetchNetworkOverview = async (updateRequested) => {
     const url = `/v1/network/overview?timestamp=${updateRequested}`;
     return doGetRequest(url);
 }
+
+export const fetchServersOverview = async (updateRequested) => {
+    const url = `/v1/network/servers?timestamp=${updateRequested}`;
+    return doGetRequest(url);
+}
