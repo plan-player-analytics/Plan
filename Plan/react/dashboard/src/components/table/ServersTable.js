@@ -74,13 +74,13 @@ const sort = (servers, sortBy, sortReversed) => {
 
 export const ServerSortOption = {
     ALPHABETICAL: 'html.label.alphabetical',
-    AVERAGE_TPS: 'html.label.averageTps',
+    AVERAGE_TPS: 'html.label.averageTps7days',
     // DOWNTIME: 'html.label.downtime',
-    LOW_TPS_SPIKES: 'html.label.lowTpsSpikes',
-    NEW_PLAYERS: 'html.label.newPlayers',
-    PLAYERS_ONLINE: 'html.label.playersOnline',
+    LOW_TPS_SPIKES: 'html.label.lowTpsSpikes7days',
+    NEW_PLAYERS: 'html.label.newPlayers7days',
+    PLAYERS_ONLINE: 'html.label.playersOnlineNow',
     REGISTERED_PLAYERS: 'html.label.registeredPlayers',
-    UNIQUE_PLAYERS: 'html.label.uniquePlayers',
+    UNIQUE_PLAYERS: 'html.label.uniquePlayers7days',
 }
 
 const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {

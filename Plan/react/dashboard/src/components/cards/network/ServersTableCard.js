@@ -44,7 +44,7 @@ const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
             </DropdownToggle>
 
             <DropdownMenu>
-                <h6 className="dropdown-header">Sort by</h6>
+                <h6 className="dropdown-header">{t('html.label.sortBy')}</h6>
                 {sortOptions.map((option, i) => (
                     <DropdownItem key={i} onClick={() => setSortBy(option)}>
                         {t(option)}
