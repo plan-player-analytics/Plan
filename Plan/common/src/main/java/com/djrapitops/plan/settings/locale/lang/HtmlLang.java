@@ -108,7 +108,7 @@ public enum HtmlLang implements Lang {
     LABEL_AVG_ENTITIES("html.label.averageEntities", "Average Entities"),
     LABEL_AVG_CHUNKS("html.label.averageChunks", "Average Chunks"),
     LABEL_LOW_TPS("html.label.lowTpsSpikes", "Low TPS Spikes"),
-    LABEL_LOW_TPS_7_DAYS("html.label.lowTpsSpikes", "Low TPS Spikes (7 days)"),
+    LABEL_LOW_TPS_7_DAYS("html.label.lowTpsSpikes7days", "Low TPS Spikes (7 days)"),
     LABEL_DOWNTIME("html.label.downtime", "Downtime"),
     // Sessions tab #tab-sessions-overview
     TITLE_RECENT_SESSIONS("html.label.recentSessions", "Recent Sessions"),

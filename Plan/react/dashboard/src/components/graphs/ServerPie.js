@@ -5,6 +5,7 @@ import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
+import NoDataDisplay from "highcharts/modules/no-data-to-display";
 import Accessibility from "highcharts/modules/accessibility";
 
 const ServerPie = ({colors, series}) => {
@@ -21,8 +22,10 @@ const ServerPie = ({colors, series}) => {
             data: series
         };
 
+        NoDataDisplay(Highcharts);
         Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
+        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}});
         Highcharts.chart('server-pie', {
             chart: {
                 backgroundColor: 'transparent',

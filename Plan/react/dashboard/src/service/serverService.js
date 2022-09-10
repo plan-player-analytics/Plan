@@ -42,7 +42,8 @@ export const fetchExtensionData = async (timestamp, identifier) => {
 }
 
 export const fetchSessions = async (timestamp, identifier) => {
-    const url = `/v1/sessions?server=${identifier}&timestamp=${timestamp}`;
+    const url = identifier ? `/v1/sessions?server=${identifier}&timestamp=${timestamp}` :
+        `/v1/sessions?timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 

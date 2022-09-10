@@ -1,23 +1,21 @@
 import {Col, Row} from "react-bootstrap-v5";
 import React from "react";
-import ServerWorldPieCard from "../../components/cards/server/graphs/ServerWorldPieCard";
 import ServerRecentSessionsCard from "../../components/cards/server/tables/ServerRecentSessionsCard";
 import SessionInsightsCard from "../../components/cards/server/insights/SessionInsightsCard";
 import LoadIn from "../../components/animation/LoadIn";
-import {useParams} from "react-router-dom";
+import ServerPieCard from "../../components/cards/common/ServerPieCard";
 
-const ServerSessions = () => {
-    const {identifier} = useParams();
+const NetworkSessions = () => {
     return (
         <LoadIn>
             <section className="server_sessions">
                 <Row>
                     <Col lg={8}>
-                        <ServerRecentSessionsCard identifier={identifier}/>
+                        <ServerRecentSessionsCard identifier={undefined}/>
                     </Col>
                     <Col lg={4}>
-                        <ServerWorldPieCard/>
-                        <SessionInsightsCard identifier={identifier}/>
+                        <ServerPieCard/>
+                        <SessionInsightsCard identifier={undefined}/>
                     </Col>
                 </Row>
             </section>
@@ -25,4 +23,4 @@ const ServerSessions = () => {
     )
 }
 
-export default ServerSessions;
+export default NetworkSessions;

@@ -9,3 +9,13 @@ export const fetchServersOverview = async (updateRequested) => {
     const url = `/v1/network/servers?timestamp=${updateRequested}`;
     return doGetRequest(url);
 }
+
+export const fetchServerPie = async (timestamp) => {
+    const url = `/v1/graph?type=serverPie&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchNetworkSessionsOverview = async (timestamp) => {
+    const url = `/v1/network/sessionsOverview?timestamp=${timestamp}`;
+    return doGetRequest(url);
+}

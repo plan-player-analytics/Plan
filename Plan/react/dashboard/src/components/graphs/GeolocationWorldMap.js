@@ -5,6 +5,7 @@ import {withReducedSaturation} from "../../util/colors";
 import Highcharts from 'highcharts/highmaps.js';
 import map from '@highcharts/map-collection/custom/world.geo.json';
 import Accessibility from "highcharts/modules/accessibility";
+import NoDataDisplay from "highcharts/modules/no-data-to-display";
 
 const GeolocationWorldMap = ({series, colors}) => {
     const {t} = useTranslation();
@@ -19,8 +20,10 @@ const GeolocationWorldMap = ({series, colors}) => {
             joinBy: ['iso-a3', 'code']
         };
 
+        NoDataDisplay(Highcharts);
         Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
+        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}});
         Highcharts.mapChart('countryWorldMap', {
             chart: {
                 animation: true
