@@ -1,14 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {Card, Dropdown} from "react-bootstrap-v5";
 import ServersTable, {ServerSortOption} from "../../table/ServersTable";
-import {
-    faNetworkWired,
-    faSort,
-    faSortAlphaDown,
-    faSortAlphaUp,
-    faSortNumericDown,
-    faSortNumericUp
-} from "@fortawesome/free-solid-svg-icons";
+import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
@@ -21,33 +14,20 @@ const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
     const sortOptions = Object.values(ServerSortOption);
 
     const getSortIcon = useCallback(() => {
-        switch (sortBy) {
-            case ServerSortOption.ALPHABETICAL:
-                return sortReversed ? faSortAlphaUp : faSortAlphaDown;
-            case ServerSortOption.PLAYERS_ONLINE:
-            // case ServerSortOption.DOWNTIME:
-            case ServerSortOption.AVERAGE_TPS:
-            case ServerSortOption.LOW_TPS_SPIKES:
-            case ServerSortOption.NEW_PLAYERS:
-            case ServerSortOption.UNIQUE_PLAYERS:
-            case ServerSortOption.REGISTERED_PLAYERS:
-                return sortReversed ? faSortNumericDown : faSortNumericUp;
-            default:
-                return faSort;
-        }
-    }, [sortBy, sortReversed])
+        return sortReversed ? sortBy.iconDesc : sortBy.iconAsc;
+    }, [sortBy, sortReversed]);
 
     return (
-        <Dropdown className="float-end">
+        <Dropdown className="float-end" style={{position: "absolute", right: "0.5rem"}}>
             <DropdownToggle variant=''>
-                <Fa icon={getSortIcon()}/> {t(sortBy)}
+                <Fa icon={getSortIcon()}/> {t(sortBy.label)}
             </DropdownToggle>
 
             <DropdownMenu>
                 <h6 className="dropdown-header">{t('html.label.sortBy')}</h6>
                 {sortOptions.map((option, i) => (
                     <DropdownItem key={i} onClick={() => setSortBy(option)}>
-                        {t(option)}
+                        {t(option.label)}
                     </DropdownItem>
                 ))}
             </DropdownMenu>

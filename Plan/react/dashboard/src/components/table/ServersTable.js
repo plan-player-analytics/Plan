@@ -1,11 +1,21 @@
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCaretSquareRight, faLineChart, faLink, faServer, faUser, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {
+    faCaretSquareRight,
+    faLineChart,
+    faLink,
+    faServer,
+    faSortAlphaDown,
+    faSortAlphaUp,
+    faSortNumericDown,
+    faSortNumericUp,
+    faUser,
+    faUsers
+} from "@fortawesome/free-solid-svg-icons";
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
 import {NavLink} from "react-router-dom";
-import {calculateSum} from "../../util/calculation";
 
 const ServerRow = ({server, onQuickView}) => {
     const {t} = useTranslation();
@@ -13,7 +23,8 @@ const ServerRow = ({server, onQuickView}) => {
         <tr>
             <td>{server.name}</td>
             <td className="p-1">
-                <NavLink to={"/server/" + encodeURIComponent(server.name)}
+                <NavLink to={"/server/" + encodeURIComponent(server.serverUUID)}
+                         title={t('html.label.serverAnalysis') + ': ' + server.name}
                          className={'btn bg-transparent col-light-green'}><Fa
                     icon={faLink}/> {t('html.label.serverAnalysis')}
                 </NavLink>
@@ -32,6 +43,7 @@ const ServerRow = ({server, onQuickView}) => {
     );
 }
 
+const sortKeepOrder = () => 0;
 const sortBySometimesNumericProperty = (propertyName) => (a, b) => {
     if (typeof (a[propertyName]) === 'number' && typeof (b[propertyName]) === 'number') return a[propertyName] - b[propertyName];
     if (typeof (a[propertyName]) === 'number') return 1;
@@ -40,24 +52,7 @@ const sortBySometimesNumericProperty = (propertyName) => (a, b) => {
 }
 const sortByNumericProperty = (propertyName) => (a, b) => b[propertyName] - a[propertyName]; // Biggest first
 const sortBeforeReverse = (servers, sortBy) => {
-    const sorting = [...servers];
-    switch (sortBy) {
-        case ServerSortOption.PLAYERS_ONLINE:
-            return sorting.sort(sortBySometimesNumericProperty('online'));
-        case ServerSortOption.AVERAGE_TPS:
-            return sorting.sort(sortBySometimesNumericProperty('avg_tps'));
-        case ServerSortOption.UNIQUE_PLAYERS:
-            return sorting.sort(sortByNumericProperty('unique_players'));
-        case ServerSortOption.NEW_PLAYERS:
-            return sorting.sort(sortByNumericProperty('new_players'));
-        case ServerSortOption.REGISTERED_PLAYERS:
-            return sorting.sort(sortByNumericProperty('players'));
-        // case ServerSortOption.DOWNTIME:
-        //     return servers.sort(sortByNumericProperty('downtime_raw'));
-        case ServerSortOption.ALPHABETICAL:
-        default:
-            return sorting;
-    }
+    return [...servers].sort(sortBy.sortFunction);
 }
 
 const reverse = (array) => {
@@ -72,15 +67,54 @@ const sort = (servers, sortBy, sortReversed) => {
     return sortReversed ? reverse(sortBeforeReverse(servers, sortBy)) : sortBeforeReverse(servers, sortBy);
 }
 
+const SortOptionIcon = {
+    LETTERS: {
+        iconAsc: faSortAlphaDown,
+        iconDesc: faSortAlphaUp
+    },
+    NUMBERS: {
+        iconAsc: faSortNumericUp,
+        iconDesc: faSortNumericDown
+    }
+}
+
 export const ServerSortOption = {
-    ALPHABETICAL: 'html.label.alphabetical',
-    AVERAGE_TPS: 'html.label.averageTps7days',
+    ALPHABETICAL: {
+        label: 'html.label.alphabetical',
+        sortFunction: sortKeepOrder,
+        ...SortOptionIcon.LETTERS
+    },
+    AVERAGE_TPS: {
+        label: 'html.label.averageTps7days',
+        sortFunction: sortBySometimesNumericProperty('avg_tps'),
+        ...SortOptionIcon.NUMBERS
+    },
     // DOWNTIME: 'html.label.downtime',
-    LOW_TPS_SPIKES: 'html.label.lowTpsSpikes7days',
-    NEW_PLAYERS: 'html.label.newPlayers7days',
-    PLAYERS_ONLINE: 'html.label.playersOnlineNow',
-    REGISTERED_PLAYERS: 'html.label.registeredPlayers',
-    UNIQUE_PLAYERS: 'html.label.uniquePlayers7days',
+    LOW_TPS_SPIKES: {
+        label: 'html.label.lowTpsSpikes7days',
+        sortFunction: sortByNumericProperty('low_tps_spikes'),
+        ...SortOptionIcon.NUMBERS
+    },
+    NEW_PLAYERS: {
+        label: 'html.label.newPlayers7days',
+        sortFunction: sortByNumericProperty('new_players'),
+        ...SortOptionIcon.NUMBERS
+    },
+    PLAYERS_ONLINE: {
+        label: 'html.label.playersOnlineNow',
+        sortFunction: sortBySometimesNumericProperty('online'),
+        ...SortOptionIcon.NUMBERS
+    },
+    REGISTERED_PLAYERS: {
+        label: 'html.label.registeredPlayers',
+        sortFunction: sortByNumericProperty('players'),
+        ...SortOptionIcon.NUMBERS
+    },
+    UNIQUE_PLAYERS: {
+        label: 'html.label.uniquePlayers7days',
+        sortFunction: sortByNumericProperty('unique_players'),
+        ...SortOptionIcon.NUMBERS
+    },
 }
 
 const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {
@@ -111,14 +145,6 @@ const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {
                         <td>-</td>
                     </tr>}
                 </tbody>
-                {sortedServers.length && <tfoot>
-                <tr>
-                    <td><b>{t('html.label.total')}</b></td>
-                    <td></td>
-                    <td>{calculateSum(servers.map(s => s.players))}</td>
-                    <td>{calculateSum(servers.map(s => s.online))}</td>
-                </tr>
-                </tfoot>}
             </table>
         </Scrollable>
     )
