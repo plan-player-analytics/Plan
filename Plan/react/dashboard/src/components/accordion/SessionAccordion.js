@@ -84,7 +84,8 @@ const SessionBody = ({i, session}) => {
 const SessionAccordion = (
     {
         sessions,
-        isPlayer
+        isPlayer,
+        isNetwork
     }
 ) => {
     const {t} = useTranslation();
@@ -99,7 +100,10 @@ const SessionAccordion = (
             firstColumn,
             <><Fa icon={faClock}/> {t('html.label.sessionStart')}</>,
             <><Fa icon={faClock}/> {t('html.label.length')}</>,
-            <><Fa icon={faMap}/> {t('html.label.mostPlayedWorld')}</>
+            <>
+                {!isNetwork && <><Fa icon={faMap}/> {t('html.label.mostPlayedWorld')}</>}
+                {isNetwork && <><Fa icon={faServer}/> {t('html.label.server')}</>}
+            </>
         ]} slices={sessions.map(session => {
             return {
                 body: <SessionBody session={session}/>,
