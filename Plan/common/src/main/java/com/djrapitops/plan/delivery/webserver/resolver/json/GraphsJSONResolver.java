@@ -145,7 +145,7 @@ public class GraphsJSONResolver implements Resolver {
         } else {
             // Assume network
             storedJSON = jsonResolverService.resolve(
-                    timestamp, dataID, () -> generateGraphDataJSONOfType(dataID)
+                    timestamp, dataID, () -> generateGraphDataJSONOfType(dataID, request.getQuery())
             );
         }
         return storedJSON;
@@ -226,7 +226,7 @@ public class GraphsJSONResolver implements Resolver {
         }
     }
 
-    private Object generateGraphDataJSONOfType(DataID id) {
+    private Object generateGraphDataJSONOfType(DataID id, URIQuery query) {
         switch (id) {
             case GRAPH_ACTIVITY:
                 return graphJSON.activityGraphsJSONAsMap();
@@ -240,6 +240,15 @@ public class GraphsJSONResolver implements Resolver {
                 return graphJSON.playerHostnamePieJSONAsMap();
             case GRAPH_WORLD_MAP:
                 return graphJSON.geolocationGraphsJSONAsMap();
+            case JOIN_ADDRESSES_BY_DAY:
+                try {
+                    return graphJSON.joinAddressesByDay(
+                            query.get("after").map(Long::parseLong).orElse(0L),
+                            query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis())
+                    );
+                } catch (NumberFormatException e) {
+                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number) " + e.getMessage());
+                }
             default:
                 return Collections.singletonMap("error", "Undefined ID: " + id.name());
         }

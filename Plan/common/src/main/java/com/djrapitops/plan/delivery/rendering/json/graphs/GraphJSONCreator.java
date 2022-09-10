@@ -464,6 +464,17 @@ public class GraphJSONCreator {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
         List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(serverUUID, config.getTimeZone().getOffset(System.currentTimeMillis()), after, before));
 
+        return mapToJson(pieColors, joinAddresses);
+    }
+
+    public Map<String, Object> joinAddressesByDay(long after, long before) {
+        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(config.getTimeZone().getOffset(System.currentTimeMillis()), after, before));
+
+        return mapToJson(pieColors, joinAddresses);
+    }
+
+    private Map<String, Object> mapToJson(String[] pieColors, List<DateObj<Map<String, Integer>>> joinAddresses) {
         for (DateObj<Map<String, Integer>> addressesByDate : joinAddresses) {
             translateUnknown(addressesByDate.getValue());
         }

@@ -158,4 +158,46 @@ public class JoinAddressQueries {
             });
         };
     }
+
+    public static Query<List<DateObj<Map<String, Integer>>>> joinAddressesPerDay(long timezoneOffset, long after, long before) {
+        return db -> {
+            Sql sql = db.getSql();
+
+            String selectAddresses = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    JoinAddressTable.JOIN_ADDRESS +
+                    ", COUNT(1) as count" +
+                    FROM + SessionsTable.TABLE_NAME + " s" +
+                    LEFT_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
+                    WHERE + SessionsTable.SESSION_START + ">?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    GROUP_BY + "date,j." + JoinAddressTable.ID;
+
+            return db.query(new QueryStatement<>(selectAddresses, 1000) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timezoneOffset);
+                    statement.setLong(2, after);
+                    statement.setLong(3, before);
+                }
+
+                @Override
+                public List<DateObj<Map<String, Integer>>> processResults(ResultSet set) throws SQLException {
+                    Map<Long, Map<String, Integer>> addressesByDate = new HashMap<>();
+                    while (set.next()) {
+                        long date = set.getLong("date");
+                        String joinAddress = set.getString(JoinAddressTable.JOIN_ADDRESS);
+                        int count = set.getInt("count");
+                        Map<String, Integer> joinAddresses = addressesByDate.computeIfAbsent(date, k -> new TreeMap<>());
+                        joinAddresses.put(joinAddress, count);
+                    }
+
+                    return addressesByDate.entrySet()
+                            .stream().map(entry -> new DateObj<>(entry.getKey(), entry.getValue()))
+                            .collect(Collectors.toList());
+                }
+            });
+        };
+    }
 }

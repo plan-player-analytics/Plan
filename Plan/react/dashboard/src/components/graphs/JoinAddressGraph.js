@@ -7,7 +7,7 @@ import Highcharts from "highcharts/highstock";
 import Accessibility from "highcharts/modules/accessibility";
 import {linegraphButtons} from "../../util/graphs";
 
-const JoinAddressGraph = ({id, data, colors}) => {
+const JoinAddressGraph = ({id, data, colors, stack}) => {
     const {t} = useTranslation()
     const {nightModeEnabled, graphTheming} = useTheme();
 
@@ -24,7 +24,7 @@ const JoinAddressGraph = ({id, data, colors}) => {
 
         const valuesByAddress = {};
         const dates = []
-        for (const point of data) {
+        for (const point of data || []) {
             dates.push(point.date);
             for (const address of point.joinAddresses) {
                 if (!valuesByAddress[address.joinAddress]) valuesByAddress[address.joinAddress] = [];
@@ -61,7 +61,7 @@ const JoinAddressGraph = ({id, data, colors}) => {
             title: {text: ''},
             plotOptions: {
                 column: {
-                    stacking: 'normal',
+                    stacking: stack ? 'normal' : undefined,
                     lineWidth: 1
                 }
             },
@@ -70,7 +70,7 @@ const JoinAddressGraph = ({id, data, colors}) => {
             },
             series: series
         })
-    }, [data, colors, graphTheming, id, t, nightModeEnabled])
+    }, [data, colors, graphTheming, id, t, nightModeEnabled, stack])
 
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>

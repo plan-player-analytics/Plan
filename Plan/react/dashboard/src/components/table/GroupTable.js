@@ -2,6 +2,7 @@ import React from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
+import Scrollable from "../Scrollable";
 
 const GroupRow = ({group, color}) => {
     return (
@@ -24,20 +25,22 @@ const GroupTable = ({groups, colors}) => {
     }
 
     return (
-        <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
-            <tbody>
-            {groups.length ? groups.map((group, i) =>
-                    <GroupRow key={i}
-                              group={group}
-                              color={getColor(i)}/>) :
-                <tr>
-                    <td>{t('generic.noData')}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>}
-            </tbody>
-        </table>
+        <Scrollable>
+            <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
+                <tbody>
+                {groups.length ? groups.map((group, i) =>
+                        <GroupRow key={i}
+                                  group={group}
+                                  color={getColor(i)}/>) :
+                    <tr>
+                        <td>{t('generic.noData')}</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>}
+                </tbody>
+            </table>
+        </Scrollable>
     )
 };
 

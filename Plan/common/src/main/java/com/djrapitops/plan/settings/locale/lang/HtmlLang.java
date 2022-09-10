@@ -251,6 +251,7 @@ public enum HtmlLang implements Lang {
     LABEL_TOTAL("html.label.total", "Total"),
     LABEL_ALPHABETICAL("html.label.alphabetical", "Alphabetical"),
     LABEL_SORT_BY("html.label.sortBy", "Sort By"),
+    LABEL_STACKED("html.label.stacked", "Stacked"),
 
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),

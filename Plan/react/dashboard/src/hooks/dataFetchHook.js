@@ -51,7 +51,7 @@ export const useDataRequest = (fetchMethod, parameters) => {
                 console.warn(error);
                 datastore.finishUpdate(fetchMethod)
                 setLoadingError(error);
-                finishUpdate(new Date().getTime(), "Error: " + error, datastore.isSomethingUpdating());
+                finishUpdate(0, "Error: " + error.message, datastore.isSomethingUpdating());
             }
         };
 

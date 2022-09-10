@@ -1,6 +1,5 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
-import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchJoinAddressPie} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView";
@@ -10,9 +9,8 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLocationArrow} from "@fortawesome/free-solid-svg-icons";
 import GroupVisualizer from "../../../graphs/GroupVisualizer";
 
-const JoinAddressGroupCard = () => {
+const JoinAddressGroupCard = ({identifier}) => {
     const {t} = useTranslation();
-    const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchJoinAddressPie, [identifier]);
 

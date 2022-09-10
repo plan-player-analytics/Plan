@@ -117,11 +117,13 @@ export const fetchPingGraph = async (timestamp, identifier) => {
 }
 
 export const fetchJoinAddressPie = async (timestamp, identifier) => {
-    const url = `/v1/graph?type=joinAddressPie&server=${identifier}&timestamp=${timestamp}`;
+    const url = identifier ? `/v1/graph?type=joinAddressPie&server=${identifier}&timestamp=${timestamp}` :
+        `/v1/graph?type=joinAddressPie&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 
 export const fetchJoinAddressByDay = async (timestamp, identifier) => {
-    const url = `/v1/graph?type=joinAddressByDay&server=${identifier}&timestamp=${timestamp}`;
+    const url = identifier ? `/v1/graph?type=joinAddressByDay&server=${identifier}&timestamp=${timestamp}` :
+        `/v1/graph?type=joinAddressByDay&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
