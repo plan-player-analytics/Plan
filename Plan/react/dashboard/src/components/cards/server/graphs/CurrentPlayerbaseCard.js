@@ -1,5 +1,4 @@
 import React from "react";
-import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchPlayerbaseDevelopmentGraph} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView";
@@ -10,9 +9,8 @@ import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import {CardLoader} from "../../../navigation/Loader";
 import GroupVisualizer from "../../../graphs/GroupVisualizer";
 
-const CurrentPlayerbaseCard = () => {
+const CurrentPlayerbaseCard = ({identifier}) => {
     const {t} = useTranslation();
-    const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(fetchPlayerbaseDevelopmentGraph, [identifier]);
 

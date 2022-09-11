@@ -2,28 +2,25 @@ import {Col, Row} from "react-bootstrap-v5";
 import React from "react";
 import PlayerbaseDevelopmentCard from "../../components/cards/server/graphs/PlayerbaseDevelopmentCard";
 import CurrentPlayerbaseCard from "../../components/cards/server/graphs/CurrentPlayerbaseCard";
-import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchPlayerbaseOverview} from "../../service/serverService";
 import {ErrorViewCard} from "../ErrorView";
 import PlayerbaseTrendsCard from "../../components/cards/server/tables/PlayerbaseTrendsCard";
 import PlayerbaseInsightsCard from "../../components/cards/server/insights/PlayerbaseInsightsCard";
 import LoadIn from "../../components/animation/LoadIn";
+import {fetchNetworkPlayerbaseOverview} from "../../service/networkService";
 
-const PlayerbaseOverview = () => {
-    const {identifier} = useParams();
-
-    const {data, loadingError} = useDataRequest(fetchPlayerbaseOverview, [identifier]);
+const NetworkPlayerbaseOverview = () => {
+    const {data, loadingError} = useDataRequest(fetchNetworkPlayerbaseOverview, []);
 
     return (
         <LoadIn>
-            <section className="server_playerbase">
+            <section className="network_playerbase">
                 <Row>
                     <Col lg={8}>
-                        <PlayerbaseDevelopmentCard identifier={identifier}/>
+                        <PlayerbaseDevelopmentCard identifier={undefined}/>
                     </Col>
                     <Col lg={4}>
-                        <CurrentPlayerbaseCard identifier={identifier}/>
+                        <CurrentPlayerbaseCard identifier={undefined}/>
                     </Col>
                 </Row>
                 <Row>
@@ -42,4 +39,4 @@ const PlayerbaseOverview = () => {
     )
 }
 
-export default PlayerbaseOverview;
+export default NetworkPlayerbaseOverview;

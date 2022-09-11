@@ -20,6 +20,11 @@ export const fetchNetworkSessionsOverview = async (timestamp) => {
     return doGetRequest(url);
 }
 
+export const fetchNetworkPlayerbaseOverview = async (timestamp) => {
+    const url = `/v1/network/playerbaseOverview?timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
 export const fetchNetworkPingTable = async (timestamp) => {
     const url = `/v1/network/pingTable?timestamp=${timestamp}`;
     return doGetRequest(url);
