@@ -181,7 +181,12 @@ public class PageFactory {
         return new PlayerPluginTab(navs.toString(), tabs.toString());
     }
 
-    public NetworkPage networkPage() throws IOException {
+    public Page networkPage() throws IOException {
+        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+            String reactHtml = getResource("index.html");
+            return () -> reactHtml;
+        }
+
         return new NetworkPage(getResource("network.html"),
                 dbSystem.get(),
                 versionChecker.get(),
