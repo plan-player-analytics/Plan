@@ -6,7 +6,7 @@ import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import Accessibility from "highcharts/modules/accessibility"
 import {useTranslation} from "react-i18next";
 
-const LineGraph = ({id, series}) => {
+const LineGraph = ({id, series, legendEnabled, tall, yAxis}) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
 
@@ -20,7 +20,7 @@ const LineGraph = ({id, series}) => {
                 selected: 2,
                 buttons: linegraphButtons
             },
-            yAxis: {
+            yAxis: yAxis || {
                 softMax: 2,
                 softMin: 0
             },
@@ -30,12 +30,17 @@ const LineGraph = ({id, series}) => {
                     fillOpacity: nightModeEnabled ? 0.2 : 0.4
                 }
             },
+            legend: {
+                enabled: legendEnabled
+            },
             series: series
         })
-    }, [series, graphTheming, id, t, nightModeEnabled])
+    }, [series, graphTheming, id, t, nightModeEnabled, legendEnabled, yAxis])
+
+    const style = tall ? {height: "450px"} : undefined;
 
     return (
-        <div className="chart-area" id={id}>
+        <div className="chart-area" style={style} id={id}>
             <span className="loader"/>
         </div>
     )

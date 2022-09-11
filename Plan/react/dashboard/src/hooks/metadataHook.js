@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useState} from "react";
-import {fetchPlanMetadata} from "../service/metadataService";
+import {fetchNetworkMetadata, fetchPlanMetadata} from "../service/metadataService";
 
 import terminal from '../Terminal-icon.png'
 
@@ -13,6 +13,12 @@ export const MetadataContextProvider = ({children}) => {
         const {data, error} = await fetchPlanMetadata();
         if (data) {
             setMetadata(data);
+            if (data.isProxy) {
+                const {data: networkMetadata} = await fetchNetworkMetadata(); // error ignored
+                if (networkMetadata) {
+                    setMetadata({...data, networkMetadata})
+                }
+            }
         } else if (error) {
             setMetadata({metadataError: error})
         }

@@ -29,3 +29,8 @@ export const fetchNetworkPingTable = async (timestamp) => {
     const url = `/v1/network/pingTable?timestamp=${timestamp}`;
     return doGetRequest(url);
 }
+
+export const fetchNetworkPerformanceOverview = async (timestamp, serverUUIDs) => {
+    const url = `/v1/network/performanceOverview?servers=${encodeURIComponent(JSON.stringify(serverUUIDs))}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}

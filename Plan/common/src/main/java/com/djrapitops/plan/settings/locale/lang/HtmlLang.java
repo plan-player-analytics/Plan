@@ -180,6 +180,8 @@ public enum HtmlLang implements Lang {
     LABEL_AVG("html.label.average", "Average"),
     TITLE_PERFORMANCE_AS_NUMBERS("html.label.performanceAsNumbers", "Performance as Numbers"),
     LABEL_SERVER_DOWNTIME("html.label.serverDowntime", "Server Downtime"),
+    LABEL_TOTAL_SERVER_DOWNTIME("html.label.totalServerDowntime", "Total Server Downtime"),
+    LABEL_AVERAGE_SERVER_DOWNTIME("html.label.averageServerDowntime", "Average Downtime / Server"),
     LABEL_DURING_LOW_TPS("html.label.duringLowTps", "During Low TPS Spikes:"),
     TEXT_NO_LOW_TPS("html.text.noLowTps", "No low tps spikes"),
     // Player Page
@@ -257,6 +259,8 @@ public enum HtmlLang implements Lang {
     LABEL_PROJECTION_MERCATOR("html.label.geoProjection.mercator", "Mercator"),
     LABEL_PROJECTION_EQUAL_EARTH("html.label.geoProjection.equalEarth", "Equal Earth"),
     LABEL_PROJECTION_ORTOGRAPHIC("html.label.geoProjection.ortographic", "Ortographic"),
+    LABEL_SERVER_SELECTOR("html.label.serverSelector", "Server selector"),
+    LABEL_APPLY("html.label.apply", "Apply"),
 
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),

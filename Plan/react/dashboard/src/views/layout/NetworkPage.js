@@ -25,16 +25,13 @@ import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
-import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchNetworkMetadata} from "../../service/metadataService";
 import {iconTypeToFontAwesomeClass} from "../../util/icons";
 
 const NetworkSidebar = () => {
     const {t, i18n} = useTranslation();
     const {sidebarItems, setSidebarItems} = useNavigation();
+    const {networkMetadata} = useMetadata();
     const {extensionData} = useServerExtensionContext();
-
-    const {data: networkMetadata} = useDataRequest(fetchNetworkMetadata, [])
 
     useEffect(() => {
         const servers = networkMetadata?.servers || [];

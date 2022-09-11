@@ -179,6 +179,9 @@ public class NetworkPerformanceJSONResolver implements Resolver {
             numbers.put("avg_server_downtime_24h", "-");
         }
 
+        numbers.put("players_30d", format(tpsDataMonth.averagePlayers()));
+        numbers.put("players_7d", format(tpsDataWeek.averagePlayers()));
+        numbers.put("players_24h", format(tpsDataDay.averagePlayers()));
         numbers.put("tps_30d", format(tpsDataMonth.averageTPS()));
         numbers.put("tps_7d", format(tpsDataWeek.averageTPS()));
         numbers.put("tps_24h", format(tpsDataDay.averageTPS()));

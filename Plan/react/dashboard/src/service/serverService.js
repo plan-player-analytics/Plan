@@ -107,8 +107,8 @@ export const fetchGeolocations = async (timestamp, identifier) => {
     return doGetRequest(url);
 }
 
-export const fetchOptimizedPerformance = async (timestamp, identifier) => {
-    const url = `/v1/graph?type=optimizedPerformance&server=${identifier}&timestamp=${timestamp}`;
+export const fetchOptimizedPerformance = async (timestamp, identifier, after) => {
+    const url = `/v1/graph?type=optimizedPerformance&server=${identifier}&timestamp=${timestamp}&after=${after}`;
     return doGetRequest(url);
 }
 
