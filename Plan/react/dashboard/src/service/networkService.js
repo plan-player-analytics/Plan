@@ -19,3 +19,8 @@ export const fetchNetworkSessionsOverview = async (timestamp) => {
     const url = `/v1/network/sessionsOverview?timestamp=${timestamp}`;
     return doGetRequest(url);
 }
+
+export const fetchNetworkPingTable = async (timestamp) => {
+    const url = `/v1/network/pingTable?timestamp=${timestamp}`;
+    return doGetRequest(url);
+}

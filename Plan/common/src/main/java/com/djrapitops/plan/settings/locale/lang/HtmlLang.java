@@ -252,6 +252,11 @@ public enum HtmlLang implements Lang {
     LABEL_ALPHABETICAL("html.label.alphabetical", "Alphabetical"),
     LABEL_SORT_BY("html.label.sortBy", "Sort By"),
     LABEL_STACKED("html.label.stacked", "Stacked"),
+    LABEL_PROJECTION("html.label.geoProjection.dropdown", "Select projection"),
+    LABEL_PROJECTION_MILLER("html.label.geoProjection.miller", "Miller"),
+    LABEL_PROJECTION_MERCATOR("html.label.geoProjection.mercator", "Mercator"),
+    LABEL_PROJECTION_EQUAL_EARTH("html.label.geoProjection.equalEarth", "Equal Earth"),
+    LABEL_PROJECTION_ORTOGRAPHIC("html.label.geoProjection.ortographic", "Ortographic"),
 
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),

@@ -59,7 +59,7 @@ const Header = ({page, tab}) => {
             <span className="topbar-divider"/>
             <div className="refresh-element">
                 <button onClick={requestUpdate}>
-                    <Fa icon={faSyncAlt} spin={updating}/>
+                    <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
                 </button>
                 {' '}
                 <span className="refresh-time">{lastUpdate.formatted}</span>

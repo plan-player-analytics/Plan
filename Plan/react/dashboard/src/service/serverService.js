@@ -58,7 +58,7 @@ export const fetchPlayers = async (timestamp, identifier) => {
 }
 
 export const fetchPingTable = async (timestamp, identifier) => {
-    const url = identifier ? `/v1/pingTable?server=${identifier}&timestamp=${timestamp}` : `/v1/pingTable?timestamp=${timestamp}`;
+    const url = `/v1/pingTable?server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 
@@ -102,7 +102,8 @@ export const fetchWorldPie = async (timestamp, identifier) => {
 }
 
 export const fetchGeolocations = async (timestamp, identifier) => {
-    const url = `/v1/graph?type=geolocation&server=${identifier}&timestamp=${timestamp}`;
+    const url = identifier ? `/v1/graph?type=geolocation&server=${identifier}&timestamp=${timestamp}` :
+        `/v1/graph?type=geolocation&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 

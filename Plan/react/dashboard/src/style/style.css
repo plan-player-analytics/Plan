@@ -1345,3 +1345,8 @@ button, input[type="submit"], input[type="reset"] {
     position: relative;
     top: 0.1rem;
 }
+
+.dataTables_filter input {
+    /* Fixes datatables search bar going outside cards */
+    width: calc(100% - 3.7rem) !important;
+}

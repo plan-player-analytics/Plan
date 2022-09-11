@@ -8,7 +8,7 @@ import {Card} from "react-bootstrap-v5";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartColumn} from "@fortawesome/free-solid-svg-icons";
 import JoinAddressGraph from "../../../graphs/JoinAddressGraph";
-import Toggle from "../../../Toggle";
+import Toggle from "../../../input/Toggle";
 
 const JoinAddressGraphCard = ({identifier}) => {
     const {t} = useTranslation();
