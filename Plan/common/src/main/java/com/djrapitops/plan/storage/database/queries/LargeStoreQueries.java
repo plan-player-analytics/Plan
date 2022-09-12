@@ -31,6 +31,7 @@ import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -299,13 +300,25 @@ public class LargeStoreQueries {
     public static Executable storeAllSessionsWithKillAndWorldData(Collection<FinishedSession> sessions) {
         return connection -> {
             Set<World> existingWorlds = WorldTimesQueries.fetchWorlds().executeWithConnection(connection);
-            List<String> existingJoinAddresses = JoinAddressQueries.allJoinAddresses().executeWithConnection(connection);
-            storeAllJoinAddresses(sessions, existingJoinAddresses).execute(connection);
+            tryStoreAllJoinAddresses(sessions, connection, 0);
             storeAllWorldNames(sessions, existingWorlds).execute(connection);
             storeAllSessionsWithoutKillOrWorldData(sessions).execute(connection);
             storeSessionKillData(sessions).execute(connection);
             return storeSessionWorldTimeData(sessions).execute(connection);
         };
+    }
+
+    private static void tryStoreAllJoinAddresses(Collection<FinishedSession> sessions, Connection connection, int attempt) {
+        try {
+            List<String> existingJoinAddresses = JoinAddressQueries.allJoinAddresses().executeWithConnection(connection);
+            storeAllJoinAddresses(sessions, existingJoinAddresses).execute(connection);
+        } catch (DBOpException e) {
+            if (e.getMessage().contains("Duplicate entry") && attempt < 3) {
+                tryStoreAllJoinAddresses(sessions, connection, attempt + 1);
+            } else {
+                throw e;
+            }
+        }
     }
 
     private static Executable storeAllJoinAddresses(Collection<FinishedSession> sessions, List<String> existingJoinAddresses) {
@@ -318,8 +331,8 @@ public class LargeStoreQueries {
                         .filter(Optional::isPresent)
                         .map(Optional::get)
                         .map(JoinAddress::getAddress)
-                        .filter(address -> !existingJoinAddresses.contains(address))
                         .distinct()
+                        .filter(address -> !existingJoinAddresses.contains(address))
                         .forEach(address -> {
                             try {
                                 statement.setString(1, address);
