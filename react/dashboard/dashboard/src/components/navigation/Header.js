@@ -36,7 +36,7 @@ const Header = ({page, tab}) => {
     const {toggleColorChooser} = useTheme();
     const {t} = useTranslation();
 
-    const {requestUpdate, updating, lastUpdate, toggleSidebar} = useNavigation();
+    const {requestUpdate, lastUpdate, updating, toggleSidebar} = useNavigation();
 
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.linkedToUuid) : undefined
@@ -59,7 +59,7 @@ const Header = ({page, tab}) => {
             <span className="topbar-divider"/>
             <div className="refresh-element">
                 <button onClick={requestUpdate}>
-                    <Fa icon={faSyncAlt} spin={updating}/>
+                    <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
                 </button>
                 {' '}
                 <span className="refresh-time">{lastUpdate.formatted}</span>

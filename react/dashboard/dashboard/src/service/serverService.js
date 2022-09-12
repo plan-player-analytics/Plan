@@ -42,7 +42,8 @@ export const fetchExtensionData = async (timestamp, identifier) => {
 }
 
 export const fetchSessions = async (timestamp, identifier) => {
-    const url = `/v1/sessions?server=${identifier}&timestamp=${timestamp}`;
+    const url = identifier ? `/v1/sessions?server=${identifier}&timestamp=${timestamp}` :
+        `/v1/sessions?timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 
@@ -57,7 +58,7 @@ export const fetchPlayers = async (timestamp, identifier) => {
 }
 
 export const fetchPingTable = async (timestamp, identifier) => {
-    const url = identifier ? `/v1/pingTable?server=${identifier}&timestamp=${timestamp}` : `/v1/pingTable?timestamp=${timestamp}`;
+    const url = `/v1/pingTable?server=${identifier}&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 
@@ -101,16 +102,29 @@ export const fetchWorldPie = async (timestamp, identifier) => {
 }
 
 export const fetchGeolocations = async (timestamp, identifier) => {
-    const url = `/v1/graph?type=geolocation&server=${identifier}&timestamp=${timestamp}`;
+    const url = identifier ? `/v1/graph?type=geolocation&server=${identifier}&timestamp=${timestamp}` :
+        `/v1/graph?type=geolocation&timestamp=${timestamp}`;
     return doGetRequest(url);
 }
 
-export const fetchOptimizedPerformance = async (timestamp, identifier) => {
-    const url = `/v1/graph?type=optimizedPerformance&server=${identifier}&timestamp=${timestamp}`;
+export const fetchOptimizedPerformance = async (timestamp, identifier, after) => {
+    const url = `/v1/graph?type=optimizedPerformance&server=${identifier}&timestamp=${timestamp}&after=${after}`;
     return doGetRequest(url);
 }
 
 export const fetchPingGraph = async (timestamp, identifier) => {
     const url = `/v1/graph?type=aggregatedPing&server=${identifier}&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchJoinAddressPie = async (timestamp, identifier) => {
+    const url = identifier ? `/v1/graph?type=joinAddressPie&server=${identifier}&timestamp=${timestamp}` :
+        `/v1/graph?type=joinAddressPie&timestamp=${timestamp}`;
+    return doGetRequest(url);
+}
+
+export const fetchJoinAddressByDay = async (timestamp, identifier) => {
+    const url = identifier ? `/v1/graph?type=joinAddressByDay&server=${identifier}&timestamp=${timestamp}` :
+        `/v1/graph?type=joinAddressByDay&timestamp=${timestamp}`;
     return doGetRequest(url);
 }

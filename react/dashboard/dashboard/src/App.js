@@ -32,9 +32,16 @@ const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
 const ServerPerformance = React.lazy(() => import("./views/server/ServerPerformance"));
 const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginData"));
 const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
+const ServerJoinAddresses = React.lazy(() => import("./views/server/ServerJoinAddresses"));
 
 const NetworkPage = React.lazy(() => import("./views/layout/NetworkPage"));
 const NetworkOverview = React.lazy(() => import("./views/network/NetworkOverview"));
+const NetworkServers = React.lazy(() => import("./views/network/NetworkServers"));
+const NetworkSessions = React.lazy(() => import("./views/network/NetworkSessions"));
+const NetworkJoinAddresses = React.lazy(() => import("./views/network/NetworkJoinAddresses"));
+const NetworkGeolocations = React.lazy(() => import("./views/network/NetworkGeolocations"));
+const NetworkPlayerbaseOverview = React.lazy(() => import("./views/network/NetworkPlayerbaseOverview"));
+const NetworkPerformance = React.lazy(() => import("./views/network/NetworkPerformance"));
 
 const PlayersPage = React.lazy(() => import("./views/layout/PlayersPage"));
 const AllPlayers = React.lazy(() => import("./views/players/AllPlayers"));
@@ -100,6 +107,7 @@ function App() {
                                 <Route path="sessions" element={<Lazy><ServerSessions/></Lazy>}/>
                                 <Route path="pvppve" element={<Lazy><ServerPvpPve/></Lazy>}/>
                                 <Route path="playerbase" element={<Lazy><PlayerbaseOverview/></Lazy>}/>
+                                <Route path="join-addresses" element={<Lazy><ServerJoinAddresses/></Lazy>}/>
                                 <Route path="retention" element={<></>}/>
                                 <Route path="players" element={<Lazy><ServerPlayers/></Lazy>}/>
                                 <Route path="geolocations" element={<Lazy><ServerGeolocations/></Lazy>}/>
@@ -115,7 +123,13 @@ function App() {
                             <Route path="/network" element={<Lazy><NetworkPage/></Lazy>}>
                                 <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
                                 <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
+                                <Route path="serversOverview" element={<Lazy><NetworkServers/></Lazy>}/>
+                                <Route path="sessions" element={<Lazy><NetworkSessions/></Lazy>}/>
+                                <Route path="performance" element={<Lazy><NetworkPerformance/></Lazy>}/>
+                                <Route path="playerbase" element={<Lazy><NetworkPlayerbaseOverview/></Lazy>}/>
+                                <Route path="join-addresses" element={<Lazy><NetworkJoinAddresses/></Lazy>}/>
                                 <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
+                                <Route path="geolocations" element={<Lazy><NetworkGeolocations/></Lazy>}/>
                                 <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
                                 <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
                                 <Route path="*" element={<ErrorView error={{

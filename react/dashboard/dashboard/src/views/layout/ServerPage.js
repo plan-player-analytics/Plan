@@ -10,6 +10,7 @@ import {
     faCubes,
     faGlobe,
     faInfoCircle,
+    faLocationArrow,
     faSearch,
     faUserGroup,
     faUsers
@@ -26,8 +27,8 @@ import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServerIdentity} from "../../service/serverService";
-import ExtensionIcon from "../../components/extensions/ExtensionIcon";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
+import {iconTypeToFontAwesomeClass} from "../../util/icons";
 
 const ServerSidebar = () => {
     const {t, i18n} = useTranslation();
@@ -68,6 +69,7 @@ const ServerSidebar = () => {
                         icon: faChartLine,
                         href: "playerbase"
                     },
+                    {name: 'html.label.joinAddresses', icon: faLocationArrow, href: "join-addresses"},
                     // {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
                     {name: 'html.label.playerList', icon: faUserGroup, href: "players"},
                     {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
@@ -85,7 +87,7 @@ const ServerSidebar = () => {
                 .map(info => {
                     return {
                         name: info.pluginName,
-                        icon: <ExtensionIcon icon={info.icon}/>,
+                        icon: [iconTypeToFontAwesomeClass(info.icon.family), info.icon.iconName],
                         href: `plugins/${encodeURIComponent(info.pluginName)}`
                     }
                 }).forEach(item => items.push(item))

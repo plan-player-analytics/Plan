@@ -1,5 +1,4 @@
 import {useTranslation} from "react-i18next";
-import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchPlayerbaseDevelopmentGraph} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView";
@@ -10,9 +9,8 @@ import React from "react";
 import PlayerbaseGraph from "../../../graphs/PlayerbaseGraph";
 import {CardLoader} from "../../../navigation/Loader";
 
-const PlayerbaseDevelopmentCard = () => {
+const PlayerbaseDevelopmentCard = ({identifier}) => {
     const {t} = useTranslation();
-    const {identifier} = useParams();
 
     const {data, loadingError} = useDataRequest(
         fetchPlayerbaseDevelopmentGraph,

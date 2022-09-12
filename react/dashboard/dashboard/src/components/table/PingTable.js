@@ -1,6 +1,7 @@
 import React from "react";
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
+import Scrollable from "../Scrollable";
 
 const PingRow = ({country}) => {
     return (
@@ -18,24 +19,26 @@ const PingTable = ({countries}) => {
     const {nightModeEnabled} = useTheme();
 
     return (
-        <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
-            <thead className="bg-amber">
-            <tr>
-                <th>{t('html.label.country')}</th>
-                <th>{t('html.label.averagePing')}</th>
-                <th>{t('html.label.bestPing')}</th>
-                <th>{t('html.label.worstPing')}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {countries.length ? countries.map((country, i) => <PingRow key={i} country={country}/>) : <tr>
-                <td>{t('generic.noData')}</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-            </tr>}
-            </tbody>
-        </table>
+        <Scrollable>
+            <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
+                <thead className="bg-amber" style={{position: "sticky", top: 0}}>
+                <tr>
+                    <th>{t('html.label.country')}</th>
+                    <th>{t('html.label.averagePing')}</th>
+                    <th>{t('html.label.bestPing')}</th>
+                    <th>{t('html.label.worstPing')}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {countries.length ? countries.map((country, i) => <PingRow key={i} country={country}/>) : <tr>
+                    <td>{t('generic.noData')}</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>}
+                </tbody>
+            </table>
+        </Scrollable>
     )
 };
 

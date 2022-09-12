@@ -1,17 +1,24 @@
 import {createContext, useCallback, useContext, useEffect, useState} from "react";
-import {fetchPlanMetadata} from "../service/metadataService";
+import {fetchNetworkMetadata, fetchPlanMetadata} from "../service/metadataService";
 
 import terminal from '../Terminal-icon.png'
 
 const MetadataContext = createContext({});
 
 export const MetadataContextProvider = ({children}) => {
+    const [datastore] = useState({});
     const [metadata, setMetadata] = useState({});
 
     const updateMetadata = useCallback(async () => {
         const {data, error} = await fetchPlanMetadata();
         if (data) {
             setMetadata(data);
+            if (data.isProxy) {
+                const {data: networkMetadata} = await fetchNetworkMetadata(); // error ignored
+                if (networkMetadata) {
+                    setMetadata({...data, networkMetadata})
+                }
+            }
         } else if (error) {
             setMetadata({metadataError: error})
         }
@@ -34,7 +41,7 @@ export const MetadataContextProvider = ({children}) => {
         updateMetadata();
     }, [updateMetadata]);
 
-    const sharedState = {...metadata, getPlayerHeadImageUrl}
+    const sharedState = {...metadata, getPlayerHeadImageUrl, datastore}
     return (<MetadataContext.Provider value={sharedState}>
             {children}
         </MetadataContext.Provider>

@@ -8,6 +8,7 @@ import {
     faCubes,
     faGlobe,
     faInfoCircle,
+    faLocationArrow,
     faNetworkWired,
     faSearch,
     faServer,
@@ -23,17 +24,14 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
-import ExtensionIcon from "../../components/extensions/ExtensionIcon";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
-import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchNetworkMetadata} from "../../service/metadataService";
+import {iconTypeToFontAwesomeClass} from "../../util/icons";
 
 const NetworkSidebar = () => {
     const {t, i18n} = useTranslation();
     const {sidebarItems, setSidebarItems} = useNavigation();
+    const {networkMetadata} = useMetadata();
     const {extensionData} = useServerExtensionContext();
-
-    const {data: networkMetadata} = useDataRequest(fetchNetworkMetadata, [])
 
     useEffect(() => {
         const servers = networkMetadata?.servers || [];
@@ -73,6 +71,7 @@ const NetworkSidebar = () => {
                         icon: faChartLine,
                         href: "playerbase"
                     },
+                    {name: 'html.label.joinAddresses', icon: faLocationArrow, href: "join-addresses"},
                     // {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
                     {name: 'html.label.playerList', icon: faUserGroup, href: "players"},
                     {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
@@ -89,7 +88,7 @@ const NetworkSidebar = () => {
                 .map(info => {
                     return {
                         name: info.pluginName,
-                        icon: <ExtensionIcon icon={info.icon}/>,
+                        icon: [iconTypeToFontAwesomeClass(info.icon.family), info.icon.iconName],
                         href: `plugins/${encodeURIComponent(info.pluginName)}`
                     }
                 }).forEach(item => items.push(item))

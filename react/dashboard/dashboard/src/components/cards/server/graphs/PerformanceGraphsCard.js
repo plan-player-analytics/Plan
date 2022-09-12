@@ -14,6 +14,7 @@ import CpuRamPerformanceGraph from "../../../graphs/performance/CpuRamPerformanc
 import WorldPerformanceGraph from "../../../graphs/performance/WorldPerformanceGraph";
 import DiskPerformanceGraph from "../../../graphs/performance/DiskPerformanceGraph";
 import PingGraph from "../../../graphs/performance/PingGraph";
+import {mapPerformanceDataToSeries} from "../../../../util/graphs";
 
 const AllGraphTab = ({data, dataSeries, loadingError}) => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
@@ -58,43 +59,6 @@ const PingGraphTab = ({identifier}) => {
     return <PingGraph id="server-performance-ping-chart" data={data}/>;
 }
 
-function mapToDataSeries(performanceData) {
-    const playersOnline = [];
-    const tps = [];
-    const cpu = [];
-    const ram = [];
-    const entities = [];
-    const chunks = [];
-    const disk = [];
-
-    return new Promise((resolve => {
-        let i = 0;
-        const length = performanceData.length;
-
-        function processNextThousand() {
-            const to = Math.min(i + 1000, length);
-            for (i; i < to; i++) {
-                const entry = performanceData[i];
-                const date = entry[0];
-                playersOnline[i] = [date, entry[1]];
-                tps[i] = [date, entry[2]];
-                cpu[i] = [date, entry[3]];
-                ram[i] = [date, entry[4]];
-                entities[i] = [date, entry[5]];
-                chunks[i] = [date, entry[6]];
-                disk[i] = [date, entry[7]];
-            }
-            if (i >= length) {
-                resolve({playersOnline, tps, cpu, ram, entities, chunks, disk})
-            } else {
-                setTimeout(processNextThousand, 10);
-            }
-        }
-
-        processNextThousand();
-    }))
-}
-
 const PerformanceGraphsCard = () => {
     const {t} = useTranslation();
 
@@ -104,7 +68,7 @@ const PerformanceGraphsCard = () => {
 
     useEffect(() => {
         if (data) {
-            mapToDataSeries(data.values).then(parsed => setParsedData(parsed))
+            mapPerformanceDataToSeries(data.values).then(parsed => setParsedData(parsed))
         }
     }, [data, setParsedData]);
 

@@ -14,11 +14,11 @@ import {TableRow} from "./TableRow";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faEye} from "@fortawesome/free-regular-svg-icons";
 import AsNumbersTable from "./AsNumbersTable";
-import {CardLoader} from "../navigation/Loader";
+import {ChartLoader} from "../navigation/Loader";
 
 const PerformanceAsNumbersTable = ({data}) => {
     const {t} = useTranslation();
-    if (!data) return <CardLoader/>;
+    if (!data) return <ChartLoader/>;
 
     return (
         <AsNumbersTable
@@ -31,11 +31,18 @@ const PerformanceAsNumbersTable = ({data}) => {
                           data.low_tps_spikes_24h
                       ]}/>
             <TableRow icon={faPowerOff} color="red"
-                      text={t('html.label.serverDowntime') + ' (' + t('generic.noData') + ')'}
+                      text={t(data.avg_server_downtime_30d ? 'html.label.serverDowntime' : 'html.label.totalServerDowntime') + ' (' + t('generic.noData') + ')'}
                       values={[
                           data.server_downtime_30d,
                           data.server_downtime_7d,
                           data.server_downtime_24h
+                      ]}/>
+            <TableRow icon={faPowerOff} color="red"
+                      text={t('html.label.averageServerDowntime')}
+                      values={[
+                          data.avg_server_downtime_30d,
+                          data.avg_server_downtime_7d,
+                          data.avg_server_downtime_24h
                       ]}/>
             <TableRow icon={faUser} color="light-blue" text={t('html.label.averagePlayers')}
                       values={[

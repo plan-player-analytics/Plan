@@ -20,10 +20,10 @@ const PlayerbaseOverview = () => {
             <section className="server_playerbase">
                 <Row>
                     <Col lg={8}>
-                        <PlayerbaseDevelopmentCard/>
+                        <PlayerbaseDevelopmentCard identifier={identifier}/>
                     </Col>
                     <Col lg={4}>
-                        <CurrentPlayerbaseCard/>
+                        <CurrentPlayerbaseCard identifier={identifier}/>
                     </Col>
                 </Row>
                 <Row>
