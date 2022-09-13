@@ -1,14 +1,10 @@
-plugins {
-    id "net.kyori.blossom" version "1.3.0"
-}
-
 dependencies {
-    compileOnly project(":common")
-    implementation project(path: ":common", configuration: 'shadow')
-    compileOnly project(":api")
+    implementation project(":api")
+    implementation project(":common")
 
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
+    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 }
 
 shadowJar {
+    configurations = [project.configurations.shadow]
 }

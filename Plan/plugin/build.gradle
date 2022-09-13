@@ -8,18 +8,21 @@ dependencies {
     shadow project(path: ":sponge")
     shadow project(path: ":bungeecord")
     shadow project(path: ":velocity")
+    shadow project(path: ":standalone")
     testImplementation project(path: ":common", configuration: 'testArtifacts')
     testImplementation project(path: ":bukkit", configuration: 'testArtifacts')
     testImplementation project(path: ":nukkit", configuration: 'testArtifacts')
     testImplementation project(path: ":sponge", configuration: 'testArtifacts')
     testImplementation project(path: ":bungeecord", configuration: 'testArtifacts')
     testImplementation project(path: ":velocity", configuration: 'testArtifacts')
+    testImplementation project(path: ":standalone", configuration: 'testArtifacts')
 }
 
 jar {
     // Add the sponge mixin into the manifest
     manifest.attributes([
-            'MixinConfigs': 'plan-sponge.mixins.json'
+            'MixinConfigs': 'plan-sponge.mixins.json',
+            'Main-Class'  : 'net.playeranalytics.plan.PlanStandalone'
     ])
 }
 
