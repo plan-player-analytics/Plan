@@ -163,7 +163,6 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     public void updatePlayerValues(DataValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
-        System.out.println("Updating player extension values");
         if (!enabled.get()) return; // Plugin is disabling
         if (gatherer.shouldSkipEvent(event)) return;
         if (playerUUID == null && playerName == null) return;
@@ -175,7 +174,6 @@ public class ExtensionSvc implements ExtensionService {
                 playerName :
                 uuidUtility.getNameOf(realUUID).orElse(null);
 
-        System.out.println("Passed checks, running actual update!");
         gatherer.updateValues(realUUID, realPlayerName);
     }
 

@@ -24,10 +24,8 @@ import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.*;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -116,6 +114,54 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
         } finally {
             config().set(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE, false);
         }
+    }
+
+    @Test
+    default void joinAddressIsTruncated() {
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        String joinAddress = RandomData.randomString(JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH + RandomData.randomInt(0, 100));
+        session.getExtraData().put(JoinAddress.class, new JoinAddress(joinAddress));
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        String expectedJoinAddress = StringUtils.truncate(joinAddress, JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
+
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)).orElseThrow(AssertionError::new));
+        Set<Integer> result = db().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(List.of(expectedJoinAddress)));
+
+        assertEquals(expected, result);
+
+        Map<String, Integer> expectedAddressCounts = Map.of(expectedJoinAddress, 1);
+        Map<String, Integer> resultAddressCounts = db().query(JoinAddressQueries.latestJoinAddresses());
+
+        assertEquals(expectedAddressCounts, resultAddressCounts);
+    }
+
+    @Test
+    default void joinAddressIsTruncatedWhenStoringSessionsAfterRestart() {
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        String joinAddress = RandomData.randomString(JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH + RandomData.randomInt(0, 100));
+        session.getExtraData().put(JoinAddress.class, new JoinAddress(joinAddress));
+        db().executeTransaction(new ShutdownDataPreservationTransaction(List.of(session)));
+
+        String expectedJoinAddress = StringUtils.truncate(joinAddress, JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
+
+        Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)).orElseThrow(AssertionError::new));
+        Set<Integer> result = db().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(List.of(expectedJoinAddress)));
+
+        assertEquals(expected, result);
+
+        Map<String, Integer> expectedAddressCounts = Map.of(expectedJoinAddress, 1);
+        Map<String, Integer> resultAddressCounts = db().query(JoinAddressQueries.latestJoinAddresses());
+
+        assertEquals(expectedAddressCounts, resultAddressCounts);
     }
 
     @Test
