@@ -107,7 +107,7 @@ public class PlayerLeaveEventConsumer {
 
     private void updatePlayerDataExtensionValues(PlayerLeave leave) {
         processing.submitNonCritical(() -> extensionService.updatePlayerValues(
-                leave.getPlayerUUID(), leave.getPlayerName(), CallEvents.PLAYER_JOIN)
+                leave.getPlayerUUID(), leave.getPlayerName(), CallEvents.PLAYER_LEAVE)
         );
     }
 
