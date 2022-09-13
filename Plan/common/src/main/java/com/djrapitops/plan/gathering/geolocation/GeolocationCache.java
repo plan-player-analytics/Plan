@@ -18,13 +18,13 @@ package com.djrapitops.plan.gathering.geolocation;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.PreparationException;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
@@ -47,7 +47,7 @@ public class GeolocationCache implements SubSystem {
     private final Locale locale;
     private final PlanConfig config;
     private final PluginLogger logger;
-    private final RunnableFactory runnableFactory;
+    private final Processing processing;
     private final Cache<String, String> cache;
 
     private final Geolocator geoLite2Geolocator;
@@ -60,13 +60,13 @@ public class GeolocationCache implements SubSystem {
             PlanConfig config,
             GeoLite2Geolocator geoLite2Geolocator,
             PluginLogger logger,
-            RunnableFactory runnableFactory
+            Processing processing
     ) {
         this.locale = locale;
         this.config = config;
         this.geoLite2Geolocator = geoLite2Geolocator;
         this.logger = logger;
-        this.runnableFactory = runnableFactory;
+        this.processing = processing;
 
         this.cache = Caffeine.newBuilder()
                 .expireAfterAccess(1, TimeUnit.MINUTES)
@@ -76,10 +76,10 @@ public class GeolocationCache implements SubSystem {
     @Override
     public void enable() {
         if (config.isTrue(DataGatheringSettings.GEOLOCATIONS)) {
-            runnableFactory.create(() -> {
+            processing.submitNonCritical(() -> {
                 if (inUseGeolocator == null) tryToPrepareGeoLite2();
                 if (inUseGeolocator == null) logger.error("Failed to enable geolocation.");
-            }).runTaskAsynchronously();
+            });
         } else {
             logger.info(locale.getString(PluginLang.ENABLE_NOTIFY_GEOLOCATIONS_DISABLED));
         }

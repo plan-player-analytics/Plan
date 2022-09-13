@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.ServerSensor;
+import com.djrapitops.plan.gathering.ServerUptimeCalculator;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -65,6 +66,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
     private final Formatter<Long> timeAmount;
     private final Formatter<Double> decimals;
     private final Formatter<Double> percentage;
+    private final ServerUptimeCalculator serverUptimeCalculator;
     private final Formatter<DateHolder> year;
 
     @Inject
@@ -74,6 +76,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerSensor<?> serverSensor,
+            ServerUptimeCalculator serverUptimeCalculator,
             Formatters formatters
     ) {
         this.config = config;
@@ -81,6 +84,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
+        this.serverUptimeCalculator = serverUptimeCalculator;
 
         year = formatters.year();
         day = formatters.dayLong();
@@ -148,6 +152,8 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         numbers.put("player_kills", db.query(KillQueries.playerKillCount(0L, now, serverUUID)));
         numbers.put("mob_kills", db.query(KillQueries.mobKillCount(0L, now, serverUUID)));
         numbers.put("deaths", db.query(KillQueries.deathCount(0L, now, serverUUID)));
+        numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
+                .orElse(locale.getString(GenericLang.UNAVAILABLE)));
 
         return numbers;
     }

@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions;
 
+import com.djrapitops.plan.extension.icon.IconAccessor;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -67,7 +67,7 @@ public class StoreTabInformationTransaction extends ThrowawayTransaction {
                 " SET " +
                 ExtensionTabTable.TAB_PRIORITY + "=?," +
                 ExtensionTabTable.ELEMENT_ORDER + "=?," +
-                ExtensionTabTable.ICON_ID + "=" + ExtensionIconTable.STATEMENT_SELECT_ICON_ID +
+                ExtensionTabTable.ICON_ID + "=?" +
                 WHERE + ExtensionTabTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
                 AND + ExtensionTabTable.TAB_NAME + "=?";
         return new ExecStatement(sql) {
@@ -75,9 +75,9 @@ public class StoreTabInformationTransaction extends ThrowawayTransaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, tabInformation.getTabPriority());
                 statement.setString(2, tabInformation.getSerializedTabElementOrder());
-                ExtensionIconTable.set3IconValuesToStatement(statement, 3, tabInformation.getTabIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 6, pluginName, serverUUID);
-                statement.setString(8, tabInformation.getTabName());
+                statement.setInt(3, IconAccessor.getId(tabInformation.getTabIcon()));
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 4, pluginName, serverUUID);
+                statement.setString(6, tabInformation.getTabName());
             }
         };
     }
@@ -89,15 +89,15 @@ public class StoreTabInformationTransaction extends ThrowawayTransaction {
                 ExtensionTabTable.TAB_PRIORITY + "," +
                 ExtensionTabTable.ICON_ID + "," +
                 ExtensionTabTable.PLUGIN_ID +
-                ") VALUES (?,?,?," + ExtensionIconTable.STATEMENT_SELECT_ICON_ID + "," + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
+                ") VALUES (?,?,?,?," + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ")";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, tabInformation.getTabName());
                 statement.setString(2, tabInformation.getSerializedTabElementOrder());
                 statement.setInt(3, tabInformation.getTabPriority());
-                ExtensionIconTable.set3IconValuesToStatement(statement, 4, tabInformation.getTabIcon());
-                ExtensionPluginTable.set2PluginValuesToStatement(statement, 7, pluginName, serverUUID);
+                statement.setInt(4, IconAccessor.getId(tabInformation.getTabIcon()));
+                ExtensionPluginTable.set2PluginValuesToStatement(statement, 5, pluginName, serverUUID);
             }
         };
     }

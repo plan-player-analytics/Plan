@@ -16,12 +16,23 @@
  */
 package com.djrapitops.plan.delivery.rendering.html.structure;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.extension.TableCellDto;
+import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Color;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+/**
+ * @deprecated Table html generation is to be done in frontend in the future.
+ */
+@Deprecated(since = "5.5")
 public interface HtmlTable {
 
     static HtmlTable fromExtensionTable(Table table, com.djrapitops.plan.extension.icon.Color tableColor) {
@@ -50,6 +61,43 @@ public interface HtmlTable {
         }
 
         return headers.toArray(new Header[0]);
+    }
+
+    static List<TableCellDto[]> mapToRows(List<Object[]> rows, TableColumnFormat[] tableColumnFormats) {
+        return rows.stream()
+                .map(row -> {
+                    List<TableCellDto> mapped = new ArrayList<>(row.length);
+                    for (int i = 0; i < row.length; i++) {
+                        Object value = row[i];
+                        if (value == null) {
+                            mapped.add(null);
+                        } else {
+                            TableColumnFormat format = tableColumnFormats[i];
+                            mapped.add(new TableCellDto(applyFormat(format, value), value));
+                        }
+                    }
+                    return mapped.toArray(new TableCellDto[0]);
+                })
+                .collect(Collectors.toList());
+    }
+
+    static String applyFormat(TableColumnFormat format, Object value) {
+        try {
+            switch (format) {
+                case TIME_MILLISECONDS:
+                    return Formatters.getInstance().timeAmount().apply(Long.parseLong(value.toString()));
+                case DATE_YEAR:
+                    return Formatters.getInstance().yearLong().apply(Long.parseLong(value.toString()));
+                case DATE_SECOND:
+                    return Formatters.getInstance().secondLong().apply(Long.parseLong(value.toString()));
+                case PLAYER_NAME:
+                    return Html.LINK.create("../player/" + Html.encodeToURL(Html.swapColorCodesToSpan(value.toString())));
+                default:
+                    return Html.swapColorCodesToSpan(value.toString());
+            }
+        } catch (Exception e) {
+            return Objects.toString(value);
+        }
     }
 
     String toHtml();

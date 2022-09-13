@@ -23,7 +23,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.version.VersionChecker;
 
@@ -37,7 +36,6 @@ public class PlayersPage implements Page {
     private final String templateHtml;
     private final VersionChecker versionChecker;
     private final PlanConfig config;
-    private final Locale locale;
     private final Theme theme;
     private final ServerInfo serverInfo;
 
@@ -45,14 +43,12 @@ public class PlayersPage implements Page {
             String templateHtml,
             VersionChecker versionChecker,
             PlanConfig config,
-            Locale locale,
             Theme theme,
             ServerInfo serverInfo
     ) {
         this.templateHtml = templateHtml;
         this.versionChecker = versionChecker;
         this.config = config;
-        this.locale = locale;
         this.theme = theme;
         this.serverInfo = serverInfo;
     }
@@ -62,7 +58,8 @@ public class PlayersPage implements Page {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
 
         placeholders.put("refreshBarrier", config.get(WebserverSettings.REDUCED_REFRESH_BARRIER));
-        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("versionButton", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("version", versionChecker.getCurrentVersion());
         placeholders.put("updateModal", versionChecker.getUpdateModal());
         placeholders.put("contributors", Contributors.generateContributorHtml());
         if (serverInfo.getServer().isProxy()) {
@@ -71,6 +68,6 @@ public class PlayersPage implements Page {
             placeholders.put("networkName", config.get(PluginSettings.SERVER_NAME));
         }
 
-        return locale.replaceLanguageInHtml(placeholders.apply(theme.replaceThemeColors(templateHtml)));
+        return placeholders.apply(theme.replaceThemeColors(templateHtml));
     }
 }

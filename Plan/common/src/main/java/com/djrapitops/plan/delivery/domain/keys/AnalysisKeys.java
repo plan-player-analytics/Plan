@@ -25,7 +25,7 @@ package com.djrapitops.plan.delivery.domain.keys;
  * @see com.djrapitops.plan.data.store.containers.AnalysisContainer for Suppliers for each Key.
  * @deprecated AnalysisContainer can no longer be obtained, so this is deprecated.
  */
-@Deprecated
+@Deprecated(since = "5.0")
 public class AnalysisKeys {
 
     public static final PlaceholderKey<Integer> TIME_ZONE = CommonPlaceholderKeys.TIME_ZONE;

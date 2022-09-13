@@ -76,10 +76,10 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
 
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerData() {
         String selectLimitedNumberOfPlayerUUIDsByLastSeenDate = SELECT +
-                SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
-                ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                UsersTable.USER_UUID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
-                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
+                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
                 ORDER_BY + "last_seen DESC LIMIT ?";
 
         String sql = SELECT +
@@ -105,7 +105,7 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
                 AND + "p1." + ExtensionProviderTable.SHOW_IN_PLAYERS_TABLE + "=?" +
                 AND + "p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?";
 
-        return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, xMostRecentPlayers);       // Limit to x most recently seen players
@@ -123,10 +123,10 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
 
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerGroups() {
         String selectLimitedNumberOfPlayerUUIDsByLastSeenDate = SELECT +
-                SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
-                ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                UsersTable.USER_UUID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
-                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
+                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
                 ORDER_BY + "last_seen DESC LIMIT ?";
 
         String sql = SELECT +
@@ -143,7 +143,7 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 WHERE + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
 
-        return new QueryStatement<Map<UUID, ExtensionTabData>>(sql, 1000) {
+        return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, xMostRecentPlayers);       // Limit to x most recently seen players

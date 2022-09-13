@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.player.UUIDFetcher;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -76,6 +77,7 @@ public class UUIDUtility {
      * @param playerName Player's name
      * @return UUID of the player
      */
+    @Nullable
     public UUID getUUIDOf(String playerName) {
         if (playerName == null) throw new IllegalArgumentException("Player name can not be null!");
         UUID uuid = getUUIDFromString(playerName);

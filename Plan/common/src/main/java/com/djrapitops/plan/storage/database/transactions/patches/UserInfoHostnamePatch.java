@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 
 /**
@@ -34,6 +35,6 @@ public class UserInfoHostnamePatch extends Patch {
     @Override
     protected void applyPatch() {
         addColumn(UserInfoTable.TABLE_NAME, UserInfoTable.JOIN_ADDRESS + ' '
-                + Sql.varchar(255));
+                + Sql.varchar(JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
     }
 }

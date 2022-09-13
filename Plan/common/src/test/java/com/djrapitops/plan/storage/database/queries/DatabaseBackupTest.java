@@ -26,7 +26,7 @@ import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
-import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -44,20 +44,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
     default void saveDataForBackup() {
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[0]));
-        db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), worlds[1]));
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        execute(DataStoreQueries.storeSession(session));
+        db().executeTransaction(new StoreSessionTransaction(session));
 
         db().executeTransaction(
-                new NicknameStoreTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */)
+                new StoreNicknameTransaction(playerUUID, RandomData.randomNickname(serverUUID()), (uuid, name) -> false /* Not cached */)
         );
-        db().executeTransaction(new GeoInfoStoreTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
+        db().executeTransaction(new StoreGeoInfoTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
 
         List<TPS> expected = RandomData.randomTPS();
         for (TPS tps : expected) {
@@ -70,7 +70,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         );
 
         User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
-        db().executeTransaction(new RegisterWebUserTransaction(user));
+        db().executeTransaction(new StoreWebUserTransaction(user));
     }
 
     @Test

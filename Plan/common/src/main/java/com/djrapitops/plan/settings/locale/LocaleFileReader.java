@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.settings.locale;
 
+import com.djrapitops.plan.settings.config.Config;
+import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.storage.file.Resource;
 
@@ -30,13 +32,33 @@ import java.util.Map;
  */
 public class LocaleFileReader {
 
-    private final List<String> lines;
+    private final Resource resource;
 
-    public LocaleFileReader(Resource resource) throws IOException {
-        lines = resource.asLines();
+    public LocaleFileReader(Resource resource) {
+        this.resource = resource;
     }
 
-    public Locale load(LangCode code) {
+    public Locale load(LangCode code) throws IOException {
+        try (ConfigReader reader = new ConfigReader(resource.asInputStream())) {
+            Config config = reader.read();
+            Locale locale = new Locale(code);
+            Map<String, Lang> keys = LocaleSystem.getKeys();
+
+            config.getConfigPaths().forEach(key -> {
+                Lang msg = keys.get(key);
+                if (msg != null) {
+                    locale.put(msg, new Message(config.getString(key)));
+                }
+            });
+            return locale;
+        }
+    }
+
+    /**
+     * Used to migrate old files to new format.
+     */
+    public Locale loadLegacy(LangCode code) throws IOException {
+        final List<String> lines = resource.asLines();
         Locale locale = new Locale(code);
 
         Map<String, Lang> identifiers = LocaleSystem.getIdentifiers();

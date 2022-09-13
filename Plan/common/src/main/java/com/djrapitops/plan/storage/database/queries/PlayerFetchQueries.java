@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 
@@ -49,7 +50,7 @@ public class PlayerFetchQueries {
         String sql = SELECT + UsersTable.USER_NAME +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=?";
-        return new QueryStatement<Optional<String>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
@@ -72,13 +73,18 @@ public class PlayerFetchQueries {
      * @return True if the player's BaseUser is found
      */
     public static Query<Boolean> isPlayerRegistered(UUID playerUUID) {
-        String sql = SELECT + "COUNT(1) as c" +
+        String sql = SELECT + UsersTable.ID +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=?";
-        return new HasMoreThanZeroQueryStatement(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
+            }
+
+            @Override
+            public Boolean processResults(ResultSet set) throws SQLException {
+                return set.next();
             }
         };
     }
@@ -93,8 +99,8 @@ public class PlayerFetchQueries {
     public static Query<Boolean> isPlayerRegisteredOnServer(UUID playerUUID, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as c" +
                 FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.USER_UUID + "=?" +
-                AND + UserInfoTable.SERVER_UUID + "=?";
+                WHERE + UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -109,7 +115,7 @@ public class PlayerFetchQueries {
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.USER_UUID + "=? LIMIT 1";
 
-        return new QueryStatement<Optional<Long>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());

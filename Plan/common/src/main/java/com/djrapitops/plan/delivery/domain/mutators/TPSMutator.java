@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators;
 
-import com.djrapitops.plan.delivery.domain.container.DataContainer;
-import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.TPS;
@@ -47,10 +45,6 @@ public class TPSMutator {
         this.tpsData = tpsData;
     }
 
-    public static TPSMutator forContainer(DataContainer container) {
-        return new TPSMutator(container.getValue(ServerKeys.TPS).orElse(new ArrayList<>()));
-    }
-
     public static TPSMutator copyOf(TPSMutator mutator) {
         return new TPSMutator(new ArrayList<>(mutator.tpsData));
     }
@@ -63,7 +57,7 @@ public class TPSMutator {
         return filterBy(tps -> tps.getDate() >= after && tps.getDate() <= before);
     }
 
-    public TPSMutator filterTPSBetween(int above, int below) {
+    public TPSMutator filterTPSBetween(double above, double below) {
         return filterBy(tps -> tps.getTicksPerSecond() > above && tps.getTicksPerSecond() < below);
     }
 
@@ -164,13 +158,13 @@ public class TPSMutator {
         return count * 1.0 / tpsData.size();
     }
 
-    public int lowTpsSpikeCount(int threshold) {
+    public int lowTpsSpikeCount(double threshold) {
         boolean wasLow = false;
         int spikeCount = 0;
 
         for (TPS tpsObj : tpsData) {
             double tps = tpsObj.getTicksPerSecond();
-            if (tps < threshold) {
+            if (0 <= tps && tps < threshold) {
                 if (!wasLow) {
                     spikeCount++;
                     wasLow = true;
@@ -181,6 +175,13 @@ public class TPSMutator {
         }
 
         return spikeCount;
+    }
+
+    public int averagePlayers() {
+        return (int) tpsData.stream()
+                .mapToInt(TPS::getPlayers)
+                .filter(num -> num >= 0)
+                .average().orElse(-1);
     }
 
     public double averageTPS() {

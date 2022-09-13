@@ -72,17 +72,6 @@ public abstract class Patch extends OperationCriticalTransaction {
         execute("SET FOREIGN_KEY_CHECKS=0");
     }
 
-    protected boolean hasTable(String tableName) {
-        switch (dbType) {
-            case SQLITE:
-                return query(SQLiteSchemaQueries.doesTableExist(tableName));
-            case MYSQL:
-                return query(MySQLSchemaQueries.doesTableExist(tableName));
-            default:
-                throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
-        }
-    }
-
     protected boolean hasColumn(String tableName, String columnName) {
         switch (dbType) {
             case MYSQL:
@@ -145,7 +134,7 @@ public abstract class Patch extends OperationCriticalTransaction {
 
     protected boolean allValuesHaveValueZero(String tableName, String column) {
         String sql = SELECT + '*' + FROM + tableName + WHERE + column + "=? LIMIT 1";
-        return query(new QueryStatement<Boolean>(sql) {
+        return query(new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(1, 0);
@@ -156,5 +145,9 @@ public abstract class Patch extends OperationCriticalTransaction {
                 return !set.next();
             }
         });
+    }
+
+    protected int columnVarcharLength(String table, String column) {
+        return dbType == DBType.SQLITE ? Integer.MAX_VALUE : query(MySQLSchemaQueries.columnVarcharLength(table, column));
     }
 }

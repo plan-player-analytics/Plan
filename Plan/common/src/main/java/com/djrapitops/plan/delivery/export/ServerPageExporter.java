@@ -110,13 +110,15 @@ public class ServerPageExporter extends FileExporter {
         String html = StringUtils.replaceEach(page.toHtml(),
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance', true);",
-                        "loadServerCalendar, 'online-activity-overview', true);",
-                        "}, 'playerlist', true);"
+                        "loadserverCalendar, 'online-activity-overview', true);",
+                        "}, 'playerlist', true);",
+                        "<head>"
                 },
                 new String[]{
                         "loadOptimizedPerformanceGraph, 'performance');",
-                        "loadServerCalendar, 'online-activity-overview');",
-                        "}, 'playerlist');"
+                        "loadserverCalendar, 'online-activity-overview');",
+                        "}, 'playerlist');",
+                        "<head><style>.refresh-element {display: none;}</style>"
                 });
 
         export(to, exportPaths.resolveExportPaths(html));
@@ -164,17 +166,15 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportJSON(Path toDirectory, String resource) throws IOException {
-        Optional<Response> found = getJSONResponse(resource);
-        if (!found.isPresent()) {
-            throw new NotFoundException(resource + " was not properly exported: not found");
-        }
+        Response response = getJSONResponse(resource)
+                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
 
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
                 StringUtils.replace(
-                        found.get().getAsString(),
+                        response.getAsString(),
                         StringEscapeUtils.escapeJson("../player"),
                         StringEscapeUtils.escapeJson(toRelativePathFromRoot("player"))
                 )
@@ -191,7 +191,7 @@ public class ServerPageExporter extends FileExporter {
             return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap()));
         } catch (WebException e) {
             // The rest of the exceptions should not be thrown
-            throw new IllegalStateException("Unexpected exception thrown: " + e.toString(), e);
+            throw new IllegalStateException("Unexpected exception thrown: " + e, e);
         }
     }
 
@@ -203,12 +203,11 @@ public class ServerPageExporter extends FileExporter {
                 "../css/style.css",
                 "../vendor/datatables/datatables.min.js",
                 "../vendor/datatables/datatables.min.css",
-                "../vendor/highcharts/highstock.js",
-                "../vendor/highcharts/map.js",
-                "../vendor/highcharts/world.js",
-                "../vendor/highcharts/drilldown.js",
-                "../vendor/highcharts/highcharts-more.js",
-                "../vendor/highcharts/no-data-to-display.js",
+                "../vendor/highcharts/modules/map.js",
+                "../vendor/highcharts/mapdata/world.js",
+                "../vendor/highcharts/modules/drilldown.js",
+                "../vendor/highcharts/highcharts.js",
+                "../vendor/highcharts/modules/no-data-to-display.js",
                 "../vendor/fullcalendar/fullcalendar.min.css",
                 "../vendor/momentjs/moment.js",
                 "../vendor/masonry/masonry.pkgd.min.js",

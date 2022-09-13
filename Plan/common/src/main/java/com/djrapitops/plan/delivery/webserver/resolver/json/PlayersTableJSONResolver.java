@@ -27,6 +27,15 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,6 +47,7 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 @Singleton
+@Path("/v1/players")
 public class PlayersTableJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
@@ -65,6 +75,19 @@ public class PlayersTableJSONResolver implements Resolver {
         return user.hasPermission("page.players");
     }
 
+    @GET
+    @Operation(
+            description = "Get player table data for /players page or a server",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
+            },
+            parameters = @Parameter(in = ParameterIn.QUERY, name = "server", description = "Server identifier to get data for (optional)", examples = {
+                    @ExampleObject("Server 1"),
+                    @ExampleObject("1"),
+                    @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
+            }),
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse(request));
@@ -78,7 +101,7 @@ public class PlayersTableJSONResolver implements Resolver {
     }
 
     private JSONStorage.StoredJSON getStoredJSON(Request request) {
-        long timestamp = Identifiers.getTimestamp(request);
+        Optional<Long> timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException

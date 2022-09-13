@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
@@ -30,6 +31,8 @@ import utilities.RandomData;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -68,5 +71,33 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         int expected = tpsData.get(tpsData.size() - 1).getPlayers();
         int actual = db().query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID())).map(DateObj::getValue).orElse(-1);
         assertEquals(expected, actual, () -> "Wrong return value. " + Lists.map(tpsData, TPS::getPlayers).toString());
+    }
+
+    @Test
+    default void serverStartDateIsFetched() {
+        List<TPS> tpsData = RandomData.randomTPS();
+        TPS stored = tpsData.get(0);
+        TPS stored2 = TPSBuilder.get().date(stored.getDate() + TimeUnit.MINUTES.toMillis(1L)).toTPS();
+        db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored));
+        db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored2));
+
+        Optional<Long> result = db().query(TPSQueries.fetchLatestServerStartTime(serverUUID(), TimeUnit.MINUTES.toMillis(3)));
+        assertTrue(result.isPresent());
+        assertEquals(stored.getDate(), result.get());
+    }
+
+    @Test
+    default void serverStartDateIsCorrect() {
+        List<TPS> tpsData = RandomData.randomTPS();
+        TPS stored = tpsData.get(0);
+        TPS stored2 = TPSBuilder.get().date(stored.getDate() + TimeUnit.MINUTES.toMillis(4L)).toTPS();
+        TPS stored3 = TPSBuilder.get().date(stored.getDate() + TimeUnit.MINUTES.toMillis(5L)).toTPS();
+        db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored));
+        db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored2));
+        db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored3));
+
+        Optional<Long> result = db().query(TPSQueries.fetchLatestServerStartTime(serverUUID(), TimeUnit.MINUTES.toMillis(3)));
+        assertTrue(result.isPresent());
+        assertEquals(stored2.getDate(), result.get());
     }
 }

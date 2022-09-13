@@ -30,13 +30,14 @@ import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestErrorLogger;
 import utilities.TestPluginLogger;
 import utilities.mocks.PluginMockComponent;
 
@@ -80,7 +81,7 @@ class ShutdownSaveTest {
         when(dbSystemMock.getDatabase()).thenReturn(database);
 
         TestPluginLogger logger = new TestPluginLogger();
-        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, system.getErrorLogger()) {
+        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, new TestErrorLogger()) {
             @Override
             protected boolean checkServerShuttingDownStatus() {
                 return shutdownStatus;
@@ -103,9 +104,9 @@ class ShutdownSaveTest {
         UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
         String worldName = TestConstants.WORLD_ONE_NAME;
 
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, "-", "")));
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, "-", "", TestConstants.VERSION)));
         database.executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
-        database.executeTransaction(new WorldNameStoreTransaction(serverUUID, worldName))
+        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, worldName))
                 .get();
     }
 
@@ -152,7 +153,7 @@ class ShutdownSaveTest {
         long endTime = System.currentTimeMillis();
         Collection<ActiveSession> activeSessions = SessionCache.getActiveSessions();
         for (FinishedSession session : underTest.finishSessions(activeSessions, endTime)) {
-            assertEquals(endTime, session.getEnd(), () -> "One of the sessions had differing end time");
+            assertEquals(endTime, session.getEnd(), "One of the sessions had differing end time");
         }
     }
 

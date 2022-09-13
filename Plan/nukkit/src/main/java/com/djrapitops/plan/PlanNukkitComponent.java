@@ -24,6 +24,7 @@ import com.djrapitops.plan.modules.nukkit.NukkitPlanModule;
 import com.djrapitops.plan.modules.nukkit.NukkitServerPropertiesModule;
 import com.djrapitops.plan.modules.nukkit.NukkitSuperClassBindingModule;
 import com.djrapitops.plan.modules.nukkit.NukkitTaskModule;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.BindsInstance;
 import dagger.Component;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -57,6 +58,8 @@ public interface PlanNukkitComponent {
     ServerShutdownSave serverShutdownSave();
 
     NukkitPlaceholderRegistrar placeholders();
+
+    ErrorLogger errorLogger();
 
     @Component.Builder
     interface Builder {

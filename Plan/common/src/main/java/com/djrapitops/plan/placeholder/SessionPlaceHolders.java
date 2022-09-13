@@ -16,26 +16,25 @@
  */
 package com.djrapitops.plan.placeholder;
 
+import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
-import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
-import com.djrapitops.plan.storage.database.queries.objects.PingQueries;
-import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
-import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import com.djrapitops.plan.storage.database.queries.objects.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.Serializable;
+import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -80,142 +79,154 @@ public class SessionPlaceHolders implements Placeholders {
         Formatter<DateHolder> year = formatters.year();
         Formatter<Double> decimals = formatters.decimals();
         Database database = dbSystem.getDatabase();
-        ServerUUID serverUUID = serverInfo.getServerUUID();
 
         placeholders.registerStatic("sessions_play_time_total",
-                () -> timeAmount.apply(database.query(SessionQueries.playtime(0L, now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.playtime(0L, now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_play_time_total_raw",
-                () -> database.query(SessionQueries.playtime(0L, now(), serverUUID)));
+                parameters -> database.query(SessionQueries.playtime(0L, now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_play_time_day",
-                () -> timeAmount.apply(database.query(SessionQueries.playtime(dayAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.playtime(dayAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_play_time_day_raw",
-                () -> database.query(SessionQueries.playtime(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.playtime(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_play_time_week",
-                () -> timeAmount.apply(database.query(SessionQueries.playtime(weekAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.playtime(weekAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_play_time_week_raw",
-                () -> database.query(SessionQueries.playtime(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.playtime(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_play_time_month",
-                () -> timeAmount.apply(database.query(SessionQueries.playtime(monthAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.playtime(monthAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_play_time_month_raw",
-                () -> database.query(SessionQueries.playtime(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.playtime(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("sessions_active_time_total",
-                () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(0L, now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.activePlaytime(0L, now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_active_time_total_raw",
-                () -> database.query(SessionQueries.activePlaytime(0L, now(), serverUUID)));
+                parameters -> database.query(SessionQueries.activePlaytime(0L, now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_active_time_day",
-                () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(dayAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.activePlaytime(dayAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_active_time_day_raw",
-                () -> database.query(SessionQueries.activePlaytime(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.activePlaytime(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_active_time_week",
-                () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(weekAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.activePlaytime(weekAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_active_time_week_raw",
-                () -> database.query(SessionQueries.activePlaytime(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.activePlaytime(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_active_time_month",
-                () -> timeAmount.apply(database.query(SessionQueries.activePlaytime(monthAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.activePlaytime(monthAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_active_time_month_raw",
-                () -> database.query(SessionQueries.activePlaytime(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.activePlaytime(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("sessions_afk_time_total",
-                () -> timeAmount.apply(database.query(SessionQueries.afkTime(0L, now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.afkTime(0L, now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_afk_time_total_raw",
-                () -> database.query(SessionQueries.afkTime(0L, now(), serverUUID)));
+                parameters -> database.query(SessionQueries.afkTime(0L, now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_afk_time_day",
-                () -> timeAmount.apply(database.query(SessionQueries.afkTime(dayAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.afkTime(dayAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_afk_time_day_raw",
-                () -> database.query(SessionQueries.afkTime(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.afkTime(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_afk_time_week",
-                () -> timeAmount.apply(database.query(SessionQueries.afkTime(weekAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.afkTime(weekAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_afk_time_week_raw",
-                () -> database.query(SessionQueries.afkTime(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.afkTime(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_afk_time_month",
-                () -> timeAmount.apply(database.query(SessionQueries.afkTime(monthAgo(), now(), serverUUID))));
+                parameters -> timeAmount.apply(database.query(SessionQueries.afkTime(monthAgo(), now(), getServerUUID(parameters)))));
         placeholders.registerStatic("sessions_afk_time_month_raw",
-                () -> database.query(SessionQueries.afkTime(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(SessionQueries.afkTime(monthAgo(), now(), getServerUUID(parameters))));
 
-        Supplier<Serializable> uniquePlayers = () -> database.query(PlayerCountQueries.newPlayerCount(0L, now(), serverUUID));
+        PlanPlaceholders.StaticPlaceholderLoader uniquePlayers = parameters -> database.query(PlayerCountQueries.newPlayerCount(0L, now(), getServerUUID(parameters)));
         placeholders.registerStatic("sessions_unique_players_total", uniquePlayers);
         placeholders.registerStatic("sessions_new_players_total", uniquePlayers);
 
         placeholders.registerStatic("sessions_unique_players_day",
-                () -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_unique_players_today",
-                () -> database.query(PlayerCountQueries.uniquePlayerCounts(dayAgo(), now(), config.getTimeZone().getOffset(now()), serverUUID))
-                        .lastEntry().getValue());
+                parameters -> {
+                    NavigableMap<Long, Integer> playerCounts = database.query(PlayerCountQueries.uniquePlayerCounts(dayAgo(), now(), config.getTimeZone().getOffset(now()), getServerUUID(parameters)));
+                    return playerCounts.isEmpty() ? 0 : playerCounts.lastEntry().getValue();
+                });
         placeholders.registerStatic("sessions_unique_players_week",
-                () -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_unique_players_month",
-                () -> database.query(PlayerCountQueries.uniquePlayerCount(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(PlayerCountQueries.uniquePlayerCount(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("sessions_players_death_total",
-                () -> database.query(KillQueries.deathCount(0L, now(), serverUUID)));
+                parameters -> database.query(KillQueries.deathCount(0L, now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_players_death_day",
-                () -> database.query(KillQueries.deathCount(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.deathCount(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_players_death_week",
-                () -> database.query(KillQueries.deathCount(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.deathCount(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_players_death_month",
-                () -> database.query(KillQueries.deathCount(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.deathCount(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("sessions_players_kill_total",
-                () -> database.query(KillQueries.playerKillCount(0L, now(), serverUUID)));
+                parameters -> database.query(KillQueries.playerKillCount(0L, now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_players_kill_day",
-                () -> database.query(KillQueries.playerKillCount(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.playerKillCount(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_players_kill_week",
-                () -> database.query(KillQueries.playerKillCount(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.playerKillCount(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_players_kill_month",
-                () -> database.query(KillQueries.playerKillCount(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.playerKillCount(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("sessions_mob_kill_total",
-                () -> database.query(KillQueries.mobKillCount(0L, now(), serverUUID)));
+                parameters -> database.query(KillQueries.mobKillCount(0L, now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_mob_kill_day",
-                () -> database.query(KillQueries.mobKillCount(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.mobKillCount(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_mob_kill_week",
-                () -> database.query(KillQueries.mobKillCount(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.mobKillCount(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_mob_kill_month",
-                () -> database.query(KillQueries.mobKillCount(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(KillQueries.mobKillCount(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("sessions_average_session_length_total",
-                () -> getPlaytime(database, 0L, now(), serverUUID, timeAmount));
+                parameters -> getPlaytime(database, 0L, now(), getServerUUID(parameters), timeAmount));
         placeholders.registerStatic("sessions_average_session_length_day",
-                () -> getPlaytime(database, dayAgo(), now(), serverUUID, timeAmount));
+                parameters -> getPlaytime(database, dayAgo(), now(), getServerUUID(parameters), timeAmount));
         placeholders.registerStatic("sessions_average_session_length_week",
-                () -> getPlaytime(database, weekAgo(), now(), serverUUID, timeAmount));
+                parameters -> getPlaytime(database, weekAgo(), now(), getServerUUID(parameters), timeAmount));
         placeholders.registerStatic("sessions_average_session_length_month",
-                () -> getPlaytime(database, monthAgo(), now(), serverUUID, timeAmount));
+                parameters -> getPlaytime(database, monthAgo(), now(), getServerUUID(parameters), timeAmount));
 
         placeholders.registerStatic("sessions_average_unique_players_total",
-                () -> database.query(PlayerCountQueries.averageUniquePlayerCount(0L, now(), tzOffsetMs, serverUUID)));
+                parameters -> database.query(PlayerCountQueries.averageUniquePlayerCount(0L, now(), tzOffsetMs, getServerUUID(parameters))));
         placeholders.registerStatic("sessions_average_unique_players_day",
-                () -> database.query(PlayerCountQueries.averageUniquePlayerCount(dayAgo(), now(), tzOffsetMs, serverUUID)));
+                parameters -> database.query(PlayerCountQueries.averageUniquePlayerCount(dayAgo(), now(), tzOffsetMs, getServerUUID(parameters))));
         placeholders.registerStatic("sessions_average_unique_players_week",
-                () -> database.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo(), now(), tzOffsetMs, serverUUID)));
+                parameters -> database.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo(), now(), tzOffsetMs, getServerUUID(parameters))));
         placeholders.registerStatic("sessions_average_unique_players_month",
-                () -> database.query(PlayerCountQueries.averageUniquePlayerCount(monthAgo(), now(), tzOffsetMs, serverUUID)));
+                parameters -> database.query(PlayerCountQueries.averageUniquePlayerCount(monthAgo(), now(), tzOffsetMs, getServerUUID(parameters))));
 
         placeholders.registerStatic("sessions_new_players_day",
-                () -> database.query(PlayerCountQueries.newPlayerCount(dayAgo(), now(), serverUUID)));
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(dayAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_new_players_week",
-                () -> database.query(PlayerCountQueries.newPlayerCount(weekAgo(), now(), serverUUID)));
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(weekAgo(), now(), getServerUUID(parameters))));
         placeholders.registerStatic("sessions_new_players_month",
-                () -> database.query(PlayerCountQueries.newPlayerCount(monthAgo(), now(), serverUUID)));
+                parameters -> database.query(PlayerCountQueries.newPlayerCount(monthAgo(), now(), getServerUUID(parameters))));
 
         placeholders.registerStatic("ping_total",
-                () -> decimals.apply(database.query(PingQueries.averagePing(0L, now(), serverUUID))) + " ms");
+                parameters -> decimals.apply(database.query(PingQueries.averagePing(0L, now(), getServerUUID(parameters)))) + " ms");
         placeholders.registerStatic("ping_day",
-                () -> decimals.apply(database.query(PingQueries.averagePing(dayAgo(), now(), serverUUID))) + " ms");
+                parameters -> decimals.apply(database.query(PingQueries.averagePing(dayAgo(), now(), getServerUUID(parameters)))) + " ms");
         placeholders.registerStatic("ping_week",
-                () -> decimals.apply(database.query(PingQueries.averagePing(weekAgo(), now(), serverUUID))) + " ms");
+                parameters -> decimals.apply(database.query(PingQueries.averagePing(weekAgo(), now(), getServerUUID(parameters)))) + " ms");
         placeholders.registerStatic("ping_month",
-                () -> decimals.apply(database.query(PingQueries.averagePing(monthAgo(), now(), serverUUID))) + " ms");
+                parameters -> decimals.apply(database.query(PingQueries.averagePing(monthAgo(), now(), getServerUUID(parameters)))) + " ms");
 
         placeholders.registerStatic("sessions_peak_count",
-                () -> database.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue).orElse(0));
+                parameters -> database.query(TPSQueries.fetchAllTimePeakPlayerCount(getServerUUID(parameters))).map(DateObj::getValue).orElse(0));
         placeholders.registerStatic("sessions_peak_date",
-                () -> database.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(year).orElse("-"));
+                parameters -> database.query(TPSQueries.fetchAllTimePeakPlayerCount(getServerUUID(parameters))).map(year).orElse("-"));
 
         placeholders.registerStatic("sessions_recent_peak_count",
-                () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now() - TimeUnit.DAYS.toMillis(2L))).map(DateObj::getValue).orElse(0));
+                parameters -> database.query(TPSQueries.fetchPeakPlayerCount(getServerUUID(parameters), now() - TimeUnit.DAYS.toMillis(2L))).map(DateObj::getValue).orElse(0));
         placeholders.registerStatic("sessions_recent_peak_date",
-                () -> database.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now() - TimeUnit.DAYS.toMillis(2L))).map(year).orElse("-"));
+                parameters -> database.query(TPSQueries.fetchPeakPlayerCount(getServerUUID(parameters), now() - TimeUnit.DAYS.toMillis(2L))).map(year).orElse("-"));
+    }
+
+    private ServerUUID getServerUUID(Arguments parameters) {
+        return parameters.get(0)
+                .flatMap(this::getServerUUIDForServerIdentifier)
+                .orElseGet(serverInfo::getServerUUID);
+    }
+
+    private Optional<ServerUUID> getServerUUIDForServerIdentifier(String serverIdentifier) {
+        return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
+                .map(Server::getUuid);
     }
 }

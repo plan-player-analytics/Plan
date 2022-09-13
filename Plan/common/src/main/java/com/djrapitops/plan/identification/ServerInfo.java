@@ -17,6 +17,7 @@
 package com.djrapitops.plan.identification;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 
@@ -44,6 +45,11 @@ public abstract class ServerInfo implements SubSystem {
 
     public ServerUUID getServerUUID() {
         return getServer().getUuid();
+    }
+
+    public ServerIdentifier getServerIdentifier() {
+        Server server = getServer();
+        return new ServerIdentifier(server.getUuid(), server.getIdentifiableName());
     }
 
     public Optional<ServerUUID> getServerUUIDSafe() {

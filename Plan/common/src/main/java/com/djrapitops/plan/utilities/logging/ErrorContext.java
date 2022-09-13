@@ -26,8 +26,9 @@ import java.util.*;
  */
 public class ErrorContext implements Serializable {
 
-    private final List<Object> related;
+    private final transient List<Object> related;
     private String whatToDo;
+    private boolean logErrorMessage = false;
 
     private ErrorContext() {
         related = new ArrayList<>();
@@ -39,6 +40,10 @@ public class ErrorContext implements Serializable {
 
     public Optional<String> getWhatToDo() {
         return Optional.ofNullable(whatToDo);
+    }
+
+    public boolean shouldLogErrorMessage() {
+        return logErrorMessage;
     }
 
     public Collection<String> toLines() {
@@ -55,6 +60,10 @@ public class ErrorContext implements Serializable {
         if (this.whatToDo == null && context.whatToDo != null) this.whatToDo = context.whatToDo;
     }
 
+    public List<Object> getRelated() {
+        return related;
+    }
+
     public static class Builder {
         private final ErrorContext context;
 
@@ -64,6 +73,11 @@ public class ErrorContext implements Serializable {
 
         public Builder whatToDo(String whatToDo) {
             context.whatToDo = whatToDo;
+            return this;
+        }
+
+        public Builder logErrorMessage() {
+            context.logErrorMessage = true;
             return this;
         }
 

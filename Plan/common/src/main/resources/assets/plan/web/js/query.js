@@ -6,7 +6,8 @@ const queryState = {
         afterDate: null,
         afterTime: null,
         beforeDate: null,
-        beforeTime: null
+        beforeTime: null,
+        servers: []
     },
     invalidFormFields: {
         ids: [],
@@ -34,6 +35,8 @@ const queryState = {
 
 let timestamp = undefined;
 
+let serverMap = {};
+
 function loadView(json) {
     queryState.view = json.view;
 
@@ -42,11 +45,36 @@ function loadView(json) {
     document.getElementById('viewToDateField').setAttribute('placeholder', json.view.beforeDate);
     document.getElementById('viewToTimeField').setAttribute('placeholder', json.view.beforeTime);
 
+    // Load server selector or hide it
+    if (json.view.servers.length >= 2) {
+        let options = ``;
+        for (let server of json.view.servers) {
+            if (server.proxy) continue;
+            serverMap[server.serverUUID] = server;
+            options += `<option data-plan-server-uuid="${server.serverUUID}">${server.serverName}</option>`
+        }
+        const serverSelector = document.getElementById("server-selector");
+        serverSelector.innerHTML = options;
+
+        serverSelector.addEventListener('click', () => {
+            queryState.view.servers = [];
+            if (serverSelector.selectedOptions.length !== serverSelector.options.length) {
+                for (const option of serverSelector.selectedOptions) {
+                    queryState.view.servers.push(serverMap[option.getAttribute('data-plan-server-uuid')]);
+                }
+            }
+            document.getElementById("serverDropdown").innerText = queryState.view.servers.length
+                ? `using data of ${queryState.view.servers.length} server(s)`
+                : "using data of all servers"
+        })
+    } else {
+        document.getElementById("serverDropdown").classList.add("hidden");
+    }
+
     const playersOnlineSeries = {
         name: 'Players Online', type: 'areaspline', tooltip: {valueDecimals: 0},
         data: json.viewPoints, color: '#9E9E9E', yAxis: 0
     }
-
     graphs.push(Highcharts.stockChart('viewChart', {
         rangeSelector: {
             selected: 3,
@@ -345,12 +373,13 @@ function displayResults(json) {
     /* Player table */
     $('.player-table').DataTable({
         responsive: true,
+        deferRender: true,
         columns: json.data.players.columns,
         data: json.data.players.data,
         order: [[5, "desc"]]
     });
 
-    if (nightmode) {
+    if ('undefined' !== typeof nightmode && nightmode == true) {
         document.querySelector('.table').classList.add('table-dark');
     }
 
@@ -424,7 +453,8 @@ function displayDataResultScreen(resultCount, view) {
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                             <h6 class="m-0 fw-bold col-black" title=" ${afterDate} ${afterTime} - ${beforeDate} ${beforeTime}"><i
                                     class="fas fa-fw fa-users col-black"></i>
-                                View: ${afterDate} - ${beforeDate}</h6>
+                                View: ${afterDate} - ${beforeDate}, 
+${view.servers.length ? "using data of servers: " + view.servers.map(server => server.serverName).join(', ') : "using data of all servers"}</h6>
                         </div>
                         <table class="table table-bordered table-striped table-hover player-table" style="width: 100%">
                             <tr>

@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -101,22 +102,27 @@ public class Identifiers {
                 .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
     }
 
-    public UUID getPlayerUUID(String name) {
-        return uuidUtility.getUUIDOf(name);
-    }
-
-    public static long getTimestamp(Request request) {
+    public static Optional<Long> getTimestamp(Request request) {
         try {
             long currentTime = System.currentTimeMillis();
             long timestamp = request.getQuery().get("timestamp")
                     .map(Long::parseLong)
                     .orElse(currentTime);
             if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
-                return currentTime;
+                return Optional.empty();
             }
-            return timestamp;
+            return Optional.of(timestamp);
         } catch (NumberFormatException nonNumberTimestamp) {
             throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
         }
+    }
+
+    @Nullable
+    public UUID getPlayerUUID(String name) {
+        return uuidUtility.getUUIDOf(name);
+    }
+
+    public Optional<Integer> getPlayerUserId(UUID playerUUID) {
+        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchUserId(playerUUID));
     }
 }

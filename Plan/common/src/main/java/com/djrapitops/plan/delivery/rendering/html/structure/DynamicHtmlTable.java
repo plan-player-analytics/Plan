@@ -23,6 +23,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+/**
+ * @deprecated Table html generation is to be done in frontend in the future.
+ */
+@Deprecated(since = "5.5")
 public class DynamicHtmlTable implements HtmlTable {
     private final Header[] headers;
     private final List<Object[]> rows;

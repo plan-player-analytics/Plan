@@ -69,6 +69,7 @@ function loadNetworkOverviewValues(json, error) {
     data = json.numbers;
     element = tab.querySelector('#data_numbers');
 
+    element.querySelector('#data_current_uptime').innerText = data.current_uptime;
     element.querySelector('#data_total').innerText = data.total_players;
     element.querySelector('#data_regular').innerText = data.regular_players;
     element.querySelector('#data_online').innerText = data.online_players;
@@ -242,7 +243,9 @@ function loadservers(json, error) {
 
     if (!servers || !servers.length) {
         let elements = document.getElementsByClassName('nav-servers');
-        for (let i = 0; i < elements.length; i++) { elements[i].style.display = 'none'; }
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].style.display = 'none';
+        }
         document.getElementById('game-server-warning').classList.remove('hidden');
         document.getElementById('data_server_list').innerHTML =
             `<div class="card shadow mb-4"><div class="card-body"><p>No servers found in the database.</p><p>It appears that Plan is not installed on any game servers or not connected to the same database. See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.</p></div></div>`
@@ -250,14 +253,14 @@ function loadservers(json, error) {
         return;
     }
 
-    let navServersHtml = '';
+    let navserversHtml = '';
     let serversHtml = '';
     for (let i = 0; i < servers.length; i++) {
-        navServersHtml += addserverToNav(servers[i]);
+        navserversHtml += addserverToNav(servers[i]);
         serversHtml += createnetworkserverBox(i, servers[i]);
     }
 
-    document.getElementById("navSrvContainer").innerHTML = navServersHtml;
+    document.getElementById("navSrvContainer").innerHTML = navserversHtml;
     document.getElementById("data_server_list").innerHTML = serversHtml;
 
     for (let i = 0; i < servers.length; i++) {
@@ -323,6 +326,7 @@ function onViewserver(i, servers) {
             quickView.querySelector('#data_avg_tps').innerText = server.avg_tps;
             quickView.querySelector('#data_low_tps_spikes').innerText = server.low_tps_spikes;
             quickView.querySelector('#data_downtime').innerText = server.downtime;
+            quickView.querySelector('#data_current_uptime').innerText = server.current_uptime;
         }, 0);
     }
 }
@@ -443,5 +447,231 @@ function loadJoinAddressPie(json, error) {
         joinAddressPie('joinAddressPie', series);
     } else if (error) {
         document.getElementById('joinAddressPie').innerText = `Failed to load graph data: ${error}`;
+    }
+}
+
+function loadperformanceserverOptions() {
+    const refreshElement = document.querySelector(`#performance .refresh-element`);
+    refreshElement.querySelector('i').addEventListener('click', () => {
+        if (refreshElement.querySelector('.refresh-notice').innerHTML.length) {
+            return;
+        }
+        onSelectperformanceservers();
+        refreshElement.querySelector('.refresh-notice').innerHTML = '<i class="fa fa-fw fa-cog fa-spin"></i> Updating..';
+    });
+    const selector = document.getElementById('performance-server-selector');
+    jsonRequest('./v1/network/serverOptions', function (json, error) {
+        if (json) {
+            let options = ``;
+            for (let server of json.servers) {
+                options += `<option${server.proxy ? ' selected' : ''} data-plan-server-uuid="${server.serverUUID}">${server.serverName}</option>`
+            }
+            selector.innerHTML = options;
+            onSelectperformanceservers();
+        } else if (error) {
+            selector.innerText = `Failed to load server list: ${error}`
+        }
+    });
+}
+
+async function onSelectperformanceservers() {
+    const selector = document.getElementById('performance-server-selector');
+    const selectedServerUUIDs = [];
+
+    for (const option of selector.selectedOptions) {
+        selectedServerUUIDs.push(option.getAttribute('data-plan-server-uuid'));
+    }
+
+    const serverUUIDs = encodeURIComponent(JSON.stringify(selectedServerUUIDs));
+    const loadedJson = {
+        servers: [],
+        errors: [],
+        zones: {},
+        colors: {},
+        timestamp_f: ''
+    }
+    const time = new Date().getTime();
+    const monthMs = 2592000000;
+    const after = time - monthMs;
+    for (const serverUUID of selectedServerUUIDs) {
+        jsonRequest(`./v1/graph?type=optimizedPerformance&server=${serverUUID}&after=${after}`, (json, error) => {
+            if (json) {
+                loadedJson.servers.push(json);
+                loadedJson.zones = json.zones;
+                loadedJson.colors = json.colors;
+                loadedJson.timestamp_f = json.timestamp_f;
+            } else if (error) {
+                loadedJson.errors.push(error);
+            }
+        });
+    }
+    await awaitUntil(() => selectedServerUUIDs.length === (loadedJson.servers.length + loadedJson.errors.length));
+
+    jsonRequest(`./v1/network/performanceOverview?servers=${serverUUIDs}`, loadPerformanceValues);
+    if (loadedJson.errors.length) {
+        await loadPerformanceGraph(undefined, loadedJson.errors[0]);
+    } else {
+        await loadPerformanceGraph({
+            servers: loadedJson.servers,
+            zones: loadedJson.zones,
+            colors: loadedJson.colors
+        }, undefined);
+    }
+    const refreshElement = document.querySelector(`#performance .refresh-element`);
+    refreshElement.querySelector('.refresh-time').innerText = loadedJson.timestamp_f;
+    refreshElement.querySelector('.refresh-notice').innerHTML = "";
+}
+
+async function loadPerformanceGraph(json, error) {
+    if (json) {
+        const zones = {
+            tps: [{
+                value: json.zones.tpsThresholdMed,
+                color: json.colors.low
+            }, {
+                value: json.zones.tpsThresholdHigh,
+                color: json.colors.med
+            }, {
+                value: 30,
+                color: json.colors.high
+            }],
+            disk: [{
+                value: json.zones.diskThresholdMed,
+                color: json.colors.low
+            }, {
+                value: json.zones.diskThresholdHigh,
+                color: json.colors.med
+            }, {
+                value: Number.MAX_VALUE,
+                color: json.colors.high
+            }]
+        };
+        const serverData = [];
+        for (const server of json.servers) {
+            serverData.push({
+                serverName: server.serverName,
+                values: await mapToDataSeries(server.values)
+            });
+        }
+
+        const series = {
+            tps: [],
+            cpu: [],
+            ram: [],
+            entities: [],
+            chunks: [],
+            disk: []
+        }
+        for (const server of serverData) {
+            series.tps.push({
+                name: server.serverName, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
+                data: server.values.tps, color: json.colors.high, zones: zones.tps, yAxis: 0
+            });
+            series.cpu.push({
+                name: server.serverName, type: s.type.spline, tooltip: s.tooltip.twoDecimals,
+                data: server.values.cpu, color: json.colors.cpu, yAxis: 0
+            });
+            series.ram.push({
+                name: server.serverName, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                data: server.values.ram, color: json.colors.ram, yAxis: 0
+            });
+            series.entities.push({
+                name: server.serverName, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                data: server.values.entities, color: json.colors.entities, yAxis: 0
+            });
+            series.chunks.push({
+                name: server.serverName, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                data: server.values.chunks, color: json.colors.chunks, yAxis: 0
+            });
+            series.disk.push({
+                name: server.serverName, type: s.type.spline, tooltip: s.tooltip.zeroDecimals,
+                data: server.values.disk, color: json.colors.high, zones: zones.disk, yAxis: 0
+            });
+        }
+
+        setTimeout(() => lineChart('tpsGraph', series.tps), 10);
+        setTimeout(() => lineChart('cpuGraph', series.cpu), 20);
+        setTimeout(() => lineChart('ramGraph', series.ram), 30);
+        setTimeout(() => lineChart('entityGraph', series.entities), 40);
+        setTimeout(() => lineChart('chunkGraph', series.chunks), 50);
+        setTimeout(() => lineChart('diskGraph', series.disk), 60);
+    } else if (error) {
+        const errorMessage = `Failed to load graph data: ${error}`;
+        document.getElementById('tpsGraph').innerText = errorMessage;
+        document.getElementById('cpuGraph').innerText = errorMessage;
+        document.getElementById('ramGraph').innerText = errorMessage;
+        document.getElementById('entityGraph').innerText = errorMessage;
+        document.getElementById('chunkGraph').innerText = errorMessage;
+        document.getElementById('diskGraph').innerText = errorMessage;
+    }
+}
+
+
+/* This function loads Performance tab */
+function loadPerformanceValues(json, error) {
+    const tab = document.getElementById('performance');
+    if (error) {
+        displayError(tab, error);
+        return;
+    }
+
+    // as Numbers
+    let data = json.numbers;
+    let element = tab.querySelector('#data_numbers');
+
+    element.querySelector('#data_low_tps_spikes_30d').innerText = data.low_tps_spikes_30d;
+    element.querySelector('#data_low_tps_spikes_7d').innerText = data.low_tps_spikes_7d;
+    element.querySelector('#data_low_tps_spikes_24h').innerText = data.low_tps_spikes_24h;
+    element.querySelector('#data_server_downtime_30d').innerText = data.server_downtime_30d;
+    element.querySelector('#data_server_downtime_7d').innerText = data.server_downtime_7d;
+    element.querySelector('#data_server_downtime_24h').innerText = data.server_downtime_24h;
+    element.querySelector('#data_avg_server_downtime_30d').innerText = data.avg_server_downtime_30d;
+    element.querySelector('#data_avg_server_downtime_7d').innerText = data.avg_server_downtime_7d;
+    element.querySelector('#data_avg_server_downtime_24h').innerText = data.avg_server_downtime_24h;
+    element.querySelector('#data_tps_30d').innerText = data.tps_30d;
+    element.querySelector('#data_tps_7d').innerText = data.tps_7d;
+    element.querySelector('#data_tps_24h').innerText = data.tps_24h;
+    element.querySelector('#data_cpu_30d').innerText = data.cpu_30d;
+    element.querySelector('#data_cpu_7d').innerText = data.cpu_7d;
+    element.querySelector('#data_cpu_24h').innerText = data.cpu_24h;
+    element.querySelector('#data_ram_30d').innerText = data.ram_30d;
+    element.querySelector('#data_ram_7d').innerText = data.ram_7d;
+    element.querySelector('#data_ram_24h').innerText = data.ram_24h;
+    element.querySelector('#data_entities_30d').innerText = data.entities_30d;
+    element.querySelector('#data_entities_7d').innerText = data.entities_7d;
+    element.querySelector('#data_entities_24h').innerText = data.entities_24h;
+    element.querySelector('#data_chunks_30d').innerText = data.chunks_30d;
+    element.querySelector('#data_chunks_7d').innerText = data.chunks_7d;
+    element.querySelector('#data_chunks_24h').innerText = data.chunks_24h;
+}
+
+function loadPingGraph(json, error) {
+    if (json) {
+        const series = {
+            avgPing: {
+                name: s.name.avgPing,
+                type: s.type.spline,
+                tooltip: s.tooltip.twoDecimals,
+                data: json.avg_ping_series,
+                color: json.colors.avg
+            },
+            maxPing: {
+                name: s.name.maxPing,
+                type: s.type.spline,
+                tooltip: s.tooltip.zeroDecimals,
+                data: json.max_ping_series,
+                color: json.colors.max
+            },
+            minPing: {
+                name: s.name.minPing,
+                type: s.type.spline,
+                tooltip: s.tooltip.zeroDecimals,
+                data: json.min_ping_series,
+                color: json.colors.min
+            }
+        };
+        lineChart('pingGraph', [series.avgPing, series.maxPing, series.minPing]);
+    } else if (error) {
+        document.getElementById('pingGraph').innerText = `Failed to load graph data: ${error}`;
     }
 }

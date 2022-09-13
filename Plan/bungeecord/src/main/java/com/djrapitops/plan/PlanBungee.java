@@ -23,6 +23,8 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.playeranalytics.plugin.BungeePlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -46,6 +48,7 @@ public class PlanBungee extends Plugin implements PlanPlugin {
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
+    private ErrorLogger errorLogger;
 
     @Override
     public void onLoad() {
@@ -61,7 +64,8 @@ public class PlanBungee extends Plugin implements PlanPlugin {
                 .abstractionLayer(abstractionLayer)
                 .build();
         try {
-            system = component.system();
+            system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
+            errorLogger = component.errorLogger();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
 
@@ -107,7 +111,7 @@ public class PlanBungee extends Plugin implements PlanPlugin {
             return;
         }
         for (String name : command.getAliases()) {
-            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(runnableFactory, system.getErrorLogger(), command, name));
+            getProxy().getPluginManager().registerCommand(this, new BungeeCommand(runnableFactory, errorLogger, command, name));
         }
     }
 

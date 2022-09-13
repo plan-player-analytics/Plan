@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators;
 
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.utilities.java.Lists;
@@ -44,10 +45,20 @@ public class PlayerKillMutator {
     public List<Map<String, Object>> toJSONAsMap(Formatters formatters) {
         return Lists.map(kills,
                 kill -> {
+                    PlayerKill.Killer killer = kill.getKiller();
+                    PlayerKill.Victim victim = kill.getVictim();
+                    ServerIdentifier server = kill.getServer();
+
                     Map<String, Object> killMap = new HashMap<>();
                     killMap.put("date", formatters.secondLong().apply(kill.getDate()));
-                    killMap.put("victim", kill.getVictimName().orElse(kill.getVictim().toString()));
-                    killMap.put("killer", kill.getKillerName().orElse(kill.getKiller().toString()));
+                    killMap.put("killer", killer.getName());
+                    killMap.put("victim", victim.getName());
+                    killMap.put("killerUUID", killer.getUuid().toString());
+                    killMap.put("victimUUID", victim.getUuid().toString());
+                    killMap.put("killerName", killer.getName());
+                    killMap.put("victimName", victim.getName());
+                    killMap.put("serverUUID", server.getUuid().toString());
+                    killMap.put("serverName", server.getName());
                     killMap.put("weapon", kill.getWeapon());
                     return killMap;
                 }

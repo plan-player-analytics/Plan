@@ -21,10 +21,10 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
-import org.spongepowered.api.GameState;
+import org.spongepowered.api.Server;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
-import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.event.lifecycle.StoppingEngineEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,11 +55,7 @@ public class SpongeServerShutdownSave extends ServerShutdownSave {
     }
 
     @Listener(order = Order.PRE)
-    public void onServerShutdown(GameStoppingServerEvent event) {
-        GameState state = event.getState();
-        shuttingDown = state == GameState.SERVER_STOPPING
-                || state == GameState.GAME_STOPPING
-                || state == GameState.SERVER_STOPPED
-                || state == GameState.GAME_STOPPED;
+    public void onServerShutdown(StoppingEngineEvent<Server> event) {
+        shuttingDown = true;
     }
 }

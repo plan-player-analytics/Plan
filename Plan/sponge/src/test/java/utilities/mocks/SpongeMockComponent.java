@@ -20,13 +20,14 @@ import com.djrapitops.plan.DaggerPlanSpongeComponent;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSpongeComponent;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.storage.database.SQLDB;
+import net.kyori.adventure.text.TextComponent;
 import org.mockito.Mockito;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.Platform;
 import org.spongepowered.api.Server;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
@@ -50,6 +51,7 @@ public class SpongeMockComponent {
 
     public SpongeMockComponent(Path tempDir) {
         this.tempDir = tempDir;
+        SQLDB.setDownloadDriver(false);
     }
 
     public PlanPlugin getPlanMock() throws Exception {
@@ -79,8 +81,8 @@ public class SpongeMockComponent {
 
         Platform platform = mockPlatform();
         Server server = mockServer();
-        doReturn(platform).when(game).getPlatform();
-        doReturn(server).when(game).getServer();
+        doReturn(platform).when(game).platform();
+        doReturn(server).when(game).server();
 
         return game;
     }
@@ -89,8 +91,8 @@ public class SpongeMockComponent {
         Platform platform = Mockito.mock(Platform.class);
 
         MinecraftVersion version = Mockito.mock(MinecraftVersion.class);
-        doReturn("1.12").when(version).getName();
-        doReturn(version).when(platform).getMinecraftVersion();
+        doReturn("1.12").when(version).name();
+        doReturn(version).when(platform).minecraftVersion();
 
         return platform;
     }
@@ -98,16 +100,16 @@ public class SpongeMockComponent {
     private Server mockServer() {
         Server server = Mockito.mock(Server.class);
 
-        Text motd = Mockito.mock(Text.class);
-        doReturn("Motd").when(motd).toPlain();
+        TextComponent motd = Mockito.mock(TextComponent.class);
+        doReturn("Motd").when(motd).content();
         Optional<InetSocketAddress> ip = Optional.of(new InetSocketAddress(25565));
         int maxPlayers = 20;
-        List<Player> online = new ArrayList<>();
+        List<ServerPlayer> online = new ArrayList<>();
 
-        doReturn(motd).when(server).getMotd();
-        doReturn(ip).when(server).getBoundAddress();
-        doReturn(maxPlayers).when(server).getMaxPlayers();
-        doReturn(online).when(server).getOnlinePlayers();
+        doReturn(motd).when(server).motd();
+        doReturn(ip).when(server).boundAddress();
+        doReturn(maxPlayers).when(server).maxPlayers();
+        doReturn(online).when(server).onlinePlayers();
 
         return server;
     }

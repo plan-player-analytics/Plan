@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.domain.mutators.PlayerKillMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
@@ -25,6 +26,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
+import com.djrapitops.plan.gathering.ServerUptimeCalculator;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
@@ -34,6 +36,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -48,6 +51,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Factory with different JSON creation methods placed to a single class.
@@ -61,6 +65,7 @@ public class JSONFactory {
     private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
+    private final ServerUptimeCalculator serverUptimeCalculator;
     private final Graphs graphs;
     private final Formatters formatters;
 
@@ -70,6 +75,7 @@ public class JSONFactory {
             Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
+            ServerUptimeCalculator serverUptimeCalculator,
             Graphs graphs,
             Formatters formatters
     ) {
@@ -77,6 +83,7 @@ public class JSONFactory {
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+        this.serverUptimeCalculator = serverUptimeCalculator;
         this.graphs = graphs;
         this.formatters = formatters;
     }
@@ -162,10 +169,16 @@ public class JSONFactory {
         }
     }
 
-    public List<Map<String, Object>> serverPlayerKillsAsJSONMap(ServerUUID serverUUID) {
+    public List<Map<String, Object>> serverPlayerKillsAsJSONMaps(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         List<PlayerKill> kills = db.query(KillQueries.fetchPlayerKillsOnServer(serverUUID, 100));
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
+    }
+
+    public Optional<ServerDto> serverForIdentifier(String identifier) {
+        return dbSystem.getDatabase()
+                .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
+                .map(ServerDto::fromServer);
     }
 
     public Map<String, Object> serversAsJSONMaps() {
@@ -183,7 +196,12 @@ public class JSONFactory {
                 .findFirst()
                 .map(Server::getUuid).orElse(null);
 
-        Map<ServerUUID, List<TPS>> tpsData = db.query(
+        Map<ServerUUID, Integer> serverUuidToId = new HashMap<>();
+        for (Server server : serverInformation.values()) {
+            server.getId().ifPresent(serverId -> serverUuidToId.put(server.getUuid(), serverId));
+        }
+
+        Map<Integer, List<TPS>> tpsDataByServerId = db.query(
                 TPSQueries.fetchTPSDataOfAllServersBut(weekAgo, now, proxyUUID)
         );
         Map<ServerUUID, Integer> totalPlayerCounts = db.query(PlayerCountQueries.newPlayerCounts(0, now));
@@ -199,6 +217,7 @@ public class JSONFactory {
                     ServerUUID serverUUID = entry.getKey();
                     Map<String, Object> server = new HashMap<>();
                     server.put("name", entry.getValue().getIdentifiableName());
+                    server.put("serverUUID", entry.getValue().getUuid().toString());
 
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L)));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
@@ -207,7 +226,7 @@ public class JSONFactory {
                     server.put("last_peak_players", recentPeak.map(DateObj::getValue).orElse(0));
                     server.put("best_peak_players", allTimePeak.map(DateObj::getValue).orElse(0));
 
-                    TPSMutator tpsMonth = new TPSMutator(tpsData.getOrDefault(serverUUID, Collections.emptyList()));
+                    TPSMutator tpsMonth = new TPSMutator(tpsDataByServerId.getOrDefault(serverUuidToId.get(serverUUID), Collections.emptyList()));
                     server.put("playersOnline", tpsMonth.all().stream()
                             .map(tps -> new double[]{tps.getDate(), tps.getPlayers()})
                             .toArray(double[][]::new));
@@ -219,6 +238,8 @@ public class JSONFactory {
                     server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(HtmlLang.UNIT_NO_DATA).toString());
                     server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
                     server.put("downtime", timeAmount.apply(tpsWeek.serverDownTime()));
+                    server.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
+                            .orElse(locale.getString(GenericLang.UNAVAILABLE)));
 
                     Optional<TPS> online = tpsWeek.getLast();
                     server.put("online", online.map(point -> point.getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : "Possibly offline")
@@ -258,4 +279,10 @@ public class JSONFactory {
         return tableEntries;
     }
 
+    public Map<String, List<ServerDto>> listServers() {
+        Collection<Server> servers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection());
+        return Collections.singletonMap("servers", servers.stream()
+                .map(ServerDto::fromServer)
+                .collect(Collectors.toList()));
+    }
 }

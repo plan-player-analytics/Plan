@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,16 +11,15 @@
     <title>Plan | Query</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="vendor/fontawesome-free/css/all.min.css?v=${version}" rel="stylesheet">
     <link crossorigin="anonymous" href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800,900"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
-          integrity="sha256-hHKA3d/HttC8OW3Sl093W8DoZudhHJDj++kZYo6MLzA="
-          crossorigin="anonymous">
-    <link href="css/sb-admin-2.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+          integrity="sha256-hHKA3d/HttC8OW3Sl093W8DoZudhHJDj++kZYo6MLzA=" rel="stylesheet">
+    <link href="css/sb-admin-2.css?v=${version}" rel="stylesheet">
+    <link href="css/style.css?v=${version}" rel="stylesheet">
 
 </head>
 
@@ -45,7 +44,7 @@
             </a>
         </li>
         <li class="nav-item nav-button">
-            <a class="nav-link" href="/">
+            <a class="nav-link" href="./">
                 <i class="far fa-fw fa-hand-point-left"></i>
                 <span>to main page</span></a>
         </li>
@@ -64,7 +63,7 @@
             </a>
         </div>
         <div class="ms-md-3 text-center text-md-start">
-            ${version}
+            ${versionButton}
         </div>
     </ul>
     <!-- End of Sidebar -->
@@ -96,7 +95,8 @@
                                             <label for="viewFromDateField">from</label>
                                         </div>
                                         <div class="col-5 col-md-3">
-                                            <label class="visually-hidden" for="viewFromDateField">Date: DD/MM/YYYY</label>
+                                            <label class="visually-hidden" for="viewFromDateField">Date:
+                                                DD/MM/YYYY</label>
                                             <div class="input-group">
                                                 <div class="input-group-text"><i class="far fa-calendar"></i></div>
                                                 <input class="form-control" id="viewFromDateField"
@@ -106,7 +106,8 @@
                                             </div>
                                         </div>
                                         <div class="col-6 col-md-2">
-                                            <label class="visually-hidden" for="viewFromTimeField">Time: H H : M M</label>
+                                            <label class="visually-hidden" for="viewFromTimeField">Time: H H : M
+                                                M</label>
                                             <div class="input-group">
                                                 <div class="input-group-text"><i class="far fa-clock"></i></div>
                                                 <input class="form-control" id="viewFromTimeField"
@@ -139,6 +140,21 @@
                                     </div>
                                     <div class="chart-area" id="viewChart"><span class="loader"></span></div>
 
+                                    <div>
+                                        <button aria-expanded="false" aria-haspopup="true" class="btn dropdown-toggle"
+                                                data-bs-target="#server-dropdown" data-bs-toggle="collapse"
+                                                id="serverDropdown" type="button">using data of all servers
+                                        </button>
+                                        <div aria-labelledby="serverDropdown" class="collapse"
+                                             id="server-dropdown">
+                                            <select class="form-control" id="server-selector" multiple>
+                                                <option selected>Proxy server</option>
+                                                <option>Server 1</option>
+                                                <option>Skyblock</option>
+                                                <option>Server 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <hr>
 
                                     <div id="filters"></div>
@@ -299,30 +315,31 @@
 <!-- End of Page Wrapper -->
 
 <!-- Bootstrap core JavaScript-->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+<script crossorigin="anonymous"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script crossorigin="anonymous"
         integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k="
-        crossorigin="anonymous"></script>
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="./vendor/datatables/datatables.min.js"></script>
-<link href='./vendor/datatables/datatables.min.css' rel='stylesheet'/>
-<script src="./vendor/highcharts/highstock.js"></script>
-<script src="./vendor/highcharts/map.js"></script>
-<script src="./vendor/highcharts/world.js"></script>
+<script src="./vendor/datatables/datatables.min.js?v=${version}"></script>
+<link href='./vendor/datatables/datatables.min.css?v=${version}' rel='stylesheet'/>
+<script src="./vendor/highcharts/highcharts.js?v=${version}"></script>
+<script src="./vendor/highcharts/modules/map.js?v=${version}"></script>
+<script src="./vendor/highcharts/modules/no-data-to-display.js?v=${version}"></script>
+<script src="./vendor/highcharts/mapdata/world.js?v=${version}"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="./js/sb-admin-2.js"></script>
-<script src="./js/xmlhttprequests.js"></script>
-<script src="./js/color-selector.js"></script>
-<script src="./js/domUtils.js"></script>
+<script src="./js/sb-admin-2.js?v=${version}"></script>
+<script src="./js/xmlhttprequests.js?v=${version}"></script>
+<script src="./js/color-selector.js?v=${version}"></script>
+<script src="./js/domUtils.js?v=${version}"></script>
 
 <!-- Page level custom scripts -->
-<script src="./js/graphs.js"></script>
-<script src='./js/filters.js'></script>
-<script src='./js/query.js'></script>
+<script src="./js/graphs.js?v=${version}"></script>
+<script src='./js/filters.js?v=${version}'></script>
+<script src='./js/query.js?v=${version}'></script>
 
 <script id="mainScript">
     if (location.search.includes("error=")) {

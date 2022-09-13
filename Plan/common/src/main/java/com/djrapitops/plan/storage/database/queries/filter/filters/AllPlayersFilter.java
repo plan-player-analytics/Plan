@@ -16,15 +16,14 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Special filter only used in cases where no filters are specified.
@@ -52,7 +51,7 @@ public class AllPlayersFilter implements Filter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
-        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllPlayerUUIDs());
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
+        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllUserIds());
     }
 }

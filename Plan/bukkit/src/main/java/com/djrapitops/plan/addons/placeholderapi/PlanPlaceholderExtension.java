@@ -28,9 +28,7 @@ import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -101,7 +99,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
     private String getPlaceholderValue(String params, UUID uuid) {
         try {
-            String value = placeholders.onPlaceholderRequest(uuid, params, Collections.emptyList());
+            String value = placeholders.onPlaceholderRequest(uuid, parseRequest(params), parseParameters(params));
 
             if ("true".equals(value)) { //hack
                 value = PlaceholderAPIPlugin.booleanTrue();
@@ -114,6 +112,23 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
             errorLogger.warn(e, ErrorContext.builder().whatToDo("Report this").related("Placeholder Request", params, uuid).build());
             return null;
         }
+    }
+
+    private String parseRequest(String params) {
+        return params.split(":")[0];
+    }
+
+    private List<String> parseParameters(String params) {
+        List<String> parameters = new ArrayList<>();
+        boolean first = true;
+        for (String parameter : params.split(":")) {
+            if (first) {
+                first = false;
+            } else {
+                parameters.add(parameter);
+            }
+        }
+        return parameters;
     }
 
     private String getCached(String params, UUID uuid) {

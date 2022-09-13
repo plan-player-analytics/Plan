@@ -1,0 +1,28 @@
+name: Issue Automation
+on:
+  issues:
+    types:
+      - opened
+
+# map fields with customized labels
+env:
+  inbox: INBOX
+  refinement: Needs Refinement
+  refined: Refined & Actionable
+  assigned: Assigned to Milestone
+  done: Done
+
+jobs:
+  issue_opened:
+    name: New Issue Opened
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    steps:
+      - name: Add issue to ${{ env.inbox }}
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
+          organization: plan-player-analytics
+          project_id: 3
+          resource_node_id: ${{ github.event.issue.node_id }}
+          status_value: ${{ env.inbox }} # Target status

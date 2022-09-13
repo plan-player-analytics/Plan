@@ -48,13 +48,13 @@ class BungeeSystemTest {
     private DBPreparer dbPreparer;
 
     @BeforeEach
-    void prepareSystem(@TempDir Path temp) throws Exception {
+    void prepareSystem(@TempDir Path temp) {
         component = new BungeeMockComponent(temp);
-        dbPreparer = new DBPreparer(component.getPlanSystem(), TEST_PORT_NUMBER);
+        dbPreparer = new DBPreparer(new BungeeSystemTestDependencies(component.getPlanSystem()), TEST_PORT_NUMBER);
     }
 
     @Test
-    void bungeeEnables() throws Exception {
+    void bungeeEnables() {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
@@ -75,45 +75,41 @@ class BungeeSystemTest {
 
     @Test
     void bungeeDoesNotEnableWithDefaultIP() {
-        EnableException thrown = assertThrows(EnableException.class, () -> {
-            PlanSystem bungeeSystem = component.getPlanSystem();
-            try {
-                PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-                config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
-                config.set(ProxySettings.IP, "0.0.0.0");
+        PlanSystem bungeeSystem = component.getPlanSystem();
+        try {
+            PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+            config.set(ProxySettings.IP, "0.0.0.0");
 
-                DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
-                SQLiteDB db = dbSystem.getSqLiteFactory().usingDefaultFile();
-                db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
-                dbSystem.setActiveDatabase(db);
+            DBSystem dbSystem = bungeeSystem.getDatabaseSystem();
+            SQLiteDB db = dbSystem.getSqLiteFactory().usingDefaultFile();
+            db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+            dbSystem.setActiveDatabase(db);
 
-                bungeeSystem.enable(); // Throws EnableException
-            } finally {
-                bungeeSystem.disable();
-            }
-        });
+            EnableException thrown = assertThrows(EnableException.class, bungeeSystem::enable);
+            assertEquals("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.", thrown.getMessage());
+        } finally {
+            bungeeSystem.disable();
+        }
 
-        assertEquals("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.", thrown.getMessage());
     }
 
     @Test
     void testEnableNoMySQL() {
-        assertThrows(EnableException.class, () -> {
-            PlanSystem bungeeSystem = component.getPlanSystem();
-            try {
-                PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
-                config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
-                config.set(ProxySettings.IP, "8.8.8.8");
+        PlanSystem bungeeSystem = component.getPlanSystem();
+        try {
+            PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
+            config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+            config.set(ProxySettings.IP, "8.8.8.8");
 
-                bungeeSystem.enable(); // Throws EnableException
-            } finally {
-                bungeeSystem.disable();
-            }
-        });
+            assertThrows(EnableException.class, bungeeSystem::enable);
+        } finally {
+            bungeeSystem.disable();
+        }
     }
 
     @Test
-    void testEnableWithMySQL() throws Exception {
+    void testEnableWithMySQL() {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();

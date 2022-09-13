@@ -18,7 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class ConsoleChatFormatter extends ChatFormatter {
+public class ConsoleChatFormatter implements ChatFormatter {
 
     @Override
     public int getWidth(String part) {

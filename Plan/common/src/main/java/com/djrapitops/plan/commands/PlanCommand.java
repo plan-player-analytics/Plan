@@ -332,9 +332,33 @@ public class PlanCommand {
                 .subcommand(clearCommand())
                 .subcommand(removeCommand())
                 .subcommand(uninstalledCommand())
+                .subcommand(removeJoinAddressesCommand())
+                .subcommand(onlineUuidMigration())
                 .requirePermission(Permissions.DATA_BASE)
                 .description(locale.getString(HelpLang.DB))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB))
+                .build();
+    }
+
+    private Subcommand onlineUuidMigration() {
+        return Subcommand.builder()
+                .aliases("migrate_to_online_uuids", "migratetoonlineuuids")
+                .requirePermission(Permissions.DATA_CLEAR)
+                .optionalArgument("--remove_offline", "Remove offline players if given")
+                .description(locale.getString(HelpLang.ONLINE_UUID_MIGRATION))
+                .inDepthDescription("Moves and combines offline uuid data to online uuids where possible. Leaves offline-only players to database.")
+                .onCommand((sender, arguments) -> databaseCommands.onOnlineConversion(commandName, sender, arguments))
+                .build();
+    }
+
+    private Subcommand removeJoinAddressesCommand() {
+        return Subcommand.builder()
+                .aliases("remove_join_addresses", "removejoinaddresses")
+                .requirePermission(Permissions.DATA_CLEAR)
+                .requiredArgument(locale.getString(HelpLang.ARG_SERVER), locale.getString(HelpLang.DESC_ARG_SERVER_IDENTIFIER))
+                .description(locale.getString(HelpLang.JOIN_ADDRESS_REMOVAL))
+                .onCommand((sender, arguments) -> databaseCommands.onFixFabricJoinAddresses(commandName, sender, arguments))
+                .onTabComplete(this::serverNames)
                 .build();
     }
 
@@ -369,7 +393,7 @@ public class PlanCommand {
             return DBType.names();
         }
         Optional<String> firstArgument = arguments.get(0);
-        if (!firstArgument.isPresent()) {
+        if (firstArgument.isEmpty()) {
             return tabCompleteCache.getMatchingBackupFilenames(null);
         }
         String part = firstArgument.get();

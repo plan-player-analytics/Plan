@@ -29,6 +29,7 @@ public class TPSTable {
 
     public static final String TABLE_NAME = "plan_tps";
 
+    public static final String ID = "id";
     public static final String SERVER_ID = "server_id";
     public static final String DATE = "date";
     public static final String TPS = "tps";
@@ -50,7 +51,7 @@ public class TPSTable {
             + CHUNKS + ','
             + FREE_DISK
             + ") VALUES ("
-            + ServerTable.STATEMENT_SELECT_SERVER_ID + ','
+            + ServerTable.SELECT_SERVER_ID + ','
             + "?, ?, ?, ?, ?, ?, ?, ?)";
 
     private TPSTable() {
@@ -59,6 +60,7 @@ public class TPSTable {
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
+                .column(ID, Sql.INT).primaryKey()
                 .column(SERVER_ID, Sql.INT).notNull()
                 .column(DATE, Sql.LONG).notNull()
                 .column(TPS, Sql.DOUBLE).notNull()
@@ -68,7 +70,7 @@ public class TPSTable {
                 .column(ENTITIES, Sql.INT).notNull()
                 .column(CHUNKS, Sql.INT).notNull()
                 .column(FREE_DISK, Sql.LONG).notNull()
-                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.SERVER_ID)
+                .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }
 }

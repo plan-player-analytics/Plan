@@ -1,3 +1,18 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        maven {
+            name = 'Sponge'
+            url = "https://repo.spongepowered.org/repository/maven-public/"
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 rootProject.name = 'Plan'
 
 include 'api'
@@ -9,5 +24,5 @@ include 'bungeecord'
 include 'velocity'
 include 'plugin'
 include 'extensions'
+include 'fabric'
 include 'standalone'
-

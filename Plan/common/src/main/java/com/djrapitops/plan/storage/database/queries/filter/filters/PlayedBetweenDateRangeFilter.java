@@ -16,14 +16,19 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
+import com.google.gson.Gson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Singleton
 public class PlayedBetweenDateRangeFilter extends DateRangeFilter {
@@ -42,9 +47,18 @@ public class PlayedBetweenDateRangeFilter extends DateRangeFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
         long after = getAfter(query);
         long before = getBefore(query);
-        return dbSystem.getDatabase().query(SessionQueries.uuidsOfPlayedBetween(after, before));
+        List<String> serverNames = getServerNames(query);
+        List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
+        return dbSystem.getDatabase().query(SessionQueries.userIdsOfPlayedBetween(after, before, serverUUIDs));
+    }
+
+    private List<String> getServerNames(InputFilterDto query) {
+        return query.get("servers")
+                .map(serversList -> new Gson().fromJson(serversList, String[].class))
+                .map(Arrays::asList)
+                .orElseGet(Collections::emptyList);
     }
 }

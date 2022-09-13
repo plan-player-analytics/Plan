@@ -54,11 +54,18 @@ public class RootJSONResolver {
             PlayerBaseOverviewJSONCreator playerBaseOverviewJSONCreator,
             PerformanceJSONCreator performanceJSONCreator,
             ErrorsJSONResolver errorsJSONResolver,
+            LocaleJSONResolver localeJSONResolver,
 
             PlayerJSONResolver playerJSONResolver,
             NetworkJSONResolver networkJSONResolver,
             FiltersJSONResolver filtersJSONResolver,
-            QueryJSONResolver queryJSONResolver
+            QueryJSONResolver queryJSONResolver,
+            VersionJSONResolver versionJSONResolver,
+            MetadataJSONResolver metadataJSONResolver,
+            NetworkMetadataJSONResolver networkMetadataJSONResolver,
+            WhoAmIJSONResolver whoAmIJSONResolver,
+            ServerIdentityJSONResolver serverIdentityJSONResolver,
+            ExtensionJSONResolver extensionJSONResolver
     ) {
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
@@ -80,6 +87,13 @@ public class RootJSONResolver {
                 .add("filters", filtersJSONResolver)
                 .add("query", queryJSONResolver)
                 .add("errors", errorsJSONResolver)
+                .add("version", versionJSONResolver)
+                .add("locale", localeJSONResolver)
+                .add("metadata", metadataJSONResolver)
+                .add("networkMetadata", networkMetadataJSONResolver)
+                .add("serverIdentity", serverIdentityJSONResolver)
+                .add("whoami", whoAmIJSONResolver)
+                .add("extensionData", extensionJSONResolver)
                 .build();
     }
 

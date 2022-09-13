@@ -22,11 +22,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ChatFormatter {
+public interface ChatFormatter {
 
-    public abstract int getWidth(String part);
+    int getWidth(String part);
 
-    public String table(String message, String separator) {
+    default String table(String message, String separator) {
         String[] lines = StringUtils.split(message, '\n');
         List<String[]> rows = new ArrayList<>();
         Maximum.ForInteger rowWidth = new Maximum.ForInteger(0);
@@ -54,7 +54,7 @@ public abstract class ChatFormatter {
         return table.toString();
     }
 
-    public List<String[]> tableAsParts(String message, String separator) {
+    default List<String[]> tableAsParts(String message, String separator) {
         String[] lines = StringUtils.split(message, '\n');
         List<String[]> rows = new ArrayList<>();
         Maximum.ForInteger rowWidth = new Maximum.ForInteger(0);

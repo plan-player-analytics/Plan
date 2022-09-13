@@ -1,0 +1,7 @@
+contact_links:  
+  - name: Question
+    url: https://github.com/plan-player-analytics/Plan/discussions/new
+    about: Ask a question about the plugin on the Discussions forum
+  - name: Installation help
+    url: https://discordapp.com/invite/yXKmjzT
+    about: Get help for installations on Discord

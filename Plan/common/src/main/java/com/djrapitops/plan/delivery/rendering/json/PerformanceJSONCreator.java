@@ -95,7 +95,7 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         TPSMutator tpsDataWeek = tpsDataMonth.filterDataBetween(weekAgo, now);
         TPSMutator tpsDataDay = tpsDataWeek.filterDataBetween(dayAgo, now);
 
-        Integer tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
+        Double tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
         numbers.put("low_tps_spikes_30d", tpsDataMonth.lowTpsSpikeCount(tpsThreshold));
         numbers.put("low_tps_spikes_7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
         numbers.put("low_tps_spikes_24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
@@ -104,6 +104,9 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("server_downtime_7d", timeAmount.apply(tpsDataWeek.serverDownTime()));
         numbers.put("server_downtime_24h", timeAmount.apply(tpsDataDay.serverDownTime()));
 
+        numbers.put("players_30d", format(tpsDataMonth.averagePlayers()));
+        numbers.put("players_7d", format(tpsDataWeek.averagePlayers()));
+        numbers.put("players_24h", format(tpsDataDay.averagePlayers()));
         numbers.put("tps_30d", format(tpsDataMonth.averageTPS()));
         numbers.put("tps_7d", format(tpsDataWeek.averageTPS()));
         numbers.put("tps_24h", format(tpsDataDay.averageTPS()));
@@ -144,7 +147,7 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
 
     private Map<String, Object> createInsightsMap(List<TPS> tpsData) {
         TPSMutator tpsMutator = new TPSMutator(tpsData);
-        Integer tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
+        Double tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
         TPSMutator lowTPS = tpsMutator.filterTPSBetween(-1, tpsThreshold);
 
         Map<String, Object> insights = new HashMap<>();

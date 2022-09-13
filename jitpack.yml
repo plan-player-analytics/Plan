@@ -1,0 +1,9 @@
+jdk:
+  - openjdk18
+before_install:
+   - sdk install java 18.0.1.1-open
+   - sdk use java 18.0.1.1-open
+   - apt-get install -y nodejs
+install:
+  - cd Plan
+  - ./gradlew shadowJar publishToMavenLocal

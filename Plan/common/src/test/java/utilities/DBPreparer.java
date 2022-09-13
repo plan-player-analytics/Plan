@@ -16,7 +16,6 @@
  */
 package utilities;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
@@ -34,10 +33,6 @@ public class DBPreparer {
 
     private final Dependencies dependencies;
     private final int testPortNumber;
-
-    public DBPreparer(PlanSystem system, int testPortNumber) {
-        this(new PlanSystemAsDependencies(system), testPortNumber);
-    }
 
     public DBPreparer(Dependencies dependencies, int testPortNumber) {
         this.dependencies = dependencies;
@@ -91,6 +86,9 @@ public class DBPreparer {
             mysql.executeTransaction(new Transaction() {
                 @Override
                 protected void performOperations() {
+                    execute("SET GLOBAL innodb_file_per_table=0");
+                    execute("SET GLOBAL innodb_fast_shutdown=2");
+
                     execute("DROP DATABASE " + formattedDatabase);
                     execute("CREATE DATABASE " + formattedDatabase);
                     execute("USE " + formattedDatabase);
@@ -109,34 +107,5 @@ public class DBPreparer {
         PlanConfig config();
 
         DBSystem dbSystem();
-    }
-
-    @Deprecated
-    static class PlanSystemAsDependencies implements Dependencies {
-        private final PlanSystem system;
-
-        PlanSystemAsDependencies(PlanSystem system) {
-            this.system = system;
-        }
-
-        @Override
-        public void enable() {
-            system.enable();
-        }
-
-        @Override
-        public void disable() {
-            system.disable();
-        }
-
-        @Override
-        public PlanConfig config() {
-            return system.getConfigSystem().getConfig();
-        }
-
-        @Override
-        public DBSystem dbSystem() {
-            return system.getDatabaseSystem();
-        }
     }
 }

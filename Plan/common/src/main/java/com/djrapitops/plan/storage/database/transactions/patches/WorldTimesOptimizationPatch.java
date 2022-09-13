@@ -41,10 +41,10 @@ public class WorldTimesOptimizationPatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         return hasColumn(tableName, WorldTimesTable.ID)
-                && hasColumn(tableName, WorldTimesTable.USER_UUID)
-                && hasColumn(tableName, WorldTimesTable.SERVER_UUID)
-                && !hasColumn(tableName, "user_id")
-                && !hasColumn(tableName, "server_id")
+                && hasColumn(tableName, WorldTimesTable.USER_ID)
+                && hasColumn(tableName, WorldTimesTable.SERVER_ID)
+                && !hasColumn(tableName, "uuid")
+                && !hasColumn(tableName, "server_uuid")
                 && !hasTable(tempTableName); // If this table exists the patch has failed to finish.
     }
 
@@ -54,26 +54,49 @@ public class WorldTimesOptimizationPatch extends Patch {
             tempOldTable();
             execute(WorldTimesTable.createTableSQL(dbType));
 
-            execute("INSERT INTO " + tableName + " (" +
-                    WorldTimesTable.USER_UUID + ',' +
-                    WorldTimesTable.SERVER_UUID + ',' +
-                    WorldTimesTable.ADVENTURE + ',' +
-                    WorldTimesTable.CREATIVE + ',' +
-                    WorldTimesTable.SURVIVAL + ',' +
-                    WorldTimesTable.SPECTATOR + ',' +
-                    WorldTimesTable.SESSION_ID + ',' +
-                    WorldTimesTable.WORLD_ID +
-                    ") SELECT " +
-                    "(SELECT plan_users.uuid FROM plan_users WHERE plan_users.id = " + tempTableName + ".user_id LIMIT 1), " +
-                    "(SELECT plan_servers.uuid FROM plan_servers WHERE plan_servers.id = " + tempTableName + ".server_id LIMIT 1), " +
-                    WorldTimesTable.ADVENTURE + ',' +
-                    WorldTimesTable.CREATIVE + ',' +
-                    WorldTimesTable.SURVIVAL + ',' +
-                    WorldTimesTable.SPECTATOR + ',' +
-                    WorldTimesTable.SESSION_ID + ',' +
-                    WorldTimesTable.WORLD_ID +
-                    FROM + tempTableName
-            );
+            if (hasColumn(tempTableName, WorldTimesTable.ID)) {
+                execute("INSERT INTO " + tableName + " (" +
+                        WorldTimesTable.USER_ID + ',' +
+                        WorldTimesTable.SERVER_ID + ',' +
+                        WorldTimesTable.ADVENTURE + ',' +
+                        WorldTimesTable.CREATIVE + ',' +
+                        WorldTimesTable.SURVIVAL + ',' +
+                        WorldTimesTable.SPECTATOR + ',' +
+                        WorldTimesTable.SESSION_ID + ',' +
+                        WorldTimesTable.WORLD_ID +
+                        ") SELECT " +
+                        "(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid = " + tempTableName + ".uuid LIMIT 1), " +
+                        "(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid = " + tempTableName + ".server_uuid LIMIT 1), " +
+                        WorldTimesTable.ADVENTURE + ',' +
+                        WorldTimesTable.CREATIVE + ',' +
+                        WorldTimesTable.SURVIVAL + ',' +
+                        WorldTimesTable.SPECTATOR + ',' +
+                        WorldTimesTable.SESSION_ID + ',' +
+                        WorldTimesTable.WORLD_ID +
+                        FROM + tempTableName
+                );
+            } else {
+                execute("INSERT INTO " + tableName + " (" +
+                        WorldTimesTable.USER_ID + ',' +
+                        WorldTimesTable.SERVER_ID + ',' +
+                        WorldTimesTable.ADVENTURE + ',' +
+                        WorldTimesTable.CREATIVE + ',' +
+                        WorldTimesTable.SURVIVAL + ',' +
+                        WorldTimesTable.SPECTATOR + ',' +
+                        WorldTimesTable.SESSION_ID + ',' +
+                        WorldTimesTable.WORLD_ID +
+                        ") SELECT " +
+                        WorldTimesTable.USER_ID + ',' +
+                        WorldTimesTable.SERVER_ID + ',' +
+                        WorldTimesTable.ADVENTURE + ',' +
+                        WorldTimesTable.CREATIVE + ',' +
+                        WorldTimesTable.SURVIVAL + ',' +
+                        WorldTimesTable.SPECTATOR + ',' +
+                        WorldTimesTable.SESSION_ID + ',' +
+                        WorldTimesTable.WORLD_ID +
+                        FROM + tempTableName
+                );
+            }
 
             dropTable(tempTableName);
         } catch (Exception e) {

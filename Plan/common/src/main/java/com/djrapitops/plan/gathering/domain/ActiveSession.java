@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
-import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
 import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.Objects;
@@ -32,6 +31,8 @@ public class ActiveSession {
     private final DataMap extraData;
     private long afkTime;
 
+    private long lastMovementForAfkCalculation;
+
     public ActiveSession(UUID playerUUID, ServerUUID serverUUID, long start, String world, String gameMode) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
@@ -43,10 +44,8 @@ public class ActiveSession {
         extraData.put(MobKillCounter.class, new MobKillCounter());
         extraData.put(DeathCounter.class, new DeathCounter());
         extraData.put(PlayerKills.class, new PlayerKills());
-    }
 
-    public static ActiveSession fromPlayerJoin(PlayerJoin join) {
-        return new ActiveSession(join.getPlayerUUID(), join.getServerUUID(), join.getTime(), join.getWorld(), join.getGameMode());
+        lastMovementForAfkCalculation = start;
     }
 
     public FinishedSession toFinishedSessionFromStillActive() {
@@ -143,6 +142,14 @@ public class ActiveSession {
                 ", afkTime=" + afkTime +
                 ", extraData=" + extraData +
                 '}';
+    }
+
+    public long getLastMovementForAfkCalculation() {
+        return lastMovementForAfkCalculation;
+    }
+
+    public void setLastMovementForAfkCalculation(long lastMovementForAfkCalculation) {
+        this.lastMovementForAfkCalculation = lastMovementForAfkCalculation;
     }
 
     public static class FirstSession {}

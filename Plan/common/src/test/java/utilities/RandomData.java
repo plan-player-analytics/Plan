@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -28,6 +29,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class RandomData {
 
@@ -36,6 +39,9 @@ public class RandomData {
     }
 
     private static final Random r = new Random();
+
+    private static final int JOIN_ADDRESS_COUNT = 50;
+    private static final List<JoinAddress> JOIN_ADDRESSES = generateJoinAddresses(JOIN_ADDRESS_COUNT);
 
     public static int randomInt(int rangeStart, int rangeEnd) {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
@@ -106,17 +112,22 @@ public class RandomData {
     }
 
     public static FinishedSession randomSession(ServerUUID serverUUID, String[] worlds, UUID... uuids) {
+        long start = RandomData.randomTime();
+        return randomSession(serverUUID, worlds, start, uuids);
+    }
+
+    public static FinishedSession randomSession(ServerUUID serverUUID, String[] worlds, long start, UUID... uuids) {
         DataMap extraData = new DataMap();
         extraData.put(WorldTimes.class, RandomData.randomWorldTimes(worlds));
-        long start = RandomData.randomTime();
         long end = RandomData.randomTimeAfter(start);
 
         if (uuids.length >= 2) {
-            List<PlayerKill> kills = RandomData.randomKills(uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));
+            List<PlayerKill> kills = RandomData.randomKills(serverUUID, uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));
             extraData.put(PlayerKills.class, new PlayerKills(kills));
         }
         extraData.put(MobKillCounter.class, new MobKillCounter());
         extraData.put(DeathCounter.class, new DeathCounter());
+        extraData.put(JoinAddress.class, JOIN_ADDRESSES.get(randomInt(0, JOIN_ADDRESS_COUNT)));
         return new FinishedSession(
                 uuids[0], serverUUID,
                 start, end, RandomData.randomLong(0, end - start),
@@ -135,7 +146,7 @@ public class RandomData {
                 .ifPresent(worldTimes -> worldTimes.setAll(RandomData.randomWorldTimes(worlds)));
 
         if (uuids.length >= 2) {
-            List<PlayerKill> randomKills = RandomData.randomKills(uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));
+            List<PlayerKill> randomKills = RandomData.randomKills(serverUUID, uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));
             session.getExtraData().get(PlayerKills.class).ifPresent(kills -> kills.addAll(randomKills));
         }
 
@@ -166,12 +177,12 @@ public class RandomData {
         return new WorldTimes(times);
     }
 
-    public static List<PlayerKill> randomKills(UUID killer, UUID... victimUUIDs) {
+    public static List<PlayerKill> randomKills(ServerUUID serverUUID, UUID killer, UUID... victimUUIDs) {
         if (victimUUIDs == null || victimUUIDs.length == 1 && victimUUIDs[0] == null) return Collections.emptyList();
 
-        return pickMultiple(randomInt(3, 15), () -> new PlayerKill(
+        return pickMultiple(randomInt(3, 15), () -> TestData.getPlayerKill(
                 killer, pickAtRandom(victimUUIDs),
-                randomString(randomInt(10, KillsTable.WEAPON_COLUMN_LENGTH)),
+                serverUUID, randomString(randomInt(10, KillsTable.WEAPON_COLUMN_LENGTH)),
                 randomTime()
         ));
     }
@@ -194,7 +205,17 @@ public class RandomData {
         return new DateObj<>(randomTime(), randomInt(0, 500));
     }
 
+    public static DateObj<Integer> randomIntDateObject(int rangeStart, int rangeEnd) {
+        return new DateObj<>(randomTime(), randomInt(rangeStart, rangeEnd));
+    }
+
     public static double randomDouble() {
         return ThreadLocalRandom.current().nextDouble();
+    }
+
+    public static List<JoinAddress> generateJoinAddresses(int n) {
+        return IntStream.range(0, n).mapToObj(i -> "join_address_" + i)
+                .map(JoinAddress::new)
+                .collect(Collectors.toList());
     }
 }

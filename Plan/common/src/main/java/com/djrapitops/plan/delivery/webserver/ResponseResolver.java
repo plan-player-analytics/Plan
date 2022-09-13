@@ -26,19 +26,27 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
 import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerJsonResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerPageResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -50,6 +58,12 @@ import java.util.regex.Pattern;
  * @author AuroraLS3
  */
 @Singleton
+@OpenAPIDefinition(info = @Info(
+        title = "Plan API endpoints",
+        description = "If authentication is enabled (see response of /v1/whoami) logging in is required for endpoints (/auth/login). Pass 'Cookie' header in the requests after login.",
+        contact = @Contact(name = "Github Discussions", url = "https://github.com/plan-player-analytics/Plan/discussions/categories/apis-and-development"),
+        license = @License(name = "GNU Lesser General Public License v3.0 (LGPLv3.0)", url = "https://github.com/plan-player-analytics/Plan/blob/master/LICENSE")
+))
 public class ResponseResolver {
 
     private final QueryPageResolver queryPageResolver;
@@ -65,6 +79,8 @@ public class ResponseResolver {
     private final LogoutResolver logoutResolver;
     private final RegisterResolver registerResolver;
     private final ErrorsPageResolver errorsPageResolver;
+    private final SwaggerJsonResolver swaggerJsonResolver;
+    private final SwaggerPageResolver swaggerPageResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
@@ -92,6 +108,9 @@ public class ResponseResolver {
             RegisterResolver registerResolver,
             ErrorsPageResolver errorsPageResolver,
 
+            SwaggerJsonResolver swaggerJsonResolver,
+            SwaggerPageResolver swaggerPageResolver,
+
             ErrorLogger errorLogger
     ) {
         this.resolverService = resolverService;
@@ -110,16 +129,21 @@ public class ResponseResolver {
         this.logoutResolver = logoutResolver;
         this.registerResolver = registerResolver;
         this.errorsPageResolver = errorsPageResolver;
+        this.swaggerJsonResolver = swaggerJsonResolver;
+        this.swaggerPageResolver = swaggerPageResolver;
         this.errorLogger = errorLogger;
     }
 
     public void registerPages() {
         String plugin = "Plan";
-        resolverService.registerResolver(plugin, "/robots.txt", (NoAuthResolver) request -> Optional.of(responseFactory.robotsResponse()));
+        resolverService.registerResolver(plugin, "/robots.txt", fileResolver(responseFactory::robotsResponse));
+        resolverService.registerResolver(plugin, "/manifest.json", fileResolver(() -> responseFactory.jsonFileResponse("manifest.json")));
+        resolverService.registerResolver(plugin, "/asset-manifest.json", fileResolver(() -> responseFactory.jsonFileResponse("asset-manifest.json")));
+        resolverService.registerResolver(plugin, "/favicon.ico", fileResolver(responseFactory::faviconResponse));
+
         resolverService.registerResolver(plugin, "/query", queryPageResolver);
         resolverService.registerResolver(plugin, "/players", playersPageResolver);
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
-        resolverService.registerResolver(plugin, "/favicon.ico", (NoAuthResolver) request -> Optional.of(responseFactory.faviconResponse()));
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
 
@@ -132,9 +156,15 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/errors", errorsPageResolver);
 
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
-        resolverService.registerResolverForMatches(plugin, Pattern.compile("^.*/(vendor|css|js|img)/.*"), staticResourceResolver);
+        resolverService.registerResolverForMatches(plugin, Pattern.compile(StaticResourceResolver.PATH_REGEX), staticResourceResolver);
 
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
+        resolverService.registerResolver(plugin, "/docs/swagger.json", swaggerJsonResolver);
+        resolverService.registerResolver(plugin, "/docs", swaggerPageResolver);
+    }
+
+    private NoAuthResolver fileResolver(Supplier<Response> response) {
+        return request -> Optional.of(response.get());
     }
 
     public Response getResponse(Request request) {
@@ -173,7 +203,7 @@ public class ResponseResolver {
         for (Resolver resolver : foundResolvers) {
             boolean isAuthRequired = webServer.get().isAuthRequired() && resolver.requiresAuth(request);
             if (isAuthRequired) {
-                if (!user.isPresent()) {
+                if (user.isEmpty()) {
                     if (webServer.get().isUsingHTTPS()) {
                         throw new WebUserAuthException(FailReason.NO_USER_PRESENT);
                     } else {

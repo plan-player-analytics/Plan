@@ -17,8 +17,10 @@
 package com.djrapitops.plan.storage.database.queries.analysis;
 
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import org.apache.commons.text.TextStringBuilder;
@@ -74,24 +76,37 @@ public class NetworkActivityIndexQueries {
     }
 
     public static String selectActivityIndexSQL() {
+        return selectActivityIndexSQL(Collections.emptyList());
+    }
+
+    public static String selectActivityIndexSQL(Collection<ServerUUID> onServers) {
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(onServers, "','") + "')";
+
         String selectActivePlaytimeSQL = SELECT +
-                "ux." + UsersTable.USER_UUID + ",COALESCE(active_playtime,0) AS active_playtime" +
+                "ux." + UsersTable.ID + "," +
+                "ux." + UsersTable.USER_UUID + "," +
+                "COALESCE(active_playtime,0) AS active_playtime" +
                 FROM + UsersTable.TABLE_NAME + " ux" +
-                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_UUID +
+                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_ID +
                 ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + SessionsTable.USER_UUID +
-                ") sx on sx.uuid=ux.uuid";
+                (onServers.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")") +
+                GROUP_BY + SessionsTable.USER_ID +
+                ") sx on sx." + SessionsTable.USER_ID + "=ux." + UsersTable.ID;
 
         String selectThreeWeeks = selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL;
 
         return SELECT +
                 "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (q1.active_playtime*1.0/?) +1.0)) as activity_index," +
-                "q1." + SessionsTable.USER_UUID +
+                "u." + UsersTable.ID + " as " + SessionsTable.USER_ID + ',' +
+                "u." + UsersTable.USER_UUID +
                 FROM + '(' + selectThreeWeeks + ") q1" +
-                GROUP_BY + "q1." + SessionsTable.USER_UUID;
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=q1." + UsersTable.ID +
+                GROUP_BY + "q1." + UsersTable.ID;
     }
 
     public static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, long date) throws SQLException {
@@ -111,7 +126,7 @@ public class NetworkActivityIndexQueries {
 
         String selectIndexes = SELECT + "COALESCE(activity_index, 0) as activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectActivityIndex + ") q2 on q2." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                LEFT_JOIN + '(' + selectActivityIndex + ") q2 on q2." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?";
 
         String selectCount = SELECT + "COUNT(1) as count" +
@@ -119,7 +134,7 @@ public class NetworkActivityIndexQueries {
                 WHERE + "i.activity_index>=?" +
                 AND + "i.activity_index<?";
 
-        return new QueryStatement<Integer>(selectCount) {
+        return new QueryStatement<>(selectCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, date);
@@ -140,10 +155,10 @@ public class NetworkActivityIndexQueries {
 
         String selectIndexes = SELECT + "activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?";
 
-        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
+        return new QueryStatement<>(selectIndexes) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, date);
@@ -163,17 +178,17 @@ public class NetworkActivityIndexQueries {
         };
     }
 
-    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<UUID> playerUUIDs) {
-        String selectActivityIndex = selectActivityIndexSQL();
+    public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<Integer> userIds, List<ServerUUID> serverUUIDs) {
+        String selectActivityIndex = selectActivityIndexSQL(serverUUIDs);
 
         String selectIndexes = SELECT + "activity_index" +
                 FROM + UsersTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_UUID + "=u." + UsersTable.USER_UUID +
+                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?" +
-                AND + "u." + UsersTable.USER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(playerUUIDs, "','").build() + "')";
+                AND + "u." + UsersTable.ID + " IN (" +
+                new TextStringBuilder().appendWithSeparators(userIds, ",").build() + ")";
 
-        return new QueryStatement<Map<String, Integer>>(selectIndexes) {
+        return new QueryStatement<>(selectIndexes) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, date);
@@ -198,13 +213,13 @@ public class NetworkActivityIndexQueries {
 
         String selectActivePlayerCount = SELECT + "COUNT(1) as count" +
                 FROM + '(' + selectActivityIndex + ") q2" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=q2." + SessionsTable.USER_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on q2." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.REGISTERED + ">=?" +
                 AND + "u." + UsersTable.REGISTERED + "<=?" +
                 AND + "q2.activity_index>=?" +
                 AND + "q2.activity_index<?";
 
-        return new QueryStatement<Integer>(selectActivePlayerCount) {
+        return new QueryStatement<>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, before);
@@ -234,13 +249,13 @@ public class NetworkActivityIndexQueries {
                 FROM + '(' + selectActivityIndex + ") q2" +
                 // Join two select activity index queries together to query Regular and Inactive players
                 INNER_JOIN + '(' + selectActivityIndex.replace("q1", "q3") + ") q4" +
-                " on q2." + SessionsTable.USER_UUID + "=q4." + SessionsTable.USER_UUID +
+                " on q2." + SessionsTable.USER_ID + "=q4." + SessionsTable.USER_ID +
                 WHERE + "q2.activity_index>=?" +
                 AND + "q2.activity_index<?" +
                 AND + "q4.activity_index>=?" +
                 AND + "q4.activity_index<?";
 
-        return new QueryStatement<Integer>(selectActivePlayerCount) {
+        return new QueryStatement<>(selectActivePlayerCount) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, threshold, end);
@@ -262,15 +277,15 @@ public class NetworkActivityIndexQueries {
         return database -> {
             // INNER JOIN limits the users to only those that are regular
             String selectPlaytimePerPlayer = SELECT +
-                    "p." + SessionsTable.USER_UUID + "," +
+                    "p." + SessionsTable.USER_ID + "," +
                     "SUM(p." + SessionsTable.SESSION_END + "-p." + SessionsTable.SESSION_START + ") as playtime" +
                     FROM + SessionsTable.TABLE_NAME + " p" +
-                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_UUID + "=p." + SessionsTable.USER_UUID +
+                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_ID + "=p." + SessionsTable.USER_ID +
                     WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
                     AND + "p." + SessionsTable.SESSION_START + ">=?" +
                     AND + "q2.activity_index>=?" +
                     AND + "q2.activity_index<?" +
-                    GROUP_BY + "p." + SessionsTable.USER_UUID;
+                    GROUP_BY + "p." + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
             return database.query(new QueryStatement<Long>(selectAverage, 100) {
@@ -295,10 +310,10 @@ public class NetworkActivityIndexQueries {
         return database -> {
             // INNER JOIN limits the users to only those that are regular
             String selectSessionLengthPerPlayer = SELECT +
-                    "p." + SessionsTable.USER_UUID + "," +
+                    "p." + SessionsTable.USER_ID + "," +
                     "p." + SessionsTable.SESSION_END + "-p." + SessionsTable.SESSION_START + " as length" +
                     FROM + SessionsTable.TABLE_NAME + " p" +
-                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_UUID + "=p." + SessionsTable.USER_UUID +
+                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_ID + "=p." + SessionsTable.USER_ID +
                     WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
                     AND + "p." + SessionsTable.SESSION_START + ">=?" +
                     AND + "q2.activity_index>=?" +
@@ -327,15 +342,15 @@ public class NetworkActivityIndexQueries {
         return database -> {
             // INNER JOIN limits the users to only those that are regular
             String selectPlaytimePerPlayer = SELECT +
-                    "p." + SessionsTable.USER_UUID + "," +
+                    "p." + SessionsTable.USER_ID + "," +
                     "SUM(p." + SessionsTable.AFK_TIME + ") as afk" +
                     FROM + SessionsTable.TABLE_NAME + " p" +
-                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_UUID + "=p." + SessionsTable.USER_UUID +
+                    INNER_JOIN + '(' + selectActivityIndexSQL() + ") q2 on q2." + SessionsTable.USER_ID + "=p." + SessionsTable.USER_ID +
                     WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
                     AND + "p." + SessionsTable.SESSION_START + ">=?" +
                     AND + "q2.activity_index>=?" +
                     AND + "q2.activity_index<?" +
-                    GROUP_BY + "p." + SessionsTable.USER_UUID;
+                    GROUP_BY + "p." + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
             return database.query(new QueryStatement<Long>(selectAverage, 100) {
@@ -357,16 +372,16 @@ public class NetworkActivityIndexQueries {
     }
 
     public static Query<Collection<ActivityIndex>> activityIndexForNewPlayers(long after, long before, Long threshold) {
-        String selectNewUUIDs = SELECT + UsersTable.USER_UUID +
+        String selectNewUUIDs = SELECT + UsersTable.ID +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.REGISTERED + "<=?" +
                 AND + UsersTable.REGISTERED + ">=?";
 
         String sql = SELECT + "activity_index" +
                 FROM + '(' + selectNewUUIDs + ") n" +
-                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_UUID + "=a." + SessionsTable.USER_UUID;
+                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + UsersTable.ID + "=a." + SessionsTable.USER_ID;
 
-        return new QueryStatement<Collection<ActivityIndex>>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);
@@ -386,22 +401,22 @@ public class NetworkActivityIndexQueries {
     }
 
     public static Query<ActivityIndex> averageActivityIndexForRetainedPlayers(long after, long before, Long threshold) {
-        String selectNewUUIDs = SELECT + UsersTable.USER_UUID +
+        String selectNewUUIDs = SELECT + UsersTable.ID +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + UsersTable.REGISTERED + "<=?" +
                 AND + UsersTable.REGISTERED + ">=?";
 
-        String selectUniqueUUIDs = SELECT + "DISTINCT " + SessionsTable.USER_UUID +
+        String selectUniqueUUIDs = SELECT + "DISTINCT " + SessionsTable.USER_ID +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_END + "<=?";
 
         String sql = SELECT + "AVG(activity_index) as average" +
                 FROM + '(' + selectNewUUIDs + ") n" +
-                INNER_JOIN + '(' + selectUniqueUUIDs + ") u on n." + SessionsTable.USER_UUID + "=u." + SessionsTable.USER_UUID +
-                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_UUID + "=a." + SessionsTable.USER_UUID;
+                INNER_JOIN + '(' + selectUniqueUUIDs + ") u on n." + UsersTable.ID + "=u." + SessionsTable.USER_ID +
+                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + UsersTable.ID + "=a." + SessionsTable.USER_ID;
 
-        return new QueryStatement<ActivityIndex>(sql) {
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);
@@ -421,57 +436,20 @@ public class NetworkActivityIndexQueries {
         };
     }
 
-    public static Query<ActivityIndex> averageActivityIndexForNonRetainedPlayers(long after, long before, Long threshold) {
-        String selectNewUUIDs = SELECT + UsersTable.USER_UUID +
-                FROM + UsersTable.TABLE_NAME +
-                WHERE + UsersTable.REGISTERED + "<=?" +
-                AND + UsersTable.REGISTERED + ">=?";
-
-        String selectUniqueUUIDs = SELECT + "DISTINCT " + SessionsTable.USER_UUID +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SESSION_START + ">=?" +
-                AND + SessionsTable.SESSION_END + "<=?";
-
-        String sql = SELECT + "AVG(activity_index) as average" +
-                FROM + '(' + selectNewUUIDs + ") n" +
-                LEFT_JOIN + '(' + selectUniqueUUIDs + ") u on n." + SessionsTable.USER_UUID + "=u." + SessionsTable.USER_UUID +
-                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + SessionsTable.USER_UUID + "=a." + SessionsTable.USER_UUID +
-                WHERE + "n." + SessionsTable.USER_UUID + IS_NULL;
-
-        return new QueryStatement<ActivityIndex>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, before);
-                statement.setLong(2, after);
-
-                // Have played in the last half of the time frame
-                long half = before - (before - after) / 2;
-                statement.setLong(3, half);
-                statement.setLong(4, before);
-                setSelectActivityIndexSQLParameters(statement, 5, threshold, before);
-            }
-
-            @Override
-            public ActivityIndex processResults(ResultSet set) throws SQLException {
-                return set.next() ? new ActivityIndex(set.getDouble("average"), before) : new ActivityIndex(0.0, before);
-            }
-        };
-    }
-
-    public static Query<Map<UUID, ActivityIndex>> activityIndexForAllPlayers(long date, long playtimeThreshold) {
+    public static Query<Map<Integer, ActivityIndex>> activityIndexForAllPlayers(long date, long playtimeThreshold) {
         String selectActivityIndex = selectActivityIndexSQL();
-        return new QueryStatement<Map<UUID, ActivityIndex>>(selectActivityIndex, 1000) {
+        return new QueryStatement<>(selectActivityIndex, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 setSelectActivityIndexSQLParameters(statement, 1, playtimeThreshold, date);
             }
 
             @Override
-            public Map<UUID, ActivityIndex> processResults(ResultSet set) throws SQLException {
-                Map<UUID, ActivityIndex> indexes = new HashMap<>();
+            public Map<Integer, ActivityIndex> processResults(ResultSet set) throws SQLException {
+                Map<Integer, ActivityIndex> indexes = new HashMap<>();
                 while (set.next()) {
                     indexes.put(
-                            UUID.fromString(set.getString(SessionsTable.USER_UUID)),
+                            set.getInt(UsersTable.ID),
                             new ActivityIndex(set.getDouble("activity_index"), date)
                     );
                 }

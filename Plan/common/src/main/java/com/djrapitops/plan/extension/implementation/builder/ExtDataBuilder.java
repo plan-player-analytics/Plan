@@ -54,7 +54,7 @@ public class ExtDataBuilder implements ExtensionDataBuilder {
     @Override
     public <T> ExtensionDataBuilder addValue(Class<T> ofType, Supplier<DataValue<T>> dataValue) {
         try {
-            if (ofType != null && dataValue != null) values.add(new ClassValuePair(ofType, dataValue.get()));
+            if (ofType != null && dataValue != null) addValue(ofType, dataValue.get());
         } catch (NotReadyException | UnsupportedOperationException ignored) {
             // This exception is ignored by default to allow throwing errors inside the lambda to keep code clean.
         }

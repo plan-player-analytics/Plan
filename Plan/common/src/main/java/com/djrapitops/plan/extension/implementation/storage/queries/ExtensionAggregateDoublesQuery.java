@@ -103,7 +103,7 @@ public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, Extens
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
-        return db.query(new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
+        return db.query(new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());

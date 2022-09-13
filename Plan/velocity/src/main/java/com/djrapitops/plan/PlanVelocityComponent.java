@@ -19,6 +19,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.modules.*;
 import com.djrapitops.plan.modules.velocity.*;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.BindsInstance;
 import dagger.Component;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -49,6 +50,8 @@ public interface PlanVelocityComponent {
     PlanCommand planCommand();
 
     PlanSystem system();
+
+    ErrorLogger errorLogger();
 
     @Component.Builder
     interface Builder {

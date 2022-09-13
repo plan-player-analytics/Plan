@@ -30,6 +30,7 @@ function loadPlayerOverviewValues(json, error) {
     $(element).find("#data_activity_index").text(data.activity_index);
     $(element).find("#data_activity_index_group").text(data.activity_index_group);
     $(element).find("#data_favorite_server").text(data.favorite_server);
+    $(element).find("#data_latest_join_address").text(data.latest_join_address);
     $(element).find("#data_average_ping").text(data.average_ping);
     $(element).find("#data_best_ping").text(data.best_ping);
     $(element).find("#data_worst_ping").text(data.worst_ping);
@@ -210,9 +211,9 @@ function createserverAccordionTitle(i, server) {
 // Lowercase due to locale translation: Server
 function createserverAccordionBody(i, server) {
 
-    return `<tr class="collapse" data-parent="#tableSAccordion" id="server_t_` + i + `">` +
+    return `<tr class="collapse" data-bs-parent="#tableSAccordion" id="server_t_` + i + `">` +
         `<td colspan="4">` +
-        `<div class="collapse row" data-parent="#tableSAccordion" id="server_t_` + i + `">` +
+        `<div class="collapse row" data-bs-parent="#tableSAccordion" id="server_t_` + i + `">` +
         `<div class="col-xs-12  col-sm-12 col-md-6 col-lg-6">` +
         (server.operator ? `<p><i class="col-blue fab fa-fw fa-superpowers"></i> Operator</p>` : ``) +
         (server.banned ? `<p><i class="col-red fas fa-fw fa-gavel"></i> Banned</p>` : ``) +
@@ -222,6 +223,8 @@ function createserverAccordionBody(i, server) {
         `<p><i class="col-grey far fa-fw fa-clock"></i> AFK Time<span class="float-end"><b>` + server.afk_time + `</b></span></p>` +
         `<p><i class="col-teal far fa-fw fa-clock"></i> Longest Session<span class="float-end"><b>` + server.longest_session_length + `</b></span></p>` +
         `<p><i class="col-teal far fa-fw fa-clock"></i> Session Median<span class="float-end"><b>` + server.session_median + `</b></span></p>` +
+        `<br>` +
+        `<p><i class="col-amber fa fa-fw fa-location-arrow"></i> Join Address<span class="float-end">` + server.join_address + `</span></p>` +
         `<br>` +
         `<p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span class="float-end"><b>` + server.player_kills + `</b></span></p>` +
         `<p><i class="col-green fa fa-fw fa-crosshairs"></i> Mob Kills<span class="float-end"><b>` + server.mob_kills + `</b></span></p>` +

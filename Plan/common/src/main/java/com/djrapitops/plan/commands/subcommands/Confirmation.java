@@ -39,7 +39,7 @@ public class Confirmation {
     ) {
         this.locale = locale;
         awaiting = Caffeine.newBuilder()
-                .expireAfterWrite(90, TimeUnit.SECONDS)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build();
     }
 

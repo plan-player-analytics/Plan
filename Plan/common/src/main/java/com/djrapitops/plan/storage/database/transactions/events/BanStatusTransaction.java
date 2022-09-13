@@ -18,7 +18,9 @@ package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.building.Update;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -39,6 +41,10 @@ public class BanStatusTransaction extends Transaction {
     private final ServerUUID serverUUID;
     private final BooleanSupplier banStatus;
 
+    public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, boolean banStatus) {
+        this(playerUUID, serverUUID, () -> banStatus);
+    }
+
     public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, BooleanSupplier banStatus) {
         this.playerUUID = playerUUID;
         this.serverUUID = serverUUID;
@@ -52,8 +58,8 @@ public class BanStatusTransaction extends Transaction {
 
     private Executable updateBanStatus() {
         String sql = Update.values(UserInfoTable.TABLE_NAME, UserInfoTable.BANNED)
-                .where(UserInfoTable.USER_UUID + "=?")
-                .and(UserInfoTable.SERVER_UUID + "=?")
+                .where(UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID)
+                .and(UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID)
                 .toString();
 
         return new ExecStatement(sql) {

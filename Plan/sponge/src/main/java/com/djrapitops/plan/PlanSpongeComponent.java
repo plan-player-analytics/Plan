@@ -22,6 +22,7 @@ import com.djrapitops.plan.modules.*;
 import com.djrapitops.plan.modules.sponge.SpongeServerPropertiesModule;
 import com.djrapitops.plan.modules.sponge.SpongeSuperClassBindingModule;
 import com.djrapitops.plan.modules.sponge.SpongeTaskModule;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.BindsInstance;
 import dagger.Component;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -53,6 +54,8 @@ public interface PlanSpongeComponent {
     PlanSystem system();
 
     ServerShutdownSave serverShutdownSave();
+
+    ErrorLogger errorLogger();
 
     @Component.Builder
     interface Builder {

@@ -50,34 +50,34 @@ public class ServerPage implements Page {
     private final Server server;
     private final PlanConfig config;
     private final Theme theme;
-    private final Locale locale;
     private final VersionChecker versionChecker;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final JSONStorage jsonStorage;
     private final Formatters formatters;
+    private final Locale locale;
 
     ServerPage(
             String templateHtml, Server server,
             PlanConfig config,
             Theme theme,
-            Locale locale,
             VersionChecker versionChecker,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             JSONStorage jsonStorage,
-            Formatters formatters
+            Formatters formatters,
+            Locale locale
     ) {
         this.templateHtml = templateHtml;
         this.server = server;
         this.config = config;
         this.theme = theme;
-        this.locale = locale;
         this.versionChecker = versionChecker;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
+        this.locale = locale;
     }
 
     @Override
@@ -94,7 +94,8 @@ public class ServerPage implements Page {
         placeholders.put("gmPieColors", theme.getValue(ThemeVal.GRAPH_GM_PIE));
 
         placeholders.put("contributors", Contributors.generateContributorHtml());
-        placeholders.put("version", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("versionButton", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
+        placeholders.put("version", versionChecker.getCurrentVersion());
         placeholders.put("updateModal", versionChecker.getUpdateModal());
 
         CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {

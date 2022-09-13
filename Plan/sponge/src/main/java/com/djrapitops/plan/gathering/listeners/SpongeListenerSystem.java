@@ -82,7 +82,7 @@ public class SpongeListenerSystem extends ListenerSystem {
     public void callEnableEvent(PlanPlugin plugin) {
         try {
             Event event = new PlanSpongeEnableEvent((PlanSponge) plugin);
-            Sponge.getEventManager().post(event);
+            Sponge.eventManager().post(event);
         } catch (IllegalStateException ignore) {
             /* Ignore, Sponge is not initialized */
         }

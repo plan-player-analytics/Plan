@@ -20,6 +20,7 @@ import com.djrapitops.plan.DaggerPlanBukkitComponent;
 import com.djrapitops.plan.PlanBukkitComponent;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.storage.database.SQLDB;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -44,6 +45,7 @@ public class BukkitMockComponent {
 
     public BukkitMockComponent(Path tempDir) {
         this.tempDir = tempDir;
+        SQLDB.setDownloadDriver(false);
     }
 
     public PlanPlugin getPlanMock() throws Exception {

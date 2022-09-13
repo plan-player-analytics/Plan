@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.exceptions.database.DBClosedException;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
 
@@ -58,7 +58,7 @@ public class DBAccessLock {
                 synchronized (lockObject) {
                     lockObject.wait();
                     if (database.getState() == Database.State.CLOSED) {
-                        throw new EnableException("Database failed to open, Query has failed. (This exception is necessary to not keep query threads waiting)");
+                        throw new DBClosedException("Database failed to open, Query has failed. (This exception is necessary to not keep query threads waiting)");
                     }
                 }
             }

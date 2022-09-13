@@ -23,6 +23,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.zaxxer.hikari.HikariConfig;
@@ -34,11 +35,10 @@ import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.sql.*;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -56,12 +56,13 @@ public class MySQLDB extends SQLDB {
     public MySQLDB(
             Locale locale,
             PlanConfig config,
+            PlanFiles files,
             Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger pluginLogger,
             ErrorLogger errorLogger
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, runnableFactory, pluginLogger, errorLogger);
+        super(() -> serverInfo.get().getServerUUID(), locale, config, files, runnableFactory, pluginLogger, errorLogger);
     }
 
     private static synchronized void increment() {
@@ -73,11 +74,12 @@ public class MySQLDB extends SQLDB {
         return DBType.MYSQL;
     }
 
-    private void loadMySQLDriver() {
+    @Override
+    protected List<String> getDependencyResource() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            errorLogger.critical(e, ErrorContext.builder().whatToDo("Install MySQL Driver to the server").build());
+            return files.getResourceFromJar("dependencies/mysqlDriver.txt").asLines();
+        } catch (IOException e) {
+            throw new DBInitException("Failed to get MySQL dependency information", e);
         }
     }
 
@@ -86,9 +88,18 @@ public class MySQLDB extends SQLDB {
      */
     @Override
     public void setupDataSource() {
-        try {
-            loadMySQLDriver();
+        if (driverClassLoader == null) {
+            logger.info("Downloading MySQL Driver, this may take a while...");
+            downloadDriver();
+        }
 
+        Thread currentThread = Thread.currentThread();
+        ClassLoader previousClassLoader = currentThread.getContextClassLoader();
+
+        // Set the context class loader to the driver class loader for Hikari to use for finding the Driver
+        currentThread.setContextClassLoader(driverClassLoader);
+
+        try {
             HikariConfig hikariConfig = new HikariConfig();
 
             String host = config.get(DatabaseSettings.MYSQL_HOST);
@@ -96,7 +107,7 @@ public class MySQLDB extends SQLDB {
             String database = config.get(DatabaseSettings.MYSQL_DATABASE);
             String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
             // REGEX: match "?", match "word=word&" *-times, match "word=word"
-            if (launchOptions.isEmpty() || !launchOptions.matches("\\?(((\\w|[-])+=.+)&)*((\\w|[-])+=.+)")) {
+            if (launchOptions.isEmpty() || !launchOptions.matches("\\?((([\\w-])+=.+)&)*(([\\w-])+=.+)")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
@@ -113,7 +124,7 @@ public class MySQLDB extends SQLDB {
             hikariConfig.setPoolName("Plan Connection Pool-" + increment);
             increment();
 
-            hikariConfig.setAutoCommit(true);
+            hikariConfig.setAutoCommit(false);
             try {
                 hikariConfig.setMaximumPoolSize(config.get(DatabaseSettings.MAX_CONNECTIONS));
             } catch (IllegalStateException e) {
@@ -121,7 +132,7 @@ public class MySQLDB extends SQLDB {
                 hikariConfig.setMaximumPoolSize(1);
             }
             hikariConfig.setMaxLifetime(TimeUnit.MINUTES.toMillis(25L));
-            hikariConfig.setLeakDetectionThreshold(TimeUnit.MINUTES.toMillis(10L));
+            hikariConfig.setLeakDetectionThreshold(TimeUnit.SECONDS.toMillis(29L));
 
             this.dataSource = new HikariDataSource(hikariConfig);
         } catch (HikariPool.PoolInitializationException e) {
@@ -129,6 +140,9 @@ public class MySQLDB extends SQLDB {
         } finally {
             unloadMySQLDriver();
         }
+
+        // Reset the context classloader back to what it was originally set to, now that the DataSource is created
+        currentThread.setContextClassLoader(previousClassLoader);
     }
 
     private void unloadMySQLDriver() {
@@ -136,7 +150,9 @@ public class MySQLDB extends SQLDB {
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();
-            if ("com.mysql.cj.jdbc.Driver".equals(driver.getClass().getName())) {
+            Class<?> driverClass = driver.getClass();
+            // Checks that it's from our class loader to avoid unloading another plugin's/the server's driver
+            if ("com.mysql.cj.jdbc.Driver".equals(driverClass.getName()) && driverClass.getClassLoader() == driverClassLoader) {
                 try {
                     DriverManager.deregisterDriver(driver);
                 } catch (SQLException e) {
@@ -158,7 +174,14 @@ public class MySQLDB extends SQLDB {
             }
         }
         if (connection.getAutoCommit()) connection.setAutoCommit(false);
+        setTimezoneToUTC(connection);
         return connection;
+    }
+
+    private void setTimezoneToUTC(Connection connection) throws SQLException {
+        try (Statement statement = connection.createStatement()) {
+            statement.execute("set time_zone = '+00:00'");
+        }
     }
 
     @Override
@@ -175,7 +198,7 @@ public class MySQLDB extends SQLDB {
                 connection.close();
             }
         } catch (SQLException e) {
-            errorLogger.critical(e, ErrorContext.builder().related("Closing connection").build());
+            errorLogger.error(e, ErrorContext.builder().related("Closing connection").build());
         }
     }
 

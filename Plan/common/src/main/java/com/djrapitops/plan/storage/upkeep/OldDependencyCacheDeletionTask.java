@@ -35,7 +35,7 @@ public class OldDependencyCacheDeletionTask extends TaskSystem.Task {
 
     private final File oldDependencyCache;
     private final File dependencyCache;
-    private final File libraries;
+    private final File librariesCache;
 
     private final ErrorLogger errorLogger;
 
@@ -46,7 +46,7 @@ public class OldDependencyCacheDeletionTask extends TaskSystem.Task {
     ) {
         oldDependencyCache = files.getDataDirectory().resolve("dependency_cache").toFile();
         dependencyCache = files.getDataDirectory().resolve("dep_cache").toFile();
-        libraries = files.getDataDirectory().resolve("libraries").toFile();
+        librariesCache = files.getDataDirectory().resolve("libraries").toFile();
         this.errorLogger = errorLogger;
     }
 
@@ -58,9 +58,27 @@ public class OldDependencyCacheDeletionTask extends TaskSystem.Task {
 
     @Override
     public void run() {
+        try {
+            runTask();
+        } finally {
+            cancel();
+        }
+    }
+
+    private void runTask() {
         tryToDeleteDirectory(oldDependencyCache);
         tryToDeleteDirectory(dependencyCache);
-        tryToDeleteDirectory(libraries);
+
+        if (librariesCache.exists()) {
+            // Only delete sub folders as jar files in the directory are still needed
+            File[] files = librariesCache.listFiles();
+            if (files == null) return;
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    tryToDeleteDirectory(file);
+                }
+            }
+        }
     }
 
     private void tryToDeleteDirectory(File directory) {

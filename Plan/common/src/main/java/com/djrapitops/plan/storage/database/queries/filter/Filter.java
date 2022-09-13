@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+
 import java.util.*;
 
 /**
@@ -40,11 +42,11 @@ public interface Filter {
      * @return Set of UUIDs this filter applies to
      * @throws IllegalArgumentException If the arguments are not valid.
      */
-    Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query);
+    Set<Integer> getMatchingUserIds(InputFilterDto query);
 
-    default Result apply(SpecifiedFilterInformation query) {
+    default Result apply(InputFilterDto query) {
         try {
-            return new Result(null, getKind(), getMatchingUUIDs(query));
+            return new Result(null, getKind(), getMatchingUserIds(query));
         } catch (CompleteSetException allMatch) {
             return new Result(null, getKind() + " (skip)", new HashSet<>());
         }
@@ -55,35 +57,35 @@ public interface Filter {
 
         private final String filterKind;
         private final int resultSize;
-        private final Set<UUID> currentUUIDs;
+        private final Set<Integer> currentUserIds;
 
-        private Result(Result previous, String filterKind, Set<UUID> currentUUIDs) {
+        private Result(Result previous, String filterKind, Set<Integer> currentUserIds) {
             this.previous = previous;
             this.filterKind = filterKind;
-            this.resultSize = currentUUIDs.size();
-            this.currentUUIDs = currentUUIDs;
+            this.resultSize = currentUserIds.size();
+            this.currentUserIds = currentUserIds;
         }
 
-        public Result apply(Filter filter, SpecifiedFilterInformation query) {
+        public Result apply(Filter filter, InputFilterDto query) {
             try {
-                Set<UUID> got = filter.getMatchingUUIDs(query);
-                currentUUIDs.retainAll(got);
-                return new Result(this, filter.getKind(), currentUUIDs);
+                Set<Integer> got = filter.getMatchingUserIds(query);
+                currentUserIds.retainAll(got);
+                return new Result(this, filter.getKind(), currentUserIds);
             } catch (CompleteSetException allMatch) {
                 return notApplied(filter);
             }
         }
 
         public Result notApplied(Filter filter) {
-            return new Result(this, filter.getKind() + " (skip)", currentUUIDs);
+            return new Result(this, filter.getKind() + " (skip)", currentUserIds);
         }
 
         public boolean isEmpty() {
             return resultSize <= 0;
         }
 
-        public Set<UUID> getResultUUIDs() {
-            return currentUUIDs;
+        public Set<Integer> getResultUserIds() {
+            return currentUserIds;
         }
 
         public List<ResultPath> getInverseResultPath() {

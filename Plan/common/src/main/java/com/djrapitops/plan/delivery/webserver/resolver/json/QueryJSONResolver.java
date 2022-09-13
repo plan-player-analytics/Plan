@@ -17,6 +17,9 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.DateMap;
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.InputQueryDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.ViewDto;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONCreator;
@@ -27,9 +30,11 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.RequestBodyConverter;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryResultTableDataQuery;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -39,23 +44,32 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.google.gson.Gson;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Singleton
+@Path("/v1/query")
 public class QueryJSONResolver implements Resolver {
 
     private final QueryFilters filters;
@@ -67,6 +81,7 @@ public class QueryJSONResolver implements Resolver {
     private final GraphJSONCreator graphJSONCreator;
     private final Locale locale;
     private final Formatters formatters;
+    private final Gson gson;
 
     @Inject
     public QueryJSONResolver(
@@ -76,7 +91,8 @@ public class QueryJSONResolver implements Resolver {
             ServerInfo serverInfo, JSONStorage jsonStorage,
             GraphJSONCreator graphJSONCreator,
             Locale locale,
-            Formatters formatters
+            Formatters formatters,
+            Gson gson
     ) {
         this.filters = filters;
         this.config = config;
@@ -86,6 +102,7 @@ public class QueryJSONResolver implements Resolver {
         this.graphJSONCreator = graphJSONCreator;
         this.locale = locale;
         this.formatters = formatters;
+        this.gson = gson;
     }
 
     @Override
@@ -94,6 +111,21 @@ public class QueryJSONResolver implements Resolver {
         return user.hasPermission("page.players");
     }
 
+    @GET
+    @Operation(
+            description = "Perform a query or get cached results. Use q to do new query, timestamp to see cached query.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
+                    @ApiResponse(responseCode = "400 (invalid view)", description = "If 'view' date formats does not match afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm"),
+                    @ApiResponse(responseCode = "400 (no query)", description = "If request body is empty and 'q' request parameter is not given"),
+                    @ApiResponse(responseCode = "400 (invalid query)", description = "If request body is empty and 'q' json request parameter doesn't contain 'view' property"),
+            },
+            parameters = {
+                    @Parameter(in = ParameterIn.QUERY, name = "timestamp", description = "Epoch millisecond for cached query"),
+                    @Parameter(in = ParameterIn.QUERY, name = "q", description = "URI encoded json, alternative is to POST in request body", schema = @Schema(implementation = InputQueryDto.class))
+            },
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = InputQueryDto.class)))
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse(request));
@@ -103,17 +135,33 @@ public class QueryJSONResolver implements Resolver {
         Optional<Response> cachedResult = checkForCachedResult(request);
         if (cachedResult.isPresent()) return cachedResult.get();
 
+        InputQueryDto inputQuery = parseInputQuery(request);
+        List<InputFilterDto> queries = inputQuery.getFilters();
+
+        Filter.Result result = filters.apply(queries);
+        List<Filter.ResultPath> resultPath = result.getInverseResultPath();
+        Collections.reverse(resultPath);
+
+        return buildAndStoreResponse(inputQuery.getView(), result, resultPath);
+    }
+
+    private InputQueryDto parseInputQuery(Request request) {
+        if (request.getRequestBody().length == 0) {
+            return parseInputQueryFromQueryParams(request);
+        } else {
+            return RequestBodyConverter.bodyJson(request, gson, InputQueryDto.class);
+        }
+    }
+
+    private InputQueryDto parseInputQueryFromQueryParams(Request request) {
         String q = request.getQuery().get("q").orElseThrow(() -> new BadRequestException("'q' parameter not set (expecting json array)"));
-        String view = request.getQuery().get("view").orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
-
         try {
-            String query = URLDecoder.decode(q, "UTF-8");
-            List<SpecifiedFilterInformation> queries = SpecifiedFilterInformation.parse(query);
-            Filter.Result result = filters.apply(queries);
-            List<Filter.ResultPath> resultPath = result.getInverseResultPath();
-            Collections.reverse(resultPath);
-
-            return buildAndStoreResponse(view, result, resultPath);
+            String query = URLDecoder.decode(q, StandardCharsets.UTF_8);
+            List<InputFilterDto> queryFilters = InputFilterDto.parse(query, gson);
+            ViewDto view = request.getQuery().get("view")
+                    .map(viewJson -> gson.fromJson(viewJson, ViewDto.class))
+                    .orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
+            return new InputQueryDto(view, queryFilters);
         } catch (IOException e) {
             throw new BadRequestException("Failed to decode json: '" + q + "', " + e.getMessage());
         }
@@ -132,16 +180,16 @@ public class QueryJSONResolver implements Resolver {
         }
     }
 
-    private Response buildAndStoreResponse(String view, Filter.Result result, List<Filter.ResultPath> resultPath) {
+    private Response buildAndStoreResponse(ViewDto view, Filter.Result result, List<Filter.ResultPath> resultPath) {
         try {
             long timestamp = System.currentTimeMillis();
             Map<String, Object> json = Maps.builder(String.class, Object.class)
                     .put("path", resultPath)
-                    .put("view", new Gson().fromJson(view, FiltersJSONResolver.ViewJSON.class))
+                    .put("view", view)
                     .put("timestamp", timestamp)
                     .build();
             if (!result.isEmpty()) {
-                json.put("data", getDataFor(result.getResultUUIDs(), view));
+                json.put("data", getDataFor(result.getResultUserIds(), view));
             }
 
             JSONStorage.StoredJSON stored = jsonStorage.storeJson("query", json, timestamp);
@@ -155,23 +203,22 @@ public class QueryJSONResolver implements Resolver {
         }
     }
 
-    private Map<String, Object> getDataFor(Set<UUID> playerUUIDs, String view) throws ParseException {
-        FiltersJSONResolver.ViewJSON viewJSON = new Gson().fromJson(view, FiltersJSONResolver.ViewJSON.class);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy kk:mm");
-        long after = dateFormat.parse(viewJSON.afterDate + " " + viewJSON.afterTime).getTime();
-        long before = dateFormat.parse(viewJSON.beforeDate + " " + viewJSON.beforeTime).getTime();
+    private Map<String, Object> getDataFor(Set<Integer> userIds, ViewDto view) throws ParseException {
+        long after = view.getAfterEpochMs();
+        long before = view.getBeforeEpochMs();
+        List<ServerUUID> serverUUIDs = view.getServerUUIDs();
 
         return Maps.builder(String.class, Object.class)
-                .put("players", getPlayersTableData(playerUUIDs, after, before))
-                .put("activity", getActivityGraphData(playerUUIDs, after, before))
-                .put("geolocation", getGeolocationData(playerUUIDs))
-                .put("sessions", getSessionSummaryData(playerUUIDs, after, before))
+                .put("players", getPlayersTableData(userIds, serverUUIDs, after, before))
+                .put("activity", getActivityGraphData(userIds, serverUUIDs, after, before))
+                .put("geolocation", getGeolocationData(userIds))
+                .put("sessions", getSessionSummaryData(userIds, serverUUIDs, after, before))
                 .build();
     }
 
-    private Map<String, String> getSessionSummaryData(Set<UUID> playerUUIDs, long after, long before) {
+    private Map<String, String> getSessionSummaryData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         Database database = dbSystem.getDatabase();
-        Map<String, Long> summary = database.query(SessionQueries.summaryOfPlayers(playerUUIDs, after, before));
+        Map<String, Long> summary = database.query(SessionQueries.summaryOfPlayers(userIds, serverUUIDs, after, before));
         Map<String, String> formattedSummary = new HashMap<>();
         Formatter<Long> timeAmount = formatters.timeAmount();
         for (Map.Entry<String, Long> entry : summary.entrySet()) {
@@ -182,14 +229,14 @@ public class QueryJSONResolver implements Resolver {
         return formattedSummary;
     }
 
-    private Map<String, Object> getGeolocationData(Set<UUID> playerUUIDs) {
+    private Map<String, Object> getGeolocationData(Set<Integer> userIds) {
         Database database = dbSystem.getDatabase();
         return graphJSONCreator.createGeolocationJSON(
-                database.query(GeoInfoQueries.networkGeolocationCounts(playerUUIDs))
+                database.query(GeoInfoQueries.networkGeolocationCounts(userIds))
         );
     }
 
-    private Map<String, Object> getActivityGraphData(Set<UUID> playerUUIDs, long after, long before) {
+    private Map<String, Object> getActivityGraphData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         Database database = dbSystem.getDatabase();
         Long threshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
 
@@ -198,17 +245,17 @@ public class QueryJSONResolver implements Resolver {
 
         DateMap<Map<String, Integer>> activityData = new DateMap<>();
         for (long time = before; time >= stopDate; time -= TimeAmount.WEEK.toMillis(1L)) {
-            activityData.put(time, database.query(NetworkActivityIndexQueries.fetchActivityIndexGroupingsOn(time, threshold, playerUUIDs)));
+            activityData.put(time, database.query(NetworkActivityIndexQueries.fetchActivityIndexGroupingsOn(time, threshold, userIds, serverUUIDs)));
         }
 
         return graphJSONCreator.createActivityGraphJSON(activityData);
     }
 
-    private Map<String, Object> getPlayersTableData(Set<UUID> playerUUIDs, long after, long before) {
+    private Map<String, Object> getPlayersTableData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         Database database = dbSystem.getDatabase();
         return new PlayersTableJSONCreator(
-                database.query(new QueryTablePlayersQuery(playerUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
-                database.query(new ExtensionQueryResultTableDataQuery(serverInfo.getServerUUID(), playerUUIDs)),
+                database.query(new QueryTablePlayersQuery(userIds, serverUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
+                database.query(new ExtensionQueryResultTableDataQuery(serverInfo.getServerUUID(), userIds)),
                 config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                 formatters, locale
         ).toJSONMap();

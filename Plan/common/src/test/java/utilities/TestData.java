@@ -16,6 +16,7 @@
  */
 package utilities;
 
+import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -79,8 +80,8 @@ public class TestData {
         ActiveSession sessionOne = new ActiveSession(uuid, serverUUID, playerFirstJoin, serverWorldNames[0], gms[0]);
 
         UUID otherUUID = uuid.equals(playerUUID) ? player2UUID : playerUUID;
-        sessionOne.addPlayerKill(new PlayerKill(uuid, otherUUID, "Iron Sword", 1234750L));
-        sessionOne.addPlayerKill(new PlayerKill(uuid, otherUUID, "Gold Sword", 1234800L));
+        sessionOne.addPlayerKill(TestData.getPlayerKill(uuid, otherUUID, serverUUID, "Iron Sword", 1234750L));
+        sessionOne.addPlayerKill(TestData.getPlayerKill(uuid, otherUUID, serverUUID, "Gold Sword", 1234800L));
 
         // Length 500ms
         sessions.add(sessionOne.toFinishedSession(1235000L));
@@ -97,14 +98,14 @@ public class TestData {
         return new Transaction() {
             @Override
             protected void performOperations() {
-                executeOther(new StoreServerInformationTransaction(new Server(serverUUID, "Server 1", "")));
-                executeOther(new StoreServerInformationTransaction(new Server(server2UUID, "Server 2", "")));
+                executeOther(new StoreServerInformationTransaction(new Server(serverUUID, "Server 1", "", TestConstants.VERSION)));
+                executeOther(new StoreServerInformationTransaction(new Server(server2UUID, "Server 2", "", TestConstants.VERSION)));
 
                 for (String worldName : serverWorldNames) {
-                    executeOther(new WorldNameStoreTransaction(serverUUID, worldName));
+                    executeOther(new StoreWorldNameTransaction(serverUUID, worldName));
                 }
                 for (String worldName : server2WorldNames) {
-                    executeOther(new WorldNameStoreTransaction(server2UUID, worldName));
+                    executeOther(new StoreWorldNameTransaction(server2UUID, worldName));
                 }
             }
         };
@@ -116,17 +117,17 @@ public class TestData {
                 new Transaction() {
                     @Override
                     protected void performOperations() {
-                        executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerFirstJoin,
+                        executeOther(new StoreServerPlayerTransaction(playerUUID, () -> playerFirstJoin,
                                 playerName, serverUUID, TestConstants.GET_PLAYER_HOSTNAME));
-                        executeOther(new PlayerServerRegisterTransaction(playerUUID, () -> playerSecondJoin,
+                        executeOther(new StoreServerPlayerTransaction(playerUUID, () -> playerSecondJoin,
                                 playerName, server2UUID, TestConstants.GET_PLAYER_HOSTNAME));
 
                         for (GeoInfo geoInfo : playerGeoInfo) {
-                            executeOther(new GeoInfoStoreTransaction(playerUUID, geoInfo));
+                            executeOther(new StoreGeoInfoTransaction(playerUUID, geoInfo));
                         }
 
                         for (FinishedSession session : playerSessions) {
-                            executeOther(new SessionEndTransaction(session));
+                            executeOther(new StoreSessionTransaction(session));
                         }
                     }
                 }
@@ -139,17 +140,17 @@ public class TestData {
                 new Transaction() {
                     @Override
                     protected void performOperations() {
-                        executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerFirstJoin,
+                        executeOther(new StoreServerPlayerTransaction(player2UUID, () -> playerFirstJoin,
                                 player2Name, serverUUID, TestConstants.GET_PLAYER_HOSTNAME));
-                        executeOther(new PlayerServerRegisterTransaction(player2UUID, () -> playerSecondJoin,
+                        executeOther(new StoreServerPlayerTransaction(player2UUID, () -> playerSecondJoin,
                                 player2Name, server2UUID, TestConstants.GET_PLAYER_HOSTNAME));
 
                         for (GeoInfo geoInfo : playerGeoInfo) {
-                            executeOther(new GeoInfoStoreTransaction(player2UUID, geoInfo));
+                            executeOther(new StoreGeoInfoTransaction(player2UUID, geoInfo));
                         }
 
                         for (FinishedSession session : player2Sessions) {
-                            executeOther(new SessionEndTransaction(session));
+                            executeOther(new StoreSessionTransaction(session));
                         }
                     }
                 }
@@ -182,5 +183,21 @@ public class TestData {
 
     public static BaseUser getPlayer2BaseUser() {
         return new BaseUser(player2UUID, player2Name, playerFirstJoin, 0);
+    }
+
+    public static PlayerKill getPlayerKill(UUID killerUUID, UUID victimUUID, ServerUUID serverUUID, String weapon, long time) {
+        return new PlayerKill(
+                new PlayerKill.Killer(killerUUID, getPlayerName(killerUUID)),
+                new PlayerKill.Victim(victimUUID, getPlayerName(victimUUID)),
+                new ServerIdentifier(serverUUID, TestConstants.SERVER_NAME),
+                weapon,
+                time
+        );
+    }
+
+    private static String getPlayerName(UUID uuid) {
+        if (playerUUID.equals(uuid)) return TestConstants.PLAYER_ONE_NAME;
+        if (player2UUID.equals(uuid)) return TestConstants.PLAYER_TWO_NAME;
+        return "player_name";
     }
 }

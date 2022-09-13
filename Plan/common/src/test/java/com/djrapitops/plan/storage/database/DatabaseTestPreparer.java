@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import utilities.TestConstants;
@@ -40,6 +41,9 @@ public interface DatabaseTestPreparer {
 
     ServerUUID serverUUID();
 
+    /**
+     * @deprecated Dependencies may not include the full system in the future.
+     */
     @Deprecated
     PlanSystem system();
 
@@ -60,6 +64,8 @@ public interface DatabaseTestPreparer {
     }
 
     default ExtensionSvc extensionService() {return system().getExtensionService();}
+
+    QueryFilters queryFilters();
 
     default void execute(Executable executable) {
         try {

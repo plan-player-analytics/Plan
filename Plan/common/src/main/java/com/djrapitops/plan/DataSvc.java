@@ -18,121 +18,133 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.utilities.java.TriConsumer;
 import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Singleton
 public class DataSvc implements DataService {
 
-    private final MultiHashMap<Class, Mapper> mappers;
-    private final MultiHashMap<Class, Mapper> mappersReverse;
-    private final Map<Class, Supplier> suppliers;
-    private final Map<ClassPair, Function> suppliersWithParameter;
-    private final MultiHashMap<Class, Consumer> consumers;
-
     private final Lazy<DBSystem> dbSystem;
+
+    private final Map<ClassPair, Function> pullSources;
+    private final Map<Class, Supplier> noIdentifierPullSources;
+
+    private final MultiHashMap<ClassPair, BiConsumer> sinks;
+
+    private final MultiHashMap<ClassPair, Mapper> mappers;
 
     @Inject
     public DataSvc(
             Lazy<DBSystem> dbSystem
     ) {
         this.dbSystem = dbSystem;
+        pullSources = new HashMap<>();
+        noIdentifierPullSources = new HashMap<>();
+        sinks = new MultiHashMap<>();
         mappers = new MultiHashMap<>();
-        mappersReverse = new MultiHashMap<>();
-        suppliers = new ConcurrentHashMap<>();
-        suppliersWithParameter = new ConcurrentHashMap<>();
-        consumers = new MultiHashMap<>();
     }
 
     @Override
-    public <A> DataService push(Class<A> type, A data) {
-        if (data == null) return this;
-        List<Mapper> mappers = this.mappers.get(type);
-        for (Mapper mapper : mappers) {
-            push(mapper.typeB, mapper.func.apply(data));
+    public <K, T> void push(K identifier, T value, Class<T> type) {
+        ClassPair<K, T> classPair = new ClassPair<>((Class<K>) identifier.getClass(), type);
+        for (BiConsumer<K, T> sink : sinks.get(classPair)) {
+            sink.accept(identifier, value);
         }
-        List<Consumer> consumers = this.consumers.get(type);
-        for (Consumer<A> consumer : consumers) {
-            consumer.accept(data);
+
+        for (Mapper mapper : mappers.get(classPair)) {
+            push(identifier, mapper.func.apply(identifier, value), mapper.typeB);
         }
-        if (mappers.isEmpty() && consumers.isEmpty()) {
-            System.out.println("WARN: Nothing consumed " + type);
-        }
+    }
+
+    @Override
+    public <K, A, B> Optional<B> map(K identifier, A value, Class<B> toType) {
+        ClassPair<K, A> classPair = new ClassPair<>((Class<K>) identifier.getClass(), (Class<A>) value.getClass());
+
+        List<Mapper> candidates = this.mappers.get(classPair);
+        return candidates
+                .stream()
+                .filter(mapper -> Objects.equals(mapper.typeB, toType))
+                .findAny()
+                .map(mapper -> toType.cast(mapper.func.apply(identifier, value)));
+    }
+
+    @Override
+    public <K, A, B> DataService registerMapper(Class<K> identifierType, Class<A> from, Class<B> to, BiFunction<K, A, B> mapper) {
+        ClassPair<K, A> classPair = new ClassPair<>(identifierType, from);
+        mappers.putOne(classPair, new Mapper<>(from, to, mapper));
         return this;
     }
 
     @Override
-    public <T> Optional<T> pull(Class<T> type) {
-        Supplier<T> present = this.suppliers.get(type);
-        if (present != null) return Optional.ofNullable(present.get());
-
-        List<Mapper> mappers = this.mappersReverse.get(type);
-        for (Mapper mapper : mappers) {
-            Optional<T> found = pull(mapper.typeA).map(mapper.func);
-            if (found.isPresent()) return found;
-        }
-
-        System.out.println("WARN: Nothing supplied " + type);
-        return Optional.empty();
+    public <K, A, B> DataService registerMapper(Class<K> identifierType, Class<A> from, Class<B> to, Function<A, B> mapper) {
+        return registerMapper(identifierType, from, to, (id, value) -> mapper.apply(value));
     }
 
     @Override
-    public <A, B> B mapTo(Class<B> toType, A from) {
-        List<Mapper> mappers = this.mappers.get(from.getClass());
-        for (Mapper mapper : mappers) {
-            if (mapper.typeB.equals(toType)) {
-                return toType.cast(mapper.func);
-            }
-        }
-        // TODO Figure out type mapping resolution when it needs more than one mapping
-        System.out.println("WARN: No mapper for " + from.getClass() + " -> " + toType);
-        return null;
-    }
-
-    @Override
-    public <A, B> DataService registerMapper(Class<A> typeA, Class<B> typeB, Function<A, B> mapper) {
-        Mapper<A, B> asWrapper = new Mapper<>(typeA, typeB, mapper);
-        // TODO Prevent two mappers for same 2 types with a data structure
-        mappers.putOne(typeA, asWrapper);
-        mappersReverse.putOne(typeB, asWrapper);
+    public <K, Y, A, B> DataService registerMapper(Class<K> fromIdentifier, Class<A> from, Class<Y> toIdentifier, Class<B> to, TriConsumer<K, A, BiConsumer<Y, B>> mapper) {
+        ClassPair<K, A> classPair = new ClassPair<>(fromIdentifier, from);
+        sinks.putOne(classPair, (id, value) -> mapper.accept(fromIdentifier.cast(id), from.cast(value), this::push));
         return this;
     }
 
     @Override
-    public <A> DataService registerConsumer(Class<A> type, Consumer<A> consumer) {
-        consumers.putOne(type, consumer);
+    public <K, T> DataService registerSink(Class<K> identifierType, Class<T> type, BiConsumer<K, T> consumer) {
+        ClassPair<K, T> classPair = new ClassPair<>(identifierType, type);
+        sinks.putOne(classPair, consumer);
         return this;
     }
 
     @Override
-    public <A> DataService registerSupplier(Class<A> type, Supplier<A> supplier) {
-        suppliers.put(type, supplier);
+    public <K, T> DataService registerDatabaseSink(Class<K> identifierType, Class<T> type, BiFunction<K, T, Transaction> consumer) {
+        return registerSink(identifierType, type, (id, value) -> dbSystem.get().getDatabase().executeTransaction(consumer.apply(id, value)));
+    }
+
+    @Override
+    public <K, T> Optional<T> pull(Class<T> type, K identifier) {
+        ClassPair<K, T> classPair = new ClassPair<>((Class<K>) identifier.getClass(), type);
+        return Optional.ofNullable(pullSources.get(classPair))
+                .map(source -> source.apply(identifier))
+                .map(type::cast);
+    }
+
+    @Override
+    public <T> Optional<T> pullWithoutId(Class<T> type) {
+        return Optional.ofNullable(noIdentifierPullSources.get(type))
+                .map(Supplier::get)
+                .map(type::cast);
+    }
+
+    @Override
+    public <K, T> DataService registerPullSource(Class<K> identifierType, Class<T> type, Function<K, T> source) {
+        ClassPair<K, T> classPair = new ClassPair<>(identifierType, type);
+        pullSources.put(classPair, source);
         return this;
     }
 
     @Override
-    public <S, P> Optional<S> pull(Class<S> type, P parameter) {
-        if (parameter == null) return Optional.empty();
-        Function<P, S> function = suppliersWithParameter.get(new ClassPair<>(type, parameter.getClass()));
-        return function != null ? Optional.of(function.apply(parameter)) : Optional.empty();
+    public <K, T> DataService registerDatabasePullSource(Class<K> identifierType, Class<T> type, Function<K, Query<T>> source) {
+        return registerPullSource(identifierType, type, identifier -> dbSystem.get().getDatabase().query(source.apply(identifier)));
     }
 
     @Override
-    public <P, S> DataService registerSupplier(Class<S> type, Class<P> parameterType, Function<P, S> supplierWithParameter) {
-        suppliersWithParameter.put(new ClassPair<>(type, parameterType), supplierWithParameter);
+    public <T> DataService registerPullSource(Class<T> type, Supplier<T> source) {
+        noIdentifierPullSources.put(type, source);
         return this;
     }
 
     @Override
-    public <P, S> DataService registerDBSupplier(Class<S> type, Class<P> parameterType, Function<P, Query<S>> queryVisitor) {
-        return registerSupplier(type, parameterType, parameter -> dbSystem.get().getDatabase().query(queryVisitor.apply(parameter)));
+    public <T> DataService registerDatabasePullSource(Class<T> type, Supplier<Query<T>> source) {
+        return registerPullSource(type, () -> dbSystem.get().getDatabase().query(source.get()));
     }
 
     private static class ClassPair<A, B> {
@@ -159,16 +171,6 @@ public class DataSvc implements DataService {
         }
     }
 
-    private static class KeyValuePair<K, V> {
-        final K key;
-        final V value;
-
-        public KeyValuePair(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-    }
-
     private static class MultiHashMap<A, B> extends ConcurrentHashMap<A, List<B>> {
 
         void putOne(A key, B value) {
@@ -176,15 +178,14 @@ public class DataSvc implements DataService {
             values.add(value);
             put(key, values);
         }
-
     }
 
-    private static class Mapper<A, B> {
+    private static class Mapper<K, A, B> {
         final Class<A> typeA;
         final Class<B> typeB;
-        final Function<A, B> func;
+        final BiFunction<K, A, B> func;
 
-        public Mapper(Class<A> typeA, Class<B> typeB, Function<A, B> func) {
+        public Mapper(Class<A> typeA, Class<B> typeB, BiFunction<K, A, B> func) {
             this.typeA = typeA;
             this.typeB = typeB;
             this.func = func;

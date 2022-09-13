@@ -17,7 +17,9 @@
 package com.djrapitops.plan.delivery.rendering.html;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.CODE;
 import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.LANG;
@@ -29,7 +31,7 @@ import static com.djrapitops.plan.delivery.rendering.html.Contributors.For.LANG;
  */
 public class Contributors {
 
-    private static final Contributor[] CONTRIBUTORS = new Contributor[]{
+    private static final Contributor[] CONTRIBUTOR_ARRAY = new Contributor[]{
             new Contributor("aidn5", CODE),
             new Contributor("Antonok", CODE),
             new Contributor("Argetan", CODE),
@@ -56,6 +58,7 @@ public class Contributors {
             new Contributor("Malachiel", LANG),
             new Contributor("Miclebrick", CODE),
             new Contributor("Morsmorse", LANG),
+            new Contributor("MAXOUXAX", CODE),
             new Contributor("Nogapra", LANG),
             new Contributor("Sander0542", LANG),
             new Contributor("Saph1s", LANG),
@@ -67,6 +70,7 @@ public class Contributors {
             new Contributor("yukieji", LANG),
             new Contributor("qsefthuopq", LANG),
             new Contributor("Karlatemp", CODE, LANG),
+            new Contributor("KasperiP", LANG),
             new Contributor("Mastory_Md5", LANG),
             new Contributor("FluxCapacitor2", CODE),
             new Contributor("galexrt", LANG),
@@ -83,7 +87,17 @@ public class Contributors {
             new Contributor("\u6d1b\u4f0a", LANG),
             new Contributor("portlek", CODE),
             new Contributor("mbax", CODE),
-            new Contributor("rymiel", CODE)
+            new Contributor("KairuByte", CODE),
+            new Contributor("rymiel", CODE),
+            new Contributor("Perchun_Pak", LANG),
+            new Contributor("HexedHero", CODE),
+            new Contributor("DrexHD", CODE),
+            new Contributor("zisunny104", LANG),
+            new Contributor("SkipM4", LANG),
+            new Contributor("ahdg6", CODE),
+            new Contributor("BratishkaErik", LANG),
+            new Contributor("Pingger", CODE),
+            new Contributor("stashenko", LANG),
     };
 
     private Contributors() {
@@ -91,11 +105,15 @@ public class Contributors {
     }
 
     public static String generateContributorHtml() {
-        int estimatedLength = CONTRIBUTORS.length * 40 + 50;
+        int estimatedLength = CONTRIBUTOR_ARRAY.length * 40 + 50;
         StringBuilder html = new StringBuilder(estimatedLength);
-        Arrays.stream(CONTRIBUTORS).sorted()
+        Arrays.stream(CONTRIBUTOR_ARRAY).sorted()
                 .forEach(contributor -> contributor.appendHtml(html));
         return html.toString();
+    }
+
+    public static List<Contributor> getContributors() {
+        return Arrays.stream(CONTRIBUTOR_ARRAY).sorted().collect(Collectors.toList());
     }
 
     enum For {

@@ -21,9 +21,9 @@ import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.NicknameQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.NicknameStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreNicknameTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -37,13 +37,13 @@ public interface NicknameQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void allNicknamesAreSaved() {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         List<Nickname> saved = RandomData.randomNicknames(serverUUID());
         for (Nickname nickname : saved) {
-            db().executeTransaction(new NicknameStoreTransaction(playerUUID, nickname, (uuid, name) -> false /* Not cached */));
-            db().executeTransaction(new NicknameStoreTransaction(playerUUID, nickname, (uuid, name) -> true /* Cached */));
+            db().executeTransaction(new StoreNicknameTransaction(playerUUID, nickname, (uuid, name) -> false /* Not cached */));
+            db().executeTransaction(new StoreNicknameTransaction(playerUUID, nickname, (uuid, name) -> true /* Cached */));
         }
 
         forcePersistenceCheck();
@@ -61,8 +61,8 @@ public interface NicknameQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1L, "Not random"));
 
         String nickname = "2" + RandomData.randomString(10);
-        db().executeTransaction(new NicknameStoreTransaction(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID()), (u, name) -> false /* Not cached */));
-        db().executeTransaction(new NicknameStoreTransaction(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID()), (u, name) -> true /* Cached */));
+        db().executeTransaction(new StoreNicknameTransaction(uuid, new Nickname(nickname, System.currentTimeMillis(), serverUUID()), (u, name) -> false /* Not cached */));
+        db().executeTransaction(new StoreNicknameTransaction(playerUUID, new Nickname("No nick", System.currentTimeMillis(), serverUUID()), (u, name) -> true /* Cached */));
 
         String searchFor = "2";
 

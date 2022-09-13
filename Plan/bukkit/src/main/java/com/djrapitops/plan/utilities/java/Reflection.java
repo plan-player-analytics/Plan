@@ -71,7 +71,7 @@ public final class Reflection {
                 field.setAccessible(true);
 
                 // A function for retrieving a specific field value
-                return new FieldAccessor<T>() {
+                return new FieldAccessor<>() {
 
                     @Override
                     @SuppressWarnings("unchecked")
@@ -140,7 +140,7 @@ public final class Reflection {
     private static Class<?> getCanonicalClass(String canonicalName) {
         try {
             return Class.forName(canonicalName);
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | NullPointerException e) {
             throw new IllegalArgumentException("Cannot find " + canonicalName, e);
         }
     }

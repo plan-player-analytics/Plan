@@ -19,6 +19,7 @@ package com.djrapitops.plan.utilities.logging;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.ExceptionWithContext;
+import com.djrapitops.plan.exceptions.database.DBClosedException;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.Lists;
@@ -92,6 +93,10 @@ public class PluginErrorLogger implements ErrorLogger {
     }
 
     private void log(Consumer<String> logMethod, Throwable throwable, ErrorContext context) {
+        if (isExceptionThatShouldNotBeLogged(throwable)) {
+            return;
+        }
+
         String errorName = throwable.getClass().getSimpleName();
         String hash = hash(throwable);
         Path logsDir = files.getLogsDirectory();
@@ -103,6 +108,11 @@ public class PluginErrorLogger implements ErrorLogger {
         for (String message : buildConsoleMessage(errorLog, throwable, context)) {
             logMethod.accept(message);
         }
+    }
+
+    private boolean isExceptionThatShouldNotBeLogged(Throwable throwable) {
+        return throwable instanceof DBClosedException
+                || throwable.getCause() != null && isExceptionThatShouldNotBeLogged(throwable.getCause());
     }
 
     private void logToFile(Path errorLog, Throwable throwable, ErrorContext context, String hash) {
@@ -125,16 +135,15 @@ public class PluginErrorLogger implements ErrorLogger {
 
     private void logExisting(Path errorLog, Throwable throwable, ErrorContext context, String hash) {
         // Read existing
-        List<String> lines;
         try (Stream<String> read = Files.lines(errorLog)) {
-            lines = read.collect(Collectors.toList());
-        } catch (IOException e) {
+            List<String> lines = read.collect(Collectors.toList());
+
+            int occurrences = getOccurrences(lines) + 1;
+            List<String> newLines = buildNewLines(context, lines, occurrences, hash);
+            overwrite(errorLog, throwable, newLines);
+        } catch (IOException | IndexOutOfBoundsException e) {
             logAfterReadError(errorLog, throwable, context, hash);
-            return;
         }
-        int occurrences = getOccurrences(lines) + 1;
-        List<String> newLines = buildNewLines(context, lines, occurrences, hash);
-        overwrite(errorLog, throwable, newLines);
     }
 
     private void overwrite(Path errorLog, Throwable throwable, List<String> newLines) {
@@ -184,6 +193,8 @@ public class PluginErrorLogger implements ErrorLogger {
     }
 
     private int getOccurrences(List<String> lines) {
+        if (lines.isEmpty()) return 0;
+
         String occurLine = lines.get(0);
         return Integer.parseInt(StringUtils.splitByWholeSeparator(occurLine, ": ")[2].trim());
     }
@@ -204,7 +215,7 @@ public class PluginErrorLogger implements ErrorLogger {
         String errorMsg = throwable.getMessage();
         String errorLocation = errorLog.toString();
         return new String[]{
-                "Ran into " + errorName + " - logged to " + errorLocation,
+                "Ran into " + errorName + (context.shouldLogErrorMessage() ? ": " + throwable.getMessage() : "") + " - logged to " + errorLocation,
                 "(INCLUDE CONTENTS OF THE FILE IN ANY REPORTS)",
                 context.getWhatToDo().map(td -> "What to do: " + td).orElse("Error msg: \"" + errorMsg + "\"")
         };

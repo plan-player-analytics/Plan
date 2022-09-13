@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -23,11 +24,13 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -63,7 +66,7 @@ public class ActivityIndexFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
         List<String> selected = getSelected(query);
         String[] options = getOptionsArray();
 
@@ -78,7 +81,7 @@ public class ActivityIndexFilter extends MultiOptionFilter {
         }
         long date = System.currentTimeMillis();
         long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
-        Map<UUID, ActivityIndex> indexes = dbSystem.getDatabase().query(NetworkActivityIndexQueries.activityIndexForAllPlayers(date, playtimeThreshold));
+        Map<Integer, ActivityIndex> indexes = dbSystem.getDatabase().query(NetworkActivityIndexQueries.activityIndexForAllPlayers(date, playtimeThreshold));
 
         return indexes.entrySet().stream()
                 .filter(entry -> selected.contains(entry.getValue().getGroup(locale)))

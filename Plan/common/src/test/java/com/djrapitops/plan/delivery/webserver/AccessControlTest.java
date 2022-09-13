@@ -18,18 +18,21 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
-import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -56,7 +59,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Tests for limiting user access control based on permissions.
  */
-public class AccessControlTest {
+class AccessControlTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
@@ -96,17 +99,24 @@ public class AccessControlTest {
         User userLevel1 = new User("test1", "console", null, PassEncryptUtil.createHash("testPass"), 1, Collections.emptyList());
         User userLevel2 = new User("test2", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), 2, Collections.emptyList());
         User userLevel100 = new User("test100", "console", null, PassEncryptUtil.createHash("testPass"), 100, Collections.emptyList());
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(userLevel0));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(userLevel1));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(userLevel2));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(userLevel100));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel0));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel1));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel2));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel100));
 
         system.getDatabaseSystem().getDatabase().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
         system.getDatabaseSystem().getDatabase().executeTransaction(new StoreServerInformationTransaction(new Server(
                 TestConstants.SERVER_UUID,
                 TestConstants.SERVER_NAME,
-                address
-        )));
+                address,
+                TestConstants.VERSION)));
+
+        Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+                .orElseThrow(AssertionError::new);
+        caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
+
+        assertTrue(system.getWebServerSystem().getWebServer().isUsingHTTPS());
+        assertTrue(system.getWebServerSystem().getWebServer().isAuthRequired());
 
         address = "https://localhost:" + TEST_PORT_NUMBER;
         cookieLevel0 = login(address, userLevel0.getUsername());
@@ -124,9 +134,11 @@ public class AccessControlTest {
 
     static String login(String address, String username) throws IOException, KeyManagementException, NoSuchAlgorithmException {
         HttpURLConnection loginConnection = null;
-        String cookie = "";
+        String cookie;
         try {
-            loginConnection = CONNECTOR.getConnection("GET", address + "/auth/login?user=" + username + "&password=testPass");
+            loginConnection = CONNECTOR.getConnection("POST", address + "/auth/login");
+            loginConnection.setDoOutput(true);
+            loginConnection.getOutputStream().write(("user=" + username + "&password=testPass").getBytes());
             try (InputStream in = loginConnection.getInputStream()) {
                 String responseBody = new String(IOUtils.toByteArray(in));
                 assertTrue(responseBody.contains("\"success\":true"), () -> "Not successful: " + responseBody);
@@ -134,12 +146,13 @@ public class AccessControlTest {
                 System.out.println("Got cookie: " + cookie);
             }
         } finally {
-            loginConnection.disconnect();
+            if (loginConnection != null) loginConnection.disconnect();
         }
         return cookie;
     }
 
-    @ParameterizedTest
+    @DisplayName("Access control test, level 0:")
+    @ParameterizedTest(name = "{0}: expecting {1}")
     @CsvSource({
             "/,302",
             "/server,302",
@@ -162,6 +175,7 @@ public class AccessControlTest {
             "/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",200",
             "/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + ",200",
             "/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + ",200",
+            "/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + ",200",
             "/v1/players?server=" + TestConstants.SERVER_UUID_STRING + ",200",
             "/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + ",200",
             "/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + ",200",
@@ -190,14 +204,28 @@ public class AccessControlTest {
             "/v1/players,200",
             "/query,200",
             "/v1/filters,200",
-            "/v1/query,400"
+            "/v1/query,400",
+            "/v1/errors,200",
+            "/errors,200",
+            "/v1/network/listServers,200",
+            "/v1/network/serverOptions,200",
+            "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],200",
+            "/v1/version,200",
+            "/v1/whoami,200",
+            "/v1/metadata,200",
+            "/v1/locale,200",
+            "/v1/locale/EN,200",
+            "/v1/locale/NonexistingLanguage,404",
+            "/docs/swagger.json,500", // swagger.json not available during tests
+            "/docs,200",
     })
     void levelZeroCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel0);
         assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 0, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
     }
 
-    @ParameterizedTest
+    @DisplayName("Access control test, level 1:")
+    @ParameterizedTest(name = "{0}: expecting {1}")
     @CsvSource({
             "/,302",
             "/server,403",
@@ -224,6 +252,7 @@ public class AccessControlTest {
             "/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + ",403",
+            "/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + ",403",
             "/network,403",
             "/v1/network/overview,403",
             "/v1/network/servers,403",
@@ -248,14 +277,28 @@ public class AccessControlTest {
             "/v1/players,200",
             "/query,200",
             "/v1/filters,200",
-            "/v1/query,400"
+            "/v1/query,400",
+            "/v1/errors,403",
+            "/errors,403",
+            "/v1/network/listServers,403",
+            "/v1/network/serverOptions,403",
+            "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
+            "/v1/version,200",
+            "/v1/whoami,200",
+            "/v1/metadata,200",
+            "/v1/locale,200",
+            "/v1/locale/EN,200",
+            "/v1/locale/NonexistingLanguage,404",
+            "/docs/swagger.json,403",
+            "/docs,403",
     })
     void levelOneCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel1);
         assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 1, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
     }
 
-    @ParameterizedTest
+    @DisplayName("Access control test, level 2:")
+    @ParameterizedTest(name = "{0}: expecting {1}")
     @CsvSource({
             "/,302",
             "/server,403",
@@ -278,6 +321,7 @@ public class AccessControlTest {
             "/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + ",403",
+            "/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + ",403",
             "/v1/players?server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + ",403",
@@ -306,14 +350,28 @@ public class AccessControlTest {
             "/v1/players,403",
             "/query,403",
             "/v1/filters,403",
-            "/v1/query,403"
+            "/v1/query,403",
+            "/v1/errors,403",
+            "/errors,403",
+            "/v1/network/listServers,403",
+            "/v1/network/serverOptions,403",
+            "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
+            "/v1/version,200",
+            "/v1/whoami,200",
+            "/v1/metadata,200",
+            "/v1/locale,200",
+            "/v1/locale/EN,200",
+            "/v1/locale/NonexistingLanguage,404",
+            "/docs/swagger.json,403",
+            "/docs,403",
     })
     void levelTwoCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel2);
         assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 2, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
     }
 
-    @ParameterizedTest
+    @DisplayName("Access control test, level 100:")
+    @ParameterizedTest(name = "{0}: expecting {1}")
     @CsvSource({
             "/,403",
             "/server,403",
@@ -336,6 +394,7 @@ public class AccessControlTest {
             "/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + ",403",
+            "/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + ",403",
             "/v1/players?server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + ",403",
             "/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + ",403",
@@ -364,7 +423,18 @@ public class AccessControlTest {
             "/v1/players,403",
             "/query,403",
             "/v1/filters,403",
-            "/v1/query,403"
+            "/v1/query,403",
+            "/v1/network/listServers,403",
+            "/v1/network/serverOptions,403",
+            "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
+            "/v1/version,200",
+            "/v1/whoami,200",
+            "/v1/metadata,200",
+            "/v1/locale,200",
+            "/v1/locale/EN,200",
+            "/v1/locale/NonexistingLanguage,404",
+            "/docs/swagger.json,403",
+            "/docs,403",
     })
     void levelHundredCanNotAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel100);
@@ -380,7 +450,7 @@ public class AccessControlTest {
             return connection.getResponseCode();
 
         } finally {
-            connection.disconnect();
+            if (connection != null) connection.disconnect();
         }
     }
 

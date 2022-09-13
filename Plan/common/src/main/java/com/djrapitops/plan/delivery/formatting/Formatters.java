@@ -23,6 +23,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Factory for new instances of different {@link Formatter}s.
@@ -73,6 +74,16 @@ public class Formatters {
         decimalFormatter = new DecimalFormatter(config);
         percentageFormatter = new PercentageFormatter(decimalFormatter);
         byteSizeFormatter = new ByteSizeFormatter(decimalFormatter);
+
+        Formatters.Holder.set(this);
+    }
+
+    public static Formatters getInstance() {
+        return Holder.formatters.get();
+    }
+
+    public static void clearSingleton() {
+        Holder.formatters.set(null);
     }
 
     public Formatter<DateHolder> year() {
@@ -141,5 +152,17 @@ public class Formatters {
 
     public Formatter<Long> byteSizeLong() {
         return value -> byteSizeFormatter.apply((double) value);
+    }
+
+    static class Holder {
+        static final AtomicReference<Formatters> formatters = new AtomicReference<>();
+
+        private Holder() {
+            /* Static variable holder */
+        }
+
+        static void set(Formatters service) {
+            Formatters.Holder.formatters.set(service);
+        }
     }
 }

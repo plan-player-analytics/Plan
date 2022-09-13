@@ -31,8 +31,8 @@ import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
-import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -158,7 +158,7 @@ public class RegistrationCommands {
             boolean userExists = database.query(WebUserQueries.fetchUser(username)).isPresent();
             if (userExists) throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_WEB_USER_EXISTS));
 
-            database.executeTransaction(new RegisterWebUserTransaction(user))
+            database.executeTransaction(new StoreWebUserTransaction(user))
                     .get(); // Wait for completion
 
             sender.send(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, username));
@@ -177,31 +177,26 @@ public class RegistrationCommands {
         UUID playerUUID = sender.getUUID().orElse(null);
 
         String username;
-        if (!givenUsername.isPresent() && playerUUID != null) {
-            Optional<User> found = database.query(WebUserQueries.fetchUser(playerUUID));
-            if (!found.isPresent()) {
-                throw new IllegalArgumentException(locale.getString(CommandLang.USER_NOT_LINKED));
-            }
-            username = found.get().getUsername();
-        } else if (!givenUsername.isPresent()) {
+        if (givenUsername.isEmpty() && playerUUID != null) {
+            username = database.query(WebUserQueries.fetchUser(playerUUID))
+                    .map(User::getUsername)
+                    .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.USER_NOT_LINKED)));
+        } else if (givenUsername.isEmpty()) {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, "<" + locale.getString(HelpLang.ARG_USERNAME) + ">"));
         } else {
             username = givenUsername.get();
         }
 
-        Optional<User> found = database.query(WebUserQueries.fetchUser(username));
-        if (!found.isPresent()) {
-            throw new IllegalArgumentException(locale.getString(FailReason.USER_DOES_NOT_EXIST));
-        }
-        User presentUser = found.get();
-        boolean ownsTheUser = Objects.equals(playerUUID, presentUser.getLinkedToUUID());
+        User user = database.query(WebUserQueries.fetchUser(username))
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(FailReason.USER_DOES_NOT_EXIST)));
+        boolean ownsTheUser = Objects.equals(playerUUID, user.getLinkedToUUID());
         if (!(ownsTheUser || sender.hasPermission(Permissions.UNREGISTER_OTHER.getPerm()))) {
             throw new IllegalArgumentException(locale.getString(CommandLang.USER_NOT_LINKED));
         }
 
         if (sender.supportsChatEvents()) {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, presentUser.getUsername(), presentUser.getLinkedTo())).newLine()
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, user.getUsername(), user.getLinkedTo())).newLine()
                     .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
                     .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
                     .addPart(" ")
@@ -209,7 +204,7 @@ public class RegistrationCommands {
                     .send();
         } else {
             sender.buildMessage()
-                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, presentUser.getUsername(), presentUser.getLinkedTo())).newLine()
+                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, user.getUsername(), user.getLinkedTo())).newLine()
                     .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
                     .addPart(" ")
                     .addPart("§c/" + mainCommand + " cancel")
@@ -219,7 +214,7 @@ public class RegistrationCommands {
         confirmation.confirm(sender, choice -> {
             if (Boolean.TRUE.equals(choice)) {
                 try {
-                    sender.send(colors.getMainColor() + locale.getString(CommandLang.UNREGISTER, presentUser.getUsername()));
+                    sender.send(colors.getMainColor() + locale.getString(CommandLang.UNREGISTER, user.getUsername()));
                     database.executeTransaction(new RemoveWebUserTransaction(username))
                             .get(); // Wait for completion
                     ActiveCookieStore.removeUserCookie(username);
@@ -230,19 +225,15 @@ public class RegistrationCommands {
                     errorLogger.warn(e, ErrorContext.builder().related("unregister command", sender, sender.getPlayerName().orElse("console"), arguments).build());
                 }
             } else {
-                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_UNREGISTER, presentUser.getUsername()));
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_UNREGISTER, user.getUsername()));
             }
         });
     }
 
 
     public void onLogoutCommand(CMDSender sender, Arguments arguments) {
-        Optional<String> username = arguments.get(0);
-        if (!username.isPresent()) {
-            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, locale.getString(HelpLang.ARG_USERNAME) + "/*"));
-        }
-
-        String loggingOut = username.get();
+        String loggingOut = arguments.get(0)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, locale.getString(HelpLang.ARG_USERNAME) + "/*")));
 
         if ("*".equals(loggingOut)) {
             activeCookieStore.removeAll();

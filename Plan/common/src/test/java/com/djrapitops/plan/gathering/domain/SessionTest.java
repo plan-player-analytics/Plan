@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering.domain;
 import com.djrapitops.plan.identification.ServerUUID;
 import org.junit.jupiter.api.Test;
 import utilities.TestConstants;
+import utilities.TestData;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ class SessionTest {
         List<PlayerKill> before = beforeOptional.get();
         assertTrue(before.isEmpty());
 
-        session.addPlayerKill(new PlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
+        session.addPlayerKill(TestData.getPlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, serverUUID, "Weapon", System.currentTimeMillis()));
 
         Optional<List<PlayerKill>> afterOptional = session.getExtraData().get(PlayerKills.class).map(PlayerKills::asList);
         assertTrue(afterOptional.isPresent());
@@ -57,7 +58,7 @@ class SessionTest {
     void killsAreAdded2() {
         ActiveSession session = new ActiveSession(null, serverUUID, System.currentTimeMillis(), "", "");
 
-        session.addPlayerKill(new PlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, "Weapon", System.currentTimeMillis()));
+        session.addPlayerKill(TestData.getPlayerKill(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_TWO_UUID, serverUUID, "Weapon", System.currentTimeMillis()));
 
         Optional<List<PlayerKill>> afterOptional = session.getExtraData().get(PlayerKills.class).map(PlayerKills::asList);
         assertTrue(afterOptional.isPresent());

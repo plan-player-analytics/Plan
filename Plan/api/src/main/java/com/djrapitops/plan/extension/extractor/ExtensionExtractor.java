@@ -45,7 +45,6 @@ public final class ExtensionExtractor {
     private PluginInfo pluginInfo;
     private List<TabInfo> tabInformation;
     private List<InvalidateMethod> invalidMethods;
-    private MethodAnnotations methodAnnotations;
     private Map<ExtensionMethod.ParameterType, ExtensionMethods> methods;
     private Collection<Method> conditionalMethods;
     private Collection<Tab> tabAnnotations;
@@ -102,12 +101,9 @@ public final class ExtensionExtractor {
      * @deprecated No longer used anywhere, no-op.
      */
     @Deprecated
-    public void extractAnnotationInformation() {
-        // no-op
-    }
+    public void extractAnnotationInformation() {/* no-op */}
 
     private void extractMethods() {
-        methodAnnotations = new MethodAnnotations();
         methods = new EnumMap<>(ExtensionMethod.ParameterType.class);
         methods.put(ExtensionMethod.ParameterType.SERVER_NONE, new ExtensionMethods());
         methods.put(ExtensionMethod.ParameterType.PLAYER_STRING, new ExtensionMethods());
@@ -132,55 +128,41 @@ public final class ExtensionExtractor {
             method.getAnnotation(BooleanProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addBooleanMethod(method);
-                methodAnnotations.put(method.getMethod(), BooleanProvider.class, annotation);
             });
             method.getAnnotation(NumberProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addNumberMethod(method);
-                methodAnnotations.put(method.getMethod(), NumberProvider.class, annotation);
             });
             method.getAnnotation(DoubleProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addDoubleMethod(method);
-                methodAnnotations.put(method.getMethod(), DoubleProvider.class, annotation);
             });
             method.getAnnotation(PercentageProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addPercentageMethod(method);
-                methodAnnotations.put(method.getMethod(), PercentageProvider.class, annotation);
             });
             method.getAnnotation(StringProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addStringMethod(method);
-                methodAnnotations.put(method.getMethod(), StringProvider.class, annotation);
             });
             method.getAnnotation(TableProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addTableMethod(method);
-                methodAnnotations.put(method.getMethod(), TableProvider.class, annotation);
             });
             method.getAnnotation(GroupProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addGroupMethod(method);
-                methodAnnotations.put(method.getMethod(), GroupProvider.class, annotation);
             });
             method.getAnnotation(DataBuilderProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addDataBuilderMethod(method);
-                methodAnnotations.put(method.getMethod(), DataBuilderProvider.class, annotation);
             });
 
-            method.getAnnotation(Conditional.class).ifPresent(annotation -> {
-                conditionalMethods.add(method.getMethod());
-                methodAnnotations.put(method.getMethod(), Conditional.class, annotation);
-            });
-            method.getAnnotation(Tab.class).ifPresent(annotation -> {
-                tabAnnotations.add(annotation);
-                methodAnnotations.put(method.getMethod(), Tab.class, annotation);
-            });
+            method.getAnnotation(Conditional.class).ifPresent(annotation -> conditionalMethods.add(method.getMethod()));
+            method.getAnnotation(Tab.class).ifPresent(tabAnnotations::add);
         }
 
-        if (methodAnnotations.isEmpty()) {
+        if (methods.values().stream().allMatch(ExtensionMethods::isEmpty)) {
             throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
         }
 
@@ -440,10 +422,12 @@ public final class ExtensionExtractor {
         return tabInformation;
     }
 
+    /**
+     * @deprecated During refactoring MethodAnnotations was removed. Using {@link ExtensionExtractor#getMethods()} instead.
+     */
     @Deprecated
     public MethodAnnotations getMethodAnnotations() {
-        if (methodAnnotations == null) extractMethods();
-        return methodAnnotations;
+        return new MethodAnnotations();
     }
 
     public Map<ExtensionMethod.ParameterType, ExtensionMethods> getMethods() {
@@ -454,5 +438,11 @@ public final class ExtensionExtractor {
     public List<InvalidateMethod> getInvalidateMethodAnnotations() {
         if (invalidMethods == null) extractInvalidMethods();
         return invalidMethods;
+    }
+
+    // Visible for testing
+    Collection<Method> getConditionalMethods() {
+        if (conditionalMethods == null) extractMethods();
+        return conditionalMethods;
     }
 }

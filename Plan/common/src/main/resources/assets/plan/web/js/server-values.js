@@ -74,6 +74,7 @@ function loadserverOverviewValues(json, error) {
     data = json.numbers;
     element = tab.querySelector('#data_numbers');
 
+    element.querySelector('#data_current_uptime').innerText = data.current_uptime;
     element.querySelector('#data_total').innerText = data.total_players;
     element.querySelector('#data_regular').innerText = data.regular_players;
     element.querySelector('#data_online').innerText = data.online_players;
@@ -157,9 +158,9 @@ function loadOnlineActivityOverviewValues(json, error) {
     element.querySelector('#data_new_players_7d_avg').innerText = data.new_players_7d_avg;
     element.querySelector('#data_new_players_24h_avg').innerText = data.new_players_24h_avg;
 
-    element.querySelector('#data_new_players_retention_30d').innerText = '(' + data.new_players_retention_30d + '/' + data.new_players_30d + ') ' + data.new_players_retention_30d_perc;
-    element.querySelector('#data_new_players_retention_7d').innerText = '(' + data.new_players_retention_7d + '/' + data.new_players_7d + ') ' + data.new_players_retention_7d_perc;
-    element.querySelector('#data_new_players_retention_24h').innerHTML = '(' + data.new_players_retention_24h + '/' + data.new_players_24h + ') ' + data.new_players_retention_24h_perc + ' <i class="far fa-fw fa-eye"></i>';
+    element.querySelector('#data_new_players_retention_30d').innerText = `(${data.new_players_retention_30d}/${data.new_players_30d}) ${data.new_players_retention_30d_perc}`;
+    element.querySelector('#data_new_players_retention_7d').innerText = `(${data.new_players_retention_7d}/${data.new_players_7d}) ${data.new_players_retention_7d_perc}`;
+    element.querySelector('#data_new_players_retention_24h').innerHTML = `(${data.new_players_retention_24h}/${data.new_players_24h}) ${data.new_players_retention_24h_perc} <i class="far fa-fw fa-eye"></i>`;
 
     element.querySelector('#data_playtime_30d').innerHTML = data.playtime_30d + smallTrend(data.playtime_30d_trend);
     element.querySelector('#data_playtime_7d').innerText = data.playtime_7d;
@@ -316,6 +317,9 @@ function loadPerformanceValues(json, error) {
     element.querySelector('#data_server_downtime_30d').innerText = data.server_downtime_30d;
     element.querySelector('#data_server_downtime_7d').innerText = data.server_downtime_7d;
     element.querySelector('#data_server_downtime_24h').innerText = data.server_downtime_24h;
+    element.querySelector('#data_players_30d').innerText = data.players_30d;
+    element.querySelector('#data_players_7d').innerText = data.players_7d;
+    element.querySelector('#data_players_24h').innerText = data.players_24h;
     element.querySelector('#data_tps_30d').innerText = data.tps_30d;
     element.querySelector('#data_tps_7d').innerText = data.tps_7d;
     element.querySelector('#data_tps_24h').innerText = data.tps_24h;
@@ -369,7 +373,7 @@ async function loadOptimizedPerformanceGraph(json, error) {
                 value: json.zones.diskThresholdMed,
                 color: json.colors.low
             }, {
-                value: json.zones.tpsThresholdHigh,
+                value: json.zones.diskThresholdHigh,
                 color: json.colors.med
             }, {
                 value: Number.MAX_VALUE,
@@ -558,7 +562,7 @@ function loadHourlyUniqueAndNewGraph(json, error) {
     }
 }
 
-function loadServerCalendar(json, error) {
+function loadserverCalendar(json, error) {
     if (json) {
         document.getElementById('calendar').innerText = '';
         if (window.calendars.online_activity) window.calendars.online_activity.destroy();

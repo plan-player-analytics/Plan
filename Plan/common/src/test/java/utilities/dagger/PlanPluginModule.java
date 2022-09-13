@@ -18,10 +18,6 @@ package utilities.dagger;
 
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
-import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.identification.ServerServerInfo;
-import com.djrapitops.plan.settings.BukkitConfigSystem;
-import com.djrapitops.plan.settings.ConfigSystem;
 import dagger.Binds;
 import dagger.Module;
 
@@ -32,12 +28,6 @@ import dagger.Module;
  */
 @Module
 public interface PlanPluginModule {
-
-    @Binds
-    ConfigSystem bindBukkitConfigSystem(BukkitConfigSystem bukkitConfigSystem);
-
-    @Binds
-    ServerInfo bindServerInfo(ServerServerInfo serverServerInfo);
 
     @Binds
     JSONStorage bindJSONStorage(JSONFileStorage jsonFileStorage);

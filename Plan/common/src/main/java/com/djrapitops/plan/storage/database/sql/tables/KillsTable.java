@@ -88,7 +88,7 @@ public class KillsTable {
         ServerUUID serverUUID = session.getServerUUID();
 
         Optional<PlayerKills> playerKills = session.getExtraData().get(PlayerKills.class);
-        if (!playerKills.isPresent()) return;
+        if (playerKills.isEmpty()) return;
 
         for (PlayerKill kill : playerKills.get().asList()) {
             // Session ID select statement parameters
@@ -99,7 +99,7 @@ public class KillsTable {
 
             // Kill data
             statement.setString(5, playerUUID.toString());
-            statement.setString(6, kill.getVictim().toString());
+            statement.setString(6, kill.getVictim().getUuid().toString());
             statement.setString(7, serverUUID.toString());
             statement.setLong(8, kill.getDate());
             statement.setString(9, StringUtils.truncate(kill.getWeapon(), WEAPON_COLUMN_LENGTH));

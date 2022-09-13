@@ -20,14 +20,15 @@ import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.transactions.events.NicknameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreNicknameTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.filter.cause.First;
-import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.event.message.PlayerChatEvent;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -58,11 +59,7 @@ public class SpongeChatListener {
     }
 
     @Listener(order = Order.POST)
-    public void onPlayerChat(MessageChannelEvent.Chat event, @First Player player) {
-        if (event.isCancelled()) {
-            return;
-        }
-
+    public void onPlayerChat(PlayerChatEvent event, @First Player player) {
         try {
             actOnChatEvent(player);
         } catch (Exception e) {
@@ -72,10 +69,10 @@ public class SpongeChatListener {
 
     private void actOnChatEvent(@First Player player) {
         long time = System.currentTimeMillis();
-        UUID uuid = player.getUniqueId();
-        String displayName = player.getDisplayNameData().displayName().get().toPlain();
+        UUID uuid = player.uniqueId();
+        String displayName = LegacyComponentSerializer.legacySection().serialize(player.displayName().get());
 
-        dbSystem.getDatabase().executeTransaction(new NicknameStoreTransaction(
+        dbSystem.getDatabase().executeTransaction(new StoreNicknameTransaction(
                 uuid, new Nickname(displayName, time, serverInfo.getServerUUID()),
                 (playerUUID, name) -> nicknameCache.getDisplayName(playerUUID).map(name::equals).orElse(false)
         ));

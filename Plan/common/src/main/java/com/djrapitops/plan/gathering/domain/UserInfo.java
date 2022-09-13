@@ -55,6 +55,10 @@ public class UserInfo {
         return serverUUID;
     }
 
+    /**
+     * @deprecated Join address is now stored in {@link FinishedSession#getExtraData()}, this method may become unreliable in the future.
+     */
+    @Deprecated(since = "5.4 build 1722")
     public String getJoinAddress() {
         return joinAddress;
     }

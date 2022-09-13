@@ -29,7 +29,7 @@ import java.util.UUID;
  * @see InspectContainer
  * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
  */
-@Deprecated
+@Deprecated(since = "5.0")
 public final class AnalysisContainer extends InspectContainer {
 
     private final Map<String, Map<UUID, ? extends Serializable>> playerTableValues;

@@ -28,7 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INT;
 
 /**
  * Table information about 'plan_extension_icons'.
@@ -43,12 +43,6 @@ public class ExtensionIconTable {
     public static final String ICON_NAME = "name";
     public static final String FAMILY = "family";
     public static final String COLOR = "color";
-
-    public static final String STATEMENT_SELECT_ICON_ID = '(' + SELECT + ID +
-            FROM + TABLE_NAME +
-            WHERE + ICON_NAME + "=?" +
-            AND + FAMILY + "=?" +
-            AND + COLOR + "=? LIMIT 1)";
 
     public static void set3IconValuesToStatement(PreparedStatement statement, Icon icon) throws SQLException {
         set3IconValuesToStatement(statement, 1, icon);

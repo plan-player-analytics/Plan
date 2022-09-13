@@ -36,11 +36,13 @@ import net.playeranalytics.plugin.scheduling.TimeAmount;
 import net.playeranalytics.plugin.server.Listeners;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
+import org.spongepowered.api.event.network.ServerSideConnectionEvent;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,40 +52,49 @@ import java.util.concurrent.TimeUnit;
  */
 public class SpongePingCounter extends TaskSystem.Task {
 
+    private final Map<UUID, Long> startRecording;
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final Listeners listeners;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final RunnableFactory runnableFactory;
 
     @Inject
     public SpongePingCounter(
             Listeners listeners,
             PlanConfig config,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            RunnableFactory runnableFactory
+            ServerInfo serverInfo
     ) {
         this.listeners = listeners;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.runnableFactory = runnableFactory;
         playerHistory = new HashMap<>();
+        startRecording = new ConcurrentHashMap<>();
     }
 
     @Override
     public void run() {
         long time = System.currentTimeMillis();
+
+        Iterator<Map.Entry<UUID, Long>> starts = startRecording.entrySet().iterator();
+        while (starts.hasNext()) {
+            Map.Entry<UUID, Long> start = starts.next();
+            if (time >= start.getValue()) {
+                addPlayer(start.getKey());
+                starts.remove();
+            }
+        }
+
         Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
 
         while (iterator.hasNext()) {
             Map.Entry<UUID, List<DateObj<Integer>>> entry = iterator.next();
             UUID uuid = entry.getKey();
             List<DateObj<Integer>> history = entry.getValue();
-            Optional<Player> player = Sponge.getServer().getPlayer(uuid);
+            Optional<ServerPlayer> player = Sponge.server().player(uuid);
             if (player.isPresent()) {
                 int ping = getPing(player.get());
                 if (ping <= -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
@@ -114,35 +125,32 @@ public class SpongePingCounter extends TaskSystem.Task {
         }
     }
 
-    public void addPlayer(Player player) {
-        playerHistory.put(player.getUniqueId(), new ArrayList<>());
+    public void addPlayer(UUID uuid) {
+        playerHistory.put(uuid, new ArrayList<>());
     }
 
     public void removePlayer(Player player) {
-        playerHistory.remove(player.getUniqueId());
+        playerHistory.remove(player.uniqueId());
+        startRecording.remove(player.uniqueId());
     }
 
-    private int getPing(Player player) {
-        return player.getConnection().getLatency();
+    private int getPing(ServerPlayer player) {
+        return player.connection().latency();
     }
 
     @Listener
-    public void onPlayerJoin(ClientConnectionEvent.Join joinEvent) {
-        Player player = joinEvent.getTargetEntity();
-        Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
-        if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
+    public void onPlayerJoin(ServerSideConnectionEvent.Join joinEvent) {
+        Player player = joinEvent.player();
+        Long pingDelayMs = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
+        if (pingDelayMs >= TimeUnit.HOURS.toMillis(2L)) {
             return;
         }
-        runnableFactory.create(() -> {
-            if (player.isOnline()) {
-                addPlayer(player);
-            }
-        }).runTaskLater(TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS));
+        startRecording.put(player.uniqueId(), System.currentTimeMillis() + pingDelayMs);
     }
 
     @Listener
-    public void onPlayerQuit(ClientConnectionEvent.Disconnect quitEvent) {
-        removePlayer(quitEvent.getTargetEntity());
+    public void onPlayerQuit(ServerSideConnectionEvent.Disconnect quitEvent) {
+        removePlayer(quitEvent.player());
     }
 
     public void clear() {

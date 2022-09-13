@@ -22,12 +22,22 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,6 +50,7 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 @Singleton
+@Path("/v1/graph")
 public class GraphsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
@@ -69,6 +80,41 @@ public class GraphsJSONResolver implements Resolver {
      * @throws BadRequestException If 'type' parameter is not defined or supported.
      * @throws BadRequestException If 'server' parameter is not defined or server is not found in database.
      */
+    @GET
+    @Operation(
+            description = "Get graph data",
+            parameters = {
+                    @Parameter(in = ParameterIn.QUERY, name = "type", description = "Type of the graph, see https://github.com/plan-player-analytics/Plan/blob/master/Plan/common/src/main/java/com/djrapitops/plan/delivery/webserver/resolver/json/GraphsJSONResolver.java", required = true, examples = {
+                            @ExampleObject(value = "performance", description = "Deprecated, use optimizedPerformance"),
+                            @ExampleObject("optimizedPerformance"),
+                            @ExampleObject("playersOnline"),
+                            @ExampleObject("uniqueAndNew"),
+                            @ExampleObject("hourlyUniqueAndNew"),
+                            @ExampleObject("serverCalendar"),
+                            @ExampleObject("worldPie"),
+                            @ExampleObject("activity"),
+                            @ExampleObject("geolocation"),
+                            @ExampleObject("aggregatedPing"),
+                            @ExampleObject("punchCard"),
+                            @ExampleObject("serverPie"),
+                            @ExampleObject("joinAddressPie"),
+                            @ExampleObject("joinAddressByDay"),
+                    }),
+                    @Parameter(in = ParameterIn.QUERY, name = "server", description = "Server identifier to get data for", examples = {
+                            @ExampleObject("Server 1"),
+                            @ExampleObject("1"),
+                            @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
+                    }),
+                    @Parameter(in = ParameterIn.QUERY, name = "timestamp", description = "Epoch millisecond for the request, newer value is wanted")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Graph data json", content = @Content()),
+                    @ApiResponse(responseCode = "400", description = "'type' parameter not given", content = @Content(examples = {
+                            @ExampleObject("{\"status\": 400, \"error\": \"'type' parameter was not defined.\"}")
+                    })),
+            },
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         return Optional.of(getResponse(request));
@@ -87,19 +133,19 @@ public class GraphsJSONResolver implements Resolver {
     }
 
     private JSONStorage.StoredJSON getGraphJSON(Request request, DataID dataID) {
-        long timestamp = Identifiers.getTimestamp(request);
+        Optional<Long> timestamp = Identifiers.getTimestamp(request);
 
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
             storedJSON = jsonResolverService.resolve(
                     timestamp, dataID, serverUUID,
-                    theServerUUID -> generateGraphDataJSONOfType(dataID, theServerUUID)
+                    theServerUUID -> generateGraphDataJSONOfType(dataID, theServerUUID, request.getQuery())
             );
         } else {
             // Assume network
             storedJSON = jsonResolverService.resolve(
-                    timestamp, dataID, () -> generateGraphDataJSONOfType(dataID)
+                    timestamp, dataID, () -> generateGraphDataJSONOfType(dataID, request.getQuery())
             );
         }
         return storedJSON;
@@ -133,12 +179,14 @@ public class GraphsJSONResolver implements Resolver {
                 return DataID.GRAPH_SERVER_PIE;
             case "joinAddressPie":
                 return DataID.GRAPH_HOSTNAME_PIE;
+            case "joinAddressByDay":
+                return DataID.JOIN_ADDRESSES_BY_DAY;
             default:
                 throw new BadRequestException("unknown 'type' parameter.");
         }
     }
 
-    private Object generateGraphDataJSONOfType(DataID id, ServerUUID serverUUID) {
+    private Object generateGraphDataJSONOfType(DataID id, ServerUUID serverUUID, URIQuery query) {
         switch (id) {
             case GRAPH_PERFORMANCE:
                 return graphJSON.performanceGraphJSON(serverUUID);
@@ -164,12 +212,21 @@ public class GraphsJSONResolver implements Resolver {
                 return graphJSON.pingGraphsJSON(serverUUID);
             case GRAPH_PUNCHCARD:
                 return graphJSON.punchCardJSONAsMap(serverUUID);
+            case JOIN_ADDRESSES_BY_DAY:
+                try {
+                    return graphJSON.joinAddressesByDay(serverUUID,
+                            query.get("after").map(Long::parseLong).orElse(0L),
+                            query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis())
+                    );
+                } catch (NumberFormatException e) {
+                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number) " + e.getMessage());
+                }
             default:
                 return Collections.singletonMap("error", "Undefined ID: " + id.name());
         }
     }
 
-    private Object generateGraphDataJSONOfType(DataID id) {
+    private Object generateGraphDataJSONOfType(DataID id, URIQuery query) {
         switch (id) {
             case GRAPH_ACTIVITY:
                 return graphJSON.activityGraphsJSONAsMap();
@@ -183,6 +240,15 @@ public class GraphsJSONResolver implements Resolver {
                 return graphJSON.playerHostnamePieJSONAsMap();
             case GRAPH_WORLD_MAP:
                 return graphJSON.geolocationGraphsJSONAsMap();
+            case JOIN_ADDRESSES_BY_DAY:
+                try {
+                    return graphJSON.joinAddressesByDay(
+                            query.get("after").map(Long::parseLong).orElse(0L),
+                            query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis())
+                    );
+                } catch (NumberFormatException e) {
+                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number) " + e.getMessage());
+                }
             default:
                 return Collections.singletonMap("error", "Undefined ID: " + id.name());
         }

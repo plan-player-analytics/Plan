@@ -3,13 +3,17 @@ Plan.iml
 PlanPluginBridge.iml
 .sonar/
 builds/
-# Nukkit creates server.log during tests for some reason.
+# Nukkit & Fabric create log files during tests for some reason.
 server.log
+/Plan/fabric/logs/
 
 *.db
 
 **/.gradle
 out/
+
+# Fabric
+remappedSrc/
 
 # Created by https://www.gitignore.io/api/maven,eclipse,intellij,netbeans,osx,windows,notepadpp,windows,java
 
@@ -164,33 +168,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-
-### NotepadPP ###
-# Notepad++ backups #
-*.bak
-
-
-### Windows ###
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-
 ### Java ###
 *.class
 
@@ -203,3 +180,4 @@ $RECYCLE.BIN/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/.vs

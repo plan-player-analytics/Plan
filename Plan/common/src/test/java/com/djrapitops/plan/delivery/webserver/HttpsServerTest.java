@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import org.apache.commons.compress.utils.IOUtils;
@@ -90,7 +91,9 @@ interface HttpsServerTest {
         HttpURLConnection loginConnection = null;
         String cookie = "";
         try {
-            loginConnection = connector.getConnection("GET", address + "/auth/login?user=test&password=testPass");
+            loginConnection = connector.getConnection("POST", address + "/auth/login");
+            loginConnection.setDoOutput(true);
+            loginConnection.getOutputStream().write("user=test&password=testPass".getBytes());
             try (InputStream in = loginConnection.getInputStream()) {
                 String responseBody = new String(IOUtils.toByteArray(in));
                 assertTrue(responseBody.contains("\"success\":true"), () -> "Not successful: " + responseBody);

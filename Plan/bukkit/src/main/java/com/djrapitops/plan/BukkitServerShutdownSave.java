@@ -35,6 +35,8 @@ import javax.inject.Singleton;
 @Singleton
 public class BukkitServerShutdownSave extends ServerShutdownSave {
 
+    private static final String IS_STOPPED = "isStopped";
+
     @Inject
     public BukkitServerShutdownSave(
             Locale locale,
@@ -57,7 +59,7 @@ public class BukkitServerShutdownSave extends ServerShutdownSave {
             Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
             Object minecraftServer = Reflection.getField(minecraftServerClass, "SERVER", minecraftServerClass).get(null);
 
-            return Reflection.getField(minecraftServerClass, "isStopped", boolean.class).get(minecraftServer);
+            return Reflection.getField(minecraftServerClass, IS_STOPPED, boolean.class).get(minecraftServer);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
             return false;
         }
@@ -71,7 +73,7 @@ public class BukkitServerShutdownSave extends ServerShutdownSave {
             Class<?> craftServerClass = Reflection.getCraftBukkitClass("CraftServer");
             Object minecraftServer = Reflection.getField(craftServerClass, "console", minecraftServerClass).get(Bukkit.getServer());
 
-            return (Boolean) minecraftServerClass.getMethod("isStopped").invoke(minecraftServer);
+            return (Boolean) minecraftServerClass.getMethod(IS_STOPPED).invoke(minecraftServer);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
             return false;
         }
@@ -85,7 +87,7 @@ public class BukkitServerShutdownSave extends ServerShutdownSave {
             Class<?> craftServerClass = Reflection.getCraftBukkitClass("CraftServer");
             Object minecraftServer = Reflection.getField(craftServerClass, "console", minecraftServerClass).get(Bukkit.getServer());
 
-            return (Boolean) minecraftServerClass.getMethod("isStopped").invoke(minecraftServer);
+            return (Boolean) minecraftServerClass.getMethod(IS_STOPPED).invoke(minecraftServer);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
             return false;
         }

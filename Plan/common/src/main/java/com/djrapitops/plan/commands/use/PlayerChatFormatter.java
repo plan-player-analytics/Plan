@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.commands.use;
 
-public class PlayerChatFormatter extends ChatFormatter {
+public class PlayerChatFormatter implements ChatFormatter {
 
     @Override
     public int getWidth(String part) {

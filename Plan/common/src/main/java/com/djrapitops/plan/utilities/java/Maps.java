@@ -44,6 +44,14 @@ public class Maps {
         return new Builder<>();
     }
 
+    public static <K, V> Map<V, K> reverse(Map<K, V> map) {
+        Map<V, K> reversed = new HashMap<>();
+        for (Map.Entry<K, V> entry : map.entrySet()) {
+            reversed.put(entry.getValue(), entry.getKey());
+        }
+        return reversed;
+    }
+
     public static class Builder<K, V> {
         private final Map<K, V> map;
 

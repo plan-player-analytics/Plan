@@ -39,8 +39,12 @@ public class CookieChangeTransaction extends Transaction {
         return new CookieChangeTransaction(username, cookie, expires);
     }
 
-    public static CookieChangeTransaction removeCookie(String username) {
+    public static CookieChangeTransaction removeCookieByUser(String username) {
         return new CookieChangeTransaction(username, null, null);
+    }
+
+    public static CookieChangeTransaction removeCookie(String cookie) {
+        return new CookieChangeTransaction(null, cookie, null);
     }
 
     public static CookieChangeTransaction removeAll() {
@@ -49,11 +53,25 @@ public class CookieChangeTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        if (username == null) {
+        if (username == null && cookie == null) {
             execute(new ExecStatement(CookieTable.DELETE_ALL_STATEMENT) {
                 @Override
                 public void prepare(PreparedStatement statement) {
                     // No parameters
+                }
+            });
+        } else if (username == null) {
+            execute(new ExecStatement(CookieTable.DELETE_BY_COOKIE_STATEMENT) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, cookie);
+                }
+            });
+            // Perform cleanup at the same time
+            execute(new ExecStatement(CookieTable.DELETE_OLDER_STATEMENT) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, System.currentTimeMillis());
                 }
             });
         } else if (cookie == null) {

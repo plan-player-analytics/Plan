@@ -146,7 +146,7 @@ public class ResourceSvc implements ResourceService {
             }
         } catch (IOException e) {
             errorLogger.warn(e, ErrorContext.builder()
-                    .whatToDo("Report this or provide " + fileName + " in " + files.getCustomizationDirectory())
+                    .whatToDo("Report this or provide " + fileName + " in " + resourceSettings.getCustomizationDirectory())
                     .related("Fetching resource", "Of: " + pluginName, fileName).build());
         }
         // Return original by default
@@ -174,7 +174,7 @@ public class ResourceSvc implements ResourceService {
         WebResource original = source.get();
         byte[] bytes = original.asBytes();
         OpenOption[] overwrite = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE};
-        Path to = files.getCustomizationDirectory().resolve(fileName);
+        Path to = resourceSettings.getCustomizationDirectory().resolve(fileName);
         Path dir = to.getParent();
         if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
         Files.write(to, bytes, overwrite);

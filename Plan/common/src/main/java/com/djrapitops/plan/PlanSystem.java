@@ -19,6 +19,7 @@ package com.djrapitops.plan;
 import com.djrapitops.plan.api.PlanAPI;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.web.ResolverSvc;
 import com.djrapitops.plan.delivery.web.ResourceSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
@@ -54,6 +55,8 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class PlanSystem implements SubSystem {
+
+    private static final long SERVER_ENABLE_TIME = System.currentTimeMillis();
 
     private boolean enabled = false;
 
@@ -134,21 +137,39 @@ public class PlanSystem implements SubSystem {
         this.logger = logger;
         this.errorLogger = errorLogger;
 
-        logger.info("");
+        logger.info("§2");
         logger.info("§2           ██▌");
         logger.info("§2     ██▌   ██▌");
         logger.info("§2  ██▌██▌██▌██▌  §2Player Analytics");
         logger.info("§2  ██▌██▌██▌██▌  §fv" + versionChecker.getCurrentVersion());
-        logger.info("");
+        logger.info("§2");
     }
 
-    @Deprecated
+    public static long getServerEnableTime() {
+        return SERVER_ENABLE_TIME;
+    }
+
+    /**
+     * @deprecated Use {@link com.djrapitops.plan.delivery.webserver.Addresses} instead.
+     */
+    @Deprecated(since = "Addresses.java")
     public String getMainAddress() {
         return webServerSystem.getAddresses().getMainAddress().orElse(webServerSystem.getAddresses().getFallbackLocalhostAddress());
     }
 
-    @Override
-    public void enable() {
+    /**
+     * Enables only the systems that are required for {@link com.djrapitops.plan.commands.PlanCommand}.
+     *
+     * @see #enableOtherThanCommands()
+     */
+    public void enableForCommands() {
+        enableSystems(configSystem);
+    }
+
+    /**
+     * Enables the rest of the systems that are not enabled in {@link #enableForCommands()}.
+     */
+    public void enableOtherThanCommands() {
         extensionService.register();
         resolverService.register();
         resourceService.register();
@@ -159,7 +180,6 @@ public class PlanSystem implements SubSystem {
 
         enableSystems(
                 files,
-                configSystem,
                 localeSystem,
                 versionChecker,
                 databaseSystem,
@@ -182,6 +202,15 @@ public class PlanSystem implements SubSystem {
 
         extensionService.registerExtensions();
         enabled = true;
+
+        String javaVersion = System.getProperty("java.specification.version");
+        if ("1.8".equals(javaVersion) || "9".equals(javaVersion) || "10".equals(javaVersion)
+        ) {
+            logger.warn("! ------- Deprecation warning ------- !");
+            logger.warn("Plan version 5.5 will require Java 11 or newer,");
+            logger.warn("consider updating your JVM as soon as possible.");
+            logger.warn("! ----------------------------------- !");
+        }
     }
 
     private void enableSystems(SubSystem... systems) {
@@ -191,23 +220,9 @@ public class PlanSystem implements SubSystem {
     }
 
     @Override
-    public void disable() {
-        enabled = false;
-        disableSystems(
-                taskSystem,
-                cacheSystem,
-                listenerSystem,
-                importSystem,
-                exportSystem,
-                processing,
-                databaseSystem,
-                webServerSystem,
-                serverInfo,
-                localeSystem,
-                configSystem,
-                files,
-                versionChecker
-        );
+    public void enable() {
+        enableForCommands();
+        enableOtherThanCommands();
     }
 
     private void disableSystems(SubSystem... systems) {
@@ -288,14 +303,27 @@ public class PlanSystem implements SubSystem {
         return extensionService;
     }
 
-    /**
-     * Originally visible for testing purposes.
-     *
-     * @return the error logger of the system
-     * @deprecated A smell, dagger should be used to construct things instead.
-     */
-    @Deprecated
-    public ErrorLogger getErrorLogger() {
-        return errorLogger;
+    @Override
+    public void disable() {
+        enabled = false;
+        Formatters.clearSingleton();
+
+        extensionService.disableUpdates();
+
+        disableSystems(
+                taskSystem,
+                cacheSystem,
+                listenerSystem,
+                importSystem,
+                exportSystem,
+                processing,
+                databaseSystem,
+                webServerSystem,
+                serverInfo,
+                localeSystem,
+                configSystem,
+                files,
+                versionChecker
+        );
     }
 }

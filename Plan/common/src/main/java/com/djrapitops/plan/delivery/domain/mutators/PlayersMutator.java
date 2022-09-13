@@ -17,10 +17,8 @@
 package com.djrapitops.plan.delivery.domain.mutators;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
-import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.delivery.domain.keys.ServerKeys;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.Ping;
@@ -51,10 +49,6 @@ public class PlayersMutator {
         return new PlayersMutator(new ArrayList<>(mutator.players));
     }
 
-    public static PlayersMutator forContainer(DataContainer container) {
-        return new PlayersMutator(container.getValue(ServerKeys.PLAYERS).orElse(new ArrayList<>()));
-    }
-
     public <T extends Predicate<PlayerContainer>> PlayersMutator filterBy(T by) {
         return new PlayersMutator(Lists.filter(players, by));
     }
@@ -65,7 +59,7 @@ public class PlayersMutator {
                         .map(sessions -> sessions.stream().anyMatch(session -> {
                             long start = session.getStart();
                             long end = session.getEnd();
-                            return (after <= start && start <= before) || (after <= end && end <= before);
+                            return after <= start && start <= before || after <= end && end <= before;
                         })).orElse(false)
         );
     }
@@ -127,7 +121,7 @@ public class PlayersMutator {
         Map<String, List<Ping>> pingPerCountry = new HashMap<>();
         for (PlayerContainer player : players) {
             Optional<GeoInfo> mostRecent = GeoInfoMutator.forContainer(player).mostRecent();
-            if (!mostRecent.isPresent()) {
+            if (mostRecent.isEmpty()) {
                 continue;
             }
             List<Ping> pings = player.getValue(PlayerKeys.PING).orElse(new ArrayList<>());

@@ -3,9 +3,13 @@ updates:
 - package-ecosystem: gradle
   directory: "/Plan"
   schedule:
-    interval: daily
+    interval: weekly
+    day: friday
   open-pull-requests-limit: 99
   ignore:
+  - dependency-name: net.fabricmc:fabric-loader
+    versions:
+    - ">=0, < 2"
   - dependency-name: com.djrapitops:Extension-ProtocolSupport
     versions:
     - ">= 4.a, < 5"
@@ -15,3 +19,9 @@ updates:
   - dependency-name: com.h2database:h2
     versions:
     - "> 1.4.199"
+- package-ecosystem: npm
+  directory: "/Plan/react/dashboard"
+  schedule:
+    interval: weekly
+    day: friday
+  open-pull-requests-limit: 99

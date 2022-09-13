@@ -21,6 +21,7 @@ import com.creeperface.nukkit.placeholderapi.api.PlaceholderAPI;
 import com.creeperface.nukkit.placeholderapi.api.PlaceholderParameters;
 import com.creeperface.nukkit.placeholderapi.api.PlaceholderParameters.Parameter;
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.gathering.cache.SessionCache;
@@ -79,7 +80,7 @@ public class NukkitPlaceholderRegistrar {
                 .loader(options -> {
                     try {
                         return loader.apply(
-                                getPlaceholderParameterValues(options.getParameters())
+                                new Arguments(getPlaceholderParameterValues(options.getParameters()))
                         );
                     } catch (Exception e) {
                         errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());

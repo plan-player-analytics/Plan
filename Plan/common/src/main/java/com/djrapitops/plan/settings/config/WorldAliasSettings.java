@@ -30,13 +30,12 @@ import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -54,6 +53,8 @@ public class WorldAliasSettings {
     private final Processing processing;
     private final ErrorLogger errorLogger;
 
+    private List<String[]> regexRules;
+
     @Inject
     public WorldAliasSettings(
             Lazy<PlanConfig> config,
@@ -70,8 +71,34 @@ public class WorldAliasSettings {
         percentageFormatter = () -> formatters.get().percentage();
     }
 
-    private ConfigNode getAliasSection() {
+    private ConfigNode getAliasListNode() {
         return config.get().get(DisplaySettings.WORLD_ALIASES);
+    }
+
+    private List<String[]> getRegexRules() {
+        if (regexRules == null) {
+            regexRules = new ArrayList<>();
+            for (String regexRule : config.get().getStringList("World_aliases.Regex")) {
+                regexRules.add(StringUtils.split(regexRule, ":", 2));
+            }
+        }
+        return regexRules;
+    }
+
+    private Optional<String> getAlias(String world) {
+        for (String[] regexRule : getRegexRules()) {
+            if (regexRule.length < 2) continue;
+            String alias = regexRule[0];
+            String regex = regexRule[1];
+            if (world.matches(regex)) {
+                return Optional.of(alias);
+            }
+        }
+        String alias = getAliasListNode().getString(world);
+        if (alias == null || alias.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(alias);
     }
 
     /**
@@ -83,9 +110,9 @@ public class WorldAliasSettings {
      */
     public void addWorld(String world) {
         if (world == null || world.isEmpty()) throw new IllegalArgumentException("Attempted to save empty world alias");
+        if (getAlias(world).isPresent()) return;
 
-        ConfigNode aliasSect = getAliasSection();
-
+        ConfigNode aliasSect = getAliasListNode();
         String previousValue = aliasSect.getString(world);
         if (previousValue == null || previousValue.isEmpty()) {
             aliasSect.set(world, world);
@@ -111,18 +138,17 @@ public class WorldAliasSettings {
                         entry -> entry.getValue().getTotal() // GMTimes.getTotal
                 ));
 
-        ConfigNode aliases = getAliasSection();
-
         Map<String, Long> playtimePerAlias = new HashMap<>();
         for (Map.Entry<String, Long> entry : playtimePerWorld.entrySet()) {
             String worldName = entry.getKey();
             long playtime = entry.getValue();
 
-            if (worldName != null && !aliases.contains(worldName)) {
+            Optional<String> foundAlias = getAlias(worldName);
+            if (foundAlias.isEmpty()) {
                 addWorld(worldName);
             }
 
-            String alias = aliases.getString(worldName);
+            String alias = foundAlias.orElse(worldName);
 
             playtimePerAlias.put(alias, playtimePerAlias.getOrDefault(alias, 0L) + playtime);
         }
@@ -130,8 +156,6 @@ public class WorldAliasSettings {
     }
 
     public Map<String, GMTimes> getGMTimesPerAlias(WorldTimes worldTimes) {
-        ConfigNode aliases = getAliasSection();
-
         Map<String, GMTimes> gmTimesPerAlias = new HashMap<>();
 
         String[] gms = GMTimes.getGMKeyArray();
@@ -140,11 +164,12 @@ public class WorldAliasSettings {
             String worldName = entry.getKey();
             GMTimes gmTimes = entry.getValue();
 
-            if (!aliases.contains(worldName)) {
+            Optional<String> foundAlias = getAlias(worldName);
+            if (foundAlias.isEmpty()) {
                 addWorld(worldName);
             }
 
-            String alias = aliases.getString(worldName);
+            String alias = foundAlias.orElse(worldName);
 
             GMTimes aliasGMTimes = gmTimesPerAlias.getOrDefault(alias, new GMTimes());
             for (String gm : gms) {
@@ -157,21 +182,20 @@ public class WorldAliasSettings {
 
     public String getLongestWorldPlayed(ActiveSession session) {
         Optional<WorldTimes> foundWorldTimes = session.getExtraData(WorldTimes.class);
-        if (!foundWorldTimes.isPresent()) {
+        if (foundWorldTimes.isEmpty()) {
             return locale.get().getString(HtmlLang.UNIT_NO_DATA);
         }
         WorldTimes worldTimes = foundWorldTimes.orElseGet(WorldTimes::new);
 
-        ConfigNode aliases = getAliasSection();
         return worldTimes.getCurrentWorld()
-                .map(currentWorld -> "Current: " + (aliases.contains(currentWorld) ? aliases.getString(currentWorld) : currentWorld))
+                .map(currentWorld -> "Current: " + getAlias(currentWorld).orElse(currentWorld))
                 .orElse("Current: " + locale.get().getString(GenericLang.UNAVAILABLE));
     }
 
     public String getLongestWorldPlayed(FinishedSession session) {
 
         Optional<WorldTimes> foundWorldTimes = session.getExtraData(WorldTimes.class);
-        if (!foundWorldTimes.isPresent()) {
+        if (foundWorldTimes.isEmpty()) {
             return locale.get().getString(HtmlLang.UNIT_NO_DATA);
         }
         WorldTimes worldTimes = foundWorldTimes.orElseGet(WorldTimes::new);

@@ -16,68 +16,82 @@
  */
 package com.djrapitops.plan.gathering.domain.event;
 
+import com.djrapitops.plan.gathering.domain.PlatformPlayerData;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 
-import java.net.InetAddress;
 import java.util.UUID;
 
 public class PlayerJoin {
 
-    private final UUID playerUUID;
-    private final String playerName;
-    private final String displayName;
-    private final InetAddress ipAddress;
-
-    private final ServerUUID serverUUID;
-    private final String world;
-    private final String gameMode;
+    private final Server server;
+    private final PlatformPlayerData player;
 
     private final long time;
 
-    public PlayerJoin(
-            UUID playerUUID, String playerName, String displayName, InetAddress ipAddress,
-            ServerUUID serverUUID, String world, String gameMode,
-            long time
-    ) {
-        this.playerUUID = playerUUID;
-        this.playerName = playerName;
-        this.displayName = displayName;
-        this.ipAddress = ipAddress;
-        this.serverUUID = serverUUID;
-        this.world = world;
-        this.gameMode = gameMode;
+    private PlayerJoin(Server server, PlatformPlayerData player, long time) {
+        this.server = server;
+        this.player = player;
         this.time = time;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public UUID getPlayerUUID() {
-        return playerUUID;
+        return player.getUUID();
     }
 
     public String getPlayerName() {
-        return playerName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public InetAddress getIpAddress() {
-        return ipAddress;
+        return player.getName();
     }
 
     public ServerUUID getServerUUID() {
-        return serverUUID;
+        return server.getUuid();
     }
 
-    public String getWorld() {
-        return world;
+    public Server getServer() {
+        return server;
     }
 
-    public String getGameMode() {
-        return gameMode;
+    public PlatformPlayerData getPlayer() {
+        return player;
     }
 
     public long getTime() {
         return time;
+    }
+
+    public String getJoinAddress() {
+        return player.getJoinAddress().orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+    }
+
+    public static final class Builder {
+        private Server server;
+        private PlatformPlayerData player;
+        private long time;
+
+        private Builder() {}
+
+        public static Builder aPlayerJoin() {return new Builder();}
+
+        public Builder server(Server server) {
+            this.server = server;
+            return this;
+        }
+
+        public Builder player(PlatformPlayerData player) {
+            this.player = player;
+            return this;
+        }
+
+        public Builder time(long time) {
+            this.time = time;
+            return this;
+        }
+
+        public PlayerJoin build() {return new PlayerJoin(server, player, time);}
     }
 }

@@ -16,11 +16,11 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.FilterLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
 
 import javax.inject.Inject;
@@ -57,17 +57,17 @@ public class BannedFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
         List<String> selected = getSelected(query);
-        Set<UUID> uuids = new HashSet<>();
+        Set<Integer> userIds = new HashSet<>();
         String[] options = getOptionsArray();
 
         boolean includeBanned = selected.contains(options[0]);
         boolean includeNotBanned = selected.contains(options[1]);
 
         if (includeBanned && includeNotBanned) throw new CompleteSetException(); // Full set, no need for query
-        if (includeBanned) uuids.addAll(dbSystem.getDatabase().query(UserInfoQueries.uuidsOfBanned()));
-        if (includeNotBanned) uuids.addAll(dbSystem.getDatabase().query(UserInfoQueries.uuidsOfNotBanned()));
-        return uuids;
+        if (includeBanned) userIds.addAll(dbSystem.getDatabase().query(UserInfoQueries.userIdsOfBanned()));
+        if (includeNotBanned) userIds.addAll(dbSystem.getDatabase().query(UserInfoQueries.userIdsOfNotBanned()));
+        return userIds;
     }
 }

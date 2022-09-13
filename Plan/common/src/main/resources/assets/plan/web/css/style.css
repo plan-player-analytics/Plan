@@ -869,6 +869,30 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     color: #fff;
 }
 
+.btn.bg-plan:hover,
+.btn.bg-pink:hover,
+.btn.bg-red:hover,
+.btn.bg-purple:hover,
+.btn.bg-deep-purple:hover,
+.btn.bg-indigo:hover,
+.btn.bg-light-blue:hover,
+.btn.bg-black:hover,
+.btn.bg-blue:hover,
+.btn.bg-cyan:hover,
+.btn.bg-teal:hover,
+.btn.bg-green:hover,
+.btn.bg-light-green:hover,
+.btn.bg-lime:hover,
+.btn.bg-yellow:hover,
+.btn.bg-amber:hover,
+.btn.bg-orange:hover,
+.btn.bg-deep-orange:hover,
+.btn.bg-brown:hover,
+.btn.bg-grey:hover,
+.btn.bg-blue-grey:hover {
+    color: #ccc;
+}
+
 .bg-night, body.theme-night .fc-toolbar-chunk .btn.btn-primary {
     background-color: #44475a;
     color: #eee8d5;
@@ -1253,4 +1277,11 @@ body.sidebar-hidden .navbar-nav {
 .container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+}
+
+.topbar-divider {
+    width: 0;
+    border-right: 1px solid #e3e6f0;
+    height: calc(4.375rem - 2rem);
+    margin: auto 1rem;
 }

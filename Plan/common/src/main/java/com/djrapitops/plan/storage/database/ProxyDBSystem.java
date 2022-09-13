@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import net.playeranalytics.plugin.server.PluginLogger;
 
@@ -32,12 +33,13 @@ public class ProxyDBSystem extends DBSystem {
 
     @Inject
     public ProxyDBSystem(
+            PlanConfig config,
             Locale locale,
             MySQLDB mySQLDB,
             SQLiteDB.Factory sqLiteDB,
             PluginLogger logger
     ) {
-        super(locale, sqLiteDB, logger);
+        super(config, locale, sqLiteDB, logger);
         databases.add(mySQLDB);
         db = mySQLDB;
     }

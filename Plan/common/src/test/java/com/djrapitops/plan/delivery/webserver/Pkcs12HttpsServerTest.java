@@ -18,10 +18,11 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -65,7 +66,7 @@ class Pkcs12HttpsServerTest implements HttpsServerTest {
         system.enable();
 
         User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
-        system.getDatabaseSystem().getDatabase().executeTransaction(new RegisterWebUserTransaction(user));
+        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(user));
     }
 
     @AfterAll

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -13,18 +13,16 @@
     <title>Plan | ${playerName}</title>
 
     <!-- Custom fonts for this template-->
-    <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="../vendor/fontawesome-free/css/all.min.css?v=${version}" rel="stylesheet">
     <link crossorigin="anonymous"
           href="https://fonts.googleapis.com/css?family=Nunito:400,700,800,900&display=swap&subset=latin-ext"
           rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
-          integrity="sha256-hHKA3d/HttC8OW3Sl093W8DoZudhHJDj++kZYo6MLzA="
-          crossorigin="anonymous">
-    <link href="../css/sb-admin-2.css" rel="stylesheet">
-    <link href="../css/style.css" rel="stylesheet">
-
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+          integrity="sha256-hHKA3d/HttC8OW3Sl093W8DoZudhHJDj++kZYo6MLzA=" rel="stylesheet">
+    <link href="../css/sb-admin-2.css?v=${version}" rel="stylesheet">
+    <link href="../css/style.css?v=${version}" rel="stylesheet">
 </head>
 
 <body>
@@ -86,7 +84,7 @@
                 <i class="fas fa-fw fa-cubes"></i>
                 <span>Plugins</span>
             </a>
-            <div aria-labelledby="headingPages" class="collapse" data-parent="#accordionSidebar" id="pluginsPages">
+            <div aria-labelledby="headingPages" class="collapse" data-bs-parent="#accordionSidebar" id="pluginsPages">
                 <div class="bg-white py-2 collapse-inner rounded">
                     ${navPluginsTabs}
                 </div>
@@ -107,7 +105,7 @@
             </a>
         </div>
         <div class="ms-md-3 text-center text-md-start">
-            ${version}
+            ${versionButton}
         </div>
     </ul>
     <!-- End of Sidebar -->
@@ -146,8 +144,8 @@
                                                     id="data_kick_count"></span></p>
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                            <img class="rounded mx-auto d-block"
-                                                 src="https://cravatar.eu/avatar/${playerName}/120.png">
+                                            <img class="rounded mx-auto d-block" src="${playerHeadUrl}"
+                                                 style="width: 120px;">
                                         </div>
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                             <p><i class="col-red fa fa-fw fa-crosshairs"></i> Player Kills<span
@@ -186,7 +184,8 @@
                                                     id="data_activity_index_group"></span>)</span></p>
                                             <p><i class="col-green fa fa-fw fa-server"></i> Favorite Server <span
                                                     class="float-end" id="data_favorite_server"></span></p>
-                                            <p>&nbsp; </p>
+                                            <p><i class="col-amber fa fa-fw fa-location-arrow"></i> Join Address<span
+                                                    class="float-end" id="data_latest_join_address"></span></p>
                                             <hr>
                                             <p><i class="col-amber fa fa-fw fa-signal"></i> Average Ping <span
                                                     class="float-end" id="data_average_ping"></span></p>
@@ -686,43 +685,42 @@
 <!-- End of Page Wrapper -->
 
 <!-- Bootstrap core JavaScript-->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"
+<script crossorigin="anonymous"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script crossorigin="anonymous"
         integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k="
-        crossorigin="anonymous"></script>
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="../vendor/datatables/datatables.min.js"></script>
-<link href='../vendor/datatables/datatables.min.css' rel='stylesheet'/>
-<script src="../vendor/highcharts/highstock.js"></script>
-<script src="../vendor/highcharts/drilldown.js"></script>
-<script src="../vendor/highcharts/highcharts-more.js"></script>
-<script src="../vendor/highcharts/no-data-to-display.js"></script>
-<link href='../vendor/fullcalendar/fullcalendar.min.css' rel='stylesheet'/>
-<script src='../vendor/momentjs/moment.js'></script>
-<script src='../vendor/fullcalendar/fullcalendar.min.js'></script>
-<script src="../vendor/masonry/masonry.pkgd.min.js"></script>
+<script src="../vendor/datatables/datatables.min.js?v=${version}"></script>
+<link href='../vendor/datatables/datatables.min.css?v=${version}' rel='stylesheet'/>
+<script src="../vendor/highcharts/highcharts.js?v=${version}"></script>
+<script src="../vendor/highcharts/modules/drilldown.js?v=${version}"></script>
+<script src="../vendor/highcharts/modules/no-data-to-display.js?v=${version}"></script>
+<link href='../vendor/fullcalendar/fullcalendar.min.css?v=${version}' rel='stylesheet'/>
+<script src='../vendor/momentjs/moment.js?v=${version}'></script>
+<script src='../vendor/fullcalendar/fullcalendar.min.js?v=${version}'></script>
+<script src="../vendor/masonry/masonry.pkgd.min.js?v=${version}"></script>
 
 <!-- Custom scripts for all pages-->
-<script src="../js/sb-admin-2.js"></script>
-<script src="../js/xmlhttprequests.js"></script>
-<script src="../js/color-selector.js"></script>
+<script src="../js/sb-admin-2.js?v=${version}"></script>
+<script src="../js/xmlhttprequests.js?v=${version}"></script>
+<script src="../js/color-selector.js?v=${version}"></script>
 
 <!-- Page level custom scripts -->
-<script src="../js/sessionAccordion.js"></script>
-<script src="../js/graphs.js"></script>
-<script src="../js/player-values.js"></script>
+<script src="../js/sessionAccordion.js?v=${version}"></script>
+<script src="../js/graphs.js?v=${version}"></script>
+<script src="../js/player-values.js?v=${version}"></script>
 
 <script id="mainScript">
     try {
         Highcharts.setOptions({
             lang: {noData: "No Data to Display"}, time: {timezoneOffset: ${timeZone} * 60}
         });
-        const playerName = '${playerName}';
+        const playerUUID = '${playerUUID}';
         setLoadingText('Loading player values..');
-        jsonRequest(`../v1/player?player=${encodeURIComponent(playerName)}`, function (json, error) {
+        jsonRequest(`../v1/player?player=${encodeURIComponent(playerUUID)}`, function (json, error) {
             loadPlayerOverviewValues(json, error);
             loadSessionAccordion(json, error);
             loadserverAccordion(json, error);

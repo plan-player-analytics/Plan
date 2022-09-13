@@ -16,14 +16,20 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.filter.SpecifiedFilterInformation;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
+import com.google.gson.Gson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Singleton
 public class RegisteredBetweenDateRangeFilter extends DateRangeFilter {
@@ -42,9 +48,21 @@ public class RegisteredBetweenDateRangeFilter extends DateRangeFilter {
     }
 
     @Override
-    public Set<UUID> getMatchingUUIDs(SpecifiedFilterInformation query) {
+    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
         long after = getAfter(query);
         long before = getBefore(query);
-        return dbSystem.getDatabase().query(BaseUserQueries.uuidsOfRegisteredBetween(after, before));
+        List<String> serverNames = getServerNames(query);
+        List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
+        return dbSystem.getDatabase().query(
+                serverUUIDs.isEmpty() ? BaseUserQueries.userIdsOfRegisteredBetween(after, before)
+                        : UserInfoQueries.userIdsOfRegisteredBetween(after, before, serverUUIDs)
+        );
+    }
+
+    private List<String> getServerNames(InputFilterDto query) {
+        return query.get("servers")
+                .map(serversList -> new Gson().fromJson(serversList, String[].class))
+                .map(Arrays::asList)
+                .orElseGet(Collections::emptyList);
     }
 }

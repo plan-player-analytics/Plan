@@ -107,7 +107,7 @@ public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, Extens
                 AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?" +
                 AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?";
 
-        return db.query(new QueryStatement<Map<Integer, ExtensionData.Builder>>(sql, 1000) {
+        return db.query(new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());

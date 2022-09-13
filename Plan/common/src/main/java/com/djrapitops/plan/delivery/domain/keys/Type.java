@@ -34,11 +34,11 @@ public abstract class Type<T> {
     }
 
     public static <K> Type<K> ofClass(Class<K> of) {
-        return new Type<K>() {};
+        return new Type<>() {};
     }
 
     public static <K> Type<K> of(K object) {
-        return new Type<K>() {};
+        return new Type<>() {};
     }
 
     public Class<Type<T>> getGenericsClass() {

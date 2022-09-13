@@ -65,7 +65,7 @@ public class RemoveOldSampledDataTransaction extends ThrowawayTransaction {
         String sql = DELETE_FROM + TPSTable.TABLE_NAME +
                 WHERE + TPSTable.DATE + "<?" +
                 AND + TPSTable.PLAYERS_ONLINE + "!=?" +
-                AND + TPSTable.SERVER_ID + '=' + ServerTable.STATEMENT_SELECT_SERVER_ID;
+                AND + TPSTable.SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID;
 
         return new ExecStatement(sql) {
             @Override
@@ -80,7 +80,7 @@ public class RemoveOldSampledDataTransaction extends ThrowawayTransaction {
     private Executable cleanPingTable() {
         String sql = DELETE_FROM + PingTable.TABLE_NAME +
                 WHERE + '(' + PingTable.DATE + "<?" +
-                AND + PingTable.SERVER_UUID + "=?)" +
+                AND + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID + ")" +
                 OR + PingTable.MIN_PING + "<0";
 
         return new ExecStatement(sql) {

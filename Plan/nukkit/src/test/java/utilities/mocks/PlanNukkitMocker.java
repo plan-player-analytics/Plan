@@ -34,7 +34,7 @@ import static org.mockito.Mockito.doReturn;
  *
  * @author AuroraLS3
  */
-public class PlanNukkitMocker extends Mocker {
+public class PlanNukkitMocker {
 
     private PlanNukkit planMock;
 
@@ -47,7 +47,6 @@ public class PlanNukkitMocker extends Mocker {
 
     private PlanNukkitMocker mockPlugin() {
         planMock = Mockito.mock(PlanNukkit.class);
-        super.planMock = planMock;
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
 

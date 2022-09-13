@@ -18,19 +18,20 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
-import com.djrapitops.plan.storage.database.transactions.commands.RegisterWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
-import utilities.mocks.objects.TestRunnableFactory;
+import utilities.TestPluginLogger;
 
 import java.util.Collections;
 import java.util.Map;
@@ -45,7 +46,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     @Test
     default void userIsRegistered() {
         User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
-        db().executeTransaction(new RegisterWebUserTransaction(expected));
+        db().executeTransaction(new StoreWebUserTransaction(expected));
         forcePersistenceCheck();
 
         Optional<User> found = db().query(WebUserQueries.fetchUser(WEB_USERNAME));
@@ -78,7 +79,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = createActiveCookieStore();
 
         String cookie = cookieStore.generateNewCookie(user);
 
@@ -92,7 +93,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = createActiveCookieStore();
 
         String cookie = cookieStore.generateNewCookie(user);
 
@@ -106,7 +107,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
 
-        ActiveCookieStore cookieStore = new ActiveCookieStore(Mockito.mock(PlanConfig.class), dbSystem(), new TestRunnableFactory(), Mockito.mock(Processing.class));
+        ActiveCookieStore cookieStore = createActiveCookieStore();
 
         String cookie = cookieStore.generateNewCookie(user);
 
@@ -115,6 +116,15 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         assertFalse(cookieStore.checkCookie(cookie).isPresent());
 
         assertTrue(db().query(WebUserQueries.fetchActiveCookies()).isEmpty());
+    }
+
+    private ActiveCookieStore createActiveCookieStore() {
+        return new ActiveCookieStore(
+                Mockito.mock(ActiveCookieExpiryCleanupTask.class),
+                Mockito.mock(PlanConfig.class),
+                dbSystem(),
+                Mockito.mock(Processing.class),
+                new TestPluginLogger());
     }
 
     @Test

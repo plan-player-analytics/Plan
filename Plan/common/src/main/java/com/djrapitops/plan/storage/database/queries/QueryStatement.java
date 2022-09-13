@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 
 /**
  * SQL query that closes proper elements.
@@ -65,14 +66,12 @@ public abstract class QueryStatement<T> implements Query<T> {
     }
 
     public T executeQuery(PreparedStatement statement) throws SQLException {
-        try {
+        try (statement) {
             statement.setFetchSize(fetchSize);
             prepare(statement);
             try (ResultSet set = statement.executeQuery()) {
                 return processResults(set);
             }
-        } finally {
-            statement.close();
         }
     }
 
@@ -87,5 +86,18 @@ public abstract class QueryStatement<T> implements Query<T> {
     @Override
     public String toString() {
         return "Query (" + sql + ')';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QueryStatement<?> that = (QueryStatement<?>) o;
+        return Objects.equals(getSql(), that.getSql());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSql());
     }
 }

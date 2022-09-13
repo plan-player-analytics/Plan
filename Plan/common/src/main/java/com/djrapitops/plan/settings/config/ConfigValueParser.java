@@ -99,13 +99,14 @@ public interface ConfigValueParser<T> {
             boolean surroundedByDoubleQuotes = value.startsWith("\"") || value.endsWith("\"");
             boolean containsSpace = value.isEmpty() || value.contains(" ");
             boolean startsWithSpecialSymbol = value.startsWith("-") || value.startsWith("#") || value.startsWith("&");
+            boolean containsDoubleQuotes = value.contains("\"");
 
-            if (surroundedByDoubleQuotes || containsSpace || startsWithSpecialSymbol) {
+            if (surroundedByDoubleQuotes || containsDoubleQuotes) {
                 return "'" + value + "'";
-            } else if (surroundedByQuotes) {
-                return "\"" + value + "\"";
+            } else if (surroundedByQuotes || containsSpace || startsWithSpecialSymbol) {
+                return '"' + value + '"';
             }
-            return value;
+            return '"' + value + '"';
         }
     }
 
@@ -139,6 +140,23 @@ public interface ConfigValueParser<T> {
         public String decompose(Long ofValue) {
             if (ofValue == null) throw nullInvalidException();
             return Long.toString(ofValue);
+        }
+    }
+
+    class DoubleParser implements ConfigValueParser<Double> {
+        @Override
+        public Double compose(String fromValue) {
+            try {
+                return Double.parseDouble(fromValue);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        @Override
+        public String decompose(Double ofValue) {
+            if (ofValue == null) throw nullInvalidException();
+            return Double.toString(ofValue);
         }
     }
 

@@ -473,7 +473,11 @@
             Highcharts.setOptions(Highcharts.theme);
             updateGraphs();
         } catch (e) {
-            console.error(e);
+            if ("Highcharts is not defined" === e.message || "updateGraphs is not defined" === e.message) {
+                // Highcharts isn't loaded, can be ignored
+            } else {
+                console.error(e);
+            }
         }
     }
 

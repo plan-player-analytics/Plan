@@ -23,7 +23,8 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.storage.database.queries.*;
+import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
+import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
@@ -37,6 +38,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
+import utilities.TestConstants;
 import utilities.TestErrorLogger;
 
 import java.nio.file.Path;
@@ -52,18 +54,7 @@ import static org.mockito.Mockito.when;
  * @see ExtensionsDatabaseTest
  */
 @ExtendWith(MockitoExtension.class)
-public class SQLiteTest implements DatabaseTest,
-        DatabaseBackupTest,
-        ExtensionsDatabaseTest,
-        ActivityIndexQueriesTest,
-        GeolocationQueriesTest,
-        NicknameQueriesTest,
-        PingQueriesTest,
-        SessionQueriesTest,
-        ServerQueriesTest,
-        TPSQueriesTest,
-        UserInfoQueriesTest,
-        WebUserQueriesTest {
+public class SQLiteTest implements DatabaseTest, DatabaseTestAggregate {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
@@ -72,7 +63,7 @@ public class SQLiteTest implements DatabaseTest,
     private static DBPreparer preparer;
 
     @BeforeAll
-    static void setupDatabase(@TempDir Path temp) throws Exception {
+    static void setupDatabase(@TempDir Path temp) {
         component = DaggerDatabaseTestComponent.builder()
                 .bindTemporaryDirectory(temp)
                 .build();
@@ -102,7 +93,7 @@ public class SQLiteTest implements DatabaseTest,
         db().executeTransaction(new CreateTablesTransaction());
         db().executeTransaction(new RemoveEverythingTransaction());
 
-        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), "ServerName", "")));
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), "ServerName", "", TestConstants.VERSION)));
         assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
     }
 
@@ -145,6 +136,11 @@ public class SQLiteTest implements DatabaseTest,
     @Override
     public ExtensionSvc extensionService() {
         return component.extensionService();
+    }
+
+    @Override
+    public QueryFilters queryFilters() {
+        return component.queryFilters();
     }
 
     @Override

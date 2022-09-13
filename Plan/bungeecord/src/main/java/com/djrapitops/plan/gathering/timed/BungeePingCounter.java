@@ -44,6 +44,7 @@ import net.playeranalytics.plugin.server.Listeners;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -54,35 +55,43 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class BungeePingCounter extends TaskSystem.Task implements Listener {
 
+    private final Map<UUID, Long> startRecording;
     private final Map<UUID, List<DateObj<Integer>>> playerHistory;
 
     private final Listeners listeners;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final RunnableFactory runnableFactory;
 
     @Inject
     public BungeePingCounter(
             Listeners listeners,
             PlanConfig config,
             DBSystem dbSystem,
-            ServerInfo serverInfo,
-            RunnableFactory runnableFactory
+            ServerInfo serverInfo
     ) {
         this.listeners = listeners;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
-        this.runnableFactory = runnableFactory;
+        startRecording = new ConcurrentHashMap<>();
         playerHistory = new HashMap<>();
     }
 
     @Override
     public void run() {
         long time = System.currentTimeMillis();
-        Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
 
+        Iterator<Map.Entry<UUID, Long>> starts = startRecording.entrySet().iterator();
+        while (starts.hasNext()) {
+            Map.Entry<UUID, Long> start = starts.next();
+            if (time >= start.getValue()) {
+                addPlayer(start.getKey());
+                starts.remove();
+            }
+        }
+
+        Iterator<Map.Entry<UUID, List<DateObj<Integer>>>> iterator = playerHistory.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<UUID, List<DateObj<Integer>>> entry = iterator.next();
             UUID uuid = entry.getKey();
@@ -119,12 +128,13 @@ public class BungeePingCounter extends TaskSystem.Task implements Listener {
         }
     }
 
-    public void addPlayer(ProxiedPlayer player) {
-        playerHistory.put(player.getUniqueId(), new ArrayList<>());
+    public void addPlayer(UUID uuid) {
+        playerHistory.put(uuid, new ArrayList<>());
     }
 
     public void removePlayer(ProxiedPlayer player) {
         playerHistory.remove(player.getUniqueId());
+        startRecording.remove(player.getUniqueId());
     }
 
     private int getPing(ProxiedPlayer player) {
@@ -134,15 +144,11 @@ public class BungeePingCounter extends TaskSystem.Task implements Listener {
     @EventHandler
     public void onPlayerJoin(ServerConnectedEvent joinEvent) {
         ProxiedPlayer player = joinEvent.getPlayer();
-        Long pingDelay = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
-        if (pingDelay >= TimeUnit.HOURS.toMillis(2L)) {
+        Long pingDelayMs = config.get(TimeSettings.PING_PLAYER_LOGIN_DELAY);
+        if (pingDelayMs >= TimeUnit.HOURS.toMillis(2L)) {
             return;
         }
-        runnableFactory.create(() -> {
-            if (player.isConnected()) {
-                addPlayer(player);
-            }
-        }).runTaskLater(TimeAmount.toTicks(pingDelay, TimeUnit.MILLISECONDS));
+        startRecording.put(player.getUniqueId(), System.currentTimeMillis() + pingDelayMs);
     }
 
     @EventHandler

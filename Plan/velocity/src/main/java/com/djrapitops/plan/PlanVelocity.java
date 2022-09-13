@@ -23,10 +23,14 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
+import com.djrapitops.plan.unrelocate.org.slf4j.Logger;
+import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -34,8 +38,6 @@ import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.VelocityPlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
-import org.bstats.velocity.Metrics;
-import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
@@ -54,11 +56,13 @@ import java.util.logging.Level;
         name = "Plan",
         version = "@version@",
         description = "Player Analytics Plugin by AuroraLS3",
+        dependencies = {
+                @Dependency(id = "viaversion", optional = true)
+        },
         authors = {"AuroraLS3"}
 )
 public class PlanVelocity implements PlanPlugin {
 
-    private final Metrics.Factory metricsFactory;
     private final ProxyServer proxy;
     private final Logger slf4jLogger;
     private final Path dataFolderPath;
@@ -66,22 +70,26 @@ public class PlanVelocity implements PlanPlugin {
     private Locale locale;
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
+    private PlatformAbstractionLayer abstractionLayer;
+    private ErrorLogger errorLogger;
 
     @com.google.inject.Inject
     public PlanVelocity(
             ProxyServer proxy,
             Logger slf4jLogger,
-            @DataDirectory Path dataFolderPath,
-            Metrics.Factory metricsFactory
+            @DataDirectory Path dataFolderPath
     ) {
         this.proxy = proxy;
         this.slf4jLogger = slf4jLogger;
         this.dataFolderPath = dataFolderPath;
-        this.metricsFactory = metricsFactory;
     }
 
     @Subscribe
     public void onProxyStart(ProxyInitializeEvent event) {
+        abstractionLayer = new VelocityPlatformLayer(this, proxy, new Slf4jLoggerWrapper(slf4jLogger), dataFolderPath);
+        logger = abstractionLayer.getPluginLogger();
+        runnableFactory = abstractionLayer.getRunnableFactory();
+
         onEnable();
     }
 
@@ -90,25 +98,17 @@ public class PlanVelocity implements PlanPlugin {
         onDisable();
     }
 
+    @Override
     public void onEnable() {
-        PlatformAbstractionLayer abstractionLayer = new VelocityPlatformLayer(this, proxy, slf4jLogger, dataFolderPath);
-        logger = abstractionLayer.getPluginLogger();
-        runnableFactory = abstractionLayer.getRunnableFactory();
-
         PlanVelocityComponent component = DaggerPlanVelocityComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
                 .build();
         try {
-            system = component.system();
+            system = ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), component::system);
+            errorLogger = component.errorLogger();
             locale = system.getLocaleSystem().getLocale();
             system.enable();
-
-            int pluginId = 10326;
-            new BStatsVelocity(
-                    system.getDatabaseSystem().getDatabase(),
-                    metricsFactory.make(this, pluginId)
-            ).registerMetrics();
 
             logger.info(locale.getString(PluginLang.ENABLED));
         } catch (AbstractMethodError e) {
@@ -133,6 +133,7 @@ public class PlanVelocity implements PlanPlugin {
         }
     }
 
+    @Override
     public void onDisable() {
         runnableFactory.cancelAllKnownTasks();
         if (system != null) system.disable();
@@ -152,7 +153,7 @@ public class PlanVelocity implements PlanPlugin {
                 commandManager.metaBuilder(command.getPrimaryAlias())
                         .aliases(command.getAliases().toArray(new String[0]))
                         .build(),
-                new VelocityCommand(runnableFactory, system.getErrorLogger(), command)
+                new VelocityCommand(runnableFactory, errorLogger, command)
         );
     }
 
@@ -182,5 +183,9 @@ public class PlanVelocity implements PlanPlugin {
     @Override
     public File getDataFolder() {
         return dataFolderPath.toFile();
+    }
+
+    private String fixMsgParams(String message) {
+        return message.replaceAll("\\{\\d+}", "{}");
     }
 }

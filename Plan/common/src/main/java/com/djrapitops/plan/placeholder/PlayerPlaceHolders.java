@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.placeholder;
 
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.PerServerMutator;
 import com.djrapitops.plan.delivery.domain.mutators.PingMutator;
@@ -23,6 +24,11 @@ import com.djrapitops.plan.delivery.domain.mutators.PlayerVersusMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
+import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -30,9 +36,11 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.utilities.Predicates;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -69,6 +77,9 @@ public class PlayerPlaceHolders implements Placeholders {
         Formatter<Double> decimals = formatters.decimals();
         Formatter<Long> year = formatters.yearLong();
         Formatter<Long> time = formatters.timeAmount();
+
+        placeholders.register("player_is_afk", this::isAfk);
+        placeholders.register("player_is_afk_badge", player -> isAfk(player) ? "AFK" : "");
 
         placeholders.register("player_banned",
                 player -> player.getValue(PlayerKeys.BANNED)
@@ -137,6 +148,7 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         registerPlaytimePlaceholders(placeholders, time);
+        registerSessionLengethPlaceholders(placeholders, time);
 
         placeholders.register("player_favorite_server",
                 player -> PerServerMutator.forContainer(player).favoriteServer()
@@ -146,10 +158,10 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         placeholders.register("player_activity_index",
-                player -> player.getActivityIndex(
+                player -> decimals.apply(player.getActivityIndex(
                         now(),
                         config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
-                ).getValue()
+                ).getValue())
         );
         placeholders.register("player_activity_group",
                 player -> player.getActivityIndex(
@@ -157,6 +169,81 @@ public class PlayerPlaceHolders implements Placeholders {
                         config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)
                 ).getGroup()
         );
+
+        registerKillPlaceholders(placeholders);
+    }
+
+    private void registerSessionLengethPlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+        placeholders.register("player_current_session_length",
+                player -> time.apply(getActiveSessionLength(player).orElse(-1L)));
+        placeholders.register("player_current_session_length_raw",
+                player -> getActiveSessionLength(player).orElse(0L));
+
+        placeholders.register("player_latest_session_length",
+                player -> time.apply(getActiveSessionLength(player)
+                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
+                                .map(FinishedSession::getLength)
+                                .orElse(-1L))));
+        placeholders.register("player_latest_session_length_raw",
+                player -> getActiveSessionLength(player)
+                        .orElseGet(() -> SessionsMutator.forContainer(player).latestSession()
+                                .map(FinishedSession::getLength)
+                                .orElse(0L)));
+
+        placeholders.register("player_previous_session_length",
+                player -> time.apply(SessionsMutator.forContainer(player).previousSession()
+                        .map(FinishedSession::getLength)
+                        .orElse(-1L)));
+        placeholders.register("player_previous_session_length_raw",
+                player -> SessionsMutator.forContainer(player).previousSession()
+                        .map(FinishedSession::getLength)
+                        .orElse(0L));
+    }
+
+    private boolean isAfk(PlayerContainer player) {
+        return SessionCache.getCachedSession(player.getUnsafe(PlayerKeys.UUID))
+                .map(ActiveSession::getLastMovementForAfkCalculation)
+                .filter(lastMovement -> lastMovement != AFKTracker.IGNORES_AFK
+                        && now() - lastMovement > config.get(TimeSettings.AFK_THRESHOLD))
+                .isPresent();
+    }
+
+    private void registerKillPlaceholders(PlanPlaceholders placeholders) {
+        Formatter<Double> decimals = formatters.decimals();
+        placeholders.register("player_player_caused_deaths",
+                player -> PlayerVersusMutator.forContainer(player).toPlayerDeathCount()
+        );
+        placeholders.register("player_deaths",
+                player -> PlayerVersusMutator.forContainer(player).toDeathCount()
+        );
+        placeholders.register("player_mob_caused_deaths",
+                player -> PlayerVersusMutator.forContainer(player).toMobDeathCount()
+        );
+        placeholders.register("player_kdr",
+                player -> decimals.apply(PlayerVersusMutator.forContainer(player).toKillDeathRatio())
+        );
+        placeholders.register("player_mob_kdr",
+                player -> decimals.apply(PlayerVersusMutator.forContainer(player).toMobKillDeathRatio())
+        );
+        for (int i = 1; i <= 10; i++) {
+            final int index = i;
+            placeholders.register("player_recent_kill_" + index,
+                    player -> player.getValue(PlayerKeys.PLAYER_KILLS)
+                            .filter(list -> list.size() >= index)
+                            .map(list -> list.get(index - 1))
+                            .map(PlayerKill::getVictim)
+                            .map(PlayerKill.Victim::getName)
+                            .orElse("-")
+            );
+            placeholders.register("player_recent_death_" + index,
+                    player -> player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS)
+                            .filter(list -> list.size() >= index)
+                            .map(list -> list.get(index - 1))
+                            .map(PlayerKill::getKiller)
+                            .map(PlayerKill.Killer::getName)
+                            .orElse("-")
+            );
+        }
     }
 
     private void registerPlaytimePlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
@@ -215,9 +302,9 @@ public class PlayerPlaceHolders implements Placeholders {
                         .toPlaytime())
         );
         placeholders.register("player_time_month_raw",
-                player -> time.apply(SessionsMutator.forContainer(player)
+                player -> SessionsMutator.forContainer(player)
                         .filterSessionsBetween(monthAgo(), now())
-                        .toPlaytime())
+                        .toPlaytime()
         );
 
         placeholders.register("player_server_time_active",
@@ -226,9 +313,9 @@ public class PlayerPlaceHolders implements Placeholders {
                         .toActivePlaytime())
         );
         placeholders.register("player_server_time_active_raw",
-                player -> time.apply(SessionsMutator.forContainer(player)
+                player -> SessionsMutator.forContainer(player)
                         .filterPlayedOnServer(serverInfo.getServerUUID())
-                        .toActivePlaytime())
+                        .toActivePlaytime()
         );
 
         placeholders.register("player_server_time_afk",
@@ -291,5 +378,13 @@ public class PlayerPlaceHolders implements Placeholders {
                         .filterPlayedOnServer(serverInfo.getServerUUID())
                         .toPlaytime()
         );
+    }
+
+    @NotNull
+    private Optional<Long> getActiveSessionLength(PlayerContainer player) {
+        SessionCache.refreshActiveSessionsState();
+        return SessionCache.getCachedSession(player.getUnsafe(PlayerKeys.UUID))
+                .map(ActiveSession::toFinishedSessionFromStillActive)
+                .map(FinishedSession::getLength);
     }
 }

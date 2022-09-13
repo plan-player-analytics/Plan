@@ -27,8 +27,9 @@ import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkT
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
-import com.djrapitops.plan.storage.database.transactions.events.PlayerServerRegisterTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.WorldNameStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
@@ -50,16 +51,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
     default void storeSessions(Predicate<FinishedSession> save) {
-        db().executeTransaction(new PlayerServerRegisterTransaction(playerUUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
-        db().executeTransaction(new PlayerServerRegisterTransaction(player2UUID, RandomData::randomTime,
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         for (String world : worlds) {
-            db().executeTransaction(new WorldNameStoreTransaction(serverUUID(), world));
+            db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), world));
         }
 
         for (FinishedSession session : RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID)) {
-            if (save.test(session)) execute(DataStoreQueries.storeSession(session));
+            if (save.test(session)) db().executeTransaction(new StoreSessionTransaction(session));
         }
     }
 
@@ -216,14 +217,14 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         String sql = SELECT +
                 "ux." + UsersTable.USER_UUID + ",COALESCE(active_playtime,0) AS active_playtime" +
                 FROM + UsersTable.TABLE_NAME + " ux" +
-                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_UUID +
+                LEFT_JOIN + '(' + SELECT + SessionsTable.USER_ID +
                 ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + SessionsTable.USER_UUID +
-                ") sx on sx.uuid=ux.uuid";
-        return new QueryStatement<Long>(sql) {
+                GROUP_BY + SessionsTable.USER_ID +
+                ") sx on sx." + SessionsTable.USER_ID + "=ux." + UsersTable.ID;
+        return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, after);
@@ -246,4 +247,23 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         assertNotNull(result);
     }
 
+    @RepeatedTest(25)
+    default void countRegularPlayers() {
+        storeSessions(session -> true);
+        long playtimeThreshold = TimeUnit.MILLISECONDS.toMillis(1L);
+        Integer expected = 1; // All players are very active
+        FinishedSession randomSession = RandomData.randomSession(serverUUID(), worlds, System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1L), playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(randomSession));
+        Integer result = db().query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), serverUUID(), playtimeThreshold));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void noRegularPlayers() {
+        storeSessions(session -> true);
+        long playtimeThreshold = System.currentTimeMillis(); // Threshold is so high it's impossible to be regular
+        Integer expected = 0;
+        Integer result = db().query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), serverUUID(), playtimeThreshold));
+        assertEquals(expected, result);
+    }
 }

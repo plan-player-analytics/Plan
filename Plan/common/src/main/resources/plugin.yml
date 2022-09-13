@@ -8,6 +8,7 @@ softdepend:
   - ASkyBlock
   - AdvancedAchievements
   - AdvancedBan
+  - AuthMe
   - BanManager
   - BentoBox
   - CoreProtect
@@ -39,12 +40,16 @@ softdepend:
   - Towny
   - Vault
   - ViaVersion
+  - Votifier
 
 commands:
   plan:
     usage: /plan
+    permission: plan.command
 
 permissions:
+  plan.command:
+    default: true
   plan.server:
     default: op
   plan.servers:

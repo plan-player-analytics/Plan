@@ -22,12 +22,20 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
+@Path("/auth/logout")
 public class LogoutResolver implements NoAuthResolver {
 
     private final ActiveCookieStore activeCookieStore;
@@ -39,6 +47,15 @@ public class LogoutResolver implements NoAuthResolver {
         this.activeCookieStore = activeCookieStore;
     }
 
+    @GET
+    @Operation(
+            description = "Logout the user by removing cookie",
+            responses = {
+                    @ApiResponse(responseCode = "302 (success)", description = "Logout successful, redirects to /login"),
+                    @ApiResponse(responseCode = "302 (failure)", description = "Cookie had already expired, redirects to /login"),
+            },
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
+    )
     @Override
     public Optional<Response> resolve(Request request) {
         String cookies = request.getHeader("Cookie").orElse("");
@@ -47,10 +64,9 @@ public class LogoutResolver implements NoAuthResolver {
             if (cookie.isEmpty()) continue;
             String[] split = cookie.split("=");
             String name = split[0];
-            String value = split[1];
-            if ("auth".equals(name)) {
-                foundCookie = value;
-                activeCookieStore.removeCookie(value);
+            if ("auth".equals(name) && split.length > 1) {
+                foundCookie = split[1];
+                activeCookieStore.removeCookie(foundCookie);
             }
         }
 
@@ -63,7 +79,7 @@ public class LogoutResolver implements NoAuthResolver {
     public Response getResponse() {
         return Response.builder()
                 .redirectTo("/login")
-                .setHeader("Set-Cookie", "auth=expired; Max-Age=1; SameSite=Lax; Secure;")
+                .setHeader("Set-Cookie", "auth=expired; Max-Age=0; SameSite=Lax; Secure;")
                 .build();
     }
 }

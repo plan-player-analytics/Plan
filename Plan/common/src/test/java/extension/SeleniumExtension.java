@@ -25,12 +25,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 import utilities.CIProperties;
 
 import java.io.File;
 import java.util.ArrayList;
-
-import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
+import java.util.logging.Level;
 
 /**
  * Selenium JUnit 5 Extension.
@@ -39,7 +40,7 @@ import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
  */
 public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, AfterAllCallback {
 
-    private WebDriver driver;
+    private ChromeDriver driver;
 
     public static void newTab(WebDriver driver) {
         WebElement body = driver.findElement(By.tagName("body"));
@@ -48,12 +49,13 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
     }
 
     @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return parameterContext.getParameter().getType().equals(WebDriver.class);
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+        final Class<?> type = parameterContext.getParameter().getType();
+        return WebDriver.class.equals(type) || ChromeDriver.class.equals(type);
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         return driver;
     }
 
@@ -67,17 +69,28 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         driver = getChromeWebDriver();
     }
 
-    private WebDriver getChromeWebDriver() {
+    private ChromeDriver getChromeWebDriver() {
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--enable-javascript");
+        chromeOptions.setCapability(ChromeOptions.LOGGING_PREFS, getLoggingPreferences());
+
+        // Using environment variable assumes linux
         if (System.getenv(CIProperties.CHROME_DRIVER) != null) {
-            ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
             chromeOptions.setHeadless(true);
-            chromeOptions.setCapability(SUPPORTS_JAVASCRIPT, true);
-
-            return new ChromeDriver(chromeOptions);
-        } else {
-            return new ChromeDriver();
         }
+
+        return new ChromeDriver(chromeOptions);
+    }
+
+    private LoggingPreferences getLoggingPreferences() {
+        LoggingPreferences logPrefs = new LoggingPreferences();
+        logPrefs.enable(LogType.PERFORMANCE, Level.INFO);
+        logPrefs.enable(LogType.PROFILER, Level.INFO);
+        logPrefs.enable(LogType.BROWSER, Level.INFO);
+        logPrefs.enable(LogType.CLIENT, Level.INFO);
+        logPrefs.enable(LogType.DRIVER, Level.INFO);
+        return logPrefs;
     }
 
     private String getChromeDriverLocation() {

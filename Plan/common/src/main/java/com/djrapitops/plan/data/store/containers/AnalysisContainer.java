@@ -24,6 +24,6 @@ import com.djrapitops.plan.delivery.domain.container.DynamicDataContainer;
  * @author AuroraLS3
  * @deprecated AnalysisContainer is no longer used.
  */
-@Deprecated
+@Deprecated(since = "5.0")
 public class AnalysisContainer extends DynamicDataContainer {
 }
