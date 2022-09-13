@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.gathering.domain.event;
 
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -31,7 +34,7 @@ public class JoinAddress {
     }
 
     public String getAddress() {
-        return address.get();
+        return StringUtils.truncate(address.get(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
     }
 
     @Override

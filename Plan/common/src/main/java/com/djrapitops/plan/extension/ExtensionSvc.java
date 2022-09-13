@@ -91,6 +91,7 @@ public class ExtensionSvc implements ExtensionService {
 
     public void registerExtensions() {
         try {
+            enabled.set(true);
             extensionRegister.registerBuiltInExtensions(config.getExtensionSettings().getDisabled());
         } catch (IllegalStateException failedToRegisterOne) {
             ErrorContext.Builder context = ErrorContext.builder()

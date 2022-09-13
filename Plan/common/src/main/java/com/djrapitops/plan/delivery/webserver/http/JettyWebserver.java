@@ -26,8 +26,6 @@ import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.server.*;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.SecuredRedirectHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import javax.inject.Inject;
@@ -125,11 +123,7 @@ public class JettyWebserver implements WebServer {
         connector.setHost(internalIP);
         webserver.addConnector(connector);
 
-        if (usingHttps) {
-            webserver.setHandler(new HandlerList(new SecuredRedirectHandler(), jettyRequestHandler));
-        } else {
-            webserver.setHandler(jettyRequestHandler);
-        }
+        webserver.setHandler(jettyRequestHandler);
 
         String startFailure = "Failed to start Jetty webserver: ";
         try {
