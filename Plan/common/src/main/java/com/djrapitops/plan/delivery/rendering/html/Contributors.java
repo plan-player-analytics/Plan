@@ -98,6 +98,7 @@ public class Contributors {
             new Contributor("BratishkaErik", LANG),
             new Contributor("Pingger", CODE),
             new Contributor("stashenko", LANG),
+            new Contributor("PikaMug", CODE),
     };
 
     private Contributors() {

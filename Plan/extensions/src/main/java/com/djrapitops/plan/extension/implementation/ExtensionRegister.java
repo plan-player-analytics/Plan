@@ -137,7 +137,7 @@ public class ExtensionRegister {
         register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);
         register(new ProtectionStonesExtensionFactory(), ProtectionStonesExtensionFactory::createExtension);
         register(new ProtocolSupportExtensionFactory(), ProtocolSupportExtensionFactory::createExtension);
-        register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension);
+        register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension, QuestsExtensionFactory::registerListener);
         register(new ReactExtensionFactory(), ReactExtensionFactory::createExtension);
         register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
