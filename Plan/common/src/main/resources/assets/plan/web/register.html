@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <input autocomplete="new-password" class="form-control form-control-user"
-                                               id="inputPassword" placeholder="Password" type="password">
+                                               id="inputPass" placeholder="Password" type="password">
                                         <div class="form-text" id="passwordHelpBlock">
                                             Password should be more than 8 characters, but there are no limitations.
                                         </div>
@@ -216,7 +216,7 @@
         if (user.length > 50) {
             return displayError('Username can be up to 50 characters, yours is ' + user.length);
         }
-        const password = $('#inputPassword').val();
+        const password = $('#inputPass').val();
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
