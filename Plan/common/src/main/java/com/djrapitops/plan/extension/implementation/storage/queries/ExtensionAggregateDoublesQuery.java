@@ -99,7 +99,7 @@ public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, Extens
                 LEFT_JOIN + '(' + selectDoubleAverage + ") b2 on b2." + ExtensionPlayerValueTable.PROVIDER_ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
-                LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=p1." + ExtensionTabTable.ICON_ID +
+                LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
