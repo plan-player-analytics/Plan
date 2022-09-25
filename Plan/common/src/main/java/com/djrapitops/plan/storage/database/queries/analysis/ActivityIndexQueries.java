@@ -82,8 +82,8 @@ public class ActivityIndexQueries {
 
     public static String selectActivityIndexSQL() {
         String selectActivePlaytimeSQL = SELECT +
-                "ux." + UserInfoTable.USER_ID + ",COALESCE(active_playtime,0) AS active_playtime" +
-                FROM + UserInfoTable.TABLE_NAME + " ux" +
+                "ax_ux." + UserInfoTable.USER_ID + ",COALESCE(active_playtime,0) AS active_playtime" +
+                FROM + UserInfoTable.TABLE_NAME + " ax_ux" +
                 LEFT_JOIN + '(' + SELECT + SessionsTable.USER_ID +
                 ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME +
@@ -91,17 +91,17 @@ public class ActivityIndexQueries {
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
                 GROUP_BY + SessionsTable.USER_ID +
-                ") sx on sx." + SessionsTable.USER_ID + "=ux." + UserInfoTable.USER_ID;
+                ") ax_sx on ax_sx." + SessionsTable.USER_ID + "=ax_ux." + UserInfoTable.USER_ID;
 
         String selectThreeWeeks = selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL;
 
         return SELECT +
-                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (q1.active_playtime*1.0/?) +1.0)) as activity_index," +
-                "u." + UsersTable.ID + " as " + SessionsTable.USER_ID + ',' +
-                "u." + UsersTable.USER_UUID +
-                FROM + '(' + selectThreeWeeks + ") q1" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=q1." + UserInfoTable.USER_ID +
-                GROUP_BY + "q1." + UserInfoTable.USER_ID;
+                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (ax_q1.active_playtime*1.0/?) +1.0)) as activity_index," +
+                "ax_u." + UsersTable.ID + " as user_id," +
+                "ax_u." + UsersTable.USER_UUID +
+                FROM + '(' + selectThreeWeeks + ") ax_q1" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " ax_u on ax_u." + UsersTable.ID + "=ax_q1." + UserInfoTable.USER_ID +
+                GROUP_BY + "ax_u." + UsersTable.ID + ",ax_u." + UsersTable.USER_UUID;
     }
 
     public static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, ServerUUID serverUUID, long date) throws SQLException {
@@ -122,13 +122,16 @@ public class ActivityIndexQueries {
     public static Query<Integer> fetchActivityGroupCount(long date, ServerUUID serverUUID, long playtimeThreshold, double above, double below) {
         String selectActivityIndex = selectActivityIndexSQL();
 
-        String selectCount = SELECT + "COUNT(1) as count, COALESCE(activity_index, 0) as activity_index" +
+        String selectIndexes = SELECT + "COALESCE(activity_index, 0) as activity_index" +
                 FROM + UserInfoTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectActivityIndex + ") q2 on q2." + SessionsTable.USER_ID + "=u." + UserInfoTable.USER_ID +
                 WHERE + "u." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + "u." + UserInfoTable.REGISTERED + "<=?" +
-                AND + "activity_index>=?" +
-                AND + "activity_index<?";
+                AND + "u." + UserInfoTable.REGISTERED + "<=?";
+
+        String selectCount = SELECT + "COUNT(1) as count" +
+                FROM + '(' + selectIndexes + ") i" +
+                WHERE + "i.activity_index>=?" +
+                AND + "i.activity_index<?";
 
         return new QueryStatement<>(selectCount) {
             @Override

@@ -79,7 +79,7 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
                 UsersTable.USER_UUID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
-                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
+                GROUP_BY + UsersTable.USER_UUID +
                 ORDER_BY + "last_seen DESC LIMIT ?";
 
         String sql = SELECT +
@@ -123,10 +123,11 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
 
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerGroups() {
         String selectLimitedNumberOfPlayerUUIDsByLastSeenDate = SELECT +
-                UsersTable.USER_UUID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                UsersTable.USER_UUID + "," +
+                "MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
-                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
+                GROUP_BY + UsersTable.USER_UUID +
                 ORDER_BY + "last_seen DESC LIMIT ?";
 
         String sql = SELECT +

@@ -85,10 +85,10 @@ public class NetworkActivityIndexQueries {
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(onServers, "','") + "')";
 
         String selectActivePlaytimeSQL = SELECT +
-                "ux." + UsersTable.ID + "," +
-                "ux." + UsersTable.USER_UUID + "," +
+                "ax_ux." + UsersTable.ID + "," +
+                "ax_ux." + UsersTable.USER_UUID + "," +
                 "COALESCE(active_playtime,0) AS active_playtime" +
-                FROM + UsersTable.TABLE_NAME + " ux" +
+                FROM + UsersTable.TABLE_NAME + " ax_ux" +
                 LEFT_JOIN + '(' + SELECT + SessionsTable.USER_ID +
                 ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME +
@@ -96,17 +96,17 @@ public class NetworkActivityIndexQueries {
                 AND + SessionsTable.SESSION_START + "<=?" +
                 (onServers.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")") +
                 GROUP_BY + SessionsTable.USER_ID +
-                ") sx on sx." + SessionsTable.USER_ID + "=ux." + UsersTable.ID;
+                ") ax_sx on ax_sx." + SessionsTable.USER_ID + "=ax_ux." + UsersTable.ID;
 
         String selectThreeWeeks = selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL;
 
         return SELECT +
-                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (q1.active_playtime*1.0/?) +1.0)) as activity_index," +
-                "u." + UsersTable.ID + " as " + SessionsTable.USER_ID + ',' +
-                "u." + UsersTable.USER_UUID +
-                FROM + '(' + selectThreeWeeks + ") q1" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=q1." + UsersTable.ID +
-                GROUP_BY + "q1." + UsersTable.ID;
+                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (ax_q1.active_playtime*1.0/?) +1.0)) as activity_index," +
+                "ax_u." + UsersTable.ID + " as user_id," +
+                "ax_u." + UsersTable.USER_UUID +
+                FROM + '(' + selectThreeWeeks + ") ax_q1" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " ax_u on ax_u." + UsersTable.ID + "=ax_q1." + UsersTable.ID +
+                GROUP_BY + "ax_u." + UsersTable.ID + ",ax_u." + UsersTable.USER_UUID;
     }
 
     public static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, long date) throws SQLException {

@@ -482,28 +482,39 @@ public class TPSQueries {
     public static Query<Optional<Long>> fetchLatestServerStartTime(ServerUUID serverUUID, long dataGapThreshold) {
         String selectPreviousRowNumber = SELECT +
                 "-1+ROW_NUMBER() over (ORDER BY " + DATE + ") AS previous_rn, " +
+                SERVER_ID + ',' +
                 DATE + " AS d1" +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + SERVER_ID + ',' + DATE +
                 ORDER_BY + "d1 DESC";
         String selectRowNumber = SELECT +
                 "ROW_NUMBER() over (ORDER BY " + DATE + ") AS rn, " +
+                SERVER_ID + ',' +
                 DATE + " AS previous_date" +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + SERVER_ID + ',' + DATE +
                 ORDER_BY + "previous_date DESC";
-        String selectFirstEntryDate = SELECT + "MIN(" + DATE + ") as start_time" +
+
+        String selectFirstEntryDate = SELECT +
+                "MIN(" + DATE + ") as start_time," +
+                SERVER_ID + " as server_id" +
                 FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID;
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + SERVER_ID;
+
         // Finds the start time since difference between d1 and previous date is a gap,
         // so d1 is always first entry after a gap in the data. MAX finds the latest.
         // Union ensures if there are no gaps to use the first date recorded.
         String selectStartTime = SELECT +
-                "MAX(d1) AS start_time" +
+                "MAX(d1) AS start_time," +
+                "t1." + SERVER_ID + " as server_id" +
                 FROM + "(" + selectPreviousRowNumber + ") t1" +
                 INNER_JOIN +
-                "(" + selectRowNumber + ") t2 ON t1.previous_rn=t2.rn" +
+                "(" + selectRowNumber + ") t2 ON t1.previous_rn=t2.rn AND t2." + SERVER_ID + "=t1." + SERVER_ID +
                 WHERE + "d1 - previous_date > ?" +
+                GROUP_BY + "t1." + SERVER_ID +
                 UNION + selectFirstEntryDate;
 
         return new QueryStatement<>(selectStartTime) {

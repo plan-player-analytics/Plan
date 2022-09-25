@@ -761,7 +761,7 @@ public class SessionQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + "s." + ServerTable.ID;
+                GROUP_BY + "s." + ServerTable.ID + ",s." + ServerTable.NAME;
         return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

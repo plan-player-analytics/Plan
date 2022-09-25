@@ -247,7 +247,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         assertNotNull(result);
     }
 
-    @RepeatedTest(25)
+    @RepeatedTest(5)
     default void countRegularPlayers() {
         storeSessions(session -> true);
         long playtimeThreshold = TimeUnit.MILLISECONDS.toMillis(1L);

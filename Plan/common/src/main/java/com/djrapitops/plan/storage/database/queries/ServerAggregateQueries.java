@@ -89,7 +89,7 @@ public class ServerAggregateQueries {
         String sql = SELECT + "COUNT(1) as c, " + ServerTable.SERVER_UUID +
                 FROM + UserInfoTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID +
-                GROUP_BY + UserInfoTable.SERVER_ID;
+                GROUP_BY + ServerTable.SERVER_UUID;
 
         return new QueryAllStatement<>(sql, 100) {
             @Override

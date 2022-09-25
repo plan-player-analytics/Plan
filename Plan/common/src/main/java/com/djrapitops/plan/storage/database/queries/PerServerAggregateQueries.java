@@ -57,7 +57,7 @@ public class PerServerAggregateQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
-                GROUP_BY + SessionsTable.SERVER_ID;
+                GROUP_BY + ServerTable.SERVER_UUID;
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -103,7 +103,7 @@ public class PerServerAggregateQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
-                GROUP_BY + SessionsTable.SERVER_ID;
+                GROUP_BY + ServerTable.SERVER_UUID;
         return getQueryForCountOf(playerUUID, sql, "kill_count");
     }
 
@@ -113,7 +113,7 @@ public class PerServerAggregateQueries {
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
-                GROUP_BY + SessionsTable.SERVER_ID;
+                GROUP_BY + ServerTable.SERVER_UUID;
         return getQueryForCountOf(playerUUID, sql, "death_count");
     }
 

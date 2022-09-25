@@ -135,7 +135,7 @@ public class WorldTimesQueries {
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID + "=s." + ServerTable.ID +
                 WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
-                GROUP_BY + WORLD_COLUMN + ',' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID;
+                GROUP_BY + WORLD_COLUMN + ",s." + ServerTable.SERVER_UUID;
 
         return new QueryStatement<>(sql, 1000) {
             @Override
