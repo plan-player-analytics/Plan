@@ -17,6 +17,8 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.PlanVelocity;
+import com.djrapitops.plan.identification.properties.VelocityRedisCheck;
+import com.djrapitops.plan.identification.properties.VelocityRedisPlayersOnlineSupplier;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,7 +31,9 @@ public class VelocitySensor implements ServerSensor<Object> {
 
     @Inject
     public VelocitySensor(PlanVelocity plugin) {
-        onlinePlayerCountSupplier = plugin.getProxy()::getPlayerCount;
+        onlinePlayerCountSupplier = VelocityRedisCheck.isClassAvailable()
+                ? new VelocityRedisPlayersOnlineSupplier()
+                : plugin.getProxy()::getPlayerCount;
     }
 
     @Override
