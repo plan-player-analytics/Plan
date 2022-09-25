@@ -37,7 +37,7 @@
         if (user.length > 50) {
             return displayError('Username can be up to 50 characters, yours is ' + user.length);
         }
-        const password = $('#inputPassword').val();
+        const password = $('#inputPass').val();
         if (!password || password.length < 1) {
             return displayError('You need to specify a Password');
         }
@@ -46,7 +46,7 @@
                 if (error.includes("HTTP 403")) {
                     location.reload();
                 }
-                $('#inputPassword').val("");
+                $('#inputPass').val("");
                 return displayError('Login failed: ' + error);
             }
             if (json && json.success) {
@@ -93,7 +93,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <input autocomplete="current-password" class="form-control form-control-user"
-                                               id="inputPassword" placeholder="Password"
+                                               id="inputPass" placeholder="Password"
                                                type="password">
                                     </div>
                                     <button class="btn bg-plan btn-user w-100" href="#" id="login-button">

@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import DataTablesTable from "../../table/DataTablesTable";
 import {CardLoader} from "../../navigation/Loader";
+import {baseAddress} from "../../../service/backendConfiguration";
 
 const PlayerListCard = ({data}) => {
     const {t} = useTranslation();
@@ -13,7 +14,9 @@ const PlayerListCard = ({data}) => {
     useEffect(() => {
         if (!data) return;
         for (const row of data.data) {
-            row.name = row.name.replace('../player/', '../../player/');
+            row.name = row.name
+                .replace('../player/', baseAddress + '/player/')
+                .replace('./player/', baseAddress + '/player/');
         }
 
         setOptions({
