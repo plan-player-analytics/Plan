@@ -111,7 +111,7 @@ public class JettyInternalRequest implements InternalRequest {
         if (!textCookies.isEmpty()) {
             String[] separated = new TextStringBuilder().appendWithSeparators(textCookies, ";").build().split(";");
             for (String textCookie : separated) {
-                cookies.add(new Cookie(textCookie));
+                cookies.add(new Cookie(textCookie.trim()));
             }
         }
         return cookies;
