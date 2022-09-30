@@ -19,24 +19,24 @@ command:
       description: "Datenbanktyp, zu welchem Daten verschoben werden sollen. Kann nicht der selbe wie vorher sein."
     dbTypeRemove:
       description: "Datenbanktyp, von welchem alle Daten gelöscht werden sollen."
-    exportKind: "export kind"
+    exportKind: "Export-Art"
     feature:
       description: "Name des zu deaktivierenden Features: ${0}"
-      name: "feature"
-    importKind: "import kind"
+      name: "Feature"
+    importKind: "Import-Art"
     nameOrUUID:
       description: "Name oder UUID eines Spieler"
       name: "name/uuid"
       removeDescription: "Anhabe eines Spielers, welcher aus der aktuellen Datenbank entfernt werden soll"
     server:
       description: "Name, ID oder UUID eines Servers"
-      name: "server"
+      name: "Server"
     subcommand:
-      description: "Nutze den Befehl ohne Unterbefehl, um die Hilfe anzuzeigen"
-      name: "subcommand"
+      description: "Nutze den Befehl ohne Subcommand, um die Hilfe anzuzeigen"
+      name: "Subcommand"
     username:
       description: "Nutzername eines anderen Nutzers. Wenn nicht angegeben, wird der mit dem Spieler verknüpfte Benutzer verwendet."
-      name: "username"
+      name: "Nutzername"
   confirmation:
     accept: "Annehmen"
     cancelNoChanges: "Abgebrochen. Es wurden keine Daten verändert."
@@ -49,12 +49,12 @@ command:
     expired: "Bestätigungsanfrage abgelaufen, nutze den Befehl erneut"
     unregister: "You are about to unregister '${0}' linked to ${1}"
   database:
-    creatingBackup: "Creating a backup file '${0}.db' with contents of ${1}"
+    creatingBackup: "Erstellen der Backupdatei '${0}.db' mit den Inhalten von ${1}"
     failDbNotOpen: "§cDatenbank ist ${0} - Bitte versuche es später erneut."
     manage:
       confirm: "> §cFüge '-a' zum Befehl hinzu um die Ausführung zu bestätigen: ${0}"
       confirmOverwrite: "Daten in ${0} werden überschrieben!"
-      confirmPartialRemoval: "Join Address Data for Server ${0} in ${1} will be removed!"
+      confirmPartialRemoval: "Beitrittsadressendaten für Server ${0} in ${1} werden entfernt!"
       confirmRemoval: "Daten in ${0} werden gelöscht!"
       fail: "> §cEtwas ist schiefgelaufen: ${0}"
       failFileNotFound: "> §cKeine Daten in ${0} gefunden"
@@ -64,8 +64,8 @@ command:
       failSameServer: "Server kann nicht als uninstallier markiert werden. (Du bist da dran)."
       hotswap: "§eDenk dran, zur neuen Datenbank zu wechseln (/plan db hotswap ${0}) und um das Plugin neu zu laden."
       importers: "Importer:"
-      preparing: "Preparing.."
-      progress: "${0} / ${1} processed.."
+      preparing: "Vorbereiten.."
+      progress: "${0} / ${1} verarbeitet.."
       start: "> §2Verarbeite Daten..."
       success: "> §aErfolgreich!"
     playerRemoval: "Entferne Daten von ${0} aus ${1}.."
@@ -82,12 +82,12 @@ command:
     missingFeature: "§eWelches Feature soll deaktiviert werden? (momentan unterstützt: ${0})"
     missingLink: "Dieser Benutzer ist nicht mit deinem Konto verknüpft und du hast nicht die Berechtigung, die Konten anderer Benutzer zu entfernen."
     noPermission: "§cDafür fehlt dir die Berechtigung."
-    onAccept: "The accepted action errored upon execution: ${0}"
-    onDeny: "The denied action errored upon execution: ${0}"
-    playerNotFound: "Player '${0}' was not found, they have no UUID."
-    playerNotInDatabase: "Player '${0}' was not found in the database."
-    seeConfig: "see '${0}' in config.yml"
-    serverNotFound: "Server '${0}' was not found from the database."
+    onAccept: "Bei der Ausführung der akzeptierten Aktion ist ein Fehler aufgetreten: ${0}"
+    onDeny: "Bei der Ausführung der verweigerten Aktion ist ein Fehler aufgetreten: ${0}"
+    playerNotFound: "Spieler '${0}' wurde nicht gefunden, er hat keine UUID."
+    playerNotInDatabase: "Spieler '${0}' wurde nichtn in der Datenbank gefunden."
+    seeConfig: "Siehe '${0}' in config.yml"
+    serverNotFound: "Server '${0}' wurde nicht in der Datenbank gefunden."
     tooManyArguments: "§cNur ein Argument erforderlich ${1}"
     unknownUsername: "§cDieser Benutzer war noch nie auf dem Server."
     webUserExists: "§cDieser Benutzer existiert schon!"
@@ -95,7 +95,7 @@ command:
   footer:
     help: "§7Fahre über Vefehle oder Argumente oder nutze '/${0} ?' um mehr über diese zu lernen."
   general:
-    failNoExporter: "§eExporter '${0}' doesn't exist"
+    failNoExporter: "§eExporter '${0}' existiert nicht"
     failNoImporter: "§eImporter '${0}' existiert nicht"
     featureDisabled: "§a'${0}' wurde bis zum nächsten Reload des Plugins deaktiviert."
     noAddress: "§eEs war keine Adresse verfügbar - Verwendung von localhost als Fallback. Richte 'Alternative_IP' in den Einstellungen ein."
@@ -122,68 +122,68 @@ command:
   help:
     database:
       description: "Verwalte die Plan Datenbank"
-      inDepth: "Use different database subcommands to change the data in some way"
+      inDepth: "Nutze verschiedenen Datenbank-Subcommands um die Daten zu verändern"
     dbBackup:
       description: "Erstelle ein Backup der Datenbank in eine Datei"
-      inDepth: "Uses SQLite to backup the target database to a file."
+      inDepth: "Nutzt SQLite um ein Backup der Datenbank in einer Datei zu speichern."
     dbClear:
       description: "Lösche ALLE Daten von Plan"
-      inDepth: "Clears all Plan tables, removing all Plan-data in the process."
+      inDepth: "Leert alle Plan Tabellen, alle Plan-Daten werden dabei gelöscht."
     dbHotswap:
       description: "Ändere die Datenbank schnell"
-      inDepth: "Reloads the plugin with the other database and changes the config to match."
+      inDepth: "Lädt das Plugin mit der anderen Datenbank neu und passt die config-Datei entsprechen an."
     dbMove:
       description: "Bewege die Daten zwischen den Datenbanken"
-      inDepth: "Overwrites contents in the other database with the contents in another."
+      inDepth: "Überschreibt die Inhalte in der Datenbank mit den Inhalten der Anderen."
     dbRemove:
       description: "Lösche Daten eines Spielers aus der aktuellen Datenbank"
-      inDepth: "Removes all data linked to a player from the Current database."
+      inDepth: "Löscht alle Daten, die mit einem Spieler verbunden sind, aus der aktuellen Datenbank."
     dbRestore:
       description: "Stelle Daten aus einer Datei in die Datenbank wiederher"
-      inDepth: "Uses SQLite backup file and overwrites contents of the target database."
+      inDepth: "Nutzt eine SQLite-Backupdatei und überschreibt die Inhalte der angegebenen Datenbank."
     dbUninstalled:
-      description: "Set a server as uninstalled in the database."
-      inDepth: "Marks a server in Plan database as uninstalled so that it will not show up in server queries."
+      description: "Makiert einen Server in der Datenbank als deinstalliert."
+      inDepth: "Markiert einen Server in der Plan-Datenbank als deinstalliert, sodass er nicht mehr in Server-Queries erscheint."
     disable:
       description: "Deaktiviere das Plugin oder einen Teil"
-      inDepth: "Disable the plugin or part of it until next reload/restart."
+      inDepth: "Deaktiviert das Plugin oder einen Teil davon bis zum nächsten Reload/Neustart."
     export:
       description: "Exportiere JSON oder HTMl Dateien manuell"
-      inDepth: "Performs an export to export location defined in the config."
+      inDepth: "Führt einen Export zum in der Config bestimmten Exportstandort aus."
     import:
       description: "Importiere Daten"
-      inDepth: "Performs an import to load data into the database."
+      inDepth: "Führt einen Import durch, um Daten in die Datenbank zu laden."
     info:
       description: "Informationen über das Plugin"
-      inDepth: "Display the current status of the plugin."
+      inDepth: "Zeigt den aktuellen Status des Plugins an."
     ingame:
       description: "Zeigt die Spielerinfo im Spiel"
       inDepth: "Zeigt einige Informationen zu einem Spieler im Spiel."
     json:
       description: "JSON der Rohdaten eines Spielers anzeigen."
-      inDepth: "Allows you to download a player's data in json format. All of it."
+      inDepth: "Erlaubt dir alle Daten eines Spielers im json-Format herunterzuladen. ALLES."
     logout:
       description: "Melde andere Nutzer aus dem Panel ab."
-      inDepth: "Give username argument to log out another user from the panel, give * as argument to log out everyone."
+      inDepth: "Gib einen Spielernamen an, um diesen vom Pannel abzumelden, verwende * um jeden abzumelden."
     migrateToOnlineUuids:
-      description: "Migrate offline uuid data to online uuids"
+      description: "Migriere Offline-UUID-Daten zu Online-UUIDs."
     network:
       description: "Netzwerk-Seite"
-      inDepth: "Obtain a link to the /network page, only does so on networks."
+      inDepth: "Erhalte den Link zur /network-Seite, funktioniert aber nur in Netzwerken."
     player:
       description: "Zeigt eine Spielerseite an"
-      inDepth: "Obtain a link to the /player page of a specific player, or the current player."
+      inDepth: "Erhalte den Link zur /player-Seite eines bestimmeten Spielers oder des aktuellen Spielers."
     players:
       description: "Spieler-Seite"
-      inDepth: "Obtain a link to the /players page to see a list of players."
+      inDepth: "Erhalte den Link zur /player-Seite um eine Liste der Spieler zu sehen."
     register:
       description: "Registriere einen Account"
       inDepth: "Use without arguments to get link to register page. Use --code [code] after registration to get a user."
     reload:
       description: "Plan neuladen"
-      inDepth: "Disable and enable the plugin to reload any changes in config."
+      inDepth: "Deaktiviert und aktiviert das Plugin um Änderungen in der config zu laden."
     removejoinaddresses:
-      description: "Remove join addresses of a specified server"
+      description: "Entfernt die Beitrittsadressen für den angegebenen Server"
     search:
       description: "Nach einem Spieler suchen"
       inDepth: "List all matching player names to given part of a name."
