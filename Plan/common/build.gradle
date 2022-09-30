@@ -67,7 +67,7 @@ dependencies {
 
     testImplementation project(":api")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-java:4.4.0"
+    testImplementation "org.seleniumhq.selenium:selenium-java:4.5.0"
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
