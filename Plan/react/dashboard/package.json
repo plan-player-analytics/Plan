@@ -37,7 +37,7 @@
     "react-scripts": "5.0.1",
     "sass": "^1.54.9",
     "source-map-explorer": "^2.5.2",
-    "swagger-ui": "^4.14.1",
+    "swagger-ui": "^4.14.2",
     "web-vitals": "^3.0.2"
   },
   "scripts": {
