@@ -99,6 +99,7 @@ public class Contributors {
             new Contributor("Pingger", CODE),
             new Contributor("stashenko", LANG),
             new Contributor("PikaMug", CODE),
+            new Contributor("DubHacker", LANG),
     };
 
     private Contributors() {
