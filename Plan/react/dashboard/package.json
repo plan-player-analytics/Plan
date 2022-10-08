@@ -36,7 +36,7 @@
     "react-router-dom": "6",
     "react-scripts": "5.0.1",
     "sass": "^1.55.0",
-    "source-map-explorer": "^2.5.2",
+    "source-map-explorer": "^2.5.3",
     "swagger-ui": "^4.14.2",
     "web-vitals": "^3.0.2"
   },
