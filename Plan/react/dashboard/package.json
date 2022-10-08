@@ -38,7 +38,7 @@
     "sass": "^1.55.0",
     "source-map-explorer": "^2.5.2",
     "swagger-ui": "^4.14.2",
-    "web-vitals": "^3.0.2"
+    "web-vitals": "^3.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
