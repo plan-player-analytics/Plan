@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.PlanAPI;
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
 import com.djrapitops.plan.delivery.formatting.Formatters;
@@ -76,6 +77,7 @@ public class PlanSystem implements SubSystem {
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final DeliveryUtilities deliveryUtilities;
+    private final ComponentSvc componentService;
     private final ResolverSvc resolverService;
     private final ResourceSvc resourceService;
     private final ExtensionSvc extensionService;
@@ -102,6 +104,7 @@ public class PlanSystem implements SubSystem {
             ImportSystem importSystem,
             ExportSystem exportSystem,
             DeliveryUtilities deliveryUtilities,
+            ComponentSvc componentService,
             ResolverSvc resolverService,
             ResourceSvc resourceService,
             ExtensionSvc extensionService,
@@ -127,6 +130,7 @@ public class PlanSystem implements SubSystem {
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
         this.deliveryUtilities = deliveryUtilities;
+        this.componentService = componentService;
         this.resolverService = resolverService;
         this.resourceService = resourceService;
         this.extensionService = extensionService;
@@ -167,6 +171,7 @@ public class PlanSystem implements SubSystem {
      */
     public void enableOtherThanCommands() {
         extensionService.register();
+        componentService.register();
         resolverService.register();
         resourceService.register();
         listenerService.register();

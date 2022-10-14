@@ -44,6 +44,9 @@ processResources {
 
 shadowJar {
     configurations = [project.configurations.shadow]
+
+    from findProject(':extensions:adventure').tasks.shadowJar.archiveFile
+
     exclude('net.fabricmc:*')
     exclude('/mappings/')
 

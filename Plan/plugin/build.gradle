@@ -27,6 +27,8 @@ shadowJar {
     dependsOn processResources
     configurations = [project.configurations.shadow]
 
+    from findProject(':extensions:adventure').tasks.shadowJar.archiveFile
+
     // Exclude these files
     exclude "**/*.svg"
     exclude "**/*.psd"

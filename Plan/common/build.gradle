@@ -66,6 +66,7 @@ dependencies {
     implementation "io.swagger.core.v3:swagger-jaxrs2-jakarta:$swaggerVersion"
 
     testImplementation project(":api")
+    testImplementation project(":extensions:adventure")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
     testImplementation "org.seleniumhq.selenium:selenium-java:4.5.0"
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
