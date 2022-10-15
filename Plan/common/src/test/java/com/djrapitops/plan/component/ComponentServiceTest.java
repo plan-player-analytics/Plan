@@ -28,12 +28,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(FullSystemExtension.class)
 public class ComponentServiceTest {
 
-    static ComponentService service;
+    static ComponentSvc service;
 
     @BeforeAll
     public static void enableSystem(PlanSystem system) {
         system.enable();
-        service = ComponentService.getInstance();
+        service = (ComponentSvc) ComponentService.getInstance();
     }
 
     @AfterAll
@@ -54,41 +54,11 @@ public class ComponentServiceTest {
 
     @Test
     public void testAutoDetermine() {
-        assertEquals("§cred", service.fromAutoDetermine("<red>red").intoLegacy());
-        assertEquals("§cred", service.fromAutoDetermine("&cred").intoLegacy('§'));
-        assertEquals("&cred", service.fromAutoDetermine("§cred").intoLegacy('&'));
-        assertEquals("§cred", service.fromAutoDetermine("&#ff5555red").intoLegacy());
-        assertEquals("§cred", service.fromAutoDetermine("§x§f§f§5§5§5§5red").intoLegacy());
-    }
-
-    @Test
-    public void testMiniMessage() {
-        String input = "<red>red";
-        assertEquals(input, service.fromMiniMessage(input).intoMiniMessage());
-    }
-
-    @Test
-    public void testLegacyAm() {
-        String input = "&cred";
-        assertEquals(input, service.fromLegacy(input, '&').intoLegacy('&'));
-    }
-
-    @Test
-    public void testLegacySection() {
-        String input = "§cred";
-        assertEquals(input, service.fromLegacy(input).intoLegacy());
-    }
-
-    @Test
-    public void testLegacyAdventure() {
-        String input = "&#ff555fred";
-        assertEquals(input, service.fromAdventureLegacy(input).intoAdventureLegacy());
-    }
-
-    @Test
-    public void testLegacyBungee() {
-        String input = "§x§f§f§5§5§5§fred";
-        assertEquals(input, service.fromBungeeLegacy(input).intoBungeeLegacy());
+        assertEquals("§cred", service.convert(service.fromAutoDetermine("<red>red"), ComponentOperation.LEGACY, Component.SECTION));
+        assertEquals("§cred", service.convert(service.fromAutoDetermine("&cred"), ComponentOperation.LEGACY, Component.SECTION));
+        assertEquals("&cred", service.convert(service.fromAutoDetermine("§cred"), ComponentOperation.LEGACY, Component.AMPERSAND));
+        assertEquals("§cred", service.convert(service.fromAutoDetermine("&#ff5555red"), ComponentOperation.LEGACY, Component.SECTION));
+        assertEquals("§cred", service.convert(service.fromAutoDetermine("§x§f§f§5§5§5§5red"), ComponentOperation.LEGACY, Component.SECTION));
     }
 
 }
