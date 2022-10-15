@@ -18,45 +18,18 @@ package com.djrapitops.plan.component;
 
 public class ComponentImpl implements Component {
 
-    private final ComponentSvc service;
     private final ComponentOperation inputOperation;
     private final String input;
     private final char inputCharacter;
 
-    public ComponentImpl(ComponentSvc service, ComponentOperation inputOperation, String input) {
-        this(service, inputOperation, input, Character.MIN_VALUE);
+    public ComponentImpl(ComponentOperation inputOperation, String input) {
+        this(inputOperation, input, Character.MIN_VALUE);
     }
 
-    public ComponentImpl(ComponentSvc service, ComponentOperation inputOperation, String input, char inputCharacter) {
-        this.service = service;
+    public ComponentImpl(ComponentOperation inputOperation, String input, char inputCharacter) {
         this.inputOperation = inputOperation;
         this.input = input;
         this.inputCharacter = inputCharacter;
-    }
-
-    @Override
-    public String intoLegacy(char character) {
-        return service.convert(this, ComponentOperation.LEGACY, character);
-    }
-
-    @Override
-    public String intoAdventureLegacy(char character) {
-        return service.convert(this, ComponentOperation.ADVENTURE_LEGACY, character);
-    }
-
-    @Override
-    public String intoBungeeLegacy(char character) {
-        return service.convert(this, ComponentOperation.BUNGEE_LEGACY, character);
-    }
-
-    @Override
-    public String intoMiniMessage() {
-        return service.convert(this, ComponentOperation.MINIMESSAGE);
-    }
-
-    @Override
-    public String intoJson() {
-        return service.convert(this, ComponentOperation.JSON);
     }
 
     public ComponentOperation getInputOperation() {

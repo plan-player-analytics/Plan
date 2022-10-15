@@ -56,32 +56,32 @@ public class ComponentSvc implements ComponentService {
 
     @Override
     public Component fromAutoDetermine(String unknown) {
-        return new ComponentImpl(this, ComponentOperation.AUTO_DETERMINE, unknown);
+        return new ComponentImpl(ComponentOperation.AUTO_DETERMINE, unknown);
     }
 
     @Override
     public Component fromLegacy(String legacy, char character) {
-        return new ComponentImpl(this, ComponentOperation.LEGACY, legacy, character);
+        return new ComponentImpl(ComponentOperation.LEGACY, legacy, character);
     }
 
     @Override
     public Component fromAdventureLegacy(String adventureLegacy, char character) {
-        return new ComponentImpl(this, ComponentOperation.ADVENTURE_LEGACY, adventureLegacy, character);
+        return new ComponentImpl(ComponentOperation.ADVENTURE_LEGACY, adventureLegacy, character);
     }
 
     @Override
     public Component fromBungeeLegacy(String bungeeLegacy, char character) {
-        return new ComponentImpl(this, ComponentOperation.BUNGEE_LEGACY, bungeeLegacy, character);
+        return new ComponentImpl(ComponentOperation.BUNGEE_LEGACY, bungeeLegacy, character);
     }
 
     @Override
     public Component fromMiniMessage(String miniMessage) {
-        return new ComponentImpl(this, ComponentOperation.MINIMESSAGE, miniMessage);
+        return new ComponentImpl(ComponentOperation.MINIMESSAGE, miniMessage);
     }
 
     @Override
     public Component fromJson(String json) {
-        return new ComponentImpl(this, ComponentOperation.JSON, json);
+        return new ComponentImpl(ComponentOperation.JSON, json);
     }
 
     public void register() {
