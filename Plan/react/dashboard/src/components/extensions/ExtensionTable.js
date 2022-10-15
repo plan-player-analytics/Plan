@@ -31,6 +31,7 @@ const ExtensionDataTable = ({table}) => {
         deferRender: true,
         columns: data.columns,
         data: data.data,
+        pagingType: "numbers",
         order: [[1, "desc"]]
     }
     return (
