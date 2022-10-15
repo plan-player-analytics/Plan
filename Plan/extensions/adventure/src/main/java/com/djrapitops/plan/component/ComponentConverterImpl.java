@@ -22,7 +22,7 @@ import net.kyori.adventure.text.serializer.ComponentSerializer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
-@SuppressWarnings("unused") // Reflection
+@SuppressWarnings("unused") // Accessed through Reflection
 public class ComponentConverterImpl implements ComponentConverter {
 
     private static final char AMPERSAND = com.djrapitops.plan.component.Component.AMPERSAND;
