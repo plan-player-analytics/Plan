@@ -30,14 +30,14 @@ import javax.inject.Singleton;
 @Singleton
 public class ComponentSvc implements ComponentService {
 
-    private final IComponentConverter converter;
+    private final ComponentConverter converter;
 
     @Inject
     public ComponentSvc(ErrorLogger errorLogger) {
-        IComponentConverter converter = null;
+        ComponentConverter converter = null;
         try {
-            Class<?> clazz = Class.forName("com.djrapitops.plan.component.ComponentConverter");
-            converter = (IComponentConverter) clazz.getDeclaredConstructor().newInstance();
+            Class<?> clazz = Class.forName("com.djrapitops.plan.component.ComponentConverterImpl");
+            converter = (ComponentConverter) clazz.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
             errorLogger.error(e, ErrorContext.builder().related("Could not initialize ComponentConverter").build());
         }
@@ -64,32 +64,32 @@ public class ComponentSvc implements ComponentService {
     }
 
     @Override
-    public ComponentImpl fromAutoDetermine(String unknown) {
+    public Component fromAutoDetermine(String unknown) {
         return new ComponentImpl(this, ComponentOperation.AUTO_DETERMINE, unknown);
     }
 
     @Override
-    public ComponentImpl fromLegacy(String legacy, char character) {
+    public Component fromLegacy(String legacy, char character) {
         return new ComponentImpl(this, ComponentOperation.LEGACY, legacy, character);
     }
 
     @Override
-    public ComponentImpl fromAdventureLegacy(String adventureLegacy, char character) {
+    public Component fromAdventureLegacy(String adventureLegacy, char character) {
         return new ComponentImpl(this, ComponentOperation.ADVENTURE_LEGACY, adventureLegacy, character);
     }
 
     @Override
-    public ComponentImpl fromBungeeLegacy(String bungeeLegacy, char character) {
+    public Component fromBungeeLegacy(String bungeeLegacy, char character) {
         return new ComponentImpl(this, ComponentOperation.BUNGEE_LEGACY, bungeeLegacy, character);
     }
 
     @Override
-    public ComponentImpl fromMiniMessage(String miniMessage) {
+    public Component fromMiniMessage(String miniMessage) {
         return new ComponentImpl(this, ComponentOperation.MINIMESSAGE, miniMessage);
     }
 
     @Override
-    public ComponentImpl fromJson(String json) {
+    public Component fromJson(String json) {
         return new ComponentImpl(this, ComponentOperation.JSON, json);
     }
 

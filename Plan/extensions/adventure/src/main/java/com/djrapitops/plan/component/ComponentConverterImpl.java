@@ -23,14 +23,14 @@ import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 @SuppressWarnings("unused") // Reflection
-public class ComponentConverter implements IComponentConverter {
+public class ComponentConverterImpl implements ComponentConverter {
 
     private static final char AMPERSAND = com.djrapitops.plan.component.Component.AMPERSAND;
     private static final char SECTION = com.djrapitops.plan.component.Component.SECTION;
     private final ComponentSerializer<Component, ?, String> legacyAdventureAmpersand;
     private final ComponentSerializer<Component, ?, String> legacyBungeeSection;
 
-    public ComponentConverter() {
+    public ComponentConverterImpl() {
         this.legacyAdventureAmpersand = makeAdventureLegacy(AMPERSAND);
         this.legacyBungeeSection = makeBungeeLegacy(SECTION);
     }
@@ -51,17 +51,17 @@ public class ComponentConverter implements IComponentConverter {
     }
 
     @Override
-    public String convert(ComponentImpl componentImpl, ComponentOperation outputOperation, char outputCharacter) {
-        net.kyori.adventure.text.Component component = makeIntoComponent(componentImpl);
+    public String convert(ComponentImpl inputComponent, ComponentOperation outputOperation, char outputCharacter) {
+        net.kyori.adventure.text.Component component = makeIntoComponent(inputComponent);
 
         return getSerializer(outputOperation, outputCharacter)
                 .serialize(component);
     }
 
-    private net.kyori.adventure.text.Component makeIntoComponent(ComponentImpl componentImpl) {
-        ComponentOperation inputOperation = componentImpl.getInputOperation();
-        String input = componentImpl.getInput();
-        char inputCharacter = componentImpl.getInputCharacter();
+    private net.kyori.adventure.text.Component makeIntoComponent(ComponentImpl component) {
+        ComponentOperation inputOperation = component.getInputOperation();
+        String input = component.getInput();
+        char inputCharacter = component.getInputCharacter();
 
         ComponentSerializer<net.kyori.adventure.text.Component, ? extends net.kyori.adventure.text.Component, String> serializer;
         if (inputOperation == ComponentOperation.AUTO_DETERMINE) {

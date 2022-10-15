@@ -24,7 +24,7 @@ package com.djrapitops.plan.component;
 public interface Component {
 
     char AMPERSAND = '&';
-    char SECTION = '§';
+    char SECTION = '\u00A7';
 
     /**
      * Converts this component into a legacy string. Defaults to using {@link #SECTION}.

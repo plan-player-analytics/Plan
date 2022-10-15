@@ -17,77 +17,81 @@
 package com.djrapitops.plan.component;
 
 import com.djrapitops.plan.PlanSystem;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.io.TempDir;
-import utilities.mocks.PluginMockComponent;
+import extension.FullSystemExtension;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.nio.file.Path;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(FullSystemExtension.class)
 public class ComponentServiceTest {
 
     static PlanSystem system;
     static ComponentService service;
 
     @BeforeAll
-    public static void prepareSystem(@TempDir Path tempDir) throws Exception {
-        PluginMockComponent mockComponent = new PluginMockComponent(tempDir);
-        system = mockComponent.getPlanSystem();
+    public static void enableSystem(PlanSystem system) {
         system.enable();
         service = ComponentService.getInstance();
     }
 
     @AfterAll
-    static void tearDownSystem() {
-        if (system != null) system.disable();
+    public static void tearDown() {
+        service = null;
+        if (system != null) {
+            system.disable();
+        }
     }
 
     @Test
     public void translateTest() {
-        Assertions.assertEquals("§cred", service.translateLegacy("&cred"));
+        assertEquals("§cred", service.translateLegacy("&cred"));
     }
 
     @Test
     public void invalidTranslateTest() {
-        Assertions.assertEquals("&zinvalid color code", service.translateLegacy("&zinvalid color code"));
+        assertEquals("&zinvalid color code", service.translateLegacy("&zinvalid color code"));
     }
 
     @Test
     public void testAutoDetermine() {
-        Assertions.assertEquals("§cred", service.fromAutoDetermine("<red>red").intoLegacy());
-        Assertions.assertEquals("§cred", service.fromAutoDetermine("&cred").intoLegacy('§'));
-        Assertions.assertEquals("&cred", service.fromAutoDetermine("§cred").intoLegacy('&'));
-        Assertions.assertEquals("§cred", service.fromAutoDetermine("&#ff5555red").intoLegacy());
-        Assertions.assertEquals("§cred", service.fromAutoDetermine("§x§f§f§5§5§5§5red").intoLegacy());
+        assertEquals("§cred", service.fromAutoDetermine("<red>red").intoLegacy());
+        assertEquals("§cred", service.fromAutoDetermine("&cred").intoLegacy('§'));
+        assertEquals("&cred", service.fromAutoDetermine("§cred").intoLegacy('&'));
+        assertEquals("§cred", service.fromAutoDetermine("&#ff5555red").intoLegacy());
+        assertEquals("§cred", service.fromAutoDetermine("§x§f§f§5§5§5§5red").intoLegacy());
     }
 
     @Test
     public void testMiniMessage() {
         String input = "<red>red";
-        Assertions.assertEquals(input, service.fromMiniMessage(input).intoMiniMessage());
+        assertEquals(input, service.fromMiniMessage(input).intoMiniMessage());
     }
 
     @Test
     public void testLegacyAm() {
         String input = "&cred";
-        Assertions.assertEquals(input, service.fromLegacy(input, '&').intoLegacy('&'));
+        assertEquals(input, service.fromLegacy(input, '&').intoLegacy('&'));
     }
 
     @Test
     public void testLegacySection() {
         String input = "§cred";
-        Assertions.assertEquals(input, service.fromLegacy(input).intoLegacy());
+        assertEquals(input, service.fromLegacy(input).intoLegacy());
     }
 
     @Test
     public void testLegacyAdventure() {
         String input = "&#ff555fred";
-        Assertions.assertEquals(input, service.fromAdventureLegacy(input).intoAdventureLegacy());
+        assertEquals(input, service.fromAdventureLegacy(input).intoAdventureLegacy());
     }
 
     @Test
     public void testLegacyBungee() {
         String input = "§x§f§f§5§5§5§fred";
-        Assertions.assertEquals(input, service.fromBungeeLegacy(input).intoBungeeLegacy());
+        assertEquals(input, service.fromBungeeLegacy(input).intoBungeeLegacy());
     }
 
 }

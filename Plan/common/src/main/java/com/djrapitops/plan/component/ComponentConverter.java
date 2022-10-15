@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.component;
 
-public interface IComponentConverter {
+public interface ComponentConverter {
 
-    String convert(ComponentImpl componentImpl, ComponentOperation outputOperation, char outputCharacter);
+    String convert(ComponentImpl component, ComponentOperation outputOperation, char outputCharacter);
     String translate(String input, char inputCharacter, char outputCharacter);
 }
