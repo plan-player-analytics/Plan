@@ -16,8 +16,7 @@
  */
 package com.djrapitops.plan.component;
 
-import com.djrapitops.plan.utilities.logging.ErrorContext;
-import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.djrapitops.plan.exceptions.EnableException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,15 +32,13 @@ public class ComponentSvc implements ComponentService {
     private final ComponentConverter converter;
 
     @Inject
-    public ComponentSvc(ErrorLogger errorLogger) {
-        ComponentConverter converter = null;
+    public ComponentSvc() {
         try {
             Class<?> clazz = Class.forName("com.djrapitops.plan.component.ComponentConverterImpl");
-            converter = (ComponentConverter) clazz.getDeclaredConstructor().newInstance();
+            this.converter = (ComponentConverter) clazz.getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
-            errorLogger.error(e, ErrorContext.builder().related("Could not initialize ComponentConverter").build());
+            throw new EnableException("Could not initialize ComponentConverter", e);
         }
-        this.converter = converter;
     }
 
     @Override
