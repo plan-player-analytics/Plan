@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(FullSystemExtension.class)
 public class ComponentServiceTest {
 
-    static PlanSystem system;
     static ComponentService service;
 
     @BeforeAll
@@ -38,11 +37,9 @@ public class ComponentServiceTest {
     }
 
     @AfterAll
-    public static void tearDown() {
+    public static void tearDown(PlanSystem system) {
         service = null;
-        if (system != null) {
-            system.disable();
-        }
+        system.disable();
     }
 
     @Test
