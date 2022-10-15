@@ -160,7 +160,7 @@ public class GeoInfoQueries {
     }
 
     public static Query<List<String>> uniqueGeolocations() {
-        String sql = SELECT + GeoInfoTable.GEOLOCATION + FROM + GeoInfoTable.TABLE_NAME +
+        String sql = SELECT + DISTINCT + GeoInfoTable.GEOLOCATION + FROM + GeoInfoTable.TABLE_NAME +
                 ORDER_BY + GeoInfoTable.GEOLOCATION + " ASC";
 
         return db -> db.queryList(sql, RowExtractors.getString(GeoInfoTable.GEOLOCATION));

@@ -31,7 +31,7 @@ const LanguageSelector = () => {
     )
 }
 
-const Header = ({page, tab}) => {
+const Header = ({page, tab, hideUpdater}) => {
     const {authRequired, user} = useAuth();
     const {toggleColorChooser} = useTheme();
     const {t} = useTranslation();
@@ -56,14 +56,16 @@ const Header = ({page, tab}) => {
                     {tab ? <>{' '}&middot; {t(tab)}</> : ''}</h1>
             </div>
 
-            <span className="topbar-divider"/>
-            <div className="refresh-element">
-                <button onClick={requestUpdate}>
-                    <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
-                </button>
-                {' '}
-                <span className="refresh-time">{lastUpdate.formatted}</span>
-            </div>
+            {!hideUpdater && <>
+                <span className="topbar-divider"/>
+                <div className="refresh-element">
+                    <button onClick={requestUpdate}>
+                        <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
+                    </button>
+                    {' '}
+                    <span className="refresh-time">{lastUpdate.formatted}</span>
+                </div>
+            </>}
 
             <div className="ms-auto">
                 <LanguageSelector/>
