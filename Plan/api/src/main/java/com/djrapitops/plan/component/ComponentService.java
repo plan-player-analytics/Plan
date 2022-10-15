@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * A utility api class for dealing with rich and less-rich Minecraft message formats.
  *
  * @author Vankka
+ * @see #getInstance()
  */
 public interface ComponentService {
 

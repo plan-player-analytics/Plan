@@ -43,15 +43,20 @@ public class ComponentSvc implements ComponentService {
         return input.replace(Component.AMPERSAND, Component.SECTION);
     }
 
-    protected String convert(ComponentImpl component, ComponentOperation operation) {
+    public String convert(Component component, ComponentOperation operation) {
         return convert(component, operation, Character.MIN_VALUE);
     }
 
-    protected String convert(ComponentImpl component, ComponentOperation operation, char inputCharacter) {
-        if (converter != null) {
-            return converter.convert(component, operation, inputCharacter);
+    public String convert(Component component, ComponentOperation operation, char inputCharacter) {
+        if (!(component instanceof ComponentImpl)) {
+            throw new IllegalArgumentException("Component was not made by ComponentService, but was of type " + component.getClass().getName());
         }
-        return component.getInput();
+
+        ComponentImpl impl = (ComponentImpl) component;
+        if (converter != null) {
+            return converter.convert(impl, operation, inputCharacter);
+        }
+        return impl.getInput();
     }
 
     @Override

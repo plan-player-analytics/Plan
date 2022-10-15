@@ -17,7 +17,8 @@
 package com.djrapitops.plan.component;
 
 /**
- * A Minecraft message component.
+ * A Minecraft message component. You should <b>not</b> implement this,
+ * you can use {@link ComponentService} to a get an instance.
  *
  * @author Vankka
  */

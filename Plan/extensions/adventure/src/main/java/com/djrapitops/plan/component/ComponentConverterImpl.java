@@ -52,18 +52,18 @@ public class ComponentConverterImpl implements ComponentConverter {
 
     @Override
     public String convert(ComponentImpl inputComponent, ComponentOperation outputOperation, char outputCharacter) {
-        net.kyori.adventure.text.Component component = makeIntoComponent(inputComponent);
+        Component component = makeIntoComponent(inputComponent);
 
         return getSerializer(outputOperation, outputCharacter)
                 .serialize(component);
     }
 
-    private net.kyori.adventure.text.Component makeIntoComponent(ComponentImpl component) {
+    private Component makeIntoComponent(ComponentImpl component) {
         ComponentOperation inputOperation = component.getInputOperation();
         String input = component.getInput();
         char inputCharacter = component.getInputCharacter();
 
-        ComponentSerializer<net.kyori.adventure.text.Component, ? extends net.kyori.adventure.text.Component, String> serializer;
+        ComponentSerializer<Component, ? extends Component, String> serializer;
         if (inputOperation == ComponentOperation.AUTO_DETERMINE) {
             boolean isMM = false;
             try {
