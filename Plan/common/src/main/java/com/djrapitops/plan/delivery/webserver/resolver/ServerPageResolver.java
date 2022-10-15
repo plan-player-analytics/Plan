@@ -95,7 +95,6 @@ public class ServerPageResolver implements Resolver {
     private Optional<ServerUUID> getServerUUID(URIPath path) {
         if (serverInfo.getServer().isProxy()
                 && path.getPart(0).map("network"::equals).orElse(false)
-                && path.getPart(1).isEmpty() // No slash at the end.
         ) {
             return Optional.of(serverInfo.getServerUUID());
         }
