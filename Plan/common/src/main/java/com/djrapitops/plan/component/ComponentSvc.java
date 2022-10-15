@@ -29,17 +29,11 @@ import javax.inject.Singleton;
 @Singleton
 public class ComponentSvc implements ComponentService {
 
-    private final ComponentConverter converter;
+    private ComponentConverter converter;
 
+    // This is required to inject
     @Inject
-    public ComponentSvc() {
-        try {
-            Class<?> clazz = Class.forName("com.djrapitops.plan.component.ComponentConverterImpl");
-            this.converter = (ComponentConverter) clazz.getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new EnableException("Could not initialize ComponentConverter", e);
-        }
-    }
+    public ComponentSvc() {}
 
     @Override
     public String translateLegacy(String input, char inputCharacter, char outputCharacter) {
@@ -91,6 +85,12 @@ public class ComponentSvc implements ComponentService {
     }
 
     public void register() {
+        try {
+            Class<?> clazz = Class.forName("com.djrapitops.plan.component.ComponentConverterImpl");
+            this.converter = (ComponentConverter) clazz.getDeclaredConstructor().newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new EnableException("Could not initialize ComponentConverter", e);
+        }
         ComponentService.Holder.set(this);
     }
 }
