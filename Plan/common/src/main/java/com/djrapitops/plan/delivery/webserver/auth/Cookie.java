@@ -24,9 +24,11 @@ public class Cookie {
     private final String value;
 
     public Cookie(String rawRepresentation) {
-        String[] split = StringUtils.split(rawRepresentation, "=", 2);
-        name = split[0];
-        value = split[1];
+        this(StringUtils.split(rawRepresentation, "=", 2));
+    }
+
+    private Cookie(String[] splitRawRepresentation) {
+        this(splitRawRepresentation[0], splitRawRepresentation[1]);
     }
 
     public Cookie(String name, String value) {

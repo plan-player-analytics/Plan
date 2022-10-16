@@ -48,12 +48,14 @@ const DateInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsVa
         const invalid = !isValidDate(value);
         setInvalid(invalid);
 
+        // Value has to change before invalidity events
+        // because all-valid fields triggers graph refresh with the current value
+        setValue(value);
         if (invalid) {
             setAsInvalid(id);
         } else {
             setAsValid(id);
         }
-        setValue(value);
     }
 
     return (

@@ -5,7 +5,7 @@ import {faClock} from "@fortawesome/free-regular-svg-icons";
 
 const isValidTime = value => {
     if (!value) return true;
-    const regex = /^[0-2][0-9]:[0-5][0-9]$/;
+    const regex = /^[0-2]\d:[0-5]\d$/;
     return regex.test(value);
 };
 
@@ -27,12 +27,14 @@ const TimeInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsVa
         const invalid = !isValidTime(value);
         setInvalid(invalid);
 
+        // Value has to change before invalidity events
+        // because all-valid fields triggers graph refresh with the current value
+        setValue(value);
         if (invalid) {
             setAsInvalid(id);
         } else {
             setAsValid(id);
         }
-        setValue(value);
     }
 
     return (
