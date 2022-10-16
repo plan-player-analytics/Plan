@@ -297,6 +297,10 @@ public enum HtmlLang implements Lang {
     QUERY_SHOW_VIEW("html.query.label.view", "Show a view"),
     QUERY("html.query.title.text", "Query<"),
     QUERY_MAKE_ANOTHER("html.query.label.makeAnother", "Make another query"),
+    QUERY_SERVERS_ALL("html.query.label.servers.all", "using data of all servers"),
+    QUERY_SERVERS_SINGLE("html.query.label.servers.single", "using data of 1 server"),
+    QUERY_SERVERS_TWO("html.query.label.servers.two", "using data of 2 servers"),
+    QUERY_SERVERS_MANY("html.query.label.servers.many", "using data of {number} servers"),
 
     WARNING_NO_GAME_SERVERS("html.description.noGameServers", "Some data requires Plan to be installed on game servers."),
     WARNING_NO_GEOLOCATIONS("html.description.noGeolocations", "Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."),

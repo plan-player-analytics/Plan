@@ -4,12 +4,13 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import DropdownMenu from "react-bootstrap-v5/lib/esm/DropdownMenu";
 import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
 import {useTranslation} from "react-i18next";
+import {Dropdown} from "react-bootstrap-v5";
 
-const BasicDropdown = ({selected, optionList, onChange, optionLabelMapper, icon, title}) => {
+export const DropDownWithOptions = ({selected, optionList, onChange, optionLabelMapper, icon, title}) => {
     const {t} = useTranslation();
 
     return (
-        <BasicDropdown className="float-end" style={{position: "absolute", right: "0.5rem"}} title={t(title)}>
+        <Dropdown className="float-end" style={{position: "absolute", right: "0.5rem"}} title={t(title)}>
             <DropdownToggle variant=''>
                 <Fa icon={icon}/> {t(optionLabelMapper ? optionLabelMapper(selected) : selected)}
             </DropdownToggle>
@@ -22,8 +23,6 @@ const BasicDropdown = ({selected, optionList, onChange, optionLabelMapper, icon,
                     </DropdownItem>
                 ))}
             </DropdownMenu>
-        </BasicDropdown>
+        </Dropdown>
     )
 };
-
-export default BasicDropdown

@@ -11,6 +11,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
 import Highcharts from "highcharts/highstock";
+import MultiSelect from "../../input/MultiSelect";
+import CollapseWithButton from "../../layout/CollapseWithButton";
 
 const parseTime = (dateString, timeString) => {
     const d = dateString.match(
@@ -31,10 +33,15 @@ const parseTime = (dateString, timeString) => {
 const QueryOptionsCard = () => {
     const {t} = useTranslation();
 
+    // View state
     const [fromDate, setFromDate] = useState(undefined);
     const [fromTime, setFromTime] = useState(undefined);
     const [toDate, setToDate] = useState(undefined);
     const [toTime, setToTime] = useState(undefined);
+
+    const [selectedServers, setSelectedServers] = useState([]);
+
+    // View state handling
     const [invalidFields, setInvalidFields] = useState([]);
     const setAsInvalid = id => setInvalidFields([...invalidFields, id]);
     const setAsValid = id => setInvalidFields(invalidFields.filter(invalid => id !== invalid));
@@ -58,7 +65,7 @@ const QueryOptionsCard = () => {
     useEffect(updateExtremes, [invalidFields]);
 
     const onSetExtremes = useCallback((event) => {
-        if (event && (event.trigger === "navigator" || event.trigger === 'rangeSelectorButton')) {
+        if (event) {
             const afterDate = Highcharts.dateFormat('%d/%m/%Y', event.min);
             const afterTime = Highcharts.dateFormat('%H:%M', event.min);
             const beforeDate = Highcharts.dateFormat('%d/%m/%Y', event.max);
@@ -70,6 +77,7 @@ const QueryOptionsCard = () => {
         }
     }, [setFromTime, setFromDate, setToTime, setToDate]);
 
+    // View & filter data
     const {data: options, loadingError} = useDataRequest(fetchFilters, []);
     const [graphData, setGraphData] = useState(undefined);
     useEffect(() => {
@@ -77,6 +85,20 @@ const QueryOptionsCard = () => {
             setGraphData({playersOnline: options.viewPoints, color: '#9E9E9E'})
         }
     }, [options, setGraphData]);
+
+    const getServerSelectorMessage = () => {
+        const selected = selectedServers.length;
+        const available = options.view.servers.length;
+        if (selected === 0 || selected === available) {
+            return t('query.label.servers.all');
+        } else if (selected === 1) {
+            return t('query.label.servers.single');
+        } else if (selected === 2) {
+            return t('query.label.servers.two');
+        } else {
+            return t('query.label.servers.many').replace('{number}', selected);
+        }
+    }
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!options) return (<Card>
@@ -145,6 +167,16 @@ const QueryOptionsCard = () => {
                         />
                     </Col>
                 </Row>
+                <Row>
+                    <Col md={12}>
+                        <CollapseWithButton title={getServerSelectorMessage()}>
+                            <MultiSelect options={view.servers.map(server => server.serverName)}
+                                         selectedIndexes={selectedServers}
+                                         setSelectedIndexes={setSelectedServers}/>
+                        </CollapseWithButton>
+                    </Col>
+                </Row>
+                <hr/>
             </Card.Body>
             <button id={"query-button"} className={"btn bg-plan m-2"} disabled={Boolean(invalidFields.length)}>
                 <FontAwesomeIcon icon={faSearch}/> {t('html.query.performQuery')}
