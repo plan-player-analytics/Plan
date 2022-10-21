@@ -84,7 +84,7 @@ public class ChatListener implements FabricListener {
             if (!isEnabled) {
                 return;
             }
-            onChat(sender, message.getContent().getString());
+            onChat(sender, message.getSignedContent());
         });
 
         this.enable();
