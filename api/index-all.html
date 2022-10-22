@@ -117,6 +117,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/extension/icon/Color.html#AMBER" class="member-name-link">AMBER</a> - Enum constant in enum class com.djrapitops.plan.extension.icon.<a href="com/djrapitops/plan/extension/icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/component/Component.html#AMPERSAND" class="member-name-link">AMPERSAND</a> - Static variable in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component">Component</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/query/QueryService.VoidFunction.html#apply()" class="member-name-link">apply()</a> - Method in interface com.djrapitops.plan.query.<a href="com/djrapitops/plan/query/QueryService.VoidFunction.html" title="interface in com.djrapitops.plan.query">QueryService.VoidFunction</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/query/QueryService.ThrowingFunction.html#apply(T)" class="member-name-link">apply(T)</a> - Method in interface com.djrapitops.plan.query.<a href="com/djrapitops/plan/query/QueryService.ThrowingFunction.html" title="interface in com.djrapitops.plan.query">QueryService.ThrowingFunction</a></dt>
@@ -353,6 +355,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block"><a href="com/djrapitops/plan/capability/CapabilityService.html" title="interface in com.djrapitops.plan.capability"><code>CapabilityService</code></a> for figuring out what Plan API methods and classes are available at runtime.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/component/package-summary.html">com.djrapitops.plan.component</a> - package com.djrapitops.plan.component</dt>
+<dd>
+<div class="block"><a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component"><code>ComponentService</code></a> providing an api for Minecraft message components.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/package-summary.html">com.djrapitops.plan.delivery.web</a> - package com.djrapitops.plan.delivery.web</dt>
 <dd>
 <div class="block">PageExtension API for extending the webserver and the website.</div>
@@ -407,6 +413,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Class that allows performing most commonly wanted queries.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/component/Component.html" class="type-name-link" title="interface in com.djrapitops.plan.component">Component</a> - Interface in <a href="com/djrapitops/plan/component/package-summary.html">com.djrapitops.plan.component</a></dt>
+<dd>
+<div class="block">A Minecraft message component.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html" class="type-name-link" title="interface in com.djrapitops.plan.component">ComponentService</a> - Interface in <a href="com/djrapitops/plan/component/package-summary.html">com.djrapitops.plan.component</a></dt>
+<dd>
+<div class="block">A utility api class for dealing with rich and less-rich Minecraft message formats.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.Holder.html" class="type-name-link" title="class in com.djrapitops.plan.component">ComponentService.Holder</a> - Class in <a href="com/djrapitops/plan/component/package-summary.html">com.djrapitops.plan.component</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/CompositeResolver.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.web.resolver">CompositeResolver</a> - Class in <a href="com/djrapitops/plan/delivery/web/resolver/package-summary.html">com.djrapitops.plan.delivery.web.resolver</a></dt>
 <dd>
 <div class="block">Utility Resolver for organizing resolution in a tree-like structure.</div>
@@ -632,6 +648,42 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Enum for determining additional formatter for a value given by a <a href="com/djrapitops/plan/extension/annotation/NumberProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>NumberProvider</code></a>.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromAdventureLegacy(java.lang.String)" class="member-name-link">fromAdventureLegacy(String)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromAdventureLegacy(java.lang.String,char)" class="member-name-link">fromAdventureLegacy(String, char)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromAutoDetermine(java.lang.String)" class="member-name-link">fromAutoDetermine(String)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromBungeeLegacy(java.lang.String)" class="member-name-link">fromBungeeLegacy(String)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromBungeeLegacy(java.lang.String,char)" class="member-name-link">fromBungeeLegacy(String, char)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromJson(java.lang.String)" class="member-name-link">fromJson(String)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromLegacy(java.lang.String)" class="member-name-link">fromLegacy(String)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromLegacy(java.lang.String,char)" class="member-name-link">fromLegacy(String, char)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#fromMiniMessage(java.lang.String)" class="member-name-link">fromMiniMessage(String)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Converts the given input into a <a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/FunctionalResolverWrapper.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.web.resolver">FunctionalResolverWrapper</a> - Class in <a href="com/djrapitops/plan/delivery/web/resolver/package-summary.html">com.djrapitops.plan.delivery.web.resolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/FunctionalResolverWrapper.html#%3Cinit%3E(java.util.function.Function,java.util.function.Predicate)" class="member-name-link">FunctionalResolverWrapper(Function&lt;Request, Optional&lt;Response&gt;&gt;, Predicate&lt;Request&gt;)</a> - Constructor for class com.djrapitops.plan.delivery.web.resolver.<a href="com/djrapitops/plan/delivery/web/resolver/FunctionalResolverWrapper.html" title="class in com.djrapitops.plan.delivery.web.resolver">FunctionalResolverWrapper</a></dt>
@@ -714,6 +766,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/capability/CapabilityService.html#getInstance()" class="member-name-link">getInstance()</a> - Static method in interface com.djrapitops.plan.capability.<a href="com/djrapitops/plan/capability/CapabilityService.html" title="interface in com.djrapitops.plan.capability">CapabilityService</a></dt>
 <dd>
 <div class="block">Obtain instance of CapabilityService.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#getInstance()" class="member-name-link">getInstance()</a> - Static method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Obtain the instance of ComponentService.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/web/ResolverService.html#getInstance()" class="member-name-link">getInstance()</a> - Static method in interface com.djrapitops.plan.delivery.web.<a href="com/djrapitops/plan/delivery/web/ResolverService.html" title="interface in com.djrapitops.plan.delivery.web">ResolverService</a></dt>
 <dd>&nbsp;</dd>
@@ -1362,6 +1418,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/settings/SchedulerService.Holder.html" class="type-name-link" title="class in com.djrapitops.plan.settings">SchedulerService.Holder</a> - Class in <a href="com/djrapitops/plan/settings/package-summary.html">com.djrapitops.plan.settings</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/component/Component.html#SECTION" class="member-name-link">SECTION</a> - Static variable in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/Component.html" title="interface in com.djrapitops.plan.component">Component</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/ElementOrder.html#serialize(com.djrapitops.plan.extension.ElementOrder%5B%5D)" class="member-name-link">serialize(ElementOrder[])</a> - Static method in enum class com.djrapitops.plan.extension.<a href="com/djrapitops/plan/extension/ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/CallEvents.html#SERVER_EXTENSION_REGISTER" class="member-name-link">SERVER_EXTENSION_REGISTER</a> - Enum constant in enum class com.djrapitops.plan.extension.<a href="com/djrapitops/plan/extension/CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a></dt>
@@ -1563,6 +1621,14 @@ loadScripts(document, 'script');</script>
 &nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/icon/Icon.html#toString()" class="member-name-link">toString()</a> - Method in class com.djrapitops.plan.extension.icon.<a href="com/djrapitops/plan/extension/icon/Icon.html" title="class in com.djrapitops.plan.extension.icon">Icon</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#translateLegacy(java.lang.String)" class="member-name-link">translateLegacy(String)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Translates ampersands into section signs for color codes.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/component/ComponentService.html#translateLegacy(java.lang.String,char,char)" class="member-name-link">translateLegacy(String, char, char)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentService.html" title="interface in com.djrapitops.plan.component">ComponentService</a></dt>
+<dd>
+<div class="block">Translates ampersands into section signs for color codes.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:U">U</h2>
 <dl class="index">

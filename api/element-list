@@ -1,4 +1,5 @@
 com.djrapitops.plan.capability
+com.djrapitops.plan.component
 com.djrapitops.plan.delivery.web
 com.djrapitops.plan.delivery.web.resolver
 com.djrapitops.plan.delivery.web.resolver.exception

@@ -8,6 +8,7 @@ com.djrapitops.plan.command.use
 com.djrapitops.plan.commands
 com.djrapitops.plan.commands.subcommands
 com.djrapitops.plan.commands.use
+com.djrapitops.plan.component
 com.djrapitops.plan.data.element
 com.djrapitops.plan.data.plugin
 com.djrapitops.plan.data.store.containers
