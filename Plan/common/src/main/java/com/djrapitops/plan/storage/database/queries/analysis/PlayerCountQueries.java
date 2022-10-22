@@ -82,7 +82,7 @@ public class PlayerCountQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + "=" + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.SESSION_END + "<=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
-                GROUP_BY + SessionsTable.SERVER_ID;
+                GROUP_BY + ServerTable.SERVER_UUID;
 
         return database -> database.queryMap(sql,
                 (set, byServer) -> byServer.put(
@@ -256,7 +256,7 @@ public class PlayerCountQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
                 AND + UserInfoTable.REGISTERED + ">=?" +
-                GROUP_BY + UserInfoTable.SERVER_ID;
+                GROUP_BY + "s." + ServerTable.SERVER_UUID;
 
         return database -> database.queryMap(sql,
                 (set, byServer) -> byServer.put(
