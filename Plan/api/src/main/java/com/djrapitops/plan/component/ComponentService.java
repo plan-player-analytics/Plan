@@ -41,10 +41,10 @@ public interface ComponentService {
 
     /**
      * Translates ampersands into section signs for color codes. Defaults to {@link Component#AMPERSAND} to {@link Component#SECTION}.
-     * Example: <code>&ctext</code> to <code>§ctext</code>.
+     * Example: {@code &ctext} to {@code §ctext}.
      *
-     * @param input the input color string with color codes using ampersands (<code>&</code>)
-     * @return the same input string with ampersands (<code>&</code>) for color codes replaced with section signs (<code>§</code>)
+     * @param input the input color string with color codes using ampersands ({@code &})
+     * @return the same input string with ampersands ({@code &}) for color codes replaced with section signs ({@code §})
      * @see #translateLegacy(String, char, char)
      */
     default String translateLegacy(String input) {
@@ -52,11 +52,11 @@ public interface ComponentService {
     }
 
     /**
-     * Translates ampersands into section signs for color codes. Example: <code>&ctext</code> to <code>§ctext</code>.
+     * Translates ampersands into section signs for color codes. Example: {@code &ctext} to {@code §ctext}.
      *
-     * @param input the input color string with color codes using ampersands (<code>&</code>)
-     * @param inputCharacter the input character for translation, usually <code>&</code>.
-     * @param outputCharacter the output character for translation, usually <code>§</code>.
+     * @param input           the input color string with color codes using ampersands ({@code &})
+     * @param inputCharacter  the input character for translation, usually {@code &}.
+     * @param outputCharacter the output character for translation, usually {@code §}.
      * @return the same input string with input characters for color codes replaced with output characters
      * @see #translateLegacy(String)
      * @see Component#SECTION
@@ -75,7 +75,7 @@ public interface ComponentService {
 
     /**
      * Converts the given input into a {@link Component}.
-     * Input example <code>§ctext</code>.
+     * Input example {@code §ctext}.
      *
      * @param legacy the input legacy
      * @return a {@link Component}
@@ -87,10 +87,10 @@ public interface ComponentService {
 
     /**
      * Converts the given input into a {@link Component}.
-     * Input example <code>§ctext</code>.
+     * Input example {@code §ctext}.
      *
      * @param legacy the input legacy
-     * @param character the character to use as the color prefix, usually <code>§</code>.
+     * @param character the character to use as the color prefix, usually {@code §}.
      * @return a {@link Component}
      * @see #fromLegacy(String)
      * @see Component#SECTION
@@ -100,7 +100,7 @@ public interface ComponentService {
 
     /**
      * Converts the given input into a {@link Component}.
-     * Input example: <code>&#rrggbbtext</code>.
+     * Input example: {@code &#rrggbbtext}.
      *
      * @param adventureLegacy the input adventure legacy
      * @return a {@link Component}
@@ -112,10 +112,10 @@ public interface ComponentService {
 
     /**
      * Converts the given input into a {@link Component}.
-     * Input example: <code>&#rrggbbtext</code>.
+     * Input example: {@code &#rrggbbtext}.
      *
      * @param adventureLegacy the input adventure legacy
-     * @param character the character to use as the color prefix, usually <code>&</code>.
+     * @param character the character to use as the color prefix, usually {@code &}.
      * @return a {@link Component}
      * @see #fromAdventureLegacy(String)
      * @see Component#SECTION
@@ -125,7 +125,7 @@ public interface ComponentService {
 
     /**
      * Converts the given input into a {@link Component}.
-     * Input example: <code>§x§r§r§g§g§b§btext</code>.
+     * Input example: {@code §x§r§r§g§g§b§btext}.
      *
      * @param bungeeLegacy the input bungee legacy
      * @return a {@link Component}
@@ -136,10 +136,10 @@ public interface ComponentService {
 
     /**
      * Converts the given input into a {@link Component}.
-     * Input example: <code>§x§r§r§g§g§b§btext</code>.
+     * Input example: {@code §x§r§r§g§g§b§btext}.
      *
      * @param bungeeLegacy the input bungee legacy
-     * @param character the character to use as the color prefix, usually <code>§</code>.
+     * @param character the character to use as the color prefix, usually {@code §}.
      * @return a {@link Component}
      * @see Component#SECTION
      * @see Component#AMPERSAND
@@ -157,7 +157,7 @@ public interface ComponentService {
 
     /**
      * Converts the given input into a {@link Component}.
-     * Input example: <code>{text:"text",color:"red"}</code> (standard Minecraft json).
+     * Input example: {@code {text:"text",color:"red"}} (standard Minecraft json).
      *
      * @param json the input json
      * @return a {@link Component}
