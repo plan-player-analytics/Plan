@@ -13,10 +13,12 @@ import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
 import Highcharts from "highcharts/highstock";
 import MultiSelect from "../../input/MultiSelect";
 import CollapseWithButton from "../../layout/CollapseWithButton";
+import FilterDropdown from "./FilterDropdown";
+import FilterList from "./FilterList";
 
 const parseTime = (dateString, timeString) => {
     const d = dateString.match(
-        /^(0\d|\d{2})[\/|\-]?(0\d|\d{2})[\/|\-]?(\d{4,5})$/
+        /^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/
     );
     const t = timeString.match(/^(0\d|\d{2}):?(0\d|\d{2})$/);
 
@@ -40,6 +42,17 @@ const QueryOptionsCard = () => {
     const [toTime, setToTime] = useState(undefined);
 
     const [selectedServers, setSelectedServers] = useState([]);
+    const [filters, setFilters] = useState([]);
+
+    // View & filter data
+    const {data: options, loadingError} = useDataRequest(fetchFilters, []);
+    const [graphData, setGraphData] = useState(undefined);
+    useEffect(() => {
+        if (options) {
+            console.log("Graph data loaded")
+            setGraphData({playersOnline: options.viewPoints, color: '#9E9E9E'})
+        }
+    }, [options, setGraphData]);
 
     // View state handling
     const [invalidFields, setInvalidFields] = useState([]);
@@ -47,8 +60,12 @@ const QueryOptionsCard = () => {
     const setAsValid = id => setInvalidFields(invalidFields.filter(invalid => id !== invalid));
 
     const [extremes, setExtremes] = useState(undefined);
+    /*eslint-disable react-hooks/exhaustive-deps */
+    // Because: Don't update when any of the date/time fields change because that would lead to infinite loop
     const updateExtremes = useCallback(() => {
         if (invalidFields.length || !options) return;
+        if (!fromDate && !fromTime && !toDate && !toTime) return;
+
         const newMin = parseTime(
             fromDate ? fromDate : options.view.afterDate,
             fromTime ? fromTime : options.view.afterTime
@@ -61,11 +78,12 @@ const QueryOptionsCard = () => {
             min: newMin,
             max: newMax
         });
-    }, [fromDate, fromTime, toDate, toTime, invalidFields]);
-    useEffect(updateExtremes, [invalidFields]);
+    }, [invalidFields, options]);
+    /* eslint-enable react-hooks/exhaustive-deps */
+    useEffect(updateExtremes, [invalidFields, updateExtremes]);
 
     const onSetExtremes = useCallback((event) => {
-        if (event) {
+        if (event && event.trigger) {
             const afterDate = Highcharts.dateFormat('%d/%m/%Y', event.min);
             const afterTime = Highcharts.dateFormat('%H:%M', event.min);
             const beforeDate = Highcharts.dateFormat('%d/%m/%Y', event.max);
@@ -76,15 +94,6 @@ const QueryOptionsCard = () => {
             setToTime(beforeTime);
         }
     }, [setFromTime, setFromDate, setToTime, setToDate]);
-
-    // View & filter data
-    const {data: options, loadingError} = useDataRequest(fetchFilters, []);
-    const [graphData, setGraphData] = useState(undefined);
-    useEffect(() => {
-        if (options) {
-            setGraphData({playersOnline: options.viewPoints, color: '#9E9E9E'})
-        }
-    }, [options, setGraphData]);
 
     const getServerSelectorMessage = () => {
         const selected = selectedServers.length;
@@ -176,7 +185,18 @@ const QueryOptionsCard = () => {
                         </CollapseWithButton>
                     </Col>
                 </Row>
-                <hr/>
+                <hr style={{marginBottom: 0}}/>
+                <Row>
+                    <Col md={12}>
+                        <FilterList filters={filters} setFilters={setFilters}
+                                    setAsInvalid={setAsInvalid} setAsValid={setAsValid}/>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={12}>
+                        <FilterDropdown filterOptions={options.filters} filters={filters} setFilters={setFilters}/>
+                    </Col>
+                </Row>
             </Card.Body>
             <button id={"query-button"} className={"btn bg-plan m-2"} disabled={Boolean(invalidFields.length)}>
                 <FontAwesomeIcon icon={faSearch}/> {t('html.query.performQuery')}

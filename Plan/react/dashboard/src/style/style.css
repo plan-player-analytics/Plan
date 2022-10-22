@@ -1350,3 +1350,8 @@ button, input[type="submit"], input[type="reset"] {
     /* Fixes datatables search bar going outside cards */
     width: calc(100% - 3.7rem) !important;
 }
+
+ul.filters {
+    list-style: none;
+    padding: 0;
+}

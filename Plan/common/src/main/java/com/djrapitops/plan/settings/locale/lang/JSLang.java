@@ -56,6 +56,10 @@ public enum JSLang implements Lang {
     QUERY_ACTIVITY_ON("html.query.title.activityOnDate", "Activity on <span id=\"activity-date\"></span>"),
     QUERY_ARE("html.query.generic.are", "`are`"),
     QUERY_SESSIONS_WITHIN_VIEW("html.query.title.sessionsWithinView", "Sessions within view"),
+    QUERY_HAS_PLUGIN_BOOLEAN_VALUE("html.query.filter.hasPluginBooleanValue.name", "Has plugin boolean value"),
+    QUERY_HAVE_PLUGIN_BOOLEAN_VALUE("html.query.filter.hasPluginBooleanValue.text", "have Plugin boolean value"),
+    QUERY_HAS_PLAYED_ON_SERVERS("html.query.filter.hasPlayedOnServers.name", "Has played on one of servers"),
+    QUERY_HAVE_PLAYED_ON_SERVERS("html.query.filter.hasPlayedOnServers.text", "have played on at least one of"),
 
     FILTER_GROUP("html.query.filter.pluginGroup.name", "Group: "),
     FILTER_ALL_PLAYERS("html.query.filter.generic.allPlayers", "All players"),

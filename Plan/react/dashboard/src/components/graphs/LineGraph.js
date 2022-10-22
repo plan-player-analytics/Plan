@@ -41,9 +41,9 @@ const LineGraph = ({id, series, legendEnabled, tall, yAxis, selectedRange, extre
             },
             series: series
         }));
-    }, [series, graphTheming, id, t, nightModeEnabled, legendEnabled, yAxis, onSetExtremes, setGraph, onSetExtremes, selectedRange])
+    }, [series, graphTheming, id, t, nightModeEnabled, legendEnabled, yAxis, onSetExtremes, setGraph, selectedRange])
     useEffect(() => {
-        if (graph && extremes) {
+        if (graph && graph.xAxis && graph.xAxis.length && extremes) {
             graph.xAxis[0].setExtremes(extremes.min, extremes.max);
         }
     }, [graph, extremes]);
