@@ -99,13 +99,13 @@ const QueryOptionsCard = () => {
         const selected = selectedServers.length;
         const available = options.view.servers.length;
         if (selected === 0 || selected === available) {
-            return t('query.label.servers.all');
+            return t('html.query.label.servers.all');
         } else if (selected === 1) {
-            return t('query.label.servers.single');
+            return t('html.query.label.servers.single');
         } else if (selected === 2) {
-            return t('query.label.servers.two');
+            return t('html.query.label.servers.two');
         } else {
-            return t('query.label.servers.many').replace('{number}', selected);
+            return t('html.query.label.servers.many').replace('{number}', selected);
         }
     }
 

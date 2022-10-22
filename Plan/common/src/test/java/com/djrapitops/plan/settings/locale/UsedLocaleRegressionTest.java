@@ -32,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UsedLocaleRegressionTest {
 
-
     // Ensures that all translation keys used in the React project are defined in a lang file.
     // If test fails, add a new line to a com.djrapitops.plan.settings.locale.lang.HtmlLang with the key.
     @Test
