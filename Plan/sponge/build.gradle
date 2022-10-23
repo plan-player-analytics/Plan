@@ -37,6 +37,9 @@ sponge {
             description("Author")
         }
 
+        dependency("spongeapi") {
+            optional(false)
+        }
         // Dependencies
         // version is a *required* property (empty string works fine)
         dependency("griefprevention") {
