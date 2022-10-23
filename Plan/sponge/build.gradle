@@ -38,7 +38,9 @@ sponge {
         }
 
         dependency("spongeapi") {
+            loadOrder(org.spongepowered.plugin.metadata.model.PluginDependency.LoadOrder.AFTER)
             optional(false)
+            version("$spongeVersion")
         }
         // Dependencies
         // version is a *required* property (empty string works fine)
