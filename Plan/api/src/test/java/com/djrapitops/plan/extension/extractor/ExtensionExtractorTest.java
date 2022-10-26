@@ -20,11 +20,12 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.extractor.dataprovider.*;
 import com.djrapitops.plan.extension.table.Table;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -255,6 +256,19 @@ class ExtensionExtractorTest {
     }
 
     @Test
+    void dataExtensionRequiresProviders() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            public boolean method(UUID playerUUID) {
+                return false;
+            }
+        }
+
+        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
+        assertEquals("Extension class had no methods annotated with a Provider annotation", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+    }
+
+    @Test
     void conditionalMethodRequiresProvider() {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {
@@ -265,7 +279,7 @@ class ExtensionExtractorTest {
         }
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
-        assertEquals("Extension class had no methods annotated with a Provider annotation", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+        assertEquals("Extension.method did not have any associated Provider for Conditional.", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
     }
 
     @Test
@@ -299,7 +313,7 @@ class ExtensionExtractorTest {
     }
 
     @Test
-    void methodsAreExtracted1() throws NoSuchMethodException {
+    void methodsAreExtracted1B() throws NoSuchMethodException {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {
             @Conditional("hasJoined")
@@ -310,8 +324,8 @@ class ExtensionExtractorTest {
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addBooleanMethod);
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> result = underTest.getExtensionMethods();
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> expected = buildExpectedExtensionMethodMap(extension, method -> new BooleanDataProvider(null, method));
 
         assertEquals(expected, result);
     }
@@ -328,8 +342,8 @@ class ExtensionExtractorTest {
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addNumberMethod);
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> result = underTest.getExtensionMethods();
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> expected = buildExpectedExtensionMethodMap(extension, method -> new NumberDataProvider(null, method));
 
         assertEquals(expected, result);
     }
@@ -346,8 +360,8 @@ class ExtensionExtractorTest {
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addDoubleMethod);
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> result = underTest.getExtensionMethods();
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> expected = buildExpectedExtensionMethodMap(extension, method -> new DoubleDataProvider(null, method));
 
         assertEquals(expected, result);
     }
@@ -364,8 +378,8 @@ class ExtensionExtractorTest {
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addPercentageMethod);
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> result = underTest.getExtensionMethods();
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> expected = buildExpectedExtensionMethodMap(extension, method -> new PercentageDataProvider(null, method));
 
         assertEquals(expected, result);
     }
@@ -382,8 +396,8 @@ class ExtensionExtractorTest {
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addStringMethod);
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> result = underTest.getExtensionMethods();
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> expected = buildExpectedExtensionMethodMap(extension, method -> new StringDataProvider(null, method));
 
         assertEquals(expected, result);
     }
@@ -399,8 +413,8 @@ class ExtensionExtractorTest {
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addTableMethod);
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> result = underTest.getExtensionMethods();
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> expected = buildExpectedExtensionMethodMap(extension, method -> new TableDataProvider(null, method));
 
         assertEquals(expected, result);
     }
@@ -416,25 +430,24 @@ class ExtensionExtractorTest {
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> result = underTest.getExtensionMethods();
 
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = new EnumMap<>(ExtensionMethod.ParameterType.class);
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> expected = new EnumMap<>(ExtensionMethod.ParameterType.class);
         for (ExtensionMethod.ParameterType value : ExtensionMethod.ParameterType.values()) {
-            expected.put(value, new ExtensionMethods());
+            expected.put(value, new ArrayList<>());
         }
-        expected.get(ExtensionMethod.ParameterType.PLAYER_UUID).addGroupMethod(new ExtensionMethod(extension, extension.getClass().getMethod("method", UUID.class)));
+        expected.get(ExtensionMethod.ParameterType.PLAYER_UUID).add(new ExtensionMethod(extension, extension.getClass().getMethod("method", UUID.class)));
 
         assertEquals(expected, result);
     }
 
-    private Map<ExtensionMethod.ParameterType, ExtensionMethods> buildExpectedExtensionMethodMap(DataExtension extension, BiConsumer<ExtensionMethods, ExtensionMethod> addTo) throws NoSuchMethodException {
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> map = new EnumMap<>(ExtensionMethod.ParameterType.class);
+    private Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> buildExpectedExtensionMethodMap(DataExtension extension, Function<ExtensionMethod, AnnotationDataProvider<?, ?, ?>> provider) throws NoSuchMethodException {
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> map = new EnumMap<>(ExtensionMethod.ParameterType.class);
         for (ExtensionMethod.ParameterType value : ExtensionMethod.ParameterType.values()) {
-            map.put(value, new ExtensionMethods());
+            map.put(value, new ArrayList<>());
         }
-        addTo.accept(
-                map.get(ExtensionMethod.ParameterType.SERVER_NONE),
-                new ExtensionMethod(extension, extension.getClass().getMethod("method"))
+        map.get(ExtensionMethod.ParameterType.SERVER_NONE).add(
+                provider.apply(new ExtensionMethod(extension, extension.getClass().getMethod("method"))).getExtensionMethod()
         );
         return map;
     }
@@ -450,8 +463,8 @@ class ExtensionExtractorTest {
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
-        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addDataBuilderMethod);
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> result = underTest.getExtensionMethods();
+        Map<ExtensionMethod.ParameterType, List<ExtensionMethod>> expected = buildExpectedExtensionMethodMap(extension, method -> new DataBuilderDataProvider(null, method));
 
         assertEquals(expected, result);
     }

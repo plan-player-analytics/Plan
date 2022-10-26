@@ -18,12 +18,13 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.extractor.ExtensionMethods;
-import com.djrapitops.plan.extension.icon.Color;
+import com.djrapitops.plan.extension.extractor.dataprovider.AnnotationDataProvider;
+import com.djrapitops.plan.extension.extractor.dataprovider.DataBuilderDataProvider;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
@@ -42,14 +43,14 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 /**
  * Object that can be called to place data about players to the database.
@@ -116,170 +117,34 @@ public class DataValueGatherer {
     }
 
     private void addValuesToBuilder(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
-        for (ExtensionMethod provider : methods.getBooleanProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Boolean.class, tryToBuildBoolean(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getDoubleProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Double.class, tryToBuildDouble(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getPercentageProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Double.class, tryToBuildPercentage(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getNumberProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Long.class, tryToBuildNumber(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getStringProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(String.class, tryToBuildString(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getGroupProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(String[].class, tryToBuildGroups(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getTableProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Table.class, tryToBuildTable(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            addDataFromAnotherBuilder(dataBuilder, parameters, provider);
+        for (AnnotationDataProvider<?, ?, ?> extractor : methods.getProviders()) {
+            ExtensionMethod method = extractor.getExtensionMethod();
+            if (brokenMethods.contains(method)) continue;
+            tryToAdd(extractor, dataBuilder, parameters, method);
         }
     }
 
-    private DataValue<Table> tryToBuildTable(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-        TableProvider annotation = provider.getExistingAnnotation(TableProvider.class);
+    private <D> void tryToAdd(AnnotationDataProvider<?, ?, D> extractor, ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        if (extractor instanceof DataBuilderDataProvider) {
+            try {
+                ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
+                dataBuilder.addAll(providedBuilder);
+            } catch (DataExtensionMethodCallException methodError) {
+                logFailure(methodError);
+            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
+                logFailure(unexpectedError);
+            }
+        }
+
         try {
-            return dataBuilder.valueBuilder(provider.getMethodName())
-                    .methodName(provider)
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildTable(() -> callMethod(provider, parameters, Table.class), annotation.tableColor());
+            ValueBuilder valueBuilder = extractor.getValueBuilder(dataBuilder);
+            DataValue<D> dataValue = extractor.addDataValueToBuilder(
+                    valueBuilder,
+                    () -> callMethod(provider, parameters, extractor.getDataType())
+            );
+            dataBuilder.addValue(extractor.getDataType(), dataValue);
         } catch (IllegalArgumentException e) {
             logFailure(e, getPluginName(), provider.getMethodName());
-            return null;
-        }
-    }
-
-    private DataValue<String[]> tryToBuildGroups(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-        GroupProvider annotation = provider.getExistingAnnotation(GroupProvider.class);
-        try {
-            return dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), Color.NONE)
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildGroup(() -> callMethod(provider, parameters, String[].class));
-        } catch (IllegalArgumentException e) {
-            logFailure(e, getPluginName(), provider.getMethodName());
-            return null;
-        }
-    }
-
-    private DataValue<String> tryToBuildString(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-        StringProvider annotation = provider.getExistingAnnotation(StringProvider.class);
-        try {
-            return dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .showAsPlayerPageLink(annotation)
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildString(() -> callMethod(provider, parameters, String.class));
-        } catch (IllegalArgumentException e) {
-            logFailure(e, getPluginName(), provider.getMethodName());
-            return null;
-        }
-    }
-
-    private DataValue<Long> tryToBuildNumber(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-        NumberProvider annotation = provider.getExistingAnnotation(NumberProvider.class);
-        try {
-            return dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .format(annotation.format())
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildNumber(() -> callMethod(provider, parameters, Long.class));
-        } catch (IllegalArgumentException e) {
-            logFailure(e, getPluginName(), provider.getMethodName());
-            return null;
-        }
-    }
-
-    private DataValue<Double> tryToBuildPercentage(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-        PercentageProvider annotation = provider.getExistingAnnotation(PercentageProvider.class);
-        try {
-            return dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildPercentage(() -> callMethod(provider, parameters, Double.class));
-        } catch (IllegalArgumentException e) {
-            logFailure(e, getPluginName(), provider.getMethodName());
-            return null;
-        }
-    }
-
-    private DataValue<Double> tryToBuildDouble(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-        DoubleProvider annotation = provider.getExistingAnnotation(DoubleProvider.class);
-        try {
-            return dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildDouble(() -> callMethod(provider, parameters, Double.class));
-        } catch (IllegalArgumentException e) {
-            logFailure(e, getPluginName(), provider.getMethodName());
-            return null;
-        }
-    }
-
-    private DataValue<Boolean> tryToBuildBoolean(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-        BooleanProvider annotation = provider.getExistingAnnotation(BooleanProvider.class);
-        try {
-            return dataBuilder.valueBuilder(annotation.text())
-                    .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
-                    .description(annotation.description())
-                    .priority(annotation.priority())
-                    .showInPlayerTable(annotation.showInPlayerTable())
-                    .hideFromUsers(annotation)
-                    .conditional(provider.getAnnotationOrNull(Conditional.class))
-                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildBooleanProvidingCondition(() -> callMethod(provider, parameters, Boolean.class), annotation.conditionName());
-        } catch (IllegalArgumentException e) {
-            logFailure(e, getPluginName(), provider.getMethodName());
-            return null;
-        }
-    }
-
-    private void addDataFromAnotherBuilder(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
-        try {
-            ExtensionDataBuilder providedBuilder = callMethod(provider, parameters, ExtensionDataBuilder.class);
-            dataBuilder.addAll(providedBuilder);
-        } catch (DataExtensionMethodCallException methodError) {
-            logFailure(methodError);
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-            logFailure(unexpectedError);
         }
     }
 
@@ -332,21 +197,59 @@ public class DataValueGatherer {
 
 
     private void gatherPlayer(Parameters parameters, ExtDataBuilder dataBuilder) {
+        gather(
+                parameters,
+                dataBuilder,
+                StorePlayerBooleanResultTransaction::new,
+                StorePlayerNumberResultTransaction::new,
+                StorePlayerDoubleResultTransaction::new,
+                StorePlayerStringResultTransaction::new,
+                StorePlayerTableResultTransaction::new,
+                StorePlayerGroupsResultTransaction::new
+        );
+
+    }
+
+    private void gather(Parameters parameters, ExtDataBuilder dataBuilder) {
+        gather(
+                parameters,
+                dataBuilder,
+                StoreServerBooleanResultTransaction::new,
+                StoreServerNumberResultTransaction::new,
+                StoreServerDoubleResultTransaction::new,
+                StoreServerStringResultTransaction::new,
+                StoreServerTableResultTransaction::new,
+                null
+        );
+    }
+
+    private void gather(
+            Parameters parameters,
+            ExtDataBuilder dataBuilder,
+            TransactionConstructor<Boolean> booleanTransaction,
+            TransactionConstructor<Long> numberTransaction,
+            TransactionConstructor<Double> doubleTransaction,
+            TransactionConstructor<String> stringTransaction,
+            TransactionConstructor<Table> tableTransaction,
+            TransactionConstructor<String[]> groupTransaction
+            ) {
         Conditions conditions = new Conditions();
         for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
             try {
                 pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
-                        .ifPresent(data -> storePlayerBoolean(parameters, conditions, data));
+                        .ifPresent(data -> storeBoolean(parameters, conditions, data, booleanTransaction));
                 pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
-                        .ifPresent(data -> storePlayerNumber(parameters, conditions, data));
+                        .ifPresent(data -> store(parameters, conditions, data, numberTransaction));
                 pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
-                        .ifPresent(data -> storePlayerDouble(parameters, conditions, data));
+                        .ifPresent(data -> store(parameters, conditions, data, doubleTransaction));
                 pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
-                        .ifPresent(data -> storePlayerString(parameters, conditions, data));
-                pair.getValue(String[].class).flatMap(data -> data.getMetadata(GroupsDataValue.class))
-                        .ifPresent(data -> storePlayerGroups(parameters, conditions, data));
+                        .ifPresent(data -> store(parameters, conditions, data, stringTransaction));
                 pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
-                        .ifPresent(data -> storePlayerTable(parameters, conditions, data));
+                        .ifPresent(data -> storeTable(parameters, conditions, data, tableTransaction));
+                if (groupTransaction != null) {
+                    pair.getValue(String[].class).flatMap(data -> data.getMetadata(GroupsDataValue.class))
+                            .ifPresent(data -> store(parameters, conditions, data, groupTransaction));
+                }
             } catch (DataExtensionMethodCallException methodError) {
                 logFailure(methodError);
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
@@ -355,25 +258,78 @@ public class DataValueGatherer {
         }
     }
 
-    private void gather(Parameters parameters, ExtDataBuilder dataBuilder) {
-        Conditions conditions = new Conditions();
-        for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
-            try {
-                pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
-                        .ifPresent(data -> storeBoolean(parameters, conditions, data));
-                pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
-                        .ifPresent(data -> storeNumber(parameters, conditions, data));
-                pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
-                        .ifPresent(data -> storeDouble(parameters, conditions, data));
-                pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
-                        .ifPresent(data -> storeString(parameters, conditions, data));
-                pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
-                        .ifPresent(data -> storeTable(parameters, conditions, data));
-            } catch (DataExtensionMethodCallException methodError) {
-                logFailure(methodError);
-            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
-                logFailure(unexpectedError);
+    @FunctionalInterface
+    private interface TransactionConstructor<T> {
+        ThrowawayTransaction newInstance(ProviderInformation information, Parameters parameters, T data);
+    }
+
+    private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data, TransactionConstructor<Boolean> constructor) {
+        store(parameters, conditions, data, (information, value) -> {
+            if (value) {
+                conditions.conditionFulfilled(information.getProvidedCondition());
+            } else {
+                conditions.conditionFulfilled("not_" + information.getProvidedCondition());
             }
+        }, constructor);
+    }
+
+    private <T> void store(
+            Parameters parameters,
+            Conditions conditions,
+            DataValue<T> data,
+            TransactionConstructor<T> constructor
+    ) {
+        store(parameters, conditions, data, (info, value) -> {}, constructor);
+    }
+
+    private <T> void store(
+            Parameters parameters,
+            Conditions conditions,
+            DataValue<T> data,
+            BiConsumer<ProviderInformation, T> valueConsumer,
+            TransactionConstructor<T> constructor
+    ) {
+        store(conditions, data, valueConsumer, (information, value) -> Arrays.asList(
+                new StoreIconTransaction(information.getIcon()),
+                new StoreProviderTransaction(information, parameters),
+                constructor.newInstance(information, parameters, value)
+        ));
+    }
+
+    private void storeTable(
+            Parameters parameters,
+            Conditions conditions,
+            TableDataValue dataValue,
+            TransactionConstructor<Table> constructor
+    ) {
+        store(conditions, dataValue, (info, value) -> {}, (information, value) -> {
+            List<ThrowawayTransaction> transactions = new ArrayList<>();
+            for (Icon icon : value.getIcons()) {
+                if (icon != null) transactions.add(new StoreIconTransaction(icon));
+            }
+            transactions.add(new StoreTableProviderTransaction(information, parameters, value));
+            transactions.add(constructor.newInstance(information, parameters, value));
+            return transactions;
+        });
+    }
+
+    private <T> void store(
+            Conditions conditions,
+            DataValue<T> data,
+            BiConsumer<ProviderInformation,T> valueConsumer,
+            BiFunction<ProviderInformation, T, List<ThrowawayTransaction>> transactionFunction
+    ) {
+        ProviderInformation information = data.getInformation(ProviderInformation.class);
+        if (information == null) return;
+
+        T value = getValue(conditions, data, information);
+        if (value == null) return;
+
+        valueConsumer.accept(information, value);
+
+        Database db = dbSystem.getDatabase();
+        for (ThrowawayTransaction transaction : transactionFunction.apply(information, value)) {
+            db.executeTransaction(transaction);
         }
     }
 
@@ -412,139 +368,4 @@ public class DataValueGatherer {
         return data.getValue(); // can be null, can throw
     }
 
-    private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Boolean value = getValue(conditions, data, information);
-        if (value == null) return;
-        if (value) {
-            conditions.conditionFulfilled(information.getProvidedCondition());
-        } else {
-            conditions.conditionFulfilled("not_" + information.getProvidedCondition());
-        }
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StoreServerBooleanResultTransaction(information, parameters, value));
-    }
-
-    private void storeNumber(Parameters parameters, Conditions conditions, NumberDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Long value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StoreServerNumberResultTransaction(information, parameters, value));
-    }
-
-
-    private void storeDouble(Parameters parameters, Conditions conditions, DoubleDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Double value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StoreServerDoubleResultTransaction(information, parameters, value));
-    }
-
-    private void storeString(Parameters parameters, Conditions conditions, StringDataValue data) {
-        ProviderInformation information = data.getInformation();
-        String value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StoreServerStringResultTransaction(information, parameters, value));
-    }
-
-    private void storeTable(Parameters parameters, Conditions conditions, TableDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Table value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        for (Icon icon : value.getIcons()) {
-            if (icon != null) db.executeTransaction(new StoreIconTransaction(icon));
-        }
-        db.executeTransaction(new StoreTableProviderTransaction(information, parameters, value));
-        db.executeTransaction(new StoreServerTableResultTransaction(information, parameters, value));
-    }
-
-    private void storePlayerBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Boolean value = getValue(conditions, data, information);
-        if (value == null) return;
-        if (value) {
-            conditions.conditionFulfilled(information.getProvidedCondition());
-        } else {
-            conditions.conditionFulfilled("not_" + information.getProvidedCondition());
-        }
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StorePlayerBooleanResultTransaction(information, parameters, value));
-    }
-
-    private void storePlayerNumber(Parameters parameters, Conditions conditions, NumberDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Long value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StorePlayerNumberResultTransaction(information, parameters, value));
-    }
-
-    private void storePlayerDouble(Parameters parameters, Conditions conditions, DoubleDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Double value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StorePlayerDoubleResultTransaction(information, parameters, value));
-    }
-
-    private void storePlayerString(Parameters parameters, Conditions conditions, StringDataValue data) {
-        ProviderInformation information = data.getInformation();
-        String value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StorePlayerStringResultTransaction(information, parameters, value));
-    }
-
-    private void storePlayerGroups(Parameters parameters, Conditions conditions, GroupsDataValue data) {
-        ProviderInformation information = data.getInformation();
-        String[] value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
-        db.executeTransaction(new StorePlayerGroupsResultTransaction(information, parameters, value));
-    }
-
-    private void storePlayerTable(Parameters parameters, Conditions conditions, TableDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Table value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        for (Icon icon : value.getIcons()) {
-            if (icon != null) db.executeTransaction(new StoreIconTransaction(icon));
-        }
-        db.executeTransaction(new StoreTableProviderTransaction(information, parameters, value));
-        db.executeTransaction(new StorePlayerTableResultTransaction(information, parameters, value));
-    }
 }

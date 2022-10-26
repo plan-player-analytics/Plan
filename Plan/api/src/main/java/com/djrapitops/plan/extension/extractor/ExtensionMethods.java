@@ -16,97 +16,27 @@
  */
 package com.djrapitops.plan.extension.extractor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.djrapitops.plan.extension.extractor.dataprovider.AnnotationDataProvider;
+
+import java.util.*;
 
 /**
  * Implementation detail, abstracts away method type reflection to a more usable API.
  */
 public class ExtensionMethods {
 
-    private final List<ExtensionMethod> booleanProviders;
-    private final List<ExtensionMethod> numberProviders;
-    private final List<ExtensionMethod> doubleProviders;
-    private final List<ExtensionMethod> percentageProviders;
-    private final List<ExtensionMethod> stringProviders;
-    private final List<ExtensionMethod> tableProviders;
-    private final List<ExtensionMethod> groupProviders;
-    private final List<ExtensionMethod> dataBuilderProviders;
+    private final List<AnnotationDataProvider<?, ?, ?>> providers;
 
     public ExtensionMethods() {
-        booleanProviders = new ArrayList<>();
-        numberProviders = new ArrayList<>();
-        doubleProviders = new ArrayList<>();
-        percentageProviders = new ArrayList<>();
-        stringProviders = new ArrayList<>();
-        tableProviders = new ArrayList<>();
-        groupProviders = new ArrayList<>();
-        dataBuilderProviders = new ArrayList<>();
+        providers = new ArrayList<>();
     }
 
-    public List<ExtensionMethod> getBooleanProviders() {
-        return booleanProviders;
+    public List<AnnotationDataProvider<?, ?, ?>> getProviders() {
+        return providers;
     }
 
-    public List<ExtensionMethod> getNumberProviders() {
-        return numberProviders;
-    }
-
-    public List<ExtensionMethod> getDoubleProviders() {
-        return doubleProviders;
-    }
-
-    public List<ExtensionMethod> getPercentageProviders() {
-        return percentageProviders;
-    }
-
-    public List<ExtensionMethod> getStringProviders() {
-        return stringProviders;
-    }
-
-    public List<ExtensionMethod> getTableProviders() {
-        return tableProviders;
-    }
-
-    public List<ExtensionMethod> getGroupProviders() {
-        return groupProviders;
-    }
-
-    public List<ExtensionMethod> getDataBuilderProviders() {
-        return dataBuilderProviders;
-    }
-
-    public void addBooleanMethod(ExtensionMethod method) {
-        booleanProviders.add(method);
-    }
-
-    public void addNumberMethod(ExtensionMethod method) {
-        numberProviders.add(method);
-    }
-
-    public void addDoubleMethod(ExtensionMethod method) {
-        doubleProviders.add(method);
-    }
-
-    public void addPercentageMethod(ExtensionMethod method) {
-        percentageProviders.add(method);
-    }
-
-    public void addStringMethod(ExtensionMethod method) {
-        stringProviders.add(method);
-    }
-
-    public void addTableMethod(ExtensionMethod method) {
-        tableProviders.add(method);
-    }
-
-    public void addGroupMethod(ExtensionMethod method) {
-        groupProviders.add(method);
-    }
-
-    public void addDataBuilderMethod(ExtensionMethod method) {
-        dataBuilderProviders.add(method);
+    public void addProvider(AnnotationDataProvider<?, ?, ?> extractor) {
+        providers.add(extractor);
     }
 
     @Override
@@ -114,43 +44,22 @@ public class ExtensionMethods {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExtensionMethods that = (ExtensionMethods) o;
-        return Objects.equals(booleanProviders, that.booleanProviders)
-                && Objects.equals(numberProviders, that.numberProviders)
-                && Objects.equals(doubleProviders, that.doubleProviders)
-                && Objects.equals(percentageProviders, that.percentageProviders)
-                && Objects.equals(stringProviders, that.stringProviders)
-                && Objects.equals(tableProviders, that.tableProviders)
-                && Objects.equals(groupProviders, that.groupProviders)
-                && Objects.equals(dataBuilderProviders, that.dataBuilderProviders);
+        return Objects.equals(providers, that.providers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(booleanProviders, numberProviders, doubleProviders, percentageProviders, stringProviders, tableProviders, groupProviders, dataBuilderProviders);
+        return Objects.hash(providers);
     }
 
     @Override
     public String toString() {
         return "ExtensionMethods{" +
-                "booleanProviders=" + booleanProviders +
-                ", numberProviders=" + numberProviders +
-                ", doubleProviders=" + doubleProviders +
-                ", percentageProviders=" + percentageProviders +
-                ", stringProviders=" + stringProviders +
-                ", tableProviders=" + tableProviders +
-                ", groupProviders=" + groupProviders +
-                ", dataBuilderProviders=" + dataBuilderProviders +
+                "providers=" + providers +
                 '}';
     }
 
     public boolean isEmpty() {
-        return booleanProviders.isEmpty()
-                && numberProviders.isEmpty()
-                && doubleProviders.isEmpty()
-                && percentageProviders.isEmpty()
-                && stringProviders.isEmpty()
-                && tableProviders.isEmpty()
-                && groupProviders.isEmpty()
-                && dataBuilderProviders.isEmpty();
+        return providers.isEmpty();
     }
 }
