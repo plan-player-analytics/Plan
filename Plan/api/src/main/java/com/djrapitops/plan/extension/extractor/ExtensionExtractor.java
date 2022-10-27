@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.extractor;
 
+import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
@@ -144,6 +145,10 @@ public final class ExtensionExtractor {
             method.getAnnotation(StringProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addStringMethod(method);
+            });
+            method.getAnnotation(ComponentProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addComponentMethod(method);
             });
             method.getAnnotation(TableProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
@@ -279,6 +284,15 @@ public final class ExtensionExtractor {
         validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
+    private void validateMethod(ExtensionMethod extensionMethod, ComponentProvider annotation) {
+        Method method = extensionMethod.getMethod();
+
+        validateReturnType(method, Component.class);
+        validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
+        validateMethodAnnotationPropertyLength(annotation.description(), "description", 150, method);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+    }
+
     private void validateMethod(ExtensionMethod extensionMethod, TableProvider annotation) {
         Method method = extensionMethod.getMethod();
 
@@ -306,8 +320,8 @@ public final class ExtensionExtractor {
         for (Method conditionalMethod : conditionalMethods) {
             if (!hasAnyOf(conditionalMethod,
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
-                    PercentageProvider.class, StringProvider.class, TableProvider.class,
-                    GroupProvider.class, DataBuilderProvider.class
+                    PercentageProvider.class, StringProvider.class, ComponentProvider.class,
+                    TableProvider.class, GroupProvider.class, DataBuilderProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }

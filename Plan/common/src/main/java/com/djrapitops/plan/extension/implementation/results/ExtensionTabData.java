@@ -36,6 +36,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     private final Map<String, ExtensionDoubleData> percentageData;
     private final Map<String, ExtensionNumberData> numberData;
     private final Map<String, ExtensionStringData> stringData;
+    private final Map<String, ExtensionStringData> componentData;
 
     private final List<ExtensionTableData> tableData;
     private final List<ExtensionDescription> descriptions;
@@ -52,6 +53,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         percentageData = new HashMap<>();
         numberData = new HashMap<>();
         stringData = new HashMap<>();
+        componentData = new HashMap<>();
 
         tableData = new ArrayList<>();
         descriptions = new ArrayList<>();
@@ -83,6 +85,10 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
     public Optional<ExtensionStringData> getString(String providerName) {
         return Optional.ofNullable(stringData.get(providerName));
+    }
+
+    public Optional<ExtensionStringData> getComponent(String providerName) {
+        return Optional.ofNullable(componentData.get(providerName));
     }
 
     public List<ExtensionTableData> getTableData() {
@@ -183,6 +189,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
         public Builder putStringData(ExtensionStringData extensionStringData) {
             data.stringData.put(extensionStringData.getDescription().getName(), extensionStringData);
+            return this;
+        }
+
+        public Builder putComponentData(ExtensionStringData extensionStringData) {
+            data.componentData.put(extensionStringData.getDescription().getName(), extensionStringData);
             return this;
         }
 

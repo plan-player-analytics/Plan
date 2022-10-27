@@ -27,20 +27,22 @@ public class ExtensionStringData implements DescribedExtensionData {
 
     private final ExtensionDescription description;
     private final boolean playerName;
+    private final boolean component;
     private String value;
 
-    public ExtensionStringData(ExtensionDescription description, boolean playerName, String value) {
+    public ExtensionStringData(ExtensionDescription description, boolean playerName, boolean component, String value) {
         this.description = description;
         this.playerName = playerName;
+        this.component = component;
         this.value = value;
     }
 
     public static ExtensionStringData regularString(ExtensionDescription description, String value) {
-        return new ExtensionStringData(description, false, value);
+        return new ExtensionStringData(description, false, false, value);
     }
 
     public static ExtensionStringData playerName(ExtensionDescription description, String value) {
-        return new ExtensionStringData(description, true, value);
+        return new ExtensionStringData(description, true, false, value);
     }
 
     public ExtensionDescription getDescription() {
@@ -52,7 +54,7 @@ public class ExtensionStringData implements DescribedExtensionData {
     }
 
     public String getFormattedValue() {
-        String withColors = Html.swapColorCodesToSpan(value);
+        String withColors = component ? value : Html.swapColorCodesToSpan(value);
         return !playerName ? withColors : Html.LINK.create("../player/" + Html.encodeToURL(value), withColors);
     }
 

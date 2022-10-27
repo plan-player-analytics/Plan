@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.builder.StringDataValue;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
@@ -45,6 +46,7 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
     private final String providerName;
     private final UUID playerUUID;
 
+    private final boolean component;
     private final String value;
 
     public StorePlayerStringResultTransaction(ProviderInformation information, Parameters parameters, String value) {
@@ -52,7 +54,8 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
         this.providerName = information.getName();
         this.serverUUID = parameters.getServerUUID();
         this.playerUUID = parameters.getPlayerUUID();
-        this.value = StringUtils.truncate(value, 50);
+        this.component = information.isComponent();
+        this.value = StringUtils.truncate(value, component ? StringDataValue.COMPONENT_MAX_LENGTH : StringDataValue.STRING_MAX_LENGTH);
     }
 
     @Override
@@ -72,7 +75,7 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
     private Executable updateValue() {
         String sql = "UPDATE " + TABLE_NAME +
                 " SET " +
-                STRING_VALUE + "=?" +
+                (component ? COMPONENT_VALUE : STRING_VALUE) + "=?" +
                 WHERE + USER_UUID + "=?" +
                 AND + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
 
@@ -88,7 +91,7 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
 
     private Executable insertValue() {
         String sql = "INSERT INTO " + TABLE_NAME + "(" +
-                STRING_VALUE + "," +
+                (component ? COMPONENT_VALUE : STRING_VALUE) + "," +
                 USER_UUID + "," +
                 PROVIDER_ID +
                 ") VALUES (?,?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.builder.StringDataValue;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
@@ -42,13 +43,15 @@ public class StoreServerStringResultTransaction extends ThrowawayTransaction {
     private final ServerUUID serverUUID;
     private final String providerName;
 
+    private final boolean component;
     private final String value;
 
     public StoreServerStringResultTransaction(ProviderInformation information, Parameters parameters, String value) {
         this.pluginName = information.getPluginName();
         this.providerName = information.getName();
         this.serverUUID = parameters.getServerUUID();
-        this.value = StringUtils.truncate(value, 50);
+        this.component = information.isComponent();
+        this.value = StringUtils.truncate(value, component ? StringDataValue.COMPONENT_MAX_LENGTH : StringDataValue.STRING_MAX_LENGTH);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class StoreServerStringResultTransaction extends ThrowawayTransaction {
     private Executable updateValue() {
         String sql = "UPDATE " + TABLE_NAME +
                 " SET " +
-                STRING_VALUE + "=?" +
+                (component ? COMPONENT_VALUE : STRING_VALUE) + "=?" +
                 WHERE + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
 
         return new ExecStatement(sql) {
@@ -82,7 +85,7 @@ public class StoreServerStringResultTransaction extends ThrowawayTransaction {
 
     private Executable insertValue() {
         String sql = "INSERT INTO " + TABLE_NAME + "(" +
-                STRING_VALUE + "," +
+                (component ? COMPONENT_VALUE : STRING_VALUE) + "," +
                 PROVIDER_ID +
                 ") VALUES (?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";
         return new ExecStatement(sql) {

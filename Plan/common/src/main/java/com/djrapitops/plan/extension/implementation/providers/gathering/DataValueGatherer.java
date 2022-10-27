@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
+import com.djrapitops.plan.component.Component;
+import com.djrapitops.plan.component.ComponentOperation;
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.annotation.*;
@@ -61,6 +64,7 @@ public class DataValueGatherer {
     private final CallEvents[] callEvents;
     private final ExtensionWrapper extension;
     private final DBSystem dbSystem;
+    private final ComponentSvc componentService;
     private final ServerInfo serverInfo;
     private final ErrorLogger errorLogger;
 
@@ -69,12 +73,14 @@ public class DataValueGatherer {
     public DataValueGatherer(
             ExtensionWrapper extension,
             DBSystem dbSystem,
+            ComponentSvc componentService,
             ServerInfo serverInfo,
             ErrorLogger errorLogger
     ) {
         this.callEvents = extension.getCallEvents();
         this.extension = extension;
         this.dbSystem = dbSystem;
+        this.componentService = componentService;
         this.serverInfo = serverInfo;
         this.errorLogger = errorLogger;
 
@@ -136,6 +142,10 @@ public class DataValueGatherer {
             if (brokenMethods.contains(provider)) continue;
             dataBuilder.addValue(String.class, tryToBuildString(dataBuilder, parameters, provider));
         }
+        for (ExtensionMethod provider : methods.getComponentProviders()) {
+            if (brokenMethods.contains(provider)) continue;
+            dataBuilder.addValue(String.class, tryToBuildComponent(dataBuilder, parameters, provider));
+        }
         for (ExtensionMethod provider : methods.getGroupProviders()) {
             if (brokenMethods.contains(provider)) continue;
             dataBuilder.addValue(String[].class, tryToBuildGroups(dataBuilder, parameters, provider));
@@ -192,6 +202,34 @@ public class DataValueGatherer {
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
                     .buildString(() -> callMethod(provider, parameters, String.class));
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
+        }
+    }
+
+    private DataValue<String> tryToBuildComponent(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        ComponentProvider annotation = provider.getExistingAnnotation(ComponentProvider.class);
+        try {
+            return dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.iconColor())
+                    .description(annotation.description())
+                    .priority(annotation.priority())
+                    .showInPlayerTable(annotation.showInPlayerTable())
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .buildComponent(() -> {
+                        Component component = callMethod(provider, parameters, Component.class);
+                        if (component == null) return null;
+
+                        String json = componentService.convert(component, ComponentOperation.JSON);
+                        if (json.length() > StringDataValue.COMPONENT_MAX_LENGTH) {
+                            // Too large, replace with placeholder text since JSON cannot be chopped up
+                            return "{\"text\":\"<Component too large>\"}";
+                        }
+                        return json;
+                    });
         } catch (IllegalArgumentException e) {
             logFailure(e, getPluginName(), provider.getMethodName());
             return null;

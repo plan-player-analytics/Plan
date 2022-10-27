@@ -27,10 +27,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
@@ -113,6 +110,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<Exte
                 "v1." + ExtensionPlayerValueTable.PERCENTAGE_VALUE + " as percentage_value," +
                 "v1." + ExtensionPlayerValueTable.LONG_VALUE + " as long_value," +
                 "v1." + ExtensionPlayerValueTable.STRING_VALUE + " as string_value," +
+                "v1." + ExtensionPlayerValueTable.COMPONENT_VALUE + " as component_value," +
                 "p1." + ExtensionProviderTable.PLUGIN_ID + " as plugin_id," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
@@ -211,7 +209,12 @@ public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<Exte
         String stringValue = set.getString(ExtensionPlayerValueTable.STRING_VALUE);
         if (stringValue != null) {
             boolean isPlayerName = set.getBoolean("is_player_name");
-            extensionTab.putStringData(new ExtensionStringData(description, isPlayerName, stringValue));
+            extensionTab.putStringData(new ExtensionStringData(description, isPlayerName, false, stringValue));
+        }
+
+        String componentValue = set.getString(ExtensionPlayerValueTable.COMPONENT_VALUE);
+        if (componentValue != null) {
+            extensionTab.putComponentData(new ExtensionStringData(description, false, true, componentValue));
         }
     }
 

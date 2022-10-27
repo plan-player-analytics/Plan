@@ -21,6 +21,9 @@ import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import java.util.function.Supplier;
 
 public class StringDataValue extends BuiltDataValue<String> {
+    public static final int STRING_MAX_LENGTH = 50;
+    public static final int COMPONENT_MAX_LENGTH = 500;
+
     public StringDataValue(String value, ProviderInformation information) {
         super(value, information);
     }

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.identification.Server;
@@ -147,6 +148,11 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
     @Override
     public ExtensionSvc extensionService() {
         return component.extensionService();
+    }
+
+    @Override
+    public ComponentSvc componentService() {
+        return component.componentService();
     }
 
     @Override

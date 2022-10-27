@@ -30,6 +30,7 @@ public class ExtensionMethods {
     private final List<ExtensionMethod> doubleProviders;
     private final List<ExtensionMethod> percentageProviders;
     private final List<ExtensionMethod> stringProviders;
+    private final List<ExtensionMethod> componentProviders;
     private final List<ExtensionMethod> tableProviders;
     private final List<ExtensionMethod> groupProviders;
     private final List<ExtensionMethod> dataBuilderProviders;
@@ -40,6 +41,7 @@ public class ExtensionMethods {
         doubleProviders = new ArrayList<>();
         percentageProviders = new ArrayList<>();
         stringProviders = new ArrayList<>();
+        componentProviders = new ArrayList<>();
         tableProviders = new ArrayList<>();
         groupProviders = new ArrayList<>();
         dataBuilderProviders = new ArrayList<>();
@@ -63,6 +65,10 @@ public class ExtensionMethods {
 
     public List<ExtensionMethod> getStringProviders() {
         return stringProviders;
+    }
+
+    public List<ExtensionMethod> getComponentProviders() {
+        return componentProviders;
     }
 
     public List<ExtensionMethod> getTableProviders() {
@@ -97,6 +103,10 @@ public class ExtensionMethods {
         stringProviders.add(method);
     }
 
+    public void addComponentMethod(ExtensionMethod method) {
+        componentProviders.add(method);
+    }
+
     public void addTableMethod(ExtensionMethod method) {
         tableProviders.add(method);
     }
@@ -119,6 +129,7 @@ public class ExtensionMethods {
                 && Objects.equals(doubleProviders, that.doubleProviders)
                 && Objects.equals(percentageProviders, that.percentageProviders)
                 && Objects.equals(stringProviders, that.stringProviders)
+                && Objects.equals(componentProviders, that.componentProviders)
                 && Objects.equals(tableProviders, that.tableProviders)
                 && Objects.equals(groupProviders, that.groupProviders)
                 && Objects.equals(dataBuilderProviders, that.dataBuilderProviders);
@@ -126,7 +137,7 @@ public class ExtensionMethods {
 
     @Override
     public int hashCode() {
-        return Objects.hash(booleanProviders, numberProviders, doubleProviders, percentageProviders, stringProviders, tableProviders, groupProviders, dataBuilderProviders);
+        return Objects.hash(booleanProviders, numberProviders, doubleProviders, percentageProviders, stringProviders, componentProviders, tableProviders, groupProviders, dataBuilderProviders);
     }
 
     @Override
@@ -137,6 +148,7 @@ public class ExtensionMethods {
                 ", doubleProviders=" + doubleProviders +
                 ", percentageProviders=" + percentageProviders +
                 ", stringProviders=" + stringProviders +
+                ", componentProviders=" + componentProviders +
                 ", tableProviders=" + tableProviders +
                 ", groupProviders=" + groupProviders +
                 ", dataBuilderProviders=" + dataBuilderProviders +
@@ -149,6 +161,7 @@ public class ExtensionMethods {
                 && doubleProviders.isEmpty()
                 && percentageProviders.isEmpty()
                 && stringProviders.isEmpty()
+                && componentProviders.isEmpty()
                 && tableProviders.isEmpty()
                 && groupProviders.isEmpty()
                 && dataBuilderProviders.isEmpty();
