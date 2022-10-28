@@ -144,7 +144,7 @@ public class DataValueGatherer {
         }
         for (ExtensionMethod provider : methods.getComponentProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(String.class, tryToBuildComponent(dataBuilder, parameters, provider));
+            dataBuilder.addValue(Component.class, tryToBuildComponent(dataBuilder, parameters, provider));
         }
         for (ExtensionMethod provider : methods.getGroupProviders()) {
             if (brokenMethods.contains(provider)) continue;
@@ -154,6 +154,10 @@ public class DataValueGatherer {
             if (brokenMethods.contains(provider)) continue;
             dataBuilder.addValue(Table.class, tryToBuildTable(dataBuilder, parameters, provider));
         }
+        addValuesToBuilder2(dataBuilder, methods, parameters);
+    }
+
+    private void addValuesToBuilder2(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             if (brokenMethods.contains(provider)) continue;
             addDataFromAnotherBuilder(dataBuilder, parameters, provider);
@@ -208,7 +212,7 @@ public class DataValueGatherer {
         }
     }
 
-    private DataValue<String> tryToBuildComponent(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+    private DataValue<Component> tryToBuildComponent(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
         ComponentProvider annotation = provider.getExistingAnnotation(ComponentProvider.class);
         try {
             return dataBuilder.valueBuilder(annotation.text())
@@ -219,17 +223,7 @@ public class DataValueGatherer {
                     .showInPlayerTable(annotation.showInPlayerTable())
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
-                    .buildComponent(() -> {
-                        Component component = callMethod(provider, parameters, Component.class);
-                        if (component == null) return null;
-
-                        String json = componentService.convert(component, ComponentOperation.JSON);
-                        if (json.length() > StringDataValue.COMPONENT_MAX_LENGTH) {
-                            // Too large, replace with placeholder text since JSON cannot be chopped up
-                            return "{\"text\":\"<Component too large>\"}";
-                        }
-                        return json;
-                    });
+                    .buildComponent(() -> callMethod(provider, parameters, Component.class));
         } catch (IllegalArgumentException e) {
             logFailure(e, getPluginName(), provider.getMethodName());
             return null;
@@ -381,6 +375,8 @@ public class DataValueGatherer {
                         .ifPresent(data -> storePlayerDouble(parameters, conditions, data));
                 pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
                         .ifPresent(data -> storePlayerString(parameters, conditions, data));
+                pair.getValue(Component.class).flatMap(data -> data.getMetadata(ComponentDataValue.class))
+                        .ifPresent(data -> storePlayerComponent(parameters, conditions, data));
                 pair.getValue(String[].class).flatMap(data -> data.getMetadata(GroupsDataValue.class))
                         .ifPresent(data -> storePlayerGroups(parameters, conditions, data));
                 pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
@@ -405,6 +401,8 @@ public class DataValueGatherer {
                         .ifPresent(data -> storeDouble(parameters, conditions, data));
                 pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
                         .ifPresent(data -> storeString(parameters, conditions, data));
+                pair.getValue(Component.class).flatMap(data -> data.getMetadata(ComponentDataValue.class))
+                        .ifPresent(data -> storeComponent(parameters, conditions, data));
                 pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
                         .ifPresent(data -> storeTable(parameters, conditions, data));
             } catch (DataExtensionMethodCallException methodError) {
@@ -450,6 +448,16 @@ public class DataValueGatherer {
         return data.getValue(); // can be null, can throw
     }
 
+    private String getComponentAsJson(Component component) {
+        if (component == null) return null;
+
+        String json = componentService.convert(component, ComponentOperation.JSON);
+        if (json.length() > ComponentDataValue.MAX_LENGTH) {
+            json = "{\"text\":\"<Component too long>\"}";
+        }
+        return json;
+    }
+
     private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
         ProviderInformation information = data.getInformation();
         Boolean value = getValue(conditions, data, information);
@@ -492,6 +500,17 @@ public class DataValueGatherer {
     private void storeString(Parameters parameters, Conditions conditions, StringDataValue data) {
         ProviderInformation information = data.getInformation();
         String value = getValue(conditions, data, information);
+        if (value == null) return;
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StoreServerStringResultTransaction(information, parameters, value));
+    }
+
+    private void storeComponent(Parameters parameters, Conditions conditions, ComponentDataValue data) {
+        ProviderInformation information = data.getInformation();
+        String value = getComponentAsJson(getValue(conditions, data, information));
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
@@ -554,6 +573,17 @@ public class DataValueGatherer {
     private void storePlayerString(Parameters parameters, Conditions conditions, StringDataValue data) {
         ProviderInformation information = data.getInformation();
         String value = getValue(conditions, data, information);
+        if (value == null) return;
+
+        Database db = dbSystem.getDatabase();
+        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
+        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        db.executeTransaction(new StorePlayerStringResultTransaction(information, parameters, value));
+    }
+
+    private void storePlayerComponent(Parameters parameters, Conditions conditions, ComponentDataValue data) {
+        ProviderInformation information = data.getInformation();
+        String value = getComponentAsJson(getValue(conditions, data, information)) ;
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();

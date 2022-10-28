@@ -166,7 +166,7 @@ public interface ValueBuilder {
      * @param value a {@link Component} made by {@link com.djrapitops.plan.component.ComponentService}
      * @return a data value to give to {@link ExtensionDataBuilder}.
      */
-    DataValue<String> buildComponent(String value);
+    DataValue<Component> buildComponent(Component value);
 
     /**
      * Build a Number.
@@ -253,9 +253,9 @@ public interface ValueBuilder {
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      * <p>
-     * {@link ValueBuilder#buildComponent(String)}
+     * {@link ValueBuilder#buildComponent(Component)}
      */
-    DataValue<String> buildComponent(Supplier<String> value);
+    DataValue<Component> buildComponent(Supplier<Component> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.

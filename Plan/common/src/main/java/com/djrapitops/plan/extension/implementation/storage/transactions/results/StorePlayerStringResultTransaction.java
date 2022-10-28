@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.builder.ComponentDataValue;
 import com.djrapitops.plan.extension.implementation.builder.StringDataValue;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -55,7 +56,7 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
         this.serverUUID = parameters.getServerUUID();
         this.playerUUID = parameters.getPlayerUUID();
         this.component = information.isComponent();
-        this.value = StringUtils.truncate(value, component ? StringDataValue.COMPONENT_MAX_LENGTH : StringDataValue.STRING_MAX_LENGTH);
+        this.value = StringUtils.truncate(value, component ? ComponentDataValue.MAX_LENGTH : StringDataValue.MAX_LENGTH);
     }
 
     @Override

@@ -122,7 +122,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("color", "green");
         objectNode.put("text", "Test");
-        OptionalAssert.equals(objectNode, tabData.getComponent("componentVal").map(ExtensionStringData::getFormattedValue).map(str -> {
+        OptionalAssert.equals(objectNode, tabData.getComponent("componentVal").map(ExtensionComponentData::getFormattedValue).map(str -> {
             try {
                 return objectMapper.readTree(str);
             } catch (Throwable t) {

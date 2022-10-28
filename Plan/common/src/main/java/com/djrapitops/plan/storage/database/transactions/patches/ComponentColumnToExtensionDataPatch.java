@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.patches;
 
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable;
 
@@ -35,7 +36,7 @@ public class ComponentColumnToExtensionDataPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        addColumn(serverTable, serverColumn + " " + length);
-        addColumn(playerTable, playerColumn + " " + length);
+        addColumn(serverTable, serverColumn + " " + Sql.varchar(length));
+        addColumn(playerTable, playerColumn + " " + Sql.varchar(length));
     }
 }

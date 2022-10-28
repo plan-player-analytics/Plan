@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
+import com.djrapitops.plan.component.Component;
+import com.djrapitops.plan.component.ComponentOperation;
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 
 /**
@@ -23,41 +26,26 @@ import com.djrapitops.plan.delivery.rendering.html.Html;
  *
  * @author AuroraLS3
  */
-public class ExtensionStringData implements DescribedExtensionData {
+public class ExtensionComponentData implements DescribedExtensionData {
 
     private final ExtensionDescription description;
-    private final boolean playerName;
-    private String value;
+    private final String value;
 
-    public ExtensionStringData(ExtensionDescription description, boolean playerName, String value) {
+    public ExtensionComponentData(ExtensionDescription description, String value) {
         this.description = description;
-        this.playerName = playerName;
         this.value = value;
-    }
-
-    public static ExtensionStringData regularString(ExtensionDescription description, String value) {
-        return new ExtensionStringData(description, false, value);
-    }
-
-    public static ExtensionStringData playerName(ExtensionDescription description, String value) {
-        return new ExtensionStringData(description, true, value);
     }
 
     public ExtensionDescription getDescription() {
         return description;
     }
 
-    public boolean isPlayerName() {
-        return playerName;
-    }
-
     public String getFormattedValue() {
-        String withColors = Html.swapColorCodesToSpan(value);
-        return !playerName ? withColors : Html.LINK.create("../player/" + Html.encodeToURL(value), withColors);
+        return value;
     }
 
-    ExtensionStringData concatenate(ExtensionStringData other) {
-        value += ", " + other.value;
-        return this;
+    public String getHtmlValue(ComponentSvc service) {
+        String legacy = service.convert(service.fromJson(value), ComponentOperation.LEGACY, Component.SECTION);
+        return Html.swapColorCodesToSpan(legacy);
     }
 }

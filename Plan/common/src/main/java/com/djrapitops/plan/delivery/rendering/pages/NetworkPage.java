@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.domain.container.CachingSupplier;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
@@ -56,6 +57,7 @@ public class NetworkPage implements Page {
     private final JSONStorage jsonStorage;
     private final Formatters formatters;
     private final Locale locale;
+    private final ComponentSvc componentSvc;
 
     NetworkPage(
             String templateHtml,
@@ -66,7 +68,8 @@ public class NetworkPage implements Page {
             ServerInfo serverInfo,
             JSONStorage jsonStorage,
             Formatters formatters,
-            Locale locale
+            Locale locale,
+            ComponentSvc componentSvc
     ) {
         this.templateHtml = templateHtml;
         this.dbSystem = dbSystem;
@@ -77,6 +80,7 @@ public class NetworkPage implements Page {
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
         this.locale = locale;
+        this.componentSvc = componentSvc;
     }
 
     @Override
@@ -105,7 +109,7 @@ public class NetworkPage implements Page {
 
         CachingSupplier<ServerPluginTabs> pluginTabs = new CachingSupplier<>(() -> {
             List<ExtensionData> extensionData = dbSystem.getDatabase().query(new ExtensionServerDataQuery(serverUUID));
-            return new ServerPluginTabs(extensionData, formatters);
+            return new ServerPluginTabs(extensionData, formatters, componentSvc);
         });
 
         long after = System.currentTimeMillis() - config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);

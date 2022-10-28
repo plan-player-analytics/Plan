@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.builder;
 
+import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
@@ -189,8 +190,8 @@ public class ExtValueBuilder implements ValueBuilder {
     }
 
     @Override
-    public DataValue<String> buildComponent(String value) {
-        return new StringDataValue(value, getComponentProviderInformation());
+    public DataValue<Component> buildComponent(Component value) {
+        return new ComponentDataValue(value, getComponentProviderInformation());
     }
 
     @Override
@@ -229,8 +230,8 @@ public class ExtValueBuilder implements ValueBuilder {
     }
 
     @Override
-    public DataValue<String> buildComponent(Supplier<String> value) {
-        return new StringDataValue(value, getComponentProviderInformation());
+    public DataValue<Component> buildComponent(Supplier<Component> value) {
+        return new ComponentDataValue(value, getComponentProviderInformation());
     }
 
     @Override

@@ -78,7 +78,6 @@ public class ExtensionSvc implements ExtensionService {
         this.config = config;
         this.dbSystem = dbSystem;
         this.componentService = componentService;
-        System.out.println(componentService + " <-");
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.extensionRegister = extensionRegister;

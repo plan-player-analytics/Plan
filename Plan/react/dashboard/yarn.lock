@@ -7697,6 +7697,11 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
+react-mcjsonchat@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-mcjsonchat/-/react-mcjsonchat-1.0.0.tgz#6a0c748b074c06a2d64a66db76e5fb2036c48a9a"
+  integrity sha512-H/OYi1iRYFG2Bntj1EYWfTxOaWtIopHy6ILoaXtD3OFONK7kQnp0lXFf6sw1G3BU0DL7s8NL4+AmMCer/A5eIQ==
+
 react-overlays@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/react-overlays/-/react-overlays-4.1.1.tgz#0060107cbe1c5171a744ccda3fbf0556d064bc5f"

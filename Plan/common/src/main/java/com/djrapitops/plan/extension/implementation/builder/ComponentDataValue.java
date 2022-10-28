@@ -16,18 +16,19 @@
  */
 package com.djrapitops.plan.extension.implementation.builder;
 
+import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 
 import java.util.function.Supplier;
 
-public class StringDataValue extends BuiltDataValue<String> {
-    public static final int MAX_LENGTH = 50;
+public class ComponentDataValue extends BuiltDataValue<Component> {
+    public static final int MAX_LENGTH = 500;
 
-    public StringDataValue(String value, ProviderInformation information) {
+    public ComponentDataValue(Component value, ProviderInformation information) {
         super(value, information);
     }
 
-    public StringDataValue(Supplier<String> supplier, ProviderInformation information) {
+    public ComponentDataValue(Supplier<Component> supplier, ProviderInformation information) {
         super(supplier, information);
     }
 }

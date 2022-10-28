@@ -215,12 +215,12 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
         String stringValue = set.getString(ExtensionServerValueTable.STRING_VALUE);
         if (stringValue != null) {
             boolean isPlayerName = set.getBoolean("is_player_name");
-            extensionTab.putStringData(new ExtensionStringData(description, isPlayerName, false, stringValue));
+            extensionTab.putStringData(new ExtensionStringData(description, isPlayerName, stringValue));
         }
 
         String componentValue = set.getString(ExtensionServerValueTable.COMPONENT_VALUE);
         if (componentValue != null) {
-            extensionTab.putComponentData(new ExtensionStringData(description, false, true, componentValue));
+            extensionTab.putComponentData(new ExtensionComponentData(description, componentValue));
         }
     }
 
