@@ -22,7 +22,7 @@ import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 
 /**
- * Represents double data returned by a DoubleProvider or PercentageProvider method.
+ * Represents component data returned by a ComponentProvider method.
  *
  * @author AuroraLS3
  */
