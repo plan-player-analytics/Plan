@@ -508,7 +508,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
             return new String[]{"Group"};
         }
 
-        @ComponentProvider(text = "a group")
+        @ComponentProvider(text = "colored text")
         public Component componentVal(UUID playerUUID) {
             return ComponentService.getInstance().fromLegacy("&aTest", '&');
         }
