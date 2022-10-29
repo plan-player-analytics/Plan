@@ -157,6 +157,7 @@ public class DataValueGatherer {
         addValuesToBuilder2(dataBuilder, methods, parameters);
     }
 
+// TODO refactor to reduce cyclomatic complexity of the calling method
     private void addValuesToBuilder2(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             if (brokenMethods.contains(provider)) continue;
