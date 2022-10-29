@@ -119,6 +119,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildComponent(com.djrapitops.plan.component.Component)" class="member-name-link">buildComponent</a><wbr>(<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Build a <a href="../../component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildComponent(java.util.function.Supplier)" class="member-name-link">buildComponent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildDouble(java.lang.Double)" class="member-name-link">buildDouble</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
@@ -476,6 +486,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="buildComponent(com.djrapitops.plan.component.Component)">
+<h3>buildComponent</h3>
+<div class="member-signature"><span class="return-type"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;</span>&nbsp;<span class="element-name">buildComponent</span><wbr><span class="parameters">(<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&nbsp;value)</span></div>
+<div class="block">Build a <a href="../../component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - a <a href="../../component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a> made by <a href="../../component/ComponentService.html" title="interface in com.djrapitops.plan.component"><code>ComponentService</code></a></dd>
+<dt>Returns:</dt>
+<dd>a data value to give to <a href="ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="buildNumber(java.lang.Long)">
 <h3>buildNumber</h3>
 <div class="member-signature"><span class="return-type"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">buildNumber</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;value)</span></div>
@@ -594,6 +617,15 @@ loadScripts(document, 'script');</script>
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
  <p>
  <a href="#buildString(java.lang.String)"><code>buildString(String)</code></a></div>
+</section>
+</li>
+<li>
+<section class="detail" id="buildComponent(java.util.function.Supplier)">
+<h3>buildComponent</h3>
+<div class="member-signature"><span class="return-type"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;</span>&nbsp;<span class="element-name">buildComponent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;&nbsp;value)</span></div>
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
+ <p>
+ <a href="#buildComponent(com.djrapitops.plan.component.Component)"><code>buildComponent(Component)</code></a></div>
 </section>
 </li>
 <li>
