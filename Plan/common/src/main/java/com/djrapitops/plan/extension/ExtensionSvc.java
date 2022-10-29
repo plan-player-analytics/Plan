@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension;
 
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
@@ -51,6 +52,7 @@ public class ExtensionSvc implements ExtensionService {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final ComponentSvc componentService;
     private final ServerInfo serverInfo;
     private final Processing processing;
     private final ExtensionRegister extensionRegister;
@@ -65,6 +67,7 @@ public class ExtensionSvc implements ExtensionService {
     public ExtensionSvc(
             PlanConfig config,
             DBSystem dbSystem,
+            ComponentSvc componentService,
             ServerInfo serverInfo,
             Processing processing,
             ExtensionRegister extensionRegister,
@@ -74,6 +77,7 @@ public class ExtensionSvc implements ExtensionService {
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.componentService = componentService;
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.extensionRegister = extensionRegister;
@@ -116,7 +120,7 @@ public class ExtensionSvc implements ExtensionService {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
         }
 
-        DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, serverInfo, errorLogger);
+        DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, componentService, serverInfo, errorLogger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 

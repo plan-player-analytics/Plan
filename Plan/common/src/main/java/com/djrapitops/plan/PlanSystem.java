@@ -328,6 +328,10 @@ public class PlanSystem implements SubSystem {
         return extensionService;
     }
 
+    public ComponentSvc getComponentService() {
+        return componentService;
+    }
+
     public static long getServerEnableTime() {
         return SERVER_ENABLE_TIME;
     }

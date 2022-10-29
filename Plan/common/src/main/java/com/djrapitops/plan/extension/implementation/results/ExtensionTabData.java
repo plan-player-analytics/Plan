@@ -36,6 +36,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     private final Map<String, ExtensionDoubleData> percentageData;
     private final Map<String, ExtensionNumberData> numberData;
     private final Map<String, ExtensionStringData> stringData;
+    private final Map<String, ExtensionComponentData> componentData;
 
     private final List<ExtensionTableData> tableData;
     private final List<ExtensionDescription> descriptions;
@@ -52,6 +53,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         percentageData = new HashMap<>();
         numberData = new HashMap<>();
         stringData = new HashMap<>();
+        componentData = new HashMap<>();
 
         tableData = new ArrayList<>();
         descriptions = new ArrayList<>();
@@ -83,6 +85,10 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
     public Optional<ExtensionStringData> getString(String providerName) {
         return Optional.ofNullable(stringData.get(providerName));
+    }
+
+    public Optional<ExtensionComponentData> getComponent(String providerName) {
+        return Optional.ofNullable(componentData.get(providerName));
     }
 
     public List<ExtensionTableData> getTableData() {
@@ -125,6 +131,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         this.percentageData.putAll(other.percentageData);
         this.numberData.putAll(other.numberData);
         this.stringData.putAll(other.stringData);
+        this.componentData.putAll(other.componentData);
 
         this.tableData.addAll(other.tableData);
 
@@ -137,6 +144,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         descriptions.addAll(Lists.map(percentageData.values(), DescribedExtensionData::getDescription));
         descriptions.addAll(Lists.map(numberData.values(), DescribedExtensionData::getDescription));
         descriptions.addAll(Lists.map(stringData.values(), DescribedExtensionData::getDescription));
+        descriptions.addAll(Lists.map(componentData.values(), DescribedExtensionData::getDescription));
 
         order = descriptions.stream().sorted()
                 .map(ExtensionDescription::getName)
@@ -183,6 +191,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
         public Builder putStringData(ExtensionStringData extensionStringData) {
             data.stringData.put(extensionStringData.getDescription().getName(), extensionStringData);
+            return this;
+        }
+
+        public Builder putComponentData(ExtensionComponentData extensionComponentData) {
+            data.componentData.put(extensionComponentData.getDescription().getName(), extensionComponentData);
             return this;
         }
 

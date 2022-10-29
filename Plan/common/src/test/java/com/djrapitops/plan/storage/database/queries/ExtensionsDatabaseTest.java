@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
+import com.djrapitops.plan.component.Component;
+import com.djrapitops.plan.component.ComponentService;
 import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
@@ -43,6 +45,8 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTr
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -64,6 +68,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @BeforeEach
     default void unregisterExtensions() {
+        componentService().register();
         ExtensionSvc extensionService = extensionService();
         extensionService.register();
         extensionService.unregister(new PlayerExtension());
@@ -112,6 +117,18 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
         OptionalAssert.equals("Group", tabData.getString("groupVal").map(ExtensionStringData::getFormattedValue));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode objectNode = objectMapper.createObjectNode();
+        objectNode.put("color", "green");
+        objectNode.put("text", "Test");
+        OptionalAssert.equals(objectNode, tabData.getComponent("componentVal").map(ExtensionComponentData::getFormattedValue).map(str -> {
+            try {
+                return objectMapper.readTree(str);
+            } catch (Throwable t) {
+                return fail(t);
+            }
+        }));
     }
 
     @Test
@@ -489,6 +506,11 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         @GroupProvider(text = "a group")
         public String[] groupVal(UUID playerUUID) {
             return new String[]{"Group"};
+        }
+
+        @ComponentProvider(text = "colored text")
+        public Component componentVal(UUID playerUUID) {
+            return ComponentService.getInstance().fromLegacy("&aTest", '&');
         }
     }
 

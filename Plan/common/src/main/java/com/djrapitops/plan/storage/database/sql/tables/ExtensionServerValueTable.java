@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.sql.tables;
 
+import com.djrapitops.plan.extension.implementation.builder.ComponentDataValue;
+import com.djrapitops.plan.extension.implementation.builder.StringDataValue;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
@@ -38,6 +40,7 @@ public class ExtensionServerValueTable {
     public static final String PERCENTAGE_VALUE = "percentage_value";
     public static final String LONG_VALUE = "long_value";
     public static final String STRING_VALUE = "string_value";
+    public static final String COMPONENT_VALUE = "component_value";
     public static final String GROUP_VALUE = "group_value";
 
     private ExtensionServerValueTable() {
@@ -51,7 +54,8 @@ public class ExtensionServerValueTable {
                 .column(DOUBLE_VALUE, Sql.DOUBLE)
                 .column(PERCENTAGE_VALUE, Sql.DOUBLE)
                 .column(LONG_VALUE, Sql.LONG)
-                .column(STRING_VALUE, Sql.varchar(50))
+                .column(STRING_VALUE, Sql.varchar(StringDataValue.MAX_LENGTH))
+                .column(COMPONENT_VALUE, Sql.varchar(ComponentDataValue.MAX_LENGTH))
                 .column(GROUP_VALUE, Sql.varchar(50))
                 .column(PROVIDER_ID, Sql.INT).notNull()
                 .foreignKey(PROVIDER_ID, ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.ID)

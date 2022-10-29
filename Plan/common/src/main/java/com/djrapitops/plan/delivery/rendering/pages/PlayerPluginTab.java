@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
@@ -47,19 +48,23 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
     private String tab;
 
     private boolean hasWideTable;
+    private final ComponentSvc componentSvc;
 
-    public PlayerPluginTab(String nav, String tab) {
+    public PlayerPluginTab(String nav, String tab, ComponentSvc componentSvc) {
         this.nav = nav;
         this.tab = tab;
+        this.componentSvc = componentSvc;
     }
 
     public PlayerPluginTab(
             String serverName,
             List<ExtensionData> playerData,
-            Formatters formatters
+            Formatters formatters,
+            ComponentSvc componentSvc
     ) {
         this.serverName = serverName;
         this.playerData = playerData;
+        this.componentSvc = componentSvc;
 
         numberFormatters = new EnumMap<>(FormatType.class);
         numberFormatters.put(FormatType.DATE_SECOND, formatters.secondLong());
@@ -197,6 +202,7 @@ public class PlayerPluginTab implements Comparable<PlayerPluginTab> {
             tabData.getPercentage(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue(percentageFormatter)));
             tabData.getNumber(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue(numberFormatters.get(data.getFormatType()))));
             tabData.getString(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue()));
+            tabData.getComponent(key).ifPresent(data -> append(builder, data.getDescription(), data.getHtmlValue(componentSvc)));
         }
         return builder.toString();
     }

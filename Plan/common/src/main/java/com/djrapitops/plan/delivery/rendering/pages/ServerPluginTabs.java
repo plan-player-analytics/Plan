@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
@@ -49,20 +50,24 @@ public class ServerPluginTabs {
 
     private StringBuilder nav;
     private String tab;
+    private final ComponentSvc componentSvc;
 
-    public ServerPluginTabs(String nav, String tab) {
+    public ServerPluginTabs(String nav, String tab, ComponentSvc componentSvc) {
         this.nav = new StringBuilder(nav);
         this.tab = tab;
+        this.componentSvc = componentSvc;
     }
 
     public ServerPluginTabs(
             List<ExtensionData> serverData,
-            Formatters formatters
+            Formatters formatters,
+            ComponentSvc componentSvc
     ) {
         this.serverData = serverData;
         Collections.sort(serverData);
         this.extraTabServerData = Lists.filter(serverData, ExtensionData::doesNeedWiderSpace);
         this.serverData.removeAll(extraTabServerData);
+        this.componentSvc = componentSvc;
 
         numberFormatters = new EnumMap<>(FormatType.class);
         numberFormatters.put(FormatType.DATE_SECOND, formatters.secondLong());
@@ -220,6 +225,7 @@ public class ServerPluginTabs {
             tabData.getPercentage(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue(percentageFormatter)));
             tabData.getNumber(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue(numberFormatters.get(data.getFormatType()))));
             tabData.getString(key).ifPresent(data -> append(builder, data.getDescription(), data.getFormattedValue()));
+            tabData.getComponent(key).ifPresent(data -> append(builder, data.getDescription(), data.getHtmlValue(componentSvc)));
         }
         return builder.toString();
     }

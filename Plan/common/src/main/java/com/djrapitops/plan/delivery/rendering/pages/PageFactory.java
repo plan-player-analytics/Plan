@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
@@ -62,6 +63,7 @@ public class PageFactory {
     private final Lazy<JSONStorage> jsonStorage;
     private final Lazy<Formatters> formatters;
     private final Lazy<Locale> locale;
+    private final Lazy<ComponentSvc> componentService;
 
     @Inject
     public PageFactory(
@@ -73,7 +75,8 @@ public class PageFactory {
             Lazy<ServerInfo> serverInfo,
             Lazy<JSONStorage> jsonStorage,
             Lazy<Formatters> formatters,
-            Lazy<Locale> locale
+            Lazy<Locale> locale,
+            Lazy<ComponentSvc> componentService
     ) {
         this.versionChecker = versionChecker;
         this.files = files;
@@ -84,6 +87,7 @@ public class PageFactory {
         this.jsonStorage = jsonStorage;
         this.formatters = formatters;
         this.locale = locale;
+        this.componentService = componentService;
     }
 
     public Page playersPage() throws IOException {
@@ -123,7 +127,8 @@ public class PageFactory {
                 serverInfo.get(),
                 jsonStorage.get(),
                 formatters.get(),
-                locale.get()
+                locale.get(),
+                componentService.get()
         );
     }
 
@@ -154,7 +159,7 @@ public class PageFactory {
         Map<ServerUUID, List<ExtensionData>> extensionPlayerData = database.query(new ExtensionPlayerDataQuery(playerUUID));
 
         if (extensionPlayerData.isEmpty()) {
-            return new PlayerPluginTab("", Collections.emptyList(), formatters.get());
+            return new PlayerPluginTab("", Collections.emptyList(), formatters.get(), componentService.get());
         }
 
         List<PlayerPluginTab> playerPluginTabs = new ArrayList<>();
@@ -167,7 +172,7 @@ public class PageFactory {
                 continue;
             }
 
-            playerPluginTabs.add(new PlayerPluginTab(serverName, ofServer, formatters.get()));
+            playerPluginTabs.add(new PlayerPluginTab(serverName, ofServer, formatters.get(), componentService.get()));
         }
 
         StringBuilder navs = new StringBuilder();
@@ -178,7 +183,7 @@ public class PageFactory {
             tabs.append(tab.getTab());
         });
 
-        return new PlayerPluginTab(navs.toString(), tabs.toString());
+        return new PlayerPluginTab(navs.toString(), tabs.toString(), componentService.get());
     }
 
     public Page networkPage() throws IOException {
@@ -195,7 +200,8 @@ public class PageFactory {
                 serverInfo.get(),
                 jsonStorage.get(),
                 formatters.get(),
-                locale.get()
+                locale.get(),
+                componentService.get()
         );
     }
 

@@ -43,6 +43,7 @@ public class ProviderInformation extends ExtensionDescription {
     private final boolean isPlayerName;     // default false, StringProvider
     private final Color tableColor;         // can be null, TableProvider
     private final boolean percentage;       // affects where doubles are stored
+    private final boolean component;        // affects where strings are stored
 
     private ProviderInformation(ProviderInformation.Builder builder) {
         super(
@@ -62,6 +63,7 @@ public class ProviderInformation extends ExtensionDescription {
         isPlayerName = builder.isPlayerName;
         tableColor = builder.tableColor;
         percentage = builder.percentage;
+        component = builder.component;
     }
 
     public static ProviderInformation.Builder builder(String pluginName) {
@@ -136,6 +138,10 @@ public class ProviderInformation extends ExtensionDescription {
         return percentage;
     }
 
+    public boolean isComponent() {
+        return component;
+    }
+
     public static class Builder {
         private final String pluginName;
         private String name;
@@ -152,6 +158,7 @@ public class ProviderInformation extends ExtensionDescription {
         private boolean isPlayerName = false; // default false, StringProvider
         private Color tableColor;             // can be null, TableProvider
         private boolean percentage;           // affects where doubles are stored
+        private boolean component;            // affects where strings are stored
 
         public Builder(String pluginName) {
             this.pluginName = pluginName;
@@ -224,6 +231,11 @@ public class ProviderInformation extends ExtensionDescription {
 
         public Builder setAsPercentage() {
             percentage = true;
+            return this;
+        }
+
+        public Builder setAsComponent() {
+            component = true;
             return this;
         }
 

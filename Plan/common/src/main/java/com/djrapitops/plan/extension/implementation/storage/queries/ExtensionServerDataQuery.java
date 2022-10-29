@@ -115,6 +115,7 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
                 "v1." + ExtensionServerValueTable.PERCENTAGE_VALUE + " as percentage_value," +
                 "v1." + ExtensionServerValueTable.LONG_VALUE + " as long_value," +
                 "v1." + ExtensionServerValueTable.STRING_VALUE + " as string_value," +
+                "v1." + ExtensionServerValueTable.COMPONENT_VALUE + " as component_value," +
                 "p1." + ExtensionProviderTable.PLUGIN_ID + " as plugin_id," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
@@ -215,6 +216,11 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
         if (stringValue != null) {
             boolean isPlayerName = set.getBoolean("is_player_name");
             extensionTab.putStringData(new ExtensionStringData(description, isPlayerName, stringValue));
+        }
+
+        String componentValue = set.getString(ExtensionServerValueTable.COMPONENT_VALUE);
+        if (componentValue != null) {
+            extensionTab.putComponentData(new ExtensionComponentData(description, componentValue));
         }
     }
 

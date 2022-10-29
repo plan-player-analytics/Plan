@@ -89,6 +89,7 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
                 "v1." + ExtensionPlayerValueTable.PERCENTAGE_VALUE + " as percentage_value," +
                 "v1." + ExtensionPlayerValueTable.LONG_VALUE + " as long_value," +
                 "v1." + ExtensionPlayerValueTable.STRING_VALUE + " as string_value," +
+                "v1." + ExtensionPlayerValueTable.COMPONENT_VALUE + " as component_value," +
                 "null as group_value," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
@@ -208,6 +209,11 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
         String stringValue = set.getString(ExtensionPlayerValueTable.STRING_VALUE);
         if (stringValue != null) {
             extensionTab.putStringData(ExtensionStringData.regularString(description, stringValue));
+        }
+
+        String componentValue = set.getString(ExtensionPlayerValueTable.COMPONENT_VALUE);
+        if (componentValue != null) {
+            extensionTab.putComponentData(new ExtensionComponentData(description, componentValue));
         }
     }
 
