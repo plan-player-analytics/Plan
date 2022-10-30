@@ -50,10 +50,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -132,14 +129,12 @@ public abstract class SQLDB extends AbstractDatabase {
         if (downloadDriver) {
             DependencyManager dependencyManager = new DependencyManager(files.getDataDirectory().resolve("libraries"));
             dependencyManager.loadFromResource(getDependencyResource());
-            CompletableFuture<Void>[] results = dependencyManager.download(null, DRIVER_REPOSITORIES);
-            for (int i = 0; i < results.length; i++) {
-                CompletableFuture<Void> result = results[i];
-                Repository repository = DRIVER_REPOSITORIES.get(i);
-                result.exceptionally(error -> {
-                    logger.warn("Failed to download " + getType().getName() + "-driver from " + repository.getHost() + ": " + error.getMessage() + ", " + error.getCause());
-                    return null;
-                });
+            try {
+                dependencyManager.downloadAll(null, DRIVER_REPOSITORIES).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                logger.error("Failed to download " + getType().getName() + "-driver", e);
             }
 
             IsolatedClassLoader classLoader = new IsolatedClassLoader();
