@@ -22,7 +22,8 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
-      - uses: actions/checkout@v2
+      - name: 📥 Checkout git repository
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: ☕ Setup JDK
@@ -32,7 +33,7 @@ jobs:
           java-version: '17'
       - name: 🚦 Setup Selenium Webdriver
         uses: nanasess/setup-chromedriver@v1
-      - name: Setup Selenium Webdriver settings
+      - name: 🚦 Setup Selenium Webdriver settings
         run: |
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
@@ -57,7 +58,7 @@ jobs:
         run: |
           cd Plan
           ./gradlew shadowJar
-      - name: Get versions 🛒
+      - name: ⚙ Get versions
         run: |
           cd Plan
           ./gradlew snapshotVersion jarNameVersion
@@ -86,8 +87,7 @@ jobs:
         run: |
           cd Plan
           ./gradlew build
-      - name: 🖨 Build Javadocs 
-        if: github.ref == 'refs/heads/master'
+      - name: 🖨 Build Javadocs
         run: |
           cd Plan
           echo "Building javadocs with gradle"
@@ -102,7 +102,7 @@ jobs:
           cp scripts/index.html javadocs/index.html
           cd javadocs
           touch .nojekyll
-      - name: 🖨 Deploy Javadocs 
+      - name: 📤 Deploy Javadocs 
         if: github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
