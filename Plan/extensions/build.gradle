@@ -25,7 +25,7 @@ dependencies {
     shadow 'net.playeranalytics:Extension-LibertyBans:0.8.0-R1.2'
     shadow 'net.playeranalytics:Extension-Litebans:0.3.4-R1.4'
     shadow 'net.playeranalytics:Extension-LogBlock:1.16.1.2-R1.9'
-    shadow 'net.playeranalytics:Extension-LuckPerms:5.0-R1.5'
+    shadow 'net.playeranalytics:Extension-LuckPerms:5.0-R1.6'
     shadow 'net.playeranalytics:Extension-MarriageMaster:2.3-R1.3'
     shadow 'net.playeranalytics:Extension-McMMO:2.1.149-R2.5'
     shadow 'net.playeranalytics:Extension-MinigamesLib:1.14.17-R1.2'
