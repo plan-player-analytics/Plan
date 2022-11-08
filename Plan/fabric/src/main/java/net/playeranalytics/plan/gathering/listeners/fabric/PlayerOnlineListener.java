@@ -118,7 +118,11 @@ public class PlayerOnlineListener implements FabricListener {
     private void onHandshake(HandshakeC2SPacket packet) {
         try {
             if (packet.getIntendedState() == NetworkState.LOGIN) {
-                joinAddress.set(packet.getAddress());
+                String address = packet.getAddress();
+                if (address != null && address.contains("\u0000")) {
+                    address = address.substring(0, address.indexOf('\u0000'));
+                }
+                joinAddress.set(address);
             }
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(getClass(), "onHandshake").build());

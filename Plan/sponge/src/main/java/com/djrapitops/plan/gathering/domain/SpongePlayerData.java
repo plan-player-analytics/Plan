@@ -61,7 +61,11 @@ public class SpongePlayerData implements PlatformPlayerData {
 
     @Override
     public Optional<String> getJoinAddress() {
-        return Optional.of(player.connection().virtualHost().getHostString());
+        String address = player.connection().virtualHost().getHostString();
+        if (address.contains("\u0000")) {
+            address = address.substring(0, address.indexOf('\u0000'));
+        }
+        return Optional.of(address);
     }
 
     @Override

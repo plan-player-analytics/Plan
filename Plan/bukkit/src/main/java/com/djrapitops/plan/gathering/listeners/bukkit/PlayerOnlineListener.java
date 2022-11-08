@@ -83,10 +83,13 @@ public class PlayerOnlineListener implements Listener {
             ServerUUID serverUUID = serverInfo.getServerUUID();
             boolean banned = PlayerLoginEvent.Result.KICK_BANNED == event.getResult();
 
-            String joinAddress = event.getHostname();
-            if (!joinAddress.isEmpty()) {
-                joinAddress = joinAddress.substring(0, joinAddress.lastIndexOf(':'));
-                joinAddressCache.put(playerUUID, joinAddress);
+            String address = event.getHostname();
+            if (!address.isEmpty()) {
+                address = address.substring(0, address.lastIndexOf(':'));
+                if (address.contains("\u0000")) {
+                    address = address.substring(0, address.indexOf('\u0000'));
+                }
+                joinAddressCache.put(playerUUID, address);
             }
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, banned));
         } catch (Exception e) {
