@@ -75,7 +75,7 @@ command:
     warnDbNotOpen: "§e資料庫狀態為 ${0} - 這可能需要比預期更長的時間..."
     write: "正在寫入${0}..."
   fail:
-    emptyString: "請輸入您想搜尋的內容"
+    emptyString: "搜尋欄不能空白"
     invalidArguments: "接受以下內容 ${0}: ${1}"
     invalidUsername: "§c該使用者沒有 UUID。"
     missingArguments: "§c需要參數 (${0}) ${1}"
