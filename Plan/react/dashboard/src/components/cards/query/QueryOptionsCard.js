@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Card, Col, Row} from "react-bootstrap-v5";
 import {useTranslation} from "react-i18next";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
-import {fetchFilters} from "../../../service/queryService";
+import {fetchFilters, postQuery} from "../../../service/queryService";
 import {ErrorViewCard} from "../../../views/ErrorView";
 import {ChartLoader} from "../../navigation/Loader";
 import DateInputField from "../../input/DateInputField";
@@ -15,6 +15,8 @@ import MultiSelect from "../../input/MultiSelect";
 import CollapseWithButton from "../../layout/CollapseWithButton";
 import FilterDropdown from "./FilterDropdown";
 import FilterList from "./FilterList";
+import {useQueryResultContext} from "../../../hooks/queryResultContext";
+import {useNavigate} from "react-router-dom";
 
 const parseTime = (dateString, timeString) => {
     const d = dateString.match(
@@ -34,6 +36,8 @@ const parseTime = (dateString, timeString) => {
 
 const QueryOptionsCard = () => {
     const {t} = useTranslation();
+    const navigate = useNavigate()
+    const {setResult} = useQueryResultContext();
 
     // View state
     const [fromDate, setFromDate] = useState(undefined);
@@ -49,7 +53,6 @@ const QueryOptionsCard = () => {
     const [graphData, setGraphData] = useState(undefined);
     useEffect(() => {
         if (options) {
-            console.log("Graph data loaded")
             setGraphData({playersOnline: options.viewPoints, color: '#9E9E9E'})
         }
     }, [options, setGraphData]);
@@ -106,6 +109,27 @@ const QueryOptionsCard = () => {
             return t('html.query.label.servers.two');
         } else {
             return t('html.query.label.servers.many').replace('{number}', selected);
+        }
+    }
+
+    const performQuery = async () => {
+        const inputDto = {
+            view: {
+                afterDate: fromDate ? fromDate : options.view.afterDate,
+                afterTime: fromTime ? fromTime : options.view.afterTime,
+                beforeDate: toDate ? toDate : options.view.beforeDate,
+                beforeTime: toTime ? toTime : options.view.beforeTime,
+                servers: selectedServers.map(index => options.view.servers[index])
+            },
+            filters
+        }
+
+        // TODO handle error
+        const {data} = await postQuery(inputDto);
+        setResult(data);
+        window.scrollTo(0, 0);
+        if (data?.data) {
+            navigate('../result?timestamp=' + data.timestamp);
         }
     }
 
@@ -198,7 +222,10 @@ const QueryOptionsCard = () => {
                     </Col>
                 </Row>
             </Card.Body>
-            <button id={"query-button"} className={"btn bg-plan m-2"} disabled={Boolean(invalidFields.length)}>
+            <button id={"query-button"}
+                    className={"btn bg-plan m-2"}
+                    disabled={Boolean(invalidFields.length)}
+                    onClick={performQuery}>
                 <FontAwesomeIcon icon={faSearch}/> {t('html.query.performQuery')}
             </button>
         </Card>

@@ -60,6 +60,7 @@ public enum JSLang implements Lang {
     QUERY_HAVE_PLUGIN_BOOLEAN_VALUE("html.query.filter.hasPluginBooleanValue.text", "have Plugin boolean value"),
     QUERY_HAS_PLAYED_ON_SERVERS("html.query.filter.hasPlayedOnServers.name", "Has played on one of servers"),
     QUERY_HAVE_PLAYED_ON_SERVERS("html.query.filter.hasPlayedOnServers.text", "have played on at least one of"),
+    FILTER_SKIPPED("html.query.filter.skipped", "Skipped"),
 
     FILTER_GROUP("html.query.filter.pluginGroup.name", "Group: "),
     FILTER_ALL_PLAYERS("html.query.filter.generic.allPlayers", "All players"),

@@ -48,6 +48,7 @@ const AllPlayers = React.lazy(() => import("./views/players/AllPlayers"));
 
 const QueryPage = React.lazy(() => import("./views/layout/QueryPage"));
 const NewQueryView = React.lazy(() => import("./views/query/NewQueryView"));
+const QueryResultView = React.lazy(() => import("./views/query/QueryResultView"));
 
 const ErrorsPage = React.lazy(() => import("./views/layout/ErrorsPage"));
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
@@ -147,6 +148,7 @@ function App() {
                             <Route path="/query" element={<Lazy><QueryPage/></Lazy>}>
                                 <Route path="" element={<NewRedirect/>}/>
                                 <Route path="new" element={<Lazy><NewQueryView/></Lazy>}/>
+                                <Route path="result" element={<Lazy><QueryResultView/></Lazy>}/>
                             </Route>
                             <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>
                             <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>

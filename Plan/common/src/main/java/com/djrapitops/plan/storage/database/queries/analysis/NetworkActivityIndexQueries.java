@@ -449,7 +449,7 @@ public class NetworkActivityIndexQueries {
                 Map<Integer, ActivityIndex> indexes = new HashMap<>();
                 while (set.next()) {
                     indexes.put(
-                            set.getInt(UsersTable.ID),
+                            set.getInt("user_id"),
                             new ActivityIndex(set.getDouble("activity_index"), date)
                     );
                 }

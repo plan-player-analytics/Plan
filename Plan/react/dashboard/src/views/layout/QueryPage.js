@@ -9,6 +9,7 @@ import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
 import ErrorPage from "./ErrorPage";
+import {QueryResultContextProvider} from "../../hooks/queryResultContext";
 
 const QueryPage = () => {
     const {t, i18n} = useTranslation();
@@ -38,18 +39,20 @@ const QueryPage = () => {
     return (
         <>
             <NightModeCss/>
-            <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
-            <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={displayedServerName} tab={currentTab} hideUpdater/>
-                <div id="content" style={{display: 'flex'}}>
-                    <main className="container-fluid mt-4">
-                        <Outlet context={{}}/>
-                    </main>
-                    <aside>
-                        <ColorSelectorModal/>
-                    </aside>
+            <QueryResultContextProvider>
+                <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
+                <div className="d-flex flex-column" id="content-wrapper">
+                    <Header page={displayedServerName} tab={currentTab} hideUpdater/>
+                    <div id="content" style={{display: 'flex'}}>
+                        <main className="container-fluid mt-4">
+                            <Outlet context={{}}/>
+                        </main>
+                        <aside>
+                            <ColorSelectorModal/>
+                        </aside>
+                    </div>
                 </div>
-            </div>
+            </QueryResultContextProvider>
         </>
     )
 }

@@ -7,7 +7,7 @@ import DataTablesTable from "../../table/DataTablesTable";
 import {CardLoader} from "../../navigation/Loader";
 import {baseAddress} from "../../../service/backendConfiguration";
 
-const PlayerListCard = ({data}) => {
+const PlayerListCard = ({data, title}) => {
     const {t} = useTranslation();
     const [options, setOptions] = useState(undefined);
 
@@ -34,7 +34,7 @@ const PlayerListCard = ({data}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faUsers} className="col-black"/> {t('html.label.playerList')}
+                    <Fa icon={faUsers} className="col-black"/> {title ? title : t('html.label.playerList')}
                 </h6>
             </Card.Header>
             <DataTablesTable id={"players-table"} options={options}/>

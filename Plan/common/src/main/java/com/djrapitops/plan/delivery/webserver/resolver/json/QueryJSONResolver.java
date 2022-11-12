@@ -142,7 +142,7 @@ public class QueryJSONResolver implements Resolver {
         List<Filter.ResultPath> resultPath = result.getInverseResultPath();
         Collections.reverse(resultPath);
 
-        return buildAndStoreResponse(inputQuery.getView(), result, resultPath);
+        return buildAndStoreResponse(inputQuery, result, resultPath);
     }
 
     private InputQueryDto parseInputQuery(Request request) {
@@ -180,16 +180,17 @@ public class QueryJSONResolver implements Resolver {
         }
     }
 
-    private Response buildAndStoreResponse(ViewDto view, Filter.Result result, List<Filter.ResultPath> resultPath) {
+    private Response buildAndStoreResponse(InputQueryDto input, Filter.Result result, List<Filter.ResultPath> resultPath) {
         try {
             long timestamp = System.currentTimeMillis();
             Map<String, Object> json = Maps.builder(String.class, Object.class)
                     .put("path", resultPath)
-                    .put("view", view)
+                    .put("view", input.getView())
+                    .put("filters", input.getFilters())
                     .put("timestamp", timestamp)
                     .build();
             if (!result.isEmpty()) {
-                json.put("data", getDataFor(result.getResultUserIds(), view));
+                json.put("data", getDataFor(result.getResultUserIds(), input.getView()));
             }
 
             JSONStorage.StoredJSON stored = jsonStorage.storeJson("query", json, timestamp);
