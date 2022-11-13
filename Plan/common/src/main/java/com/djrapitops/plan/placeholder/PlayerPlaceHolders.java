@@ -247,99 +247,13 @@ public class PlayerPlaceHolders implements Placeholders {
     }
 
     private void registerPlaytimePlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
-        placeholders.register("player_time_active",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .toActivePlaytime())
-        );
-        placeholders.register("player_time_active_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .toActivePlaytime()
-        );
+        registerActivePlaytimePlaceholders(placeholders, time);
+        registerAfkTimePlaceholders(placeholders, time);
+        registerPlayerPlaytimePlaceholders(placeholders, time);
+        registerServerSpecificPlaytimePlaceholders(placeholders, time);
+    }
 
-        placeholders.register("player_time_active_day",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(dayAgo(), now())
-                        .toActivePlaytime())
-        );
-        placeholders.register("player_time_active_day_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(dayAgo(), now())
-                        .toActivePlaytime()
-        );
-
-        placeholders.register("player_time_active_week",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(weekAgo(), now())
-                        .toActivePlaytime())
-        );
-        placeholders.register("player_time_active_week_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(weekAgo(), now())
-                        .toActivePlaytime()
-        );
-
-        placeholders.register("player_time_active_month",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(monthAgo(), now())
-                        .toActivePlaytime())
-        );
-        placeholders.register("player_time_active_month_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(monthAgo(), now())
-                        .toActivePlaytime()
-        );
-
-        placeholders.register("player_time_afk",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .toAfkTime())
-        );
-        placeholders.register("player_time_afk_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .toAfkTime()
-        );
-
-        placeholders.register("player_time_total",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .toPlaytime())
-        );
-        placeholders.register("player_time_total_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .toPlaytime()
-        );
-
-        placeholders.register("player_time_day",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(dayAgo(), now())
-                        .toPlaytime())
-        );
-        placeholders.register("player_time_day_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(dayAgo(), now())
-                        .toPlaytime()
-        );
-
-        placeholders.register("player_time_week",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(weekAgo(), now())
-                        .toPlaytime())
-        );
-        placeholders.register("player_time_week_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(weekAgo(), now())
-                        .toPlaytime()
-        );
-
-        placeholders.register("player_time_month",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(monthAgo(), now())
-                        .toPlaytime())
-        );
-        placeholders.register("player_time_month_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(monthAgo(), now())
-                        .toPlaytime()
-        );
-
+    private void registerServerSpecificPlaytimePlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
         placeholders.register("player_server_time_active",
                 player -> time.apply(SessionsMutator.forContainer(player)
                         .filterPlayedOnServer(serverInfo.getServerUUID())
@@ -410,6 +324,105 @@ public class PlayerPlaceHolders implements Placeholders {
                         .filterSessionsBetween(monthAgo(), now())
                         .filterPlayedOnServer(serverInfo.getServerUUID())
                         .toPlaytime()
+        );
+    }
+
+    private void registerPlayerPlaytimePlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+        placeholders.register("player_time_total",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .toPlaytime())
+        );
+        placeholders.register("player_time_total_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .toPlaytime()
+        );
+
+        placeholders.register("player_time_day",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .toPlaytime())
+        );
+        placeholders.register("player_time_day_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .toPlaytime()
+        );
+
+        placeholders.register("player_time_week",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .toPlaytime())
+        );
+        placeholders.register("player_time_week_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .toPlaytime()
+        );
+
+        placeholders.register("player_time_month",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .toPlaytime())
+        );
+        placeholders.register("player_time_month_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .toPlaytime()
+        );
+    }
+
+    private void registerAfkTimePlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+        placeholders.register("player_time_afk",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .toAfkTime())
+        );
+        placeholders.register("player_time_afk_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .toAfkTime()
+        );
+    }
+
+    private void registerActivePlaytimePlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+        placeholders.register("player_time_active",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .toActivePlaytime())
+        );
+        placeholders.register("player_time_active_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .toActivePlaytime()
+        );
+
+        placeholders.register("player_time_active_day",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .toActivePlaytime())
+        );
+        placeholders.register("player_time_active_day_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .toActivePlaytime()
+        );
+
+        placeholders.register("player_time_active_week",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .toActivePlaytime())
+        );
+        placeholders.register("player_time_active_week_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .toActivePlaytime()
+        );
+
+        placeholders.register("player_time_active_month",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .toActivePlaytime())
+        );
+        placeholders.register("player_time_active_month_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .toActivePlaytime()
         );
     }
 
