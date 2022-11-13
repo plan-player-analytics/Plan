@@ -256,6 +256,39 @@ public class PlayerPlaceHolders implements Placeholders {
                         .toActivePlaytime()
         );
 
+        placeholders.register("player_time_active_day",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .toActivePlaytime())
+        );
+        placeholders.register("player_time_active_day_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(dayAgo(), now())
+                        .toActivePlaytime()
+        );
+
+        placeholders.register("player_time_active_week",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .toActivePlaytime())
+        );
+        placeholders.register("player_time_active_week_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(weekAgo(), now())
+                        .toActivePlaytime()
+        );
+
+        placeholders.register("player_time_active_month",
+                player -> time.apply(SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .toActivePlaytime())
+        );
+        placeholders.register("player_time_active_month_raw",
+                player -> SessionsMutator.forContainer(player)
+                        .filterSessionsBetween(monthAgo(), now())
+                        .toActivePlaytime()
+        );
+
         placeholders.register("player_time_afk",
                 player -> time.apply(SessionsMutator.forContainer(player)
                         .toAfkTime())
