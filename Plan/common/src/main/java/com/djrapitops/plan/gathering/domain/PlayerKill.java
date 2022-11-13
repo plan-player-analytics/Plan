@@ -129,20 +129,6 @@ public class PlayerKill implements DateHolder {
         public long getRegisterDate() {
             return registerDate;
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            if (!super.equals(o)) return false;
-            Victim victim = (Victim) o;
-            return getRegisterDate() == victim.getRegisterDate();
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(super.hashCode(), getRegisterDate());
-        }
     }
 
     public static class Killer extends PlayerIdentifier {
