@@ -42,11 +42,11 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -190,8 +190,6 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         List<ExtensionTabData> tabs = extensionData.getTabs();
         assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
         ExtensionTabData tabData = tabs.get(0);
-
-        System.out.println(tabData.getValueOrder());
 
         OptionalAssert.equals("0.0", tabData.getPercentage("boolVal_aggregate").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal_avg").map(data -> data.getFormattedValue(Objects::toString)));

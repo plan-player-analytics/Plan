@@ -75,6 +75,7 @@ public class SessionQueries {
             KillsTable.KILLER_UUID + ',' +
             KillsTable.VICTIM_UUID + ',' +
             "v." + UsersTable.USER_NAME + " as victim_name, " +
+            "v." + UsersTable.REGISTERED + " as victim_" + UsersTable.REGISTERED + ", " +
             "k." + UsersTable.USER_NAME + " as killer_name, " +
             KillsTable.DATE + ',' +
             KillsTable.WEAPON +
@@ -199,7 +200,8 @@ public class SessionQueries {
                 );
                 PlayerKill.Victim victim = new PlayerKill.Victim(
                         UUID.fromString(set.getString(KillsTable.VICTIM_UUID)),
-                        victimName
+                        victimName,
+                        set.getLong("victim_" + UsersTable.REGISTERED)
                 );
                 ServerIdentifier serverIdentifier = new ServerIdentifier(serverUUID, serverName);
                 String weapon = set.getString(KillsTable.WEAPON);

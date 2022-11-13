@@ -43,6 +43,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Event Listener for detecting player and mob deaths.
@@ -90,7 +91,7 @@ public class DeathEventListener implements Listener {
     }
 
     private PlayerKill.Victim getVictim(Player victim) {
-        return new PlayerKill.Victim(victim.getUniqueId(), victim.getName());
+        return new PlayerKill.Victim(victim.getUniqueId(), victim.getName(), TimeUnit.SECONDS.toMillis(victim.getFirstPlayed()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

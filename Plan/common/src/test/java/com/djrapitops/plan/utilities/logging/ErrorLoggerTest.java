@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -127,7 +128,7 @@ class ErrorLoggerTest {
         error.addSuppressed(new IllegalArgumentException());
         error.addSuppressed(new NullPointerException());
 
-        assertTimeoutPreemptively(Duration.ofMillis(500), () ->
+        assertTimeoutPreemptively(Duration.of(5, ChronoUnit.SECONDS), () ->
                 UNDER_TEST.warn(error, ErrorContext.builder()
                         .whatToDo("Succeed the test")
                         .related("Test object")

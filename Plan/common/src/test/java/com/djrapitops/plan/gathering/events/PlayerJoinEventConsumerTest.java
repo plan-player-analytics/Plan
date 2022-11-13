@@ -303,7 +303,7 @@ class PlayerJoinEventConsumerTest {
 
         File playerExportDir = config.getPageExportPath().resolve("player/" + TestConstants.PLAYER_ONE_UUID).toFile();
         Awaitility.await()
-                .atMost(2, TimeUnit.SECONDS)
+                .atMost(5, TimeUnit.SECONDS)
                 .until(playerExportDir::exists);
 
         assertTrue(playerExportDir.exists());

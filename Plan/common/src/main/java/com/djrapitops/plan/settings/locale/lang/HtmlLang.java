@@ -166,6 +166,7 @@ public enum HtmlLang implements Lang {
     LABEL_3RD_WEAPON("html.label.thirdDeadliestWeapon", "3rd PvP Weapon"),
     LABEL_AVG_KDR("html.label.averageKdr", "Average KDR"),
     LABEL_PLAYER_KILLS("html.label.playerKills", "Player Kills"),
+    LABEL_PLAYER_KILLS_VICTIM_INDICATOR("html.label.playerKillsVictimIndicator", "Player was killed within 24h of first time they were seen (Time since registered: <>)."),
     LABEL_AVG_MOB_KDR("html.label.averageMobKdr", "Average Mob KDR"),
     LABEL_MOB_KILLS("html.label.mobKills", "Mob Kills"),
     LABEL_MOB_DEATHS("html.label.mobDeaths", "Mob Caused Deaths"),

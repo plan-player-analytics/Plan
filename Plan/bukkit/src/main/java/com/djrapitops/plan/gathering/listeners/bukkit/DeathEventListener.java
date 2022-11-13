@@ -93,7 +93,7 @@ public class DeathEventListener implements Listener {
     }
 
     private PlayerKill.Victim getVictim(Player victim) {
-        return new PlayerKill.Victim(victim.getUniqueId(), victim.getName());
+        return new PlayerKill.Victim(victim.getUniqueId(), victim.getName(), victim.getFirstPlayed());
     }
 
     public Optional<Player> findKiller(Entity dead) {

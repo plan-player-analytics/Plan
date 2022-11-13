@@ -60,6 +60,9 @@ public class PlayerKillMutator {
                     killMap.put("serverUUID", server.getUuid().toString());
                     killMap.put("serverName", server.getName());
                     killMap.put("weapon", kill.getWeapon());
+                    long timeSinceRegister = kill.getDate() - kill.getVictim().getRegisterDate();
+                    killMap.put("timeSinceRegisterMillis", timeSinceRegister);
+                    killMap.put("timeSinceRegisterFormatted", formatters.secondLong().apply(timeSinceRegister));
                     return killMap;
                 }
         );
