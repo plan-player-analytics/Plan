@@ -102,7 +102,7 @@ subprojects {
 
         junitVersion = "5.9.1"
         mockitoVersion = "4.9.0"
-        testContainersVersion = "1.17.5"
+        testContainersVersion = "1.17.6"
         swaggerVersion = "2.2.7"
     }
 
