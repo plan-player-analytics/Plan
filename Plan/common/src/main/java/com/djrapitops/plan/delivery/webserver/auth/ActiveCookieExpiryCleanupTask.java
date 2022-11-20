@@ -17,6 +17,8 @@
 package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import dagger.Lazy;
@@ -40,13 +42,20 @@ public class ActiveCookieExpiryCleanupTask extends TaskSystem.Task {
     private final PluginLogger logger;
 
     private final Map<String, Long> expiryDates;
+    private final Formatter<Long> dateFormatter;
 
     @Inject
-    public ActiveCookieExpiryCleanupTask(PlanConfig config, Lazy<ActiveCookieStore> activeCookieStore, PluginLogger logger) {
+    public ActiveCookieExpiryCleanupTask(
+            PlanConfig config,
+            Lazy<ActiveCookieStore> activeCookieStore,
+            Formatters formatters,
+            PluginLogger logger
+    ) {
         this.config = config;
         this.activeCookieStore = activeCookieStore;
         this.logger = logger;
         this.expiryDates = new ConcurrentHashMap<>();
+        dateFormatter = formatters.secondLong();
     }
 
     @Override
@@ -74,7 +83,7 @@ public class ActiveCookieExpiryCleanupTask extends TaskSystem.Task {
             activeCookieStore.get().removeCookie(cookie);
             expiryDates.remove(cookie);
             if (config.isTrue(PluginSettings.DEV_MODE)) {
-                logger.info("Cookie " + cookie + " has expired: " + time);
+                logger.info("Cookie " + cookie + " has expired: " + dateFormatter.apply(time));
             }
         }
     }
@@ -82,7 +91,7 @@ public class ActiveCookieExpiryCleanupTask extends TaskSystem.Task {
     public void addExpiry(String cookie, Long time) {
         expiryDates.put(cookie, time);
         if (config.isTrue(PluginSettings.DEV_MODE)) {
-            logger.info("Cookie " + cookie + " will expire " + time);
+            logger.info("Cookie " + cookie + " will expire " + dateFormatter.apply(time));
         }
     }
 }

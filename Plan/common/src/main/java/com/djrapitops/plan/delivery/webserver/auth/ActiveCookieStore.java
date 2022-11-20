@@ -125,12 +125,10 @@ public class ActiveCookieStore implements SubSystem {
     }
 
     public void removeCookie(String cookie) {
-        Optional<User> foundUser = checkCookie(cookie);
-        if (foundUser.isPresent()) {
-            USERS_BY_COOKIE.remove(cookie);
-            deleteCookieByUser(foundUser.get().getUsername());
-            deleteCookie(cookie);
-        }
+        checkCookie(cookie).map(User::getUsername)
+                .ifPresent(this::deleteCookieByUser);
+        USERS_BY_COOKIE.remove(cookie);
+        deleteCookie(cookie);
     }
 
     private void deleteCookie(String cookie) {
