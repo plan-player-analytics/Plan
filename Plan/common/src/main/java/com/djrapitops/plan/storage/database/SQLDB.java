@@ -351,7 +351,7 @@ public abstract class SQLDB extends AbstractDatabase {
     private boolean determineIfShouldDropUnimportantTransactions(int queueSize) {
         boolean dropTransactions = dropUnimportantTransactions.get();
         if (queueSize >= 500 && !dropTransactions) {
-            logger.warn("Database can't keep up with transactions (Queue size: " + queueSize + "), dropping some unimportant transactions from execution.");
+            logger.warn("Database queue size: " + queueSize + ", dropping some unimportant transactions. If this keeps happening disable some extensions or optimize MySQL.");
             dropUnimportantTransactions.set(true);
             return true;
         } else if (queueSize < 50 && dropTransactions) {
