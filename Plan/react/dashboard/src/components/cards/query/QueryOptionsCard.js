@@ -8,7 +8,7 @@ import {ChartLoader} from "../../navigation/Loader";
 import DateInputField from "../../input/DateInputField";
 import TimeInputField from "../../input/TimeInputField";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import {faGear, faSearch} from "@fortawesome/free-solid-svg-icons";
 import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
 import Highcharts from "highcharts/highstock";
 import MultiSelect from "../../input/MultiSelect";
@@ -38,6 +38,8 @@ const QueryOptionsCard = () => {
     const {t} = useTranslation();
     const navigate = useNavigate()
     const {setResult} = useQueryResultContext();
+
+    const [loadingResults, setLoadingResults] = useState(false);
 
     // View state
     const [fromDate, setFromDate] = useState(undefined);
@@ -125,7 +127,9 @@ const QueryOptionsCard = () => {
         }
 
         // TODO handle error
+        setLoadingResults(true);
         const {data} = await postQuery(inputDto);
+        setLoadingResults(false);
         setResult(data);
         window.scrollTo(0, 0);
         if (data?.data) {
@@ -224,9 +228,10 @@ const QueryOptionsCard = () => {
             </Card.Body>
             <button id={"query-button"}
                     className={"btn bg-plan m-2"}
-                    disabled={Boolean(invalidFields.length)}
+                    disabled={Boolean(invalidFields.length) || loadingResults}
                     onClick={performQuery}>
-                <FontAwesomeIcon icon={faSearch}/> {t('html.query.performQuery')}
+                <FontAwesomeIcon icon={loadingResults ? faGear : faSearch}
+                                 spin={loadingResults}/> {t('html.query.performQuery')}
             </button>
         </Card>
     )
