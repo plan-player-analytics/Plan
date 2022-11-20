@@ -6,8 +6,14 @@ import {useQueryResultContext} from "../../hooks/queryResultContext";
 import {useNavigate} from "react-router-dom";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
 import {fetchExistingResults} from "../../service/queryService";
+import {PlayerbaseDevelopmentCardWithData} from "../../components/cards/server/graphs/PlayerbaseDevelopmentCard";
+import {CurrentPlayerbaseCardWithData} from "../../components/cards/server/graphs/CurrentPlayerbaseCard";
+import {useTranslation} from "react-i18next";
+import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
+import SessionsWithinViewCard from "../../components/cards/query/SessionsWithinViewCard";
 
 const QueryResultView = () => {
+    const {t} = useTranslation();
     const navigate = useNavigate();
     const {result, setResult} = useQueryResultContext();
 
@@ -59,18 +65,21 @@ const QueryResultView = () => {
                 </Row>
                 <Row>
                     <Col lg={8}>
-                        {/*<PlayerbaseDevelopmentCard/>*/}
+                        <PlayerbaseDevelopmentCardWithData data={result.data.activity}
+                                                           title={'html.query.title.activity'}/>
                     </Col>
                     <Col lg={4}>
-                        {/*<CurrentPlayerbaseCard/>*/}
+                        <CurrentPlayerbaseCardWithData data={result.data.activity}
+                                                       title={t('html.query.title.activityOnDate')
+                                                           .replace('<span id="activity-date"></span>', result.view.beforeDate)}/>
                     </Col>
                 </Row>
                 <Row>
                     <Col lg={3}>
-                        {/*<SessionsWithinViewCard/>*/}
+                        <SessionsWithinViewCard data={result.data.sessions}/>
                     </Col>
                     <Col lg={9}>
-                        {/*<GeolocationsCard/>*/}
+                        <GeolocationsCard data={result.data.geolocation}/>
                     </Col>
                 </Row>
             </section>

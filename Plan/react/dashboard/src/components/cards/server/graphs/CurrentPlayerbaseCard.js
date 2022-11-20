@@ -9,23 +9,28 @@ import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import {CardLoader} from "../../../navigation/Loader";
 import GroupVisualizer from "../../../graphs/GroupVisualizer";
 
-const CurrentPlayerbaseCard = ({identifier}) => {
+export const CurrentPlayerbaseCardWithData = ({data, title}) => {
     const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black" style={{width: '100%'}}>
+                    <Fa icon={faUsers} className="col-amber"/> {t(title ? title : 'html.label.currentPlayerbase')}
+                </h6>
+            </Card.Header>
+            <GroupVisualizer groups={data.activity_pie_series} name={t('html.label.players')}/>
+        </Card>
+    )
+}
 
+const CurrentPlayerbaseCard = ({identifier}) => {
     const {data, loadingError} = useDataRequest(fetchPlayerbaseDevelopmentGraph, [identifier]);
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!data) return <CardLoader/>;
 
     return (
-        <Card>
-            <Card.Header>
-                <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faUsers} className="col-amber"/> {t('html.label.currentPlayerbase')}
-                </h6>
-            </Card.Header>
-            <GroupVisualizer groups={data.activity_pie_series} name={t('html.label.players')}/>
-        </Card>
+        <CurrentPlayerbaseCardWithData data={data}/>
     )
 }
 
