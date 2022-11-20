@@ -28,6 +28,8 @@ import java.sql.Types;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
+ * Sets username fields to NULL in plan_access_log table.
+ *
  * @author AuroraLS3
  */
 public class RemoveUsernameFromAccessLogPatch extends Patch {
@@ -37,7 +39,10 @@ public class RemoveUsernameFromAccessLogPatch extends Patch {
         if (!hasColumn(AccessLogTable.TABLE_NAME, "username")) {
             return true;
         }
+        return !hasUsernames();
+    }
 
+    private Boolean hasUsernames() {
         String sql = SELECT + "COUNT(*) as c" +
                 FROM + AccessLogTable.TABLE_NAME +
                 WHERE + "username" + IS_NOT_NULL;
