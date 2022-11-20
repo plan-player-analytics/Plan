@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout git repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: ☕ Setup JDK
@@ -46,7 +46,7 @@ jobs:
             sleep 1
           done
       - name: 💼 Load Gradle Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
