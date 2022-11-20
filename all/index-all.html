@@ -96,7 +96,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.html#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">AccessLogger(WebserverConfiguration, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/AccessLogTable.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.sql.tables">AccessLogTable</a> - Class in <a href="com/djrapitops/plan/storage/database/sql/tables/package-summary.html">com.djrapitops.plan.storage.database.sql.tables</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Represents plan_access_log table.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/ActivityIndex.html#ACTIVE" class="member-name-link">ACTIVE</a> - Static variable in class com.djrapitops.plan.delivery.domain.mutators.<a href="com/djrapitops/plan/delivery/domain/mutators/ActivityIndex.html" title="class in com.djrapitops.plan.delivery.domain.mutators">ActivityIndex</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/config/paths/TimeSettings.html#ACTIVE_PLAY_THRESHOLD" class="member-name-link">ACTIVE_PLAY_THRESHOLD</a> - Static variable in class com.djrapitops.plan.settings.config.paths.<a href="com/djrapitops/plan/settings/config/paths/TimeSettings.html" title="class in com.djrapitops.plan.settings.config.paths">TimeSettings</a></dt>
@@ -105,7 +107,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieExpiryCleanupTask.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieExpiryCleanupTask</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/auth/package-summary.html">com.djrapitops.plan.delivery.webserver.auth</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieExpiryCleanupTask.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,dagger.Lazy,net.playeranalytics.plugin.server.PluginLogger)" class="member-name-link">ActiveCookieExpiryCleanupTask(PlanConfig, Lazy&lt;ActiveCookieStore&gt;, PluginLogger)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieExpiryCleanupTask.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieExpiryCleanupTask</a></dt>
+<dt><a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieExpiryCleanupTask.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,dagger.Lazy,com.djrapitops.plan.delivery.formatting.Formatters,net.playeranalytics.plugin.server.PluginLogger)" class="member-name-link">ActiveCookieExpiryCleanupTask(PlanConfig, Lazy&lt;ActiveCookieStore&gt;, Formatters, PluginLogger)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieExpiryCleanupTask.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieExpiryCleanupTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieStore.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieStore</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/auth/package-summary.html">com.djrapitops.plan.delivery.webserver.auth</a></dt>
 <dd>&nbsp;</dd>
@@ -14615,7 +14617,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieStore.html#removeUserCookie(java.lang.String)" class="member-name-link">removeUserCookie(String)</a> - Static method in class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieStore.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/RemoveUsernameFromAccessLogPatch.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.patches">RemoveUsernameFromAccessLogPatch</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/patches/package-summary.html">com.djrapitops.plan.storage.database.transactions.patches</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Sets username fields to NULL in plan_access_log table.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/RemoveUsernameFromAccessLogPatch.html#%3Cinit%3E()" class="member-name-link">RemoveUsernameFromAccessLogPatch()</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/RemoveUsernameFromAccessLogPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">RemoveUsernameFromAccessLogPatch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/commands/RemoveWebUserTransaction.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.commands">RemoveWebUserTransaction</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/commands/package-summary.html">com.djrapitops.plan.storage.database.transactions.commands</a></dt>
