@@ -61,6 +61,9 @@ public class StoreRequestTransaction extends Transaction {
     private String getTruncatedURI() {
         String uri = request != null ? request.getPath().asString() + request.getQuery().asString()
                 : internalRequest.getRequestedURIString();
+        if (uri == null) {
+            uri = "non-HTTP request, missing URI";
+        }
         return StringUtils.truncate(uri, 65000);
     }
 }
