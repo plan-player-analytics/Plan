@@ -35,6 +35,7 @@ jobs:
           committer_email: 41898282+github-actions[bot]@users.noreply.github.com
           message: Update versions.txt ${{ github.event.release.name }}
           add: versions.txt
+          push: origin HEAD:master
 
   update_html:
     name: Update html-branch
