@@ -77,7 +77,7 @@ jobs:
           path: ${{ env.JAR_FILENAME }}
       - name: Upload release to Ore 🚀
         if: ${{ github.event.release.prerelease == false }}
-        uses: dualspiral/ore-upload-action@v1
+        uses: dualspiral/ore-upload-action@v2
         with:
           plugin: ${{ github.event.release.name }}
           description: ${{ github.event.release.body }}
