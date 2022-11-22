@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Allows sensing values from different server platforms.
@@ -54,5 +55,9 @@ public interface ServerSensor<W> {
 
     default int getEntityCount(W world) {
         return -1;
+    }
+
+    default List<String> getOnlinePlayerNames() {
+        return Collections.emptyList();
     }
 }

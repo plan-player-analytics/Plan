@@ -23,6 +23,8 @@ import net.minecraft.server.world.ServerWorld;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
@@ -81,5 +83,10 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
     @Override
     public int getOnlinePlayerCount() {
         return server.getCurrentPlayerCount();
+    }
+
+    @Override
+    public List<String> getOnlinePlayerNames() {
+        return Arrays.asList(server.getPlayerNames());
     }
 }

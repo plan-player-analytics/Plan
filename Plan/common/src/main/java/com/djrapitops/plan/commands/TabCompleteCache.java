@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
@@ -43,25 +44,28 @@ public class TabCompleteCache implements SubSystem {
     private final Processing processing;
     private final PlanFiles files;
     private final DBSystem dbSystem;
+    private final ServerSensor<?> serverSensor;
 
-    private final List<String> playerIdentifiers;
-    private final List<String> serverIdentifiers;
-    private final List<String> userIdentifiers;
-    private final List<String> backupFileNames;
+    private final Set<String> playerIdentifiers;
+    private final Set<String> serverIdentifiers;
+    private final Set<String> userIdentifiers;
+    private final Set<String> backupFileNames;
 
     @Inject
     public TabCompleteCache(
             Processing processing,
             PlanFiles files,
-            DBSystem dbSystem
+            DBSystem dbSystem,
+            ServerSensor<?> serverSensor
     ) {
         this.processing = processing;
         this.files = files;
         this.dbSystem = dbSystem;
-        playerIdentifiers = new ArrayList<>();
-        serverIdentifiers = new ArrayList<>();
-        userIdentifiers = new ArrayList<>();
-        backupFileNames = new ArrayList<>();
+        this.serverSensor = serverSensor;
+        playerIdentifiers = new HashSet<>();
+        serverIdentifiers = new HashSet<>();
+        userIdentifiers = new HashSet<>();
+        backupFileNames = new HashSet<>();
     }
 
     @Override
@@ -71,11 +75,6 @@ public class TabCompleteCache implements SubSystem {
             refreshServerIdentifiers();
             refreshUserIdentifiers();
             refreshBackupFileNames();
-
-            Collections.sort(playerIdentifiers);
-            Collections.sort(serverIdentifiers);
-            Collections.sort(userIdentifiers);
-            Collections.sort(backupFileNames);
         });
     }
 
@@ -115,30 +114,45 @@ public class TabCompleteCache implements SubSystem {
     }
 
     public List<String> getMatchingServerIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) {
-            return serverIdentifiers.size() < 100 ? serverIdentifiers : Collections.emptyList();
+        if (serverIdentifiers.size() >= 100) {
+            return Collections.emptyList();
         }
-        return serverIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
+        return serverIdentifiers.stream()
+                .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
     }
 
     public List<String> getMatchingPlayerIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) {
-            return playerIdentifiers.size() < 100 ? playerIdentifiers : Collections.emptyList();
+        if (playerIdentifiers.size() >= 100) {
+            return Collections.emptyList();
         }
-        return playerIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
+
+        playerIdentifiers.addAll(serverSensor.getOnlinePlayerNames());
+
+        return playerIdentifiers.stream()
+                .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
     }
 
     public List<String> getMatchingUserIdentifiers(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) {
-            return userIdentifiers.size() < 100 ? userIdentifiers : Collections.emptyList();
+        if (userIdentifiers.size() >= 100) {
+            return Collections.emptyList();
         }
-        return userIdentifiers.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
+        return userIdentifiers.stream()
+                .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
     }
 
     public List<String> getMatchingBackupFilenames(String searchFor) {
-        if (searchFor == null || searchFor.isEmpty()) {
-            return backupFileNames.size() < 100 ? backupFileNames : Collections.emptyList();
+        if (backupFileNames.size() >= 100) {
+            return Collections.emptyList();
         }
-        return backupFileNames.stream().filter(identifier -> identifier.startsWith(searchFor)).collect(Collectors.toList());
+        return backupFileNames.stream()
+                .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
+                .sorted(String.CASE_INSENSITIVE_ORDER)
+                .collect(Collectors.toList());
     }
 }

@@ -17,12 +17,15 @@
 package com.djrapitops.plan.gathering;
 
 import org.spongepowered.api.Game;
+import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.chunk.WorldChunk;
 import org.spongepowered.api.world.server.ServerWorld;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class SpongeSensor implements ServerSensor<ServerWorld> {
@@ -72,5 +75,10 @@ public class SpongeSensor implements ServerSensor<ServerWorld> {
     @Override
     public int getEntityCount(ServerWorld world) {
         return world.entities().size();
+    }
+
+    @Override
+    public List<String> getOnlinePlayerNames() {
+        return game.server().onlinePlayers().stream().map(ServerPlayer::name).collect(Collectors.toList());
     }
 }

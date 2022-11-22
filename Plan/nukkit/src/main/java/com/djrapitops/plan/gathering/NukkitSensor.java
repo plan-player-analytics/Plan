@@ -16,11 +16,14 @@
  */
 package com.djrapitops.plan.gathering;
 
+import cn.nukkit.Player;
 import cn.nukkit.level.Level;
 import com.djrapitops.plan.PlanNukkit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class NukkitSensor implements ServerSensor<Level> {
@@ -62,5 +65,13 @@ public class NukkitSensor implements ServerSensor<Level> {
     @Override
     public Iterable<Level> getWorlds() {
         return plugin.getServer().getLevels().values();
+    }
+
+    @Override
+    public List<String> getOnlinePlayerNames() {
+        return plugin.getServer().getOnlinePlayers()
+                .values().stream()
+                .map(Player::getName)
+                .collect(Collectors.toList());
     }
 }

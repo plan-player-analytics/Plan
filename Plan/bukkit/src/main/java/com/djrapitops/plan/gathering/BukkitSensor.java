@@ -16,11 +16,15 @@
  */
 package com.djrapitops.plan.gathering;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class BukkitSensor implements ServerSensor<World> {
@@ -117,5 +121,12 @@ public class BukkitSensor implements ServerSensor<World> {
         } catch (NoSuchMethodException e) {
             return false;
         }
+    }
+
+    @Override
+    public List<String> getOnlinePlayerNames() {
+        return Bukkit.getOnlinePlayers().stream()
+                .map(Player::getName)
+                .collect(Collectors.toList());
     }
 }
