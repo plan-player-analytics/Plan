@@ -920,7 +920,8 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 .btn.bg-grey:hover,
 .btn.bg-blue-grey:hover,
 .btn.bg-transparent-light:hover {
-    color: #ccc;
+    color: #ccc !important;
+    background-color: var(--bs-btn-disabled-bg);
 }
 
 .bg-night, body.theme-night .fc-toolbar-chunk .btn.btn-primary {
