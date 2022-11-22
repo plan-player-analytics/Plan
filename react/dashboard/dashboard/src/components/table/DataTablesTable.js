@@ -17,6 +17,10 @@ const DataTablesTable = ({id, options}) => {
         }
 
         dataTableRef.current = new DataTable(idSelector, options);
+        // https://github.com/plan-player-analytics/Plan/issues/2637
+        const triggerResize = () => window.dispatchEvent(new Event('resize'));
+        dataTableRef.current.on('length.dt', triggerResize);
+        dataTableRef.current.on('search.dt', triggerResize);
 
         return () => {
             if (dataTableRef.current) {

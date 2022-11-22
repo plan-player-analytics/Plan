@@ -4,11 +4,12 @@ import {tooltip} from "../../util/graphs";
 import LineGraph from "./LineGraph";
 import {ChartLoader} from "../navigation/Loader";
 
-const PlayersOnlineGraph = ({data}) => {
+const PlayersOnlineGraph = ({data, selectedRange, extremes, onSetExtremes}) => {
     const {t} = useTranslation();
     const [series, setSeries] = useState([]);
 
     useEffect(() => {
+        if (!data) return;
         const playersOnlineSeries = {
             name: t('html.label.playersOnline'),
             type: 'areaspline',
@@ -23,7 +24,11 @@ const PlayersOnlineGraph = ({data}) => {
     if (!data) return <ChartLoader/>;
 
     return (
-        <LineGraph id="players-online-graph" series={series}/>
+        <LineGraph id="players-online-graph"
+                   series={series}
+                   selectedRange={selectedRange}
+                   extremes={extremes}
+                   onSetExtremes={onSetExtremes}/>
     )
 }
 

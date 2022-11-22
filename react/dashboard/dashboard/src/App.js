@@ -46,11 +46,18 @@ const NetworkPerformance = React.lazy(() => import("./views/network/NetworkPerfo
 const PlayersPage = React.lazy(() => import("./views/layout/PlayersPage"));
 const AllPlayers = React.lazy(() => import("./views/players/AllPlayers"));
 
+const QueryPage = React.lazy(() => import("./views/layout/QueryPage"));
+const NewQueryView = React.lazy(() => import("./views/query/NewQueryView"));
+const QueryResultView = React.lazy(() => import("./views/query/QueryResultView"));
+
 const ErrorsPage = React.lazy(() => import("./views/layout/ErrorsPage"));
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
+}
+const NewRedirect = () => {
+    return (<Navigate to={"new"} replace={true}/>)
 }
 
 const ContextProviders = ({children}) => (
@@ -101,7 +108,7 @@ function App() {
                                 <Route path="*" element={<Lazy><AllPlayers/></Lazy>}/>
                             </Route>
                             <Route path="/server/:identifier" element={<Lazy><ServerPage/></Lazy>}>
-                                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
+                                <Route path="" element={<OverviewRedirect/>}/>
                                 <Route path="overview" element={<Lazy><ServerOverview/></Lazy>}/>
                                 <Route path="online-activity" element={<Lazy><OnlineActivity/></Lazy>}/>
                                 <Route path="sessions" element={<Lazy><ServerSessions/></Lazy>}/>
@@ -121,7 +128,7 @@ function App() {
                                 }}/>}/>
                             </Route>
                             <Route path="/network" element={<Lazy><NetworkPage/></Lazy>}>
-                                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
+                                <Route path="" element={<OverviewRedirect/>}/>
                                 <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
                                 <Route path="serversOverview" element={<Lazy><NetworkServers/></Lazy>}/>
                                 <Route path="sessions" element={<Lazy><NetworkSessions/></Lazy>}/>
@@ -137,6 +144,11 @@ function App() {
                                     title: 'No such tab',
                                     icon: faMapSigns
                                 }}/>}/>
+                            </Route>
+                            <Route path="/query" element={<Lazy><QueryPage/></Lazy>}>
+                                <Route path="" element={<NewRedirect/>}/>
+                                <Route path="new" element={<Lazy><NewQueryView/></Lazy>}/>
+                                <Route path="result" element={<Lazy><QueryResultView/></Lazy>}/>
                             </Route>
                             <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>
                             <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>

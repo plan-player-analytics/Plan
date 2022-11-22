@@ -31,7 +31,7 @@ const LanguageSelector = () => {
     )
 }
 
-const Header = ({page, tab}) => {
+const Header = ({page, tab, hideUpdater}) => {
     const {authRequired, user} = useAuth();
     const {toggleColorChooser} = useTheme();
     const {t} = useTranslation();
@@ -40,11 +40,7 @@ const Header = ({page, tab}) => {
 
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.linkedToUuid) : undefined
-    // <!-- <li><a className="dropdown-item" href="#"><i className="fas fa-users-cog"></i> Web users</a></li>-->
-    // <!-- <li><a className="dropdown-item" href="#"><i className="fas fa-code"></i> API access</a></li>-->
-    // <!-- <li>-->
-    // <!--    <hr className="dropdown-divider">-->
-    // <!-- </li>-->
+    // TODO Remove .replace('<', '') after locale replacement
     return (
         <nav className="nav mt-3 align-items-center justify-content-between container-fluid">
             <div className="d-sm-flex">
@@ -53,17 +49,19 @@ const Header = ({page, tab}) => {
                         <Fa icon={faBars} className={"sidebar-toggler"}/>
                     </button>
                     {page}
-                    {tab ? <>{' '}&middot; {t(tab)}</> : ''}</h1>
+                    {tab ? <>{' '}&middot; {t(tab).replace('<', '')}</> : ''}</h1>
             </div>
 
-            <span className="topbar-divider"/>
-            <div className="refresh-element">
-                <button onClick={requestUpdate}>
-                    <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
-                </button>
-                {' '}
-                <span className="refresh-time">{lastUpdate.formatted}</span>
-            </div>
+            {!hideUpdater && <>
+                <span className="topbar-divider"/>
+                <div className="refresh-element">
+                    <button onClick={requestUpdate}>
+                        <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
+                    </button>
+                    {' '}
+                    <span className="refresh-time">{lastUpdate.formatted}</span>
+                </div>
+            </>}
 
             <div className="ms-auto">
                 <LanguageSelector/>

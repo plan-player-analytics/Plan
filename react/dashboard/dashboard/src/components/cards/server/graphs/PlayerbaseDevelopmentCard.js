@@ -9,9 +9,22 @@ import React from "react";
 import PlayerbaseGraph from "../../../graphs/PlayerbaseGraph";
 import {CardLoader} from "../../../navigation/Loader";
 
-const PlayerbaseDevelopmentCard = ({identifier}) => {
+export const PlayerbaseDevelopmentCardWithData = ({data, title}) => {
     const {t} = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className="col-black">
+                    <Fa className="col-amber"
+                        icon={faChartLine}/> {t(title ? title : 'html.label.playerbaseDevelopment')}
+                </h6>
+            </Card.Header>
+            <PlayerbaseGraph data={data}/>
+        </Card>
+    )
+}
 
+const PlayerbaseDevelopmentCard = ({identifier}) => {
     const {data, loadingError} = useDataRequest(
         fetchPlayerbaseDevelopmentGraph,
         [identifier])
@@ -20,14 +33,7 @@ const PlayerbaseDevelopmentCard = ({identifier}) => {
     if (!data) return <CardLoader/>;
 
     return (
-        <Card>
-            <Card.Header>
-                <h6 className="col-black">
-                    <Fa className="col-amber" icon={faChartLine}/> {t('html.label.playerbaseDevelopment')}
-                </h6>
-            </Card.Header>
-            <PlayerbaseGraph data={data}/>
-        </Card>
+        <PlayerbaseDevelopmentCardWithData data={data}/>
     )
 }
 
