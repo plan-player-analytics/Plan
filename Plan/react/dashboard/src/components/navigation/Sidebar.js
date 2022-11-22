@@ -44,14 +44,16 @@ const InnerItem = ({href, icon, name, nameShort, color}) => {
     </NavLink>
 }
 
-const Item = ({href, icon, name, nameShort, color, inner}) => {
+const Item = ({item, inner}) => {
     const {setCurrentTab} = useNavigation();
     const {pathname} = useLocation();
     const {t} = useTranslation();
 
+    const {href, name, nameShort, color, icon, external} = item;
+
     useEffect(() => {
-        if ('/' !== href && pathname.includes(href)) setCurrentTab(name);
-    }, [pathname, href, setCurrentTab, name])
+        if (!external && '/' !== href && pathname.includes(href)) setCurrentTab(name);
+    }, [pathname, href, setCurrentTab, name, external])
 
     if (inner) {
         return (<InnerItem href={href} icon={icon} name={t(name)} nameShort={t(nameShort)} color={color}/>)
@@ -167,11 +169,7 @@ const SidebarCollapse = ({item, open, setOpen}) => {
                             <Item key={i}
                                   inner
                                   active={false}
-                                  href={content.href}
-                                  icon={content.icon}
-                                  name={content.name}
-                                  nameShort={content.nameShort}
-                                  color={content.color}
+                                  item={content}
                             />)}
                     </div>
                 </div>
@@ -191,11 +189,7 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t) => {
     if (item.href !== undefined) {
         return <Item key={i}
                      active={false}
-                     href={item.href}
-                     icon={item.icon}
-                     name={item.name}
-                     color={item.color}
-                     nameShort={item.nameShort}
+                     item={item}
         />
     }
 
@@ -233,7 +227,7 @@ const Sidebar = ({items, showBackButton}) => {
                     <Logo/>
                     <Divider/>
                     {showBackButton && <>
-                        <Item active={false} href="/" icon={faArrowLeft} name={t('html.label.toMainPage')}/>
+                        <Item active={false} item={{href: "/", icon: faArrowLeft, name: t('html.label.toMainPage')}}/>
                         <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>
                     </>}
                     {items.length ? items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t)) : ''}

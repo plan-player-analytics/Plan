@@ -23,12 +23,12 @@ const QueryPage = () => {
     useEffect(() => {
         const items = [
             {name: 'html.label.links'},
-            {name: 'html.query.label.makeAnother', icon: faUndo, href: "/query"},
+            {name: 'html.query.label.makeAnother', icon: faUndo, href: "/query", external: true},
         ]
 
         setSidebarItems(items);
         window.document.title = `Plan | Query`;
-        setCurrentTab('html.label.query')
+        setCurrentTab('html.query.title.text');
     }, [t, i18n, setCurrentTab, setSidebarItems])
 
     const showBackButton = true;

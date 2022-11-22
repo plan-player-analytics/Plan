@@ -11,11 +11,13 @@ import {CurrentPlayerbaseCardWithData} from "../../components/cards/server/graph
 import {useTranslation} from "react-i18next";
 import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
 import SessionsWithinViewCard from "../../components/cards/query/SessionsWithinViewCard";
+import {useNavigation} from "../../hooks/navigationHook";
 
 const QueryResultView = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const {result, setResult} = useQueryResultContext();
+    const {setCurrentTab} = useNavigation()
 
     const getResult = useCallback(async () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -31,6 +33,7 @@ const QueryResultView = () => {
     }, [])
 
     useEffect(() => {
+        setCurrentTab('html.query.results.title')
         if (!result.data) {
             getResult().then(data => {
                 if (data.data) {
@@ -40,7 +43,7 @@ const QueryResultView = () => {
                 }
             });
         }
-    }, [result, navigate, getResult, setResult])
+    }, [result, navigate, getResult, setResult, setCurrentTab])
 
     if (!result.data) {
         return <></>
