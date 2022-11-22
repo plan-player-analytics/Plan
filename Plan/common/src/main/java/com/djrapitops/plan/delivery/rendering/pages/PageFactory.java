@@ -252,6 +252,10 @@ public class PageFactory {
     }
 
     public Page queryPage() throws IOException {
+        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+            String reactHtml = getResource("index.html");
+            return () -> reactHtml;
+        }
         return new QueryPage(
                 getResource("query.html"),
                 locale.get(), theme.get(), versionChecker.get()
