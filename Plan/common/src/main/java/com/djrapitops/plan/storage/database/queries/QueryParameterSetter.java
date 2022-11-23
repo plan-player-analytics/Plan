@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Collection;
 import java.util.UUID;
 
 public class QueryParameterSetter {
@@ -30,8 +31,20 @@ public class QueryParameterSetter {
     public static void setParameters(PreparedStatement statement, Object... parameters) throws SQLException {
         int index = 1;
         for (Object parameter : parameters) {
-            setParameter(statement, index, parameter);
-            index++;
+            if (parameter instanceof Object[]) {
+                for (Object arrayParameter : ((Object[]) parameter)) {
+                    setParameter(statement, index, arrayParameter);
+                    index++;
+                }
+            } else if (parameter instanceof Collection) {
+                for (Object collectionParameter : ((Collection<?>) parameter)) {
+                    setParameter(statement, index, collectionParameter);
+                    index++;
+                }
+            } else {
+                setParameter(statement, index, parameter);
+                index++;
+            }
         }
     }
 
