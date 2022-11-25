@@ -287,6 +287,7 @@ public enum HtmlLang implements Lang {
     REGISTER_COMPLETE_INSTRUCTIONS_2("html.register.completion2", "Code expires in 15 minutes"),
     REGISTER_COMPLETE_INSTRUCTIONS_3("html.register.completion3", "Use the following command in game to finish registration:"),
     REGISTER_COMPLETE_INSTRUCTIONS_4("html.register.completion4", "Or using console:"),
+    REGISTER_SUCCESS("html.register.success", "Registered a new user successfully! You can now login."),
     REGISTER_FAILED("html.register.error.failed", "Registration failed: "),
     REGISTER_CHECK_FAILED("html.register.error.checkFailed", "Checking registration status failed: "),
 

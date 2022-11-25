@@ -28,7 +28,6 @@ const ServerPvpPve = React.lazy(() => import("./views/server/ServerPvpPve"));
 const PlayerbaseOverview = React.lazy(() => import("./views/server/PlayerbaseOverview"));
 const ServerPlayers = React.lazy(() => import("./views/server/ServerPlayers"));
 const ServerGeolocations = React.lazy(() => import("./views/server/ServerGeolocations"));
-const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
 const ServerPerformance = React.lazy(() => import("./views/server/ServerPerformance"));
 const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginData"));
 const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
@@ -50,6 +49,8 @@ const QueryPage = React.lazy(() => import("./views/layout/QueryPage"));
 const NewQueryView = React.lazy(() => import("./views/query/NewQueryView"));
 const QueryResultView = React.lazy(() => import("./views/query/QueryResultView"));
 
+const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
+const RegisterPage = React.lazy(() => import("./views/layout/RegisterPage"));
 const ErrorsPage = React.lazy(() => import("./views/layout/ErrorsPage"));
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
 
@@ -90,6 +91,7 @@ function App() {
                             <Route path="" element={<MainPageRedirect/>}/>
                             <Route path="/" element={<MainPageRedirect/>}/>
                             <Route path="/login" element={<Lazy><LoginPage/></Lazy>}/>
+                            <Route path="/register" element={<Lazy><RegisterPage/></Lazy>}/>
                             <Route path="/player/:identifier" element={<Lazy><PlayerPage/></Lazy>}>
                                 <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
                                 <Route path="overview" element={<Lazy><PlayerOverview/></Lazy>}/>

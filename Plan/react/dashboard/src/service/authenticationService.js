@@ -9,3 +9,13 @@ export const fetchLogin = async (username, password) => {
     const url = '/auth/login';
     return doSomePostRequest(url, [standard200option], `user=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
 }
+
+export const postRegister = async (username, password) => {
+    const url = '/auth/register';
+    return doSomePostRequest(url, [standard200option], `user=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`);
+}
+
+export const fetchRegisterCheck = async (code) => {
+    const url = `/auth/register?code=${encodeURIComponent(code)}`;
+    return doGetRequest(url);
+}
