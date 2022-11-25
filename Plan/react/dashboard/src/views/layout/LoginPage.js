@@ -145,7 +145,7 @@ const LoginPage = () => {
         return () => {
             document.body.classList.remove("bg-plan", "plan-bg-gradient");
         }
-    }, [setRedirectTo])
+    }, [setRedirectTo, setSuccessMessage, t])
 
     const login = async (username, password) => {
         if (!username || username.length < 1) {
