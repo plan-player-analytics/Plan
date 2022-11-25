@@ -32,12 +32,12 @@ public class QueryParameterSetter {
         int index = 1;
         for (Object parameter : parameters) {
             if (parameter instanceof Object[]) {
-                for (Object arrayParameter : ((Object[]) parameter)) {
+                for (Object arrayParameter : (Object[]) parameter) {
                     setParameter(statement, index, arrayParameter);
                     index++;
                 }
             } else if (parameter instanceof Collection) {
-                for (Object collectionParameter : ((Collection<?>) parameter)) {
+                for (Object collectionParameter : (Collection<?>) parameter) {
                     setParameter(statement, index, collectionParameter);
                     index++;
                 }
