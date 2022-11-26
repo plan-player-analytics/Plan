@@ -16,8 +16,6 @@
  */
 package utilities;
 
-import com.djrapitops.plan.PlanPlugin;
-
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -60,7 +58,10 @@ public class TestResources {
 
     private static void writeResourceToFile(File toFile, String resourcePath) {
         try (
-                InputStream in = PlanPlugin.class.getResourceAsStream(resourcePath);
+                // Gradle copied resources are not in the classpath during tests for some reason,
+                // so they're taken from build dir where they're copied to.
+                InputStream in = Files.newInputStream(new File("").toPath()
+                        .resolve("../common/build/resources/main" + resourcePath));
                 OutputStream out = Files.newOutputStream(toFile.toPath())
         ) {
             if (in == null) {
