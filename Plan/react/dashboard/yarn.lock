@@ -1204,7 +1204,7 @@
     "@fullcalendar/common" "~5.11.3"
     tslib "^2.1.0"
 
-"@fullcalendar/common@~5.11.2", "@fullcalendar/common@~5.11.3":
+"@fullcalendar/common@~5.11.3":
   version "5.11.3"
   resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.11.3.tgz#6d555a06925b8a6d1556570c9f039960539908d5"
   integrity sha512-welVwyfQOXQQGfDwBMSfYEPbiO1cPfUD+C7jd3ZoweJR+dSO11ddFugxIQ7dGfABAGZ63oq/+LW9FsmAJezVNg==
@@ -1219,12 +1219,12 @@
     "@fullcalendar/common" "~5.11.3"
     tslib "^2.1.0"
 
-"@fullcalendar/react@^5.11.2":
-  version "5.11.2"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-5.11.2.tgz#019e6a0573d869c2a52f63426e13593857ee2d30"
-  integrity sha512-OnLvfV406VEQcK4QGN8xR4ro6Manp9dKE7/n9dhs19J1kKpqS1w1sIEYg1dT11njbk0Ob+TdF3cXLDFq73jUlA==
+"@fullcalendar/react@^5.11.3":
+  version "5.11.3"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-5.11.3.tgz#34c076785ec8ea12cfbc29b7028cb5d923c2aecd"
+  integrity sha512-pxk6da5V1Mn41M664phQ1cr+0QbhXqkDHUhAVp8OOBrtMW84nhs82IYWTZNA3cbFCn4aUgoG2oGnyxekSF3pYA==
   dependencies:
-    "@fullcalendar/common" "~5.11.2"
+    "@fullcalendar/common" "~5.11.3"
     tslib "^2.1.0"
 
 "@highcharts/map-collection@^2.0.1":
