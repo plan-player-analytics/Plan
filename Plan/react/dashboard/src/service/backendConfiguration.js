@@ -11,8 +11,11 @@ const isCurrentAddress = (address) => {
     return is;
 }
 
+// Concat to prevent double string replacement.
+/*eslint-disable no-useless-concat */
 export const baseAddress = "PLAN_BASE" + "_ADDRESS" === javaReplaced.address || !isCurrentAddress(javaReplaced.address) ? "" : javaReplaced.address;
 export const staticSite = "PLAN_EXPORTED" + "_VERSION" !== javaReplaced.isStatic;
+/*eslint-enable no-useless-concat */
 
 export const doSomeGetRequest = async (url, statusOptions) => {
     return doSomeRequest(url, statusOptions, async () => axios.get(url));
