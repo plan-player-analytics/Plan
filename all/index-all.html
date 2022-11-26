@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="script.js"></script>
-<script type="text/javascript" src="script-dir/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="script-dir/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="index-page">
@@ -4886,7 +4886,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Handles export for different pages.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/delivery/export/Exporter.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.delivery.export.PlayerJSONExporter,com.djrapitops.plan.delivery.export.PlayerPageExporter,com.djrapitops.plan.delivery.export.PlayersPageExporter,com.djrapitops.plan.delivery.export.ServerPageExporter,com.djrapitops.plan.delivery.export.NetworkPageExporter)" class="member-name-link">Exporter(PlanConfig, PlayerJSONExporter, PlayerPageExporter, PlayersPageExporter, ServerPageExporter, NetworkPageExporter)</a> - Constructor for class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a></dt>
+<dt><a href="com/djrapitops/plan/delivery/export/Exporter.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.delivery.export.PlayerJSONExporter,com.djrapitops.plan.delivery.export.PlayerPageExporter,com.djrapitops.plan.delivery.export.PlayersPageExporter,com.djrapitops.plan.delivery.export.ServerPageExporter,com.djrapitops.plan.delivery.export.NetworkPageExporter,com.djrapitops.plan.delivery.export.ReactExporter)" class="member-name-link">Exporter(PlanConfig, PlayerJSONExporter, PlayerPageExporter, PlayersPageExporter, ServerPageExporter, NetworkPageExporter, ReactExporter)</a> - Constructor for class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/exceptions/ExportException.html" class="type-name-link" title="class in com.djrapitops.plan.exceptions">ExportException</a> - Exception in <a href="com/djrapitops/plan/exceptions/package-summary.html">com.djrapitops.plan.exceptions</a></dt>
 <dd>
@@ -4917,6 +4917,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Export page of a player.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/export/Exporter.html#exportPlayersPage()" class="member-name-link">exportPlayersPage()</a> - Method in class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/export/Exporter.html#exportReact()" class="member-name-link">exportReact()</a> - Method in class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/export/ReactExporter.html#exportReactFiles(java.nio.file.Path)" class="member-name-link">exportReactFiles(Path)</a> - Method in class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ReactExporter.html" title="class in com.djrapitops.plan.delivery.export">ReactExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/export/ExportScheduler.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.export">ExportScheduler</a> - Class in <a href="com/djrapitops/plan/delivery/export/package-summary.html">com.djrapitops.plan.delivery.export</a></dt>
 <dd>
@@ -6447,6 +6451,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/identification/properties/RedisPlayersOnlineSupplier.html#getAsInt()" class="member-name-link">getAsInt()</a> - Method in class com.djrapitops.plan.identification.properties.<a href="com/djrapitops/plan/identification/properties/RedisPlayersOnlineSupplier.html" title="class in com.djrapitops.plan.identification.properties">RedisPlayersOnlineSupplier</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/properties/VelocityRedisPlayersOnlineSupplier.html#getAsInt()" class="member-name-link">getAsInt()</a> - Method in class com.djrapitops.plan.identification.properties.<a href="com/djrapitops/plan/identification/properties/VelocityRedisPlayersOnlineSupplier.html" title="class in com.djrapitops.plan.identification.properties">VelocityRedisPlayersOnlineSupplier</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/web/AssetVersions.html#getAssetPaths()" class="member-name-link">getAssetPaths()</a> - Method in class com.djrapitops.plan.delivery.web.<a href="com/djrapitops/plan/delivery/web/AssetVersions.html" title="class in com.djrapitops.plan.delivery.web">AssetVersions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/AssetVersions.html#getAssetVersion(java.lang.String)" class="member-name-link">getAssetVersion(String)</a> - Method in class com.djrapitops.plan.delivery.web.<a href="com/djrapitops/plan/delivery/web/AssetVersions.html" title="class in com.djrapitops.plan.delivery.web">AssetVersions</a></dt>
 <dd>&nbsp;</dd>
@@ -14077,6 +14083,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Create a RawDataContainer.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html#rawPlayerPageResponse(java.util.UUID)" class="member-name-link">rawPlayerPageResponse(UUID)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html" title="class in com.djrapitops.plan.delivery.webserver">ResponseFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/export/ReactExporter.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.export">ReactExporter</a> - Class in <a href="com/djrapitops/plan/delivery/export/package-summary.html">com.djrapitops.plan.delivery.export</a></dt>
+<dd>
+<div class="block">Exporter in charge of exporting React related files.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/delivery/export/ReactExporter.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.delivery.web.AssetVersions)" class="member-name-link">ReactExporter(PlanFiles, PlanConfig, AssetVersions)</a> - Constructor for class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ReactExporter.html" title="class in com.djrapitops.plan.delivery.export">ReactExporter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html#reactPageResponse()" class="member-name-link">reactPageResponse()</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html" title="class in com.djrapitops.plan.delivery.webserver">ResponseFactory</a></dt>
 <dd>&nbsp;</dd>
