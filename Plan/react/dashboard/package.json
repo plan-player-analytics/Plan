@@ -13,7 +13,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@fullcalendar/bootstrap": "^5.11.3",
     "@fullcalendar/daygrid": "^5.11.3",
-    "@fullcalendar/react": "^5.11.2",
+    "@fullcalendar/react": "^5.11.3",
     "@highcharts/map-collection": "^2.0.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.0.0",
