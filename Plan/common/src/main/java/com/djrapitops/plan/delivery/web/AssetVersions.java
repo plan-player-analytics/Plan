@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Singleton
@@ -60,5 +61,10 @@ public class AssetVersions {
         }
 
         return Optional.of(max);
+    }
+
+    public List<String> getAssetPaths() throws IOException {
+        if (webAssetConfig == null) prepare();
+        return webAssetConfig.getConfigPaths();
     }
 }

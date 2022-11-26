@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
+import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -60,9 +61,15 @@ abstract class FileExporter {
         export(to, Arrays.asList(StringUtils.split(content, "\r\n")));
     }
 
+    void export(Path to, Resource resource) throws IOException {
+        export(to, resource.asWebResource());
+    }
+
     void export(Path to, WebResource resource) throws IOException {
         Path dir = to.getParent();
-        if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
+        if (!Files.isSymbolicLink(dir) && !Files.isDirectory(dir)) {
+            Files.createDirectories(dir);
+        }
 
         try (
                 InputStream in = resource.asStream();

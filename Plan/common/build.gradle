@@ -120,6 +120,8 @@ task copyYarnBuildResults {
 }
 
 task determineAssetModifications {
+    dependsOn yarnBundle
+    inputs.files(fileTree("$rootDir/react/dashboard/build"))
     inputs.files(fileTree(dir: 'src/main/resources/assets/plan/web'))
     inputs.files(fileTree(dir: 'src/main/resources/assets/plan/locale'))
     outputs.file("build/resources/main/assets/plan/AssetVersion.yml")
@@ -139,7 +141,7 @@ task determineAssetModifications {
             // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
-            versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
+            versionFile.text += String.format(
                     "%s: %s\n", relativePath.toString().replace('.', ','), modified
             )
         }
@@ -154,7 +156,16 @@ task determineAssetModifications {
             // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
-            versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
+            versionFile.text += String.format(
+                    "%s: %s\n", relativePath.toString().replace('.', ','), modified
+            )
+        }
+
+        tree = fileTree("$rootDir/react/dashboard/build")
+        tree.forEach { File f ->
+            def modified = System.currentTimeMillis()
+            def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
+            versionFile.text += String.format(
                     "%s: %s\n", relativePath.toString().replace('.', ','), modified
             )
         }

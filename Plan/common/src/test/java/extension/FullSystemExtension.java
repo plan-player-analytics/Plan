@@ -17,6 +17,7 @@
 package extension;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
@@ -80,7 +81,8 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 PlanConfig.class.equals(type) ||
                 ServerUUID.class.equals(type) ||
                 PlanPluginComponent.class.equals(type) ||
-                Database.class.equals(type);
+                Database.class.equals(type) ||
+                Exporter.class.equals(type);
     }
 
     @Override
@@ -104,6 +106,9 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
         }
         if (Database.class.equals(type)) {
             return planSystem.getDatabaseSystem().getDatabase();
+        }
+        if (Exporter.class.equals(type)) {
+            return planSystem.getExportSystem().getExporter();
         }
         throw new ParameterResolutionException("Unsupported parameter type " + type.getName());
     }
