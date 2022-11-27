@@ -104,7 +104,7 @@ jobs:
           touch .nojekyll
       - name: 📤 Deploy Javadocs 
         if: github.ref == 'refs/heads/master'
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+        uses: JamesIves/github-pages-deploy-action@4
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: javadocs # The folder the action should deploy.
