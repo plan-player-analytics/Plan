@@ -4,6 +4,7 @@ import I18NextLocalStorageBackend from "i18next-localstorage-backend";
 import I18NextHttpBackend from 'i18next-http-backend';
 import {initReactI18next} from 'react-i18next';
 import {fetchAvailableLocales} from "./metadataService";
+import {baseAddress, staticSite} from "./backendConfiguration";
 
 /**
  * A locale system for localizing the website.
@@ -53,6 +54,8 @@ export const localeService = {
                 this.clientLocale = this.defaultLanguage;
             }
 
+            let loadPath = baseAddress + '/v1/locale/{{lng}}';
+            if (staticSite) loadPath = baseAddress + '/locale/{{lng}}.json'
             await i18next
                 .use(I18NextChainedBackend)
                 .use(initReactI18next)
@@ -70,7 +73,7 @@ export const localeService = {
                             expirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
                             versions: this.languageVersions
                         }, {
-                            loadPath: '/v1/locale/{{lng}}'
+                            loadPath: loadPath
                         }]
                     },
                 }, () => {/* No need to initialize anything */

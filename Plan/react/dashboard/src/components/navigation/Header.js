@@ -10,7 +10,7 @@ import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
 import {localeService} from "../../service/localeService";
 import {useTranslation} from "react-i18next";
 import {useNavigation} from "../../hooks/navigationHook";
-import {baseAddress} from "../../service/backendConfiguration";
+import {baseAddress, staticSite} from "../../service/backendConfiguration";
 
 const LanguageSelector = () => {
     const languages = localeService.getLanguages();
@@ -55,9 +55,9 @@ const Header = ({page, tab, hideUpdater}) => {
             {!hideUpdater && <>
                 <span className="topbar-divider"/>
                 <div className="refresh-element">
-                    <button onClick={requestUpdate}>
+                    {!staticSite && <button onClick={requestUpdate}>
                         <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
-                    </button>
+                    </button>}
                     {' '}
                     <span className="refresh-time">{lastUpdate.formatted}</span>
                 </div>

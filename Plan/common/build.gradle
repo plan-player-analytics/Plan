@@ -142,7 +142,7 @@ task determineAssetModifications {
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format(
-                    "%s: %s\n", relativePath.toString().replace('.', ','), modified
+                    "%s: %s\n", relativePath.toString().replace('.', ',').replace('\\', '/'), modified
             )
         }
         tree = fileTree(dir: 'src/main/resources/assets/plan/locale')
@@ -157,16 +157,17 @@ task determineAssetModifications {
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format(
-                    "%s: %s\n", relativePath.toString().replace('.', ','), modified
+                    "%s: %s\n", relativePath.toString().replace('.', ',').replace('\\', '/'), modified
             )
         }
 
         tree = fileTree("$rootDir/react/dashboard/build")
         tree.forEach { File f ->
+            if (f.getName().endsWith(".map")) return
             def modified = System.currentTimeMillis()
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format(
-                    "%s: %s\n", relativePath.toString().replace('.', ','), modified
+                    "%s: %s\n", relativePath.toString().replace('.', ',').replace('\\', '/'), modified
             )
         }
     }

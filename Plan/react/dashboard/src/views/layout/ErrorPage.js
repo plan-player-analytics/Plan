@@ -12,7 +12,7 @@ const ErrorPage = ({error}) => {
             <NightModeCss/>
             <Sidebar items={[]} showBackButton={true}/>
             <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={error.title ? error.title : 'Unexpected error occurred'}/>
+                <Header page={error.title ? error.title : 'Unexpected error occurred'} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
                         <ErrorView error={error}/>

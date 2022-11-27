@@ -17,8 +17,13 @@
 package com.djrapitops.plan.delivery.export;
 
 import com.djrapitops.plan.delivery.web.AssetVersions;
+import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
+import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.LangCode;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +32,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -40,16 +47,19 @@ public class ReactExporter extends FileExporter {
 
     private final PlanFiles files;
     private final PlanConfig config;
+    private final RootJSONResolver jsonHandler;
     private final AssetVersions assetVersions;
 
     @Inject
     public ReactExporter(
             PlanFiles files,
             PlanConfig config,
+            RootJSONResolver jsonHandler,
             AssetVersions assetVersions
     ) {
         this.files = files;
         this.config = config;
+        this.jsonHandler = jsonHandler;
         this.assetVersions = assetVersions;
     }
 
@@ -62,6 +72,21 @@ public class ReactExporter extends FileExporter {
         exportAsset(toDirectory, "manifest.json");
         exportAsset(toDirectory, "robots.txt");
         exportStaticBundle(toDirectory);
+        exportLocaleJson(toDirectory.resolve("locale"));
+        exportMetadataJson(toDirectory.resolve("metadata"));
+    }
+
+    private void exportMetadataJson(Path toDirectory) throws IOException {
+        exportJson(toDirectory, "metadata");
+        exportJson(toDirectory, "version");
+        exportJson(toDirectory, "networkMetadata");
+    }
+
+    private void exportLocaleJson(Path toDirectory) throws IOException {
+        exportJson(toDirectory, "locale"); // List of languages
+        for (LangCode langCode : LangCode.values()) {
+            exportJson(toDirectory, "locale/" + langCode.name(), langCode.name());
+        }
     }
 
     private void exportStaticBundle(Path toDirectory) throws IOException {
@@ -87,6 +112,31 @@ public class ReactExporter extends FileExporter {
 
     private void exportAsset(Path toDirectory, String asset) throws IOException {
         export(toDirectory.resolve(asset), files.getResourceFromJar("web/" + asset));
+    }
+
+    private void exportJson(Path toDirectory, String resource) throws IOException {
+        exportJson(toDirectory, resource, toJsonResourceName(resource));
+    }
+
+    private void exportJson(Path toDirectory, String resource, String fileName) throws IOException {
+        Path to = toDirectory.resolve(fileName + ".json");
+        Optional<Response> jsonResponse = getJsonResponse(resource);
+        if (jsonResponse.isPresent()) {
+            export(to, jsonResponse.get().getBytes());
+        }
+    }
+
+    private String toJsonResourceName(String resource) {
+        return StringUtils.replaceEach(resource, new String[]{"?", "&",}, new String[]{"-", "_"});
+    }
+
+    private Optional<Response> getJsonResponse(String resource) {
+        try {
+            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap()));
+        } catch (WebException e) {
+            // The rest of the exceptions should not be thrown
+            throw new IllegalStateException("Unexpected exception thrown: " + e, e);
+        }
     }
 
 }

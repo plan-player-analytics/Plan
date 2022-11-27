@@ -1,6 +1,9 @@
-import {doGetRequest, doSomePostRequest, standard200option} from "./backendConfiguration";
+import {doGetRequest, doSomePostRequest, standard200option, staticSite} from "./backendConfiguration";
 
 export const fetchWhoAmI = async () => {
+    if (staticSite) {
+        return {authRequired: false, loggedIn: false}
+    }
     const url = '/v1/whoami';
     return doGetRequest(url);
 }

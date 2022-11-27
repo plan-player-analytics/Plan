@@ -26,6 +26,7 @@ import {SwitchTransition} from "react-transition-group";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 import {iconTypeToFontAwesomeClass} from "../../util/icons";
+import {staticSite} from "../../service/backendConfiguration";
 
 const NetworkSidebar = () => {
     const {t, i18n} = useTranslation();
@@ -49,7 +50,7 @@ const NetworkSidebar = () => {
                         href: "serversOverview"
                     },
                     {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions"},
-                    {name: 'html.label.performance', icon: faCogs, href: "performance"},
+                    staticSite ? undefined : {name: 'html.label.performance', icon: faCogs, href: "performance"},
                     {},
                     ...servers.map(server => {
                         return {

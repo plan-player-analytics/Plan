@@ -24,15 +24,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(FullSystemExtension.class)
 class ReactExporterTest {
@@ -56,11 +57,12 @@ class ReactExporterTest {
                 .resolve("../react/dashboard/build");
 
         List<Path> filesToExport = Files.list(reactBuildPath)
+                .filter(path -> !path.endsWith(".map"))
                 .map(path -> path.relativize(reactBuildPath))
-                .collect(Collectors.toList());
-        List<Path> filesExported = Files.list(exportPath)
-                .map(path -> path.relativize(exportPath))
-                .collect(Collectors.toList());
-        assertEquals(filesToExport, filesExported);
+                .toList();
+        List<Path> filesExported = Files.list(exportPath).map(path -> path.relativize(exportPath)).toList();
+        assertAll(filesToExport.stream()
+                .map(path -> (Executable) () -> assertTrue(filesExported.contains(path)))
+                .toList());
     }
 }

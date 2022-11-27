@@ -230,7 +230,7 @@ const Sidebar = ({items, showBackButton}) => {
                         <Item active={false} item={{href: "/", icon: faArrowLeft, name: t('html.label.toMainPage')}}/>
                         <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>
                     </>}
-                    {items.length ? items.map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t)) : ''}
+                    {items.length ? items.filter(item => item !== undefined).map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t)) : ''}
                     <Divider/>
                     <FooterButtons/>
                 </ul>}
