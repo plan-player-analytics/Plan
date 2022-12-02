@@ -12,6 +12,7 @@ import {MetadataContextProvider} from "./hooks/metadataHook";
 import {AuthenticationContextProvider} from "./hooks/authenticationHook";
 import {NavigationContextProvider} from "./hooks/navigationHook";
 import MainPageRedirect from "./components/navigation/MainPageRedirect";
+import {staticSite} from "./service/backendConfiguration";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -28,7 +29,6 @@ const ServerPvpPve = React.lazy(() => import("./views/server/ServerPvpPve"));
 const PlayerbaseOverview = React.lazy(() => import("./views/server/PlayerbaseOverview"));
 const ServerPlayers = React.lazy(() => import("./views/server/ServerPlayers"));
 const ServerGeolocations = React.lazy(() => import("./views/server/ServerGeolocations"));
-const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
 const ServerPerformance = React.lazy(() => import("./views/server/ServerPerformance"));
 const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginData"));
 const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
@@ -50,6 +50,9 @@ const QueryPage = React.lazy(() => import("./views/layout/QueryPage"));
 const NewQueryView = React.lazy(() => import("./views/query/NewQueryView"));
 const QueryResultView = React.lazy(() => import("./views/query/QueryResultView"));
 
+const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
+const RegisterPage = React.lazy(() => import("./views/layout/RegisterPage"));
+const ErrorPage = React.lazy(() => import("./views/layout/ErrorPage"));
 const ErrorsPage = React.lazy(() => import("./views/layout/ErrorsPage"));
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
 
@@ -89,7 +92,9 @@ function App() {
                         <Routes>
                             <Route path="" element={<MainPageRedirect/>}/>
                             <Route path="/" element={<MainPageRedirect/>}/>
-                            <Route path="/login" element={<Lazy><LoginPage/></Lazy>}/>
+                            <Route path="index.html" element={<MainPageRedirect/>}/>
+                            {!staticSite && <Route path="/login" element={<Lazy><LoginPage/></Lazy>}/>}
+                            {!staticSite && <Route path="/register" element={<Lazy><RegisterPage/></Lazy>}/>}
                             <Route path="/player/:identifier" element={<Lazy><PlayerPage/></Lazy>}>
                                 <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
                                 <Route path="overview" element={<Lazy><PlayerOverview/></Lazy>}/>
@@ -132,7 +137,8 @@ function App() {
                                 <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
                                 <Route path="serversOverview" element={<Lazy><NetworkServers/></Lazy>}/>
                                 <Route path="sessions" element={<Lazy><NetworkSessions/></Lazy>}/>
-                                <Route path="performance" element={<Lazy><NetworkPerformance/></Lazy>}/>
+                                {!staticSite &&
+                                    <Route path="performance" element={<Lazy><NetworkPerformance/></Lazy>}/>}
                                 <Route path="playerbase" element={<Lazy><NetworkPlayerbaseOverview/></Lazy>}/>
                                 <Route path="join-addresses" element={<Lazy><NetworkJoinAddresses/></Lazy>}/>
                                 <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
@@ -145,13 +151,18 @@ function App() {
                                     icon: faMapSigns
                                 }}/>}/>
                             </Route>
-                            <Route path="/query" element={<Lazy><QueryPage/></Lazy>}>
+                            {!staticSite && <Route path="/query" element={<Lazy><QueryPage/></Lazy>}>
                                 <Route path="" element={<NewRedirect/>}/>
                                 <Route path="new" element={<Lazy><NewQueryView/></Lazy>}/>
                                 <Route path="result" element={<Lazy><QueryResultView/></Lazy>}/>
-                            </Route>
-                            <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>
-                            <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>
+                            </Route>}
+                            {!staticSite && <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>}
+                            {!staticSite && <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>}
+                            <Route path="*" element={<Lazy><ErrorPage error={{
+                                message: 'Page not found, please correct the address',
+                                title: 'No such page',
+                                icon: faMapSigns
+                            }}/></Lazy>}/>
                         </Routes>
                     </BrowserRouter>
                 </div>

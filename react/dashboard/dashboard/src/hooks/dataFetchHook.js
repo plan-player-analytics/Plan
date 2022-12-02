@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {useNavigation} from "./navigationHook";
 import {useDataStore} from "./datastoreHook";
 import {useMetadata} from "./metadataHook";
+import {staticSite} from "../service/backendConfiguration";
 
 export const useDataRequest = (fetchMethod, parameters) => {
     const [data, setData] = useState(undefined);
@@ -16,7 +17,7 @@ export const useDataRequest = (fetchMethod, parameters) => {
         const handleResponse = (json, error, skipOldData, timeout) => {
             if (json) {
                 const timestamp = json.timestamp;
-                if (timestamp) {
+                if (staticSite || timestamp) {
                     // Data has timestamp, the data may come from cache
                     const acceptedTimestamp = timestamp + (refreshBarrierMs ? refreshBarrierMs : 15000);
                     if (acceptedTimestamp < updateRequested) {

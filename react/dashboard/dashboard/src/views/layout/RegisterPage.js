@@ -8,10 +8,9 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faPalette} from "@fortawesome/free-solid-svg-icons";
 import {useTheme} from "../../hooks/themeHook";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import drawSine from "../../util/loginSineRenderer";
-import {fetchLogin} from "../../service/authenticationService";
-import ForgotPasswordModal from "../../components/modal/ForgotPasswordModal";
 import {useAuth} from "../../hooks/authenticationHook";
+import FinalizeRegistrationModal from "../../components/modal/FinalizeRegistrationModal";
+import {fetchRegisterCheck, postRegister} from "../../service/authenticationService";
 import {baseAddress} from "../../service/backendConfiguration";
 
 const Logo = () => {
@@ -22,7 +21,7 @@ const Logo = () => {
     )
 };
 
-const LoginCard = ({children}) => {
+const RegisterCard = ({children}) => {
     return (
         <Row className="justify-content-center container-fluid">
             <Col xl={6} lg={7} md={9}>
@@ -42,16 +41,16 @@ const LoginCard = ({children}) => {
     )
 }
 
-const LoginForm = ({login}) => {
+const RegisterForm = ({register}) => {
     const {t} = useTranslation();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const onLogin = useCallback(event => {
+    const onRegister = useCallback(event => {
         event.preventDefault();
-        login(username, password).then(() => setPassword(''));
-    }, [username, password, setPassword, login]);
+        register(username, password).then(() => setPassword(''));
+    }, [username, password, setPassword, register]);
 
     return (
         <form className="user">
@@ -60,14 +59,16 @@ const LoginForm = ({login}) => {
                        id="inputUser"
                        placeholder={t('html.login.username')} type="text"
                        value={username} onChange={event => setUsername(event.target.value)}/>
+                <div className={"form-text"}>{t('html.register.usernameTip')}</div>
             </div>
             <div className="mb-3">
                 <input autoComplete="current-password" className="form-control form-control-user"
                        id="inputPassword" placeholder={t('html.login.password')} type="password"
                        value={password} onChange={event => setPassword(event.target.value)}/>
+                <div className={"form-text"}>{t('html.register.passwordTip')}</div>
             </div>
-            <button className="btn bg-plan btn-user w-100" id="login-button" onClick={onLogin}>
-                {t('html.login.login')}
+            <button className="btn bg-plan btn-user w-100" id="register-button" onClick={onRegister}>
+                {t('html.register.register')}
             </button>
         </form>
     );
@@ -86,68 +87,58 @@ const ColorChooserButton = () => {
         </div>
     )
 }
-const ForgotPasswordButton = ({onClick}) => {
+
+const LoginLink = () => {
     const {t} = useTranslation();
 
     return (
         <div className='text-center'>
-            <button className='col-plan small' onClick={onClick}>{t('html.login.forgotPassword')}</button>
+            <Link to='/login' className='col-plan small'>{t('html.register.login')}</Link>
         </div>
     )
 }
 
-const CreateAccountLink = () => {
-    const {t} = useTranslation();
-
-    return (
-        <div className='text-center'>
-            <Link to='/register' className='col-plan small'>{t('html.login.register')}</Link>
-        </div>
-    )
-}
-
-const Decoration = () => {
-    useEffect(() => {
-        drawSine('decoration');
-    })
-
-    return (
-        <Row className='justify-content-center'>
-            <canvas className="col-xl-3 col-lg-3 col-md-5" id="decoration" style={{height: "100px"}}/>
-        </Row>
-    );
-}
-
-const LoginPage = () => {
+const RegisterPage = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const {authLoaded, authRequired, loggedIn, updateLoginDetails} = useAuth();
+    const {authLoaded, authRequired, loggedIn} = useAuth();
 
-    const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false);
+    const [finalizeRegistrationModalOpen, setFinalizeRegistrationModalOpen] = useState(false);
 
-    const [successMessage, setSuccessMessage] = useState('')
+    const [registerCode, setRegisterCode] = useState(undefined);
     const [failMessage, setFailMessage] = useState('');
-    const [redirectTo, setRedirectTo] = useState(undefined);
 
-    const togglePasswordModal = useCallback(() => setForgotPasswordModalOpen(!forgotPasswordModalOpen),
-        [setForgotPasswordModalOpen, forgotPasswordModalOpen])
+    const toggleRegistrationModal = useCallback(() => setFinalizeRegistrationModalOpen(!finalizeRegistrationModalOpen),
+        [setFinalizeRegistrationModalOpen, finalizeRegistrationModalOpen])
 
     useEffect(() => {
         document.body.classList.add("bg-plan", "plan-bg-gradient");
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const cameFrom = urlParams.get('from');
-        if (cameFrom) setRedirectTo(cameFrom);
-
-        const registerSuccess = urlParams.get('registerSuccess');
-        if (registerSuccess) setSuccessMessage(t('html.register.success'))
-
         return () => {
             document.body.classList.remove("bg-plan", "plan-bg-gradient");
         }
-    }, [setRedirectTo, setSuccessMessage, t])
+    }, []);
 
-    const login = async (username, password) => {
+    const checkRegistration = async (code) => {
+        if (!code) {
+            setFinalizeRegistrationModalOpen(false);
+            return setFailMessage("Register code was not received.");
+        }
+        if (!finalizeRegistrationModalOpen) {
+            setFinalizeRegistrationModalOpen(true);
+        }
+
+        const {data, error} = await fetchRegisterCheck(code);
+        if (error) {
+            setFailMessage(t('html.register.error.checkFailed') + error)
+        } else if (data && data.success) {
+            navigate(baseAddress + '/login?registerSuccess=true');
+        } else {
+            setTimeout(() => checkRegistration(code), 5000);
+        }
+    }
+
+    const register = async (username, password) => {
         if (!username || username.length < 1) {
             return setFailMessage(t('html.register.error.noUsername'));
         }
@@ -158,24 +149,16 @@ const LoginPage = () => {
             return setFailMessage(t('html.register.error.noPassword'));
         }
 
-        const {data, error} = await fetchLogin(username, password);
+        const {data, error} = await postRegister(username, password);
 
         if (error) {
-            if (error.message === 'Request failed with status code 403') {
-                // Too many logins, reload browser to show forbidden page
-                window.location.reload();
-            } else {
-                setFailMessage(t('html.login.failed') + (error.data && error.data.error ? error.data.error : error.message));
-            }
-        } else if (data && data.success) {
-            await updateLoginDetails();
-            if (redirectTo && !redirectTo.startsWith('http') && !redirectTo.startsWith('file') && !redirectTo.startsWith('javascript')) {
-                navigate(baseAddress + redirectTo.substring(redirectTo.indexOf('/')) + (window.location.hash ? window.location.hash : ''));
-            } else {
-                navigate(baseAddress + '/');
-            }
+            setFailMessage(t('html.register.error.failed') + (error.data && error.data.error ? error.data.error : error.message));
+        } else if (data && data.code) {
+            setRegisterCode(data.code);
+            setFinalizeRegistrationModalOpen(true);
+            setTimeout(() => checkRegistration(data.code), 10000);
         } else {
-            setFailMessage(t('html.login.failed') + data ? data.error : t('generic.noData'));
+            setFailMessage(t('html.register.error.failed') + data ? data.error : t('generic.noData'));
         }
     }
 
@@ -191,23 +174,27 @@ const LoginPage = () => {
         <>
             <main className="container">
                 <Logo/>
-                <LoginCard>
+                <RegisterCard>
+                    <div className="text-center">
+                        <h1 className="h4 text-gray-900 mb-4">{t('html.register.createNewUser')}</h1>
+                    </div>
                     {failMessage && <Alert className='alert-danger'>{failMessage}</Alert>}
-                    {successMessage && <Alert className='alert-success'>{successMessage}</Alert>}
-                    <LoginForm login={login}/>
+                    <RegisterForm register={register}/>
                     <hr className="col-secondary"/>
-                    <ForgotPasswordButton onClick={togglePasswordModal}/>
-                    <CreateAccountLink/>
+                    <LoginLink/>
                     <ColorChooserButton/>
-                </LoginCard>
-                <Decoration/>
+                </RegisterCard>
             </main>
             <aside>
                 <ColorSelectorModal/>
-                <ForgotPasswordModal show={forgotPasswordModalOpen} toggle={togglePasswordModal}/>
+                <FinalizeRegistrationModal
+                    show={finalizeRegistrationModalOpen}
+                    toggle={toggleRegistrationModal}
+                    registerCode={registerCode}
+                />
             </aside>
         </>
     )
 };
 
-export default LoginPage
+export default RegisterPage

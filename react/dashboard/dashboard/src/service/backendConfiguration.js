@@ -1,6 +1,9 @@
 import axios from "axios";
 
-const toBeReplaced = "PLAN_BASE_ADDRESS";
+const javaReplaced = {
+    isStatic: "PLAN_EXPORTED_VERSION",
+    address: "PLAN_BASE_ADDRESS"
+}
 
 const isCurrentAddress = (address) => {
     const is = window.location.href.startsWith(address);
@@ -8,7 +11,8 @@ const isCurrentAddress = (address) => {
     return is;
 }
 
-export const baseAddress = "PLAN_BASE_ADDRESS" === toBeReplaced || !isCurrentAddress(toBeReplaced) ? "" : toBeReplaced;
+export const baseAddress = javaReplaced.address.startsWith('PLAN_') || !isCurrentAddress(javaReplaced.address) ? "" : javaReplaced.address;
+export const staticSite = javaReplaced.isStatic === 'true';
 
 export const doSomeGetRequest = async (url, statusOptions) => {
     return doSomeRequest(url, statusOptions, async () => axios.get(url));

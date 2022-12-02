@@ -1,26 +1,30 @@
-import {doGetRequest} from "./backendConfiguration";
+import {doGetRequest, staticSite} from "./backendConfiguration";
 
 export const fetchPlanMetadata = async () => {
-    const url = '/v1/metadata';
+    let url = '/v1/metadata';
+    if (staticSite) url = '/metadata/metadata.json'
     return doGetRequest(url);
 }
 
 export const fetchPlanVersion = async () => {
-    const url = '/v1/version';
+    let url = '/v1/version';
+    if (staticSite) url = '/metadata/version.json'
     return doGetRequest(url);
 }
 
 export const fetchAvailableLocales = async () => {
-    const url = '/v1/locale';
+    let url = '/v1/locale';
+    if (staticSite) url = '/locale/locale.json'
     return doGetRequest(url);
 }
 
 export const fetchErrorLogs = async () => {
-    const url = '/v1/errors';
+    let url = '/v1/errors';
     return doGetRequest(url);
 }
 
 export const fetchNetworkMetadata = async () => {
-    const url = '/v1/networkMetadata';
+    let url = '/v1/networkMetadata';
+    if (staticSite) url = '/metadata/networkMetadata.json'
     return doGetRequest(url);
 }
