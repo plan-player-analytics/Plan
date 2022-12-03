@@ -131,6 +131,7 @@ public class GeoLite2Geolocator implements Geolocator {
     public Optional<String> getCountry(InetAddress inetAddress) {
         if (inetAddress == null) return Optional.empty();
         if (inetAddress.getHostAddress().contains("127.0.0.1")) return Optional.of("Local Machine");
+        if (inetAddress.isSiteLocalAddress()) return Optional.of("Local Private Network");
 
         try (
                 // See https://github.com/maxmind/MaxMind-DB-Reader-java#file-lock-on-windows
