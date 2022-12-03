@@ -58,12 +58,12 @@ public class ChatListener implements FabricListener {
         this.errorLogger = errorLogger;
     }
 
-    public void onChat(ServerPlayerEntity player, String message) {
+    public void onChat(ServerPlayerEntity player) {
 
         try {
             actOnChatEvent(player);
         } catch (Exception e) {
-            errorLogger.error(e, ErrorContext.builder().related(player, message).build());
+            errorLogger.error(e, ErrorContext.builder().related(player).build());
         }
     }
 
@@ -84,7 +84,7 @@ public class ChatListener implements FabricListener {
             if (!isEnabled) {
                 return;
             }
-            onChat(sender, message.getContent().getString());
+            onChat(sender);
         });
 
         this.enable();
