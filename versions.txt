@@ -1,4 +1,4 @@
-REL|5.5.2100|https://github.com/plan-player-analytics/Plan/releases/download/5.5.2100/Plan-5.5-build-2100.jar|https://github.com/plan-player-analytics/Plan/releases
+REL|5.5 build 2100|https://github.com/plan-player-analytics/Plan/releases/download/5.5.2100/Plan-5.5-build-2100.jar|https://github.com/plan-player-analytics/Plan/releases
 DEV|5.5 build 2076|https://github.com/plan-player-analytics/Plan/releases/download/5.5.2076/Plan-5.5-dev-build-2076.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.5.2076
 REL|5.5 build 1984|https://github.com/plan-player-analytics/Plan/releases/download/5.5.1984/Plan-5.5-build-1984.jar|https://github.com/plan-player-analytics/Plan/releases
 REL|5.5 build 1969|https://github.com/plan-player-analytics/Plan/releases/download/5.5.1969/Plan-5.5-build-1969.jar|https://github.com/plan-player-analytics/Plan/releases
