@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -98,7 +99,8 @@ public class TabCompleteCache implements SubSystem {
     }
 
     private void refreshBackupFileNames() {
-        Arrays.stream(files.getDataFolder().list())
+        Optional.ofNullable(files.getDataFolder().list()).stream()
+                .flatMap(Arrays::stream)
                 .filter(Objects::nonNull)
                 .filter(fileName -> fileName.endsWith(".db")
                         && !fileName.equalsIgnoreCase("database.db"))
@@ -114,45 +116,31 @@ public class TabCompleteCache implements SubSystem {
     }
 
     public List<String> getMatchingServerIdentifiers(String searchFor) {
-        if (serverIdentifiers.size() >= 100) {
-            return Collections.emptyList();
-        }
-        return serverIdentifiers.stream()
-                .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
-                .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.toList());
+        return findMatches(serverIdentifiers, searchFor);
     }
 
     public List<String> getMatchingPlayerIdentifiers(String searchFor) {
-        if (playerIdentifiers.size() >= 100) {
-            return Collections.emptyList();
-        }
-
         playerIdentifiers.addAll(serverSensor.getOnlinePlayerNames());
-
-        return playerIdentifiers.stream()
-                .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
-                .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.toList());
+        return findMatches(playerIdentifiers, searchFor);
     }
 
     public List<String> getMatchingUserIdentifiers(String searchFor) {
-        if (userIdentifiers.size() >= 100) {
-            return Collections.emptyList();
-        }
-        return userIdentifiers.stream()
-                .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
-                .sorted(String.CASE_INSENSITIVE_ORDER)
-                .collect(Collectors.toList());
+        return findMatches(userIdentifiers, searchFor);
     }
 
     public List<String> getMatchingBackupFilenames(String searchFor) {
-        if (backupFileNames.size() >= 100) {
-            return Collections.emptyList();
-        }
-        return backupFileNames.stream()
+        return findMatches(backupFileNames, searchFor);
+    }
+
+    @NotNull
+    List<String> findMatches(Collection<String> searchList, String searchFor) {
+        List<String> filtered = searchList.stream()
                 .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
                 .sorted(String.CASE_INSENSITIVE_ORDER)
                 .collect(Collectors.toList());
+        if (filtered.size() >= 100) {
+            return Collections.emptyList();
+        }
+        return filtered;
     }
 }
