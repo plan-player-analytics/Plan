@@ -27,7 +27,7 @@
     "i18next": "^22.0.6",
     "i18next-chained-backend": "^4.0.1",
     "i18next-http-backend": "^2.0.1",
-    "i18next-localstorage-backend": "^4.0.0",
+    "i18next-localstorage-backend": "^4.0.1",
     "masonry-layout": "^4.2.2",
     "react": "^17.0.2",
     "react-bootstrap-v5": "^1.4.0",
