@@ -72,7 +72,7 @@ dependencies {
     testArtifacts project(":extensions:adventure")
     testImplementation project(":extensions:adventure")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-java:4.6.0"
+    testImplementation "org.seleniumhq.selenium:selenium-java:4.7.0"
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
