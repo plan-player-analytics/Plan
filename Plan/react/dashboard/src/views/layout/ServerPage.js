@@ -29,6 +29,7 @@ import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServerIdentity} from "../../service/serverService";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 import {iconTypeToFontAwesomeClass} from "../../util/icons";
+import {staticSite} from "../../service/backendConfiguration";
 
 const ServerSidebar = () => {
     const {t, i18n} = useTranslation();
@@ -93,11 +94,13 @@ const ServerSidebar = () => {
                 }).forEach(item => items.push(item))
         }
 
-        items.push(
-            {},
-            {name: 'html.label.links'},
-            {name: 'html.label.query', icon: faSearch, href: "/query"}
-        );
+        if (!staticSite) {
+            items.push(
+                {},
+                {name: 'html.label.links'},
+                {name: 'html.label.query', icon: faSearch, href: "/query"}
+            );
+        }
 
         setSidebarItems(items);
         window.document.title = `Plan | Server Analysis`;

@@ -306,7 +306,8 @@ public enum HtmlLang implements Lang {
 
     WARNING_NO_GAME_SERVERS("html.description.noGameServers", "Some data requires Plan to be installed on game servers."),
     WARNING_NO_GEOLOCATIONS("html.description.noGeolocations", "Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."),
-    WARNING_NO_SPONGE_CHUNKS("html.description.noSpongeChunks", "Chunks unavailable on Sponge");
+    WARNING_NO_SPONGE_CHUNKS("html.description.noSpongeChunks", "Chunks unavailable on Sponge"),
+    EXPORTED_TITLE("html.label.exported", "Data export time");
 
     private final String key;
     private final String defaultValue;

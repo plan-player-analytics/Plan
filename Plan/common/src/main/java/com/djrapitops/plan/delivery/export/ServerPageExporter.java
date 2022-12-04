@@ -142,6 +142,7 @@ public class ServerPageExporter extends FileExporter {
                 "playerVersus?server=" + serverUUID,
                 "playerbaseOverview?server=" + serverUUID,
                 "performanceOverview?server=" + serverUUID,
+                "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=optimizedPerformance&server=" + serverUUID,
                 "graph?type=aggregatedPing&server=" + serverUUID,
                 "graph?type=worldPie&server=" + serverUUID,
@@ -150,12 +151,15 @@ public class ServerPageExporter extends FileExporter {
                 "graph?type=uniqueAndNew&server=" + serverUUID,
                 "graph?type=hourlyUniqueAndNew&server=" + serverUUID,
                 "graph?type=joinAddressPie&server=" + serverUUID,
+                "graph?type=joinAddressByDay&server=" + serverUUID,
                 "graph?type=serverCalendar&server=" + serverUUID,
                 "graph?type=punchCard&server=" + serverUUID,
                 "players?server=" + serverUUID,
                 "kills?server=" + serverUUID,
                 "pingTable?server=" + serverUUID,
-                "sessions?server=" + serverUUID
+                "sessions?server=" + serverUUID,
+                "extensionData?server=" + serverUUID,
+                "serverIdentity?server=" + serverUUID
         );
     }
 

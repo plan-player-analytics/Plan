@@ -9,6 +9,7 @@ import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
 import ErrorPage from "./ErrorPage";
+import {staticSite} from "../../service/backendConfiguration";
 
 const PlayersPage = () => {
     const {t, i18n} = useTranslation();
@@ -20,7 +21,7 @@ const PlayersPage = () => {
     const {currentTab, setCurrentTab} = useNavigation();
 
     useEffect(() => {
-        const items = [
+        const items = staticSite ? [] : [
             {name: 'html.label.links'},
             {name: 'html.label.query', icon: faSearch, href: "/query"},
         ]

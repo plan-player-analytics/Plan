@@ -132,11 +132,13 @@ public class NetworkPageExporter extends FileExporter {
                 "graph?type=hourlyUniqueAndNew",
                 "graph?type=serverPie",
                 "graph?type=joinAddressPie",
+                "graph?type=joinAddressByDay",
                 "graph?type=activity",
                 "graph?type=geolocation",
                 "graph?type=uniqueAndNew",
                 "network/pingTable",
-                "sessions"
+                "sessions",
+                "extensionData?server=" + serverUUID
         );
     }
 
