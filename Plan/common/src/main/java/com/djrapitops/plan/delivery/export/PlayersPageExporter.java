@@ -26,6 +26,8 @@ import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -49,6 +51,7 @@ import java.util.Optional;
 public class PlayersPageExporter extends FileExporter {
 
     private final PlanFiles files;
+    private final PlanConfig config;
     private final DBSystem dbSystem;
     private final PageFactory pageFactory;
     private final RootJSONResolver jsonHandler;
@@ -60,13 +63,14 @@ public class PlayersPageExporter extends FileExporter {
     @Inject
     public PlayersPageExporter(
             PlanFiles files,
-            DBSystem dbSystem,
+            PlanConfig config, DBSystem dbSystem,
             PageFactory pageFactory,
             RootJSONResolver jsonHandler,
             Theme theme,
             ServerInfo serverInfo
     ) {
         this.files = files;
+        this.config = config;
         this.dbSystem = dbSystem;
         this.pageFactory = pageFactory;
         this.jsonHandler = jsonHandler;
@@ -84,10 +88,13 @@ public class PlayersPageExporter extends FileExporter {
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory);
         exportHtml(toDirectory);
+        exportReactRedirects(toDirectory);
         exportPaths.clear();
     }
 
     private void exportHtml(Path toDirectory) throws IOException {
+        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+
         Path to = toDirectory
                 .resolve("players")
                 .resolve("index.html");
@@ -106,6 +113,17 @@ public class PlayersPageExporter extends FileExporter {
                 });
 
         export(to, exportPaths.resolveExportPaths(html));
+    }
+
+    private void exportReactRedirects(Path toDirectory) throws IOException {
+        if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
+
+        Resource redirect = files.getResourceFromJar("web/export-redirect.html");
+        exportReactRedirect(toDirectory, redirect, "players");
+    }
+
+    private void exportReactRedirect(Path toDirectory, Resource redirectHtml, String path) throws IOException {
+        export(toDirectory.resolve(path).resolve("index.html"), redirectHtml.asString());
     }
 
     private void exportJSON(Path toDirectory) throws IOException {
@@ -135,6 +153,8 @@ public class PlayersPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
+        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+
         // Style
         exportResources(toDirectory,
                 "img/Flaticon_circle.png",

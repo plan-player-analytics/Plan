@@ -28,6 +28,8 @@ import com.djrapitops.plan.exceptions.connection.WebException;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -52,6 +54,7 @@ import java.util.Optional;
 public class ServerPageExporter extends FileExporter {
 
     private final PlanFiles files;
+    private final PlanConfig config;
     private final PageFactory pageFactory;
     private final DBSystem dbSystem;
     private final RootJSONResolver jsonHandler;
@@ -63,6 +66,7 @@ public class ServerPageExporter extends FileExporter {
     @Inject
     public ServerPageExporter(
             PlanFiles files,
+            PlanConfig config,
             PageFactory pageFactory,
             DBSystem dbSystem,
             RootJSONResolver jsonHandler,
@@ -70,6 +74,7 @@ public class ServerPageExporter extends FileExporter {
             ServerInfo serverInfo // To know if current server is a Proxy
     ) {
         this.files = files;
+        this.config = config;
         this.pageFactory = pageFactory;
         this.dbSystem = dbSystem;
         this.jsonHandler = jsonHandler;
@@ -95,10 +100,13 @@ public class ServerPageExporter extends FileExporter {
         exportRequiredResources(toDirectory);
         exportJSON(toDirectory, server);
         exportHtml(toDirectory, server);
+        exportReactRedirects(toDirectory, server.getUuid());
         exportPaths.clear();
     }
 
     private void exportHtml(Path toDirectory, Server server) throws IOException {
+        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+
         ServerUUID serverUUID = server.getUuid();
         Path to = toDirectory
                 .resolve(serverInfo.getServer().isProxy() ? "server/" + toFileName(server.getName()) : "server")
@@ -122,6 +130,28 @@ public class ServerPageExporter extends FileExporter {
                 });
 
         export(to, exportPaths.resolveExportPaths(html));
+    }
+
+    private void exportReactRedirects(Path toDirectory, ServerUUID serverUUID) throws IOException {
+        if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
+
+        Resource redirect = files.getResourceFromJar("web/export-redirect.html");
+        String server = "server/";
+        exportReactRedirect(toDirectory, redirect, server + serverUUID);
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/overview");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/online-activity");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/sessions");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/pvppve");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/playerbase");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/join-addresses");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/players");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/geolocations");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/performance");
+        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/plugins-overview");
+    }
+
+    private void exportReactRedirect(Path toDirectory, Resource redirectHtml, String path) throws IOException {
+        export(toDirectory.resolve(path).resolve("index.html"), redirectHtml.asString());
     }
 
     /**
@@ -200,6 +230,8 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
+        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+
         // Style
         exportResources(toDirectory,
                 "../img/Flaticon_circle.png",
