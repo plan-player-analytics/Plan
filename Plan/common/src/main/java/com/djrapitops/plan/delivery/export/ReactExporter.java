@@ -117,6 +117,7 @@ public class ReactExporter extends FileExporter {
     private void deleteOldStaticBundleFiles(Path toDirectory) throws IOException {
         Set<Path> filesToDelete;
         Path staticDirectory = toDirectory.resolve("static");
+        if (!Files.isDirectory(staticDirectory)) return;
         try (Stream<Path> exportedFiles = Files.walk(staticDirectory)) {
             filesToDelete = exportedFiles
                     .filter(path -> {
