@@ -31,11 +31,14 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Exporter in charge of exporting React related files.
@@ -90,14 +93,15 @@ public class ReactExporter extends FileExporter {
     }
 
     private void exportStaticBundle(Path toDirectory) throws IOException {
+        deleteOldStaticBundleFiles(toDirectory);
         List<String> paths = assetVersions.getAssetPaths().stream()
                 .filter(path -> path.contains("static"))
+                .map(path -> path.replace(',', '.'))
                 .collect(Collectors.toList());
         for (String path : paths) {
-            String resourcePath = path.replace(',', '.');
-            Path to = toDirectory.resolve(resourcePath);
-            Resource resource = files.getResourceFromJar("web/" + resourcePath);
-            if (resourcePath.endsWith(".js")) {
+            Path to = toDirectory.resolve(path);
+            Resource resource = files.getResourceFromJar("web/" + path);
+            if (path.endsWith(".js")) {
                 String withReplacedConstants = StringUtils.replaceEach(
                         resource.asString(),
                         new String[]{"PLAN_BASE_ADDRESS", "PLAN_EXPORTED_VERSION"},
@@ -107,6 +111,22 @@ public class ReactExporter extends FileExporter {
             } else {
                 export(to, resource);
             }
+        }
+    }
+
+    private void deleteOldStaticBundleFiles(Path toDirectory) throws IOException {
+        Set<Path> filesToDelete;
+        Path staticDirectory = toDirectory.resolve("static");
+        try (Stream<Path> exportedFiles = Files.walk(staticDirectory)) {
+            filesToDelete = exportedFiles
+                    .filter(path -> {
+                        String filePath = path.toFile().getPath();
+                        return filePath.contains(".chunk") || filePath.contains("main.");
+                    })
+                    .collect(Collectors.toSet());
+        }
+        for (Path path : filesToDelete) {
+            Files.deleteIfExists(path);
         }
     }
 
