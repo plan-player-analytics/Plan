@@ -95,11 +95,13 @@ const NetworkSidebar = () => {
                 }).forEach(item => items.push(item))
         }
 
-        items.push(
-            {},
-            {name: 'html.label.links'},
-            {name: 'html.label.query', icon: faSearch, href: "/query"}
-        );
+        if (!staticSite) {
+            items.push(
+                {},
+                {name: 'html.label.links'},
+                {name: 'html.label.query', icon: faSearch, href: "/query"}
+            );
+        }
 
         setSidebarItems(items);
         window.document.title = `Plan | Network`;

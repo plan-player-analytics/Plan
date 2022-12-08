@@ -2,7 +2,7 @@ import {doGetRequest, doSomePostRequest, standard200option, staticSite} from "./
 
 export const fetchWhoAmI = async () => {
     if (staticSite) {
-        return {authRequired: false, loggedIn: false}
+        return {data: {authRequired: false, loggedIn: false}, error: null};
     }
     const url = '/v1/whoami';
     return doGetRequest(url);

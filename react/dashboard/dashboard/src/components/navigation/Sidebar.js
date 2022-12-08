@@ -23,12 +23,12 @@ const Divider = ({showMargin}) => (
     <hr className={"sidebar-divider" + (showMargin ? '' : " my-0")}/>
 )
 
-const InnerItem = ({href, icon, name, nameShort, color}) => {
+const InnerItem = ({href, icon, name, nameShort, color, external}) => {
     if (!href) {
         return (<hr className={"nav-servers dropdown-divider mx-3 my-2"}/>)
     }
 
-    if (href.startsWith('/')) {
+    if (external) {
         return (
             <a href={href} className="collapse-item nav-button">
                 <Fa icon={icon} className={color ? "col-" + color : undefined}/>
@@ -56,10 +56,11 @@ const Item = ({item, inner}) => {
     }, [pathname, href, setCurrentTab, name, external])
 
     if (inner) {
-        return (<InnerItem href={href} icon={icon} name={t(name)} nameShort={t(nameShort)} color={color}/>)
+        return (<InnerItem href={href} icon={icon} name={t(name)} nameShort={t(nameShort)} color={color}
+                           external={external}/>)
     }
 
-    if (href.startsWith('/')) {
+    if (external) {
         return (
             <li className={"nav-item nav-button"}>
                 <a href={baseAddress + href} className="nav-link">
@@ -165,12 +166,14 @@ const SidebarCollapse = ({item, open, setOpen}) => {
             <Collapse in={open}>
                 <div id={item.name + "-collapse"}>
                     <div className="bg-white py-2 collapse-inner rounded">
-                        {item.contents.map((content, i) =>
-                            <Item key={i}
-                                  inner
-                                  active={false}
-                                  item={content}
-                            />)}
+                        {item.contents
+                            .filter(content => content !== undefined)
+                            .map((content, i) =>
+                                <Item key={i}
+                                      inner
+                                      active={false}
+                                      item={content}
+                                />)}
                     </div>
                 </div>
             </Collapse>

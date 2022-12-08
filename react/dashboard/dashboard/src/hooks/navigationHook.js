@@ -15,9 +15,11 @@ export const NavigationContextProvider = ({children}) => {
         const pathname = window.location.href;
         setItems(items);
         for (const item of items) {
+            if (!item) continue;
             if ('/' !== item.href && pathname.includes(item.href)) setCurrentTab(item.name);
             if (item.contents) {
                 for (const subItem of item.contents) {
+                    if (!subItem) continue;
                     if ('/' !== subItem.href && pathname.includes(subItem.href)) setCurrentTab(subItem.name);
                 }
             }

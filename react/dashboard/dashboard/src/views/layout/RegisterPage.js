@@ -11,7 +11,6 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useAuth} from "../../hooks/authenticationHook";
 import FinalizeRegistrationModal from "../../components/modal/FinalizeRegistrationModal";
 import {fetchRegisterCheck, postRegister} from "../../service/authenticationService";
-import {baseAddress} from "../../service/backendConfiguration";
 
 const Logo = () => {
     return (
@@ -132,7 +131,7 @@ const RegisterPage = () => {
         if (error) {
             setFailMessage(t('html.register.error.checkFailed') + error)
         } else if (data && data.success) {
-            navigate(baseAddress + '/login?registerSuccess=true');
+            navigate('/login?registerSuccess=true');
         } else {
             setTimeout(() => checkRegistration(code), 5000);
         }

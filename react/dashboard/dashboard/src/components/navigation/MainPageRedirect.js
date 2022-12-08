@@ -2,6 +2,7 @@ import {useAuth} from "../../hooks/authenticationHook";
 import {useMetadata} from "../../hooks/metadataHook";
 import {Navigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
+import {staticSite} from "../../service/backendConfiguration";
 
 const RedirectPlaceholder = () => {
     const [redirectStart] = useState(Date.now())
@@ -49,14 +50,19 @@ const MainPageRedirect = () => {
     const {authLoaded, authRequired, loggedIn, user} = useAuth();
     const {isProxy, serverName} = useMetadata();
 
+    if (staticSite) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect');
+        if (redirect) {
+            return (<Navigate to={redirect} replace={true}/>)
+        }
+    }
 
     if (!authLoaded || !serverName) {
         return <RedirectPlaceholder/>
     }
 
-    if (authRequired && !loggedIn) {
-        return (<Navigate to="/login" replace={true}/>)
-    } else if (authRequired && loggedIn) {
+    const redirectBasedOnPermissions = () => {
         if (isProxy && user.permissions.includes('page.network')) {
             return (<Navigate to={"/network/overview"} replace={true}/>)
         } else if (user.permissions.includes('page.server')) {
@@ -66,6 +72,12 @@ const MainPageRedirect = () => {
         } else if (user.permissions.includes('page.player.self')) {
             return (<Navigate to={"/player/" + user.linkedToUuid} replace={true}/>)
         }
+    };
+
+    if (authRequired && !loggedIn) {
+        return (<Navigate to="/login" replace={true}/>)
+    } else if (authRequired && loggedIn) {
+        return redirectBasedOnPermissions();
     } else {
         return (<Navigate to={isProxy ? "/network/overview" : "/server/" + encodeURIComponent(serverName) + "/overview"}
                           replace={true}/>)

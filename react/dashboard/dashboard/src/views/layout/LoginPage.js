@@ -12,7 +12,6 @@ import drawSine from "../../util/loginSineRenderer";
 import {fetchLogin} from "../../service/authenticationService";
 import ForgotPasswordModal from "../../components/modal/ForgotPasswordModal";
 import {useAuth} from "../../hooks/authenticationHook";
-import {baseAddress} from "../../service/backendConfiguration";
 
 const Logo = () => {
     return (
@@ -170,9 +169,9 @@ const LoginPage = () => {
         } else if (data && data.success) {
             await updateLoginDetails();
             if (redirectTo && !redirectTo.startsWith('http') && !redirectTo.startsWith('file') && !redirectTo.startsWith('javascript')) {
-                navigate(baseAddress + redirectTo.substring(redirectTo.indexOf('/')) + (window.location.hash ? window.location.hash : ''));
+                navigate(redirectTo.substring(redirectTo.indexOf('/')) + (window.location.hash ? window.location.hash : ''));
             } else {
-                navigate(baseAddress + '/');
+                navigate('/');
             }
         } else {
             setFailMessage(t('html.login.failed') + data ? data.error : t('generic.noData'));
