@@ -5,10 +5,22 @@ import Highcharts from "highcharts/highstock";
 import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import Accessibility from "highcharts/modules/accessibility"
 import {useTranslation} from "react-i18next";
+import {useMetadata} from "../../hooks/metadataHook";
 
-const LineGraph = ({id, series, legendEnabled, tall, yAxis, selectedRange, extremes, onSetExtremes}) => {
+const LineGraph = ({
+                       id,
+                       series,
+                       legendEnabled,
+                       tall,
+                       yAxis,
+                       selectedRange,
+                       extremes,
+                       onSetExtremes,
+                       alreadyOffsetTimezone
+                   }) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
+    const {timeZoneOffsetMinutes} = useMetadata();
     const [graph, setGraph] = useState(undefined);
 
     useEffect(() => {
@@ -39,9 +51,16 @@ const LineGraph = ({id, series, legendEnabled, tall, yAxis, selectedRange, extre
             legend: {
                 enabled: legendEnabled
             },
+            time: {
+                timezoneOffset: alreadyOffsetTimezone ? 0 : timeZoneOffsetMinutes
+            },
             series: series
         }));
-    }, [series, graphTheming, id, t, nightModeEnabled, legendEnabled, yAxis, onSetExtremes, setGraph, selectedRange])
+    }, [series, id, t,
+        graphTheming, nightModeEnabled, alreadyOffsetTimezone, timeZoneOffsetMinutes,
+        legendEnabled, yAxis,
+        onSetExtremes, setGraph, selectedRange]);
+
     useEffect(() => {
         if (graph && graph.xAxis && graph.xAxis.length && extremes) {
             graph.xAxis[0].setExtremes(extremes.min, extremes.max);

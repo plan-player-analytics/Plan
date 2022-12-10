@@ -7,10 +7,12 @@ import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
 import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
+import {useMetadata} from "../../../hooks/metadataHook";
 
 const TpsPerformanceGraph = ({id, data, dataSeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
+    const {timeZoneOffsetMinutes} = useMetadata();
 
     useEffect(() => {
         const zones = {
@@ -79,9 +81,12 @@ const TpsPerformanceGraph = ({id, data, dataSeries}) => {
             legend: {
                 enabled: true
             },
+            time: {
+                timezoneOffset: timeZoneOffsetMinutes
+            },
             series: [series.playersOnline, series.tps]
         });
-    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t])
+    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes])
 
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>

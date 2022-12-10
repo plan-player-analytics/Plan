@@ -29,7 +29,7 @@ const TimeByTimeGraph = ({data}) => {
     }, [data, t, nightModeEnabled])
 
     return (
-        <LineGraph id="day-by-day-graph" series={series}/>
+        <LineGraph id="day-by-day-graph" series={series} alreadyOffsetTimezone/>
     )
 }
 
