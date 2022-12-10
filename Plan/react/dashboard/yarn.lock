@@ -5070,10 +5070,10 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
-i18next-chained-backend@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/i18next-chained-backend/-/i18next-chained-backend-4.0.1.tgz#2a0476155678152d3463d03b96981d3e2078591e"
-  integrity sha512-HCRBCN0IT7+M9FdbtBQRBH0E6htYIG8AjE3VC7WyP1WZq/qabG0SKXTYbHzfO78fcFWo1g2iFztV+Lfbre2HMA==
+i18next-chained-backend@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/i18next-chained-backend/-/i18next-chained-backend-4.1.0.tgz#0c3d4a6e1cc8795462693b659330b9665aefd391"
+  integrity sha512-GVyP6gICTM0CG3yQ7OIaYRqGOwt6nf+DfbeAHkQetKlkbsg3NWLkM+8invQtljTUdcEs2JMGKBat3/su6nFhXQ==
   dependencies:
     "@babel/runtime" "^7.19.4"
 
