@@ -39,7 +39,9 @@ const LineGraph = ({
             },
             xAxis: {
                 events: {
-                    afterSetExtremes: (event) => onSetExtremes(event)
+                    afterSetExtremes: (event) => {
+                        if (onSetExtremes) onSetExtremes(event);
+                    }
                 }
             },
             title: {text: ''},
