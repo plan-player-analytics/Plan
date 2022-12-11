@@ -17,7 +17,7 @@ export const useDataRequest = (fetchMethod, parameters) => {
         const handleResponse = (json, error, skipOldData, timeout) => {
             if (json) {
                 const timestamp = json.timestamp;
-                if (staticSite || timestamp) {
+                if (!staticSite && timestamp) {
                     // Data has timestamp, the data may come from cache
                     const acceptedTimestamp = timestamp + (refreshBarrierMs ? refreshBarrierMs : 15000);
                     if (acceptedTimestamp < updateRequested) {

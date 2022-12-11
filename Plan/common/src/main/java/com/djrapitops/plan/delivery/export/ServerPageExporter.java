@@ -132,22 +132,30 @@ public class ServerPageExporter extends FileExporter {
         export(to, exportPaths.resolveExportPaths(html));
     }
 
+    public static String[] getRedirections(ServerUUID serverUUID) {
+        String server = "server/";
+        return new String[]{
+                server + serverUUID,
+                server + serverUUID + "/overview",
+                server + serverUUID + "/online-activity",
+                server + serverUUID + "/sessions",
+                server + serverUUID + "/pvppve",
+                server + serverUUID + "/playerbase",
+                server + serverUUID + "/join-addresses",
+                server + serverUUID + "/players",
+                server + serverUUID + "/geolocations",
+                server + serverUUID + "/performance",
+                server + serverUUID + "/plugins-overview",
+        };
+    }
+
     private void exportReactRedirects(Path toDirectory, ServerUUID serverUUID) throws IOException {
         if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
 
-        Resource redirect = files.getResourceFromJar("web/export-redirect.html");
-        String server = "server/";
-        exportReactRedirect(toDirectory, redirect, server + serverUUID);
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/overview");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/online-activity");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/sessions");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/pvppve");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/playerbase");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/join-addresses");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/players");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/geolocations");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/performance");
-        exportReactRedirect(toDirectory, redirect, server + serverUUID + "/plugins-overview");
+        Resource redirectPage = files.getResourceFromJar("web/export-redirect.html");
+        for (String redirection : getRedirections(serverUUID)) {
+            exportReactRedirect(toDirectory, redirectPage, redirection);
+        }
     }
 
     private void exportReactRedirect(Path toDirectory, Resource redirectHtml, String path) throws IOException {

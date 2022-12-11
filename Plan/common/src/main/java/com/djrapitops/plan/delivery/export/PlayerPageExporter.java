@@ -75,6 +75,17 @@ public class PlayerPageExporter extends FileExporter {
         this.theme = theme;
     }
 
+    public static String[] getRedirections(UUID playerUUID) {
+        String player = "player/";
+        return new String[]{
+                player + playerUUID,
+                player + playerUUID + "/overview",
+                player + playerUUID + "/sessions",
+                player + playerUUID + "/pvppve",
+                player + playerUUID + "/servers",
+        };
+    }
+
     /**
      * Perform export for a player page.
      *
@@ -119,13 +130,10 @@ public class PlayerPageExporter extends FileExporter {
     private void exportReactRedirects(Path toDirectory, UUID playerUUID) throws IOException {
         if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
 
-        Resource redirect = files.getResourceFromJar("web/export-redirect.html");
-        String player = "player/";
-        exportReactRedirect(toDirectory, redirect, player + playerUUID);
-        exportReactRedirect(toDirectory, redirect, player + playerUUID + "/overview");
-        exportReactRedirect(toDirectory, redirect, player + playerUUID + "/sessions");
-        exportReactRedirect(toDirectory, redirect, player + playerUUID + "/pvppve");
-        exportReactRedirect(toDirectory, redirect, player + playerUUID + "/servers");
+        Resource redirectPage = files.getResourceFromJar("web/export-redirect.html");
+        for (String redirection : getRedirections(playerUUID)) {
+            exportReactRedirect(toDirectory, redirectPage, redirection);
+        }
     }
 
     private void exportReactRedirect(Path toDirectory, Resource redirectHtml, String path) throws IOException {

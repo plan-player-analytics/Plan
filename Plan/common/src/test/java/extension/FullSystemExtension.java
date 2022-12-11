@@ -22,6 +22,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import org.junit.jupiter.api.extension.*;
 import utilities.RandomData;
 import utilities.dagger.PlanPluginComponent;
@@ -78,6 +79,7 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         Class<?> type = parameterContext.getParameter().getType();
         return PlanSystem.class.equals(type) ||
+                PlanFiles.class.equals(type) ||
                 PlanConfig.class.equals(type) ||
                 ServerUUID.class.equals(type) ||
                 PlanPluginComponent.class.equals(type) ||
@@ -90,6 +92,9 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
         Class<?> type = parameterContext.getParameter().getType();
         if (PlanSystem.class.equals(type)) {
             return planSystem;
+        }
+        if (PlanFiles.class.equals(type)) {
+            return planSystem.getPlanFiles();
         }
         if (PlanConfig.class.equals(type)) {
             return planSystem.getConfigSystem().getConfig();

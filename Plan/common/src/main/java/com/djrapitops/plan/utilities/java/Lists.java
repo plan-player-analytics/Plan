@@ -108,6 +108,10 @@ public class Lists {
             return this;
         }
 
+        public Lists.Builder<V> addAll(V[] values) {
+            return addAll(Arrays.asList(values));
+        }
+
         public Lists.Builder<V> apply(UnaryOperator<Lists.Builder<V>> operator) {
             return operator.apply(this);
         }
