@@ -87,7 +87,7 @@ class JSErrorRegressionTest {
         config.set(PluginSettings.FRONTEND_BETA, true);
 
         // Avoid accidentally DDoS:ing head image service during tests.
-        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "http://localhost:" + TEST_PORT_NUMBER + "/${playerUUID}/img/Flaticon_circle.png");
+        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
 
         planSystem.enable();
         serverUUID = planSystem.getServerInfo().getServerUUID();

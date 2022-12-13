@@ -34,13 +34,14 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTr
 import extension.SeleniumExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.NginxContainer;
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -68,32 +69,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SeleniumExtension.class)
 class ExportJSErrorRegressionTest {
 
-    static Path tempDir;
+    static NginxContainer<?> nginx = new NginxContainer<>("nginx:latest")
+            .waitingFor(new HttpWaitStrategy());
+
     static Path exportDirectory;
 
-    static {
-        try {
-            tempDir = Files.createTempDirectory("export-test");
-            exportDirectory = tempDir.resolve("export");
-
-            Files.createDirectories(exportDirectory);
-            Files.write(exportDirectory.resolve("index.html"), new byte[1]);
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-    }
-
-    public static PluginMockComponent component;
-
-    @Container
-    public static NginxContainer<?> nginx = new NginxContainer<>("nginx:latest")
-            .withCustomContent(exportDirectory.toFile().getAbsolutePath())
-            .waitingFor(new HttpWaitStrategy());
-    private static PlanSystem planSystem;
-    private static ServerUUID serverUUID;
+    static PluginMockComponent component;
+    static PlanSystem planSystem;
+    static ServerUUID serverUUID;
 
     @BeforeAll
-    static void setUpClass() throws Exception {
+    static void setUpClass(@TempDir Path tempDir) throws Exception {
+        exportDirectory = tempDir.resolve("export");
+        Files.createDirectories(exportDirectory);
+        Files.write(exportDirectory.resolve("index.html"), new byte[1]);
+
+        nginx.addFileSystemBind(exportDirectory.toFile().getAbsolutePath(), "/usr/share/nginx/html", BindMode.READ_ONLY);
+        nginx.start();
+
         component = new PluginMockComponent(tempDir);
         planSystem = component.getPlanSystem();
 
@@ -106,7 +99,7 @@ class ExportJSErrorRegressionTest {
         config.set(ExportSettings.SERVER_PAGE, true);
         config.set(ExportSettings.PLAYERS_PAGE, true);
 
-        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "");
+        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
 
         planSystem.enable();
         serverUUID = planSystem.getServerInfo().getServerUUID();
@@ -118,14 +111,6 @@ class ExportJSErrorRegressionTest {
         exporter.exportServerPage(planSystem.getServerInfo().getServer());
         exporter.exportPlayerPage(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
         exporter.exportPlayersPage();
-
-        System.out.println("Exported files: \n");
-        try (Stream<Path> walk = Files.walk(exportDirectory)) {
-            walk.sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .map(File::getAbsolutePath)
-                    .forEach(System.out::println);
-        }
     }
 
     private static void savePlayerData() {
@@ -139,7 +124,7 @@ class ExportJSErrorRegressionTest {
     }
 
     @AfterAll
-    static void tearDownClass() throws IOException {
+    static void tearDownClass(@TempDir Path tempDir) throws IOException {
         if (planSystem != null) {
             planSystem.disable();
         }
@@ -171,8 +156,7 @@ class ExportJSErrorRegressionTest {
                 endpoint -> DynamicTest.dynamicTest("Exported page does not log errors to js console " + endpoint, () -> {
                     // Avoid accidentally DDoS:ing head image service during tests.
                     planSystem.getConfigSystem().getConfig()
-                            .set(DisplaySettings.PLAYER_HEAD_IMG_URL, nginx.getBaseUrl("http", 80).toURI()
-                                    .resolve("/img/Flaticon_circle.png").toString());
+                            .set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
                     export();
 
                     String address = nginx.getBaseUrl("http", 80).toURI().resolve(endpoint).toString();
