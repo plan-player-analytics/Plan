@@ -51,6 +51,8 @@ public class QueryParameterSetter {
     private static void setParameter(PreparedStatement statement, int index, Object parameter) throws SQLException {
         if (parameter == null) {
             statement.setNull(index, Types.VARCHAR);
+        } else if (parameter instanceof Boolean) {
+            statement.setBoolean(index, (Boolean) parameter);
         } else if (parameter instanceof Integer) {
             statement.setInt(index, (Integer) parameter);
         } else if (parameter instanceof Long) {
