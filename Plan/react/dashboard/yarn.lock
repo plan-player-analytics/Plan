@@ -5077,10 +5077,10 @@ i18next-chained-backend@^4.1.0:
   dependencies:
     "@babel/runtime" "^7.19.4"
 
-i18next-http-backend@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/i18next-http-backend/-/i18next-http-backend-2.0.2.tgz#83fa92c12b0b6e90f1969d904b81855d57b1db1c"
-  integrity sha512-TFiIqitZEc8+jyca31EW5ef5PjUYtUGGfL8c8FJwiiHguq5OQTqoR3mxpKqaCPiikg+cxSgXtNA2gZPCu0aryQ==
+i18next-http-backend@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/i18next-http-backend/-/i18next-http-backend-2.1.0.tgz#c521603b864e5334fee21fcf1a57c5adefb15089"
+  integrity sha512-rTVhhFrpnZJnNvCCdC6RjhFPk0S6mJ2VAix93vbDD19ixlrSJtoNqkk49wvR10PImBSsuGJf35gMQwn2mjer6A==
   dependencies:
     cross-fetch "3.1.5"
 
