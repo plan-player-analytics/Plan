@@ -200,4 +200,10 @@ public class JoinAddressQueries {
             });
         };
     }
+
+    public static Query<Optional<Integer>> getIdOfJoinAddress(String correctedAddress) {
+        String sql = SELECT + JoinAddressTable.ID + FROM + JoinAddressTable.TABLE_NAME + WHERE + JoinAddressTable.JOIN_ADDRESS + "=?";
+        return db -> db.queryOptional(sql,
+                results -> results.getInt(JoinAddressTable.ID), correctedAddress);
+    }
 }

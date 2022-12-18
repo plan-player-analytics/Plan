@@ -33,7 +33,7 @@ public abstract class AbstractDatabase implements Database {
 
     protected AbstractDatabase() {
         state = State.CLOSED;
-        accessLock = new DBAccessLock(this);
+        accessLock = new DBAccessLock();
     }
 
     @Override

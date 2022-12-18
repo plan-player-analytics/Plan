@@ -206,7 +206,7 @@ public abstract class Transaction {
         } else if (query instanceof QueryAPIQuery) {
             return ((QueryAPIQuery<T>) query).executeWithConnection(connection);
         } else {
-            return query.executeQuery(db);
+            return db.queryWithinTransaction(query, this);
         }
     }
 

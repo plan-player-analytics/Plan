@@ -59,6 +59,8 @@ public class QueryParameterSetter {
             statement.setLong(index, (Long) parameter);
         } else if (parameter instanceof Double) {
             statement.setDouble(index, (Double) parameter);
+        } else if (parameter instanceof Character) {
+            statement.setString(index, String.valueOf(parameter));
         } else if (parameter instanceof Float) {
             statement.setFloat(index, (Float) parameter);
         } else if (parameter instanceof String) {

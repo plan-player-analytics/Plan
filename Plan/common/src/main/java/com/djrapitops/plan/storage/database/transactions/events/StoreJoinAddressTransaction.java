@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -33,6 +34,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 public class StoreJoinAddressTransaction extends Transaction {
 
     private final Supplier<String> joinAddress;
+    private int newId;
 
     public StoreJoinAddressTransaction(String joinAddress) {
         this(() -> joinAddress);
@@ -66,11 +68,15 @@ public class StoreJoinAddressTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        execute(new ExecStatement(JoinAddressTable.INSERT_STATEMENT) {
+        newId = executeReturningId(new ExecStatement(JoinAddressTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, getAddress());
             }
         });
+    }
+
+    public Optional<Integer> getNewId() {
+        return newId == -1 ? Optional.empty() : Optional.of(newId);
     }
 }

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.exceptions.database.DBClosedException;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.exceptions.database.FatalDBException;
@@ -238,7 +239,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new UsersTableNameLengthPatch(),
                 new SessionJoinAddressPatch(),
                 new RemoveUsernameFromAccessLogPatch(),
-                new ComponentColumnToExtensionDataPatch()
+                new ComponentColumnToExtensionDataPatch(),
+                new BadJoinAddressDataCorrectionPatch()
         };
     }
 
@@ -317,14 +319,17 @@ public abstract class SQLDB extends AbstractDatabase {
 
     @Override
     public <T> T query(Query<T> query) {
-        accessLock.checkAccess();
-        return query.executeQuery(this);
+        return accessLock.performDatabaseOperation(() -> query.executeQuery(this));
+    }
+
+    public <T> T queryWithinTransaction(Query<T> query, Transaction transaction) {
+        return accessLock.performDatabaseOperation(() -> query.executeQuery(this), transaction);
     }
 
     @Override
     public CompletableFuture<?> executeTransaction(Transaction transaction) {
         if (getState() == State.CLOSED) {
-            throw new DBOpException("Transaction tried to execute although database is closed.");
+            throw new DBClosedException("Transaction tried to execute although database is closed.");
         }
 
         Exception origin = new Exception();
@@ -337,10 +342,9 @@ public abstract class SQLDB extends AbstractDatabase {
 
         return CompletableFuture.supplyAsync(() -> {
             try {
-                accessLock.checkAccess(transaction);
-                if (!ranIntoFatalError.get()) {
-                    transaction.executeTransaction(this);
-                }
+                accessLock.performDatabaseOperation(() -> {
+                    if (!ranIntoFatalError.get()) {transaction.executeTransaction(this);}
+                }, transaction);
                 return CompletableFuture.completedFuture(null);
             } finally {
                 transactionQueueSize.decrementAndGet();

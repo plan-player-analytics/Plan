@@ -19,6 +19,10 @@ package com.djrapitops.plan.storage.database;
 import com.djrapitops.plan.exceptions.database.DBClosedException;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
+import com.djrapitops.plan.utilities.java.ThrowingSupplier;
+import com.djrapitops.plan.utilities.java.ThrowingVoidFunction;
+
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Database Lock that prevents queries and transactions from taking place before database schema is ready.
@@ -30,46 +34,61 @@ import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalT
  */
 public class DBAccessLock {
 
-    private final Database database;
+    private final ReentrantLock reentrantLock;
 
-    private final Object lockObject;
-
-    public DBAccessLock(Database database) {
-        this.database = database;
-        this.lockObject = new Object();
-    }
-
-    public void checkAccess() {
-        checkAccess(false);
-    }
-
-    public void checkAccess(Transaction transaction) {
-        checkAccess(transaction instanceof OperationCriticalTransaction);
-    }
-
-    private void checkAccess(boolean isOperationCriticalTransaction) {
-        if (isOperationCriticalTransaction) {
-            return;
-        }
-        try {
-            // Wait for the database to be in OPEN or CLOSING state before allowing execution.
-            // CLOSING is not an allowed state if database was not OPEN at the time of close.
-            while (database.getState() != Database.State.OPEN && database.getState() != Database.State.CLOSING) {
-                synchronized (lockObject) {
-                    lockObject.wait();
-                    if (database.getState() == Database.State.CLOSED) {
-                        throw new DBClosedException("Database failed to open, Query has failed. (This exception is necessary to not keep query threads waiting)");
-                    }
-                }
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    public DBAccessLock() {
+        reentrantLock = new ReentrantLock();
     }
 
     public void operabilityChanged() {
-        synchronized (lockObject) {
-            lockObject.notifyAll();
+        for (int i = 0; i < reentrantLock.getHoldCount(); i++) {
+            reentrantLock.unlock();
+        }
+    }
+
+    public <E extends Exception> void performDatabaseOperation(ThrowingVoidFunction<E> operation) throws E {
+        performDatabaseOperation(operation, false);
+    }
+
+    public <E extends Exception> void performDatabaseOperation(ThrowingVoidFunction<E> operation, Transaction transaction) throws E {
+        performDatabaseOperation(operation, transaction instanceof OperationCriticalTransaction);
+    }
+
+    private <E extends Exception> void performDatabaseOperation(ThrowingVoidFunction<E> operation, boolean isOperationCriticalTransaction) throws E {
+        if (isOperationCriticalTransaction) {
+            operation.apply();
+            return;
+        }
+        try {
+            reentrantLock.lockInterruptibly();
+            operation.apply();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            reentrantLock.unlock();
+        }
+    }
+
+    public <T, E extends Exception> T performDatabaseOperation(ThrowingSupplier<T, E> operation) throws E {
+        return performDatabaseOperation(operation, false);
+    }
+
+    public <T, E extends Exception> T performDatabaseOperation(ThrowingSupplier<T, E> operation, Transaction transaction) throws E {
+        return performDatabaseOperation(operation, transaction instanceof OperationCriticalTransaction);
+    }
+
+    private <T, E extends Exception> T performDatabaseOperation(ThrowingSupplier<T, E> operation, boolean isOperationCriticalTransaction) throws E {
+        if (isOperationCriticalTransaction) {
+            return operation.get();
+        }
+        try {
+            reentrantLock.lockInterruptibly();
+            return operation.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new DBClosedException("Operation interrupted");
+        } finally {
+            reentrantLock.unlock();
         }
     }
 }

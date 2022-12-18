@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueriesTest;
 import com.djrapitops.plan.storage.database.transactions.commands.ChangeUserUUIDTransactionTest;
 import com.djrapitops.plan.storage.database.transactions.commands.CombineUserTransactionTest;
+import com.djrapitops.plan.storage.database.transactions.patches.BadJoinAddressDataCorrectionPatchTest;
 
 public interface DatabaseTestAggregate extends
         ActivityIndexQueriesTest,
@@ -39,6 +40,7 @@ public interface DatabaseTestAggregate extends
         JoinAddressQueriesTest,
         ChangeUserUUIDTransactionTest,
         CombineUserTransactionTest,
-        ExtensionQueryResultTableDataQueryTest {
+        ExtensionQueryResultTableDataQueryTest,
+        BadJoinAddressDataCorrectionPatchTest {
     /* Collects all query tests together so its easier to implement database tests */
 }
