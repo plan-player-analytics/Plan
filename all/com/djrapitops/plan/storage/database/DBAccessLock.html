@@ -93,7 +93,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.database.Database)" class="member-name-link">DBAccessLock</a><wbr>(<a href="Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a>&nbsp;database)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">DBAccessLock</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -110,13 +110,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkAccess()" class="member-name-link">checkAccess</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkAccess(com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">checkAccess</a><wbr>(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#operabilityChanged()" class="member-name-link">operabilityChanged</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T,<wbr>
+E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&gt;<br>T</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingSupplier)" class="member-name-link">performDatabaseOperation</a><wbr>(<a href="../../utilities/java/ThrowingSupplier.html" title="interface in com.djrapitops.plan.utilities.java">ThrowingSupplier</a>&lt;T,<wbr>E&gt;&nbsp;operation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T,<wbr>
+E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&gt;<br>T</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingSupplier,com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">performDatabaseOperation</a><wbr>(<a href="../../utilities/java/ThrowingSupplier.html" title="interface in com.djrapitops.plan.utilities.java">ThrowingSupplier</a>&lt;T,<wbr>E&gt;&nbsp;operation,
+ <a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&gt;<br>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingVoidFunction)" class="member-name-link">performDatabaseOperation</a><wbr>(<a href="../../utilities/java/ThrowingVoidFunction.html" title="interface in com.djrapitops.plan.utilities.java">ThrowingVoidFunction</a>&lt;E&gt;&nbsp;operation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&gt;<br>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingVoidFunction,com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">performDatabaseOperation</a><wbr>(<a href="../../utilities/java/ThrowingVoidFunction.html" title="interface in com.djrapitops.plan.utilities.java">ThrowingVoidFunction</a>&lt;E&gt;&nbsp;operation,
+ <a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -136,9 +146,9 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.database.Database)">
+<section class="detail" id="&lt;init&gt;()">
 <h3>DBAccessLock</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DBAccessLock</span><wbr><span class="parameters">(<a href="Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a>&nbsp;database)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DBAccessLock</span>()</div>
 </section>
 </li>
 </ul>
@@ -150,21 +160,57 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="checkAccess()">
-<h3>checkAccess</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkAccess</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="checkAccess(com.djrapitops.plan.storage.database.transactions.Transaction)">
-<h3>checkAccess</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkAccess</span><wbr><span class="parameters">(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="operabilityChanged()">
 <h3>operabilityChanged</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">operabilityChanged</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingVoidFunction)">
+<h3>performDatabaseOperation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">performDatabaseOperation</span><wbr><span class="parameters">(<a href="../../utilities/java/ThrowingVoidFunction.html" title="interface in com.djrapitops.plan.utilities.java">ThrowingVoidFunction</a>&lt;E&gt;&nbsp;operation)</span>
+                                                    throws <span class="exceptions">E</span></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code>E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingVoidFunction,com.djrapitops.plan.storage.database.transactions.Transaction)">
+<h3>performDatabaseOperation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">performDatabaseOperation</span><wbr><span class="parameters">(<a href="../../utilities/java/ThrowingVoidFunction.html" title="interface in com.djrapitops.plan.utilities.java">ThrowingVoidFunction</a>&lt;E&gt;&nbsp;operation,
+ <a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</span>
+                                                    throws <span class="exceptions">E</span></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code>E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingSupplier)">
+<h3>performDatabaseOperation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T,<wbr>
+E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">performDatabaseOperation</span><wbr><span class="parameters">(<a href="../../utilities/java/ThrowingSupplier.html" title="interface in com.djrapitops.plan.utilities.java">ThrowingSupplier</a>&lt;T,<wbr>E&gt;&nbsp;operation)</span>
+                                                   throws <span class="exceptions">E</span></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code>E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingSupplier,com.djrapitops.plan.storage.database.transactions.Transaction)">
+<h3>performDatabaseOperation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T,<wbr>
+E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a>&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">performDatabaseOperation</span><wbr><span class="parameters">(<a href="../../utilities/java/ThrowingSupplier.html" title="interface in com.djrapitops.plan.utilities.java">ThrowingSupplier</a>&lt;T,<wbr>E&gt;&nbsp;operation,
+ <a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</span>
+                                                   throws <span class="exceptions">E</span></div>
+<dl class="notes">
+<dt>Throws:</dt>
+<dd><code>E extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code></dd>
+</dl>
 </section>
 </li>
 </ul>
