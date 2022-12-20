@@ -5084,12 +5084,12 @@ i18next-http-backend@^2.0.2:
   dependencies:
     cross-fetch "3.1.5"
 
-i18next-localstorage-backend@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/i18next-localstorage-backend/-/i18next-localstorage-backend-4.0.1.tgz#ddd1bf02f2a41258ced6d10734badf042aea9f6c"
-  integrity sha512-hicBcvYOqoKmfbTHcabKFaFT1DWw/rJOw5zBmpuSJUAnJSlV4dI/Y2LRXXhNLM5fZL6Kb/iY5DeWucgy6q3Utw==
+i18next-localstorage-backend@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/i18next-localstorage-backend/-/i18next-localstorage-backend-4.1.0.tgz#b2e99eb18312654b3b13b34bb25331fbe1d3b380"
+  integrity sha512-lxcuww2QSIvu3Ev5fiysTrAjNzWwhVh2u+/ZJCkxIg9Eo9KL5A8qQwmujlsdADs4YjfjxPm/GaivIYxcqWqKgg==
   dependencies:
-    "@babel/runtime" "^7.19.4"
+    "@babel/runtime" "^7.20.6"
 
 i18next@^22.1.4:
   version "22.1.4"
