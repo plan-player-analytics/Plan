@@ -70,7 +70,8 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
 }
 
 export const standard200option = {status: 200, get: response => response.data}
+const exported404options = {status: 404, get: () => 'Data not yet exported'}
 
 export const doGetRequest = async url => {
-    return doSomeGetRequest(url, [standard200option])
+    return doSomeGetRequest(url, staticSite ? [standard200option, exported404options] : [standard200option])
 }

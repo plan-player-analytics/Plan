@@ -143,7 +143,10 @@ const ServerPage = () => {
     if (error) return <ErrorPage error={error}/>;
     if (identityLoadingError) {
         if (identityLoadingError.status === 404) return <ErrorPage
-            error={{title: t('html.error.404NotFound'), message: t('html.error.serverNotSeen')}}/>
+            error={{
+                title: t('html.error.404NotFound'),
+                message: t(staticSite ? 'html.error.serverNotExported' : 'html.error.serverNotSeen')
+            }}/>
         return <ErrorPage error={identityLoadingError}/>
     }
 

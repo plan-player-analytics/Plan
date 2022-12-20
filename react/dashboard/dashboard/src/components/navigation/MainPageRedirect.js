@@ -48,7 +48,7 @@ const RedirectPlaceholder = () => {
 
 const MainPageRedirect = () => {
     const {authLoaded, authRequired, loggedIn, user} = useAuth();
-    const {isProxy, serverName} = useMetadata();
+    const {isProxy, serverName, serverUUID} = useMetadata();
 
     if (staticSite) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -58,15 +58,17 @@ const MainPageRedirect = () => {
         }
     }
 
-    if (!authLoaded || !serverName) {
+    if (!authLoaded || !serverName || !serverUUID) {
         return <RedirectPlaceholder/>
     }
 
+    const server = staticSite ? serverUUID : encodeURIComponent(serverName);
     const redirectBasedOnPermissions = () => {
         if (isProxy && user.permissions.includes('page.network')) {
             return (<Navigate to={"/network/overview"} replace={true}/>)
         } else if (user.permissions.includes('page.server')) {
-            return (<Navigate to={"/server/" + encodeURIComponent(serverName) + "/overview"} replace={true}/>)
+            return (<Navigate to={"/server/" + server + "/overview"}
+                              replace={true}/>)
         } else if (user.permissions.includes('page.player.other')) {
             return (<Navigate to={"/players"} replace={true}/>)
         } else if (user.permissions.includes('page.player.self')) {
@@ -79,8 +81,9 @@ const MainPageRedirect = () => {
     } else if (authRequired && loggedIn) {
         return redirectBasedOnPermissions();
     } else {
-        return (<Navigate to={isProxy ? "/network/overview" : "/server/" + encodeURIComponent(serverName) + "/overview"}
-                          replace={true}/>)
+        return (<Navigate
+            to={isProxy ? "/network/overview" : "/server/" + server + "/overview"}
+            replace={true}/>)
     }
 }
 

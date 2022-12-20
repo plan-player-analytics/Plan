@@ -60,7 +60,7 @@ const LoadIn = ({children, duration}) => {
     return (
         <Transition in={visible} timeout={duration}>
             {state => (
-                <div style={{
+                <div className={"load-in"} style={{
                     ...defaultStyle,
                     ...transitionStyles[state]
                 }}>
