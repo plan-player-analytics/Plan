@@ -17,7 +17,6 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.QueryParameterSetter;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
@@ -42,13 +41,9 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class BadJoinAddressDataCorrectionPatch extends Patch {
 
-    private Map<String, Integer> badAddressIds;
-
     @Override
     public boolean hasBeenApplied() {
-        badAddressIds = getBadAddressIds();
-        badAddressIds.keySet().removeIf(address -> !address.contains("\u0000"));
-        return badAddressIds.isEmpty();
+        return !hasBadAddressIds();
     }
 
     @Override
@@ -56,19 +51,24 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
         Set<Integer> removeIds = new HashSet<>();
         Map<Integer, Integer> oldToNewIds = new HashMap<>();
         Map<String, Integer> newIds = new HashMap<>();
+
+        Map<String, Integer> badAddressIds = getBadAddressIds();
         for (Map.Entry<String, Integer> entry : badAddressIds.entrySet()) {
             String badAddress = entry.getKey();
             Integer oldId = entry.getValue();
             String correctedAddress = StringUtils.split(badAddress, '\u0000')[0];
-            removeIds.add(oldId);
 
             Integer newIdStored = newIds.get(correctedAddress);
             int newId = newIdStored == null ? getOrAddCorrectAddressId(correctedAddress) : newIdStored;
             newIds.put(correctedAddress, newId);
             oldToNewIds.put(oldId, newId);
+            removeIds.add(oldId);
         }
         updateOldIds(oldToNewIds);
+        deleteOldIds(removeIds);
+    }
 
+    private void deleteOldIds(Set<Integer> removeIds) {
         String sql = DELETE_FROM + JoinAddressTable.TABLE_NAME +
                 WHERE + JoinAddressTable.ID + " IN (" + Sql.nParameters(removeIds.size()) + ")";
         execute(new ExecStatement(sql) {
@@ -110,13 +110,19 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
                 .orElseThrow(() -> new DBOpException("Could not get ID of join address properly"));
     }
 
+    private boolean hasBadAddressIds() {
+        String sql = SELECT + "COUNT(*) as c" +
+                FROM + JoinAddressTable.TABLE_NAME +
+                WHERE + "INSTR(" + JoinAddressTable.JOIN_ADDRESS + ", CHAR(0))";
+        return query(db -> db.queryOptional(sql, results -> results.getInt("c") > 0))
+                .orElse(false);
+    }
+
     private Map<String, Integer> getBadAddressIds() {
-        String likeNullChar = dbType == DBType.MYSQL ? "CONCAT(\"%\", CHAR(0x00 using utf8), \"%\")"
-                : "\"%\" || CHAR(0) || \"%\"";
         String sql = SELECT + JoinAddressTable.ID + ',' +
                 JoinAddressTable.JOIN_ADDRESS +
                 FROM + JoinAddressTable.TABLE_NAME +
-                WHERE + JoinAddressTable.JOIN_ADDRESS + " LIKE " + likeNullChar;
+                WHERE + "INSTR(" + JoinAddressTable.JOIN_ADDRESS + ", CHAR(0))";
         return query(db -> db.queryMap(sql, (results, map) -> map.put(results.getString(JoinAddressTable.JOIN_ADDRESS),
                 results.getInt(JoinAddressTable.ID))));
     }
