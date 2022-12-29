@@ -80,14 +80,17 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
     }
 
     private void updateOldIds(Map<Integer, Integer> oldToNewIds) {
-        String sql = "UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.JOIN_ADDRESS_ID + "=?" +
+        String sql = "UPDATE " + SessionsTable.TABLE_NAME +
+                " SET " + SessionsTable.JOIN_ADDRESS_ID + "=?" +
                 WHERE + SessionsTable.JOIN_ADDRESS_ID + "=?";
         execute(new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (Map.Entry<Integer, Integer> entry : oldToNewIds.entrySet()) {
-                    statement.setInt(1, entry.getKey());
-                    statement.setInt(2, entry.getValue());
+                    Integer newId = entry.getValue();
+                    Integer oldId = entry.getKey();
+                    statement.setInt(1, newId);
+                    statement.setInt(2, oldId);
                     statement.addBatch();
                 }
             }

@@ -16,12 +16,16 @@
  */
 package com.djrapitops.plan.storage.database.transactions.patches;
 
+import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 
@@ -71,6 +75,35 @@ public interface BadJoinAddressDataCorrectionPatchTest extends DatabaseTestPrepa
 
         Set<String> expected = Set.of(correct, JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         Set<String> result = new HashSet<>(db.query(JoinAddressQueries.allJoinAddresses()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void joinAddressWithBadDataIsCorrectedWithOriginalPlusSessions() {
+        Database db = db();
+        String correct = "correct_address";
+        String bad = "correct_address\u000062.6.…zwyzyty0zmnlowzmmtqynmm";
+        db.executeTransaction(new StoreJoinAddressTransaction(correct));
+        db.executeTransaction(new StoreJoinAddressTransaction(bad));
+
+        executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        session.getExtraData().put(JoinAddress.class, new JoinAddress(bad));
+        executeTransactions(new StoreSessionTransaction(session));
+
+        Set<String> preTestExpected = Set.of(bad);
+        Set<String> preTestResult = db.query(JoinAddressQueries.latestJoinAddresses()).keySet();
+        assertEquals(preTestExpected, preTestResult);
+
+        System.out.println(db.queryList("SELECT join_address_id FROM plan_sessions", set -> set.getInt(1)));
+        BadJoinAddressDataCorrectionPatch patch = new BadJoinAddressDataCorrectionPatch();
+        db.executeTransaction(patch);
+        assertTrue(patch.wasApplied());
+        System.out.println(db.queryList("SELECT join_address_id FROM plan_sessions", set -> set.getInt(1)));
+
+        Set<String> expected = Set.of(correct);
+        Set<String> result = db.query(JoinAddressQueries.latestJoinAddresses()).keySet();
         assertEquals(expected, result);
     }
 
