@@ -96,11 +96,9 @@ public interface BadJoinAddressDataCorrectionPatchTest extends DatabaseTestPrepa
         Set<String> preTestResult = db.query(JoinAddressQueries.latestJoinAddresses()).keySet();
         assertEquals(preTestExpected, preTestResult);
 
-        System.out.println(db.queryList("SELECT join_address_id FROM plan_sessions", set -> set.getInt(1)));
         BadJoinAddressDataCorrectionPatch patch = new BadJoinAddressDataCorrectionPatch();
         db.executeTransaction(patch);
         assertTrue(patch.wasApplied());
-        System.out.println(db.queryList("SELECT join_address_id FROM plan_sessions", set -> set.getInt(1)));
 
         Set<String> expected = Set.of(correct);
         Set<String> result = db.query(JoinAddressQueries.latestJoinAddresses()).keySet();

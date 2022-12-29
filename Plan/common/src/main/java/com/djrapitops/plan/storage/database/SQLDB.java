@@ -240,7 +240,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new SessionJoinAddressPatch(),
                 new RemoveUsernameFromAccessLogPatch(),
                 new ComponentColumnToExtensionDataPatch(),
-                new BadJoinAddressDataCorrectionPatch()
+                new BadJoinAddressDataCorrectionPatch(),
+                new AfterBadJoinAddressDataCorrectionPatch(),
         };
     }
 
