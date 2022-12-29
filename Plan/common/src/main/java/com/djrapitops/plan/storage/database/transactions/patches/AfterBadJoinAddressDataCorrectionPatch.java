@@ -82,6 +82,6 @@ public class AfterBadJoinAddressDataCorrectionPatch extends Patch {
                 WHERE + SessionsTable.JOIN_ADDRESS_ID + " NOT IN (" +
                 SELECT + JoinAddressTable.ID + FROM + JoinAddressTable.TABLE_NAME +
                 ")";
-        return query(db -> db.querySet(sql, (results) -> results.getInt(SessionsTable.JOIN_ADDRESS_ID)));
+        return query(db -> db.querySet(sql, results -> results.getInt(SessionsTable.JOIN_ADDRESS_ID)));
     }
 }
