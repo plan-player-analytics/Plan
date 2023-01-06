@@ -178,6 +178,8 @@ public class ResponseFactory {
                         if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {return resource;}
                         return locale.replaceLanguageInJavascript(resource);
                     })
+                    .chain(resource -> StringUtils.replace(resource, "n.p=\"/\"",
+                            "n.p=\"" + getBasePath() + "/\""))
                     .apply();
             return Response.builder()
                     .setMimeType(MimeType.JS)
@@ -189,6 +191,12 @@ public class ResponseFactory {
         }
     }
 
+    private String getBasePath() {
+        String address = addresses.get().getMainAddress()
+                .orElseGet(addresses.get()::getFallbackLocalhostAddress);
+        return addresses.get().getBasePath(address);
+    }
+
     private String replaceMainAddressPlaceholder(String resource) {
         String address = addresses.get().getAccessAddress()
                 .orElseGet(addresses.get()::getFallbackLocalhostAddress);
@@ -197,7 +205,10 @@ public class ResponseFactory {
 
     public Response cssResponse(String fileName) {
         try {
-            String content = theme.replaceThemeColors(getResource(fileName).asString());
+            String content = UnaryChain.of(getResource(fileName).asString())
+                    .chain(theme::replaceThemeColors)
+                    .chain(resource -> StringUtils.replace(resource, "/static", getBasePath() + "/static"))
+                    .apply();
             return Response.builder()
                     .setMimeType(MimeType.CSS)
                     .setContent(content)
@@ -459,9 +470,9 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.HTML)
-                    .setContent(getResource("index.html"))
+                    .setContent(pageFactory.reactPage().toHtml())
                     .build();
-        } catch (UncheckedIOException e) {
+        } catch (UncheckedIOException | IOException e) {
             return forInternalError(e, "Could not read index.html");
         }
     }

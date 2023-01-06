@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import dagger.Lazy;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -110,5 +111,16 @@ public class Addresses {
     public Optional<String> getServerPropertyIP() {
         String ip = serverProperties.get().getIp();
         return isValidAddress(ip) ? Optional.of(ip) : Optional.empty();
+    }
+
+    public String getBasePath(String address) {
+        String basePath = address
+                .replace("http://", "")
+                .replace("https://", "");
+        if (StringUtils.contains(basePath, '/')) {
+            return basePath.substring(StringUtils.indexOf(basePath, '/'));
+        } else {
+            return "";
+        }
     }
 }

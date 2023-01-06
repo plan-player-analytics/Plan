@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
@@ -39,6 +40,7 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Lazy;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -64,6 +66,7 @@ public class PageFactory {
     private final Lazy<Formatters> formatters;
     private final Lazy<Locale> locale;
     private final Lazy<ComponentSvc> componentService;
+    private final Lazy<Addresses> addresses;
 
     @Inject
     public PageFactory(
@@ -76,7 +79,8 @@ public class PageFactory {
             Lazy<JSONStorage> jsonStorage,
             Lazy<Formatters> formatters,
             Lazy<Locale> locale,
-            Lazy<ComponentSvc> componentService
+            Lazy<ComponentSvc> componentService,
+            Lazy<Addresses> addresses
     ) {
         this.versionChecker = versionChecker;
         this.files = files;
@@ -88,16 +92,29 @@ public class PageFactory {
         this.formatters = formatters;
         this.locale = locale;
         this.componentService = componentService;
+        this.addresses = addresses;
     }
 
     public Page playersPage() throws IOException {
         if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
-            String reactHtml = getResource("index.html");
-            return () -> reactHtml;
+            return reactPage();
         }
 
         return new PlayersPage(getResource("players.html"), versionChecker.get(),
                 config.get(), theme.get(), serverInfo.get());
+    }
+
+    public Page reactPage() throws IOException {
+        String reactHtml = StringUtils.replace(
+                getResource("index.html"),
+                "/static", getBasePath() + "/static");
+        return () -> reactHtml;
+    }
+
+    private String getBasePath() {
+        String address = addresses.get().getMainAddress()
+                .orElseGet(addresses.get()::getFallbackLocalhostAddress);
+        return addresses.get().getBasePath(address);
     }
 
     /**
@@ -113,8 +130,7 @@ public class PageFactory {
                 .orElseThrow(() -> new NotFoundException("Server not found in the database"));
 
         if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
-            String reactHtml = getResource("index.html");
-            return () -> reactHtml;
+            return reactPage();
         }
 
         return new ServerPage(
@@ -137,8 +153,7 @@ public class PageFactory {
         PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
 
         if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
-            String reactHtml = getResource("index.html");
-            return () -> reactHtml;
+            return reactPage();
         }
 
         return new PlayerPage(
@@ -188,8 +203,7 @@ public class PageFactory {
 
     public Page networkPage() throws IOException {
         if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
-            String reactHtml = getResource("index.html");
-            return () -> reactHtml;
+            return reactPage();
         }
 
         return new NetworkPage(getResource("network.html"),
@@ -240,8 +254,7 @@ public class PageFactory {
 
     public Page loginPage() throws IOException {
         if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
-            String reactHtml = getResource("index.html");
-            return () -> reactHtml;
+            return reactPage();
         }
 
         return new LoginPage(getResource("login.html"), serverInfo.get(), locale.get(), theme.get(), versionChecker.get());
@@ -249,8 +262,7 @@ public class PageFactory {
 
     public Page registerPage() throws IOException {
         if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
-            String reactHtml = getResource("index.html");
-            return () -> reactHtml;
+            return reactPage();
         }
 
         return new LoginPage(getResource("register.html"), serverInfo.get(), locale.get(), theme.get(), versionChecker.get());
@@ -258,8 +270,7 @@ public class PageFactory {
 
     public Page queryPage() throws IOException {
         if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
-            String reactHtml = getResource("index.html");
-            return () -> reactHtml;
+            return reactPage();
         }
         return new QueryPage(
                 getResource("query.html"),
@@ -268,7 +279,6 @@ public class PageFactory {
     }
 
     public Page errorsPage() throws IOException {
-        String reactHtml = getResource("index.html");
-        return () -> reactHtml;
+        return reactPage();
     }
 }

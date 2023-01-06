@@ -82,7 +82,7 @@ const Lazy = ({children}) => (
 )
 
 const getBasename = () => {
-    if (staticSite && baseAddress) {
+    if (baseAddress) {
         const addressWithoutProtocol = baseAddress
             .replace("http://", "")
             .replace("https://", "");

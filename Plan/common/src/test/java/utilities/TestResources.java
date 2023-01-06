@@ -47,7 +47,7 @@ public class TestResources {
         assertTrue(toFile.exists(), () -> "Failed to copy resource: '" + resourcePath + "', it was not written");
     }
 
-    private static void copyResourceToFile(File toFile, InputStream testResource) {
+    public static void copyResourceToFile(File toFile, InputStream testResource) {
         try (
                 InputStream in = testResource;
                 OutputStream out = Files.newOutputStream(toFile.toPath())

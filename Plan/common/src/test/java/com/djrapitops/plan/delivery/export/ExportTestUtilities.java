@@ -48,25 +48,26 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author AuroraLS3
  */
-class ExportTestUtilities {
+public class ExportTestUtilities {
 
     private ExportTestUtilities() {
         /* Static utility method class */
     }
 
-    static void assertNoLogs(List<LogEntry> logs) {
+    public static void assertNoLogs(List<LogEntry> logs) {
         List<String> loggedLines = logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
                 .toList();
         assertTrue(loggedLines.isEmpty(), () -> "Browser console included " + loggedLines.size() + " logs: " + loggedLines);
     }
 
-    static void assertNoLogsExceptFaviconError(List<LogEntry> logs) {
+    public static void assertNoLogsExceptFaviconError(List<LogEntry> logs) {
         List<String> loggedLines = logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
                 .filter(log -> !log.contains("favicon.ico") && !log.contains("manifest.json"))
@@ -82,12 +83,15 @@ class ExportTestUtilities {
         }
     }
 
-    static List<LogEntry> getLogsAfterRequestToAddress(ChromeDriver driver, String address) {
+    public static List<LogEntry> getLogsAfterRequestToAddress(ChromeDriver driver, String address) {
         System.out.println("GET: " + address);
         driver.get(address);
 
         new WebDriverWait(driver, Duration.of(10, ChronoUnit.SECONDS)).until(
                 webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+
+        assertFalse(driver.findElement(By.tagName("body")).getText().contains("Bad Gateway"), "502 Bad Gateway, nginx could not reach Plan");
+
         Awaitility.await()
                 .atMost(Duration.of(10, ChronoUnit.SECONDS))
                 .until(() -> getElement(driver).map(WebElement::isDisplayed).orElse(false));
@@ -114,7 +118,7 @@ class ExportTestUtilities {
         database.executeTransaction(new StoreSessionTransaction(session));
     }
 
-    static List<String> getEndpointsToTest(ServerUUID serverUUID) {
+    public static List<String> getEndpointsToTest(ServerUUID serverUUID) {
         return Lists.builder(String.class)
                 .add("/")
                 .addAll(ServerPageExporter.getRedirections(serverUUID))
