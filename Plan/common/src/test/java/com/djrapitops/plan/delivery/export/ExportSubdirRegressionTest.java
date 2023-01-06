@@ -47,12 +47,14 @@ import java.util.stream.Collectors;
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.*;
 
 /**
+ * Tests exported website when exported to /plan/...
+ *
  * @author AuroraLS3
  */
 @Testcontainers(disabledWithoutDocker = true)
 @ExtendWith(SeleniumExtension.class)
 @ExtendWith(FullSystemExtension.class)
-class ExportRegressionTest {
+class ExportSubdirRegressionTest {
 
     public static GenericContainer<?> webserver;
     private static Path exportDir;
@@ -61,8 +63,8 @@ class ExportRegressionTest {
     @BeforeAll
     static void setUp(PlanFiles files, PlanConfig config, PlanSystem system) throws Exception {
         exportDir = files.getDataDirectory().resolve("export");
-        Files.createDirectories(exportDir);
-        System.out.println("Export to " + exportDir.toFile().getAbsolutePath());
+        Files.createDirectories(exportDir.resolve("plan"));
+        System.out.println("Export to " + exportDir.resolve("plan").toFile().getAbsolutePath());
 
         webserver = new GenericContainer<>(DockerImageName.parse("halverneus/static-file-server:latest"))
                 .withExposedPorts(8080)
@@ -72,10 +74,11 @@ class ExportRegressionTest {
 
         config.set(PluginSettings.FRONTEND_BETA, true);
         config.set(WebserverSettings.DISABLED, true);
-        config.set(WebserverSettings.EXTERNAL_LINK, "http://" + webserver.getHost() + ":" + webserver.getMappedPort(8080));
+        config.set(WebserverSettings.EXTERNAL_LINK, "http://" + webserver.getHost() + ":" + webserver.getMappedPort(8080) + "/plan");
         // Avoid accidentally DDoS:ing head image service during tests.
         config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
-        config.set(ExportSettings.HTML_EXPORT_PATH, exportDir.toFile().getAbsolutePath());
+        // Using .resolve("plan") here to export to /web/plan
+        config.set(ExportSettings.HTML_EXPORT_PATH, exportDir.resolve("plan").toFile().getAbsolutePath());
         config.set(ExportSettings.SERVER_PAGE, true);
         config.set(ExportSettings.PLAYERS_PAGE, true);
         config.set(ExportSettings.PLAYER_PAGES, true);
@@ -103,10 +106,10 @@ class ExportRegressionTest {
 
         return endpointsToTest.stream().map(
                 endpoint -> DynamicTest.dynamicTest("Exported page does not log errors to js console " + endpoint, () -> {
-                    String address = "http://" + webserver.getHost() + ":" + webserver.getMappedPort(8080)
+                    String address = "http://" + webserver.getHost() + ":" + webserver.getMappedPort(8080) + "/plan"
                             + (endpoint.startsWith("/") ? endpoint : '/' + endpoint);
                     List<LogEntry> logs = getLogsAfterRequestToAddress(driver, address);
-                    assertNoLogs(logs);
+                    assertNoLogsExceptFaviconError(logs);
                 })
         ).collect(Collectors.toList());
     }

@@ -118,12 +118,8 @@ public class PlayersPageExporter extends FileExporter {
     private void exportReactRedirects(Path toDirectory) throws IOException {
         if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
 
-        Resource redirect = files.getResourceFromJar("web/export-redirect.html");
-        exportReactRedirect(toDirectory, redirect, "players");
-    }
-
-    private void exportReactRedirect(Path toDirectory, Resource redirectHtml, String path) throws IOException {
-        export(toDirectory.resolve(path).resolve("index.html"), redirectHtml.asString());
+        String[] redirections = {"players"};
+        exportReactRedirects(toDirectory, files, config, redirections);
     }
 
     private void exportJSON(Path toDirectory) throws IOException {

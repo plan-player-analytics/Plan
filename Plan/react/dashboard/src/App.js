@@ -12,7 +12,7 @@ import {MetadataContextProvider} from "./hooks/metadataHook";
 import {AuthenticationContextProvider} from "./hooks/authenticationHook";
 import {NavigationContextProvider} from "./hooks/navigationHook";
 import MainPageRedirect from "./components/navigation/MainPageRedirect";
-import {staticSite} from "./service/backendConfiguration";
+import {baseAddress, staticSite} from "./service/backendConfiguration";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -81,6 +81,18 @@ const Lazy = ({children}) => (
     </React.Suspense>
 )
 
+const getBasename = () => {
+    if (staticSite && baseAddress) {
+        const addressWithoutProtocol = baseAddress
+            .replace("http://", "")
+            .replace("https://", "");
+        const startOfPath = addressWithoutProtocol.indexOf("/");
+        return startOfPath >= 0 ? addressWithoutProtocol.substring(startOfPath) : "";
+    } else {
+        return "";
+    }
+}
+
 function App() {
     axios.defaults.withCredentials = true;
 
@@ -88,7 +100,7 @@ function App() {
         <div className="App">
             <ContextProviders>
                 <div id="wrapper">
-                    <BrowserRouter>
+                    <BrowserRouter basename={getBasename()}>
                         <Routes>
                             <Route path="" element={<MainPageRedirect/>}/>
                             <Route path="/" element={<MainPageRedirect/>}/>

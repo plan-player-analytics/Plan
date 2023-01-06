@@ -118,23 +118,24 @@ public class NetworkPageExporter extends FileExporter {
         export(to, exportPaths.resolveExportPaths(html));
     }
 
+    public static String[] getRedirections() {
+        return new String[]{
+                "network",
+                "network/overview",
+                "network/serversOverview",
+                "network/sessions",
+                "network/playerbase",
+                "network/join-addresses",
+                "network/players",
+                "network/geolocations",
+                "network/plugins-overview",
+        };
+    }
+
     private void exportReactRedirects(Path toDirectory) throws IOException {
         if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
 
-        Resource redirect = files.getResourceFromJar("web/export-redirect.html");
-        exportReactRedirect(toDirectory, redirect, "network");
-        exportReactRedirect(toDirectory, redirect, "network/overview");
-        exportReactRedirect(toDirectory, redirect, "network/serversOverview");
-        exportReactRedirect(toDirectory, redirect, "network/sessions");
-        exportReactRedirect(toDirectory, redirect, "network/playerbase");
-        exportReactRedirect(toDirectory, redirect, "network/join-addresses");
-        exportReactRedirect(toDirectory, redirect, "network/players");
-        exportReactRedirect(toDirectory, redirect, "network/geolocations");
-        exportReactRedirect(toDirectory, redirect, "network/plugins-overview");
-    }
-
-    private void exportReactRedirect(Path toDirectory, Resource redirectHtml, String path) throws IOException {
-        export(toDirectory.resolve(path).resolve("index.html"), redirectHtml.asString());
+        exportReactRedirects(toDirectory, files, config, getRedirections());
     }
 
     /**

@@ -126,7 +126,7 @@ public class Exporter extends FileExporter {
         if (config.isFalse(ExportSettings.PLAYER_PAGES)) return false;
 
         try {
-            playerPageExporter.export(toDirectory, playerUUID, playerName);
+            playerPageExporter.export(toDirectory, playerUUID);
             return true;
         } catch (IOException | NotFoundException e) {
             throw new ExportException("Failed to export player: " + playerName + ", " + e.toString(), e);

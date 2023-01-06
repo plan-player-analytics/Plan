@@ -67,7 +67,7 @@ public class ReactExporter extends FileExporter {
     }
 
     public void exportReactFiles(Path toDirectory) throws IOException {
-        exportAsset(toDirectory, "index.html");
+        exportIndexHtml(toDirectory);
         exportAsset(toDirectory, "asset-manifest.json");
         exportAsset(toDirectory, "favicon.ico");
         exportAsset(toDirectory, "logo192.png");
@@ -101,11 +101,16 @@ public class ReactExporter extends FileExporter {
         for (String path : paths) {
             Path to = toDirectory.resolve(path);
             Resource resource = files.getResourceFromJar("web/" + path);
-            if (path.endsWith(".js")) {
+            // Make static asset loading work with subdirectory addresses
+            if (path.endsWith(".css") || "asset-manifest.json".equals(path)) {
+                String contents = resource.asString();
+                String withReplacedStatic = StringUtils.replace(contents, "/static", getBasePath() + "/static");
+                export(to, withReplacedStatic);
+            } else if (path.endsWith(".js")) {
                 String withReplacedConstants = StringUtils.replaceEach(
                         resource.asString(),
-                        new String[]{"PLAN_BASE_ADDRESS", "PLAN_EXPORTED_VERSION"},
-                        new String[]{config.get(WebserverSettings.EXTERNAL_LINK), "true"}
+                        new String[]{"PLAN_BASE_ADDRESS", "PLAN_EXPORTED_VERSION", "n.p=\"/\""},
+                        new String[]{config.get(WebserverSettings.EXTERNAL_LINK), "true", "n.p=\"" + getBasePath() + "/\""}
                 );
                 export(to, withReplacedConstants);
             } else {
@@ -128,6 +133,26 @@ public class ReactExporter extends FileExporter {
         }
         for (Path path : filesToDelete) {
             Files.deleteIfExists(path);
+        }
+    }
+
+    private void exportIndexHtml(Path toDirectory) throws IOException {
+        String contents = files.getResourceFromJar("web/index.html")
+                .asString();
+        String basePath = getBasePath();
+        contents = StringUtils.replace(contents, "/static", basePath + "/static");
+
+        export(toDirectory.resolve("index.html"), contents);
+    }
+
+    private String getBasePath() {
+        String basePath = config.get(WebserverSettings.EXTERNAL_LINK)
+                .replace("http://", "")
+                .replace("https://", "");
+        if (StringUtils.contains(basePath, '/')) {
+            return basePath.substring(StringUtils.indexOf(basePath, '/'));
+        } else {
+            return "";
         }
     }
 

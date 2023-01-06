@@ -15,11 +15,11 @@ export const baseAddress = javaReplaced.address.startsWith('PLAN_') || !isCurren
 export const staticSite = javaReplaced.isStatic === 'true';
 
 export const doSomeGetRequest = async (url, statusOptions) => {
-    return doSomeRequest(url, statusOptions, async () => axios.get(url));
+    return doSomeRequest(url, statusOptions, async () => axios.get(baseAddress + url));
 }
 
 export const doSomePostRequest = async (url, statusOptions, body) => {
-    return doSomeRequest(url, statusOptions, async () => axios.post(url, body));
+    return doSomeRequest(url, statusOptions, async () => axios.post(baseAddress + url, body));
 }
 
 export const doSomeRequest = async (url, statusOptions, axiosFunction) => {

@@ -152,14 +152,7 @@ public class ServerPageExporter extends FileExporter {
     private void exportReactRedirects(Path toDirectory, ServerUUID serverUUID) throws IOException {
         if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
 
-        Resource redirectPage = files.getResourceFromJar("web/export-redirect.html");
-        for (String redirection : getRedirections(serverUUID)) {
-            exportReactRedirect(toDirectory, redirectPage, redirection);
-        }
-    }
-
-    private void exportReactRedirect(Path toDirectory, Resource redirectHtml, String path) throws IOException {
-        export(toDirectory.resolve(path).resolve("index.html"), redirectHtml.asString());
+        exportReactRedirects(toDirectory, files, config, getRedirections(serverUUID));
     }
 
     /**

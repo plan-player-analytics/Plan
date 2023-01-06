@@ -91,11 +91,10 @@ public class PlayerPageExporter extends FileExporter {
      *
      * @param toDirectory Path to Export directory
      * @param playerUUID  UUID of the player
-     * @param playerName  Name of the player
      * @throws IOException       If a template can not be read from jar/disk or the result written
      * @throws NotFoundException If a file or resource that is being exported can not be found
      */
-    public void export(Path toDirectory, UUID playerUUID, String playerName) throws IOException {
+    public void export(Path toDirectory, UUID playerUUID) throws IOException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
         if (Boolean.FALSE.equals(dbSystem.getDatabase().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)))) {
@@ -130,14 +129,7 @@ public class PlayerPageExporter extends FileExporter {
     private void exportReactRedirects(Path toDirectory, UUID playerUUID) throws IOException {
         if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
 
-        Resource redirectPage = files.getResourceFromJar("web/export-redirect.html");
-        for (String redirection : getRedirections(playerUUID)) {
-            exportReactRedirect(toDirectory, redirectPage, redirection);
-        }
-    }
-
-    private void exportReactRedirect(Path toDirectory, Resource redirectHtml, String path) throws IOException {
-        export(toDirectory.resolve(path).resolve("index.html"), redirectHtml.asString());
+        exportReactRedirects(toDirectory, files, config, getRedirections(playerUUID));
     }
 
     private void exportJSON(ExportPaths exportPaths, Path toDirectory, UUID playerUUID) throws IOException {
