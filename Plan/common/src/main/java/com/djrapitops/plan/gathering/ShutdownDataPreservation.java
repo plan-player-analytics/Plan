@@ -120,12 +120,21 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
     List<FinishedSession> loadFinishedSessions() {
         if (!Files.exists(storeLocation)) return Collections.emptyList();
         try (Stream<String> lines = Files.lines(storeLocation)) {
-            return lines.map(FinishedSession::deserializeCSV)
+            return lines.map(this::deserializeToSession)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toList());
         } catch (IOException e) {
             throw new IllegalStateException("Could not read " + storeLocation.toFile().getAbsolutePath() + ", " + e.getMessage(), e);
+        }
+    }
+
+    private Optional<FinishedSession> deserializeToSession(String line) {
+        try {
+            return FinishedSession.deserializeCSV(line);
+        } catch (Exception e) {
+            logger.warn("Ignoring line '" + line + "' in unsaved-sessions.csv due to: " + e);
+            return Optional.empty();
         }
     }
 
