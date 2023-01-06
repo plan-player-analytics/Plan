@@ -64,6 +64,7 @@ import static com.djrapitops.plan.delivery.export.ExportTestUtilities.*;
 @Testcontainers(disabledWithoutDocker = true)
 @ExtendWith(SeleniumExtension.class)
 @ExtendWith(FullSystemExtension.class)
+@Disabled("Docker networking doesn't work in Github Actions")
 class ReverseProxyRegressionTest {
 
     private static final int PLAN_PORT = 9001;
