@@ -210,7 +210,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 new KillsOptimizationPatch(),
                 new NicknamesOptimizationPatch(),
                 new TransferTableRemovalPatch(),
-                new BadAFKThresholdValuePatch(),
+                // new BadAFKThresholdValuePatch(),
                 new DeleteIPsPatch(),
                 new ExtensionShowInPlayersTablePatch(),
                 new ExtensionTableRowValueLengthPatch(),
