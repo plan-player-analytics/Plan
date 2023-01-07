@@ -34,9 +34,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class DBAccessLock {
 
+    private final Database database;
     private final ReentrantLock reentrantLock;
 
-    public DBAccessLock() {
+    public DBAccessLock(Database database) {
+        this.database = database;
         reentrantLock = new ReentrantLock();
     }
 
@@ -59,14 +61,26 @@ public class DBAccessLock {
             operation.apply();
             return;
         }
-        try {
-            reentrantLock.lockInterruptibly();
+        if (isDatabasePatching()) {
+            boolean interrupted = false;
+            try {
+                reentrantLock.lockInterruptibly();
+                operation.apply();
+            } catch (InterruptedException e) {
+                interrupted = true;
+                Thread.currentThread().interrupt();
+            } finally {
+                if (!interrupted) {
+                    reentrantLock.unlock();
+                }
+            }
+        } else {
             operation.apply();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } finally {
-            reentrantLock.unlock();
         }
+    }
+
+    private boolean isDatabasePatching() {
+        return database.getState() != Database.State.OPEN && database.getState() != Database.State.CLOSING;
     }
 
     public <T, E extends Exception> T performDatabaseOperation(ThrowingSupplier<T, E> operation) throws E {
@@ -81,14 +95,22 @@ public class DBAccessLock {
         if (isOperationCriticalTransaction) {
             return operation.get();
         }
-        try {
-            reentrantLock.lockInterruptibly();
+        if (isDatabasePatching()) {
+            boolean interrupted = false;
+            try {
+                reentrantLock.lockInterruptibly();
+                return operation.get();
+            } catch (InterruptedException e) {
+                interrupted = true;
+                Thread.currentThread().interrupt();
+                throw new DBClosedException("Operation interrupted");
+            } finally {
+                if (!interrupted) {
+                    reentrantLock.unlock();
+                }
+            }
+        } else {
             return operation.get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new DBClosedException("Operation interrupted");
-        } finally {
-            reentrantLock.unlock();
         }
     }
 }
