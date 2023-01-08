@@ -265,6 +265,7 @@ html:
         authFailedTips: "- 确保你已使用 <b>/plan register</b> 来注册用户<br>- 检查用户名与密码是否正确<br>- 用户名与密码区分大小写<br><br>若您忘记了密码，请让工作人员删除您的旧密码并重新注册。"
         noServersOnline: "无可执行此请求的在线服务器。"
         playerNotSeen: "Plan 没有找到此玩家。"
+        serverNotExported: "Server doesn't exist, its data might not have been exported yet."
         serverNotSeen: "Server doesn't exist"
     generic:
         none: "无"
@@ -317,6 +318,7 @@ html:
         downtime: "停机时间"
         duringLowTps: "持续低 TPS 时间"
         entities: "实体"
+        exported: "Data export time"
         favoriteServer: "最喜爱的服务器"
         firstSession: "第一此会话"
         firstSessionLength:
@@ -392,6 +394,7 @@ html:
         player: "玩家"
         playerDeaths: "被玩家击杀次数"
         playerKills: "击杀玩家数"
+        playerKillsVictimIndicator: "Player was killed within 24h of first time they were seen (Time since registered: <>)."
         playerList: "玩家列表"
         playerOverview: "玩家总览"
         playerPage: "玩家页面"
@@ -517,6 +520,12 @@ html:
                 allPlayers: "全体玩家"
                 and: "外加 "
                 start: "查询玩家："
+            hasPlayedOnServers:
+                name: "Has played on one of servers"
+                text: "have played on at least one of"
+            hasPluginBooleanValue:
+                name: "Has plugin boolean value"
+                text: "have Plugin boolean value"
             joinAddress:
                 text: "加入地址"
             nonOperators: "非管理员"
@@ -531,6 +540,7 @@ html:
                 text: "在 ${plugin} 插件的 ${group} 分组中"
             registeredBetween:
                 text: "在此期间注册"
+            skipped: "Skipped"
             title:
                 activityGroup: "活跃度分组"
             view: "  日期范围:"
@@ -542,6 +552,11 @@ html:
         label:
             from: ">从 </label>"
             makeAnother: "进行另一个查询"
+            servers:
+                all: "using data of all servers"
+                many: "using data of {number} servers"
+                single: "using data of 1 server"
+                two: "using data of 2 servers"
             to: ">到 </label>"
             view: "日期范围"
         performQuery: "执行查询！"
@@ -570,6 +585,7 @@ html:
         login: "已经有帐号了？ 登录！"
         passwordTip: "密码不能超过8个字符，没有其他限制。"
         register: "注册"
+        success: "Registered a new user successfully! You can now login."
         usernameTip: "用户名最多可以包含 50 个字符。"
     text:
         clickToExpand: "点击展开"
