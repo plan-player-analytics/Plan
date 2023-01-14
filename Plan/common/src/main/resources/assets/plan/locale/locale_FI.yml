@@ -268,7 +268,7 @@ html:
         serverNotExported: "Palvelinta ei löytynyt, sen tietoja ei ole välttämättä viety tiedostoon vielä"
         serverNotSeen: "Palvelinta ei löytynyt"
     generic:
-        none: "Ei yhtään"
+        none: "None"
     label:
         active: "Aktiivinen"
         activePlaytime: "Aktiivinen peliaika"
