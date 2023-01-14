@@ -26,6 +26,7 @@ import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -62,7 +63,7 @@ public class ServerTabJSONResolver<T> implements Resolver {
         return Optional.of(getResponse(request));
     }
 
-    private Response getResponse(Request request) {
+    private Response getResponse(@Untrusted Request request) {
         ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
         return Response.builder()
                 .setMimeType(MimeType.JSON)

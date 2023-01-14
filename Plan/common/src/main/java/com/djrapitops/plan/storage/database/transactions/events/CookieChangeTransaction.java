@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -26,10 +27,11 @@ import java.sql.SQLException;
 public class CookieChangeTransaction extends Transaction {
 
     private final String username;
+    @Untrusted
     private final String cookie; // Null if removing
     private final Long expires;
 
-    private CookieChangeTransaction(String username, String cookie, Long expires) {
+    private CookieChangeTransaction(String username, @Untrusted String cookie, Long expires) {
         this.username = username;
         this.cookie = cookie;
         this.expires = expires;
@@ -43,7 +45,7 @@ public class CookieChangeTransaction extends Transaction {
         return new CookieChangeTransaction(username, null, null);
     }
 
-    public static CookieChangeTransaction removeCookie(String cookie) {
+    public static CookieChangeTransaction removeCookie(@Untrusted String cookie) {
         return new CookieChangeTransaction(null, cookie, null);
     }
 

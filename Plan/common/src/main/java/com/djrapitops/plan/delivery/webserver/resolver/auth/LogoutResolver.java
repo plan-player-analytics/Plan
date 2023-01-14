@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -57,13 +58,13 @@ public class LogoutResolver implements NoAuthResolver {
             requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
-    public Optional<Response> resolve(Request request) {
-        String cookies = request.getHeader("Cookie").orElse("");
-        String foundCookie = null;
-        for (String cookie : cookies.split(";")) {
+    public Optional<Response> resolve(@Untrusted Request request) {
+        @Untrusted String cookies = request.getHeader("Cookie").orElse("");
+        @Untrusted String foundCookie = null;
+        for (@Untrusted String cookie : cookies.split(";")) {
             if (cookie.isEmpty()) continue;
-            String[] split = cookie.split("=");
-            String name = split[0];
+            @Untrusted String[] split = cookie.split("=");
+            @Untrusted String name = split[0];
             if ("auth".equals(name) && split.length > 1) {
                 foundCookie = split[1];
                 activeCookieStore.removeCookie(foundCookie);

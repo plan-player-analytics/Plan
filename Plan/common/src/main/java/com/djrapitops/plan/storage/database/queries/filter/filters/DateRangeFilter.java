@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.lang3.StringUtils;
 
@@ -61,17 +62,17 @@ public abstract class DateRangeFilter implements Filter {
                 .build();
     }
 
-    protected long getAfter(InputFilterDto query) {
+    protected long getAfter(@Untrusted InputFilterDto query) {
         return getTime(query, "afterDate", "afterTime");
     }
 
-    protected long getBefore(InputFilterDto query) {
+    protected long getBefore(@Untrusted InputFilterDto query) {
         return getTime(query, "beforeDate", "beforeTime");
     }
 
-    private long getTime(InputFilterDto query, String dateKey, String timeKey) {
-        String date = query.get(dateKey).orElseThrow(() -> new BadRequestException("'" + dateKey + "' not specified in parameters for " + getKind()));
-        String time = query.get(timeKey).orElseThrow(() -> new BadRequestException("'" + timeKey + "' not specified in parameters for " + getKind()));
+    private long getTime(@Untrusted InputFilterDto query, String dateKey, String timeKey) {
+        @Untrusted String date = query.get(dateKey).orElseThrow(() -> new BadRequestException("'" + dateKey + "' not specified in parameters for " + getKind()));
+        @Untrusted String time = query.get(timeKey).orElseThrow(() -> new BadRequestException("'" + timeKey + "' not specified in parameters for " + getKind()));
 
         try {
             return dateFormat.parse(date + ' ' + time).getTime();

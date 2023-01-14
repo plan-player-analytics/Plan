@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,7 +44,7 @@ public class WebUserQueries {
         /* Static method class */
     }
 
-    public static Query<Optional<User>> fetchUser(String username) {
+    public static Query<Optional<User>> fetchUser(@Untrusted String username) {
         String sql = SELECT + '*' + FROM + SecurityTable.TABLE_NAME +
                 LEFT_JOIN + UsersTable.TABLE_NAME + " on " + SecurityTable.LINKED_TO + "=" + UsersTable.USER_UUID +
                 WHERE + SecurityTable.USERNAME + "=?" + LIMIT + "1";

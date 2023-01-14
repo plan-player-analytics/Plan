@@ -47,6 +47,7 @@ import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.QueryTablePlayersQuery;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Operation;
@@ -131,12 +132,12 @@ public class QueryJSONResolver implements Resolver {
         return Optional.of(getResponse(request));
     }
 
-    private Response getResponse(Request request) {
+    private Response getResponse(@Untrusted Request request) {
         Optional<Response> cachedResult = checkForCachedResult(request);
         if (cachedResult.isPresent()) return cachedResult.get();
 
         InputQueryDto inputQuery = parseInputQuery(request);
-        List<InputFilterDto> queries = inputQuery.getFilters();
+        @Untrusted List<InputFilterDto> queries = inputQuery.getFilters();
 
         Filter.Result result = filters.apply(queries);
         List<Filter.ResultPath> resultPath = result.getInverseResultPath();
@@ -145,7 +146,7 @@ public class QueryJSONResolver implements Resolver {
         return buildAndStoreResponse(inputQuery, result, resultPath);
     }
 
-    private InputQueryDto parseInputQuery(Request request) {
+    private InputQueryDto parseInputQuery(@Untrusted Request request) {
         if (request.getRequestBody().length == 0) {
             return parseInputQueryFromQueryParams(request);
         } else {
@@ -153,11 +154,11 @@ public class QueryJSONResolver implements Resolver {
         }
     }
 
-    private InputQueryDto parseInputQueryFromQueryParams(Request request) {
-        String q = request.getQuery().get("q").orElseThrow(() -> new BadRequestException("'q' parameter not set (expecting json array)"));
+    private InputQueryDto parseInputQueryFromQueryParams(@Untrusted Request request) {
+        @Untrusted String q = request.getQuery().get("q").orElseThrow(() -> new BadRequestException("'q' parameter not set (expecting json array)"));
         try {
-            String query = URLDecoder.decode(q, StandardCharsets.UTF_8);
-            List<InputFilterDto> queryFilters = InputFilterDto.parse(query, gson);
+            @Untrusted String query = URLDecoder.decode(q, StandardCharsets.UTF_8);
+            @Untrusted List<InputFilterDto> queryFilters = InputFilterDto.parse(query, gson);
             ViewDto view = request.getQuery().get("view")
                     .map(viewJson -> gson.fromJson(viewJson, ViewDto.class))
                     .orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
@@ -167,15 +168,16 @@ public class QueryJSONResolver implements Resolver {
         }
     }
 
-    private Optional<Response> checkForCachedResult(Request request) {
+    private Optional<Response> checkForCachedResult(@Untrusted Request request) {
         try {
             return request.getQuery().get("timestamp")
-                    .flatMap(queryTimestamp -> jsonStorage.fetchExactJson("query", Long.parseLong(queryTimestamp)))
+                    .map(Long::parseLong)
+                    .flatMap(queryTimestamp -> jsonStorage.fetchExactJson("query", queryTimestamp))
                     .map(results -> Response.builder()
                             .setMimeType(MimeType.JSON)
                             .setJSONContent(results.json)
                             .build());
-        } catch (NumberFormatException e) {
+        } catch (@Untrusted NumberFormatException e) {
             throw new BadRequestException("Could not parse 'timestamp' into a number. Remove parameter or fix it.");
         }
     }
@@ -183,10 +185,10 @@ public class QueryJSONResolver implements Resolver {
     private Response buildAndStoreResponse(InputQueryDto input, Filter.Result result, List<Filter.ResultPath> resultPath) {
         try {
             long timestamp = System.currentTimeMillis();
-            Map<String, Object> json = Maps.builder(String.class, Object.class)
+            @Untrusted Map<String, Object> json = Maps.builder(String.class, Object.class)
                     .put("path", resultPath)
                     .put("view", input.getView())
-                    .put("filters", input.getFilters())
+                    .put("filters", input.getFilters()) // filters json may contain untrusted data
                     .put("timestamp", timestamp)
                     .build();
             if (!result.isEmpty()) {

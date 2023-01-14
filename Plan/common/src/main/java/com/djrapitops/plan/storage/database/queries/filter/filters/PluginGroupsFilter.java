@@ -28,6 +28,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ExtensionGroupsTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 
 import javax.inject.Inject;
@@ -67,7 +68,7 @@ public class PluginGroupsFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
+    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
         return dbSystem.getDatabase().query(
                 new ExtensionUserIdsInGroupQuery(identifier.getPluginName(), identifier.getProviderName(), identifier.getServerUUID(), getSelected(query))
         );

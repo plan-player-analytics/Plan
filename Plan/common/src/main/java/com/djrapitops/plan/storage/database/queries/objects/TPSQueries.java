@@ -23,7 +23,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
-import com.djrapitops.plan.utilities.Benchmark;
+import com.djrapitops.plan.utilities.dev.Benchmark;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;

@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -125,7 +126,7 @@ public class UserIdentifierQueries {
      * @param playerName Name of the player, case does not matter.
      * @return Optional: UUID if found, empty if not.
      */
-    public static Query<Optional<UUID>> fetchPlayerUUIDOf(String playerName) {
+    public static Query<Optional<UUID>> fetchPlayerUUIDOf(@Untrusted String playerName) {
         String sql = Select.from(UsersTable.TABLE_NAME, UsersTable.USER_UUID)
                 .where("UPPER(" + UsersTable.USER_NAME + ")=UPPER(?)")
                 .toString();
@@ -172,7 +173,7 @@ public class UserIdentifierQueries {
         };
     }
 
-    public static Query<List<String>> fetchMatchingPlayerNames(String searchFor) {
+    public static Query<List<String>> fetchMatchingPlayerNames(@Untrusted String searchFor) {
         String sql = SELECT + DISTINCT + UsersTable.USER_NAME +
                 FROM + UsersTable.TABLE_NAME +
                 WHERE + "LOWER(" + UsersTable.USER_NAME + ") LIKE LOWER(?)" +

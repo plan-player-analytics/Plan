@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.domain;
 
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.Objects;
 
@@ -27,6 +28,7 @@ import java.util.Objects;
  */
 public class Nickname implements DateHolder {
 
+    @Untrusted
     private final String name;
     private final long date;
     private final ServerUUID serverUUID;
@@ -37,6 +39,7 @@ public class Nickname implements DateHolder {
         this.serverUUID = serverUUID;
     }
 
+    @Untrusted
     public String getName() {
         return name.length() <= 75 ? name : name.substring(0, 74);
     }

@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.domain.auth;
 
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -30,6 +31,7 @@ import java.util.UUID;
  */
 public class User implements Comparable<User> {
 
+    @Untrusted
     private final String username;
     private final String linkedTo;
     private final UUID linkedToUUID; // null for 'console'
@@ -37,7 +39,7 @@ public class User implements Comparable<User> {
     private int permissionLevel;
     private final Collection<String> permissions;
 
-    public User(String username, String linkedTo, UUID linkedToUUID, String passwordHash, int permissionLevel, Collection<String> permissions) {
+    public User(@Untrusted String username, String linkedTo, UUID linkedToUUID, String passwordHash, int permissionLevel, Collection<String> permissions) {
         this.username = username;
         this.linkedTo = linkedTo;
         this.linkedToUUID = linkedToUUID;
@@ -46,7 +48,7 @@ public class User implements Comparable<User> {
         this.permissions = permissions;
     }
 
-    public boolean doesPasswordMatch(String password) {
+    public boolean doesPasswordMatch(@Untrusted String password) {
         return PassEncryptUtil.verifyPassword(password, passwordHash);
     }
 
@@ -54,6 +56,7 @@ public class User implements Comparable<User> {
         return new WebUser(linkedTo, linkedToUUID, username, permissions);
     }
 
+    @Untrusted
     public String getUsername() {
         return username;
     }

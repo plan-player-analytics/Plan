@@ -23,6 +23,7 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -110,7 +111,7 @@ public class ServerQueries {
         return fetchServerMatchingIdentifier(serverUUID.toString());
     }
 
-    public static Query<Optional<Server>> fetchServerMatchingIdentifier(String identifier) {
+    public static Query<Optional<Server>> fetchServerMatchingIdentifier(@Untrusted String identifier) {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + "(LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
@@ -283,7 +284,7 @@ public class ServerQueries {
         return db -> Maps.reverse(db.query(fetchServerNames()));
     }
 
-    public static Query<List<ServerUUID>> fetchServersMatchingIdentifiers(List<String> serverNames) {
+    public static Query<List<ServerUUID>> fetchServersMatchingIdentifiers(@Untrusted List<String> serverNames) {
         return db -> {
             Map<String, ServerUUID> nameToUUIDMap = db.query(ServerQueries.fetchServerNamesToUUIDs());
             return serverNames.stream()

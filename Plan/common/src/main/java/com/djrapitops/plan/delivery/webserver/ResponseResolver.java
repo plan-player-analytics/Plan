@@ -34,6 +34,7 @@ import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerJsonResolv
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerPageResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.connection.ForbiddenException;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
@@ -167,7 +168,7 @@ public class ResponseResolver {
         return request -> Optional.of(response.get());
     }
 
-    public Response getResponse(Request request) {
+    public Response getResponse(@Untrusted Request request) {
         try {
             return tryToGetResponse(request);
         } catch (NotFoundException e) {
@@ -189,7 +190,7 @@ public class ResponseResolver {
      * @throws ForbiddenException  If the user is not allowed to see the page
      * @throws BadRequestException If the request did not have required things.
      */
-    private Response tryToGetResponse(Request request) {
+    private Response tryToGetResponse(@Untrusted Request request) {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
             return Response.builder().setStatus(204).build();

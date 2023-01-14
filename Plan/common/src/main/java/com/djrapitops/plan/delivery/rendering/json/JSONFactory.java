@@ -45,6 +45,7 @@ import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 
 import javax.inject.Inject;
@@ -175,7 +176,7 @@ public class JSONFactory {
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
     }
 
-    public Optional<ServerDto> serverForIdentifier(String identifier) {
+    public Optional<ServerDto> serverForIdentifier(@Untrusted String identifier) {
         return dbSystem.getDatabase()
                 .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
                 .map(ServerDto::fromServer);

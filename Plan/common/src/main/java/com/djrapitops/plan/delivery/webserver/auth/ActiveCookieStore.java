@@ -25,6 +25,7 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.events.CookieChangeTransaction;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -70,7 +71,7 @@ public class ActiveCookieStore implements SubSystem {
         Holder.getActiveCookieStore().removeCookie(cookie);
     }
 
-    public static void removeUserCookie(String username) {
+    public static void removeUserCookie(@Untrusted String username) {
         USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(username))
                 .findAny()
                 .map(Map.Entry::getKey)
@@ -106,7 +107,7 @@ public class ActiveCookieStore implements SubSystem {
         USERS_BY_COOKIE.clear();
     }
 
-    public Optional<User> checkCookie(String cookie) {
+    public Optional<User> checkCookie(@Untrusted String cookie) {
         return Optional.ofNullable(USERS_BY_COOKIE.get(cookie));
     }
 
@@ -124,14 +125,14 @@ public class ActiveCookieStore implements SubSystem {
         ));
     }
 
-    public void removeCookie(String cookie) {
+    public void removeCookie(@Untrusted String cookie) {
         checkCookie(cookie).map(User::getUsername)
                 .ifPresent(this::deleteCookieByUser);
         USERS_BY_COOKIE.remove(cookie);
         deleteCookie(cookie);
     }
 
-    private void deleteCookie(String cookie) {
+    private void deleteCookie(@Untrusted String cookie) {
         dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeCookie(cookie));
     }
 

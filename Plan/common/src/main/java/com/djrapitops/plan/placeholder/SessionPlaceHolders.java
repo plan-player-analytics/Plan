@@ -29,6 +29,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -219,13 +220,13 @@ public class SessionPlaceHolders implements Placeholders {
                 parameters -> database.query(TPSQueries.fetchPeakPlayerCount(getServerUUID(parameters), now() - TimeUnit.DAYS.toMillis(2L))).map(year).orElse("-"));
     }
 
-    private ServerUUID getServerUUID(Arguments parameters) {
+    private ServerUUID getServerUUID(@Untrusted Arguments parameters) {
         return parameters.get(0)
                 .flatMap(this::getServerUUIDForServerIdentifier)
                 .orElseGet(serverInfo::getServerUUID);
     }
 
-    private Optional<ServerUUID> getServerUUIDForServerIdentifier(String serverIdentifier) {
+    private Optional<ServerUUID> getServerUUIDForServerIdentifier(@Untrusted String serverIdentifier) {
         return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
                 .map(Server::getUuid);
     }

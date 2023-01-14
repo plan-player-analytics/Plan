@@ -20,6 +20,7 @@ import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -90,7 +91,7 @@ public class PlanFiles implements SubSystem {
         return getFileFromPluginFolder("locale.yml");
     }
 
-    public File getFileFromPluginFolder(String name) {
+    public File getFileFromPluginFolder(@Untrusted String name) {
         return new File(dataFolder, name.replace("/", File.separator));
     }
 

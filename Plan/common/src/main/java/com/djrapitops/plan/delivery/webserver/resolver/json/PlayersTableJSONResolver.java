@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -100,7 +101,7 @@ public class PlayersTableJSONResolver implements Resolver {
                 .build();
     }
 
-    private JSONStorage.StoredJSON getStoredJSON(Request request) {
+    private JSONStorage.StoredJSON getStoredJSON(@Untrusted Request request) {
         Optional<Long> timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {

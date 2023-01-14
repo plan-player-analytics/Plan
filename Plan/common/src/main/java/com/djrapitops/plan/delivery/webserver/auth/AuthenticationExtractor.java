@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.delivery.webserver.http.InternalRequest;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,8 +38,8 @@ public class AuthenticationExtractor {
         return getCookieAuthentication(internalRequest.getCookies());
     }
 
-    private Optional<Authentication> getCookieAuthentication(List<Cookie> cookies) {
-        for (Cookie cookie : cookies) {
+    private Optional<Authentication> getCookieAuthentication(@Untrusted List<Cookie> cookies) {
+        for (@Untrusted Cookie cookie : cookies) {
             if ("auth".equals(cookie.getName())) {
                 return Optional.of(new CookieAuthentication(activeCookieStore, cookie.getValue()));
             }

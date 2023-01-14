@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,7 +45,7 @@ public class AllowedIpList {
         }
     }
 
-    public boolean isAllowed(String accessAddress) {
+    public boolean isAllowed(@Untrusted String accessAddress) {
         prepare();
 
         List<String> ips = allowList.get();

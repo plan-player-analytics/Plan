@@ -46,6 +46,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.*;
 import com.djrapitops.plan.storage.database.transactions.patches.BadFabricJoinAddressValuePatch;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.player.UUIDFetcher;
@@ -113,7 +114,7 @@ public class DatabaseCommands {
         this.processing = processing;
     }
 
-    public void onBackup(CMDSender sender, Arguments arguments) {
+    public void onBackup(CMDSender sender, @Untrusted Arguments arguments) {
         String dbName = arguments.get(0)
                 .orElse(dbSystem.getDatabase().getType().getName())
                 .toLowerCase();
@@ -129,7 +130,7 @@ public class DatabaseCommands {
         sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
     }
 
-    public void performBackup(CMDSender sender, Arguments arguments, String dbName, Database fromDB) {
+    public void performBackup(CMDSender sender, @Untrusted Arguments arguments, String dbName, Database fromDB) {
         Database toDB = null;
         try {
             String timeStamp = timestamp.apply(System.currentTimeMillis());
@@ -150,8 +151,8 @@ public class DatabaseCommands {
         }
     }
 
-    public void onRestore(String mainCommand, CMDSender sender, Arguments arguments) {
-        String backupDbName = arguments.get(0)
+    public void onRestore(String mainCommand, CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String backupDbName = arguments.get(0)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, "<" + locale.getString(HelpLang.ARG_BACKUP_FILE) + ">")));
 
         boolean containsDBFileExtension = backupDbName.endsWith(".db");
@@ -219,7 +220,7 @@ public class DatabaseCommands {
         }
     }
 
-    public void onMove(String mainCommand, CMDSender sender, Arguments arguments) {
+    public void onMove(String mainCommand, CMDSender sender, @Untrusted Arguments arguments) {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite>"))));
 
@@ -282,7 +283,7 @@ public class DatabaseCommands {
     }
 
 
-    public void onClear(String mainCommand, CMDSender sender, Arguments arguments) {
+    public void onClear(String mainCommand, CMDSender sender, @Untrusted Arguments arguments) {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite>"))));
 
@@ -335,8 +336,8 @@ public class DatabaseCommands {
         }
     }
 
-    public void onFixFabricJoinAddresses(String mainCommand, CMDSender sender, Arguments arguments) {
-        String identifier = arguments.concatenate(" ");
+    public void onFixFabricJoinAddresses(String mainCommand, CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String identifier = arguments.concatenate(" ");
         Optional<ServerUUID> serverUUID = identifiers.getServerUUID(identifier);
         if (serverUUID.isEmpty()) {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier));
@@ -385,8 +386,8 @@ public class DatabaseCommands {
         }
     }
 
-    public void onRemove(String mainCommand, CMDSender sender, Arguments arguments) {
-        String identifier = arguments.concatenate(" ");
+    public void onRemove(String mainCommand, CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String identifier = arguments.concatenate(" ");
         UUID playerUUID = identifiers.getPlayerUUID(identifier);
         if (playerUUID == null) {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND, identifier));
@@ -444,9 +445,9 @@ public class DatabaseCommands {
         }
     }
 
-    public void onUninstalled(CMDSender sender, Arguments arguments) {
+    public void onUninstalled(CMDSender sender, @Untrusted Arguments arguments) {
         ensureDatabaseIsOpen();
-        String identifier = arguments.concatenate(" ");
+        @Untrusted String identifier = arguments.concatenate(" ");
         Server server = dbSystem.getDatabase()
                 .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier)));
@@ -460,7 +461,7 @@ public class DatabaseCommands {
         sender.send(locale.getString(CommandLang.DB_UNINSTALLED));
     }
 
-    public void onHotswap(CMDSender sender, Arguments arguments) {
+    public void onHotswap(CMDSender sender, @Untrusted Arguments arguments) {
         DBType toDB = arguments.get(0).flatMap(DBType::getForName)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse("<MySQL/SQLite>"))));
 
@@ -482,7 +483,7 @@ public class DatabaseCommands {
         statusCommands.onReload(sender);
     }
 
-    public void onOnlineConversion(String mainCommand, CMDSender sender, Arguments arguments) {
+    public void onOnlineConversion(String mainCommand, CMDSender sender, @Untrusted Arguments arguments) {
         boolean removeOfflinePlayers = arguments.get(0)
                 .map("--remove_offline"::equals)
                 .orElse(false);
@@ -491,7 +492,7 @@ public class DatabaseCommands {
             Map<UUID, BaseUser> baseUsersByUUID = dbSystem.getDatabase().query(BaseUserQueries.fetchAllBaseUsersByUUID());
             List<String> playerNames = baseUsersByUUID.values().stream().map(BaseUser::getName).collect(Collectors.toList());
             sender.send("Performing lookup for " + playerNames.size() + " uuids from Mojang..");
-            sender.send("Preparation estimated complete at: " + clock.apply(System.currentTimeMillis() + playerNames.size() * 100) + " (due to request rate limiting)");
+            sender.send("Preparation estimated complete at: " + clock.apply(System.currentTimeMillis() + playerNames.size() * 100L) + " (due to request rate limiting)");
             Map<String, UUID> onlineUUIDsOfPlayers = getUUIDViaUUIDFetcher(playerNames);
 
             if (onlineUUIDsOfPlayers.isEmpty()) {

@@ -30,6 +30,7 @@ import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -92,11 +93,11 @@ public class LoginResolver implements NoAuthResolver {
                 .build();
     }
 
-    public User getUser(Request request) {
-        URIQuery form = RequestBodyConverter.formBody(request);
-        URIQuery query = request.getQuery();
-        String username = getUser(form, query);
-        String password = getPassword(form, query);
+    public User getUser(@Untrusted Request request) {
+        @Untrusted URIQuery form = RequestBodyConverter.formBody(request);
+        @Untrusted URIQuery query = request.getQuery();
+        @Untrusted String username = getUser(form, query);
+        @Untrusted String password = getPassword(form, query);
         User user = dbSystem.getDatabase().query(WebUserQueries.fetchUser(username))
                 .orElseThrow(() -> new WebUserAuthException(FailReason.USER_PASS_MISMATCH));
 
@@ -107,13 +108,13 @@ public class LoginResolver implements NoAuthResolver {
         return user;
     }
 
-    private String getPassword(URIQuery form, URIQuery query) {
+    private String getPassword(@Untrusted URIQuery form, @Untrusted URIQuery query) {
         return form.get("password")
                 .orElseGet(() -> query.get("password")
                         .orElseThrow(() -> new BadRequestException("'password' parameter not defined")));
     }
 
-    private String getUser(URIQuery form, URIQuery query) {
+    private String getUser(@Untrusted URIQuery form, @Untrusted URIQuery query) {
         return form.get("user")
                 .orElseGet(() -> query.get("user")
                         .orElseThrow(() -> new BadRequestException("'user' parameter not defined")));

@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -48,10 +49,10 @@ public class RegisteredBetweenDateRangeFilter extends DateRangeFilter {
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
+    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
         long after = getAfter(query);
         long before = getBefore(query);
-        List<String> serverNames = getServerNames(query);
+        @Untrusted List<String> serverNames = getServerNames(query);
         List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
         return dbSystem.getDatabase().query(
                 serverUUIDs.isEmpty() ? BaseUserQueries.userIdsOfRegisteredBetween(after, before)
@@ -59,7 +60,7 @@ public class RegisteredBetweenDateRangeFilter extends DateRangeFilter {
         );
     }
 
-    private List<String> getServerNames(InputFilterDto query) {
+    private List<String> getServerNames(@Untrusted InputFilterDto query) {
         return query.get("servers")
                 .map(serversList -> new Gson().fromJson(serversList, String[].class))
                 .map(Arrays::asList)

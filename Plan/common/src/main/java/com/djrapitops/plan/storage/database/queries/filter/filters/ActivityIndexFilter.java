@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -66,8 +67,8 @@ public class ActivityIndexFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
-        List<String> selected = getSelected(query);
+    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
+        @Untrusted List<String> selected = getSelected(query);
         String[] options = getOptionsArray();
 
         boolean includeVeryActive = selected.contains(options[0]);

@@ -36,10 +36,12 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plan.utilities.java.UnaryChain;
 import dagger.Lazy;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -375,11 +377,11 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response ipWhitelist403(String accessor) {
+    public Response ipWhitelist403(@Untrusted String accessor) {
         return Response.builder()
                 .setMimeType(MimeType.HTML)
                 .setContent("<h1>403 Forbidden</h1>" +
-                        "<p>IP-whitelist enabled, \"" + accessor + "\" is not on the list!</p>")
+                        "<p>IP-whitelist enabled, \"" + StringEscapeUtils.escapeHtml4(accessor) + "\" is not on the list!</p>")
                 .setStatus(403)
                 .build();
     }

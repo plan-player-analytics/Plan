@@ -32,6 +32,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionSer
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -88,14 +89,14 @@ public class ExtensionJSONResolver implements Resolver {
     )
     @Override
     public Optional<Response> resolve(Request request) {
-        String identifier = request.getQuery().get("server")
+        @Untrusted String identifier = request.getQuery().get("server")
                 .orElseThrow(() -> new BadRequestException("'server' parameter was not given"));
         ServerUUID serverUUID = identifiers.getServerUUID(identifier)
-                .orElseThrow(() -> new NotFoundException("Server with identifier '" + identifier + "' was not found in database"));
+                .orElseThrow(() -> new NotFoundException("Server with given server-parameter was not found in database"));
         return Optional.of(getResponse(request, serverUUID));
     }
 
-    private JSONStorage.StoredJSON getJSON(Request request, ServerUUID serverUUID) {
+    private JSONStorage.StoredJSON getJSON(@Untrusted Request request, ServerUUID serverUUID) {
         Optional<Long> timestamp = Identifiers.getTimestamp(request);
 
         return jsonResolverService.resolve(

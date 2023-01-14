@@ -24,7 +24,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
-import com.djrapitops.plan.utilities.Benchmark;
+import com.djrapitops.plan.utilities.dev.Benchmark;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

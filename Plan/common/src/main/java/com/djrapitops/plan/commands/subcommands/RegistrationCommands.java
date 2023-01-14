@@ -34,6 +34,7 @@ import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -87,7 +88,7 @@ public class RegistrationCommands {
         }
     }
 
-    public void onRegister(CMDSender sender, Arguments arguments) {
+    public void onRegister(CMDSender sender, @Untrusted Arguments arguments) {
         ensureDatabaseIsOpen();
         if (arguments.isEmpty()) {
             String address = linkCommands.getAddress(sender) + "/register";
@@ -96,7 +97,7 @@ public class RegistrationCommands {
                     .apply(builder -> linkCommands.linkTo(builder, sender, address))
                     .send();
         } else {
-            Optional<String> code = arguments.getAfter("--code");
+            @Untrusted Optional<String> code = arguments.getAfter("--code");
             if (code.isPresent()) {
                 registerUsingCode(sender, code.get());
             } else {
@@ -105,7 +106,7 @@ public class RegistrationCommands {
         }
     }
 
-    public void registerUsingCode(CMDSender sender, String code) {
+    public void registerUsingCode(CMDSender sender, @Untrusted String code) {
         UUID linkedToUUID = sender.getUUID().orElse(null);
         Optional<User> user = RegistrationBin.register(code, linkedToUUID);
         if (user.isPresent()) {
@@ -115,8 +116,8 @@ public class RegistrationCommands {
         }
     }
 
-    public void registerUsingLegacy(CMDSender sender, Arguments arguments) {
-        String password = arguments.get(0)
+    public void registerUsingLegacy(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String password = arguments.get(0)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, "<password>")));
         String passwordHash = PassEncryptUtil.createHash(password);
         int permissionLevel = arguments.getInteger(2)
@@ -128,10 +129,10 @@ public class RegistrationCommands {
         if (senderUUID.isPresent() && senderName.isPresent()) {
             String playerName = senderName.get();
             UUID linkedToUUID = senderUUID.get();
-            String username = arguments.get(1).orElse(playerName);
+            @Untrusted String username = arguments.get(1).orElse(playerName);
             registerUser(new User(username, playerName, linkedToUUID, passwordHash, permissionLevel, Collections.emptyList()), sender, permissionLevel);
         } else {
-            String username = arguments.get(1)
+            @Untrusted String username = arguments.get(1)
                     .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 3, "<password> <name> <level>")));
             registerUser(new User(username, "console", null, passwordHash, permissionLevel, Collections.emptyList()), sender, permissionLevel);
         }
@@ -170,13 +171,13 @@ public class RegistrationCommands {
         }
     }
 
-    public void onUnregister(String mainCommand, CMDSender sender, Arguments arguments) {
-        Optional<String> givenUsername = arguments.get(0).filter(arg -> sender.hasPermission(Permissions.UNREGISTER_OTHER));
+    public void onUnregister(String mainCommand, CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted Optional<String> givenUsername = arguments.get(0).filter(arg -> sender.hasPermission(Permissions.UNREGISTER_OTHER));
 
         Database database = dbSystem.getDatabase();
         UUID playerUUID = sender.getUUID().orElse(null);
 
-        String username;
+        @Untrusted String username;
         if (givenUsername.isEmpty() && playerUUID != null) {
             username = database.query(WebUserQueries.fetchUser(playerUUID))
                     .map(User::getUsername)
@@ -231,8 +232,8 @@ public class RegistrationCommands {
     }
 
 
-    public void onLogoutCommand(CMDSender sender, Arguments arguments) {
-        String loggingOut = arguments.get(0)
+    public void onLogoutCommand(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String loggingOut = arguments.get(0)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, locale.getString(HelpLang.ARG_USERNAME) + "/*")));
 
         if ("*".equals(loggingOut)) {

@@ -27,6 +27,7 @@ import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -79,8 +80,8 @@ public class RegisterResolver implements NoAuthResolver {
     }
 
     public Response getResponse(Request request) {
-        URIQuery query = request.getQuery();
-        Optional<String> checkCode = query.get("code");
+        @Untrusted URIQuery query = request.getQuery();
+        @Untrusted Optional<String> checkCode = query.get("code");
         if (checkCode.isPresent()) {
             return Response.builder()
                     .setStatus(200)
@@ -88,13 +89,13 @@ public class RegisterResolver implements NoAuthResolver {
                     .build();
         }
 
-        URIQuery form = RequestBodyConverter.formBody(request);
-        String username = getUser(form, query);
+        @Untrusted URIQuery form = RequestBodyConverter.formBody(request);
+        @Untrusted String username = getUser(form, query);
 
         boolean alreadyExists = dbSystem.getDatabase().query(WebUserQueries.fetchUser(username)).isPresent();
         if (alreadyExists) throw new BadRequestException("User already exists!");
 
-        String password = getPassword(form, query);
+        @Untrusted String password = getPassword(form, query);
         try {
             String code = RegistrationBin.addInfoForRegistration(username, password);
             return Response.builder()
@@ -109,13 +110,13 @@ public class RegisterResolver implements NoAuthResolver {
         }
     }
 
-    private String getPassword(URIQuery form, URIQuery query) {
+    private String getPassword(@Untrusted URIQuery form, @Untrusted URIQuery query) {
         return form.get("password")
                 .orElseGet(() -> query.get("password")
                         .orElseThrow(() -> new BadRequestException("'password' parameter not defined")));
     }
 
-    private String getUser(URIQuery form, URIQuery query) {
+    private String getUser(@Untrusted URIQuery form, @Untrusted URIQuery query) {
         return form.get("user")
                 .orElseGet(() -> query.get("user")
                         .orElseThrow(() -> new BadRequestException("'user' parameter not defined")));

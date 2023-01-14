@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
@@ -33,7 +34,6 @@ import net.playeranalytics.plugin.PluginInformation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Optional;
 
 @Singleton
 public class PluginStatusCommands {
@@ -80,15 +80,15 @@ public class PluginStatusCommands {
         }, "Plan Reload Thread").start();
     }
 
-    public void onDisable(CMDSender sender, Arguments arguments) {
+    public void onDisable(CMDSender sender, @Untrusted Arguments arguments) {
         if (arguments.isEmpty()) {
             plugin.onDisable();
             sender.send(locale.getString(CommandLang.DISABLE_DISABLED));
             return;
         }
 
-        Optional<String> kickCountDisable = arguments.get(0).filter("kickcount"::equalsIgnoreCase);
-        if (kickCountDisable.isPresent()) {
+        boolean kickCountDisable = arguments.get(0).map("kickcount"::equalsIgnoreCase).orElse(false);
+        if (kickCountDisable) {
             status.setCountKicks(false);
             sender.send(locale.getString(CommandLang.FEATURE_DISABLED, "Kick Counting"));
         } else {

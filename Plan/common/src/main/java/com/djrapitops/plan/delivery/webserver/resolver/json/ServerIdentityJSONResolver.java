@@ -24,6 +24,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -75,7 +76,7 @@ public class ServerIdentityJSONResolver implements Resolver {
     )
     @Override
     public Optional<Response> resolve(Request request) {
-        String serverIdentifier = request.getQuery().get("server")
+        @Untrusted String serverIdentifier = request.getQuery().get("server")
                 .orElseThrow(() -> new BadRequestException("Missing 'server' query parameter"));
         ServerDto server = jsonFactory.serverForIdentifier(serverIdentifier)
                 .orElseThrow(() -> new NotFoundException("Server with identifier '" + serverIdentifier + "' was not found in the database"));

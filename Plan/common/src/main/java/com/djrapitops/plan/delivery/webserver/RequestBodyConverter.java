@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -38,7 +39,7 @@ public class RequestBodyConverter {
         return new URIQuery(new String(request.getRequestBody(), StandardCharsets.UTF_8));
     }
 
-    public static <T> T bodyJson(Request request, Gson gson, Class<T> ofType) {
+    public static <T> T bodyJson(@Untrusted Request request, Gson gson, Class<T> ofType) {
         return gson.fromJson(new String(request.getRequestBody(), StandardCharsets.UTF_8), ofType);
     }
 

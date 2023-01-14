@@ -29,6 +29,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -201,11 +202,11 @@ public class ServerPlaceHolders implements Placeholders {
         registerDynamicCategoryPlaceholders(placeholders, database);
     }
 
-    private ServerUUID getServerUUID(Arguments parameters) {
+    private ServerUUID getServerUUID(@Untrusted Arguments parameters) {
         return parameters.get(0).flatMap(this::getServerUUIDForServerIdentifier).orElseGet(serverInfo::getServerUUID);
     }
 
-    private Optional<ServerUUID> getServerUUIDForServerIdentifier(String serverIdentifier) {
+    private Optional<ServerUUID> getServerUUIDForServerIdentifier(@Untrusted String serverIdentifier) {
         return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
                 .map(Server::getUuid);
     }
@@ -242,7 +243,7 @@ public class ServerPlaceHolders implements Placeholders {
     }
 
     interface QueryCreator<T> {
-        Query<Optional<TopListQueries.TopListEntry<T>>> apply(Integer number, Long timespan, Arguments parameters);
+        Query<Optional<TopListQueries.TopListEntry<T>>> apply(Integer number, Long timespan, @Untrusted Arguments parameters);
     }
 
     public static class TopCategoryQuery<T> {
@@ -266,7 +267,7 @@ public class ServerPlaceHolders implements Placeholders {
             return timeSpan;
         }
 
-        public Query<Optional<TopListQueries.TopListEntry<T>>> getQuery(int i, Arguments parameters) {
+        public Query<Optional<TopListQueries.TopListEntry<T>>> getQuery(int i, @Untrusted Arguments parameters) {
             return queryCreator.apply(i, timeSpanMillis, parameters);
         }
     }

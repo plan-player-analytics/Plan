@@ -33,6 +33,7 @@ import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.swagger.v3.oas.annotations.Operation;
@@ -119,7 +120,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
                 .build());
     }
 
-    private List<UUID> getUUIDList(String jsonString) {
+    private List<UUID> getUUIDList(@Untrusted String jsonString) {
         return gson.fromJson(jsonString, new TypeToken<List<UUID>>() {}.getType());
     }
 

@@ -26,7 +26,9 @@ import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -60,17 +62,22 @@ public class PlayerPageResolver implements Resolver {
     public boolean canAccess(Request request) {
         URIPath path = request.getPath();
         WebUser user = request.getUser().orElse(new WebUser(""));
-        boolean isOwnPage = path.getPart(1).map(nameOrUUID -> {
+        boolean isOwnPage = isOwnPage(path, user);
+        return user.hasPermission("page.player.other") || user.hasPermission("page.player.self") && isOwnPage;
+    }
+
+    @NotNull
+    private Boolean isOwnPage(@Untrusted URIPath path, WebUser user) {
+        return path.getPart(1).map(nameOrUUID -> {
             if (user.getName().equalsIgnoreCase(nameOrUUID)) return true; // name matches user
             return uuidUtility.getNameOf(nameOrUUID).map(user.getName()::equalsIgnoreCase) // uuid matches user
                     .orElse(false); // uuid or name don't match
         }).orElse(true); // No name or UUID given
-        return user.hasPermission("page.player.other") || user.hasPermission("page.player.self") && isOwnPage;
     }
 
     @Override
     public Optional<Response> resolve(Request request) {
-        URIPath path = request.getPath();
+        @Untrusted URIPath path = request.getPath();
         if (StringUtils.containsAny(path.asString(), "/vendor/", "/js/", "/css/", "/img/", "/static/")) {
             return Optional.empty();
         }
@@ -78,7 +85,7 @@ public class PlayerPageResolver implements Resolver {
                 .map(playerName -> getResponse(request.getPath(), playerName));
     }
 
-    private Response getResponse(URIPath path, String playerName) {
+    private Response getResponse(@Untrusted URIPath path, @Untrusted String playerName) {
         UUID playerUUID = uuidUtility.getUUIDOf(playerName);
         if (playerUUID == null) return responseFactory.uuidNotFound404();
 

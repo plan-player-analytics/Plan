@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -115,25 +116,25 @@ public class TabCompleteCache implements SubSystem {
         backupFileNames.clear();
     }
 
-    public List<String> getMatchingServerIdentifiers(String searchFor) {
+    public List<String> getMatchingServerIdentifiers(@Untrusted String searchFor) {
         return findMatches(serverIdentifiers, searchFor);
     }
 
-    public List<String> getMatchingPlayerIdentifiers(String searchFor) {
+    public List<String> getMatchingPlayerIdentifiers(@Untrusted String searchFor) {
         playerIdentifiers.addAll(serverSensor.getOnlinePlayerNames());
         return findMatches(playerIdentifiers, searchFor);
     }
 
-    public List<String> getMatchingUserIdentifiers(String searchFor) {
+    public List<String> getMatchingUserIdentifiers(@Untrusted String searchFor) {
         return findMatches(userIdentifiers, searchFor);
     }
 
-    public List<String> getMatchingBackupFilenames(String searchFor) {
+    public List<String> getMatchingBackupFilenames(@Untrusted String searchFor) {
         return findMatches(backupFileNames, searchFor);
     }
 
     @NotNull
-    List<String> findMatches(Collection<String> searchList, String searchFor) {
+    List<String> findMatches(Collection<String> searchList, @Untrusted String searchFor) {
         List<String> filtered = searchList.stream()
                 .filter(identifier -> searchFor == null || searchFor.isEmpty() || identifier.startsWith(searchFor))
                 .sorted(String.CASE_INSENSITIVE_ORDER)

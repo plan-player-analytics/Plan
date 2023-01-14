@@ -18,6 +18,7 @@ package com.djrapitops.plan.commands.use;
 
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.TriConsumer;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class CommandWithSubcommands extends Subcommand {
         return subcommands;
     }
 
-    public Optional<Subcommand> findSubCommand(Arguments arguments) {
+    public Optional<Subcommand> findSubCommand(@Untrusted Arguments arguments) {
         return arguments.get(0).flatMap(alias -> {
             for (Subcommand subcommand : subcommands) {
                 if (subcommand.getAliases().contains(alias)) {
@@ -65,7 +66,7 @@ public class CommandWithSubcommands extends Subcommand {
         });
     }
 
-    public void onHelp(CMDSender sender, Arguments arguments) {
+    public void onHelp(CMDSender sender, @Untrusted Arguments arguments) {
         List<Subcommand> hasPermissionFor = getPermittedSubcommands(sender);
         sender.buildMessage()
                 .addPart(locale.getString(CommandLang.HEADER_HELP, getPrimaryAlias()))
@@ -89,7 +90,7 @@ public class CommandWithSubcommands extends Subcommand {
                 .send();
     }
 
-    public void onCommand(CMDSender sender, Arguments arguments) {
+    public void onCommand(CMDSender sender, @Untrusted Arguments arguments) {
         if (sender.isMissingPermissionsFor(this)) {
             sender.send(locale.getString(CommandLang.FAIL_NO_PERMISSION) + " " + getRequiredPermissions());
             return;
@@ -101,10 +102,10 @@ public class CommandWithSubcommands extends Subcommand {
         }
     }
 
-    public void executeCommand(CMDSender sender, Arguments arguments) {
-        Optional<String> gotAlias = arguments.get(0);
+    public void executeCommand(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted Optional<String> gotAlias = arguments.get(0);
         if (gotAlias.isPresent()) {
-            String alias = gotAlias.get();
+            @Untrusted String alias = gotAlias.get();
             if ("help".equals(alias)) {
                 onHelp(sender, arguments);
                 return;
@@ -128,8 +129,8 @@ public class CommandWithSubcommands extends Subcommand {
         fallback.accept(sender, arguments);
     }
 
-    public List<String> onTabComplete(CMDSender sender, Arguments arguments) {
-        Optional<String> gotAlias = arguments.get(0);
+    public List<String> onTabComplete(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted Optional<String> gotAlias = arguments.get(0);
         List<String> options = new ArrayList<>();
         if (gotAlias.isPresent()) {
             subcommandsLoop:

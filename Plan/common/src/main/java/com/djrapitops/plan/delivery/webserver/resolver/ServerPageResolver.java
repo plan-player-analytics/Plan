@@ -28,6 +28,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -58,7 +59,7 @@ public class ServerPageResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        String firstPart = request.getPath().getPart(0).orElse("");
+        @Untrusted String firstPart = request.getPath().getPart(0).orElse("");
         WebUser permissions = request.getUser().orElse(new WebUser(""));
         boolean forServerPage = "server".equalsIgnoreCase(firstPart) && permissions.hasPermission("page.server");
         boolean forNetworkPage = "network".equalsIgnoreCase(firstPart) && permissions.hasPermission("page.network");
@@ -92,7 +93,7 @@ public class ServerPageResolver implements Resolver {
         return Optional.of(responseFactory.serverPageResponse(serverUUID));
     }
 
-    private Optional<ServerUUID> getServerUUID(URIPath path) {
+    private Optional<ServerUUID> getServerUUID(@Untrusted URIPath path) {
         if (serverInfo.getServer().isProxy()
                 && path.getPart(0).map("network"::equals).orElse(false)
         ) {

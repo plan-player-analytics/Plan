@@ -14,24 +14,18 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver.auth;
+package com.djrapitops.plan.utilities.dev;
 
-import com.djrapitops.plan.delivery.domain.auth.User;
-import com.djrapitops.plan.utilities.dev.Untrusted;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class CookieAuthentication implements Authentication {
-
-    private final ActiveCookieStore activeCookieStore;
-    @Untrusted
-    private final String cookie;
-
-    public CookieAuthentication(ActiveCookieStore activeCookieStore, @Untrusted String cookie) {
-        this.activeCookieStore = activeCookieStore;
-        this.cookie = cookie;
-    }
-
-    @Override
-    public User getUser() {
-        return activeCookieStore.checkCookie(cookie).orElse(null);
-    }
-}
+/**
+ * Annotation for identifying untrusted data that has not been sanitized.
+ *
+ * @author AuroraLS3
+ */
+@Retention(RetentionPolicy.SOURCE)
+@Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD, ElementType.LOCAL_VARIABLE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE, ElementType.CONSTRUCTOR, ElementType.TYPE})
+public @interface Untrusted {}

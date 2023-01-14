@@ -31,6 +31,7 @@ import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.settings.locale.lang.Lang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -96,7 +97,7 @@ public class LocaleJSONResolver implements NoAuthResolver {
     private Response getResponse(Request request) {
         ResponseBuilder builder = Response.builder();
 
-        Optional<String> langCode = request.getPath().getPart(1);
+        @Untrusted Optional<String> langCode = request.getPath().getPart(1);
         Map<String, Object> json = langCode
                 .map(this::getLocaleJSON)
                 .orElseGet(this::getLanguageListJSON);
@@ -137,7 +138,7 @@ public class LocaleJSONResolver implements NoAuthResolver {
         return json;
     }
 
-    private Map<String, Object> getLocaleJSON(String langCode) {
+    private Map<String, Object> getLocaleJSON(@Untrusted String langCode) {
         try {
             LangCode code = LangCode.valueOf(langCode.toUpperCase());
             Map<String, Object> json = new TreeMap<>();
@@ -153,7 +154,7 @@ public class LocaleJSONResolver implements NoAuthResolver {
             }
 
             return dfs(loadLocale(file), json);
-        } catch (IllegalArgumentException noSuchEnum) {
+        } catch (@Untrusted IllegalArgumentException noSuchEnum) {
             return Collections.emptyMap();
         } catch (IOException dfsFileLookupError) {
             throw new UncheckedIOException(dfsFileLookupError);

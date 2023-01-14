@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor;
 import com.djrapitops.plan.delivery.webserver.auth.Cookie;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.text.TextStringBuilder;
 import org.eclipse.jetty.http.HttpHeader;
@@ -72,11 +73,11 @@ public class JettyInternalRequest implements InternalRequest {
     @Override
     public com.djrapitops.plan.delivery.web.resolver.request.Request toRequest() {
         String requestMethod = baseRequest.getMethod();
-        URIPath path = new URIPath(baseRequest.getHttpURI().getDecodedPath());
-        URIQuery query = new URIQuery(baseRequest.getHttpURI().getQuery());
-        byte[] requestBody = readRequestBody();
+        @Untrusted URIPath path = new URIPath(baseRequest.getHttpURI().getDecodedPath());
+        @Untrusted URIQuery query = new URIQuery(baseRequest.getHttpURI().getQuery());
+        @Untrusted byte[] requestBody = readRequestBody();
         WebUser user = getWebUser(webserverConfiguration, authenticationExtractor);
-        Map<String, String> headers = getRequestHeaders();
+        @Untrusted Map<String, String> headers = getRequestHeaders();
         return new com.djrapitops.plan.delivery.web.resolver.request.Request(requestMethod, path, query, user, headers, requestBody);
     }
 
@@ -106,7 +107,7 @@ public class JettyInternalRequest implements InternalRequest {
 
     @Override
     public List<Cookie> getCookies() {
-        List<String> textCookies = getCookieHeaders();
+        @Untrusted List<String> textCookies = getCookieHeaders();
         List<Cookie> cookies = new ArrayList<>();
         if (!textCookies.isEmpty()) {
             String[] separated = new TextStringBuilder().appendWithSeparators(textCookies, ";").build().split(";");

@@ -21,10 +21,12 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.RowExtractors;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -166,14 +168,12 @@ public class GeoInfoQueries {
         return db -> db.queryList(sql, RowExtractors.getString(GeoInfoTable.GEOLOCATION));
     }
 
-    public static Query<Set<Integer>> userIdsOfPlayersWithGeolocations(List<String> selected) {
+    public static Query<Set<Integer>> userIdsOfPlayersWithGeolocations(@Untrusted List<String> selected) {
         String sql = SELECT + "u." + UsersTable.ID +
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=g." + GeoInfoTable.USER_ID +
                 WHERE + GeoInfoTable.GEOLOCATION +
-                " IN ('" +
-                new TextStringBuilder().appendWithSeparators(selected, "','") +
-                "')";
-        return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID));
+                " IN (" + Sql.nParameters(selected.size()) + ")";
+        return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID), selected);
     }
 }

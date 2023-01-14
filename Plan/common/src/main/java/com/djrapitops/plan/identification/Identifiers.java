@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -63,55 +64,7 @@ public class Identifiers {
         ));
     }
 
-    /**
-     * Obtain UUID of the server.
-     *
-     * @param identifier Identifier (name or uuid string) of the server
-     * @return UUID of the server.
-     * @throws BadRequestException If the server is not in the database.
-     */
-    public Optional<ServerUUID> getServerUUID(String identifier) {
-        Optional<ServerUUID> parsed = UUIDUtility.parseFromString(identifier).map(ServerUUID::from);
-        if (parsed.isPresent()) return parsed;
-        return getServerUUIDFromName(identifier);
-    }
-
-    private Optional<ServerUUID> getServerUUIDFromName(String serverName) {
-        return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverName))
-                .map(Server::getUuid);
-    }
-
-    /**
-     * Obtain UUID of the player.
-     *
-     * @param request for Request, URIQuery needs a 'player' parameter.
-     * @return UUID of the player.
-     * @throws BadRequestException If player parameter is not defined or the player is not in the database.
-     */
-    public UUID getPlayerUUID(Request request) {
-        String playerIdentifier = request.getQuery().get("player")
-                .orElseThrow(() -> new BadRequestException("'player' parameter was not defined.")).trim();
-
-        Optional<UUID> parsed = UUIDUtility.parseFromString(playerIdentifier);
-        return parsed.orElseGet(() -> getPlayerUUIDFromName(playerIdentifier));
-    }
-
-    private UUID getPlayerUUIDFromName(String playerName) {
-        return dbSystem.getDatabase()
-                .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
-                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
-    }
-
-    @Nullable
-    public UUID getPlayerUUID(String name) {
-        return uuidUtility.getUUIDOf(name);
-    }
-
-    public Optional<Integer> getPlayerUserId(UUID playerUUID) {
-        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchUserId(playerUUID));
-    }
-
-    public static Optional<Long> getTimestamp(Request request) {
+    public static Optional<Long> getTimestamp(@Untrusted Request request) {
         try {
             long currentTime = System.currentTimeMillis();
             long timestamp = request.getQuery().get("timestamp")
@@ -124,5 +77,53 @@ public class Identifiers {
         } catch (NumberFormatException nonNumberTimestamp) {
             throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
         }
+    }
+
+    /**
+     * Obtain UUID of the server.
+     *
+     * @param identifier Identifier (name or uuid string) of the server
+     * @return UUID of the server.
+     * @throws BadRequestException If the server is not in the database.
+     */
+    public Optional<ServerUUID> getServerUUID(@Untrusted String identifier) {
+        Optional<ServerUUID> parsed = UUIDUtility.parseFromString(identifier).map(ServerUUID::from);
+        if (parsed.isPresent()) return parsed;
+        return getServerUUIDFromName(identifier);
+    }
+
+    private Optional<ServerUUID> getServerUUIDFromName(@Untrusted String serverName) {
+        return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverName))
+                .map(Server::getUuid);
+    }
+
+    /**
+     * Obtain UUID of the player.
+     *
+     * @param request for Request, URIQuery needs a 'player' parameter.
+     * @return UUID of the player.
+     * @throws BadRequestException If player parameter is not defined or the player is not in the database.
+     */
+    public UUID getPlayerUUID(@Untrusted Request request) {
+        @Untrusted String playerIdentifier = request.getQuery().get("player")
+                .orElseThrow(() -> new BadRequestException("'player' parameter was not defined.")).trim();
+
+        Optional<UUID> parsed = UUIDUtility.parseFromString(playerIdentifier);
+        return parsed.orElseGet(() -> getPlayerUUIDFromName(playerIdentifier));
+    }
+
+    @Nullable
+    public UUID getPlayerUUID(String name) {
+        return uuidUtility.getUUIDOf(name);
+    }
+
+    public Optional<Integer> getPlayerUserId(UUID playerUUID) {
+        return dbSystem.getDatabase().query(UserIdentifierQueries.fetchUserId(playerUUID));
+    }
+
+    private UUID getPlayerUUIDFromName(@Untrusted String playerName) {
+        return dbSystem.getDatabase()
+                .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
+                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
     }
 }

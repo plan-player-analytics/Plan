@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
@@ -84,7 +85,7 @@ public class PlanCommand {
         this.errorLogger = errorLogger;
     }
 
-    private void handleException(RuntimeException error, CMDSender sender, Arguments arguments) {
+    private void handleException(RuntimeException error, CMDSender sender, @Untrusted Arguments arguments) {
         if (error instanceof IllegalArgumentException) {
             sender.send("§c" + error.getMessage());
         } else {
@@ -131,13 +132,13 @@ public class PlanCommand {
         return command;
     }
 
-    public List<String> serverNames(CMDSender sender, Arguments arguments) {
-        String asString = arguments.concatenate(" ");
+    public List<String> serverNames(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String asString = arguments.concatenate(" ");
         return tabCompleteCache.getMatchingServerIdentifiers(asString);
     }
 
-    private List<String> playerNames(CMDSender sender, Arguments arguments) {
-        String asString = arguments.concatenate(" ");
+    private List<String> playerNames(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String asString = arguments.concatenate(" ");
         return tabCompleteCache.getMatchingPlayerIdentifiers(asString);
     }
 
@@ -254,12 +255,12 @@ public class PlanCommand {
                 .build();
     }
 
-    private List<String> webUserNames(CMDSender sender, Arguments arguments) {
+    private List<String> webUserNames(CMDSender sender, @Untrusted Arguments arguments) {
         if (!sender.hasPermission(Permissions.UNREGISTER_OTHER)) {
             return Collections.emptyList();
         }
 
-        String username = arguments.concatenate(" ");
+        @Untrusted String username = arguments.concatenate(" ");
         return tabCompleteCache.getMatchingUserIdentifiers(username);
     }
 
@@ -388,15 +389,15 @@ public class PlanCommand {
                 .build();
     }
 
-    private List<String> getBackupFilenames(CMDSender sender, Arguments arguments) {
+    private List<String> getBackupFilenames(CMDSender sender, @Untrusted Arguments arguments) {
         if (arguments.get(1).isPresent()) {
             return DBType.names();
         }
-        Optional<String> firstArgument = arguments.get(0);
+        @Untrusted Optional<String> firstArgument = arguments.get(0);
         if (firstArgument.isEmpty()) {
             return tabCompleteCache.getMatchingBackupFilenames(null);
         }
-        String part = firstArgument.get();
+        @Untrusted String part = firstArgument.get();
         return tabCompleteCache.getMatchingBackupFilenames(part);
     }
 

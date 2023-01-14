@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.web;
 
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -69,7 +70,7 @@ public class ResolverSvc implements ResolverService {
     }
 
     @Override
-    public List<Resolver> getResolvers(String target) {
+    public List<Resolver> getResolvers(@Untrusted String target) {
         List<Resolver> resolvers = new ArrayList<>();
         for (Container container : basicResolvers) {
             if (container.matcher.test(target)) resolvers.add(container.resolver);

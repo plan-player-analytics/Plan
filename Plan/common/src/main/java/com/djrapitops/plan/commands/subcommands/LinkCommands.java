@@ -33,6 +33,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -92,9 +93,9 @@ public class LinkCommands {
      * @param sender    Sender of command.
      * @param arguments Given arguments.
      */
-    public void onServerCommand(CMDSender sender, Arguments arguments) {
+    public void onServerCommand(CMDSender sender, @Untrusted Arguments arguments) {
         Server server;
-        String identifier = arguments.concatenate(" ");
+        @Untrusted String identifier = arguments.concatenate(" ");
         if (arguments.isEmpty()) {
             server = serverInfo.getServer();
         } else {
@@ -117,7 +118,7 @@ public class LinkCommands {
      * @param sender    Sender of command.
      * @param arguments Given arguments.
      */
-    public void onServersCommand(CMDSender sender, Arguments arguments) {
+    public void onServersCommand(CMDSender sender, @Untrusted Arguments arguments) {
         ensureDatabaseIsOpen();
         String m = colors.getMainColor();
         String s = colors.getSecondaryColor();
@@ -148,8 +149,8 @@ public class LinkCommands {
      * @param sender    Sender of command.
      * @param arguments Given arguments.
      */
-    public void onPlayerCommand(CMDSender sender, Arguments arguments) {
-        String identifier = arguments.concatenate(" ");
+    public void onPlayerCommand(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String identifier = arguments.concatenate(" ");
         UUID playerUUID = identifiers.getPlayerUUID(identifier);
         UUID senderUUID = sender.getUUID().orElse(null);
         if (playerUUID == null) playerUUID = senderUUID;
@@ -174,7 +175,7 @@ public class LinkCommands {
      * @param sender    Sender of command
      * @param arguments Only present to fulfill Subcommand#onCommand requirements.
      */
-    public void onPlayersCommand(CMDSender sender, Arguments arguments) {
+    public void onPlayersCommand(CMDSender sender, @Untrusted Arguments arguments) {
         String address = getAddress(sender) + "/players";
         sender.buildMessage()
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_PLAYERS))
@@ -188,7 +189,7 @@ public class LinkCommands {
      * @param sender    Sender of command
      * @param arguments Only present to fulfill Subcommand#onCommand requirements.
      */
-    public void onNetworkCommand(CMDSender sender, Arguments arguments) {
+    public void onNetworkCommand(CMDSender sender, @Untrusted Arguments arguments) {
         String address = getAddress(sender) + "/network";
         sender.buildMessage()
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_NETWORK))
@@ -205,7 +206,7 @@ public class LinkCommands {
      * @param sender    Sender of command.
      * @param arguments Given arguments.
      */
-    public void onWebUsersCommand(CMDSender sender, Arguments arguments) {
+    public void onWebUsersCommand(CMDSender sender, @Untrusted Arguments arguments) {
         ensureDatabaseIsOpen();
         String m = colors.getMainColor();
         String s = colors.getSecondaryColor();
@@ -227,8 +228,8 @@ public class LinkCommands {
         }
     }
 
-    public void onJson(CMDSender sender, Arguments arguments) {
-        String identifier = arguments.concatenate(" ");
+    public void onJson(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String identifier = arguments.concatenate(" ");
         UUID playerUUID = identifiers.getPlayerUUID(identifier);
         UUID senderUUID = sender.getUUID().orElse(null);
         if (playerUUID == null) playerUUID = senderUUID;

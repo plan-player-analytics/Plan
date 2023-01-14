@@ -21,7 +21,9 @@ import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.exceptions.ExceptionWithContext;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.version.VersionChecker;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.text.TextStringBuilder;
 
 /**
@@ -32,7 +34,9 @@ import org.apache.commons.text.TextStringBuilder;
 public class InternalErrorPage implements Page {
 
     private final String template;
+    @Untrusted
     private final String errorMsg;
+    @Untrusted
     private final Throwable error;
 
     private final VersionChecker versionChecker;
@@ -66,13 +70,13 @@ public class InternalErrorPage implements Page {
         paragraph.append("Please report this issue here: ");
         paragraph.append(Html.LINK.create("https://github.com/plan-player-analytics/Plan/issues", "Issues"));
         paragraph.append("<br><br><pre>");
-        paragraph.append(error).append(" | ").append(errorMsg);
+        paragraph.append(StringEscapeUtils.escapeHtml4(error.toString())).append(" | ").append(StringEscapeUtils.escapeHtml4(errorMsg));
 
         if (error instanceof ExceptionWithContext) {
             ((ExceptionWithContext) error).getContext()
                     .ifPresent(context -> paragraph.append(context.getWhatToDo()
                                     .map(whatToDo -> "<br>What to do about it: " + whatToDo)
-                                    .orElse("<br>Error message: " + error.getMessage()))
+                                    .orElse("<br>Error message: " + StringEscapeUtils.escapeHtml4(error.getMessage())))
                             .append("<br><br>Related things:<br>")
                             .appendWithSeparators(context.toLines(), "<br>")
                             .append("<br>"));
@@ -91,8 +95,8 @@ public class InternalErrorPage implements Page {
         return paragraph.toString();
     }
 
-    private void appendCause(Throwable cause, TextStringBuilder paragraph) {
-        paragraph.append("<br>Caused by: ").append(cause);
+    private void appendCause(@Untrusted Throwable cause, TextStringBuilder paragraph) {
+        paragraph.append("<br>Caused by: ").append(StringEscapeUtils.escapeHtml4(cause.toString()));
         for (StackTraceElement element : cause.getStackTrace()) {
             paragraph.append("<br>");
             paragraph.append("    ").append(element);

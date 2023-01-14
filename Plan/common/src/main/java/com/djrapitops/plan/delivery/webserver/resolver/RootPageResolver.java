@@ -32,6 +32,7 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Resolves '/' URL (Address Root).
@@ -72,7 +73,7 @@ public class RootPageResolver implements NoAuthResolver {
         } else if (user.hasPermission("page.players")) {
             return responseFactory.redirectResponse("players");
         } else if (user.hasPermission("page.player.self")) {
-            return responseFactory.redirectResponse("player/" + Html.encodeToURL(user.getName()));
+            return responseFactory.redirectResponse("player/" + user.getUUID().map(UUID::toString).orElseGet(user::getName));
         } else {
             return responseFactory.forbidden403(user.getName() + " has insufficient permissions to be redirected to any page. Needs one of: 'page.server', 'page.players' or 'page.player.self'");
         }

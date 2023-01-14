@@ -26,7 +26,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
-import org.apache.commons.text.TextStringBuilder;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -104,12 +104,12 @@ public class JoinAddressQueries {
         };
     }
 
-    public static Query<Set<Integer>> userIdsOfPlayersWithJoinAddresses(List<String> joinAddresses) {
+    public static Query<Set<Integer>> userIdsOfPlayersWithJoinAddresses(@Untrusted List<String> joinAddresses) {
         String sql = SELECT + DISTINCT + SessionsTable.USER_ID +
                 FROM + JoinAddressTable.TABLE_NAME + " j" +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " s on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
                 WHERE + JoinAddressTable.JOIN_ADDRESS + " IN (" +
-                new TextStringBuilder().appendWithSeparators(joinAddresses.stream().map(item -> '?').iterator(), ",") +
+                nParameters(joinAddresses.size()) +
                 ')'; // Don't append addresses directly, SQL injection hazard
 
         return db -> db.querySet(sql, RowExtractors.getInt(SessionsTable.USER_ID), joinAddresses.toArray());

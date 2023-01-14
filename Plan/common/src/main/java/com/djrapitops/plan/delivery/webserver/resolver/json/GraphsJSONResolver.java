@@ -29,6 +29,7 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -41,7 +42,6 @@ import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -121,7 +121,7 @@ public class GraphsJSONResolver implements Resolver {
     }
 
     private Response getResponse(Request request) {
-        String type = request.getQuery().get("type")
+        @Untrusted String type = request.getQuery().get("type")
                 .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
 
         DataID dataID = getDataID(type);
@@ -132,7 +132,7 @@ public class GraphsJSONResolver implements Resolver {
                 .build();
     }
 
-    private JSONStorage.StoredJSON getGraphJSON(Request request, DataID dataID) {
+    private JSONStorage.StoredJSON getGraphJSON(@Untrusted Request request, DataID dataID) {
         Optional<Long> timestamp = Identifiers.getTimestamp(request);
 
         JSONStorage.StoredJSON storedJSON;
@@ -151,7 +151,7 @@ public class GraphsJSONResolver implements Resolver {
         return storedJSON;
     }
 
-    private DataID getDataID(String type) {
+    private DataID getDataID(@Untrusted String type) {
         switch (type) {
             case "performance":
                 return DataID.GRAPH_PERFORMANCE;
@@ -186,7 +186,7 @@ public class GraphsJSONResolver implements Resolver {
         }
     }
 
-    private Object generateGraphDataJSONOfType(DataID id, ServerUUID serverUUID, URIQuery query) {
+    private Object generateGraphDataJSONOfType(DataID id, ServerUUID serverUUID, @Untrusted URIQuery query) {
         switch (id) {
             case GRAPH_PERFORMANCE:
                 return graphJSON.performanceGraphJSON(serverUUID);
@@ -218,15 +218,15 @@ public class GraphsJSONResolver implements Resolver {
                             query.get("after").map(Long::parseLong).orElse(0L),
                             query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis())
                     );
-                } catch (NumberFormatException e) {
-                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number) " + e.getMessage());
+                } catch (@Untrusted NumberFormatException e) {
+                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number)");
                 }
             default:
-                return Collections.singletonMap("error", "Undefined ID: " + id.name());
+                throw new BadRequestException("Graph type not supported with server-parameter (" + id.name() + ")");
         }
     }
 
-    private Object generateGraphDataJSONOfType(DataID id, URIQuery query) {
+    private Object generateGraphDataJSONOfType(DataID id, @Untrusted URIQuery query) {
         switch (id) {
             case GRAPH_ACTIVITY:
                 return graphJSON.activityGraphsJSONAsMap();
@@ -246,11 +246,11 @@ public class GraphsJSONResolver implements Resolver {
                             query.get("after").map(Long::parseLong).orElse(0L),
                             query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis())
                     );
-                } catch (NumberFormatException e) {
-                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number) " + e.getMessage());
+                } catch (@Untrusted NumberFormatException e) {
+                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number)");
                 }
             default:
-                return Collections.singletonMap("error", "Undefined ID: " + id.name());
+                throw new BadRequestException("Graph type not supported without server-parameter (" + id.name() + ")");
         }
     }
 }
