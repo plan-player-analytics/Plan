@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.RowExtractors;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
@@ -171,9 +172,7 @@ public class GeoInfoQueries {
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=g." + GeoInfoTable.USER_ID +
                 WHERE + GeoInfoTable.GEOLOCATION +
-                " IN ('" +
-                new TextStringBuilder().appendWithSeparators(selected, "','") +
-                "')";
-        return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID));
+                " IN (" + Sql.nParameters(selected.size()) + ")";
+        return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID), selected);
     }
 }

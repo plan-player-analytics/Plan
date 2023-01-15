@@ -175,6 +175,11 @@ public class ResourceSvc implements ResourceService {
         byte[] bytes = original.asBytes();
         OpenOption[] overwrite = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE};
         Path to = resourceSettings.getCustomizationDirectory().resolve(fileName);
+        if (!to.startsWith(resourceSettings.getCustomizationDirectory())) {
+            throw new IllegalArgumentException(
+                    "Absolute path was given for writing a customized file, " +
+                            "writing outside customization directory is prevented for security reasons.");
+        }
         Path dir = to.getParent();
         if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
         Files.write(to, bytes, overwrite);

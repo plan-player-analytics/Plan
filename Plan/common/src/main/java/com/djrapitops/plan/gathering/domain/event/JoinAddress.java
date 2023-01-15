@@ -31,7 +31,11 @@ public class JoinAddress {
     }
 
     public String getAddress() {
-        return address.get();
+        String joinAddress = address.get();
+        if (joinAddress.contains("\u0000")) {
+            joinAddress = joinAddress.split("\u0000", 2)[0];
+        }
+        return joinAddress;
     }
 
     @Override

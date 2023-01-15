@@ -16,10 +16,13 @@
  */
 package com.djrapitops.plan.storage.database.sql.building;
 
+import org.apache.commons.text.TextStringBuilder;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 
 /**
  * Duplicate String reducing utility class for SQL language Strings.
@@ -55,6 +58,12 @@ public abstract class Sql {
     private static final String MIN = "MIN(";
     private static final String MAX = "MAX(";
     private static final String VARCHAR = "varchar(";
+
+    public static String nParameters(int n) {
+        return new TextStringBuilder()
+                .appendWithSeparators(IntStream.range(0, n).mapToObj(i -> "?").iterator(), ",")
+                .toString();
+    }
 
     public static String varchar(int length) {
         return VARCHAR + length + ')';

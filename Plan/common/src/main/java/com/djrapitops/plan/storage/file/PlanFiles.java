@@ -161,6 +161,9 @@ public class PlanFiles implements SubSystem {
         Path dir = config.get().getResourceSettings().getCustomizationDirectory();
         if (dir.toFile().exists() && dir.toFile().isDirectory()) {
             Path asPath = dir.resolve(resourceName);
+            if (!asPath.startsWith(dir)) {
+                return Optional.empty();
+            }
             File found = asPath.toFile();
             if (found.exists()) {
                 return Optional.of(found);
