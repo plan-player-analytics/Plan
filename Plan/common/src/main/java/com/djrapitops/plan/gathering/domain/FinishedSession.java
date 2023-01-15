@@ -196,8 +196,10 @@ public class FinishedSession implements DateHolder {
                 getExtraData(PlayerKills.class).orElseGet(PlayerKills::new).toJson() + ';' +
                 getExtraData(MobKillCounter.class).orElseGet(MobKillCounter::new).toJson() + ';' +
                 getExtraData(DeathCounter.class).orElseGet(DeathCounter::new).toJson() + ';' +
-                // Join address contains @Untrusted data
-                getExtraData(JoinAddress.class).map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP) + ';' +
+                // Join address contains @Untrusted data so possible ; needs to be neutralized
+                getExtraData(JoinAddress.class).map(JoinAddress::getAddress)
+                        .map(address -> address.replace(';', ':'))
+                        .orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP) + ';' +
                 getExtraData(PlayerName.class).map(PlayerName::get).orElseGet(playerUUID::toString);
     }
 
