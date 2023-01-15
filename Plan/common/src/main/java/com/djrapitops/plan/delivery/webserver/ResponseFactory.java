@@ -84,7 +84,7 @@ public class ResponseFactory {
         this.addresses = addresses;
     }
 
-    public WebResource getResource(String resourceName) {
+    public WebResource getResource(@Untrusted String resourceName) {
         return ResourceService.getInstance().getResource("Plan", resourceName,
                 () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
     }
@@ -205,7 +205,7 @@ public class ResponseFactory {
         return StringUtils.replace(resource, "PLAN_BASE_ADDRESS", address);
     }
 
-    public Response cssResponse(String fileName) {
+    public Response cssResponse(@Untrusted String fileName) {
         try {
             String content = UnaryChain.of(getResource(fileName).asString())
                     .chain(theme::replaceThemeColors)

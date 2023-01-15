@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.file;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
@@ -40,7 +41,7 @@ public class ResourceCache {
         // Static class
     }
 
-    public static Resource getOrCache(String resourceName, Supplier<Resource> resourceSupplier) {
+    public static Resource getOrCache(@Untrusted String resourceName, Supplier<Resource> resourceSupplier) {
         String found = cache.getIfPresent(resourceName);
         if (found == null) {
             Resource created = resourceSupplier.get();

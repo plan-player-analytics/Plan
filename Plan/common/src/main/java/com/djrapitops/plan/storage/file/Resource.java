@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.delivery.web.resource.WebResource;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +39,7 @@ public interface Resource {
      *
      * @return Relative file path given to {@link PlanFiles}.
      */
+    @Untrusted
     String getResourceName();
 
     byte[] asBytes() throws IOException;

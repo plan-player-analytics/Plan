@@ -23,6 +23,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -76,12 +77,12 @@ public class ResourceSvc implements ResourceService {
     }
 
     @Override
-    public WebResource getResource(String pluginName, String fileName, Supplier<WebResource> source) {
+    public WebResource getResource(String pluginName, @Untrusted String fileName, Supplier<WebResource> source) {
         checkParams(pluginName, fileName, source);
         return applySnippets(pluginName, fileName, getTheResource(pluginName, fileName, source));
     }
 
-    public void checkParams(String pluginName, String fileName, Supplier<WebResource> source) {
+    public void checkParams(String pluginName, @Untrusted String fileName, Supplier<WebResource> source) {
         if (pluginName == null || pluginName.isEmpty()) {
             throw new IllegalArgumentException("'pluginName' can't be '" + pluginName + "'!");
         }
@@ -93,7 +94,7 @@ public class ResourceSvc implements ResourceService {
         }
     }
 
-    private WebResource applySnippets(String pluginName, String fileName, WebResource resource) {
+    private WebResource applySnippets(String pluginName, @Untrusted String fileName, WebResource resource) {
         Map<Position, StringBuilder> byPosition = calculateSnippets(fileName);
         if (byPosition.isEmpty()) return resource;
 
@@ -129,7 +130,7 @@ public class ResourceSvc implements ResourceService {
         return html;
     }
 
-    private Map<Position, StringBuilder> calculateSnippets(String fileName) {
+    private Map<Position, StringBuilder> calculateSnippets(@Untrusted String fileName) {
         Map<Position, StringBuilder> byPosition = new EnumMap<>(Position.class);
         for (Snippet snippet : snippets) {
             if (snippet.matches(fileName)) {
@@ -139,7 +140,7 @@ public class ResourceSvc implements ResourceService {
         return byPosition;
     }
 
-    public WebResource getTheResource(String pluginName, String fileName, Supplier<WebResource> source) {
+    public WebResource getTheResource(String pluginName, @Untrusted String fileName, Supplier<WebResource> source) {
         try {
             if (resourceSettings.shouldBeCustomized(pluginName, fileName)) {
                 return getOrWriteCustomized(fileName, source);
@@ -153,7 +154,7 @@ public class ResourceSvc implements ResourceService {
         return source.get();
     }
 
-    public WebResource getOrWriteCustomized(String fileName, Supplier<WebResource> source) throws IOException {
+    public WebResource getOrWriteCustomized(@Untrusted String fileName, Supplier<WebResource> source) throws IOException {
         Optional<Resource> customizedResource = files.getCustomizableResource(fileName);
         if (customizedResource.isPresent()) {
             return readCustomized(customizedResource.get());
@@ -170,11 +171,16 @@ public class ResourceSvc implements ResourceService {
         }
     }
 
-    public WebResource writeCustomized(String fileName, Supplier<WebResource> source) throws IOException {
+    public WebResource writeCustomized(@Untrusted String fileName, Supplier<WebResource> source) throws IOException {
         WebResource original = source.get();
         byte[] bytes = original.asBytes();
         OpenOption[] overwrite = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE};
-        Path to = resourceSettings.getCustomizationDirectory().resolve(fileName);
+        @Untrusted Path to = resourceSettings.getCustomizationDirectory().resolve(fileName);
+        if (!to.startsWith(resourceSettings.getCustomizationDirectory())) {
+            throw new IllegalArgumentException(
+                    "Absolute path was given for writing a customized file, " +
+                            "writing outside customization directory is prevented for security reasons.");
+        }
         Path dir = to.getParent();
         if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
         Files.write(to, bytes, overwrite);

@@ -119,7 +119,7 @@ public class PlanFiles implements SubSystem {
      * @param resourceName Path to the file inside jar/assets/plan/ folder.
      * @return a {@link Resource} for accessing the resource.
      */
-    public Resource getResourceFromJar(String resourceName) {
+    public Resource getResourceFromJar(@Untrusted String resourceName) {
         return new JarResource("assets/plan/" + resourceName, getResourceStream);
     }
 
@@ -134,11 +134,11 @@ public class PlanFiles implements SubSystem {
     }
 
     // TODO Customized file logic should be moved to another class so the circular dependency on config can be removed.
-    public Optional<Resource> getCustomizableResource(String resourceName) {
+    public Optional<Resource> getCustomizableResource(@Untrusted String resourceName) {
         return Optional.ofNullable(findCustomized(resourceName));
     }
 
-    private Resource findCustomized(String resourceName) {
+    private Resource findCustomized(@Untrusted String resourceName) {
         if (config.get().isTrue(CustomizedFileSettings.WEB_DEV_MODE)) {
             // Bypass cache in web developer mode.
             return getFileResource(resourceName);
@@ -147,19 +147,21 @@ public class PlanFiles implements SubSystem {
         }
     }
 
-    private FileResource getFileResource(String resourceName) {
+    private FileResource getFileResource(@Untrusted String resourceName) {
         return attemptToFind(resourceName)
                 .map(found -> new FileResource(resourceName, found))
                 .orElse(null);
     }
 
-    public Optional<File> attemptToFind(String resourceName) {
+    public Optional<File> attemptToFind(@Untrusted String resourceName) {
         Path dir = config.get().getResourceSettings().getCustomizationDirectory();
         if (dir.toFile().exists() && dir.toFile().isDirectory()) {
-            Path asPath = dir.resolve(resourceName);
+            // Path may be absolute due to resolving untrusted path
+            @Untrusted Path asPath = dir.resolve(resourceName);
             if (!asPath.startsWith(dir)) {
                 return Optional.empty();
             }
+            // Now it should be trustworthy
             File found = asPath.toFile();
             if (found.exists()) {
                 return Optional.of(found);

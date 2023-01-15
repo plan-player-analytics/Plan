@@ -19,6 +19,7 @@ package com.djrapitops.plan.settings.config;
 import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class ResourceSettings {
         this.config = config;
     }
 
-    public boolean shouldBeCustomized(String plugin, String fileName) {
+    public boolean shouldBeCustomized(String plugin, @Untrusted String fileName) {
         if (config.isTrue(CustomizedFileSettings.WEB_DEV_MODE) && config.isFalse(PluginSettings.FRONTEND_BETA)) {
             return true;
         }
@@ -48,6 +49,8 @@ public class ResourceSettings {
         fileCustomization.setComment(Collections.singletonList("The files are placed in /Plan/web/ if the setting is 'true' when accessed."));
 
         ConfigNode pluginCustomization = fileCustomization.getNode(plugin).orElseGet(() -> fileCustomization.addNode(plugin));
+
+        // No longer untrusted in configuration context, but may contain untrusted data in other context.
         String fileNameNonPath = StringUtils.replaceChars(fileName, '.', ',');
 
         if (pluginCustomization.contains(fileNameNonPath)) {
