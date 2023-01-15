@@ -133,6 +133,7 @@ com.djrapitops.plan.utilities
 com.djrapitops.plan.utilities.analysis
 com.djrapitops.plan.utilities.chat
 com.djrapitops.plan.utilities.comparators
+com.djrapitops.plan.utilities.dev
 com.djrapitops.plan.utilities.html.icon
 com.djrapitops.plan.utilities.java
 com.djrapitops.plan.utilities.logging
