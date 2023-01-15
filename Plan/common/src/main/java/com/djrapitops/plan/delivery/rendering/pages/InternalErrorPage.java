@@ -42,7 +42,7 @@ public class InternalErrorPage implements Page {
     private final VersionChecker versionChecker;
 
     public InternalErrorPage(
-            String template, String errorMsg, Throwable error,
+            String template, String errorMsg, @Untrusted Throwable error,
             VersionChecker versionChecker
     ) {
         this.template = template;

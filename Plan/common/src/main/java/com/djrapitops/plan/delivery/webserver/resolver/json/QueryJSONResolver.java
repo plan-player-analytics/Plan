@@ -164,7 +164,7 @@ public class QueryJSONResolver implements Resolver {
                     .orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
             return new InputQueryDto(view, queryFilters);
         } catch (IOException e) {
-            throw new BadRequestException("Failed to decode json: '" + q + "', " + e.getMessage());
+            throw new BadRequestException("Failed to decode json");
         }
     }
 
@@ -202,7 +202,7 @@ public class QueryJSONResolver implements Resolver {
                     .setJSONContent(stored.json)
                     .build();
         } catch (ParseException e) {
-            throw new BadRequestException("'view' date format was incorrect (expecting afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm}): " + e.getMessage());
+            throw new BadRequestException("'view' date format was incorrect (expecting afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm})");
         }
     }
 

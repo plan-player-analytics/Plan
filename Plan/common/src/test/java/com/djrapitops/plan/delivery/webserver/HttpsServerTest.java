@@ -16,11 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
-import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
-import com.djrapitops.plan.exceptions.connection.ForbiddenException;
-import com.djrapitops.plan.exceptions.connection.WebException;
 import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.Test;
 import utilities.HTTPConnector;
@@ -68,19 +64,12 @@ interface HttpsServerTest {
             int responseCode = connection.getResponseCode();
 
             switch (responseCode) {
-                case 200:
-                case 302:
-                    return;
-                case 400:
-                    throw new BadRequestException("Bad Request: " + address);
-                case 403:
-                    throw new ForbiddenException(address + " returned 403");
-                case 404:
-                    throw new NotFoundException(address + " returned a 404, ensure that your server is connected to an up to date Plan server.");
-                case 500:
-                    throw new IllegalStateException(); // Not supported
-                default:
-                    throw new WebException(address + "| Wrong response code " + responseCode);
+                case 200, 302 -> {}
+                case 400 -> throw new IllegalStateException("Bad Request: " + address);
+                case 403 -> throw new IllegalStateException(address + " returned 403");
+                case 404 -> throw new IllegalStateException(address + " returned a 404.");
+                case 500 -> throw new IllegalStateException(); // Not supported
+                default -> throw new IllegalStateException(address + "| Wrong response code " + responseCode);
             }
         } finally {
             connection.disconnect();

@@ -33,7 +33,6 @@ import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerJsonResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerPageResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.ForbiddenException;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -173,8 +172,6 @@ public class ResponseResolver {
             return tryToGetResponse(request);
         } catch (NotFoundException e) {
             return responseFactory.notFound404(e.getMessage());
-        } catch (ForbiddenException e) {
-            return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
             return responseFactory.badRequest(e.getMessage(), request.getPath().asString());
         } catch (WebUserAuthException e) {
@@ -187,7 +184,6 @@ public class ResponseResolver {
 
     /**
      * @throws NotFoundException   In some cases when page was not found, not all.
-     * @throws ForbiddenException  If the user is not allowed to see the page
      * @throws BadRequestException If the request did not have required things.
      */
     private Response tryToGetResponse(@Untrusted Request request) {

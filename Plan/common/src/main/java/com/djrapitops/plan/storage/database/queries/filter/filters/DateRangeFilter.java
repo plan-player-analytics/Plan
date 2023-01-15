@@ -76,8 +76,8 @@ public abstract class DateRangeFilter implements Filter {
 
         try {
             return dateFormat.parse(date + ' ' + time).getTime();
-        } catch (ParseException e) {
-            throw new IllegalArgumentException(e);
+        } catch (@Untrusted ParseException e) {
+            throw new IllegalArgumentException("Could not parse date from given '" + dateKey + "' and '" + timeKey + "' - expected format dd/MM/yyyy and kk:mm");
         }
     }
 }

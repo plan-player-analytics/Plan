@@ -38,6 +38,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Lazy;
 import org.apache.commons.lang3.StringUtils;
@@ -219,7 +220,7 @@ public class PageFactory {
         );
     }
 
-    public Page internalErrorPage(String message, Throwable error) {
+    public Page internalErrorPage(String message, @Untrusted Throwable error) {
         try {
             return new InternalErrorPage(
                     getResource("error.html"), message, error,

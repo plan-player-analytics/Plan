@@ -74,8 +74,8 @@ public class Identifiers {
                 return Optional.empty();
             }
             return Optional.of(timestamp);
-        } catch (NumberFormatException nonNumberTimestamp) {
-            throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
+        } catch (@Untrusted NumberFormatException nonNumberTimestamp) {
+            throw new BadRequestException("'timestamp' was not a number");
         }
     }
 

@@ -79,7 +79,7 @@ public class ServerIdentityJSONResolver implements Resolver {
         @Untrusted String serverIdentifier = request.getQuery().get("server")
                 .orElseThrow(() -> new BadRequestException("Missing 'server' query parameter"));
         ServerDto server = jsonFactory.serverForIdentifier(serverIdentifier)
-                .orElseThrow(() -> new NotFoundException("Server with identifier '" + serverIdentifier + "' was not found in the database"));
+                .orElseThrow(() -> new NotFoundException("Server with given identifier was not found in the database"));
         return Optional.of(Response.builder()
                 .setJSONContent(server)
                 .build());

@@ -96,7 +96,7 @@ public class ResponseFactory {
                 .build();
     }
 
-    private Response forInternalError(Throwable error, String cause) {
+    private Response forInternalError(@Untrusted Throwable error, String cause) {
         return Response.builder()
                 .setMimeType(MimeType.HTML)
                 .setContent(pageFactory.internalErrorPage(cause, error).toHtml())
@@ -171,7 +171,7 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response javaScriptResponse(String fileName) {
+    public Response javaScriptResponse(@Untrusted String fileName) {
         try {
             String content = UnaryChain.of(getResource(fileName).asString())
                     .chain(this::replaceMainAddressPlaceholder)
@@ -189,7 +189,7 @@ public class ResponseFactory {
                     .setStatus(200)
                     .build();
         } catch (UncheckedIOException e) {
-            return notFound404("JS File not found from jar: " + fileName + ", " + e);
+            return notFound404("Javascript File not found");
         }
     }
 
@@ -217,11 +217,11 @@ public class ResponseFactory {
                     .setStatus(200)
                     .build();
         } catch (UncheckedIOException e) {
-            return notFound404("CSS File not found from jar: " + fileName + ", " + e);
+            return notFound404("CSS File not found");
         }
     }
 
-    public Response imageResponse(String fileName) {
+    public Response imageResponse(@Untrusted String fileName) {
         try {
             return Response.builder()
                     .setMimeType(MimeType.IMAGE)
@@ -229,11 +229,11 @@ public class ResponseFactory {
                     .setStatus(200)
                     .build();
         } catch (UncheckedIOException e) {
-            return notFound404("Image File not found from jar: " + fileName + ", " + e);
+            return notFound404("Image File not found");
         }
     }
 
-    public Response fontResponse(String fileName) {
+    public Response fontResponse(@Untrusted String fileName) {
         String type;
         if (fileName.endsWith(".woff")) {
             type = MimeType.FONT_WOFF;
@@ -252,7 +252,7 @@ public class ResponseFactory {
                     .setContent(getResource(fileName))
                     .build();
         } catch (UncheckedIOException e) {
-            return notFound404("Font File not found from jar: " + fileName + ", " + e);
+            return notFound404("Font File not found");
         }
     }
 

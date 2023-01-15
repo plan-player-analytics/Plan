@@ -96,7 +96,7 @@ public class QueryFilters {
 
     private Filter.Result apply(Filter.Result current, @Untrusted InputFilterDto inputFilterDto) {
         @Untrusted String kind = inputFilterDto.getKind();
-        Filter filter = getFilter(kind).orElseThrow(() -> new BadRequestException("Filter kind not supported: '" + kind + "'"));
+        Filter filter = getFilter(kind).orElseThrow(() -> new BadRequestException("Given Filter 'kind' not supported"));
 
         return getResult(current, filter, inputFilterDto);
     }
@@ -106,8 +106,7 @@ public class QueryFilters {
             return current == null ? filter.apply(query) : current.apply(filter, query);
         } catch (IllegalArgumentException badOptions) {
             throw new BadRequestException("Bad parameters for filter '" + filter.getKind() +
-                    "': expecting " + Arrays.asList(filter.getExpectedParameters()) +
-                    ", but was given " + query.getSetParameters());
+                    "': expecting " + Arrays.asList(filter.getExpectedParameters()) + " as parameters");
         }
     }
 

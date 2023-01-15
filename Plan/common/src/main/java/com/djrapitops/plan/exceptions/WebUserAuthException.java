@@ -17,14 +17,13 @@
 package com.djrapitops.plan.exceptions;
 
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
-import com.djrapitops.plan.exceptions.connection.WebException;
 
 /**
  * Thrown when WebUser can not be authorized (WebServer).
  *
  * @author AuroraLS3
  */
-public class WebUserAuthException extends WebException {
+public class WebUserAuthException extends IllegalStateException {
 
     private final FailReason failReason;
 
