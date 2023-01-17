@@ -91,11 +91,19 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer player, @Untrusted String params) {
-        UUID uuid = player != null ? player.getUniqueId() : null;
-        if ("Server thread".equalsIgnoreCase(Thread.currentThread().getName())) {
-            return getCached(params, uuid);
+        try {
+            UUID uuid = player != null ? player.getUniqueId() : null;
+            if ("Server thread".equalsIgnoreCase(Thread.currentThread().getName())) {
+                return getCached(params, uuid);
+            }
+            return getPlaceholderValue(params, uuid);
+        } catch (IllegalStateException e) {
+            if ("zip file closed".equals(e.getMessage())) {
+                return null; // Plan is disabled.
+            } else {
+                throw e;
+            }
         }
-        return getPlaceholderValue(params, uuid);
     }
 
     private String getPlaceholderValue(@Untrusted String params, UUID uuid) {

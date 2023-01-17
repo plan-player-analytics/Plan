@@ -30,6 +30,8 @@ public class BukkitPlaceholderRegistrar {
     private final PlanSystem system;
     private final ErrorLogger errorLogger;
 
+    private PlanPlaceholderExtension placeholderExtension;
+
     @Inject
     public BukkitPlaceholderRegistrar(
             PlanPlaceholders placeholders,
@@ -42,6 +44,13 @@ public class BukkitPlaceholderRegistrar {
     }
 
     public void register() {
-        new PlanPlaceholderExtension(placeholders, system, errorLogger).register();
+        placeholderExtension = new PlanPlaceholderExtension(placeholders, system, errorLogger);
+        placeholderExtension.register();
+    }
+
+    public void unregister() {
+        if (placeholderExtension != null) {
+            placeholderExtension.unregister();
+        }
     }
 }

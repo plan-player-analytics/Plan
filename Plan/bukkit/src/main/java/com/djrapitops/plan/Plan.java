@@ -58,6 +58,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
     private ErrorLogger errorLogger;
+    private PlanBukkitComponent component;
 
     @Override
     public void onLoad() {
@@ -68,7 +69,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     @Override
     public void onEnable() {
-        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder()
+        component = DaggerPlanBukkitComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
                 .server(getServer())
@@ -135,9 +136,16 @@ public class Plan extends JavaPlugin implements PlanPlugin {
     public void onDisable() {
         storeSessionsOnShutdown();
         cancelAllTasks();
+        if (component != null) unregisterPlaceholders(component.placeholders());
         if (system != null) system.disable();
 
         pluginLogger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED));
+    }
+
+    private void unregisterPlaceholders(BukkitPlaceholderRegistrar placeholders) {
+        if (placeholders != null) {
+            placeholders.unregister();
+        }
     }
 
     private void storeSessionsOnShutdown() {
