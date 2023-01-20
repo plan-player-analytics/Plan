@@ -17,6 +17,7 @@
 package extension;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -83,6 +84,7 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 PlanConfig.class.equals(type) ||
                 ServerUUID.class.equals(type) ||
                 PlanPluginComponent.class.equals(type) ||
+                PlanCommand.class.equals(type) ||
                 Database.class.equals(type) ||
                 Exporter.class.equals(type);
     }
@@ -105,6 +107,13 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
         if (PlanPluginComponent.class.equals(type)) {
             try {
                 return component.getComponent();
+            } catch (Exception e) {
+                throw new ParameterResolutionException("Error getting " + type.getName(), e);
+            }
+        }
+        if (PlanCommand.class.equals(type)) {
+            try {
+                return component.getComponent().planCommand();
             } catch (Exception e) {
                 throw new ParameterResolutionException("Error getting " + type.getName(), e);
             }
