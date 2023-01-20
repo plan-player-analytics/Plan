@@ -16,9 +16,15 @@
  */
 package net.playeranalytics.plugin.server;
 
+import com.djrapitops.plan.component.Component;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 public class FabricPluginLogger implements PluginLogger {
+
+    private static final String CHAT_COLOR_REGEX = "§[0-9a-fk-or]";
+    private static final String MESSAGE_FORMAT = "[Plan] {}";
 
     private final Logger logger;
 
@@ -26,39 +32,38 @@ public class FabricPluginLogger implements PluginLogger {
         this.logger = logger;
     }
 
-    @Override
-    public PluginLogger info(String message) {
-        logger.info("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""));
-        return this;
+    @NotNull
+    private static String removeChatColors(String message) {
+        return message.replaceAll(CHAT_COLOR_REGEX, "");
     }
 
-    public void info(String message, Object... args) {
-        String replacedMsg = message.replaceAll("(?<=\\{).+?(?=})", "");
-        String formattedMsg = "[Plan] " + replacedMsg;
-        logger.info(formattedMsg.replaceAll("§[0-9a-fk-or]", ""), args);
+    @Override
+    public PluginLogger info(String message) {
+        logger.info(MESSAGE_FORMAT, StringUtils.contains(message, Component.SECTION) ? removeChatColors(message) : message);
+        return this;
     }
 
     @Override
     public PluginLogger warn(String message) {
-        logger.warn("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""));
+        logger.warn(MESSAGE_FORMAT, StringUtils.contains(message, Component.SECTION) ? removeChatColors(message) : message);
         return this;
     }
 
     @Override
     public PluginLogger error(String message) {
-        logger.error("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""));
+        logger.error(MESSAGE_FORMAT, StringUtils.contains(message, Component.SECTION) ? removeChatColors(message) : message);
         return this;
     }
 
     @Override
     public PluginLogger warn(String message, Throwable throwable) {
-        logger.warn("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""), throwable);
+        logger.warn(MESSAGE_FORMAT, StringUtils.contains(message, Component.SECTION) ? removeChatColors(message) : message, throwable);
         return this;
     }
 
     @Override
     public PluginLogger error(String message, Throwable throwable) {
-        logger.error("[Plan] " + message.replaceAll("§[0-9a-fk-or]", ""), throwable);
+        logger.error(MESSAGE_FORMAT, StringUtils.contains(message, Component.SECTION) ? removeChatColors(message) : message, throwable);
         return this;
     }
 }

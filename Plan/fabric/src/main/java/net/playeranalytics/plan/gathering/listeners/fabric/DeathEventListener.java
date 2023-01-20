@@ -59,9 +59,9 @@ public class DeathEventListener implements FabricListener {
 
     @Override
     public void register() {
-        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) -> {
-            PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
-        });
+        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) ->
+                PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer)
+        );
         PlanFabricEvents.ON_KILLED.register((victim, killer) -> {
             if (!this.isEnabled) {
                 return;
@@ -101,14 +101,14 @@ public class DeathEventListener implements FabricListener {
     }
 
     public Optional<ServerPlayerEntity> getCause(Entity killer) {
-        if (killer instanceof ServerPlayerEntity) return Optional.of((ServerPlayerEntity) killer);
-        if (killer instanceof TameableEntity) return getOwner((TameableEntity) killer);
-        if (killer instanceof ProjectileEntity) return getShooter((ProjectileEntity) killer);
+        if (killer instanceof ServerPlayerEntity player) return Optional.of(player);
+        if (killer instanceof TameableEntity tamed) return getOwner(tamed);
+        if (killer instanceof ProjectileEntity projectile) return getShooter(projectile);
         return Optional.empty();
     }
 
     public String findWeapon(Entity killer) {
-        if (killer instanceof ServerPlayerEntity) return getItemInHand((ServerPlayerEntity) killer);
+        if (killer instanceof ServerPlayerEntity player) return getItemInHand(player);
 
         // Projectile, EnderCrystal and all other causes that are not known yet
         return new EntityNameFormatter().apply(killer.getType().getName().getString());
@@ -121,8 +121,8 @@ public class DeathEventListener implements FabricListener {
 
     private Optional<ServerPlayerEntity> getShooter(ProjectileEntity projectile) {
         Entity source = projectile.getOwner();
-        if (source instanceof ServerPlayerEntity) {
-            return Optional.of((ServerPlayerEntity) source);
+        if (source instanceof ServerPlayerEntity player) {
+            return Optional.of(player);
         }
 
         return Optional.empty();
@@ -134,8 +134,8 @@ public class DeathEventListener implements FabricListener {
         }
 
         Entity owner = tameable.getOwner();
-        if (owner instanceof ServerPlayerEntity) {
-            return Optional.of((ServerPlayerEntity) owner);
+        if (owner instanceof ServerPlayerEntity player) {
+            return Optional.of(player);
         }
 
         return Optional.empty();
