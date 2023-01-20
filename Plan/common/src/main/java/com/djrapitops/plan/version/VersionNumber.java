@@ -23,7 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VersionNumber implements Comparable<VersionNumber> {
-    private static final Pattern MATCH_NUMBERS = Pattern.compile("([0-9]+)");
+    private static final Pattern MATCH_NUMBERS = Pattern.compile("(\\d+)");
 
     private final String version;
     private final List<Long> versionNumbers;

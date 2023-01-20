@@ -26,7 +26,6 @@ import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -109,14 +108,5 @@ public class AfterBadJoinAddressDataCorrectionPatch extends Patch {
                 ")";
         return query(db -> db.queryOptional(sql, results -> results.getInt("c") > 0))
                 .orElse(false);
-    }
-
-    private Set<Integer> getBadAddressIds() {
-        String sql = SELECT + DISTINCT + SessionsTable.JOIN_ADDRESS_ID +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.JOIN_ADDRESS_ID + " NOT IN (" +
-                SELECT + JoinAddressTable.ID + FROM + JoinAddressTable.TABLE_NAME +
-                ")";
-        return query(db -> db.querySet(sql, results -> results.getInt(SessionsTable.JOIN_ADDRESS_ID)));
     }
 }

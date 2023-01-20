@@ -17,6 +17,8 @@
 package com.djrapitops.plan.settings.config;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.ZoneId;
 import java.util.Optional;
@@ -31,33 +33,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TimeZoneUtilityTest {
 
-    @Test
-    void utcIsValidZoneID() {
-        ZoneId zone = ZoneId.of("UTC");
-        assertNotNull(zone);
-    }
-
-    @Test
-    void gmtPlusIsValidZoneID() {
-        ZoneId zone = ZoneId.of("GMT+3");
-        assertNotNull(zone);
-    }
-
-    @Test
-    void gmtMinusIsValidZoneID() {
-        ZoneId zone = ZoneId.of("GMT-3");
-        assertNotNull(zone);
-    }
-
-    @Test
-    void gmtPlusMinutesIsValidZoneID() {
-        ZoneId zone = ZoneId.of("GMT+03:30");
-        assertNotNull(zone);
-    }
-
-    @Test
-    void gmtMinusMinutesIsValidZoneID() {
-        ZoneId zone = ZoneId.of("GMT-03:30");
+    @ParameterizedTest
+    @CsvSource({
+            "UTC",
+            "GMT+3",
+            "GMT-3",
+            "GMT+03:30",
+            "GMT-03:30"
+    })
+    void isValidZoneId(String zoneId) {
+        ZoneId zone = ZoneId.of(zoneId);
         assertNotNull(zone);
     }
 

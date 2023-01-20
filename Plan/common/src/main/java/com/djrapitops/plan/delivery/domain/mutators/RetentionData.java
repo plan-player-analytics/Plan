@@ -46,8 +46,8 @@ public class RetentionData {
             totalPlayersOnline += retentionData.getOnlineOnJoin();
         }
 
-        double averageIndex = totalIndex / (double) size;
-        double averagePlayersOnline = totalPlayersOnline / (double) size;
+        double averageIndex = totalIndex / size;
+        double averagePlayersOnline = totalPlayersOnline / size;
 
         return new RetentionData(averageIndex, averagePlayersOnline);
     }

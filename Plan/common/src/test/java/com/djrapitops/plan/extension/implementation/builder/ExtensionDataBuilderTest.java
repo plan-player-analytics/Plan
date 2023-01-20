@@ -25,7 +25,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ExtensionDataBuilderTest {
+class ExtensionDataBuilderTest {
     @Test
     void nullTextWhenCreatingValueBuilderThrowsException() {
         ExtDataBuilder builder = new ExtDataBuilder(new Extension());

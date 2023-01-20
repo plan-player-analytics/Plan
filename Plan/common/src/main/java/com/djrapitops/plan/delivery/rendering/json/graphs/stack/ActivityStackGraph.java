@@ -59,7 +59,7 @@ class ActivityStackGraph extends StackGraph {
 
         for (Map<String, Integer> data : activityData.values()) {
             for (int j = 0; j < groups.length; j++) {
-                dataSets[j].add((double) data.getOrDefault(defaultGroups[j], 0));
+                dataSets[j].add(data.getOrDefault(defaultGroups[j], 0));
             }
         }
 

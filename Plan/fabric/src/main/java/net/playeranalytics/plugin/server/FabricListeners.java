@@ -34,13 +34,13 @@ public class FabricListeners implements Listeners {
     public void registerListener(Object listener) {
         if (listener == null) {
             throw new IllegalArgumentException("Listener can not be null!");
-        } else if (!(listener instanceof FabricListener)) {
-            throw new IllegalArgumentException("Listener needs to be of type " + listener.getClass().getName() + ", but was " + listener.getClass());
-        } else {
-            if (!((FabricListener) listener).isEnabled()) {
-                ((FabricListener) listener).register();
-                listeners.add((FabricListener) listener);
+        } else if (listener instanceof FabricListener fabricListener) {
+            if (!fabricListener.isEnabled()) {
+                fabricListener.register();
+                listeners.add(fabricListener);
             }
+        } else {
+            throw new IllegalArgumentException("Listener needs to be of type " + listener.getClass().getName() + ", but was " + listener.getClass());
         }
     }
 

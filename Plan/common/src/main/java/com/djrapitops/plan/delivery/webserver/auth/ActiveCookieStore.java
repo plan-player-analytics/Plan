@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 public class ActiveCookieStore implements SubSystem {
 
     private static final Map<String, User> USERS_BY_COOKIE = new ConcurrentHashMap<>();
-    public static long cookieExpiresAfterMs = TimeUnit.HOURS.toMillis(2L);
+    private static long cookieExpiresAfterMs = TimeUnit.HOURS.toMillis(2L);
 
     private final ActiveCookieExpiryCleanupTask activeCookieExpiryCleanupTask;
 
@@ -65,6 +65,10 @@ public class ActiveCookieStore implements SubSystem {
         this.config = config;
         this.dbSystem = dbSystem;
         this.processing = processing;
+    }
+
+    public static long getCookieExpiresAfterMs() {
+        return cookieExpiresAfterMs;
     }
 
     private static void removeCookieStatic(String cookie) {

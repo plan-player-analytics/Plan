@@ -18,6 +18,10 @@ package com.djrapitops.plan.utilities.analysis;
 
 public class Percentage {
 
+    private Percentage() {
+        /* static utility method class */
+    }
+
     public static double calculate(double amount, long total) {
         return calculate(amount, total, 0);
     }

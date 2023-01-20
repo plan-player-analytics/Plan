@@ -46,15 +46,16 @@ public class FabricVersionChecker extends VersionChecker {
         super(currentVersion, locale, config, logger, runnableFactory, errorLogger);
     }
 
+    @Override
     public Optional<VersionInfo> getNewVersionAvailable() {
         if (newVersionAvailable == null) {
             return Optional.empty();
         } else {
             return Optional.of(new VersionInfo(
-                newVersionAvailable.isRelease(),
-                newVersionAvailable.getVersion(),
-                newVersionAvailable.getDownloadUrl().replace("Plan-", "PlanFabric-"),
-                newVersionAvailable.getChangeLogUrl()
+                    newVersionAvailable.isRelease(),
+                    newVersionAvailable.getVersion(),
+                    newVersionAvailable.getDownloadUrl().replace("Plan-", "PlanFabric-"),
+                    newVersionAvailable.getChangeLogUrl()
             ));
         }
     }

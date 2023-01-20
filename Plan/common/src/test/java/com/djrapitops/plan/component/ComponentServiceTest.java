@@ -26,34 +26,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(FullSystemExtension.class)
-public class ComponentServiceTest {
+class ComponentServiceTest {
 
     static ComponentSvc service;
 
     @BeforeAll
-    public static void enableSystem(PlanSystem system) {
+    static void enableSystem(PlanSystem system) {
         system.enable();
         service = (ComponentSvc) ComponentService.getInstance();
     }
 
     @AfterAll
-    public static void tearDown(PlanSystem system) {
+    static void tearDown(PlanSystem system) {
         service = null;
         system.disable();
     }
 
     @Test
-    public void translateTest() {
+    void translateTest() {
         assertEquals("§cred", service.translateLegacy("&cred"));
     }
 
     @Test
-    public void invalidTranslateTest() {
+    void invalidTranslateTest() {
         assertEquals("&zinvalid color code", service.translateLegacy("&zinvalid color code"));
     }
 
     @Test
-    public void testAutoDetermine() {
+    void testAutoDetermine() {
         assertEquals("§cred", service.convert(service.fromAutoDetermine("<red>red"), ComponentOperation.LEGACY, Component.SECTION));
         assertEquals("§cred", service.convert(service.fromAutoDetermine("&cred"), ComponentOperation.LEGACY, Component.SECTION));
         assertEquals("&cred", service.convert(service.fromAutoDetermine("§cred"), ComponentOperation.LEGACY, Component.AMPERSAND));

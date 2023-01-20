@@ -73,12 +73,10 @@ public class PassBruteForceGuard {
         }
 
         @Override
-        public void increaseAttemptCountOnFailedLogin(String accessor) {
-        }
+        public void increaseAttemptCountOnFailedLogin(String accessor) { /* Disabled */ }
 
         @Override
-        public void resetAttemptCount(String accessor) {
-        }
+        public void resetAttemptCount(String accessor) { /* Disabled */ }
     }
 
 }

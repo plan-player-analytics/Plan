@@ -44,11 +44,10 @@ public abstract class ServerInfo implements SubSystem {
     }
 
     public ServerUUID getServerUUID() {
-        return getServer().getUuid();
+        return server.getUuid();
     }
 
     public ServerIdentifier getServerIdentifier() {
-        Server server = getServer();
         return new ServerIdentifier(server.getUuid(), server.getIdentifiableName());
     }
 

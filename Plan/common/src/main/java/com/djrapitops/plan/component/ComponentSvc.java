@@ -31,9 +31,8 @@ public class ComponentSvc implements ComponentService {
 
     private ComponentConverter converter;
 
-    // This is required to inject
     @Inject
-    public ComponentSvc() {}
+    public ComponentSvc() {/* Dagger constructor */}
 
     @Override
     public String translateLegacy(String input, char inputCharacter, char outputCharacter) {

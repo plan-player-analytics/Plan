@@ -185,8 +185,4 @@ public class PlanVelocity implements PlanPlugin {
     public File getDataFolder() {
         return dataFolderPath.toFile();
     }
-
-    private String fixMsgParams(String message) {
-        return message.replaceAll("\\{\\d+}", "{}");
-    }
 }

@@ -125,12 +125,7 @@ public class MySQLDB extends SQLDB {
             increment();
 
             hikariConfig.setAutoCommit(false);
-            try {
-                hikariConfig.setMaximumPoolSize(config.get(DatabaseSettings.MAX_CONNECTIONS));
-            } catch (IllegalStateException e) {
-                logger.warn(e.getMessage() + ", using 1 as maximum for now.");
-                hikariConfig.setMaximumPoolSize(1);
-            }
+            setMaxConnections(hikariConfig);
             hikariConfig.setMaxLifetime(TimeUnit.MINUTES.toMillis(25L));
             hikariConfig.setLeakDetectionThreshold(TimeUnit.SECONDS.toMillis(29L));
 
@@ -143,6 +138,15 @@ public class MySQLDB extends SQLDB {
 
         // Reset the context classloader back to what it was originally set to, now that the DataSource is created
         currentThread.setContextClassLoader(previousClassLoader);
+    }
+
+    private void setMaxConnections(HikariConfig hikariConfig) {
+        try {
+            hikariConfig.setMaximumPoolSize(config.get(DatabaseSettings.MAX_CONNECTIONS));
+        } catch (IllegalStateException e) {
+            logger.warn(e.getMessage() + ", using 1 as maximum for now.");
+            hikariConfig.setMaximumPoolSize(1);
+        }
     }
 
     private void unloadMySQLDriver() {

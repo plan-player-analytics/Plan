@@ -59,7 +59,7 @@ public class JSONFileStorage implements JSONStorage {
     private final Path jsonDirectory;
 
     private final ReentrantLockHelper readWriteProtectionLock = new ReentrantLockHelper();
-    private final Pattern timestampRegex = Pattern.compile(".*-([0-9]*).json");
+    private final Pattern timestampRegex = Pattern.compile(".*-(\\d*).json");
     private static final String JSON_FILE_EXTENSION = ".json";
 
     private final Formatter<Long> dateFormatter;

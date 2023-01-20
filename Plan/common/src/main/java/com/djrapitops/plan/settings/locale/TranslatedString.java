@@ -117,6 +117,7 @@ class TranslatedString {
 
         @Override
         public void translate(String replace, String with) {
+            /* Some elements should not be translated, like URLs */
         }
 
         @Override

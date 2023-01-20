@@ -68,7 +68,7 @@ public class ComponentConverterImpl implements ComponentConverter {
             boolean isMM = false;
             try {
                 isMM = MiniMessage.miniMessage().stripTags(input).length() != input.length();
-            } catch (Throwable ignored) {
+            } catch (Exception ignored) {
                 // MiniMessage may in some cases throw an exception, for example when it is given a legacy section.
             }
 

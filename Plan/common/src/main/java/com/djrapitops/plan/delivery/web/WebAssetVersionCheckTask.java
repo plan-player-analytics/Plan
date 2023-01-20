@@ -127,9 +127,9 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
     }
 
     private static class AssetInfo {
-        public String filename;
-        public long modifiedAt;
-        public long expectedModifiedAt;
+        private final String filename;
+        private final long modifiedAt;
+        private final long expectedModifiedAt;
 
         public AssetInfo(String filename, long modifiedAt, long expectedModifiedAt) {
             this.filename = filename;

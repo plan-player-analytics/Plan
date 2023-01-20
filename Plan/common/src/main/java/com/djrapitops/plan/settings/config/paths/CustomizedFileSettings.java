@@ -23,4 +23,8 @@ import com.djrapitops.plan.settings.config.paths.key.StringSetting;
 public class CustomizedFileSettings {
     public static final Setting<Boolean> WEB_DEV_MODE = new BooleanSetting("Customized_files.Enable_web_dev_mode");
     public static final Setting<String> PATH = new StringSetting("Customized_files.Path");
+
+    private CustomizedFileSettings() {
+        /* static variable class*/
+    }
 }

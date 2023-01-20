@@ -62,6 +62,7 @@ public class SpongeSensor implements ServerSensor<ServerWorld> {
         return -1;
     }
 
+    @SuppressWarnings("unused") // This remains here so that it is not enabled, it causes lag.
     private int getLaggyChunkCount(ServerWorld world) {
         Iterator<WorldChunk> chunks = world.loadedChunks().iterator();
         int count = 0;
