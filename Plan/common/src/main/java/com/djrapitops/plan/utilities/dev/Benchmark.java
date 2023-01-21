@@ -24,6 +24,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author AuroraLS3
@@ -33,7 +35,7 @@ public class Benchmark {
     private static final Formatter<Long> FORMATTER = new BenchmarkFormatter();
 
     private Benchmark() {
-        /* Only used for in-development benchmarks. */
+        /* Only used for in-development benchmarks. (static methods) */
     }
 
     public static void bench(Runnable runnable) {
@@ -72,9 +74,8 @@ public class Benchmark {
         }
         builder.append(" - ").append(calledFrom);
 
-        System.out.print(builder.toString());
+        Logger.getLogger("Plan").log(Level.INFO, builder::toString);
     }
-
 
     @Retention(RetentionPolicy.SOURCE)
     @Target({ElementType.METHOD, ElementType.TYPE})
