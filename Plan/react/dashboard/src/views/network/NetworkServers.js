@@ -19,7 +19,8 @@ const NetworkServers = () => {
     return (
         <Row>
             <Col md={6}>
-                <ServersTableCard servers={data?.servers || []} onSelect={(index) => setSelectedServer(index)}/>
+                <ServersTableCard loaded={Boolean(data)} servers={data?.servers || []}
+                                  onSelect={(index) => setSelectedServer(index)}/>
             </Col>
             <Col md={6}>
                 {data?.servers.length && <QuickViewGraphCard server={data.servers[selectedServer]}/>}
