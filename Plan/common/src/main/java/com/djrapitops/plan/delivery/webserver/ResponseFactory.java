@@ -17,6 +17,8 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Family;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
@@ -24,6 +26,7 @@ import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.ResponseBuilder;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
@@ -42,6 +45,7 @@ import com.djrapitops.plan.utilities.java.UnaryChain;
 import dagger.Lazy;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -66,6 +70,7 @@ public class ResponseFactory {
     private final DBSystem dbSystem;
     private final Theme theme;
     private final Lazy<Addresses> addresses;
+    private final Formatter<Long> httpLastModifiedFormatter;
 
     @Inject
     public ResponseFactory(
@@ -73,6 +78,7 @@ public class ResponseFactory {
             PageFactory pageFactory,
             Locale locale,
             DBSystem dbSystem,
+            Formatters formatters,
             Theme theme,
             Lazy<Addresses> addresses
     ) {
@@ -82,6 +88,8 @@ public class ResponseFactory {
         this.dbSystem = dbSystem;
         this.theme = theme;
         this.addresses = addresses;
+
+        httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
 
     public WebResource getResource(@Untrusted String resourceName) {
@@ -90,9 +98,13 @@ public class ResponseFactory {
     }
 
     private Response forPage(Page page) {
+        long now = System.currentTimeMillis(); // TODO implement use of last modified date.
         return Response.builder()
                 .setMimeType(MimeType.HTML)
                 .setContent(page.toHtml())
+                .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(now))
+                .setHeader(HttpHeader.ETAG.asString(), now)
                 .build();
     }
 
@@ -173,21 +185,30 @@ public class ResponseFactory {
 
     public Response javaScriptResponse(@Untrusted String fileName) {
         try {
-            String content = UnaryChain.of(getResource(fileName).asString())
+            WebResource resource = getResource(fileName);
+            String content = UnaryChain.of(resource.asString())
                     .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
-                    .chain(resource -> {
-                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {return resource;}
-                        return locale.replaceLanguageInJavascript(resource);
+                    .chain(contents -> {
+                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {return contents;}
+                        return locale.replaceLanguageInJavascript(contents);
                     })
-                    .chain(resource -> StringUtils.replace(resource, "n.p=\"/\"",
+                    .chain(contents -> StringUtils.replace(contents, "n.p=\"/\"",
                             "n.p=\"" + getBasePath() + "/\""))
                     .apply();
-            return Response.builder()
+            ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.JS)
                     .setContent(content)
-                    .setStatus(200)
-                    .build();
+                    .setStatus(200);
+
+            if (fileName.contains("static")) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        // Can't cache main bundle in browser since base path might change
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), fileName.contains("main") ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("Javascript File not found");
         }
@@ -207,15 +228,25 @@ public class ResponseFactory {
 
     public Response cssResponse(@Untrusted String fileName) {
         try {
-            String content = UnaryChain.of(getResource(fileName).asString())
+            WebResource resource = getResource(fileName);
+            String content = UnaryChain.of(resource.asString())
                     .chain(theme::replaceThemeColors)
-                    .chain(resource -> StringUtils.replace(resource, "/static", getBasePath() + "/static"))
+                    .chain(contents -> StringUtils.replace(contents, "/static", getBasePath() + "/static"))
                     .apply();
-            return Response.builder()
+
+            ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.CSS)
                     .setContent(content)
-                    .setStatus(200)
-                    .build();
+                    .setStatus(200);
+
+            if (fileName.contains("static")) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        // Can't cache css bundles in browser since base path might change
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("CSS File not found");
         }
@@ -223,11 +254,19 @@ public class ResponseFactory {
 
     public Response imageResponse(@Untrusted String fileName) {
         try {
-            return Response.builder()
+            WebResource resource = getResource(fileName);
+            ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.IMAGE)
-                    .setContent(getResource(fileName))
-                    .setStatus(200)
-                    .build();
+                    .setContent(resource)
+                    .setStatus(200);
+
+            if (fileName.contains("static")) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("Image File not found");
         }
@@ -247,10 +286,18 @@ public class ResponseFactory {
             type = MimeType.FONT_BYTESTREAM;
         }
         try {
-            return Response.builder()
+            WebResource resource = getResource(fileName);
+            ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(type)
-                    .setContent(getResource(fileName))
-                    .build();
+                    .setContent(resource);
+
+            if (fileName.contains("static")) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("Font File not found");
         }

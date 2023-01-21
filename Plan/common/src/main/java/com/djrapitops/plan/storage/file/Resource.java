@@ -82,7 +82,7 @@ public interface Resource {
      */
     default WebResource asWebResource() {
         try {
-            return WebResource.create(asInputStream());
+            return WebResource.create(asInputStream(), getLastModifiedDate());
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to read '" + getResourceName() + "'", e);
         }

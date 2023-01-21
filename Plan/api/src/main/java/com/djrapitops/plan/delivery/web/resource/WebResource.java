@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 /**
  * Represents a customizable resource.
@@ -61,6 +62,18 @@ public interface WebResource {
      * @throws IOException If the stream can not be read.
      */
     static WebResource create(InputStream in) throws IOException {
+        return create(in, null);
+    }
+
+    /**
+     * Creates a new WebResource from an InputStream.
+     *
+     * @param in           InputStream for the resource, closed after inside the method.
+     * @param lastModified Epoch millisecond the resource was last modified
+     * @return WebResource.
+     * @throws IOException If the stream can not be read.
+     */
+    static WebResource create(InputStream in, Long lastModified) throws IOException {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             int read;
             byte[] bytes = new byte[1024];
@@ -68,7 +81,7 @@ public interface WebResource {
                 out.write(bytes, 0, read);
             }
 
-            return new ByteResource(out.toByteArray());
+            return new ByteResource(out.toByteArray(), lastModified);
         } finally {
             in.close();
         }
@@ -85,11 +98,21 @@ public interface WebResource {
 
     InputStream asStream();
 
+    default Optional<Long> getLastModified() {
+        return Optional.empty();
+    }
+
     final class ByteResource implements WebResource {
         private final byte[] content;
+        private final Long lastModified;
 
         public ByteResource(byte[] content) {
+            this(content, null);
+        }
+
+        public ByteResource(byte[] content, Long lastModified) {
             this.content = content;
+            this.lastModified = lastModified;
         }
 
         @Override
@@ -105,6 +128,11 @@ public interface WebResource {
         @Override
         public InputStream asStream() {
             return new ByteArrayInputStream(content);
+        }
+
+        @Override
+        public Optional<Long> getLastModified() {
+            return Optional.ofNullable(lastModified);
         }
     }
 }

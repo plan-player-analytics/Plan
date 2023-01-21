@@ -24,9 +24,11 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.eclipse.jetty.http.HttpHeader;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -65,9 +67,13 @@ public class ServerTabJSONResolver<T> implements Resolver {
 
     private Response getResponse(@Untrusted Request request) {
         ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
+        JSONStorage.StoredJSON storedJson = asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, serverUUID, jsonCreator);
         return Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, serverUUID, jsonCreator).json)
+                .setJSONContent(storedJson.json)
+                .setHeader(HttpHeader.CACHE_CONTROL.asString(), "no-cache, private")
+                .setHeader(HttpHeader.LAST_MODIFIED.asString(), asyncJSONResolverService.getHttpLastModifiedFormatter().apply(storedJson.timestamp))
+                .setHeader(HttpHeader.ETAG.asString(), storedJson.timestamp)
                 .build();
     }
 }
