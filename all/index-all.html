@@ -1899,7 +1899,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/chat/DefaultFontInfo.html#C" class="member-name-link">C</a> - Enum constant in enum class com.djrapitops.plan.utilities.chat.<a href="com/djrapitops/plan/utilities/chat/DefaultFontInfo.html" title="enum class in com.djrapitops.plan.utilities.chat">DefaultFontInfo</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/storage/file/ResourceCache.html#cache(java.lang.String,java.lang.String)" class="member-name-link">cache(String, String)</a> - Static method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/ResourceCache.html" title="class in com.djrapitops.plan.storage.file">ResourceCache</a></dt>
+<dt><a href="com/djrapitops/plan/storage/file/ResourceCache.html#cache(java.lang.String,java.lang.String,long)" class="member-name-link">cache(String, String, long)</a> - Static method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/ResourceCache.html" title="class in com.djrapitops.plan.storage.file">ResourceCache</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/cache/SessionCache.html#cacheSession(java.util.UUID,com.djrapitops.plan.gathering.domain.ActiveSession)" class="member-name-link">cacheSession(UUID, ActiveSession)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/SessionCache.html" title="class in com.djrapitops.plan.gathering.cache">SessionCache</a></dt>
 <dd>
@@ -7406,6 +7406,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/TPSMutator.html#getLast()" class="member-name-link">getLast()</a> - Method in class com.djrapitops.plan.delivery.domain.mutators.<a href="com/djrapitops/plan/delivery/domain/mutators/TPSMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">TPSMutator</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/file/FileResource.html#getLastModifiedDate()" class="member-name-link">getLastModifiedDate()</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/FileResource.html" title="class in com.djrapitops.plan.storage.file">FileResource</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/file/JarResource.html#getLastModifiedDate()" class="member-name-link">getLastModifiedDate()</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/JarResource.html" title="class in com.djrapitops.plan.storage.file">JarResource</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/file/Resource.html#getLastModifiedDate()" class="member-name-link">getLastModifiedDate()</a> - Method in interface com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/file/StringCachingResource.html#getLastModifiedDate()" class="member-name-link">getLastModifiedDate()</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/StringCachingResource.html" title="class in com.djrapitops.plan.storage.file">StringCachingResource</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/file/StringResource.html#getLastModifiedDate()" class="member-name-link">getLastModifiedDate()</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/StringResource.html" title="class in com.djrapitops.plan.storage.file">StringResource</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/file/PlanFiles.html#getLastModifiedForJarResource(java.lang.String)" class="member-name-link">getLastModifiedForJarResource(String)</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/ActiveSession.html#getLastMovementForAfkCalculation()" class="member-name-link">getLastMovementForAfkCalculation()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/ActiveSession.html" title="class in com.djrapitops.plan.gathering.domain">ActiveSession</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/TablePlayer.html#getLastSeen()" class="member-name-link">getLastSeen()</a> - Method in class com.djrapitops.plan.delivery.domain.<a href="com/djrapitops/plan/delivery/domain/TablePlayer.html" title="class in com.djrapitops.plan.delivery.domain">TablePlayer</a></dt>
@@ -10310,9 +10322,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block"><a href="com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file"><code>Resource</code></a> implementation for something that is read via InputStream.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/storage/file/JarResource.html#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamFunction)" class="member-name-link">JarResource(String, JarResource.StreamFunction)</a> - Constructor for class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/JarResource.html" title="class in com.djrapitops.plan.storage.file">JarResource</a></dt>
+<dt><a href="com/djrapitops/plan/storage/file/JarResource.html#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamFunction,java.util.function.LongSupplier)" class="member-name-link">JarResource(String, JarResource.StreamFunction, LongSupplier)</a> - Constructor for class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/JarResource.html" title="class in com.djrapitops.plan.storage.file">JarResource</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/storage/file/JarResource.html#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamSupplier)" class="member-name-link">JarResource(String, JarResource.StreamSupplier)</a> - Constructor for class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/JarResource.html" title="class in com.djrapitops.plan.storage.file">JarResource</a></dt>
+<dt><a href="com/djrapitops/plan/storage/file/JarResource.html#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamSupplier,java.util.function.LongSupplier)" class="member-name-link">JarResource(String, JarResource.StreamSupplier, LongSupplier)</a> - Constructor for class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/JarResource.html" title="class in com.djrapitops.plan.storage.file">JarResource</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/file/JarResource.StreamFunction.html" class="type-name-link" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a> - Interface in <a href="com/djrapitops/plan/storage/file/package-summary.html">com.djrapitops.plan.storage.file</a></dt>
 <dd>&nbsp;</dd>
@@ -12977,7 +12989,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Abstracts File methods of Plugin classes so that they can be tested without Mocks.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/storage/file/PlanFiles.html#%3Cinit%3E(java.io.File,com.djrapitops.plan.storage.file.JarResource.StreamFunction,dagger.Lazy)" class="member-name-link">PlanFiles(File, JarResource.StreamFunction, Lazy&lt;PlanConfig&gt;)</a> - Constructor for class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a></dt>
+<dt><a href="com/djrapitops/plan/storage/file/PlanFiles.html#%3Cinit%3E(java.io.File,com.djrapitops.plan.storage.file.JarResource.StreamFunction,dagger.Lazy,dagger.Lazy)" class="member-name-link">PlanFiles(File, JarResource.StreamFunction, Lazy&lt;AssetVersions&gt;, Lazy&lt;PlanConfig&gt;)</a> - Constructor for class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/PlanNukkit.html" class="type-name-link" title="class in com.djrapitops.plan">PlanNukkit</a> - Class in <a href="com/djrapitops/plan/package-summary.html">com.djrapitops.plan</a></dt>
 <dd>
@@ -16184,7 +16196,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Implements jar resource fetching with Sponge Asset API.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/storage/file/SpongePlanFiles.html#%3Cinit%3E(java.io.File,com.djrapitops.plan.storage.file.JarResource.StreamFunction,com.djrapitops.plan.PlanPlugin,dagger.Lazy)" class="member-name-link">SpongePlanFiles(File, JarResource.StreamFunction, PlanPlugin, Lazy&lt;PlanConfig&gt;)</a> - Constructor for class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/SpongePlanFiles.html" title="class in com.djrapitops.plan.storage.file">SpongePlanFiles</a></dt>
+<dt><a href="com/djrapitops/plan/storage/file/SpongePlanFiles.html#%3Cinit%3E(java.io.File,com.djrapitops.plan.storage.file.JarResource.StreamFunction,com.djrapitops.plan.PlanPlugin,dagger.Lazy,dagger.Lazy)" class="member-name-link">SpongePlanFiles(File, JarResource.StreamFunction, PlanPlugin, Lazy&lt;AssetVersions&gt;, Lazy&lt;PlanConfig&gt;)</a> - Constructor for class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/SpongePlanFiles.html" title="class in com.djrapitops.plan.storage.file">SpongePlanFiles</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/SpongePlayerCMDSender.html" class="type-name-link" title="class in com.djrapitops.plan.commands.use">SpongePlayerCMDSender</a> - Class in <a href="com/djrapitops/plan/commands/use/package-summary.html">com.djrapitops.plan.commands.use</a></dt>
 <dd>&nbsp;</dd>

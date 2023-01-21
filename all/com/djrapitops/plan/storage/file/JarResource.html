@@ -113,11 +113,13 @@ implements <a href="Resource.html" title="interface in com.djrapitops.plan.stora
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamFunction)" class="member-name-link">JarResource</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName,
- <a href="JarResource.StreamFunction.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a>&nbsp;streamFunction)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamFunction,java.util.function.LongSupplier)" class="member-name-link">JarResource</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName,
+ <a href="JarResource.StreamFunction.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a>&nbsp;streamFunction,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/LongSupplier.html" title="class or interface in java.util.function" class="external-link">LongSupplier</a>&nbsp;lastModifiedSupplier)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamSupplier)" class="member-name-link">JarResource</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName,
- <a href="JarResource.StreamSupplier.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamSupplier</a>&nbsp;streamSupplier)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamSupplier,java.util.function.LongSupplier)" class="member-name-link">JarResource</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName,
+ <a href="JarResource.StreamSupplier.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamSupplier</a>&nbsp;streamSupplier,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/LongSupplier.html" title="class or interface in java.util.function" class="external-link">LongSupplier</a>&nbsp;lastModifiedSupplier)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
@@ -151,9 +153,12 @@ implements <a href="Resource.html" title="interface in com.djrapitops.plan.stora
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the resource as a String with each line separated by CRLF newline characters <code>\r\n</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getResourceName()" class="member-name-link">getResourceName</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLastModifiedDate()" class="member-name-link">getLastModifiedDate</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getResourceName()" class="member-name-link">getResourceName</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the name of this Resource.</div>
 </div>
 </div>
@@ -177,17 +182,19 @@ implements <a href="Resource.html" title="interface in com.djrapitops.plan.stora
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamSupplier)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamSupplier,java.util.function.LongSupplier)">
 <h3>JarResource</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JarResource</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName,
- <a href="JarResource.StreamSupplier.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamSupplier</a>&nbsp;streamSupplier)</span></div>
+ <a href="JarResource.StreamSupplier.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamSupplier</a>&nbsp;streamSupplier,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/LongSupplier.html" title="class or interface in java.util.function" class="external-link">LongSupplier</a>&nbsp;lastModifiedSupplier)</span></div>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamFunction)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.storage.file.JarResource.StreamFunction,java.util.function.LongSupplier)">
 <h3>JarResource</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JarResource</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName,
- <a href="JarResource.StreamFunction.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a>&nbsp;streamFunction)</span></div>
+ <a href="JarResource.StreamFunction.html" title="interface in com.djrapitops.plan.storage.file">JarResource.StreamFunction</a>&nbsp;streamFunction,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/LongSupplier.html" title="class or interface in java.util.function" class="external-link">LongSupplier</a>&nbsp;lastModifiedSupplier)</span></div>
 </section>
 </li>
 </ul>
@@ -198,6 +205,16 @@ implements <a href="Resource.html" title="interface in com.djrapitops.plan.stora
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getLastModifiedDate()">
+<h3>getLastModifiedDate</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getLastModifiedDate</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="Resource.html#getLastModifiedDate()">getLastModifiedDate</a></code>&nbsp;in interface&nbsp;<code><a href="Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a></code></dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="asInputStream()">
 <h3>asInputStream</h3>
