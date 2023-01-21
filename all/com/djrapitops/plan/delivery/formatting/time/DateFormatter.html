@@ -81,7 +81,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="ClockFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">ClockFormatter</a></code>, <code><a href="DayFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">DayFormatter</a></code>, <code><a href="ISO8601NoClockFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">ISO8601NoClockFormatter</a></code>, <code><a href="JavascriptDateFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">JavascriptDateFormatter</a></code>, <code><a href="SecondFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">SecondFormatter</a></code>, <code><a href="YearFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">YearFormatter</a></code></dd>
+<dd><code><a href="ClockFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">ClockFormatter</a></code>, <code><a href="DayFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">DayFormatter</a></code>, <code><a href="HttpLastModifiedDateFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">HttpLastModifiedDateFormatter</a></code>, <code><a href="ISO8601NoClockFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">ISO8601NoClockFormatter</a></code>, <code><a href="JavascriptDateFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">JavascriptDateFormatter</a></code>, <code><a href="SecondFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">SecondFormatter</a></code>, <code><a href="YearFormatter.html" title="class in com.djrapitops.plan.delivery.formatting.time">YearFormatter</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">DateFormatter</span>
@@ -139,6 +139,17 @@ implements <a href="../Formatter.html" title="interface in com.djrapitops.plan.d
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#format(long,java.lang.String)" class="member-name-link">format</a><wbr>(long&nbsp;epochMs,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;format)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#format(long,java.lang.String,java.util.Locale)" class="member-name-link">format</a><wbr>(long&nbsp;epochMs,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;format,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Locale.html" title="class or interface in java.util" class="external-link">Locale</a>&nbsp;usedLocale)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#format(long,java.lang.String,java.util.Locale,java.util.TimeZone)" class="member-name-link">format</a><wbr>(long&nbsp;epochMs,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;format,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Locale.html" title="class or interface in java.util" class="external-link">Locale</a>&nbsp;usedLocale,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/TimeZone.html" title="class or interface in java.util" class="external-link">TimeZone</a>&nbsp;timeZone)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replaceRecentDays(long,java.lang.String)" class="member-name-link">replaceRecentDays</a><wbr>(long&nbsp;epochMs,
@@ -209,6 +220,23 @@ implements <a href="../Formatter.html" title="interface in com.djrapitops.plan.d
 <h3>format</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">format</span><wbr><span class="parameters">(long&nbsp;epochMs,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;format)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="format(long,java.lang.String,java.util.Locale)">
+<h3>format</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">format</span><wbr><span class="parameters">(long&nbsp;epochMs,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;format,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Locale.html" title="class or interface in java.util" class="external-link">Locale</a>&nbsp;usedLocale)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="format(long,java.lang.String,java.util.Locale,java.util.TimeZone)">
+<h3>format</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">format</span><wbr><span class="parameters">(long&nbsp;epochMs,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;format,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Locale.html" title="class or interface in java.util" class="external-link">Locale</a>&nbsp;usedLocale,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/TimeZone.html" title="class or interface in java.util" class="external-link">TimeZone</a>&nbsp;timeZone)</span></div>
 </section>
 </li>
 <li>
