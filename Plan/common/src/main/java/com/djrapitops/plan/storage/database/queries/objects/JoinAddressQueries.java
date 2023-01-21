@@ -62,21 +62,24 @@ public class JoinAddressQueries {
     }
 
     public static Query<Map<String, Integer>> latestJoinAddresses(ServerUUID serverUUID) {
-        String selectLatestJoinAddresses = SELECT +
+        String selectLatestSessionStarts = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_START + ") as max_start" +
+                FROM + SessionsTable.TABLE_NAME + " max_s" +
+                WHERE + "max_s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + SessionsTable.USER_ID;
+        String selectLatestJoinAddressIds = SELECT + SessionsTable.JOIN_ADDRESS_ID +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + "(" + selectLatestSessionStarts + ") q1 on q1." + SessionsTable.USER_ID + "=s." + SessionsTable.USER_ID +
+                AND + "q1.max_start=s." + SessionsTable.SESSION_START;
+
+        String selectJoinAddressCounts = SELECT +
                 "COUNT(1) as total," +
                 JoinAddressTable.JOIN_ADDRESS +
-                FROM + SessionsTable.TABLE_NAME + " a" +
-                LEFT_JOIN + SessionsTable.TABLE_NAME + " b on a." + SessionsTable.ID + "<b." + SessionsTable.ID +
-                AND + "a." + SessionsTable.USER_ID + "=b." + SessionsTable.USER_ID +
-                AND + "a." + SessionsTable.SERVER_ID + "=b." + SessionsTable.SERVER_ID +
+                FROM + "(" + selectLatestJoinAddressIds + ") a" +
                 INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on j." + JoinAddressTable.ID + "=a." + SessionsTable.JOIN_ADDRESS_ID +
-                WHERE + "b." + SessionsTable.ID + IS_NULL +
-                AND + "a." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + JoinAddressTable.JOIN_ADDRESS +
                 ORDER_BY + JoinAddressTable.JOIN_ADDRESS + " ASC";
 
-
-        return db -> db.queryMap(selectLatestJoinAddresses, JoinAddressQueries::extractJoinAddressCounts, TreeMap::new, serverUUID);
+        return db -> db.queryMap(selectJoinAddressCounts, JoinAddressQueries::extractJoinAddressCounts, TreeMap::new, serverUUID);
     }
 
     public static QueryStatement<List<String>> allJoinAddresses() {
