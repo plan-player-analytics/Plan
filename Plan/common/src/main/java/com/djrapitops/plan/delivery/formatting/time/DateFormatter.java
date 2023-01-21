@@ -47,8 +47,16 @@ public abstract class DateFormatter implements Formatter<Long> {
         java.util.Locale usedLocale = "default".equalsIgnoreCase(localeSetting)
                 ? java.util.Locale.ENGLISH
                 : java.util.Locale.forLanguageTag(localeSetting);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format, usedLocale);
+        return format(epochMs, format, usedLocale);
+    }
+
+    protected String format(long epochMs, String format, java.util.Locale usedLocale) {
         TimeZone timeZone = config.getTimeZone();
+        return format(epochMs, format, usedLocale, timeZone);
+    }
+
+    protected String format(long epochMs, String format, java.util.Locale usedLocale, TimeZone timeZone) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format, usedLocale);
         dateFormat.setTimeZone(timeZone);
         return dateFormat.format(epochMs);
     }

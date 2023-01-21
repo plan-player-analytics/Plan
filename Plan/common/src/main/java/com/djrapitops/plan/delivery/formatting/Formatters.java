@@ -43,6 +43,7 @@ public class Formatters {
     private final DayFormatter dayLongFormatter;
     private final SecondFormatter secondLongFormatter;
     private final ClockFormatter clockLongFormatter;
+    private final HttpLastModifiedDateFormatter httpLastModifiedDateFormatter;
     private final JavascriptDateFormatter javascriptDateFormatter;
     private final ISO8601NoClockFormatter iso8601NoClockLongFormatter;
     private final ISO8601NoClockTZIndependentFormatter iso8601NoClockTZIndependentFormatter;
@@ -59,6 +60,7 @@ public class Formatters {
         dayLongFormatter = new DayFormatter(config, locale);
         clockLongFormatter = new ClockFormatter(config, locale);
         secondLongFormatter = new SecondFormatter(config, locale);
+        httpLastModifiedDateFormatter = new HttpLastModifiedDateFormatter(config, locale);
         javascriptDateFormatter = new JavascriptDateFormatter(config, locale);
         iso8601NoClockLongFormatter = new ISO8601NoClockFormatter(config, locale);
         iso8601NoClockTZIndependentFormatter = new ISO8601NoClockTZIndependentFormatter();
@@ -120,6 +122,10 @@ public class Formatters {
 
     public Formatter<DateHolder> iso8601NoClock() {
         return iso8601NoClockFormatter;
+    }
+
+    public Formatter<Long> httpLastModifiedLong() {
+        return httpLastModifiedDateFormatter;
     }
 
     public Formatter<Long> javascriptDateFormatterLong() {
