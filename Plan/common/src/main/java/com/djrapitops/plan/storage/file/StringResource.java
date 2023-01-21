@@ -33,15 +33,22 @@ public class StringResource implements Resource {
 
     private final String resourceName;
     private final String resource;
+    private final long lastModified;
 
-    StringResource(String resourceName, String resource) {
+    StringResource(String resourceName, String resource, long lastModified) {
         this.resourceName = resourceName;
         this.resource = resource;
+        this.lastModified = lastModified;
     }
 
     @Override
     public String getResourceName() {
         return resourceName;
+    }
+
+    @Override
+    public long getLastModifiedDate() {
+        return lastModified;
     }
 
     @Override

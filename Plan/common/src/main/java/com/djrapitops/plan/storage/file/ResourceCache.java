@@ -33,7 +33,7 @@ import java.util.function.Supplier;
  */
 public class ResourceCache {
 
-    private static final Cache<String, String> cache = Caffeine.newBuilder()
+    private static final Cache<String, Resource> cache = Caffeine.newBuilder()
             .expireAfterAccess(1, TimeUnit.MINUTES)
             .build();
 
@@ -42,17 +42,17 @@ public class ResourceCache {
     }
 
     public static Resource getOrCache(@Untrusted String resourceName, Supplier<Resource> resourceSupplier) {
-        String found = cache.getIfPresent(resourceName);
+        Resource found = cache.getIfPresent(resourceName);
         if (found == null) {
             Resource created = resourceSupplier.get();
             if (created == null) return null;
             return new StringCachingResource(created);
         }
-        return new StringResource(resourceName, found);
+        return found;
     }
 
-    public static void cache(String resourceName, String got) {
-        cache.put(resourceName, got);
+    public static void cache(@Untrusted String resourceName, String contents, long lastModifiedDate) {
+        cache.put(resourceName, new StringResource(resourceName, contents, lastModifiedDate));
     }
 
     public static void invalidateAll() {

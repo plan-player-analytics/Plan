@@ -42,6 +42,8 @@ public interface Resource {
     @Untrusted
     String getResourceName();
 
+    long getLastModifiedDate();
+
     byte[] asBytes() throws IOException;
 
     /**

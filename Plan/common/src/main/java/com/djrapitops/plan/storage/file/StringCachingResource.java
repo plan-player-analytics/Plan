@@ -39,6 +39,9 @@ public class StringCachingResource implements Resource {
     }
 
     @Override
+    public long getLastModifiedDate() {return implementation.getLastModifiedDate();}
+
+    @Override
     public InputStream asInputStream() throws IOException {
         return implementation.asInputStream();
     }
@@ -51,7 +54,7 @@ public class StringCachingResource implements Resource {
     @Override
     public String asString() throws IOException {
         String got = implementation.asString();
-        ResourceCache.cache(implementation.getResourceName(), got);
+        ResourceCache.cache(implementation.getResourceName(), got, implementation.getLastModifiedDate());
         return got;
     }
 

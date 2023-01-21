@@ -17,11 +17,14 @@
 package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,16 +49,19 @@ public class PlanFiles implements SubSystem {
     private final File dataFolder;
     private final File configFile;
 
+    private final Lazy<AssetVersions> assetVersions;
     private final Lazy<PlanConfig> config;
 
     @Inject
     public PlanFiles(
             @Named("dataFolder") File dataFolder,
             JarResource.StreamFunction getResourceStream,
+            Lazy<AssetVersions> assetVersions,
             Lazy<PlanConfig> config
     ) {
         this.dataFolder = dataFolder;
         this.getResourceStream = getResourceStream;
+        this.assetVersions = assetVersions;
         this.config = config;
         this.configFile = getFileFromPluginFolder("config.yml");
     }
@@ -120,7 +126,18 @@ public class PlanFiles implements SubSystem {
      * @return a {@link Resource} for accessing the resource.
      */
     public Resource getResourceFromJar(@Untrusted String resourceName) {
-        return new JarResource("assets/plan/" + resourceName, getResourceStream);
+        return new JarResource(
+                "assets/plan/" + resourceName,
+                getResourceStream,
+                () -> getLastModifiedForJarResource(resourceName)
+        );
+    }
+
+    @NotNull
+    protected Long getLastModifiedForJarResource(@Untrusted String resourceName) {
+        String webResourceName = StringUtils.remove(resourceName, "web/");
+        return assetVersions.get().getAssetVersion(webResourceName)
+                .orElseGet(System::currentTimeMillis);
     }
 
     /**

@@ -20,6 +20,7 @@ import com.djrapitops.plan.settings.config.Config;
 import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,7 +47,7 @@ public class AssetVersions {
         }
     }
 
-    public Optional<Long> getAssetVersion(String resource) {
+    public Optional<Long> getAssetVersion(@Untrusted String resource) {
         if (webAssetConfig == null) return Optional.empty();
 
         return webAssetConfig.getNode(resource.replace('.', ',')).map(ConfigNode::getLong);

@@ -63,6 +63,11 @@ public class FileResource implements Resource {
     }
 
     @Override
+    public long getLastModifiedDate() {
+        return file.lastModified();
+    }
+
+    @Override
     public InputStream asInputStream() throws IOException {
         return new FileInputStream(file);
     }
