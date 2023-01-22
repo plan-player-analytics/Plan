@@ -67,6 +67,8 @@ import java.util.function.Function;
 @Singleton
 public class ResponseFactory {
 
+    private static final String STATIC_BUNDLE_FOLDER = "static";
+
     private final PlanFiles files;
     private final PageFactory pageFactory;
     private final Locale locale;
@@ -220,10 +222,13 @@ public class ResponseFactory {
                     .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
                     .chain(contents -> {
-                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {return contents;}
+                        if (fileName.contains(STATIC_BUNDLE_FOLDER) || fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {
+                            return contents;
+                        }
                         return locale.replaceLanguageInJavascript(contents);
                     })
-                    .chain(contents -> StringUtils.replace(contents, "n.p=\"/\"",
+                    .chain(contents -> StringUtils.replace(contents,
+                            "n.p=\"/\"",
                             "n.p=\"" + getBasePath() + "/\""))
                     .apply();
             ResponseBuilder responseBuilder = Response.builder()
@@ -231,7 +236,7 @@ public class ResponseFactory {
                     .setContent(content)
                     .setStatus(200);
 
-            if (fileName.contains("static")) {
+            if (fileName.contains(STATIC_BUNDLE_FOLDER)) {
                 resource.getLastModified().ifPresent(lastModified -> responseBuilder
                         // Can't cache main bundle in browser since base path might change
                         .setHeader(HttpHeader.CACHE_CONTROL.asString(), fileName.contains("main") ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
@@ -273,7 +278,7 @@ public class ResponseFactory {
                     .setContent(content)
                     .setStatus(200);
 
-            if (fileName.contains("static")) {
+            if (fileName.contains(STATIC_BUNDLE_FOLDER)) {
                 resource.getLastModified().ifPresent(lastModified -> responseBuilder
                         // Can't cache css bundles in browser since base path might change
                         .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
@@ -298,7 +303,7 @@ public class ResponseFactory {
                     .setContent(resource)
                     .setStatus(200);
 
-            if (fileName.contains("static")) {
+            if (fileName.contains(STATIC_BUNDLE_FOLDER)) {
                 resource.getLastModified().ifPresent(lastModified -> responseBuilder
                         .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CACHE_IN_BROWSER)
                         .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
@@ -333,7 +338,7 @@ public class ResponseFactory {
                     .setMimeType(type)
                     .setContent(resource);
 
-            if (fileName.contains("static")) {
+            if (fileName.contains(STATIC_BUNDLE_FOLDER)) {
                 resource.getLastModified().ifPresent(lastModified -> responseBuilder
                         .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CACHE_IN_BROWSER)
                         .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
