@@ -33,6 +33,7 @@ import com.djrapitops.plan.storage.database.queries.objects.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -85,7 +86,11 @@ public class PlayerContainerQuery implements Query<PlayerContainer> {
             return worldTimes;
         });
 
-        container.putSupplier(PlayerKeys.LAST_SEEN, () -> SessionsMutator.forContainer(container).toLastSeen());
+        container.putSupplier(PlayerKeys.LAST_SEEN, () -> {
+            Optional<ActiveSession> activeSession = container.getValue(PlayerKeys.ACTIVE_SESSION);
+            if (activeSession.isPresent()) return System.currentTimeMillis();
+            return SessionsMutator.forContainer(container).toLastSeen();
+        });
         container.putSupplier(PlayerKeys.PLAYER_KILLS, () -> db.query(KillQueries.fetchPlayerKillsOfPlayer(uuid)));
         container.putSupplier(PlayerKeys.PLAYER_DEATHS_KILLS, () -> db.query(KillQueries.fetchPlayerDeathsOfPlayer(uuid)));
         container.putSupplier(PlayerKeys.PLAYER_KILL_COUNT, () -> container.getValue(PlayerKeys.PLAYER_KILLS).map(Collection::size).orElse(0));
