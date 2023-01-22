@@ -16,12 +16,10 @@
  */
 package com.djrapitops.plan.delivery.web.resource;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * Represents a customizable resource.
@@ -87,6 +85,30 @@ public interface WebResource {
         }
     }
 
+    /**
+     * Create a lazy WebResource that only reads contents if necessary.
+     *
+     * @param in           Supplier for InputStream, a lazy method that reads input when necessary.
+     * @param lastModified Last modified date for the resource.
+     * @return WebResource.
+     */
+    static WebResource create(Supplier<InputStream> in, Long lastModified) {
+        return new LazyWebResource(in, () -> {
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+                 InputStream input = in.get()) {
+                int read;
+                byte[] bytes = new byte[1024];
+                while ((read = input.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+
+                return out.toByteArray();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }, lastModified);
+    }
+
     byte[] asBytes();
 
     /**
@@ -128,6 +150,38 @@ public interface WebResource {
         @Override
         public InputStream asStream() {
             return new ByteArrayInputStream(content);
+        }
+
+        @Override
+        public Optional<Long> getLastModified() {
+            return Optional.ofNullable(lastModified);
+        }
+    }
+
+    final class LazyWebResource implements WebResource {
+        private final Supplier<InputStream> inputStreamSupplier;
+        private final Supplier<byte[]> contentSupplier;
+        private final Long lastModified;
+
+        public LazyWebResource(Supplier<InputStream> inputStreamSupplier, Supplier<byte[]> contentSupplier, Long lastModified) {
+            this.inputStreamSupplier = inputStreamSupplier;
+            this.contentSupplier = contentSupplier;
+            this.lastModified = lastModified;
+        }
+
+        @Override
+        public byte[] asBytes() {
+            return contentSupplier.get();
+        }
+
+        @Override
+        public String asString() {
+            return new String(asBytes(), StandardCharsets.UTF_8);
+        }
+
+        @Override
+        public InputStream asStream() {
+            return inputStreamSupplier.get();
         }
 
         @Override

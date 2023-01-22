@@ -81,11 +81,13 @@ public interface Resource {
      * @throws UncheckedIOException if fails to read the file.
      */
     default WebResource asWebResource() {
-        try {
-            return WebResource.create(asInputStream(), getLastModifiedDate());
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to read '" + getResourceName() + "'", e);
-        }
+        return WebResource.create(() -> {
+            try {
+                return asInputStream();
+            } catch (IOException e) {
+                throw new UncheckedIOException("Failed to read '" + getResourceName() + "'", e);
+            }
+        }, getLastModifiedDate());
     }
 
     /**

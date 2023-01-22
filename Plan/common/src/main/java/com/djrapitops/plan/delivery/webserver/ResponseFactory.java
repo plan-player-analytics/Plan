@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * Factory for creating different {@link Response} objects.
@@ -149,6 +150,19 @@ public class ResponseFactory {
                 .build();
     }
 
+    private Response getCachedOrNew(long modified, String fileName, Function<String, Response> newResponseFunction) {
+        WebResource resource = getResource(fileName);
+        Optional<Long> lastModified = resource.getLastModified();
+        if (lastModified.isPresent() && modified == lastModified.get()) {
+            return Response.builder()
+                    .setStatus(304)
+                    .setContent(new byte[0])
+                    .build();
+        } else {
+            return newResponseFunction.apply(fileName);
+        }
+    }
+
     public Response internalErrorResponse(Throwable e, String cause) {
         return forInternalError(e, cause);
     }
@@ -181,6 +195,10 @@ public class ResponseFactory {
                 .setMimeType(MimeType.JSON)
                 .setJSONContent(player.mapToNormalMap())
                 .build();
+    }
+
+    public Response javaScriptResponse(long modified, @Untrusted String fileName) {
+        return getCachedOrNew(modified, fileName, this::javaScriptResponse);
     }
 
     public Response javaScriptResponse(@Untrusted String fileName) {
@@ -226,6 +244,10 @@ public class ResponseFactory {
         return StringUtils.replace(resource, "PLAN_BASE_ADDRESS", address);
     }
 
+    public Response cssResponse(long modified, @Untrusted String fileName) {
+        return getCachedOrNew(modified, fileName, this::cssResponse);
+    }
+
     public Response cssResponse(@Untrusted String fileName) {
         try {
             WebResource resource = getResource(fileName);
@@ -252,6 +274,10 @@ public class ResponseFactory {
         }
     }
 
+    public Response imageResponse(long modified, @Untrusted String fileName) {
+        return getCachedOrNew(modified, fileName, this::imageResponse);
+    }
+
     public Response imageResponse(@Untrusted String fileName) {
         try {
             WebResource resource = getResource(fileName);
@@ -270,6 +296,10 @@ public class ResponseFactory {
         } catch (UncheckedIOException e) {
             return notFound404("Image File not found");
         }
+    }
+
+    public Response fontResponse(long modified, @Untrusted String fileName) {
+        return getCachedOrNew(modified, fileName, this::fontResponse);
     }
 
     public Response fontResponse(@Untrusted String fileName) {
@@ -320,9 +350,14 @@ public class ResponseFactory {
 
     public Response robotsResponse() {
         try {
+            WebResource resource = getResource("robots.txt");
+            Long lastModified = resource.getLastModified().orElseGet(System::currentTimeMillis);
             return Response.builder()
                     .setMimeType("text/plain")
-                    .setContent(getResource("robots.txt"))
+                    .setContent(resource)
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CACHE_IN_BROWSER)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                    .setHeader(HttpHeader.ETAG.asString(), lastModified)
                     .build();
         } catch (UncheckedIOException e) {
             return forInternalError(e, "Could not read robots.txt");
