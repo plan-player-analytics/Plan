@@ -119,7 +119,7 @@ public class RandomData {
     public static FinishedSession randomSession(ServerUUID serverUUID, String[] worlds, long start, UUID... uuids) {
         DataMap extraData = new DataMap();
         extraData.put(WorldTimes.class, RandomData.randomWorldTimes(worlds));
-        long end = RandomData.randomTimeAfter(start);
+        long end = RandomData.randomTimeAfter(start + 1);
 
         if (uuids.length >= 2) {
             List<PlayerKill> kills = RandomData.randomKills(serverUUID, uuids[0], pickAtRandom(Arrays.copyOfRange(uuids, 1, uuids.length)));

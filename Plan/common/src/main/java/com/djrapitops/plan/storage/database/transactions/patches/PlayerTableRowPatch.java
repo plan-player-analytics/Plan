@@ -43,10 +43,10 @@ public class PlayerTableRowPatch extends Patch {
 
     private boolean tableRowIdsAreUniquePerTableId() {
         String columnCountPerTableSql = SELECT +
-                TABLE_ID + ",COUNT(1) as c" +
+                USER_UUID + ',' + TABLE_ID + ",COUNT(1) as c" +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ROW + "=?" +
-                GROUP_BY + TABLE_ID;
+                GROUP_BY + TABLE_ID + ',' + USER_UUID;
         return query(new QueryStatement<>(columnCountPerTableSql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
