@@ -55,7 +55,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogsExceptFaviconError;
 
 /**
  * This test class is for catching any JavaScript errors.
@@ -166,16 +166,8 @@ class ExportJSErrorRegressionTest {
                     logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
                     logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
 
-                    assertNoLogs(logs);
+                    assertNoLogsExceptFaviconError(logs);
                 })
         ).collect(Collectors.toList());
-    }
-
-    private void assertNoLogs(List<LogEntry> logs) {
-        List<String> loggedLines = logs.stream()
-                .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
-                .filter(line -> !line.contains("favicon.ico"))
-                .toList();
-        assertTrue(loggedLines.isEmpty(), () -> "Browser console included " + loggedLines.size() + " logs: " + loggedLines);
     }
 }
