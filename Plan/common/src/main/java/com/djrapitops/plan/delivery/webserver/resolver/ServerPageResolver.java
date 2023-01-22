@@ -80,17 +80,17 @@ public class ServerPageResolver implements Resolver {
         return Optional.of(responseFactory.redirectResponse(directTo));
     }
 
-    private Optional<Response> getServerPage(ServerUUID serverUUID, Request request) {
+    private Optional<Response> getServerPage(ServerUUID serverUUID, @Untrusted Request request) {
         boolean toNetworkPage = serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID);
         if (toNetworkPage) {
             if (request.getPath().getPart(0).map("network"::equals).orElse(false)) {
-                return Optional.of(responseFactory.networkPageResponse());
+                return Optional.of(responseFactory.networkPageResponse(request));
             } else {
                 // Accessing /server/Server <Bungee ID> which should be redirected to /network
                 return redirectToCurrentServer();
             }
         }
-        return Optional.of(responseFactory.serverPageResponse(serverUUID));
+        return Optional.of(responseFactory.serverPageResponse(request, serverUUID));
     }
 
     private Optional<ServerUUID> getServerUUID(@Untrusted URIPath path) {

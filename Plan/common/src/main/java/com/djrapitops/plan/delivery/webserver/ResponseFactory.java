@@ -28,9 +28,11 @@ import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.ResponseBuilder;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
@@ -98,14 +100,27 @@ public class ResponseFactory {
                 () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
     }
 
-    private Response forPage(Page page) {
-        long now = System.currentTimeMillis(); // TODO implement use of last modified date.
+    private static Response browserCachedNotChangedResponse() {
+        return Response.builder()
+                .setStatus(304)
+                .setContent(new byte[0])
+                .build();
+    }
+
+    private Response forPage(@Untrusted Request request, Page page) {
+        long modified = page.lastModified();
+        Optional<Long> etag = Identifiers.getEtag(request);
+
+        if (etag.isPresent() && modified == etag.get()) {
+            return browserCachedNotChangedResponse();
+        }
+
         return Response.builder()
                 .setMimeType(MimeType.HTML)
                 .setContent(page.toHtml())
                 .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
-                .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(now))
-                .setHeader(HttpHeader.ETAG.asString(), now)
+                .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(modified))
+                .setHeader(HttpHeader.ETAG.asString(), modified)
                 .build();
     }
 
@@ -117,11 +132,11 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response playersPageResponse() {
+    public Response playersPageResponse(@Untrusted Request request) {
         try {
             Optional<Response> error = checkDbClosedError();
             if (error.isPresent()) return error.get();
-            return forPage(pageFactory.playersPage());
+            return forPage(request, pageFactory.playersPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate players page");
         }
@@ -154,10 +169,7 @@ public class ResponseFactory {
         WebResource resource = getResource(fileName);
         Optional<Long> lastModified = resource.getLastModified();
         if (lastModified.isPresent() && modified == lastModified.get()) {
-            return Response.builder()
-                    .setStatus(304)
-                    .setContent(new byte[0])
-                    .build();
+            return browserCachedNotChangedResponse();
         } else {
             return newResponseFunction.apply(fileName);
         }
@@ -167,21 +179,21 @@ public class ResponseFactory {
         return forInternalError(e, cause);
     }
 
-    public Response networkPageResponse() {
+    public Response networkPageResponse(@Untrusted Request request) {
         Optional<Response> error = checkDbClosedError();
         if (error.isPresent()) return error.get();
         try {
-            return forPage(pageFactory.networkPage());
+            return forPage(request, pageFactory.networkPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate network page");
         }
     }
 
-    public Response serverPageResponse(ServerUUID serverUUID) {
+    public Response serverPageResponse(@Untrusted Request request, ServerUUID serverUUID) {
         Optional<Response> error = checkDbClosedError();
         if (error.isPresent()) return error.get();
         try {
-            return forPage(pageFactory.serverPage(serverUUID));
+            return forPage(request, pageFactory.serverPage(serverUUID));
         } catch (NotFoundException e) {
             return notFound404(e.getMessage());
         } catch (IOException e) {
@@ -497,9 +509,9 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response playerPageResponse(UUID playerUUID) {
+    public Response playerPageResponse(@Untrusted Request request, UUID playerUUID) {
         try {
-            return forPage(pageFactory.playerPage(playerUUID));
+            return forPage(request, pageFactory.playerPage(playerUUID));
         } catch (IllegalStateException e) {
             return playerNotFound404();
         } catch (IOException e) {
@@ -507,33 +519,33 @@ public class ResponseFactory {
         }
     }
 
-    public Response loginPageResponse() {
+    public Response loginPageResponse(@Untrusted Request request) {
         try {
-            return forPage(pageFactory.loginPage());
+            return forPage(request, pageFactory.loginPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate player page");
         }
     }
 
-    public Response registerPageResponse() {
+    public Response registerPageResponse(@Untrusted Request request) {
         try {
-            return forPage(pageFactory.registerPage());
+            return forPage(request, pageFactory.registerPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate player page");
         }
     }
 
-    public Response queryPageResponse() {
+    public Response queryPageResponse(@Untrusted Request request) {
         try {
-            return forPage(pageFactory.queryPage());
+            return forPage(request, pageFactory.queryPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate query page");
         }
     }
 
-    public Response errorsPageResponse() {
+    public Response errorsPageResponse(@Untrusted Request request) {
         try {
-            return forPage(pageFactory.errorsPage());
+            return forPage(request, pageFactory.errorsPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate errors page");
         }
@@ -550,12 +562,9 @@ public class ResponseFactory {
         }
     }
 
-    public Response reactPageResponse() {
+    public Response reactPageResponse(Request request) {
         try {
-            return Response.builder()
-                    .setMimeType(MimeType.HTML)
-                    .setContent(pageFactory.reactPage().toHtml())
-                    .build();
+            return forPage(request, pageFactory.reactPage());
         } catch (UncheckedIOException | IOException e) {
             return forInternalError(e, "Could not read index.html");
         }

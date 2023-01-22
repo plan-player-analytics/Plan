@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
+import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -30,7 +31,7 @@ import com.djrapitops.plan.version.VersionChecker;
  */
 public class LoginPage implements Page {
 
-    private final String template;
+    private final WebResource template;
     private final ServerInfo serverInfo;
     private final Locale locale;
     private final Theme theme;
@@ -38,7 +39,7 @@ public class LoginPage implements Page {
     private final VersionChecker versionChecker;
 
     LoginPage(
-            String htmlTemplate,
+            WebResource htmlTemplate,
             ServerInfo serverInfo,
             Locale locale,
             Theme theme,
@@ -52,11 +53,16 @@ public class LoginPage implements Page {
     }
 
     @Override
+    public long lastModified() {
+        return template.getLastModified().orElseGet(System::currentTimeMillis);
+    }
+
+    @Override
     public String toHtml() {
         PlaceholderReplacer placeholders = new PlaceholderReplacer();
         placeholders.put("command", getCommand());
         placeholders.put("version", versionChecker.getCurrentVersion());
-        return UnaryChain.of(template)
+        return UnaryChain.of(template.asString())
                 .chain(theme::replaceThemeColors)
                 .chain(placeholders::apply)
                 .chain(locale::replaceLanguageInHtml)

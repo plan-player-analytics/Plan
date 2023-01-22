@@ -82,10 +82,11 @@ public class PlayerPageResolver implements Resolver {
             return Optional.empty();
         }
         return path.getPart(1)
-                .map(playerName -> getResponse(request.getPath(), playerName));
+                .map(playerName -> getResponse(request, playerName));
     }
 
-    private Response getResponse(@Untrusted URIPath path, @Untrusted String playerName) {
+    private Response getResponse(@Untrusted Request request, @Untrusted String playerName) {
+        @Untrusted URIPath path = request.getPath();
         UUID playerUUID = uuidUtility.getUUIDOf(playerName);
         if (playerUUID == null) return responseFactory.uuidNotFound404();
 
@@ -98,6 +99,6 @@ public class PlayerPageResolver implements Resolver {
             // Redirect /player/{uuid/name}/ to /player/{uuid}
             return responseFactory.redirectResponse("../" + Html.encodeToURL(playerUUID.toString()));
         }
-        return responseFactory.playerPageResponse(playerUUID);
+        return responseFactory.playerPageResponse(request, playerUUID);
     }
 }

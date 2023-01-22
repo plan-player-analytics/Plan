@@ -51,6 +51,6 @@ public class PlayersPageResolver implements Resolver {
     public Optional<Response> resolve(Request request) {
         // Redirect /players/ to /players
         if (request.getPath().getPart(1).isPresent()) return Optional.of(responseFactory.redirectResponse("/players"));
-        return Optional.of(responseFactory.playersPageResponse());
+        return Optional.of(responseFactory.playersPageResponse(request));
     }
 }

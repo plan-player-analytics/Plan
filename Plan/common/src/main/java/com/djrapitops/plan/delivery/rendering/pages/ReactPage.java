@@ -16,15 +16,33 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
+import com.djrapitops.plan.delivery.web.resource.WebResource;
+import org.apache.commons.lang3.StringUtils;
+
 /**
- * Interface for generating page HTML String.
+ * Represents React index.html.
  *
  * @author AuroraLS3
  */
-public interface Page {
-    String toHtml();
+public class ReactPage implements Page {
 
-    default long lastModified() {
-        return System.currentTimeMillis();
+    private final String basePath;
+    private final WebResource reactHtml;
+
+    public ReactPage(String basePath, WebResource reactHtml) {
+        this.basePath = basePath;
+        this.reactHtml = reactHtml;
+    }
+
+    @Override
+    public String toHtml() {
+        return StringUtils.replace(
+                reactHtml.asString(),
+                "/static", basePath + "/static");
+    }
+
+    @Override
+    public long lastModified() {
+        return reactHtml.getLastModified().orElseGet(System::currentTimeMillis);
     }
 }
