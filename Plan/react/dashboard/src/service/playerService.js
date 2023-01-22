@@ -2,9 +2,9 @@ import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
 import {doSomeGetRequest, standard200option, staticSite} from "./backendConfiguration";
 
 export const fetchPlayer = async (timestamp, uuid) => {
-    let url = `/v1/player?player=${uuid}&timestamp=${timestamp}`;
+    let url = `/v1/player?player=${uuid}`;
     if (staticSite) url = `/player/${uuid}/player-${uuid}.json`
-    return doSomeGetRequest(url, [
+    return doSomeGetRequest(url, timestamp, [
         standard200option,
         {
             status: staticSite ? 404 : 400,

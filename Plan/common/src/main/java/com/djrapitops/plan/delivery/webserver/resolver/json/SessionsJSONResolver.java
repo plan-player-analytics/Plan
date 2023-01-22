@@ -16,9 +16,9 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
@@ -50,7 +50,7 @@ import java.util.Optional;
  */
 @Singleton
 @Path("/v1/sessions")
-public class SessionsJSONResolver implements Resolver {
+public class SessionsJSONResolver extends JSONResolver {
 
     private final Identifiers identifiers;
     private final AsyncJSONResolverService jsonResolverService;
@@ -66,6 +66,9 @@ public class SessionsJSONResolver implements Resolver {
         this.jsonResolverService = jsonResolverService;
         this.jsonFactory = jsonFactory;
     }
+
+    @Override
+    public Formatter<Long> getHttpLastModifiedFormatter() {return jsonResolverService.getHttpLastModifiedFormatter();}
 
     @Override
     public boolean canAccess(Request request) {
@@ -92,10 +95,8 @@ public class SessionsJSONResolver implements Resolver {
     }
 
     private Response getResponse(Request request) {
-        return Response.builder()
-                .setMimeType(MimeType.JSON)
-                .setJSONContent(getStoredJSON(request).json)
-                .build();
+        JSONStorage.StoredJSON result = getStoredJSON(request);
+        return getCachedOrNewResponse(request, result);
     }
 
     private JSONStorage.StoredJSON getStoredJSON(@Untrusted Request request) {

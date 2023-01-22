@@ -46,6 +46,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -89,6 +90,10 @@ public class PlayerJSONCreator {
         decimals = formatters.decimals();
         year = formatters.yearLong();
         this.graphs = graphs;
+    }
+
+    public long getLastSeen(UUID playerUUID) {
+        return dbSystem.getDatabase().query(SessionQueries.lastSeen(playerUUID));
     }
 
     public Map<String, Object> createJSONAsMap(UUID playerUUID) {
@@ -226,6 +231,7 @@ public class PlayerJSONCreator {
         info.put("best_ping", bestPing != -1.0 ? bestPing + " ms" : unavailable);
         info.put("registered", player.getValue(PlayerKeys.REGISTERED).map(year).orElse("-"));
         info.put("last_seen", player.getValue(PlayerKeys.LAST_SEEN).map(year).orElse("-"));
+        info.put("last_seen_raw_value", player.getValue(PlayerKeys.LAST_SEEN).orElse(0L));
 
         return info;
     }

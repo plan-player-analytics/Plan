@@ -14,8 +14,9 @@ const isCurrentAddress = (address) => {
 export const baseAddress = javaReplaced.address.startsWith('PLAN_') || !isCurrentAddress(javaReplaced.address) ? "" : javaReplaced.address;
 export const staticSite = javaReplaced.isStatic === 'true';
 
-export const doSomeGetRequest = async (url, statusOptions) => {
-    return doSomeRequest(url, statusOptions, async () => axios.get(baseAddress + url));
+export const doSomeGetRequest = async (url, updateRequested, statusOptions) => {
+    return doSomeRequest(url, statusOptions, async () => axios.get(baseAddress + url,
+        updateRequested ? {headers: {"X-Plan-Timestamp": updateRequested}} : {}));
 }
 
 export const doSomePostRequest = async (url, statusOptions, body) => {
@@ -72,6 +73,6 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
 export const standard200option = {status: 200, get: response => response.data}
 const exported404options = {status: 404, get: () => 'Data not yet exported'}
 
-export const doGetRequest = async url => {
-    return doSomeGetRequest(url, staticSite ? [standard200option, exported404options] : [standard200option])
+export const doGetRequest = async (url, updateRequested) => {
+    return doSomeGetRequest(url, updateRequested, staticSite ? [standard200option, exported404options] : [standard200option])
 }

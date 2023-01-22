@@ -16,9 +16,8 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
-import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -51,7 +50,7 @@ import java.util.Optional;
  */
 @Singleton
 @Path("/v1/graph")
-public class GraphsJSONResolver implements Resolver {
+public class GraphsJSONResolver extends JSONResolver {
 
     private final Identifiers identifiers;
     private final AsyncJSONResolverService jsonResolverService;
@@ -60,12 +59,16 @@ public class GraphsJSONResolver implements Resolver {
     @Inject
     public GraphsJSONResolver(
             Identifiers identifiers,
-            AsyncJSONResolverService jsonResolverService, GraphJSONCreator graphJSON
+            AsyncJSONResolverService jsonResolverService,
+            GraphJSONCreator graphJSON
     ) {
         this.identifiers = identifiers;
         this.jsonResolverService = jsonResolverService;
         this.graphJSON = graphJSON;
     }
+
+    @Override
+    public Formatter<Long> getHttpLastModifiedFormatter() {return jsonResolverService.getHttpLastModifiedFormatter();}
 
     @Override
     public boolean canAccess(Request request) {
@@ -126,10 +129,8 @@ public class GraphsJSONResolver implements Resolver {
 
         DataID dataID = getDataID(type);
 
-        return Response.builder()
-                .setMimeType(MimeType.JSON)
-                .setJSONContent(getGraphJSON(request, dataID).json)
-                .build();
+        JSONStorage.StoredJSON storedJSON = getGraphJSON(request, dataID);
+        return getCachedOrNewResponse(request, storedJSON);
     }
 
     private JSONStorage.StoredJSON getGraphJSON(@Untrusted Request request, DataID dataID) {

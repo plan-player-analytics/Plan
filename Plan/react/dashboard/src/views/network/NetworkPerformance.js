@@ -52,13 +52,11 @@ const NetworkPerformance = () => {
             timestamp_f: ''
         }
         const time = new Date().getTime();
-        const monthMs = 2592000000;
-        const after = time - monthMs;
 
         for (const index of visualizedServers) {
             const server = serverOptions[index];
 
-            const {data, error} = await fetchOptimizedPerformance(time, encodeURIComponent(server.serverUUID), after);
+            const {data, error} = await fetchOptimizedPerformance(time, encodeURIComponent(server.serverUUID));
             if (data) {
                 loaded.servers.push(server);
                 const values = data.values;

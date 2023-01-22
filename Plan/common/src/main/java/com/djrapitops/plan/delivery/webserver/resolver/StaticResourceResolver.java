@@ -18,14 +18,12 @@ package com.djrapitops.plan.delivery.webserver.resolver;
 
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
+import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.http.HttpHeader;
-import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,21 +52,9 @@ public class StaticResourceResolver implements NoAuthResolver {
         return Optional.ofNullable(getResponse(request));
     }
 
-    @NotNull
-    private static Optional<Long> getEtag(Request request) {
-        return request.getHeader(HttpHeader.IF_NONE_MATCH.asString())
-                .map(tag -> {
-                    try {
-                        return Long.parseLong(tag);
-                    } catch (NumberFormatException notANumber) {
-                        throw new BadRequestException("'" + HttpHeader.IF_NONE_MATCH.asString() + "'-header was not a number. Clear browser cache.");
-                    }
-                });
-    }
-
     private Response getResponse(Request request) {
         @Untrusted String resource = getPath(request).asString().substring(1);
-        @Untrusted Optional<Long> etag = getEtag(request);
+        @Untrusted Optional<Long> etag = Identifiers.getEtag(request);
         if (resource.endsWith(".css")) {
             return etag.map(tag -> responseFactory.cssResponse(tag, resource))
                     .orElseGet(() -> responseFactory.cssResponse(resource));

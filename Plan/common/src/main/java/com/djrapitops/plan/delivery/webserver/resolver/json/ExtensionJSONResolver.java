@@ -17,8 +17,8 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionDataDto;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  * @author AuroraLS3
  */
 @Singleton
-public class ExtensionJSONResolver implements Resolver {
+public class ExtensionJSONResolver extends JSONResolver {
 
     private final DBSystem dbSystem;
     private final Identifiers identifiers;
@@ -65,6 +65,9 @@ public class ExtensionJSONResolver implements Resolver {
         this.identifiers = identifiers;
         this.jsonResolverService = jsonResolverService;
     }
+
+    @Override
+    public Formatter<Long> getHttpLastModifiedFormatter() {return jsonResolverService.getHttpLastModifiedFormatter();}
 
     @Override
     public boolean canAccess(Request request) {
@@ -107,10 +110,7 @@ public class ExtensionJSONResolver implements Resolver {
 
     private Response getResponse(Request request, ServerUUID serverUUID) {
         JSONStorage.StoredJSON json = getJSON(request, serverUUID);
-
-        return Response.builder()
-                .setJSONContent(json.json)
-                .build();
+        return getCachedOrNewResponse(request, json);
     }
 
     private Map<String, List<ExtensionDataDto>> getExtensionData(ServerUUID serverUUID) {

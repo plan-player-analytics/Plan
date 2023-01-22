@@ -23,6 +23,7 @@ public class CacheStrategy {
 
     public static final String CACHE_IN_BROWSER = "max-age: 2592000";
     public static final String CHECK_ETAG = "no-cache";
+    public static final String CHECK_ETAG_USER_SPECIFIC = "no-cache, private";
 
     private CacheStrategy() {
         // Static variable class
