@@ -238,7 +238,7 @@ public class PlanCommand {
                 .optionalArgument(locale.getString(HelpLang.ARG_USERNAME), locale.getString(HelpLang.DESC_ARG_USERNAME))
                 .description(locale.getString(HelpLang.UNREGISTER))
                 .inDepthDescription(locale.getString(DeepHelpLang.UNREGISTER))
-                .onCommand((sender, arguments) -> registrationCommands.onUnregister(commandName, sender, arguments))
+                .onCommand(registrationCommands::onUnregister)
                 .onTabComplete(this::webUserNames)
                 .build();
     }
@@ -348,7 +348,7 @@ public class PlanCommand {
                 .optionalArgument("--remove_offline", "Remove offline players if given")
                 .description(locale.getString(HelpLang.ONLINE_UUID_MIGRATION))
                 .inDepthDescription("Moves and combines offline uuid data to online uuids where possible. Leaves offline-only players to database.")
-                .onCommand((sender, arguments) -> databaseCommands.onOnlineConversion(commandName, sender, arguments))
+                .onCommand(databaseCommands::onOnlineConversion)
                 .build();
     }
 
@@ -358,7 +358,7 @@ public class PlanCommand {
                 .requirePermission(Permissions.DATA_CLEAR)
                 .requiredArgument(locale.getString(HelpLang.ARG_SERVER), locale.getString(HelpLang.DESC_ARG_SERVER_IDENTIFIER))
                 .description(locale.getString(HelpLang.JOIN_ADDRESS_REMOVAL))
-                .onCommand((sender, arguments) -> databaseCommands.onFixFabricJoinAddresses(commandName, sender, arguments))
+                .onCommand(databaseCommands::onFixFabricJoinAddresses)
                 .onTabComplete(this::serverNames)
                 .build();
     }
@@ -384,7 +384,7 @@ public class PlanCommand {
                 .optionalArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_RESTORE))
                 .description(locale.getString(HelpLang.DB_RESTORE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_RESTORE))
-                .onCommand((sender, arguments) -> databaseCommands.onRestore(commandName, sender, arguments))
+                .onCommand(databaseCommands::onRestore)
                 .onTabComplete(this::getBackupFilenames)
                 .build();
     }
@@ -409,7 +409,7 @@ public class PlanCommand {
                 .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_MOVE_TO))
                 .description(locale.getString(HelpLang.DB_MOVE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_MOVE))
-                .onCommand((sender, arguments) -> databaseCommands.onMove(commandName, sender, arguments))
+                .onCommand(databaseCommands::onMove)
                 .onTabComplete((sender, arguments) -> DBType.names())
                 .build();
     }
@@ -434,7 +434,7 @@ public class PlanCommand {
                 .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_REMOVE))
                 .description(locale.getString(HelpLang.DB_CLEAR))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_CLEAR))
-                .onCommand((sender, arguments) -> databaseCommands.onClear(commandName, sender, arguments))
+                .onCommand(databaseCommands::onClear)
                 .onTabComplete((sender, arguments) ->
                         arguments.isEmpty() ? DBType.names() : Collections.emptyList()
                 ).build();
@@ -447,7 +447,7 @@ public class PlanCommand {
                 .requiredArgument(locale.getString(HelpLang.ARG_NAME_UUID), locale.getString(HelpLang.DESC_ARG_PLAYER_IDENTIFIER_REMOVE))
                 .description(locale.getString(HelpLang.DB_REMOVE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_REMOVE))
-                .onCommand((sender, arguments) -> databaseCommands.onRemove(commandName, sender, arguments))
+                .onCommand(databaseCommands::onRemove)
                 .onTabComplete(this::playerNames)
                 .build();
     }

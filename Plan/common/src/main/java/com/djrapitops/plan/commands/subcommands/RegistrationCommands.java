@@ -171,7 +171,7 @@ public class RegistrationCommands {
         }
     }
 
-    public void onUnregister(String mainCommand, CMDSender sender, @Untrusted Arguments arguments) {
+    public void onUnregister(CMDSender sender, @Untrusted Arguments arguments) {
         @Untrusted Optional<String> givenUsername = arguments.get(0).filter(arg -> sender.hasPermission(Permissions.UNREGISTER_OTHER));
 
         Database database = dbSystem.getDatabase();
@@ -195,24 +195,9 @@ public class RegistrationCommands {
             throw new IllegalArgumentException(locale.getString(CommandLang.USER_NOT_LINKED));
         }
 
-        if (sender.supportsChatEvents()) {
-            sender.buildMessage()
-                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, user.getUsername(), user.getLinkedTo())).newLine()
-                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
-                    .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
-                    .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover(locale.getString(CommandLang.CONFIRM_DENY))
-                    .send();
-        } else {
-            sender.buildMessage()
-                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, user.getUsername(), user.getLinkedTo())).newLine()
-                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
-                    .addPart(" ")
-                    .addPart("§c/" + mainCommand + " cancel")
-                    .send();
-        }
+        String prompt = locale.getString(CommandLang.CONFIRM_UNREGISTER, user.getUsername(), user.getLinkedTo());
 
-        confirmation.confirm(sender, choice -> {
+        confirmation.confirm(sender, prompt, choice -> {
             if (Boolean.TRUE.equals(choice)) {
                 try {
                     sender.send(colors.getMainColor() + locale.getString(CommandLang.UNREGISTER, user.getUsername()));
