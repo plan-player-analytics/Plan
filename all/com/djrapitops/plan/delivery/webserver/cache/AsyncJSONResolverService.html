@@ -91,7 +91,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.delivery.webserver.cache.JSONStorage)" class="member-name-link">AsyncJSONResolverService</a><wbr>(<a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.delivery.formatting.Formatters,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.delivery.webserver.cache.JSONStorage)" class="member-name-link">AsyncJSONResolverService</a><wbr>(<a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+ <a href="../../formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a>&nbsp;formatters,
  <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="JSONStorage.html" title="interface in com.djrapitops.plan.delivery.webserver.cache">JSONStorage</a>&nbsp;jsonStorage)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -109,17 +110,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,com.djrapitops.plan.identification.ServerUUID,java.util.function.Function)" class="member-name-link">resolve</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../formatting/Formatter.html" title="interface in com.djrapitops.plan.delivery.formatting">Formatter</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHttpLastModifiedFormatter()" class="member-name-link">getHttpLastModifiedFormatter</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,com.djrapitops.plan.identification.ServerUUID,java.util.function.Function)" class="member-name-link">resolve</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
  <a href="DataID.html" title="enum class in com.djrapitops.plan.delivery.webserver.cache">DataID</a>&nbsp;dataID,
  <a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>,<wbr>T&gt;&nbsp;creator)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,java.util.function.Supplier)" class="member-name-link">resolve</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,java.util.function.Supplier)" class="member-name-link">resolve</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
  <a href="DataID.html" title="enum class in com.djrapitops.plan.delivery.webserver.cache">DataID</a>&nbsp;dataID,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;jsonCreator)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -138,10 +142,11 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.delivery.webserver.cache.JSONStorage)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.delivery.formatting.Formatters,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.delivery.webserver.cache.JSONStorage)">
 <h3>AsyncJSONResolverService</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">AsyncJSONResolverService</span><wbr><span class="parameters">(<a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+ <a href="../../formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a>&nbsp;formatters,
  <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="JSONStorage.html" title="interface in com.djrapitops.plan.delivery.webserver.cache">JSONStorage</a>&nbsp;jsonStorage)</span></div>
 </section>
@@ -169,6 +174,12 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></span>&nbsp;<span class="element-name">resolve</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
  <a href="DataID.html" title="enum class in com.djrapitops.plan.delivery.webserver.cache">DataID</a>&nbsp;dataID,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;jsonCreator)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getHttpLastModifiedFormatter()">
+<h3>getHttpLastModifiedFormatter</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../formatting/Formatter.html" title="interface in com.djrapitops.plan.delivery.formatting">Formatter</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">getHttpLastModifiedFormatter</span>()</div>
 </section>
 </li>
 </ul>
