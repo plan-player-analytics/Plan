@@ -17,6 +17,8 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Family;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
@@ -24,10 +26,13 @@ import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.ResponseBuilder;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
@@ -42,6 +47,7 @@ import com.djrapitops.plan.utilities.java.UnaryChain;
 import dagger.Lazy;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
+import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,6 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * Factory for creating different {@link Response} objects.
@@ -66,6 +73,7 @@ public class ResponseFactory {
     private final DBSystem dbSystem;
     private final Theme theme;
     private final Lazy<Addresses> addresses;
+    private final Formatter<Long> httpLastModifiedFormatter;
 
     @Inject
     public ResponseFactory(
@@ -73,6 +81,7 @@ public class ResponseFactory {
             PageFactory pageFactory,
             Locale locale,
             DBSystem dbSystem,
+            Formatters formatters,
             Theme theme,
             Lazy<Addresses> addresses
     ) {
@@ -82,6 +91,8 @@ public class ResponseFactory {
         this.dbSystem = dbSystem;
         this.theme = theme;
         this.addresses = addresses;
+
+        httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
 
     public WebResource getResource(@Untrusted String resourceName) {
@@ -89,10 +100,27 @@ public class ResponseFactory {
                 () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
     }
 
-    private Response forPage(Page page) {
+    private static Response browserCachedNotChangedResponse() {
+        return Response.builder()
+                .setStatus(304)
+                .setContent(new byte[0])
+                .build();
+    }
+
+    private Response forPage(@Untrusted Request request, Page page) {
+        long modified = page.lastModified();
+        Optional<Long> etag = Identifiers.getEtag(request);
+
+        if (etag.isPresent() && modified == etag.get()) {
+            return browserCachedNotChangedResponse();
+        }
+
         return Response.builder()
                 .setMimeType(MimeType.HTML)
                 .setContent(page.toHtml())
+                .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(modified))
+                .setHeader(HttpHeader.ETAG.asString(), modified)
                 .build();
     }
 
@@ -104,11 +132,11 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response playersPageResponse() {
+    public Response playersPageResponse(@Untrusted Request request) {
         try {
             Optional<Response> error = checkDbClosedError();
             if (error.isPresent()) return error.get();
-            return forPage(pageFactory.playersPage());
+            return forPage(request, pageFactory.playersPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate players page");
         }
@@ -137,25 +165,35 @@ public class ResponseFactory {
                 .build();
     }
 
+    private Response getCachedOrNew(long modified, String fileName, Function<String, Response> newResponseFunction) {
+        WebResource resource = getResource(fileName);
+        Optional<Long> lastModified = resource.getLastModified();
+        if (lastModified.isPresent() && modified == lastModified.get()) {
+            return browserCachedNotChangedResponse();
+        } else {
+            return newResponseFunction.apply(fileName);
+        }
+    }
+
     public Response internalErrorResponse(Throwable e, String cause) {
         return forInternalError(e, cause);
     }
 
-    public Response networkPageResponse() {
+    public Response networkPageResponse(@Untrusted Request request) {
         Optional<Response> error = checkDbClosedError();
         if (error.isPresent()) return error.get();
         try {
-            return forPage(pageFactory.networkPage());
+            return forPage(request, pageFactory.networkPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate network page");
         }
     }
 
-    public Response serverPageResponse(ServerUUID serverUUID) {
+    public Response serverPageResponse(@Untrusted Request request, ServerUUID serverUUID) {
         Optional<Response> error = checkDbClosedError();
         if (error.isPresent()) return error.get();
         try {
-            return forPage(pageFactory.serverPage(serverUUID));
+            return forPage(request, pageFactory.serverPage(serverUUID));
         } catch (NotFoundException e) {
             return notFound404(e.getMessage());
         } catch (IOException e) {
@@ -171,23 +209,36 @@ public class ResponseFactory {
                 .build();
     }
 
+    public Response javaScriptResponse(long modified, @Untrusted String fileName) {
+        return getCachedOrNew(modified, fileName, this::javaScriptResponse);
+    }
+
     public Response javaScriptResponse(@Untrusted String fileName) {
         try {
-            String content = UnaryChain.of(getResource(fileName).asString())
+            WebResource resource = getResource(fileName);
+            String content = UnaryChain.of(resource.asString())
                     .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
-                    .chain(resource -> {
-                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {return resource;}
-                        return locale.replaceLanguageInJavascript(resource);
+                    .chain(contents -> {
+                        if (fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {return contents;}
+                        return locale.replaceLanguageInJavascript(contents);
                     })
-                    .chain(resource -> StringUtils.replace(resource, "n.p=\"/\"",
+                    .chain(contents -> StringUtils.replace(contents, "n.p=\"/\"",
                             "n.p=\"" + getBasePath() + "/\""))
                     .apply();
-            return Response.builder()
+            ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.JS)
                     .setContent(content)
-                    .setStatus(200)
-                    .build();
+                    .setStatus(200);
+
+            if (fileName.contains("static")) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        // Can't cache main bundle in browser since base path might change
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), fileName.contains("main") ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("Javascript File not found");
         }
@@ -205,32 +256,62 @@ public class ResponseFactory {
         return StringUtils.replace(resource, "PLAN_BASE_ADDRESS", address);
     }
 
+    public Response cssResponse(long modified, @Untrusted String fileName) {
+        return getCachedOrNew(modified, fileName, this::cssResponse);
+    }
+
     public Response cssResponse(@Untrusted String fileName) {
         try {
-            String content = UnaryChain.of(getResource(fileName).asString())
+            WebResource resource = getResource(fileName);
+            String content = UnaryChain.of(resource.asString())
                     .chain(theme::replaceThemeColors)
-                    .chain(resource -> StringUtils.replace(resource, "/static", getBasePath() + "/static"))
+                    .chain(contents -> StringUtils.replace(contents, "/static", getBasePath() + "/static"))
                     .apply();
-            return Response.builder()
+
+            ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.CSS)
                     .setContent(content)
-                    .setStatus(200)
-                    .build();
+                    .setStatus(200);
+
+            if (fileName.contains("static")) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        // Can't cache css bundles in browser since base path might change
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("CSS File not found");
         }
     }
 
+    public Response imageResponse(long modified, @Untrusted String fileName) {
+        return getCachedOrNew(modified, fileName, this::imageResponse);
+    }
+
     public Response imageResponse(@Untrusted String fileName) {
         try {
-            return Response.builder()
+            WebResource resource = getResource(fileName);
+            ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.IMAGE)
-                    .setContent(getResource(fileName))
-                    .setStatus(200)
-                    .build();
+                    .setContent(resource)
+                    .setStatus(200);
+
+            if (fileName.contains("static")) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("Image File not found");
         }
+    }
+
+    public Response fontResponse(long modified, @Untrusted String fileName) {
+        return getCachedOrNew(modified, fileName, this::fontResponse);
     }
 
     public Response fontResponse(@Untrusted String fileName) {
@@ -247,10 +328,18 @@ public class ResponseFactory {
             type = MimeType.FONT_BYTESTREAM;
         }
         try {
-            return Response.builder()
+            WebResource resource = getResource(fileName);
+            ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(type)
-                    .setContent(getResource(fileName))
-                    .build();
+                    .setContent(resource);
+
+            if (fileName.contains("static")) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("Font File not found");
         }
@@ -273,9 +362,14 @@ public class ResponseFactory {
 
     public Response robotsResponse() {
         try {
+            WebResource resource = getResource("robots.txt");
+            Long lastModified = resource.getLastModified().orElseGet(System::currentTimeMillis);
             return Response.builder()
                     .setMimeType("text/plain")
-                    .setContent(getResource("robots.txt"))
+                    .setContent(resource)
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CACHE_IN_BROWSER)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                    .setHeader(HttpHeader.ETAG.asString(), lastModified)
                     .build();
         } catch (UncheckedIOException e) {
             return forInternalError(e, "Could not read robots.txt");
@@ -415,9 +509,9 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response playerPageResponse(UUID playerUUID) {
+    public Response playerPageResponse(@Untrusted Request request, UUID playerUUID) {
         try {
-            return forPage(pageFactory.playerPage(playerUUID));
+            return forPage(request, pageFactory.playerPage(playerUUID));
         } catch (IllegalStateException e) {
             return playerNotFound404();
         } catch (IOException e) {
@@ -425,33 +519,33 @@ public class ResponseFactory {
         }
     }
 
-    public Response loginPageResponse() {
+    public Response loginPageResponse(@Untrusted Request request) {
         try {
-            return forPage(pageFactory.loginPage());
+            return forPage(request, pageFactory.loginPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate player page");
         }
     }
 
-    public Response registerPageResponse() {
+    public Response registerPageResponse(@Untrusted Request request) {
         try {
-            return forPage(pageFactory.registerPage());
+            return forPage(request, pageFactory.registerPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate player page");
         }
     }
 
-    public Response queryPageResponse() {
+    public Response queryPageResponse(@Untrusted Request request) {
         try {
-            return forPage(pageFactory.queryPage());
+            return forPage(request, pageFactory.queryPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate query page");
         }
     }
 
-    public Response errorsPageResponse() {
+    public Response errorsPageResponse(@Untrusted Request request) {
         try {
-            return forPage(pageFactory.errorsPage());
+            return forPage(request, pageFactory.errorsPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate errors page");
         }
@@ -468,12 +562,9 @@ public class ResponseFactory {
         }
     }
 
-    public Response reactPageResponse() {
+    public Response reactPageResponse(Request request) {
         try {
-            return Response.builder()
-                    .setMimeType(MimeType.HTML)
-                    .setContent(pageFactory.reactPage().toHtml())
-                    .build();
+            return forPage(request, pageFactory.reactPage());
         } catch (UncheckedIOException | IOException e) {
             return forInternalError(e, "Could not read index.html");
         }

@@ -786,6 +786,14 @@ public class SessionQueries {
         };
     }
 
+    public static Query<Long> lastSeen(UUID playerUUID) {
+        String sql = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
+        return db -> db.queryOptional(sql, set -> set.getLong("last_seen"), playerUUID)
+                .orElse(0L);
+    }
+
     public static Query<Long> lastSeen(UUID playerUUID, ServerUUID serverUUID) {
         String sql = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +

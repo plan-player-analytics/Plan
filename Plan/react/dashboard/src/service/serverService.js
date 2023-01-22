@@ -3,49 +3,49 @@ import {doGetRequest, staticSite} from "./backendConfiguration";
 export const fetchServerIdentity = async (timestamp, identifier) => {
     let url = `/v1/serverIdentity?server=${identifier}`;
     if (staticSite) url = `/data/serverIdentity-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchServerOverview = async (timestamp, identifier) => {
-    let url = `/v1/serverOverview?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/serverOverview?server=${identifier}`;
     if (staticSite) url = `/data/serverOverview-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchOnlineActivityOverview = async (timestamp, identifier) => {
-    let url = `/v1/onlineOverview?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/onlineOverview?server=${identifier}`;
     if (staticSite) url = `/data/onlineOverview-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPlayerbaseOverview = async (timestamp, identifier) => {
-    let url = `/v1/playerbaseOverview?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/playerbaseOverview?server=${identifier}`;
     if (staticSite) url = `/data/playerbaseOverview-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchSessionOverview = async (timestamp, identifier) => {
-    let url = `/v1/sessionsOverview?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/sessionsOverview?server=${identifier}`;
     if (staticSite) url = `/data/sessionsOverview-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPvpPve = async (timestamp, identifier) => {
-    let url = `/v1/playerVersus?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/playerVersus?server=${identifier}`;
     if (staticSite) url = `/data/playerVersus-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPerformanceOverview = async (timestamp, identifier) => {
-    let url = `/v1/performanceOverview?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/performanceOverview?server=${identifier}`;
     if (staticSite) url = `/data/performanceOverview-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchExtensionData = async (timestamp, identifier) => {
-    let url = `/v1/extensionData?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/extensionData?server=${identifier}`;
     if (staticSite) url = `/data/extensionData-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchSessions = async (timestamp, identifier) => {
@@ -57,21 +57,21 @@ export const fetchSessions = async (timestamp, identifier) => {
 }
 
 const fetchSessionsServer = async (timestamp, identifier) => {
-    let url = `/v1/sessions?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/sessions?server=${identifier}`;
     if (staticSite) url = `/data/sessions-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchSessionsNetwork = async (timestamp) => {
-    let url = `/v1/sessions?timestamp=${timestamp}`;
+    let url = `/v1/sessions`;
     if (staticSite) url = `/data/sessions.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchKills = async (timestamp, identifier) => {
-    let url = `/v1/kills?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/kills?server=${identifier}`;
     if (staticSite) url = `/data/kills-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPlayers = async (timestamp, identifier) => {
@@ -82,21 +82,21 @@ export const fetchPlayers = async (timestamp, identifier) => {
     }
 }
 const fetchPlayersServer = async (timestamp, identifier) => {
-    let url = `/v1/players?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/players?server=${identifier}`;
     if (staticSite) url = `/data/players-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchPlayersNetwork = async (timestamp) => {
-    let url = `/v1/players?timestamp=${timestamp}`;
+    let url = `/v1/players`;
     if (staticSite) url = `/data/players.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPingTable = async (timestamp, identifier) => {
-    let url = `/v1/pingTable?server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/pingTable?server=${identifier}`;
     if (staticSite) url = `/data/pingTable-${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPlayersOnlineGraph = async (timestamp, identifier) => {
@@ -108,15 +108,15 @@ export const fetchPlayersOnlineGraph = async (timestamp, identifier) => {
 }
 
 const fetchPlayersOnlineGraphServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=playersOnline&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=playersOnline&server=${identifier}`;
     if (staticSite) url = `/data/graph-playersOnline_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchPlayersOnlineGraphNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=playersOnline&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=playersOnline`;
     if (staticSite) url = `/data/graph-playersOnline.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPlayerbaseDevelopmentGraph = async (timestamp, identifier) => {
@@ -128,15 +128,15 @@ export const fetchPlayerbaseDevelopmentGraph = async (timestamp, identifier) => 
 }
 
 const fetchPlayerbaseDevelopmentGraphServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=activity&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=activity&server=${identifier}`;
     if (staticSite) url = `/data/graph-activity_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchPlayerbaseDevelopmentGraphNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=activity&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=activity`;
     if (staticSite) url = `/data/graph-activity.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchDayByDayGraph = async (timestamp, identifier) => {
@@ -148,15 +148,15 @@ export const fetchDayByDayGraph = async (timestamp, identifier) => {
 }
 
 const fetchDayByDayGraphServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=uniqueAndNew&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=uniqueAndNew&server=${identifier}`;
     if (staticSite) url = `/data/graph-uniqueAndNew_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchDayByDayGraphNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=uniqueAndNew&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=uniqueAndNew`;
     if (staticSite) url = `/data/graph-uniqueAndNew.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchHourByHourGraph = async (timestamp, identifier) => {
@@ -168,33 +168,33 @@ export const fetchHourByHourGraph = async (timestamp, identifier) => {
 }
 
 const fetchHourByHourGraphServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=hourlyUniqueAndNew&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=hourlyUniqueAndNew&server=${identifier}`;
     if (staticSite) url = `/data/graph-hourlyUniqueAndNew_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchHourByHourGraphNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=hourlyUniqueAndNew&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=hourlyUniqueAndNew`;
     if (staticSite) url = `/data/graph-hourlyUniqueAndNew.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchServerCalendarGraph = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=serverCalendar&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=serverCalendar&server=${identifier}`;
     if (staticSite) url = `/data/graph-serverCalendar_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPunchCardGraph = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=punchCard&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=punchCard&server=${identifier}`;
     if (staticSite) url = `/data/graph-punchCard_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchWorldPie = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=worldPie&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=worldPie&server=${identifier}`;
     if (staticSite) url = `/data/graph-worldPie_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchGeolocations = async (timestamp, identifier) => {
@@ -206,27 +206,27 @@ export const fetchGeolocations = async (timestamp, identifier) => {
 }
 
 const fetchGeolocationsServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=geolocation&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=geolocation&server=${identifier}`;
     if (staticSite) url = `/data/graph-geolocation_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchGeolocationsNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=geolocation&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=geolocation`;
     if (staticSite) url = `/data/graph-geolocation.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
-export const fetchOptimizedPerformance = async (timestamp, identifier, after) => {
-    let url = `/v1/graph?type=optimizedPerformance&server=${identifier}&timestamp=${timestamp}&after=${after}`;
+export const fetchOptimizedPerformance = async (timestamp, identifier) => {
+    let url = `/v1/graph?type=optimizedPerformance&server=${identifier}`;
     if (staticSite) url = `/data/graph-optimizedPerformance_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchPingGraph = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=aggregatedPing&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=aggregatedPing&server=${identifier}`;
     if (staticSite) url = `/data/graph-aggregatedPing_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchJoinAddressPie = async (timestamp, identifier) => {
@@ -238,15 +238,15 @@ export const fetchJoinAddressPie = async (timestamp, identifier) => {
 }
 
 const fetchJoinAddressPieServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=joinAddressPie&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=joinAddressPie&server=${identifier}`;
     if (staticSite) url = `/data/graph-joinAddressPie_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchJoinAddressPieNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=joinAddressPie&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=joinAddressPie`;
     if (staticSite) url = `/data/graph-joinAddressPie.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 export const fetchJoinAddressByDay = async (timestamp, identifier) => {
@@ -258,13 +258,13 @@ export const fetchJoinAddressByDay = async (timestamp, identifier) => {
 }
 
 const fetchJoinAddressByDayServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=joinAddressByDay&server=${identifier}&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=joinAddressByDay&server=${identifier}`;
     if (staticSite) url = `/data/graph-joinAddressByDay_${identifier}.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }
 
 const fetchJoinAddressByDayNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=joinAddressByDay&timestamp=${timestamp}`;
+    let url = `/v1/graph?type=joinAddressByDay`;
     if (staticSite) url = `/data/graph-joinAddressByDay.json`;
-    return doGetRequest(url);
+    return doGetRequest(url, timestamp);
 }

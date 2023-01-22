@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
+import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
@@ -41,7 +42,6 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Lazy;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -101,15 +101,12 @@ public class PageFactory {
             return reactPage();
         }
 
-        return new PlayersPage(getResource("players.html"), versionChecker.get(),
+        return new PlayersPage(getResourceAsString("players.html"), versionChecker.get(),
                 config.get(), theme.get(), serverInfo.get());
     }
 
     public Page reactPage() throws IOException {
-        String reactHtml = StringUtils.replace(
-                getResource("index.html"),
-                "/static", getBasePath() + "/static");
-        return () -> reactHtml;
+        return new ReactPage(getBasePath(), getResource("index.html"));
     }
 
     private String getBasePath() {
@@ -135,7 +132,7 @@ public class PageFactory {
         }
 
         return new ServerPage(
-                getResource("server.html"),
+                getResourceAsString("server.html"),
                 server,
                 config.get(),
                 theme.get(),
@@ -158,7 +155,7 @@ public class PageFactory {
         }
 
         return new PlayerPage(
-                getResource("player.html"), player,
+                getResourceAsString("player.html"), player,
                 versionChecker.get(),
                 config.get(),
                 this,
@@ -207,7 +204,7 @@ public class PageFactory {
             return reactPage();
         }
 
-        return new NetworkPage(getResource("network.html"),
+        return new NetworkPage(getResourceAsString("network.html"),
                 dbSystem.get(),
                 versionChecker.get(),
                 config.get(),
@@ -223,7 +220,7 @@ public class PageFactory {
     public Page internalErrorPage(String message, @Untrusted Throwable error) {
         try {
             return new InternalErrorPage(
-                    getResource("error.html"), message, error,
+                    getResourceAsString("error.html"), message, error,
                     versionChecker.get());
         } catch (IOException noParse) {
             return () -> "Error occurred: " + error.toString() +
@@ -234,20 +231,24 @@ public class PageFactory {
 
     public Page errorPage(String title, String error) throws IOException {
         return new ErrorMessagePage(
-                getResource("error.html"), title, error,
+                getResourceAsString("error.html"), title, error,
                 versionChecker.get(), theme.get());
     }
 
     public Page errorPage(Icon icon, String title, String error) throws IOException {
         return new ErrorMessagePage(
-                getResource("error.html"), icon, title, error, theme.get(), versionChecker.get());
+                getResourceAsString("error.html"), icon, title, error, theme.get(), versionChecker.get());
     }
 
-    public String getResource(String name) throws IOException {
+    public String getResourceAsString(String name) throws IOException {
+        return getResource(name).asString();
+    }
+
+    public WebResource getResource(String name) throws IOException {
         try {
             return ResourceService.getInstance().getResource("Plan", name,
                     () -> files.get().getResourceFromJar("web/" + name).asWebResource()
-            ).asString();
+            );
         } catch (UncheckedIOException readFail) {
             throw readFail.getCause();
         }
@@ -274,7 +275,7 @@ public class PageFactory {
             return reactPage();
         }
         return new QueryPage(
-                getResource("query.html"),
+                getResourceAsString("query.html"),
                 locale.get(), theme.get(), versionChecker.get()
         );
     }

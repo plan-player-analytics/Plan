@@ -96,7 +96,9 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
             if ("Server thread".equalsIgnoreCase(Thread.currentThread().getName())) {
                 return getCached(params, uuid);
             }
-            return getPlaceholderValue(params, uuid);
+
+            return Optional.ofNullable(getCached(params, uuid))
+                    .orElseGet(() -> getPlaceholderValue(params, uuid));
         } catch (IllegalStateException e) {
             if ("zip file closed".equals(e.getMessage())) {
                 return null; // Plan is disabled.

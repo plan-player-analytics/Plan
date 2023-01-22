@@ -129,9 +129,11 @@ public class JSONFileStorage implements JSONStorage {
     public Optional<StoredJSON> fetchJSON(String identifier) {
         File[] stored = jsonDirectory.toFile().listFiles();
         if (stored == null) return Optional.empty();
+
+        String lookForStart = identifier + '-';
         for (File file : stored) {
             String fileName = file.getName();
-            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier + '-')) {
+            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(lookForStart)) {
                 return Optional.ofNullable(readStoredJSON(file));
             }
         }
@@ -179,10 +181,12 @@ public class JSONFileStorage implements JSONStorage {
     private Optional<StoredJSON> fetchJSONWithTimestamp(String identifier, long timestamp, BiPredicate<Matcher, Long> timestampComparator) {
         File[] stored = jsonDirectory.toFile().listFiles();
         if (stored == null) return Optional.empty();
+
+        String lookForStart = identifier + '-';
         for (File file : stored) {
             try {
                 String fileName = file.getName();
-                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier + '-')) {
+                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(lookForStart)) {
                     Matcher timestampMatch = timestampRegex.matcher(fileName);
                     if (timestampMatch.find() && timestampComparator.test(timestampMatch, timestamp)) {
                         return Optional.ofNullable(readStoredJSON(file));
@@ -268,6 +272,28 @@ public class JSONFileStorage implements JSONStorage {
                 }
             }
         });
+    }
+
+    @Override
+    public Optional<Long> getTimestamp(String identifier) {
+        File[] stored = jsonDirectory.toFile().listFiles();
+        if (stored == null) return Optional.empty();
+
+        String lookForStart = identifier + '-';
+        for (File file : stored) {
+            try {
+                String fileName = file.getName();
+                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(lookForStart)) {
+                    Matcher timestampMatch = timestampRegex.matcher(fileName);
+                    if (timestampMatch.find()) {
+                        return Optional.of(Long.parseLong(timestampMatch.group(1)));
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Ignore this file, malformed timestamp
+            }
+        }
+        return Optional.empty();
     }
 
     @Singleton

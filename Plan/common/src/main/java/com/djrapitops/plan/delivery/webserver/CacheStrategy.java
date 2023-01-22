@@ -14,17 +14,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.pages;
+package com.djrapitops.plan.delivery.webserver;
 
 /**
- * Interface for generating page HTML String.
- *
  * @author AuroraLS3
  */
-public interface Page {
-    String toHtml();
+public class CacheStrategy {
 
-    default long lastModified() {
-        return System.currentTimeMillis();
+    public static final String CACHE_IN_BROWSER = "max-age: 2592000";
+    public static final String CHECK_ETAG = "no-cache";
+    public static final String CHECK_ETAG_USER_SPECIFIC = "no-cache, private";
+
+    private CacheStrategy() {
+        // Static variable class
     }
+
 }

@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.eclipse.jetty.http.HttpHeader;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -67,9 +68,11 @@ public class Identifiers {
     public static Optional<Long> getTimestamp(@Untrusted Request request) {
         try {
             long currentTime = System.currentTimeMillis();
-            long timestamp = request.getQuery().get("timestamp")
+            long timestamp = request.getHeader("X-Plan-Timestamp")
                     .map(Long::parseLong)
-                    .orElse(currentTime);
+                    .orElseGet(() -> request.getQuery().get("timestamp")
+                            .map(Long::parseLong)
+                            .orElse(currentTime));
             if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
                 return Optional.empty();
             }
@@ -77,6 +80,17 @@ public class Identifiers {
         } catch (@Untrusted NumberFormatException nonNumberTimestamp) {
             throw new BadRequestException("'timestamp' was not a number");
         }
+    }
+
+    public static Optional<Long> getEtag(Request request) {
+        return request.getHeader(HttpHeader.IF_NONE_MATCH.asString())
+                .map(tag -> {
+                    try {
+                        return Long.parseLong(tag);
+                    } catch (NumberFormatException notANumber) {
+                        throw new BadRequestException("'" + HttpHeader.IF_NONE_MATCH.asString() + "'-header was not a number. Clear browser cache.");
+                    }
+                });
     }
 
     /**

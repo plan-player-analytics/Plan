@@ -44,6 +44,6 @@ public class SwaggerPageResolver implements Resolver {
 
     @Override
     public Optional<Response> resolve(Request request) {
-        return Optional.of(responseFactory.reactPageResponse());
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

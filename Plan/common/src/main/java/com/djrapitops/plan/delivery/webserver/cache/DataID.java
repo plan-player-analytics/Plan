@@ -55,6 +55,7 @@ public enum DataID {
     JOIN_ADDRESSES_BY_DAY;
 
     public String of(ServerUUID serverUUID) {
+        if (serverUUID == null) return name();
         return name() + '-' + serverUUID;
     }
 }

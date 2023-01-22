@@ -16,14 +16,14 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.ServerTabJSONCreator;
-import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -36,7 +36,7 @@ import java.util.function.Function;
  *
  * @author AuroraLS3
  */
-public class ServerTabJSONResolver<T> implements Resolver {
+public class ServerTabJSONResolver<T> extends JSONResolver {
 
     private final DataID dataID;
     private final Identifiers identifiers;
@@ -54,6 +54,9 @@ public class ServerTabJSONResolver<T> implements Resolver {
     }
 
     @Override
+    public Formatter<Long> getHttpLastModifiedFormatter() {return asyncJSONResolverService.getHttpLastModifiedFormatter();}
+
+    @Override
     public boolean canAccess(Request request) {
         return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
     }
@@ -65,9 +68,7 @@ public class ServerTabJSONResolver<T> implements Resolver {
 
     private Response getResponse(@Untrusted Request request) {
         ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
-        return Response.builder()
-                .setMimeType(MimeType.JSON)
-                .setJSONContent(asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, serverUUID, jsonCreator).json)
-                .build();
+        JSONStorage.StoredJSON storedJson = asyncJSONResolverService.resolve(Identifiers.getTimestamp(request), dataID, serverUUID, jsonCreator);
+        return getCachedOrNewResponse(request, storedJson);
     }
 }
