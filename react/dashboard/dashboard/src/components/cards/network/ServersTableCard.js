@@ -7,6 +7,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
 import DropdownMenu from "react-bootstrap-v5/lib/esm/DropdownMenu";
 import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
+import {CardLoader} from "../../navigation/Loader";
 
 const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
     const {t} = useTranslation();
@@ -35,10 +36,14 @@ const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
     )
 }
 
-const ServersTableCard = ({servers, onSelect}) => {
+const ServersTableCard = ({loaded, servers, onSelect}) => {
     const {t} = useTranslation();
     const [sortBy, setSortBy] = useState(ServerSortOption.ALPHABETICAL);
     const [sortReversed, setSortReversed] = useState(false);
+
+    if (!loaded) {
+        return <CardLoader/>
+    }
 
     const setSort = option => {
         if (sortBy === option) {
@@ -62,10 +67,10 @@ const ServersTableCard = ({servers, onSelect}) => {
                 <p>It appears that Plan is not installed on any game servers or not connected to the same database.
                     See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.</p>
             </Card.Body>}
-            {servers.length && <ServersTable servers={servers}
-                                             onSelect={onSelect}
-                                             sortBy={sortBy}
-                                             sortReversed={sortReversed}/>}
+            {Boolean(servers.length) && <ServersTable servers={servers}
+                                                      onSelect={onSelect}
+                                                      sortBy={sortBy}
+                                                      sortReversed={sortReversed}/>}
         </Card>
     )
 };
