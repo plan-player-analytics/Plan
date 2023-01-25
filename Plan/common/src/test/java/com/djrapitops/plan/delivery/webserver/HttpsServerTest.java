@@ -52,7 +52,7 @@ interface HttpsServerTest {
         String address = "https://localhost:" + testPortNumber();
 
         String cookie = login(address);
-        testAccess(address, cookie);
+        testAccess(address + "/server/Server%201", cookie);
     }
 
     default void testAccess(String address, String cookie) throws IOException, KeyManagementException, NoSuchAlgorithmException {
@@ -64,7 +64,8 @@ interface HttpsServerTest {
             int responseCode = connection.getResponseCode();
 
             switch (responseCode) {
-                case 200, 302 -> {}
+                case 200 -> {}
+                case 302 -> throw new IllegalStateException("Redirection to " + connection.getHeaderField("Location"));
                 case 400 -> throw new IllegalStateException("Bad Request: " + address);
                 case 403 -> throw new IllegalStateException(address + " returned 403");
                 case 404 -> throw new IllegalStateException(address + " returned a 404.");
