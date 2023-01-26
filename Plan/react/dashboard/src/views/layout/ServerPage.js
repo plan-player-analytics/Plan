@@ -16,7 +16,6 @@ import {
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
-import {NightModeCss} from "../../hooks/themeHook";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
@@ -35,11 +34,6 @@ const ServerSidebar = () => {
     const {t, i18n} = useTranslation();
     const {sidebarItems, setSidebarItems} = useNavigation();
     const {extensionData} = useServerExtensionContext();
-    const {authRequired, loggedIn, user} = useAuth();
-
-    const {isProxy} = useMetadata();
-    const showBackButton = isProxy
-        && (!authRequired || (loggedIn && user.permissions.filter(perm => perm !== 'page.network').length));
 
     useEffect(() => {
         const items = [
@@ -107,14 +101,14 @@ const ServerSidebar = () => {
     }, [t, i18n, extensionData, setSidebarItems])
 
     return (
-        <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
+        <Sidebar items={sidebarItems}/>
     )
 }
 
 const ServerPage = () => {
     const {t} = useTranslation();
     const {identifier} = useParams();
-    const {isProxy, serverName} = useMetadata();
+    const {isProxy, serverName, networkMetadata} = useMetadata();
 
     const {
         data: serverIdentity,
@@ -133,7 +127,8 @@ const ServerPage = () => {
         }
 
         if (isProxy) {
-            return identifier;
+            const fromMetadata = networkMetadata?.servers?.find(server => server.serverUUID === identifier);
+            return fromMetadata ? fromMetadata.serverName : identifier;
         } else {
             return serverName && serverName.startsWith('Server') ? "Plan" : serverName
         }
@@ -152,7 +147,6 @@ const ServerPage = () => {
 
     return (
         <>
-            <NightModeCss/>
             <ServerExtensionContextProvider identifier={identifier}>
                 <ServerSidebar/>
                 <div className="d-flex flex-column" id="content-wrapper">

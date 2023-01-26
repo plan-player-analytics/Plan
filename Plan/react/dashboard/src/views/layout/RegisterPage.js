@@ -66,7 +66,7 @@ const RegisterForm = ({register}) => {
                        value={password} onChange={event => setPassword(event.target.value)}/>
                 <div className={"form-text"}>{t('html.register.passwordTip')}</div>
             </div>
-            <button className="btn bg-plan btn-user w-100" id="register-button" onClick={onRegister}>
+            <button className="btn bg-theme btn-user w-100" id="register-button" onClick={onRegister}>
                 {t('html.register.register')}
             </button>
         </form>
@@ -79,7 +79,7 @@ const ColorChooserButton = () => {
 
     return (
         <div className='text-center'>
-            <button className="btn col-plan" onClick={toggleColorChooser}
+            <button className="btn col-theme" onClick={toggleColorChooser}
                     title={t('html.label.themeSelect')}>
                 <Fa icon={faPalette}/>
             </button>
@@ -92,7 +92,7 @@ const LoginLink = () => {
 
     return (
         <div className='text-center'>
-            <Link to='/login' className='col-plan small'>{t('html.register.login')}</Link>
+            <Link to='/login' className='col-theme small'>{t('html.register.login')}</Link>
         </div>
     )
 }
@@ -111,10 +111,10 @@ const RegisterPage = () => {
         [setFinalizeRegistrationModalOpen, finalizeRegistrationModalOpen])
 
     useEffect(() => {
-        document.body.classList.add("bg-plan", "plan-bg-gradient");
+        document.body.classList.add("bg-theme", "plan-bg-gradient");
 
         return () => {
-            document.body.classList.remove("bg-plan", "plan-bg-gradient");
+            document.body.classList.remove("bg-theme", "plan-bg-gradient");
         }
     }, []);
 

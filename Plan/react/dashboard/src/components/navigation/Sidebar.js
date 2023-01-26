@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
-import {faArrowLeft, faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
+import {faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
 import {NavLink, useLocation} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
@@ -12,6 +12,7 @@ import {useNavigation} from "../../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
 import {Collapse} from "react-bootstrap-v5";
 import {baseAddress} from "../../service/backendConfiguration";
+import PageNavigationItem from "./PageNavigationItem";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -44,7 +45,7 @@ const InnerItem = ({href, icon, name, nameShort, color, external}) => {
     </NavLink>
 }
 
-const Item = ({item, inner}) => {
+export const Item = ({item, inner}) => {
     const {setCurrentTab} = useNavigation();
     const {pathname} = useLocation();
     const {t} = useTranslation();
@@ -84,7 +85,7 @@ const Item = ({item, inner}) => {
 
 const VersionButton = ({toggleVersionModal, versionInfo}) => {
     if (versionInfo.updateAvailable) {
-        return <button className="btn bg-white col-plan" onClick={toggleVersionModal}>
+        return <button className="btn bg-white col-theme" onClick={toggleVersionModal}>
             <Fa icon={faDownload}/> Update Available!
         </button>;
     }
@@ -203,9 +204,8 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t) => {
     return <hr key={i} className="sidebar-divider"/>
 }
 
-const Sidebar = ({items, showBackButton}) => {
+const Sidebar = ({page, items}) => {
     const {t} = useTranslation();
-    const {color} = useTheme();
     const {currentTab, sidebarExpanded, setSidebarExpanded} = useNavigation();
 
     const [openCollapse, setOpenCollapse] = useState(undefined);
@@ -226,13 +226,10 @@ const Sidebar = ({items, showBackButton}) => {
     return (
         <>
             {sidebarExpanded &&
-                <ul className={"navbar-nav sidebar sidebar-dark accordion bg-" + color} id="accordionSidebar">
+                <ul className={"navbar-nav sidebar sidebar-dark accordion bg-theme"} id="accordionSidebar">
                     <Logo/>
-                    <Divider/>
-                    {showBackButton && <>
-                        <Item active={false} item={{href: "/", icon: faArrowLeft, name: t('html.label.toMainPage')}}/>
-                        <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>
-                    </>}
+                    <PageNavigationItem page={page}/>
+                    <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>
                     {items.length ? items.filter(item => item !== undefined).map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t)) : ''}
                     <Divider/>
                     <FooterButtons/>

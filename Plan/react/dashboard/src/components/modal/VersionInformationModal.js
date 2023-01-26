@@ -20,15 +20,15 @@ const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
                 <p>You have version {versionInfo.currentVersion}.</p>
                 <p>New
                     release: {versionInfo.newVersion}{versionInfo.isRelease ? '' : " (" + t('html.modal.version.dev') + ")"}</p>
-                <a className="btn col-plan" href={versionInfo.changelogUrl} rel="noopener noreferrer" target="_blank">
+                <a className="btn col-theme" href={versionInfo.changelogUrl} rel="noopener noreferrer" target="_blank">
                     {t('html.modal.version.changelog')}
                 </a>
-                <a className="btn col-plan" href={versionInfo.downloadUrl} rel="noopener noreferrer" target="_blank">
+                <a className="btn col-theme" href={versionInfo.downloadUrl} rel="noopener noreferrer" target="_blank">
                     {t('html.modal.version.download')} Plan-{versionInfo.newVersion}.jar
                 </a>
             </Modal.Body>
             <Modal.Footer>
-                <button className="btn bg-plan" onClick={toggle}>OK</button>
+                <button className="btn bg-theme" onClick={toggle}>OK</button>
             </Modal.Footer>
         </Modal>
     )
@@ -47,7 +47,7 @@ const NewestVersionModal = ({open, toggle, versionInfo}) => {
                 You're using the latest version {versionInfo.currentVersion}. (No updates available)
             </Modal.Body>
             <Modal.Footer>
-                <button className="btn bg-plan" onClick={toggle}>OK</button>
+                <button className="btn bg-theme" onClick={toggle}>OK</button>
             </Modal.Footer>
         </Modal>
     );

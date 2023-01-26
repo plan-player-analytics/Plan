@@ -3,7 +3,6 @@ import {useTranslation} from "react-i18next";
 import {Outlet} from "react-router-dom";
 import {useNavigation} from "../../hooks/navigationHook";
 import {faUndo} from "@fortawesome/free-solid-svg-icons";
-import {NightModeCss} from "../../hooks/themeHook";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
@@ -13,7 +12,7 @@ import {QueryResultContextProvider} from "../../hooks/queryResultContext";
 
 const QueryPage = () => {
     const {t, i18n} = useTranslation();
-    const {isProxy, serverName} = useMetadata();
+    const {isProxy, networkName, serverName} = useMetadata();
 
     const [error] = useState(undefined);
     const {sidebarItems, setSidebarItems} = useNavigation();
@@ -31,16 +30,13 @@ const QueryPage = () => {
         setCurrentTab('html.query.title.text');
     }, [t, i18n, setCurrentTab, setSidebarItems])
 
-    const showBackButton = true;
-
     if (error) return <ErrorPage error={error}/>;
 
-    const displayedServerName = !isProxy && serverName && serverName.startsWith('Server') ? "Plan" : serverName;
+    const displayedServerName = isProxy ? networkName : (serverName && serverName.startsWith('Server') ? "Plan" : serverName);
     return (
         <>
-            <NightModeCss/>
             <QueryResultContextProvider>
-                <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
+                <Sidebar items={sidebarItems}/>
                 <div className="d-flex flex-column" id="content-wrapper">
                     <Header page={displayedServerName} tab={currentTab} hideUpdater/>
                     <div id="content" style={{display: 'flex'}}>
