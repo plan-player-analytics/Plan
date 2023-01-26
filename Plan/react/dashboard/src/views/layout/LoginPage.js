@@ -188,6 +188,7 @@ const LoginPage = () => {
 
     return (
         <>
+            <style>{'#wrapper{background-image:none;}'}</style>
             <main className="container">
                 <Logo/>
                 <LoginCard>

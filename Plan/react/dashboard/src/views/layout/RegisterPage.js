@@ -171,6 +171,7 @@ const RegisterPage = () => {
 
     return (
         <>
+            <style>{'#wrapper{background-image:none;}'}</style>
             <main className="container">
                 <Logo/>
                 <RegisterCard>

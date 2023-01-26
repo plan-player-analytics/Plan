@@ -18,8 +18,9 @@ const PageNavigationItem = ({page}) => {
 
     useEffect(() => {
         if (networkMetadata) {
+            const hasProxy = networkMetadata.servers.filter(server => server.proxy).length
+
             let newItems = [
-                {id: 'network', displayName: t('html.label.network'), href: "/network", permission: 'page.network'},
                 {id: 'players', displayName: t('html.label.players'), href: "/players", permission: 'page.players'},
                 {
                     id: 'query',
@@ -39,12 +40,19 @@ const PageNavigationItem = ({page}) => {
                     })
             ];
 
+            if (hasProxy) {
+                newItems.unshift({
+                    id: 'network',
+                    displayName: t('html.label.network'),
+                    href: "/network",
+                    permission: 'page.network'
+                });
+            }
             if (page) {
                 newItems.unshift({id: 'page', displayName: page, href: location.pathname, permission: undefined})
             }
-
             if (authRequired && loggedIn) {
-                newItems = newItems.filter(item => item.permission && user.permissions.includes(item.permission))
+                newItems = newItems.filter(item => !item.permission || user.permissions.includes(item.permission))
             }
             setItems(newItems);
             setCurrentPage(newItems.find(item => location.pathname.startsWith(item.href))?.id);
@@ -56,7 +64,7 @@ const PageNavigationItem = ({page}) => {
         navigate(items.find(item => item.id === selected).href);
     }
 
-    if (!currentPage || !items.length) {
+    if (!items.length) {
         return <li className={"nav-item nav-button nav-link"}
                    style={{
                        padding: "0.5rem",
@@ -77,9 +85,9 @@ const PageNavigationItem = ({page}) => {
                         aria-label="Page selector"
                         className="form-select form-select-sm scrollbar"
                         id="pageSelector"
-                        defaultValue={currentPage}>
+                        defaultValue={currentPage ? currentPage : items[0].id}>
                     {items.map((item, i) =>
-                        <option key={i} value={item.id}>{item.displayName}</option>)}
+                        <option key={item.id} value={item.id}>{item.displayName}</option>)}
                 </select>
             </InputGroup>
         </li>

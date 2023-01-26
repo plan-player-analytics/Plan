@@ -13,11 +13,9 @@ export const MetadataContextProvider = ({children}) => {
         const {data, error} = await fetchPlanMetadata();
         if (data) {
             setMetadata(data);
-            if (data.isProxy) {
-                const {data: networkMetadata} = await fetchNetworkMetadata(); // error ignored
-                if (networkMetadata) {
-                    setMetadata({...data, networkMetadata})
-                }
+            const {data: networkMetadata} = await fetchNetworkMetadata(); // error ignored
+            if (networkMetadata) {
+                setMetadata({...data, networkMetadata})
             }
         } else if (error) {
             setMetadata({metadataError: error})
