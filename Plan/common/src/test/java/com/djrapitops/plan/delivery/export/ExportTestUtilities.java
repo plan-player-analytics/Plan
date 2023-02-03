@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTr
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import com.djrapitops.plan.utilities.java.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -63,8 +64,9 @@ public class ExportTestUtilities {
     public static void assertNoLogs(List<LogEntry> logs) {
         List<String> loggedLines = logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
-                .filter(log -> !log.contains("fonts.gstatic.com"))
-                .toList();
+                .filter(log -> !StringUtils.containsAny(log,
+                        "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net"
+                )).toList();
         assertTrue(loggedLines.isEmpty(), () -> "Browser console included " + loggedLines.size() + " logs: " + loggedLines);
     }
 
