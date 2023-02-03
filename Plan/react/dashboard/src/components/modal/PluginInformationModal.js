@@ -60,7 +60,7 @@ const Contributor = ({contributor}) => {
     const icons = contributor.contributed.map(
         (type, i) => <Fa key={i} icon={["fa", getContributionIcon(type)]}/>);
     return (
-        <li className="col-4">{contributor.name} {icons} </li>
+        <li className="contributor">{contributor.name} {icons} </li>
     )
 }
 

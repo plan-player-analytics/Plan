@@ -24,7 +24,7 @@ const Divider = ({showMargin}) => (
     <hr className={"sidebar-divider" + (showMargin ? '' : " my-0")}/>
 )
 
-const InnerItem = ({href, icon, name, nameShort, color, external}) => {
+const InnerItem = ({href, icon, name, nameShort, color, external, collapseSidebar}) => {
     if (!href) {
         return (<hr className={"nav-servers dropdown-divider mx-3 my-2"}/>)
     }
@@ -38,14 +38,14 @@ const InnerItem = ({href, icon, name, nameShort, color, external}) => {
         )
     }
 
-    return <NavLink to={href} className={({isActive}) => {
+    return <NavLink to={href} onClick={collapseSidebar} className={({isActive}) => {
         return isActive ? "collapse-item nav-button active" : "collapse-item nav-button"
     }}>
         <Fa icon={icon} className={color ? "col-" + color : undefined}/> <span>{nameShort ? nameShort : name}</span>
     </NavLink>
 }
 
-export const Item = ({item, inner}) => {
+export const Item = ({item, inner, collapseSidebar}) => {
     const {setCurrentTab} = useNavigation();
     const {pathname} = useLocation();
     const {t} = useTranslation();
@@ -58,7 +58,7 @@ export const Item = ({item, inner}) => {
 
     if (inner) {
         return (<InnerItem href={href} icon={icon} name={t(name)} nameShort={t(nameShort)} color={color}
-                           external={external}/>)
+                           external={external} collapseSidebar={collapseSidebar}/>)
     }
 
     if (external) {
@@ -74,7 +74,7 @@ export const Item = ({item, inner}) => {
 
     return (
         <li className={"nav-item nav-button"}>
-            <NavLink to={href} className={({isActive}) => {
+            <NavLink to={href} onClick={collapseSidebar} className={({isActive}) => {
                 return isActive ? "nav-link active" : "nav-link"
             }}>
                 <Fa icon={icon} className={color ? "col-" + color : undefined}/> <span>{t(name)}</span>
@@ -95,36 +95,19 @@ const VersionButton = ({toggleVersionModal, versionInfo}) => {
     </button>;
 }
 
-const FooterButtons = () => {
+const FooterButtons = ({collapseSidebar, toggleInfoModal, toggleVersionModal, versionInfo}) => {
     const {t} = useTranslation();
     const {toggleColorChooser} = useTheme();
+    const openColorChooser = useCallback(() => {
+        toggleColorChooser();
+        collapseSidebar();
+    }, [toggleColorChooser, collapseSidebar]);
     const {authRequired} = useAuth();
 
-    const [infoModalOpen, setInfoModalOpen] = useState(false);
-    const toggleInfoModal = () => setInfoModalOpen(!infoModalOpen);
-
-    const [versionModalOpen, setVersionModalOpen] = useState(false);
-    const toggleVersionModal = () => setVersionModalOpen(!versionModalOpen);
-
-    const [versionInfo, setVersionInfo] = useState({currentVersion: 'Loading..', updateAvailable: false});
-
-    const loadVersion = async () => {
-        const {data, error} = await fetchPlanVersion();
-        if (data) {
-            setVersionInfo(data);
-        } else if (error) {
-            setVersionInfo({currentVersion: "Error getting version", updateAvailable: false})
-        }
-    }
-
-    useEffect(() => {
-        loadVersion();
-    }, [])
-
     return (
-        <>
+        <div className={"footer-buttons"}>
             <div className="mt-2 ms-md-3 text-center text-md-start">
-                <button className="btn bg-transparent-light" onClick={toggleColorChooser}
+                <button className="btn bg-transparent-light" onClick={openColorChooser}
                         title={t('html.label.themeSelect')}>
                     <Fa icon={faPalette}/>
                 </button>
@@ -140,13 +123,11 @@ const FooterButtons = () => {
             <div className="ms-md-3 text-center text-md-start">
                 <VersionButton toggleVersionModal={toggleVersionModal} versionInfo={versionInfo}/>
             </div>
-            <PluginInformationModal open={infoModalOpen} toggle={toggleInfoModal}/>
-            <VersionInformationModal open={versionModalOpen} toggle={toggleVersionModal} versionInfo={versionInfo}/>
-        </>
+        </div>
     )
 }
 
-const SidebarCollapse = ({item, open, setOpen}) => {
+const SidebarCollapse = ({item, open, setOpen, collapseSidebar}) => {
     const {t} = useTranslation();
     const toggle = event => {
         event.preventDefault();
@@ -174,6 +155,7 @@ const SidebarCollapse = ({item, open, setOpen}) => {
                                       inner
                                       active={false}
                                       item={content}
+                                      collapseSidebar={collapseSidebar}
                                 />)}
                     </div>
                 </div>
@@ -182,18 +164,20 @@ const SidebarCollapse = ({item, open, setOpen}) => {
     )
 }
 
-const renderItem = (item, i, openCollapse, setOpenCollapse, t) => {
+const renderItem = (item, i, openCollapse, setOpenCollapse, t, windowWidth, collapseSidebar) => {
     if (item.contents) {
         return <SidebarCollapse key={i}
                                 item={item}
-                                open={openCollapse && openCollapse === i}
-                                setOpen={() => setOpenCollapse(i)}/>
+                                open={windowWidth < 660 || (openCollapse && openCollapse === i)}
+                                setOpen={() => setOpenCollapse(i)}
+                                collapseSidebar={collapseSidebar}/>
     }
 
     if (item.href !== undefined) {
         return <Item key={i}
                      active={false}
                      item={item}
+                     collapseSidebar={collapseSidebar}
         />
     }
 
@@ -220,8 +204,41 @@ const Sidebar = ({page, items}) => {
         return () => window.removeEventListener('resize', updateWidth);
     }, [updateWidth]);
 
-    const collapseSidebar = () => setSidebarExpanded(windowWidth > 1350);
-    useEffect(collapseSidebar, [windowWidth, currentTab, setSidebarExpanded]);
+    const collapseSidebar = useCallback(() => {
+        setSidebarExpanded(windowWidth > 1350);
+        if (windowWidth < 660) {
+            window.scrollTo({top: 0});
+        }
+    }, [setSidebarExpanded, windowWidth]);
+    const collapseConditionallyOnItemClick = useCallback(() => {
+        if (windowWidth < 660) {
+            setTimeout(collapseSidebar, 10);
+        }
+    }, [collapseSidebar, windowWidth]);
+    useEffect(collapseSidebar, [windowWidth, currentTab, setSidebarExpanded, collapseSidebar]);
+
+    const [infoModalOpen, setInfoModalOpen] = useState(false);
+    const toggleInfoModal = useCallback(() => {
+        setInfoModalOpen(!infoModalOpen);
+        collapseConditionallyOnItemClick();
+    }, [setInfoModalOpen, infoModalOpen, collapseConditionallyOnItemClick]);
+
+    const [versionModalOpen, setVersionModalOpen] = useState(false);
+    const toggleVersionModal = useCallback(() => {
+        setVersionModalOpen(!versionModalOpen);
+        collapseConditionallyOnItemClick();
+    }, [setVersionModalOpen, versionModalOpen, collapseConditionallyOnItemClick]);
+
+    const [versionInfo, setVersionInfo] = useState({currentVersion: 'Loading..', updateAvailable: false});
+    const loadVersion = async () => {
+        const {data, error} = await fetchPlanVersion();
+        if (data) {
+            setVersionInfo(data);
+        } else if (error) {
+            setVersionInfo({currentVersion: "Error getting version", updateAvailable: false})
+        }
+    }
+    useEffect(() => loadVersion(), []);
 
     return (
         <>
@@ -230,10 +247,17 @@ const Sidebar = ({page, items}) => {
                     <Logo/>
                     <PageNavigationItem page={page}/>
                     <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>
-                    {items.length ? items.filter(item => item !== undefined).map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t)) : ''}
+                    {items.length ? items.filter(item => item !== undefined).map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t, windowWidth, collapseConditionallyOnItemClick)) : ''}
                     <Divider/>
-                    <FooterButtons/>
+                    <FooterButtons
+                        collapseSidebar={collapseConditionallyOnItemClick}
+                        toggleInfoModal={toggleInfoModal}
+                        toggleVersionModal={toggleVersionModal}
+                        versionInfo={versionInfo}
+                    />
                 </ul>}
+            <PluginInformationModal open={infoModalOpen} toggle={toggleInfoModal}/>
+            <VersionInformationModal open={versionModalOpen} toggle={toggleVersionModal} versionInfo={versionInfo}/>
         </>
     )
 }

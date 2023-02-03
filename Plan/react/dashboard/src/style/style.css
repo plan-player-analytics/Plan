@@ -1425,3 +1425,7 @@ ul.filters {
     min-height: 100vh;
     background-image: linear-gradient(to right, var(--color-theme) 0%, var(--color-theme) 14rem, #f8f9fc 14.01rem, #f8f9fc 100%);
 }
+
+.contributor {
+    width: 33%;
+}

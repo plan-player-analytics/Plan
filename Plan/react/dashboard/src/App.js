@@ -1,6 +1,7 @@
 import './style/main.sass';
 import './style/sb-admin-2.css'
 import './style/style.css';
+import './style/mobile.css';
 
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import React from "react";

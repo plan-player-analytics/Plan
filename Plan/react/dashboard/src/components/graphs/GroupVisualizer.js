@@ -30,7 +30,7 @@ const Visualizer = ({option, groups, colors, name}) => {
 
 const VisualizerSelector = ({onClick, icon}) => {
     return (
-        <button className="btn float-end" onClick={onClick}>
+        <button className="btn float-end visualizer-button" onClick={onClick}>
             <FontAwesomeIcon icon={icon} className="col-gray"/>
         </button>
     )
