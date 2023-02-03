@@ -144,7 +144,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     private void unregisterPlaceholders(BukkitPlaceholderRegistrar placeholders) {
         if (placeholders != null) {
-            placeholders.unregister();
+            runnableFactory.create(placeholders::unregister);
         }
     }
 
