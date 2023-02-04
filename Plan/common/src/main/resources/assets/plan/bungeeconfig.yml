@@ -43,22 +43,13 @@ Webserver:
     Enabled: false
     # %port% is replaced automatically with Webserver.Port
     Address: your.domain.here:%port%
-  # InternalIP usually does not need to be changed, only change it if you know what you're doing!
+  # Internal IP usually does not need to be changed, only change it if you know what you're doing!
   # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
   Internal_IP: 0.0.0.0
-  Cache:
-    Reduced_refresh_barrier:
-      Time: 15
-      Unit: SECONDS
-    Invalidate_query_results_on_disk_after:
-      Time: 7
-      Unit: DAYS
-    Invalidate_disk_cache_after:
-      Time: 2
-      Unit: DAYS
-    Invalidate_memory_cache_after:
-      Time: 5
-      Unit: MINUTES
+  # Use absolute path ("C:\Example\Path", "/var/example/path") or relative ("public_html" -> {server}/plugins/Plan/public_html)
+  # NOTE: All files in this directory can be read by anyone who can access the webserver.
+  # This can be used to host certbot http challenge file, or for customizing Plan React-bundle
+  Public_html_directory: "public_html"
   Security:
     SSL_certificate:
       KeyStore_path: Cert.jks
@@ -88,6 +79,19 @@ Webserver:
       Unit: HOURS
   Disable_Webserver: false
   External_Webserver_address: "https://www.example.address"
+  Cache:
+    Reduced_refresh_barrier:
+      Time: 15
+      Unit: SECONDS
+    Invalidate_query_results_on_disk_after:
+      Time: 7
+      Unit: DAYS
+    Invalidate_disk_cache_after:
+      Time: 2
+      Unit: DAYS
+    Invalidate_memory_cache_after:
+      Time: 5
+      Unit: MINUTES
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true

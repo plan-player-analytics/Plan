@@ -21,7 +21,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.ResourceSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -50,7 +50,7 @@ import java.util.function.Supplier;
 public class ResourceSvc implements ResourceService {
 
     public final Set<Snippet> snippets;
-    private final PlanFiles files;
+    private final PublicHtmlFiles publicHtmlFiles;
     private final ResourceSettings resourceSettings;
     private final Locale locale;
     private final PluginLogger logger;
@@ -58,13 +58,13 @@ public class ResourceSvc implements ResourceService {
 
     @Inject
     public ResourceSvc(
-            PlanFiles files,
+            PublicHtmlFiles publicHtmlFiles,
             PlanConfig config,
             Locale locale,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
-        this.files = files;
+        this.publicHtmlFiles = publicHtmlFiles;
         this.resourceSettings = config.getResourceSettings();
         this.locale = locale;
         this.logger = logger;
@@ -155,7 +155,7 @@ public class ResourceSvc implements ResourceService {
     }
 
     public WebResource getOrWriteCustomized(@Untrusted String fileName, Supplier<WebResource> source) throws IOException {
-        Optional<Resource> customizedResource = files.getCustomizableResource(fileName);
+        Optional<Resource> customizedResource = publicHtmlFiles.findCustomizedResource(fileName);
         if (customizedResource.isPresent()) {
             return readCustomized(customizedResource.get());
         } else {

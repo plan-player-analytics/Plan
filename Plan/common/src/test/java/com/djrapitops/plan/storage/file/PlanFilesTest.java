@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.storage.file;
 
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
 import extension.FullSystemExtension;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,10 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author AuroraLS3
@@ -48,18 +44,5 @@ class PlanFilesTest {
 
         File file = files.getFileFromPluginFolder(testFile.toFile().getAbsolutePath());
         assertNotEquals(testFile.toFile().getAbsolutePath(), file.getAbsolutePath());
-    }
-
-    @Test
-    @DisplayName("getCustomizableResource has no Path Traversal vulnerability")
-    void getCustomizableResourceDoesNotAllowAbsolutePathTraversal(@TempDir Path tempDir, PlanConfig config, PlanFiles files) throws IOException {
-        config.set(CustomizedFileSettings.PATH, tempDir.resolve("customized").toFile().getAbsolutePath());
-
-        Path testFile = tempDir.resolve("file.db");
-        Files.createDirectories(tempDir.getParent());
-        Files.createFile(testFile);
-
-        Optional<Resource> resource = files.getCustomizableResource(testFile.toFile().getAbsolutePath());
-        assertTrue(resource.isEmpty());
     }
 }

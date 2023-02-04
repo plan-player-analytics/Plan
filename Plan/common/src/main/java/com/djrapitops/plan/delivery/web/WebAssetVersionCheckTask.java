@@ -28,6 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +36,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Task in charge of checking html customized files on enable to see if they are outdated.
+ *
+ * @deprecated Html customization system will be overhauled for React version of frontend.
  */
 @Singleton
+@Deprecated(forRemoval = true, since = "#2260") // TODO Remove after Frontend BETA
 public class WebAssetVersionCheckTask extends TaskSystem.Task {
 
     private final PlanConfig config;
@@ -110,7 +114,8 @@ public class WebAssetVersionCheckTask extends TaskSystem.Task {
     }
 
     private Optional<AssetInfo> findOutdatedResource(String resource) {
-        Optional<File> resourceFile = files.attemptToFind(resource);
+        Path dir = config.getResourceSettings().getCustomizationDirectory();
+        Optional<File> resourceFile = files.attemptToFind(dir, resource);
         Optional<Long> webAssetVersion = assetVersions.getAssetVersion(resource);
         if (resourceFile.isPresent() && webAssetVersion.isPresent() && webAssetVersion.get() > resourceFile.get().lastModified()) {
             return Optional.of(new AssetInfo(

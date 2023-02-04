@@ -18,6 +18,7 @@ package com.djrapitops.plan.settings.config;
 
 import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
@@ -72,9 +73,16 @@ public class ResourceSettings {
     }
 
     public Path getCustomizationDirectory() {
-        Path exportDirectory = Paths.get(config.get(CustomizedFileSettings.PATH));
-        return exportDirectory.isAbsolute()
-                ? exportDirectory
-                : files.getDataDirectory().resolve(exportDirectory);
+        Path customizationDirectory = Paths.get(config.get(CustomizedFileSettings.PATH));
+        return customizationDirectory.isAbsolute()
+                ? customizationDirectory
+                : files.getDataDirectory().resolve(customizationDirectory);
+    }
+
+    public Path getPublicHtmlDirectory() {
+        Path customizationDirectory = Paths.get(config.get(WebserverSettings.PUBLIC_HTML_PATH));
+        return customizationDirectory.isAbsolute()
+                ? customizationDirectory
+                : files.getDataDirectory().resolve(customizationDirectory);
     }
 }
