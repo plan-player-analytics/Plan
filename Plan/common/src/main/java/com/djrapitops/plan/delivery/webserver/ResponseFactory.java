@@ -42,6 +42,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
+import com.djrapitops.plan.storage.file.Resource;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plan.utilities.java.UnaryChain;
@@ -363,6 +364,47 @@ public class ResponseFactory {
             return responseBuilder.build();
         } catch (UncheckedIOException e) {
             return notFound404("Font File not found");
+        }
+    }
+
+    public Response publicHtmlResourceResponse(long modified, @Untrusted String fileName, String mimeType) {
+        // Slightly different from getCachedOrNew
+        WebResource resource = publicHtmlFiles.findPublicHtmlResource(fileName)
+                .map(Resource::asWebResource)
+                .orElse(null);
+        if (resource == null) return null;
+
+        Optional<Long> lastModified = resource.getLastModified();
+        if (lastModified.isPresent() && modified == lastModified.get()) {
+            return browserCachedNotChangedResponse();
+        } else {
+            return publicHtmlResourceResponse(fileName, mimeType);
+        }
+    }
+
+    public Response publicHtmlResourceResponse(@Untrusted String fileName, String mimeType) {
+        try {
+            WebResource resource = publicHtmlFiles.findPublicHtmlResource(fileName)
+                    .map(Resource::asWebResource)
+                    .orElse(null);
+            if (resource == null) return null;
+
+            byte[] content = resource.asBytes();
+            ResponseBuilder responseBuilder = Response.builder()
+                    .setMimeType(mimeType)
+                    .setContent(content)
+                    .setStatus(200);
+
+            if (fileName.contains(STATIC_BUNDLE_FOLDER)) {
+                resource.getLastModified().ifPresent(lastModified -> responseBuilder
+                        // Can't cache css bundles in browser since base path might change
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+            }
+            return responseBuilder.build();
+        } catch (UncheckedIOException e) {
+            return notFound404("CSS File not found");
         }
     }
 

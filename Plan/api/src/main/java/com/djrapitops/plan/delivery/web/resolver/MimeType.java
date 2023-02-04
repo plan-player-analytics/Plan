@@ -20,7 +20,7 @@ public final class MimeType {
     public static final String HTML = "text/html";
     public static final String CSS = "text/css";
     public static final String JSON = "application/json";
-    public static final String JS = "application/javascript";
+    public static final String JS = "text/javascript";
     public static final String IMAGE = "image/gif";
     public static final String FAVICON = "image/x-icon";
     public static final String FONT_TTF = "application/x-font-ttf";
