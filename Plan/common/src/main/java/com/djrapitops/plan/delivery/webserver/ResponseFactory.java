@@ -30,10 +30,10 @@ import com.djrapitops.plan.delivery.web.resolver.ResponseBuilder;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
-import com.djrapitops.plan.delivery.webserver.auth.FailReason;
-import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -41,6 +41,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plan.utilities.java.UnaryChain;
@@ -53,8 +54,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -70,6 +69,8 @@ public class ResponseFactory {
     private static final String STATIC_BUNDLE_FOLDER = "static";
 
     private final PlanFiles files;
+    private final PlanConfig config;
+    private final PublicHtmlFiles publicHtmlFiles;
     private final PageFactory pageFactory;
     private final Locale locale;
     private final DBSystem dbSystem;
@@ -80,6 +81,7 @@ public class ResponseFactory {
     @Inject
     public ResponseFactory(
             PlanFiles files,
+            PlanConfig config, PublicHtmlFiles publicHtmlFiles,
             PageFactory pageFactory,
             Locale locale,
             DBSystem dbSystem,
@@ -88,6 +90,8 @@ public class ResponseFactory {
             Lazy<Addresses> addresses
     ) {
         this.files = files;
+        this.config = config;
+        this.publicHtmlFiles = publicHtmlFiles;
         this.pageFactory = pageFactory;
         this.locale = locale;
         this.dbSystem = dbSystem;
@@ -97,9 +101,21 @@ public class ResponseFactory {
         httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
 
+    /**
+     * @throws UncheckedIOException If reading the resource fails
+     */
     public WebResource getResource(@Untrusted String resourceName) {
         return ResourceService.getInstance().getResource("Plan", resourceName,
                 () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
+    }
+
+    /**
+     * @throws UncheckedIOException If reading the resource fails
+     */
+    private WebResource getPublicOrJarResource(@Untrusted String resourceName) {
+        return publicHtmlFiles.findPublicHtmlResource(resourceName)
+                .orElseGet(() -> files.getResourceFromJar("web/" + resourceName))
+                .asWebResource();
     }
 
     private static Response browserCachedNotChangedResponse() {
@@ -168,7 +184,7 @@ public class ResponseFactory {
     }
 
     private Response getCachedOrNew(long modified, String fileName, Function<String, Response> newResponseFunction) {
-        WebResource resource = getResource(fileName);
+        WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
         Optional<Long> lastModified = resource.getLastModified();
         if (lastModified.isPresent() && modified == lastModified.get()) {
             return browserCachedNotChangedResponse();
@@ -217,7 +233,7 @@ public class ResponseFactory {
 
     public Response javaScriptResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = getResource(fileName);
+            WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
             String content = UnaryChain.of(resource.asString())
                     .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
@@ -267,7 +283,7 @@ public class ResponseFactory {
 
     public Response cssResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = getResource(fileName);
+            WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
             String content = UnaryChain.of(resource.asString())
                     .chain(theme::replaceThemeColors)
                     .chain(contents -> StringUtils.replace(contents, "/static", getBasePath() + "/static"))
@@ -297,7 +313,7 @@ public class ResponseFactory {
 
     public Response imageResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = getResource(fileName);
+            WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
             ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.IMAGE)
                     .setContent(resource)
@@ -333,7 +349,7 @@ public class ResponseFactory {
             type = MimeType.FONT_BYTESTREAM;
         }
         try {
-            WebResource resource = getResource(fileName);
+            WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
             ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(type)
                     .setContent(resource);
@@ -405,49 +421,6 @@ public class ResponseFactory {
         }
     }
 
-    public Response basicAuthFail(WebUserAuthException e) {
-        try {
-            FailReason failReason = e.getFailReason();
-            String reason = failReason.getReason();
-            if (failReason == FailReason.ERROR) {
-                StringBuilder errorBuilder = new StringBuilder("</p><pre>");
-                for (String line : getStackTrace(e.getCause())) {
-                    errorBuilder.append(line);
-                }
-                errorBuilder.append("</pre>");
-
-                reason += errorBuilder.toString();
-            }
-            return Response.builder()
-                    .setMimeType(MimeType.HTML)
-                    .setContent(pageFactory.errorPage(Icon.called("lock").build(), "401 Unauthorized", "Authentication Failed.</p><p><b>Reason: " + reason + "</b></p><p>").toHtml())
-                    .setStatus(401)
-                    .setHeader("WWW-Authenticate", "Basic realm=\"" + failReason.getReason() + "\"")
-                    .build();
-        } catch (IOException jarReadFailed) {
-            return forInternalError(e, "Failed to generate PromptAuthorizationResponse");
-        }
-    }
-
-    private List<String> getStackTrace(Throwable throwable) {
-        List<String> stackTrace = new ArrayList<>();
-        stackTrace.add(throwable.toString());
-        for (StackTraceElement element : throwable.getStackTrace()) {
-            stackTrace.add("    " + element.toString());
-        }
-
-        Throwable cause = throwable.getCause();
-        if (cause != null) {
-            List<String> causeTrace = getStackTrace(cause);
-            if (!causeTrace.isEmpty()) {
-                causeTrace.set(0, "Caused by: " + causeTrace.get(0));
-                stackTrace.addAll(causeTrace);
-            }
-        }
-
-        return stackTrace;
-    }
-
     public Response forbidden403() {
         return forbidden403("Your user is not authorized to view this page.<br>"
                 + "If you believe this is an error contact staff to change your access level.");
@@ -485,23 +458,6 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response basicAuth() {
-        try {
-            String tips = "<br>- Ensure you have registered a user with <b>/plan register</b><br>"
-                    + "- Check that the username and password are correct<br>"
-                    + "- Username and password are case-sensitive<br>"
-                    + "<br>If you have forgotten your password, ask a staff member to delete your old user and re-register.";
-            return Response.builder()
-                    .setMimeType(MimeType.HTML)
-                    .setContent(pageFactory.errorPage(Icon.called("lock").build(), "401 Unauthorized", "Authentication Failed." + tips).toHtml())
-                    .setStatus(401)
-                    .setHeader("WWW-Authenticate", "Basic realm=\"Plan WebUser (/plan register)\"")
-                    .build();
-        } catch (IOException e) {
-            return forInternalError(e, "Failed to generate PromptAuthorizationResponse");
-        }
-    }
-
     public Response badRequest(String errorMessage, String target) {
         return Response.builder()
                 .setMimeType(MimeType.JSON)
@@ -528,7 +484,7 @@ public class ResponseFactory {
         try {
             return forPage(request, pageFactory.loginPage());
         } catch (IOException e) {
-            return forInternalError(e, "Failed to generate player page");
+            return forInternalError(e, "Failed to generate login page");
         }
     }
 
@@ -536,7 +492,7 @@ public class ResponseFactory {
         try {
             return forPage(request, pageFactory.registerPage());
         } catch (IOException e) {
-            return forInternalError(e, "Failed to generate player page");
+            return forInternalError(e, "Failed to generate register page");
         }
     }
 
