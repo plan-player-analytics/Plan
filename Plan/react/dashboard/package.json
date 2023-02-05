@@ -23,7 +23,7 @@
     "datatables.net": "^1.13.1",
     "datatables.net-bs5": "^1.12.1",
     "datatables.net-responsive-bs5": "^2.4.0",
-    "highcharts": "^10.3.2",
+    "highcharts": "^10.3.3",
     "i18next": "^22.4.9",
     "i18next-chained-backend": "^4.2.0",
     "i18next-http-backend": "^2.1.1",
