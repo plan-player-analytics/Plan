@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 cd ..
-./gradlew :common:yarnStart
+./gradlew :common:yarnStart --no-daemon
