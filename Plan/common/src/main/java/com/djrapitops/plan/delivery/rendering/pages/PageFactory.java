@@ -39,6 +39,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Lazy;
@@ -59,6 +60,7 @@ public class PageFactory {
 
     private final Lazy<VersionChecker> versionChecker;
     private final Lazy<PlanFiles> files;
+    private final Lazy<PublicHtmlFiles> publicHtmlFiles;
     private final Lazy<PlanConfig> config;
     private final Lazy<Theme> theme;
     private final Lazy<DBSystem> dbSystem;
@@ -73,7 +75,7 @@ public class PageFactory {
     public PageFactory(
             Lazy<VersionChecker> versionChecker,
             Lazy<PlanFiles> files,
-            Lazy<PlanConfig> config,
+            Lazy<PublicHtmlFiles> publicHtmlFiles, Lazy<PlanConfig> config,
             Lazy<Theme> theme,
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
@@ -85,6 +87,7 @@ public class PageFactory {
     ) {
         this.versionChecker = versionChecker;
         this.files = files;
+        this.publicHtmlFiles = publicHtmlFiles;
         this.config = config;
         this.theme = theme;
         this.dbSystem = dbSystem;
@@ -106,7 +109,8 @@ public class PageFactory {
     }
 
     public Page reactPage() throws IOException {
-        return new ReactPage(getBasePath(), getResource("index.html"));
+        // TODO use ResourceService to apply snippets to the React index.html
+        return new ReactPage(getBasePath(), getPublicHtmlOrJarResource("index.html"));
     }
 
     private String getBasePath() {
@@ -244,11 +248,21 @@ public class PageFactory {
         return getResource(name).asString();
     }
 
-    public WebResource getResource(String name) throws IOException {
+    public WebResource getResource(String resourceName) throws IOException {
         try {
-            return ResourceService.getInstance().getResource("Plan", name,
-                    () -> files.get().getResourceFromJar("web/" + name).asWebResource()
+            return ResourceService.getInstance().getResource("Plan", resourceName,
+                    () -> files.get().getResourceFromJar("web/" + resourceName).asWebResource()
             );
+        } catch (UncheckedIOException readFail) {
+            throw readFail.getCause();
+        }
+    }
+
+    public WebResource getPublicHtmlOrJarResource(String resourceName) throws IOException {
+        try {
+            return publicHtmlFiles.get().findPublicHtmlResource(resourceName)
+                    .orElseGet(() -> files.get().getResourceFromJar("web/" + resourceName))
+                    .asWebResource();
         } catch (UncheckedIOException readFail) {
             throw readFail.getCause();
         }

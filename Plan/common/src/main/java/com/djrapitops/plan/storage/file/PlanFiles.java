@@ -19,8 +19,6 @@ package com.djrapitops.plan.storage.file;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
 import org.apache.commons.lang3.StringUtils;
@@ -50,19 +48,16 @@ public class PlanFiles implements SubSystem {
     private final File configFile;
 
     private final Lazy<AssetVersions> assetVersions;
-    private final Lazy<PlanConfig> config;
 
     @Inject
     public PlanFiles(
             @Named("dataFolder") File dataFolder,
             JarResource.StreamFunction getResourceStream,
-            Lazy<AssetVersions> assetVersions,
-            Lazy<PlanConfig> config
+            Lazy<AssetVersions> assetVersions
     ) {
         this.dataFolder = dataFolder;
         this.getResourceStream = getResourceStream;
         this.assetVersions = assetVersions;
-        this.config = config;
         this.configFile = getFileFromPluginFolder("config.yml");
     }
 
@@ -150,28 +145,7 @@ public class PlanFiles implements SubSystem {
         return new FileResource(resourceName, getFileFromPluginFolder(resourceName));
     }
 
-    // TODO Customized file logic should be moved to another class so the circular dependency on config can be removed.
-    public Optional<Resource> getCustomizableResource(@Untrusted String resourceName) {
-        return Optional.ofNullable(findCustomized(resourceName));
-    }
-
-    private Resource findCustomized(@Untrusted String resourceName) {
-        if (config.get().isTrue(CustomizedFileSettings.WEB_DEV_MODE)) {
-            // Bypass cache in web developer mode.
-            return getFileResource(resourceName);
-        } else {
-            return ResourceCache.getOrCache(resourceName, () -> getFileResource(resourceName));
-        }
-    }
-
-    private FileResource getFileResource(@Untrusted String resourceName) {
-        return attemptToFind(resourceName)
-                .map(found -> new FileResource(resourceName, found))
-                .orElse(null);
-    }
-
-    public Optional<File> attemptToFind(@Untrusted String resourceName) {
-        Path dir = config.get().getResourceSettings().getCustomizationDirectory();
+    public Optional<File> attemptToFind(Path dir, @Untrusted String resourceName) {
         if (dir.toFile().exists() && dir.toFile().isDirectory()) {
             // Path may be absolute due to resolving untrusted path
             @Untrusted Path asPath = dir.resolve(resourceName);

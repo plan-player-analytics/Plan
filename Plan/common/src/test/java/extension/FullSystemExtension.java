@@ -18,12 +18,14 @@ package extension;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import org.junit.jupiter.api.extension.*;
 import utilities.RandomData;
 import utilities.dagger.PlanPluginComponent;
@@ -86,6 +88,8 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 PlanPluginComponent.class.equals(type) ||
                 PlanCommand.class.equals(type) ||
                 Database.class.equals(type) ||
+                DeliveryUtilities.class.equals(type) ||
+                PublicHtmlFiles.class.equals(type) ||
                 Exporter.class.equals(type);
     }
 
@@ -120,6 +124,12 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
         }
         if (Database.class.equals(type)) {
             return planSystem.getDatabaseSystem().getDatabase();
+        }
+        if (DeliveryUtilities.class.equals(type)) {
+            return planSystem.getDeliveryUtilities();
+        }
+        if (PublicHtmlFiles.class.equals(type)) {
+            return planSystem.getDeliveryUtilities().getPublicHtmlFiles();
         }
         if (Exporter.class.equals(type)) {
             return planSystem.getExportSystem().getExporter();

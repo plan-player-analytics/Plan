@@ -86,6 +86,7 @@ public class ResponseResolver {
     private final ResolverService resolverService;
     private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
+    private final PublicHtmlResolver publicHtmlResolver;
 
     @Inject
     public ResponseResolver(
@@ -100,6 +101,7 @@ public class ResponseResolver {
             RootPageResolver rootPageResolver,
             RootJSONResolver rootJSONResolver,
             StaticResourceResolver staticResourceResolver,
+            PublicHtmlResolver publicHtmlResolver,
 
             LoginPageResolver loginPageResolver,
             RegisterPageResolver registerPageResolver,
@@ -123,6 +125,7 @@ public class ResponseResolver {
         this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
         this.staticResourceResolver = staticResourceResolver;
+        this.publicHtmlResolver = publicHtmlResolver;
         this.loginPageResolver = loginPageResolver;
         this.registerPageResolver = registerPageResolver;
         this.loginResolver = loginResolver;
@@ -157,6 +160,7 @@ public class ResponseResolver {
 
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
         resolverService.registerResolverForMatches(plugin, Pattern.compile(StaticResourceResolver.PATH_REGEX), staticResourceResolver);
+        resolverService.registerResolverForMatches(plugin, Pattern.compile(".*"), publicHtmlResolver);
 
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
         resolverService.registerResolver(plugin, "/docs/swagger.json", swaggerJsonResolver);
