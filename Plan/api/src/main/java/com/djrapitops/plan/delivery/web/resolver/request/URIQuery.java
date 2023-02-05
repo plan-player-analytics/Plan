@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.web.resolver.request;
 
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -82,6 +83,8 @@ public final class URIQuery {
             );
         } catch (UnsupportedEncodingException e) {
             // If UTF-8 is unsupported, we have bigger problems
+        } catch (IllegalArgumentException badCharacter) {
+            throw new BadRequestException("URI Query contained bad character");
         }
     }
 
