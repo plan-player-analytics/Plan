@@ -1,5 +1,4 @@
 import React from 'react';
-import {NightModeCss} from "../../hooks/themeHook";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
@@ -18,10 +17,9 @@ const ErrorsPage = () => {
 
     return (
         <>
-            <NightModeCss/>
-            <Sidebar items={[]} showBackButton={true}/>
+            <Sidebar page={'Errors'} items={[]}/>
             <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={<><FontAwesomeIcon icon={faBug}/> Error Logs</>}/>
+                <Header page={<><FontAwesomeIcon icon={faBug}/> Error Logs</>} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
                         <Card>

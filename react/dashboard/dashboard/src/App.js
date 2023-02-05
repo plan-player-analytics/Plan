@@ -1,10 +1,11 @@
 import './style/main.sass';
 import './style/sb-admin-2.css'
 import './style/style.css';
+import './style/mobile.css';
 
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import React from "react";
-import {ThemeContextProvider} from "./hooks/themeHook";
+import {NightModeCss, ThemeContextProvider, ThemeCss} from "./hooks/themeHook";
 import axios from "axios";
 import ErrorView from "./views/ErrorView";
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
@@ -99,8 +100,10 @@ function App() {
     return (
         <div className="App">
             <ContextProviders>
+                <ThemeCss/>
                 <div id="wrapper">
                     <BrowserRouter basename={getBasename()}>
+                        <NightModeCss/>
                         <Routes>
                             <Route path="" element={<MainPageRedirect/>}/>
                             <Route path="/" element={<MainPageRedirect/>}/>

@@ -1,7 +1,8 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useMemo, useState} from "react";
 import {createNightModeCss, getColors} from "../util/colors";
 import {getLightModeChartTheming, getNightModeChartTheming} from "../util/graphColors";
 import {useMetadata} from "./metadataHook";
+import {useLocation} from "react-router-dom";
 
 const themeColors = getColors();
 themeColors.splice(themeColors.length - 4, 4);
@@ -40,14 +41,13 @@ export const ThemeContextProvider = ({children}) => {
     const [selectedColor, setSelectedColor] = useState(getStoredTheme(getDefaultTheme(metadata)));
     const [previousColor, setPreviousColor] = useState(undefined);
 
-    const sharedState = {
-        selectedColor,
-        setSelectedColor,
-        previousColor,
-        setPreviousColor,
-        colorChooserOpen,
-        setColorChooserOpen
-    }
+    const sharedState = useMemo(() => {
+        return {
+            selectedColor, setSelectedColor,
+            previousColor, setPreviousColor,
+            colorChooserOpen, setColorChooserOpen
+        }
+    }, [selectedColor, setSelectedColor, previousColor, setPreviousColor, colorChooserOpen, setColorChooserOpen]);
     return (<ThemeContext.Provider value={sharedState}>
             {children}
         </ThemeContext.Provider>
@@ -107,8 +107,29 @@ export const useTheme = () => {
     };
 }
 
+export const ThemeCss = () => {
+    const {color} = useTheme();
+
+    if (!color) return <></>;
+
+    return (
+        <style>
+            {':root {--color-theme: var(--color-' + color + ') !important;}'}
+        </style>
+    )
+}
+
 export const NightModeCss = () => {
     const theme = useTheme();
+    const location = useLocation();
+
+    if (location.pathname.startsWith('/docs')) {
+        return <>
+            <style>
+                {'#wrapper {background-image: none;}'}
+            </style>
+        </>
+    }
 
     return (
         <>

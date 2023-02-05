@@ -31,9 +31,9 @@ const ColorSelectorModal = () => {
                 <button aria-label="Close" className="btn-close" onClick={theme.toggleColorChooser}/>
             </Modal.Header>
             <Modal.Body style={{padding: "0.5rem 0 0.5rem 0.5rem"}}>
-                {theme.themeColors.map((color, i) =>
+                {theme.themeColors.map(color =>
                     <ColorSelectorButton
-                        key={i}
+                        key={color.name}
                         color={color.name}
                         setColor={theme.setColor}
                         disabled={theme.nightModeEnabled}
@@ -43,7 +43,7 @@ const ColorSelectorModal = () => {
                 <button className="btn" id="night-mode-toggle" type="button" onClick={theme.toggleNightMode}>
                     <Fa icon={faCloudMoon}/> {t('html.button.nightMode')}
                 </button>
-                <button className="btn bg-plan" type="button" onClick={theme.toggleColorChooser}>OK</button>
+                <button className="btn bg-theme" type="button" onClick={theme.toggleColorChooser}>OK</button>
             </Modal.Footer>
         </Modal>
     )

@@ -2,10 +2,8 @@ import React, {useEffect} from "react";
 import Sidebar from "../../components/navigation/Sidebar";
 import {Outlet, useOutletContext, useParams} from "react-router-dom";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {NightModeCss} from "../../hooks/themeHook";
 import {fetchPlayer} from "../../service/playerService";
 import {faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
-import {useAuth} from "../../hooks/authenticationHook";
 import Header from "../../components/navigation/Header";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
@@ -48,15 +46,11 @@ const PlayerPage = () => {
         finishUpdate(player.timestamp, player.timestamp_f);
     }, [player, t, i18n, finishUpdate, setSidebarItems])
 
-    const {hasPermissionOtherThan} = useAuth();
-    const showBackButton = hasPermissionOtherThan('page.player.self');
-
     if (loadingError) return <ErrorPage error={loadingError}/>;
 
     return player ? (
         <>
-            <NightModeCss/>
-            <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
+            <Sidebar page={player.info.name} items={sidebarItems}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <Header page={player.info.name} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>
@@ -70,7 +64,6 @@ const PlayerPage = () => {
             </div>
         </>
     ) : <>
-        <NightModeCss/>
         <div className="page-loader">
             <div className="loader-container">
                 <span className="loader"/>

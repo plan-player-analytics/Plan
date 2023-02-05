@@ -3,7 +3,6 @@ import {useTranslation} from "react-i18next";
 import {Outlet} from "react-router-dom";
 import {useNavigation} from "../../hooks/navigationHook";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
-import {NightModeCss} from "../../hooks/themeHook";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
@@ -13,12 +12,10 @@ import {staticSite} from "../../service/backendConfiguration";
 
 const PlayersPage = () => {
     const {t, i18n} = useTranslation();
-    const {isProxy, serverName} = useMetadata();
+    const {isProxy, networkName, serverName} = useMetadata();
 
     const [error] = useState(undefined);
-    const {sidebarItems, setSidebarItems} = useNavigation();
-
-    const {currentTab, setCurrentTab} = useNavigation();
+    const {sidebarItems, setSidebarItems, currentTab, setCurrentTab} = useNavigation();
 
     useEffect(() => {
         const items = staticSite ? [] : [
@@ -31,16 +28,12 @@ const PlayersPage = () => {
         setCurrentTab('html.label.players')
     }, [t, i18n, setCurrentTab, setSidebarItems])
 
-    // const {authRequired, user} = useAuth();
-    const showBackButton = true; // TODO
-
     if (error) return <ErrorPage error={error}/>;
 
-    const displayedServerName = !isProxy && serverName && serverName.startsWith('Server') ? "Plan" : serverName;
+    const displayedServerName = isProxy ? networkName : (serverName && serverName.startsWith('Server') ? "Plan" : serverName);
     return (
         <>
-            <NightModeCss/>
-            <Sidebar items={sidebarItems} showBackButton={showBackButton}/>
+            <Sidebar items={sidebarItems}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <Header page={displayedServerName} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>

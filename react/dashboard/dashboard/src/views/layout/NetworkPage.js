@@ -16,7 +16,6 @@ import {
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
-import {NightModeCss} from "../../hooks/themeHook";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
@@ -39,6 +38,7 @@ const NetworkSidebar = () => {
         const items = [
             {name: 'html.label.networkOverview', icon: faInfoCircle, href: "overview"},
             {},
+            {name: 'html.label.information'},
             {
                 name: 'html.label.servers',
                 icon: faServer,
@@ -52,14 +52,16 @@ const NetworkSidebar = () => {
                     {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions"},
                     staticSite ? undefined : {name: 'html.label.performance', icon: faCogs, href: "performance"},
                     {},
-                    ...servers.map(server => {
-                        return {
-                            name: server.serverName,
-                            icon: faServer,
-                            href: "/server/" + server.serverUUID,
-                            color: 'light-green'
-                        }
-                    })
+                    ...servers
+                        .filter(server => !server.proxy)
+                        .map(server => {
+                            return {
+                                name: server.serverName,
+                                icon: faServer,
+                                href: "/server/" + server.serverUUID,
+                                color: 'light-green'
+                            }
+                        })
                 ]
             },
             {
@@ -108,7 +110,7 @@ const NetworkSidebar = () => {
     }, [t, i18n, extensionData, setSidebarItems, networkMetadata])
 
     return (
-        <Sidebar items={sidebarItems} showBackButton={false}/>
+        <Sidebar items={sidebarItems}/>
     )
 }
 
@@ -124,7 +126,6 @@ const ServerPage = () => {
 
     return (
         <>
-            <NightModeCss/>
             <ServerExtensionContextProvider identifier={serverUUID}>
                 <NetworkSidebar/>
                 <div className="d-flex flex-column" id="content-wrapper">

@@ -62,12 +62,11 @@ const MainPageRedirect = () => {
         return <RedirectPlaceholder/>
     }
 
-    const server = staticSite ? serverUUID : encodeURIComponent(serverName);
     const redirectBasedOnPermissions = () => {
         if (isProxy && user.permissions.includes('page.network')) {
             return (<Navigate to={"/network/overview"} replace={true}/>)
         } else if (user.permissions.includes('page.server')) {
-            return (<Navigate to={"/server/" + server + "/overview"}
+            return (<Navigate to={"/server/" + serverUUID + "/overview"}
                               replace={true}/>)
         } else if (user.permissions.includes('page.player.other')) {
             return (<Navigate to={"/players"} replace={true}/>)
@@ -82,7 +81,7 @@ const MainPageRedirect = () => {
         return redirectBasedOnPermissions();
     } else {
         return (<Navigate
-            to={isProxy ? "/network/overview" : "/server/" + server + "/overview"}
+            to={isProxy ? "/network/overview" : "/server/" + serverUUID + "/overview"}
             replace={true}/>)
     }
 }

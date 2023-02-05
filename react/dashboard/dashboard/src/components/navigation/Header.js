@@ -42,7 +42,7 @@ const Header = ({page, tab, hideUpdater}) => {
     const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.linkedToUuid) : undefined
     // TODO Remove .replace('<', '') after locale replacement
     return (
-        <nav className="nav mt-3 align-items-center justify-content-between container-fluid">
+        <nav className="nav-header nav mt-3 align-items-center justify-content-between container-fluid">
             <div className="d-sm-flex">
                 <h1 className="h3 mb-0 text-gray-800">
                     <button onClick={toggleSidebar}>

@@ -227,7 +227,7 @@ const QueryOptionsCard = () => {
                 </Row>
             </Card.Body>
             <button id={"query-button"}
-                    className={"btn bg-plan m-2"}
+                    className={"btn bg-theme m-2"}
                     disabled={Boolean(invalidFields.length) || loadingResults}
                     onClick={performQuery}>
                 <FontAwesomeIcon icon={loadingResults ? faGear : faSearch}

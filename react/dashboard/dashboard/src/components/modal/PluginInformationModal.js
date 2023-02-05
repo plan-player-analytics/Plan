@@ -30,14 +30,14 @@ const LicenseSection = () => {
 const Links = () => {
     const {t} = useTranslation();
     return (<>
-            <a className="btn col-plan" href="https://github.com/plan-player-analytics/Plan/wiki"
+            <a className="btn col-theme" href="https://github.com/plan-player-analytics/Plan/wiki"
                rel="noopener noreferrer" target="_blank">
                 <Fa icon={faGraduationCap}/> {t('html.modal.info.wiki')}
             </a>
-            <a className="btn col-plan" href="https://github.com/plan-player-analytics/Plan/issues"
+            <a className="btn col-theme" href="https://github.com/plan-player-analytics/Plan/issues"
                rel="noopener noreferrer" target="_blank">
                 <Fa icon={faBug}/> {t('html.modal.info.bugs')}</a>
-            <a className="btn col-plan" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
+            <a className="btn col-theme" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
                target="_blank">
                 <Fa icon={faDiscord}/> {t('html.modal.info.discord')}
             </a>
@@ -60,7 +60,7 @@ const Contributor = ({contributor}) => {
     const icons = contributor.contributed.map(
         (type, i) => <Fa key={i} icon={["fa", getContributionIcon(type)]}/>);
     return (
-        <li className="col-4">{contributor.name} {icons} </li>
+        <li className="contributor">{contributor.name} {icons} </li>
     )
 }
 
@@ -75,7 +75,7 @@ const Contributions = () => {
     // TODO Translate
     return (<>
         <p>Player Analytics {t('html.modal.info.developer')} AuroraLS3.</p>
-        <p>In addition following <span className="col-plan">awesome people</span> have
+        <p>In addition following <span className="col-theme">awesome people</span> have
             contributed:</p>
         <ul className="row contributors">
             {contributors.map((contributor, i) => <Contributor key={i} contributor={contributor}/>)}
@@ -86,7 +86,7 @@ const Contributions = () => {
             icon={faLanguage}/> {t('html.modal.info.contributors.translator')}
         </small>
         <hr/>
-        <p className="col-plan">
+        <p className="col-theme">
             {t('html.modal.info.contributors.donate')}
             <Fa icon={faStar} className={"col-amber"}/>
         </p>
@@ -98,19 +98,19 @@ const MetricsLinks = () => {
     return (
         <>
             <h6>{t('html.modal.info.metrics')}</h6>
-            <a className="btn col-plan" href="https://bstats.org/plugin/bukkit/Plan"
+            <a className="btn col-theme" href="https://bstats.org/plugin/bukkit/Plan"
                rel="noopener noreferrer" target="_blank">
                 <Fa icon={faChartArea}/> Bukkit
             </a>
-            <a className="btn col-plan" href="https://bstats.org/plugin/bungeecord/Plan"
+            <a className="btn col-theme" href="https://bstats.org/plugin/bungeecord/Plan"
                rel="noopener noreferrer" target="_blank">
                 <Fa icon={faChartArea}/> BungeeCord
             </a>
-            <a className="btn col-plan" href="https://bstats.org/plugin/sponge/plan"
+            <a className="btn col-theme" href="https://bstats.org/plugin/sponge/plan"
                rel="noopener noreferrer" target="_blank">
                 <Fa icon={faChartArea}/> Sponge
             </a>
-            <a className="btn col-plan" href="https://bstats.org/plugin/velocity/Plan/10326"
+            <a className="btn col-theme" href="https://bstats.org/plugin/velocity/Plan/10326"
                rel="noopener noreferrer" target="_blank">
                 <Fa icon={faChartArea}/> Velocity
             </a>
@@ -138,7 +138,7 @@ const PluginInformationModal = ({open, toggle}) => {
                 <MetricsLinks/>
             </Modal.Body>
             <Modal.Footer>
-                <button className="btn bg-plan" onClick={toggle}>OK</button>
+                <button className="btn bg-theme" onClick={toggle}>OK</button>
             </Modal.Footer>
         </Modal>
     )
