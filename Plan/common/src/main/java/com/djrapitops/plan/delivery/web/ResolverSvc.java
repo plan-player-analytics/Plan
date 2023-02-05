@@ -17,13 +17,17 @@
 package com.djrapitops.plan.delivery.web;
 
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * ResolverService Implementation.
@@ -33,11 +37,16 @@ import java.util.regex.Pattern;
 @Singleton
 public class ResolverSvc implements ResolverService {
 
+    private final PlanConfig config;
+    private final PluginLogger logger;
+
     private final List<Container> basicResolvers;
     private final List<Container> regexResolvers;
 
     @Inject
-    public ResolverSvc() {
+    public ResolverSvc(PlanConfig config, PluginLogger logger) {
+        this.config = config;
+        this.logger = logger;
         basicResolvers = new ArrayList<>();
         regexResolvers = new ArrayList<>();
     }
@@ -77,6 +86,12 @@ public class ResolverSvc implements ResolverService {
         }
         for (Container container : regexResolvers) {
             if (container.matcher.test(target)) resolvers.add(container.resolver);
+        }
+        if (config.isTrue(PluginSettings.DEV_MODE)) {
+            logger.info("Match Resolvers " + target + " - " + resolvers.stream()
+                    .map(Object::getClass)
+                    .map(Class::getSimpleName)
+                    .collect(Collectors.toList()));
         }
         return resolvers;
     }

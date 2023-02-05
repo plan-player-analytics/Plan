@@ -48,17 +48,24 @@ public class PublicHtmlResolver implements NoAuthResolver {
         return Optional.ofNullable(getResponse(request));
     }
 
+    @SuppressWarnings("OptionalIsPresent") // More readable
     private Response getResponse(Request request) {
         @Untrusted String resource = request.getPath().asString().substring(1);
         @Untrusted Optional<Long> etag = Identifiers.getEtag(request);
 
-        String mimeType = getMimeType(resource);
-        return etag.map(tag -> responseFactory.publicHtmlResourceResponse(tag, resource, mimeType))
-                .orElseGet(() -> responseFactory.publicHtmlResourceResponse(resource, mimeType));
+        Optional<String> mimeType = getMimeType(resource);
+        if (mimeType.isEmpty()) return null;
+
+        return etag.map(tag -> responseFactory.publicHtmlResourceResponse(tag, resource, mimeType.get()))
+                .orElseGet(() -> responseFactory.publicHtmlResourceResponse(resource, mimeType.get()));
+    }
+
+    private Optional<String> getMimeType(@Untrusted String resource) {
+        return Optional.ofNullable(getNullableMimeType(resource));
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
-    private String getMimeType(@Untrusted String resource) {
+    private String getNullableMimeType(@Untrusted String resource) {
         if (resource.endsWith(".avif")) return "image/avif";
         if (resource.endsWith(".bin")) return "application/octet-stream";
         if (resource.endsWith(".bmp")) return "image/bmp";
@@ -90,6 +97,6 @@ public class PublicHtmlResolver implements NoAuthResolver {
         if (resource.endsWith(".woff2")) return MimeType.FONT_BYTESTREAM;
         if (resource.endsWith(".xml")) return "application/xml";
 
-        return "application/octet-stream";
+        return null;
     }
 }
