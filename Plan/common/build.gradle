@@ -105,6 +105,14 @@ task yarnBundle(type: YarnTask) {
     args = ['run', 'build']
 }
 
+task yarnStart(type: YarnTask) {
+    logging.captureStandardOutput LogLevel.INFO
+    inputs.file("$rootDir/react/dashboard/package.json")
+
+    dependsOn yarn_install
+    args = ['run', 'start']
+}
+
 task copyYarnBuildResults {
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
