@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.file;
 
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.Optional;
 
@@ -65,7 +67,12 @@ public class PublicHtmlFiles {
             }
         }
         if (from.toFile().exists() && from.toFile().isDirectory()) {
-            @Untrusted Path asPath = from.resolve(resourceName).normalize();
+            @Untrusted Path asPath;
+            try {
+                asPath = from.resolve(resourceName).normalize();
+            } catch (InvalidPathException badCharacter) {
+                throw new BadRequestException("Requested resource name contained a bad character.");
+            }
             // Path may be absolute due to resolving untrusted path
             if (!asPath.startsWith(from)) {
                 return Optional.empty();
