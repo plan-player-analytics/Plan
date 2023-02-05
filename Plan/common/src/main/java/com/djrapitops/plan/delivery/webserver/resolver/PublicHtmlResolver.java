@@ -64,6 +64,7 @@ public class PublicHtmlResolver implements NoAuthResolver {
         return Optional.ofNullable(getNullableMimeType(resource));
     }
 
+    // Checkstyle.OFF: CyclomaticComplexity
     // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
     private String getNullableMimeType(@Untrusted String resource) {
         if (resource.endsWith(".avif")) return "image/avif";
@@ -99,4 +100,6 @@ public class PublicHtmlResolver implements NoAuthResolver {
 
         return null;
     }
+    // Checkstyle.ON: CyclomaticComplexity
+
 }
