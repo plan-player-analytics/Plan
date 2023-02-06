@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import Scrollable from "../../components/Scrollable";

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import {ErrorViewCard} from "../ErrorView";
 import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
 import PingTableCard from "../../components/cards/common/PingTableCard";

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import LoadIn from "../../components/animation/LoadIn";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import {useMetadata} from "../../hooks/metadataHook";
 import CardHeader from "../../components/cards/CardHeader";
 import {faServer} from "@fortawesome/free-solid-svg-icons";

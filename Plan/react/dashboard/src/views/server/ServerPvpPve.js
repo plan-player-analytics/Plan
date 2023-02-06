@@ -1,6 +1,6 @@
 import React from "react";
 import PvpPveAsNumbersCard from "../../components/cards/server/tables/PvpPveAsNumbersCard";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
 import PvpPveInsightsCard from "../../components/cards/server/insights/PvpPveInsightsCard";
 import {useParams} from "react-router-dom";

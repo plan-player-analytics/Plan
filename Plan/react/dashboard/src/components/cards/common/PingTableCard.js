@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import CardHeader from "../CardHeader";
 import {faWifi} from "@fortawesome/free-solid-svg-icons";
 import PingTable from "../../table/PingTable";

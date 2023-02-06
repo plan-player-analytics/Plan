@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServersOverview} from "../../service/networkService";
 import ErrorView from "../ErrorView";

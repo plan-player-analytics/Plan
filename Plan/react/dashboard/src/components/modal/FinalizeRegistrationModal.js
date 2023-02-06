@@ -1,7 +1,7 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
 import {useMetadata} from "../../hooks/metadataHook";
-import {Modal} from "react-bootstrap-v5";
+import {Modal} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faHandPointRight} from "@fortawesome/free-regular-svg-icons";
 

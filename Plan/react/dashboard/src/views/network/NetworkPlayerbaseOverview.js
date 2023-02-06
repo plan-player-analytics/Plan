@@ -1,4 +1,4 @@
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import React from "react";
 import PlayerbaseDevelopmentCard from "../../components/cards/server/graphs/PlayerbaseDevelopmentCard";
 import CurrentPlayerbaseCard from "../../components/cards/server/graphs/CurrentPlayerbaseCard";

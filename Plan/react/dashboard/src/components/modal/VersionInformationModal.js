@@ -1,6 +1,6 @@
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {Modal} from "react-bootstrap-v5";
+import {Modal} from "react-bootstrap";
 import {faCheckCircle, faDownload} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 

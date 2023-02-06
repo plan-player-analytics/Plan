@@ -1,6 +1,6 @@
 import React from 'react';
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 
 const CardHeader = ({icon, color, label}) => {

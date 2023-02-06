@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import {faExclamationCircle, faPowerOff, faTachometerAlt, faUser, faUsers} from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../../components/Datapoint";
 import {useTranslation} from "react-i18next";

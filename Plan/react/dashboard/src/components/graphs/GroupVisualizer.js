@@ -3,7 +3,7 @@ import GroupTable from "../table/GroupTable";
 import GroupPie from "./GroupPie";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBarChart, faChartColumn, faPieChart, faTable} from "@fortawesome/free-solid-svg-icons";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import GroupBarGraph from "./GroupBarGraph";
 
 const options = {

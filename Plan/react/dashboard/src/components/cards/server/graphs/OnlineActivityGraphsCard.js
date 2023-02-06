@@ -9,7 +9,7 @@ import {
 import {ErrorViewBody} from "../../../../views/ErrorView";
 import PunchCard from "../../../graphs/PunchCard";
 import {useTranslation} from "react-i18next";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import CardTabs from "../../../CardTabs";
 import {faBraille, faChartArea} from "@fortawesome/free-solid-svg-icons";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";

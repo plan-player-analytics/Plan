@@ -3,7 +3,7 @@ import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchOptimizedPerformance, fetchPingGraph} from "../../../../service/serverService";
 import {ErrorViewBody} from "../../../../views/ErrorView";
 import {useTranslation} from "react-i18next";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import CardTabs from "../../../CardTabs";
 import {faGears, faHdd, faMap, faMicrochip, faSignal, faTachometerAlt} from "@fortawesome/free-solid-svg-icons";
 import React, {useEffect, useState} from "react";

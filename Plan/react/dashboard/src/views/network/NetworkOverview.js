@@ -2,7 +2,7 @@ import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import ErrorView from "../ErrorView";
 import LoadIn from "../../components/animation/LoadIn";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
 import {fetchNetworkOverview} from "../../service/networkService";

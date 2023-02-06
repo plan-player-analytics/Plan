@@ -9,7 +9,7 @@ import {
     faTachometerAlt,
     faUser
 } from "@fortawesome/free-solid-svg-icons";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchPingGraph} from "../../../service/serverService";
 import {tooltip, yAxisConfigurations} from "../../../util/graphs";

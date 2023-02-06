@@ -1,5 +1,5 @@
 import React from 'react';
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import JoinAddressGroupCard from "../../components/cards/server/graphs/JoinAddressGroupCard";
 import JoinAddressGraphCard from "../../components/cards/server/graphs/JoinAddressGraphCard";
 import LoadIn from "../../components/animation/LoadIn";

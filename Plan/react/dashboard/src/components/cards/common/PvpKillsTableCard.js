@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCrosshairs} from "@fortawesome/free-solid-svg-icons";
 import KillsTable from "../../table/KillsTable";

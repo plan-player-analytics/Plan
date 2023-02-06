@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect} from 'react';
 import LoadIn from "../../components/animation/LoadIn";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import QueryPath from "../../components/alert/QueryPath";
 import {useQueryResultContext} from "../../hooks/queryResultContext";
 import {useNavigate} from "react-router-dom";

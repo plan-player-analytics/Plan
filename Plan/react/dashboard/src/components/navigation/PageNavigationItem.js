@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {faCompass} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {InputGroup} from "react-bootstrap-v5";
+import {InputGroup} from "react-bootstrap";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useMetadata} from "../../hooks/metadataHook";
 import {useAuth} from "../../hooks/authenticationHook";
@@ -86,7 +86,7 @@ const PageNavigationItem = ({page}) => {
                         className="form-select form-select-sm scrollbar"
                         id="pageSelector"
                         defaultValue={currentPage ? currentPage : items[0].id}>
-                    {items.map((item, i) =>
+                    {items.map(item =>
                         <option key={item.id} value={item.id}>{item.displayName}</option>)}
                 </select>
             </InputGroup>

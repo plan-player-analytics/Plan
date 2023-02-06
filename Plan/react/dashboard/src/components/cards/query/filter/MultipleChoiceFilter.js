@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import MultiSelect from "../../../input/MultiSelect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 
 const MultipleChoiceFilter = ({index, label, filter, removeFilter, setFilterOptions}) => {
     const {t} = useTranslation();

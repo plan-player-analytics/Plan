@@ -1,10 +1,10 @@
 import React from 'react';
-import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
+import DropdownToggle from "react-bootstrap/lib/esm/DropdownToggle";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import DropdownMenu from "react-bootstrap-v5/lib/esm/DropdownMenu";
-import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
+import DropdownMenu from "react-bootstrap/lib/esm/DropdownMenu";
+import DropdownItem from "react-bootstrap/lib/esm/DropdownItem";
 import {useTranslation} from "react-i18next";
-import {Dropdown} from "react-bootstrap-v5";
+import {Dropdown} from "react-bootstrap";
 
 export const DropDownWithOptions = ({selected, optionList, onChange, optionLabelMapper, icon, title}) => {
     const {t} = useTranslation();

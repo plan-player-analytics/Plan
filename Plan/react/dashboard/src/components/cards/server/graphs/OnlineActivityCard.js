@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchPlayersOnlineGraph} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartArea} from "@fortawesome/free-solid-svg-icons";
 import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";

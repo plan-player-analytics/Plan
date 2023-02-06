@@ -1,4 +1,4 @@
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import Datapoint from "../../Datapoint";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLongArrowAltRight} from "@fortawesome/free-solid-svg-icons";

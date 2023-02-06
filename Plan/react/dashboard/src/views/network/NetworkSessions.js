@@ -1,4 +1,4 @@
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import React from "react";
 import ServerRecentSessionsCard from "../../components/cards/server/tables/ServerRecentSessionsCard";
 import SessionInsightsCard from "../../components/cards/server/insights/SessionInsightsCard";

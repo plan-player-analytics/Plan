@@ -1,4 +1,4 @@
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import React from "react";
 import {CardLoader} from "../../navigation/Loader";
 import ServerPie from "../../graphs/ServerPie";

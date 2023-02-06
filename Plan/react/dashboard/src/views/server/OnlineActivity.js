@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import OnlineActivityGraphsCard from "../../components/cards/server/graphs/OnlineActivityGraphsCard";
 import OnlineActivityAsNumbersCard from "../../components/cards/server/tables/OnlineActivityAsNumbersCard";
 import {useParams} from "react-router-dom";

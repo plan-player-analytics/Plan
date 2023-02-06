@@ -10,7 +10,7 @@ import {fetchPlanVersion} from "../../service/metadataService";
 import {useAuth} from "../../hooks/authenticationHook";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
-import {Collapse} from "react-bootstrap-v5";
+import {Collapse} from "react-bootstrap";
 import {baseAddress} from "../../service/backendConfiguration";
 import PageNavigationItem from "./PageNavigationItem";
 
@@ -238,7 +238,9 @@ const Sidebar = ({page, items}) => {
             setVersionInfo({currentVersion: "Error getting version", updateAvailable: false})
         }
     }
-    useEffect(() => loadVersion(), []);
+    useEffect(() => {
+        loadVersion();
+    }, []);
 
     return (
         <>

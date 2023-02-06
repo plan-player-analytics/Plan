@@ -1,14 +1,11 @@
 import {useTranslation} from "react-i18next";
-import {Card, Col, Dropdown, Row} from "react-bootstrap-v5";
+import {Card, Col, Dropdown, Row} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import React, {useState} from "react";
 import {faExclamationTriangle, faGlobe, faLayerGroup} from "@fortawesome/free-solid-svg-icons";
 import GeolocationBarGraph from "../../graphs/GeolocationBarGraph";
 import GeolocationWorldMap, {ProjectionOptions} from "../../graphs/GeolocationWorldMap";
 import {CardLoader} from "../../navigation/Loader";
-import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
-import DropdownMenu from "react-bootstrap-v5/lib/esm/DropdownMenu";
-import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
 
 const ProjectionDropDown = ({projection, setProjection}) => {
     const {t} = useTranslation();
@@ -18,18 +15,18 @@ const ProjectionDropDown = ({projection, setProjection}) => {
     return (
         <Dropdown className="float-end" style={{position: "absolute", right: "0.5rem"}}
                   title={t('html.label.geoProjection.dropdown')}>
-            <DropdownToggle variant=''>
+            <Dropdown.Toggle variant=''>
                 <Fa icon={faLayerGroup}/> {t(projection)}
-            </DropdownToggle>
+            </Dropdown.Toggle>
 
-            <DropdownMenu>
+            <Dropdown.Menu>
                 <h6 className="dropdown-header">{t('html.label.geoProjection.dropdown')}</h6>
                 {projectionOptions.map((option, i) => (
-                    <DropdownItem key={i} onClick={() => setProjection(option)}>
+                    <Dropdown.Item key={i} onClick={() => setProjection(option)}>
                         {t(option)}
-                    </DropdownItem>
+                    </Dropdown.Item>
                 ))}
-            </DropdownMenu>
+            </Dropdown.Menu>
         </Dropdown>
     )
 }

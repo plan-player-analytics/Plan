@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Card, Col} from "react-bootstrap-v5";
+import {Card, Col} from "react-bootstrap";
 import ExtensionIcon from "./ExtensionIcon";
 import Datapoint from "../Datapoint";
 import Masonry from 'masonry-layout'

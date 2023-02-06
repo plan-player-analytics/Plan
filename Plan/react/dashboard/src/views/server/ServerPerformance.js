@@ -1,6 +1,6 @@
 import React from 'react';
 import LoadIn from "../../components/animation/LoadIn";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchPerformanceOverview} from "../../service/serverService";
