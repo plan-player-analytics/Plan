@@ -108,7 +108,7 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: javadocs # The folder the action should deploy.
-      - name: 🩺 SonarCloud: Java
+      - name: 🩺 SonarCloud - Java
         if: "${{ env.SONAR_TOKEN != '' }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -116,7 +116,7 @@ jobs:
         run: |
           cd Plan
           ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan
-      - name: 🩺 SonarCloud: React
+      - name: 🩺 SonarCloud - React
         if: "${{ env.SONAR_TOKEN != '' }}"
         uses: SonarSource/sonarcloud-github-action@master
         env:
