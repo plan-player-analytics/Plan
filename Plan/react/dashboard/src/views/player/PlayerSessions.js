@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Col, Row} from "react-bootstrap";
+import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCalendarAlt} from "@fortawesome/free-regular-svg-icons";
 import PlayerSessionCalendar from "../../components/calendar/PlayerSessionCalendar";
@@ -8,6 +8,7 @@ import {useTranslation} from "react-i18next";
 import PlayerWorldPieCard from "../../components/cards/player/PlayerWorldPieCard";
 import PlayerRecentSessionsCard from "../../components/cards/player/PlayerRecentSessionsCard";
 import LoadIn from "../../components/animation/LoadIn";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const SessionCalendarCard = ({player}) => {
     const {t} = useTranslation();
@@ -27,8 +28,8 @@ const PlayerSessions = () => {
     const {player} = usePlayer();
     return (
         <LoadIn>
-            <section className="player_sessions">
-                <Row>
+            <section className="player-sessions">
+                <ExtendableRow id={'row-player-sessions-0'}>
                     <Col lg={8}>
                         <SessionCalendarCard player={player}/>
                         <PlayerRecentSessionsCard player={player}/>
@@ -36,7 +37,7 @@ const PlayerSessions = () => {
                     <Col lg={4}>
                         <PlayerWorldPieCard player={player}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

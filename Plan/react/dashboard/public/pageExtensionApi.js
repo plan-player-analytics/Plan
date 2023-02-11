@@ -1,5 +1,6 @@
 /*
 * Usage:
+* - Look for any element with 'extendable' class name and use its id.
 *
 * // Html-string
 * const render = async () => {
@@ -9,6 +10,7 @@
 * const unmount = async () => {
 *   // Any code that needs to run when the element is removed from DOM
 * };
+* // 'server-overview-card' is the ID of the element
 * global.pageExtensionApi.registerElement('beforeElement', 'server-overview-card', render, unmount);
 *
 * // HtmlElement
@@ -22,19 +24,24 @@ class PageExtensionApi {
     beforeElementRenders = [];
     afterElementRenders = [];
 
-    registerElement(position, className, renderCallback, unmountCallback) {
+    registerElement(position, id, renderCallback, unmountCallback) {
         const renderers = position === 'beforeElement' ? this.beforeElementRenders : this.afterElementRenders;
-        renderers.push({className, renderCallback, unmountCallback});
+        renderers.push({id, renderCallback, unmountCallback});
     }
 
-    onRender(className, position) {
+    onRender(id, position) {
         const renderers = position === 'beforeElement' ? this.beforeElementRenders : this.afterElementRenders;
         return Promise.all(renderers
-            .filter(renderer => renderer.className === className)
+            .filter(renderer => renderer.id === id)
             .filter(renderer => renderer.renderCallback)
             .map(async renderer => {
                 try {
-                    return await renderer.renderCallback()
+                    const rendered = await renderer.renderCallback();
+                    if (rendered instanceof HTMLElement) {
+                        return rendered.outerHTML;
+                    } else {
+                        return rendered;
+                    }
                 } catch (e) {
                     console.warn("Error when rendering " + renderer + ": " + e);
                     return null;
@@ -58,4 +65,5 @@ class PageExtensionApi {
     }
 }
 
-const pageExtensionApi = new PageExtensionApi();
+// Global
+pageExtensionApi = new PageExtensionApi();

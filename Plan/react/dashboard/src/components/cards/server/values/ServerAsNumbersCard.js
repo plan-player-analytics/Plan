@@ -14,6 +14,7 @@ import Datapoint from "../../../Datapoint";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import {CardLoader} from "../../../navigation/Loader";
+import ExtendableCardBody from "../../../layout/extension/ExtendableCardBody";
 
 const ServerAsNumbersCard = ({data}) => {
     const {t} = useTranslation();
@@ -27,7 +28,7 @@ const ServerAsNumbersCard = ({data}) => {
                     <Fa icon={faBookOpen}/> {data.player_kills ? t('html.label.serverAsNumberse') : t('html.label.networkAsNumbers')}
                 </h6>
             </Card.Header>
-            <Card.Body>
+            <ExtendableCardBody id={data.player_kills ? 'card-body-server-as-numbers' : 'card-body-network-as-numbers'}>
                 <Datapoint name={t('html.label.currentUptime')}
                            color={'light-green'} icon={faPowerOff}
                            value={data.current_uptime}/>
@@ -71,7 +72,7 @@ const ServerAsNumbersCard = ({data}) => {
                 <Datapoint name={t('html.label.deaths')}
                            color={'black'} icon={faSkull}
                            value={data.deaths} bold/>
-            </Card.Body>
+            </ExtendableCardBody>
         </Card>
     )
 }

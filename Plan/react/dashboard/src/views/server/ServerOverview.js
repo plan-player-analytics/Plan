@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Card, Col, Row} from "react-bootstrap";
+import {Card, Col} from "react-bootstrap";
 import {faExclamationCircle, faPowerOff, faTachometerAlt, faUser, faUsers} from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../../components/Datapoint";
 import {useTranslation} from "react-i18next";
@@ -13,6 +13,7 @@ import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNu
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
 import LoadIn from "../../components/animation/LoadIn";
 import {CardLoader} from "../../components/navigation/Loader";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
@@ -68,23 +69,23 @@ const ServerOverview = () => {
 
     return (
         <LoadIn>
-            <section className="server_overview">
-                <Row>
+            <section className="server-overview">
+                <ExtendableRow id={'row-server-overview-0'}>
                     <Col lg={9}>
                         <OnlineActivityCard/>
                     </Col>
                     <Col lg={3}>
                         <Last7DaysCard data={data?.last_7_days}/>
                     </Col>
-                </Row>
-                <Row>
+                </ExtendableRow>
+                <ExtendableRow id={'row-server-overview-1'}>
                     <Col lg={4}>
                         <ServerAsNumbersCard data={data?.numbers}/>
                     </Col>
                     <Col lg={8}>
                         <ServerWeekComparisonCard data={data?.weeks}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )
