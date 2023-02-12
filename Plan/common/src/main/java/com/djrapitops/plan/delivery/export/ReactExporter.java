@@ -74,6 +74,7 @@ public class ReactExporter extends FileExporter {
         exportAsset(toDirectory, "logo512.png");
         exportAsset(toDirectory, "manifest.json");
         exportAsset(toDirectory, "robots.txt");
+        exportAsset(toDirectory, "pageExtensionApi.js");
         exportStaticBundle(toDirectory);
         exportLocaleJson(toDirectory.resolve("locale"));
         exportMetadataJson(toDirectory.resolve("metadata"));

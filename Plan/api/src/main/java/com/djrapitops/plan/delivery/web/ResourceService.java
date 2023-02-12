@@ -82,6 +82,8 @@ public interface ResourceService {
     enum Position {
         /**
          * Loaded before page contents.
+         * <p>
+         * Recommended for loading style sheets.
          */
         PRE_CONTENT,
         /**
@@ -94,7 +96,11 @@ public interface ResourceService {
          * Loaded after script execution.
          * <p>
          * Recommended for loading data to custom structure on the page.
+         *
+         * @see <a href="https://github.com/plan-player-analytics/Plan/blob/master/Plan/react/dashboard/public/pageExtensionApi.js">Javascript API</a>
+         * @deprecated No longer supported on React pages, use the javascript API in PRE_MAIN_SCRIPT.
          */
+        @Deprecated
         AFTER_MAIN_SCRIPT;
 
         public String cleanName() {
