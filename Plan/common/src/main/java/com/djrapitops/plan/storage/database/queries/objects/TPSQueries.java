@@ -216,14 +216,15 @@ public class TPSQueries {
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(ServerUUID serverUUID, long afterDate) {
-        String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ')' + FROM + TABLE_NAME + WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+        String subQuery = '(' + SELECT + DATE + ",MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + FROM + TABLE_NAME +
+                WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + DATE + ">= ?)";
         String sql = SELECT +
-                DATE + ',' + PLAYERS_ONLINE +
-                FROM + TABLE_NAME +
+                "t." + DATE + ',' + "t." + PLAYERS_ONLINE +
+                FROM + TABLE_NAME + " t" +
+                INNER_JOIN + subQuery + " max on t." + DATE + "=max." + DATE + AND + "t." + PLAYERS_ONLINE + "=max." + PLAYERS_ONLINE +
                 WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + DATE + ">= ?" +
-                AND + PLAYERS_ONLINE + "=" + subQuery +
+                AND + "t." + DATE + ">= ?" +
                 ORDER_BY + DATE + " DESC LIMIT 1";
 
         return new QueryStatement<>(sql) {
@@ -248,7 +249,6 @@ public class TPSQueries {
         };
     }
 
-    @Benchmark.Slow("1s")
     public static Query<Optional<DateObj<Integer>>> fetchAllTimePeakPlayerCount(ServerUUID serverUUID) {
         return fetchPeakPlayerCount(serverUUID, 0);
     }
