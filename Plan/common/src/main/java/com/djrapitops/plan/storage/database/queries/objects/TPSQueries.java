@@ -216,16 +216,17 @@ public class TPSQueries {
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(ServerUUID serverUUID, long afterDate) {
-        String subQuery = '(' + SELECT + DATE + ",MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + FROM + TABLE_NAME +
+        String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + FROM + TABLE_NAME +
                 WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + DATE + ">= ?)";
+                AND + DATE + ">= ?" +
+                GROUP_BY + SERVER_ID + ")";
         String sql = SELECT +
                 "t." + DATE + ',' + "t." + PLAYERS_ONLINE +
                 FROM + TABLE_NAME + " t" +
-                INNER_JOIN + subQuery + " max on t." + DATE + "=max." + DATE + AND + "t." + PLAYERS_ONLINE + "=max." + PLAYERS_ONLINE +
+                INNER_JOIN + subQuery + " max on t." + PLAYERS_ONLINE + "=max." + PLAYERS_ONLINE +
                 WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + "t." + DATE + ">= ?" +
-                ORDER_BY + DATE + " DESC LIMIT 1";
+                ORDER_BY + "t." + DATE + " DESC LIMIT 1";
 
         return new QueryStatement<>(sql) {
             @Override
