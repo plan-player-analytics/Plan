@@ -2,10 +2,10 @@
 
 [![Github Actions](https://github.com/plan-player-analytics/Plan/workflows/CI/badge.svg)](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
-![Java](https://custom-icon-badges.demolab.com/badge/java-11-orange?logo=java-white)
+![Java](https://custom-icon-badges.demolab.com/badge/⮞-red?logo=java-white)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
 [![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=coverage)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
-![React](https://custom-icon-badges.demolab.com/badge/React-18-blue?logo=react-white)
+![React](https://custom-icon-badges.demolab.com/badge/⮞-blue?logo=react-white)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=plan-player-analytics_Plan&metric=ncloc)](https://sonarcloud.io/summary/overall?id=plan-player-analytics_Plan)
 
 [Documentation & Tutorials](https://github.com/plan-player-analytics/Plan/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [DEV builds](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml?query=branch%3Amaster) | [Issues & Suggestions](https://github.com/plan-player-analytics/Plan/issues)
