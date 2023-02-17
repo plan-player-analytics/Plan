@@ -1022,14 +1022,7 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.16.3", "@babel/runtime@^7.19.4", "@babel/runtime@^7.20.6", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
-  version "7.20.6"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.6.tgz#facf4879bfed9b5326326273a64220f099b0fce3"
-  integrity sha512-Q+8MqP7TiHMWzSfwiJwXCjyf4GYA4Dgw3emg/7xmwsdLJOZUp+nMqcOwOzzYheuM1rhDu8FSj2l0aoMygEuXuA==
-  dependencies:
-    regenerator-runtime "^0.13.11"
-
-"@babel/runtime@^7.17.2", "@babel/runtime@^7.20.7":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.15.4", "@babel/runtime@^7.16.3", "@babel/runtime@^7.17.2", "@babel/runtime@^7.19.4", "@babel/runtime@^7.20.6", "@babel/runtime@^7.20.7", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.20.13"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.20.13.tgz#7055ab8a7cff2b8f6058bf6ae45ff84ad2aded4b"
   integrity sha512-gt3PKXs0DBoL9xCvOIIZ2NEqAGZqHjAnmVbfQtB620V0uReIQutpel14KcneZuer7UioY8ALKZ7iocavvzTNFA==
@@ -7664,10 +7657,10 @@ react-app-polyfill@^3.0.0:
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
 
-react-bootstrap@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.7.0.tgz#4a8f0311bccac477dc925366763c536f46e4393b"
-  integrity sha512-Jcrn6aUuRVBeSB6dzKODKZU1TONOdhAxu0IDm4Sv74SJUm98dMdhSotF2SNvFEADANoR+stV+7TK6SNX1wWu5w==
+react-bootstrap@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.7.2.tgz#100069ea7b4807cccbc5fef1e33bc90283262602"
+  integrity sha512-WDSln+mG4RLLFO01stkj2bEx/3MF4YihK9D/dWnHaSxOiQZLbhhlf95D2Jb20X3t2m7vMxRe888FVrfLJoGmmA==
   dependencies:
     "@babel/runtime" "^7.17.2"
     "@restart/hooks" "^0.4.6"
