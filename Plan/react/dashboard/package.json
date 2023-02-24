@@ -32,7 +32,7 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",
-    "react-i18next": "^12.1.5",
+    "react-i18next": "^12.2.0",
     "react-mcjsonchat": "^1.0.0",
     "react-router-dom": "6",
     "react-scripts": "5.0.1",
