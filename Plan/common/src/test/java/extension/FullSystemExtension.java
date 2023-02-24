@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
+import javassist.tools.web.Webserver;
 import org.junit.jupiter.api.extension.*;
 import utilities.RandomData;
 import utilities.dagger.PlanPluginComponent;
@@ -90,6 +91,7 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 Database.class.equals(type) ||
                 DeliveryUtilities.class.equals(type) ||
                 PublicHtmlFiles.class.equals(type) ||
+                Webserver.class.equals(type) ||
                 Exporter.class.equals(type);
     }
 
@@ -130,6 +132,9 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
         }
         if (PublicHtmlFiles.class.equals(type)) {
             return planSystem.getDeliveryUtilities().getPublicHtmlFiles();
+        }
+        if (Webserver.class.equals(type)) {
+            return planSystem.getWebServerSystem().getWebServer();
         }
         if (Exporter.class.equals(type)) {
             return planSystem.getExportSystem().getExporter();
