@@ -22,6 +22,8 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import extension.FullSystemExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -51,7 +53,8 @@ class PublicHtmlTest {
         system.disable();
     }
 
-    @ParameterizedTest
+    @DisplayName("Public Html supports file types")
+    @ParameterizedTest(name = "Supports file type {0}")
     @CsvSource({
             "avif", "bin", "bmp",
             "css", "csv", "eot",
@@ -75,6 +78,20 @@ class PublicHtmlTest {
 
         assertEquals(200, access(address + "/" + fileName));
         assertEquals(404, access(address + "/does-not-exist-" + fileName));
+    }
+
+    @Test
+    @DisplayName("Public Html doesn't support some file types")
+    void customFileTypeNotSupported(PlanConfig config, DeliveryUtilities deliveryUtilities) throws Exception {
+        String fileName = "test.mp4";
+        Path publicHtmlDirectory = config.getResourceSettings().getPublicHtmlDirectory();
+        Path file = publicHtmlDirectory.resolve(fileName);
+        Files.createDirectories(publicHtmlDirectory);
+        Files.write(file, new byte[]{1, 1, 1, 1});
+        String address = deliveryUtilities.getAddresses().getAccessAddress()
+                .orElse(deliveryUtilities.getAddresses().getFallbackLocalhostAddress());
+
+        assertEquals(404, access(address + "/" + fileName));
     }
 
     private int access(String address) throws Exception {
