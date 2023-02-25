@@ -141,7 +141,9 @@ public class ReactExporter extends FileExporter {
         String contents = files.getResourceFromJar("web/index.html")
                 .asString();
         String basePath = getBasePath();
-        contents = StringUtils.replace(contents, "/static", basePath + "/static");
+        contents = StringUtils.replaceEach(contents,
+                new String[]{"/static", "/pageExtensionApi.js"},
+                new String[]{basePath + "/static", basePath + "/pageExtensionApi.js"});
 
         export(toDirectory.resolve("index.html"), contents);
     }
