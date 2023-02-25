@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Col, Row} from "react-bootstrap";
+import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLifeRing} from "@fortawesome/free-regular-svg-icons";
 import {faKhanda, faSkull} from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +10,7 @@ import {useTranslation} from "react-i18next";
 import PvpPveAsNumbersCard from "../../components/cards/player/PvpPveAsNumbersCard";
 import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
 import LoadIn from "../../components/animation/LoadIn";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const InsightsCard = ({player}) => {
     const {t} = useTranslation();
@@ -50,23 +51,23 @@ const PlayerPvpPve = () => {
     const {player} = usePlayer();
     return (
         <LoadIn>
-            <section className="player_pvp_pve">
-                <Row>
+            <section className="player-pvp-pve">
+                <ExtendableRow id={'row-player-pvp-pve-0'}>
                     <Col lg={8}>
                         <PvpPveAsNumbersCard player={player}/>
                     </Col>
                     <Col lg={4}>
                         <InsightsCard player={player}/>
                     </Col>
-                </Row>
-                <Row>
+                </ExtendableRow>
+                <ExtendableRow id={'row-player-pvp-pve-1'}>
                     <Col lg={6}>
                         <PvpKillsTableCard player_kills={player.player_kills}/>
                     </Col>
                     <Col lg={6}>
                         <PvpDeathsTableCard player={player}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

@@ -1,11 +1,12 @@
 import {useTranslation} from "react-i18next";
-import {Card, Col, Dropdown, Row} from "react-bootstrap";
+import {Card, Col, Dropdown} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import React, {useState} from "react";
 import {faExclamationTriangle, faGlobe, faLayerGroup} from "@fortawesome/free-solid-svg-icons";
 import GeolocationBarGraph from "../../graphs/GeolocationBarGraph";
 import GeolocationWorldMap, {ProjectionOptions} from "../../graphs/GeolocationWorldMap";
 import {CardLoader} from "../../navigation/Loader";
+import ExtendableRow from "../../layout/extension/ExtendableRow";
 
 const ProjectionDropDown = ({projection, setProjection}) => {
     const {t} = useTranslation();
@@ -54,7 +55,7 @@ const GeolocationsCard = ({data}) => {
                 <ProjectionDropDown projection={projection} setProjection={setProjection}/>
             </Card.Header>
             <Card.Body className="chart-area" style={{height: "100%"}}>
-                <Row>
+                <ExtendableRow id={'row-geolocations-graphs-card-0'}>
                     <Col md={3}>
                         <GeolocationBarGraph series={data.geolocation_bar_series} color={data.colors.bars}/>
                     </Col>
@@ -62,7 +63,7 @@ const GeolocationsCard = ({data}) => {
                         <GeolocationWorldMap series={data.geolocation_series} colors={data.colors}
                                              projection={projection}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </Card.Body>
         </Card>
     )

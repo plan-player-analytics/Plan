@@ -29,6 +29,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -94,20 +95,8 @@ public class ResourceSvc implements ResourceService {
         }
     }
 
-    private WebResource applySnippets(String pluginName, @Untrusted String fileName, WebResource resource) {
-        Map<Position, StringBuilder> byPosition = calculateSnippets(fileName);
-        if (byPosition.isEmpty()) return resource;
-
-        String html = applySnippets(resource, byPosition);
-        return WebResource.create(html);
-    }
-
-    private String applySnippets(WebResource resource, Map<Position, StringBuilder> byPosition) {
-        String html = resource.asString();
-        if (html == null) {
-            return "Error: Given resource did not support WebResource#asString method properly and returned 'null'";
-        }
-
+    @Nullable
+    private static String applyLegacy(Map<Position, StringBuilder> byPosition, String html) {
         StringBuilder toHead = byPosition.get(Position.PRE_CONTENT);
         if (toHead != null) {
             html = StringUtils.replaceOnce(html, "</head>", toHead.append("</head>").toString());
@@ -128,6 +117,33 @@ public class ResourceSvc implements ResourceService {
         }
 
         return html;
+    }
+
+    private WebResource applySnippets(String pluginName, @Untrusted String fileName, WebResource resource) {
+        Map<Position, StringBuilder> byPosition = calculateSnippets(fileName);
+        if (byPosition.isEmpty()) return resource;
+
+        String html = applySnippets(fileName, resource, byPosition);
+        return WebResource.create(html);
+    }
+
+    private String applySnippets(@Untrusted String fileName, WebResource resource, Map<Position, StringBuilder> byPosition) {
+        String html = resource.asString();
+        if (html == null) {
+            return "Error: Given resource did not support WebResource#asString method properly and returned 'null'";
+        }
+
+        if ("index.html".equals(fileName)) {
+            StringBuilder toHead = byPosition.get(Position.PRE_CONTENT);
+            if (toHead != null) {
+                html = StringUtils.replaceOnce(html, "</head>", toHead.append("</head>").toString());
+            }
+            StringBuilder toBody = byPosition.get(Position.PRE_MAIN_SCRIPT);
+            html = StringUtils.replaceOnce(html, "<script>/* This script tag will be replaced with scripts */</script>", toBody.toString());
+            return html;
+        } else {
+            return applyLegacy(byPosition, html);
+        }
     }
 
     private Map<Position, StringBuilder> calculateSnippets(@Untrusted String fileName) {

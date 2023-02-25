@@ -14,6 +14,7 @@ import {AuthenticationContextProvider} from "./hooks/authenticationHook";
 import {NavigationContextProvider} from "./hooks/navigationHook";
 import MainPageRedirect from "./components/navigation/MainPageRedirect";
 import {baseAddress, staticSite} from "./service/backendConfiguration";
+import {PageExtensionContextProvider} from "./hooks/pageExtensionHook";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -69,7 +70,9 @@ const ContextProviders = ({children}) => (
         <MetadataContextProvider>
             <ThemeContextProvider>
                 <NavigationContextProvider>
-                    {children}
+                    <PageExtensionContextProvider>
+                        {children}
+                    </PageExtensionContextProvider>
                 </NavigationContextProvider>
             </ThemeContextProvider>
         </MetadataContextProvider>

@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Col, Row} from "react-bootstrap";
+import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faAddressBook, faCalendar, faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import {
@@ -29,6 +29,8 @@ import {useTranslation} from "react-i18next";
 import NicknamesCard from "../../components/cards/player/NicknamesCard";
 import {TableRow} from "../../components/table/TableRow";
 import LoadIn from "../../components/animation/LoadIn";
+import ExtendableCardBody from "../../components/layout/extension/ExtendableCardBody";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const PlayerOverviewCard = ({player}) => {
     const {t} = useTranslation();
@@ -42,8 +44,8 @@ const PlayerOverviewCard = ({player}) => {
                     <Fa icon={faAddressBook}/> {player.info.name}
                 </h6>
             </Card.Header>
-            <Card.Body>
-                <Row>
+            <ExtendableCardBody id={'card-body-player-overview-card'}>
+                <ExtendableRow id={'row-player-overview-card-0'}>
                     <Col sm={4}>
                         <p>
                             <Fa icon={faCircle} className={player.info.online ? "col-green" : "col-red"}/>
@@ -67,9 +69,9 @@ const PlayerOverviewCard = ({player}) => {
                                className="col-green"/> {t('html.label.mobKills')}: {player.info.mob_kill_count}</p>
                         <p><Fa icon={faSkull}/> {t('html.label.deaths')}: {player.info.death_count}</p>
                     </Col>
-                </Row>
+                </ExtendableRow>
                 <hr/>
-                <Row>
+                <ExtendableRow id={'row-player-overview-card-1'}>
                     <Col lg={6}>
                         <Datapoint
                             icon={faClock} color="green"
@@ -136,8 +138,8 @@ const PlayerOverviewCard = ({player}) => {
                             name={t('html.label.lastSeen')} value={player.info.last_seen} boldTitle
                         />
                     </Col>
-                </Row>
-            </Card.Body>
+                </ExtendableRow>
+            </ExtendableCardBody>
         </Card>
     );
 }
@@ -222,8 +224,8 @@ const PlayerOverview = () => {
 
     return (
         <LoadIn>
-            <section className="player_overview">
-                <Row>
+            <section className="player-overview">
+                <ExtendableRow id={'row-player-overview-0'}>
                     <Col lg={6}>
                         <PlayerOverviewCard player={player}/>
                         <NicknamesCard player={player}/>
@@ -233,7 +235,7 @@ const PlayerOverview = () => {
                         <PunchCardCard player={player}/>
                         <OnlineActivityCard player={player}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

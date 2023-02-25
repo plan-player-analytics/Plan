@@ -219,6 +219,7 @@ class AccessControlTest {
             "/v1/locale/NonexistingLanguage,404",
             "/docs/swagger.json,500", // swagger.json not available during tests
             "/docs,200",
+            "/pageExtensionApi.js,200",
     })
     void levelZeroCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel0);
@@ -293,6 +294,7 @@ class AccessControlTest {
             "/v1/locale/NonexistingLanguage,404",
             "/docs/swagger.json,403",
             "/docs,403",
+            "/pageExtensionApi.js,200",
     })
     void levelOneCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel1);
@@ -367,6 +369,7 @@ class AccessControlTest {
             "/v1/locale/NonexistingLanguage,404",
             "/docs/swagger.json,403",
             "/docs,403",
+            "/pageExtensionApi.js,200",
     })
     void levelTwoCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel2);
@@ -439,6 +442,7 @@ class AccessControlTest {
             "/v1/locale/NonexistingLanguage,404",
             "/docs/swagger.json,403",
             "/docs,403",
+            "/pageExtensionApi.js,200",
     })
     void levelHundredCanNotAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
         int responseCode = access(resource, cookieLevel100);

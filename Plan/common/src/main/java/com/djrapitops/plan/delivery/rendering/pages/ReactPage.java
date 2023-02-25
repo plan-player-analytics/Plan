@@ -36,9 +36,10 @@ public class ReactPage implements Page {
 
     @Override
     public String toHtml() {
-        return StringUtils.replace(
+        return StringUtils.replaceEach(
                 reactHtml.asString(),
-                "/static", basePath + "/static");
+                new String[]{"/static", "/pageExtensionApi.js"},
+                new String[]{basePath + "/static", basePath + "/pageExtensionApi.js"});
     }
 
     @Override

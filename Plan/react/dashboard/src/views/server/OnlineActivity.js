@@ -1,5 +1,5 @@
 import React from "react";
-import {Col, Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import OnlineActivityGraphsCard from "../../components/cards/server/graphs/OnlineActivityGraphsCard";
 import OnlineActivityAsNumbersCard from "../../components/cards/server/tables/OnlineActivityAsNumbersCard";
 import {useParams} from "react-router-dom";
@@ -8,6 +8,7 @@ import {fetchOnlineActivityOverview} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import OnlineActivityInsightsCard from "../../components/cards/server/insights/OnlineActivityInsightsCard";
 import LoadIn from "../../components/animation/LoadIn";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const OnlineActivity = () => {
     const {identifier} = useParams();
@@ -18,20 +19,20 @@ const OnlineActivity = () => {
 
     return (
         <LoadIn>
-            <section className="server_online_activity_overview">
-                <Row>
+            <section className="server-online-activity-overview">
+                <ExtendableRow id={'row-server-online-activity-overview-0'}>
                     <Col lg={12}>
                         <OnlineActivityGraphsCard/>
                     </Col>
-                </Row>
-                <Row>
+                </ExtendableRow>
+                <ExtendableRow id={'row-server-online-activity-overview-1'}>
                     <Col lg={8}>
                         <OnlineActivityAsNumbersCard data={data?.numbers}/>
                     </Col>
                     <Col lg={4}>
                         <OnlineActivityInsightsCard data={data?.insights}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

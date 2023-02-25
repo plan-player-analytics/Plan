@@ -74,6 +74,7 @@ public class ReactExporter extends FileExporter {
         exportAsset(toDirectory, "logo512.png");
         exportAsset(toDirectory, "manifest.json");
         exportAsset(toDirectory, "robots.txt");
+        exportAsset(toDirectory, "pageExtensionApi.js");
         exportStaticBundle(toDirectory);
         exportLocaleJson(toDirectory.resolve("locale"));
         exportMetadataJson(toDirectory.resolve("metadata"));
@@ -140,7 +141,9 @@ public class ReactExporter extends FileExporter {
         String contents = files.getResourceFromJar("web/index.html")
                 .asString();
         String basePath = getBasePath();
-        contents = StringUtils.replace(contents, "/static", basePath + "/static");
+        contents = StringUtils.replaceEach(contents,
+                new String[]{"/static", "/pageExtensionApi.js"},
+                new String[]{basePath + "/static", basePath + "/pageExtensionApi.js"});
 
         export(toDirectory.resolve("index.html"), contents);
     }

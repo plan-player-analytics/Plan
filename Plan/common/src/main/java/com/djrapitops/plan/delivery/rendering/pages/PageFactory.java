@@ -109,8 +109,15 @@ public class PageFactory {
     }
 
     public Page reactPage() throws IOException {
-        // TODO use ResourceService to apply snippets to the React index.html
-        return new ReactPage(getBasePath(), getPublicHtmlOrJarResource("index.html"));
+        try {
+            String fileName = "index.html";
+            WebResource resource = ResourceService.getInstance().getResource(
+                    "Plan", fileName, () -> getPublicHtmlOrJarResource(fileName)
+            );
+            return new ReactPage(getBasePath(), resource);
+        } catch (UncheckedIOException readFail) {
+            throw readFail.getCause();
+        }
     }
 
     private String getBasePath() {
@@ -258,14 +265,10 @@ public class PageFactory {
         }
     }
 
-    public WebResource getPublicHtmlOrJarResource(String resourceName) throws IOException {
-        try {
-            return publicHtmlFiles.get().findPublicHtmlResource(resourceName)
-                    .orElseGet(() -> files.get().getResourceFromJar("web/" + resourceName))
-                    .asWebResource();
-        } catch (UncheckedIOException readFail) {
-            throw readFail.getCause();
-        }
+    public WebResource getPublicHtmlOrJarResource(String resourceName) {
+        return publicHtmlFiles.get().findPublicHtmlResource(resourceName)
+                .orElseGet(() -> files.get().getResourceFromJar("web/" + resourceName))
+                .asWebResource();
     }
 
     public Page loginPage() throws IOException {

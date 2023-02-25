@@ -1,6 +1,6 @@
 import React from 'react';
 import LoadIn from "../../components/animation/LoadIn";
-import {Col, Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchPerformanceOverview} from "../../service/serverService";
@@ -8,6 +8,7 @@ import PerformanceGraphsCard from "../../components/cards/server/graphs/Performa
 import PerformanceInsightsCard from "../../components/cards/server/insights/PerformanceInsightsCard";
 import {ErrorViewCard} from "../ErrorView";
 import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const ServerPerformance = () => {
     const {identifier} = useParams();
@@ -16,13 +17,13 @@ const ServerPerformance = () => {
 
     return (
         <LoadIn>
-            <section className="server_performance">
-                <Row>
+            <section className="server-performance">
+                <ExtendableRow id={'row-server-performance-0'}>
                     <Col lg={12}>
                         <PerformanceGraphsCard/>
                     </Col>
-                </Row>
-                <Row>
+                </ExtendableRow>
+                <ExtendableRow id={'row-server-performance-1'}>
                     <Col lg={8}>
                         {loadingError ? <ErrorViewCard error={loadingError}/> :
                             <PerformanceAsNumbersCard data={data?.numbers}/>}
@@ -31,7 +32,7 @@ const ServerPerformance = () => {
                         {loadingError ? <ErrorViewCard error={loadingError}/> :
                             <PerformanceInsightsCard data={data?.insights}/>}
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )
