@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.capability;
 
+import com.djrapitops.plan.delivery.web.ResourceService;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -83,7 +85,12 @@ enum Capability {
     /**
      * {@link com.djrapitops.plan.delivery.web.ResourceService}
      */
-    PAGE_EXTENSION_RESOURCES;
+    PAGE_EXTENSION_RESOURCES,
+    /**
+     * {@link com.djrapitops.plan.delivery.web.ResourceService#addJavascriptToResource(String, String, ResourceService.Position, String, String)}
+     * {@link com.djrapitops.plan.delivery.web.ResourceService#addStyleToResource(String, String, ResourceService.Position, String, String)}
+     */
+    PAGE_EXTENSION_RESOURCES_REGISTER_DIRECT_CUSTOMIZATION;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {
