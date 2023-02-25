@@ -21,6 +21,7 @@ const RedirectPlaceholder = () => {
 
     if (dateDiff > 50) {
         return <>
+            <p style={{marginLeft: "14rem"}}></p>
             <p className="m-4">Redirecting..</p>
             <div style={{maxWidth: "500px"}}>
                 <p className="m-4">
@@ -32,7 +33,7 @@ const RedirectPlaceholder = () => {
                 </p>
                 <p className="m-4">
                     If you are trying to set up a development environment,
-                    change package.json "proxy" to your Plan webserver address.
+                    change package.json "proxy" to address of your Plan webserver.
                 </p>
                 <p className="m-4">
                     <button className="btn bg-plan" onClick={() => window.location.reload()}>Click to Refresh the
@@ -42,7 +43,10 @@ const RedirectPlaceholder = () => {
             </div>
         </>
     } else {
-        return <p className="m-4">Redirecting..</p>
+        return <>
+            <p style={{marginLeft: "14rem"}}></p>
+            <p className="m-4">Redirecting..</p>
+        </>
     }
 }
 
