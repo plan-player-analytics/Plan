@@ -110,7 +110,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="#AFTER_MAIN_SCRIPT" class="member-name-link">AFTER_MAIN_SCRIPT</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Loaded after script execution.</div>
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">No longer supported on React pages, use the javascript API in PRE_MAIN_SCRIPT.</div>
+</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="#PRE_CONTENT" class="member-name-link">PRE_CONTENT</a></code></div>
 <div class="col-last odd-row-color">
@@ -172,7 +174,9 @@ the order they are declared.</div>
 <section class="detail" id="PRE_CONTENT">
 <h3>PRE_CONTENT</h3>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ResourceService.Position.html" title="enum class in com.djrapitops.plan.delivery.web">ResourceService.Position</a></span>&nbsp;<span class="element-name">PRE_CONTENT</span></div>
-<div class="block">Loaded before page contents.</div>
+<div class="block">Loaded before page contents.
+ <p>
+ Recommended for loading style sheets.</div>
 </section>
 </li>
 <li>
@@ -187,10 +191,22 @@ the order they are declared.</div>
 <li>
 <section class="detail" id="AFTER_MAIN_SCRIPT">
 <h3>AFTER_MAIN_SCRIPT</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ResourceService.Position.html" title="enum class in com.djrapitops.plan.delivery.web">ResourceService.Position</a></span>&nbsp;<span class="element-name">AFTER_MAIN_SCRIPT</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ResourceService.Position.html" title="enum class in com.djrapitops.plan.delivery.web">ResourceService.Position</a></span>&nbsp;<span class="element-name">AFTER_MAIN_SCRIPT</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">No longer supported on React pages, use the javascript API in PRE_MAIN_SCRIPT.</div>
+</div>
 <div class="block">Loaded after script execution.
  <p>
  Recommended for loading data to custom structure on the page.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="https://github.com/plan-player-analytics/Plan/blob/master/Plan/react/dashboard/public/pageExtensionApi.js">Javascript API</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </li>
 </ul>
