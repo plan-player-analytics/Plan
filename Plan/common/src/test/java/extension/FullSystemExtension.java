@@ -26,6 +26,8 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
+import com.djrapitops.plan.utilities.java.Maps;
+import javassist.tools.web.Webserver;
 import org.junit.jupiter.api.extension.*;
 import utilities.RandomData;
 import utilities.dagger.PlanPluginComponent;
@@ -35,6 +37,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * JUnit 5 extension to construct a full PlanSystem for a test.
@@ -47,6 +51,36 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
     public PluginMockComponent component;
     private Path tempDir;
     private PlanSystem planSystem;
+
+    private final Map<Class, Supplier> parameterResolvers;
+
+    public FullSystemExtension() {
+        this.parameterResolvers = Maps.builder(Class.class, Supplier.class)
+                .put(PlanSystem.class, () -> planSystem)
+                .put(PlanFiles.class, () -> planSystem.getPlanFiles())
+                .put(PlanConfig.class, () -> planSystem.getConfigSystem().getConfig())
+                .put(ServerUUID.class, () -> planSystem.getServerInfo().getServerUUID())
+                .put(PlanPluginComponent.class, () -> {
+                    try {
+                        return component.getComponent();
+                    } catch (Exception e) {
+                        throw new ParameterResolutionException("Error getting " + PlanPluginComponent.class, e);
+                    }
+                })
+                .put(PlanCommand.class, () -> {
+                    try {
+                        return component.getComponent().planCommand();
+                    } catch (Exception e) {
+                        throw new ParameterResolutionException("Error getting " + PlanCommand.class, e);
+                    }
+                })
+                .put(Database.class, () -> planSystem.getDatabaseSystem().getDatabase())
+                .put(DeliveryUtilities.class, () -> planSystem.getDeliveryUtilities())
+                .put(PublicHtmlFiles.class, () -> planSystem.getDeliveryUtilities().getPublicHtmlFiles())
+                .put(Webserver.class, () -> planSystem.getWebServerSystem().getWebServer())
+                .put(Exporter.class, () -> planSystem.getExportSystem().getExporter())
+                .build();
+    }
 
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
@@ -81,59 +115,14 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         Class<?> type = parameterContext.getParameter().getType();
-        return PlanSystem.class.equals(type) ||
-                PlanFiles.class.equals(type) ||
-                PlanConfig.class.equals(type) ||
-                ServerUUID.class.equals(type) ||
-                PlanPluginComponent.class.equals(type) ||
-                PlanCommand.class.equals(type) ||
-                Database.class.equals(type) ||
-                DeliveryUtilities.class.equals(type) ||
-                PublicHtmlFiles.class.equals(type) ||
-                Exporter.class.equals(type);
+        return parameterResolvers.containsKey(type);
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         Class<?> type = parameterContext.getParameter().getType();
-        if (PlanSystem.class.equals(type)) {
-            return planSystem;
-        }
-        if (PlanFiles.class.equals(type)) {
-            return planSystem.getPlanFiles();
-        }
-        if (PlanConfig.class.equals(type)) {
-            return planSystem.getConfigSystem().getConfig();
-        }
-        if (ServerUUID.class.equals(type)) {
-            return planSystem.getServerInfo().getServerUUID();
-        }
-        if (PlanPluginComponent.class.equals(type)) {
-            try {
-                return component.getComponent();
-            } catch (Exception e) {
-                throw new ParameterResolutionException("Error getting " + type.getName(), e);
-            }
-        }
-        if (PlanCommand.class.equals(type)) {
-            try {
-                return component.getComponent().planCommand();
-            } catch (Exception e) {
-                throw new ParameterResolutionException("Error getting " + type.getName(), e);
-            }
-        }
-        if (Database.class.equals(type)) {
-            return planSystem.getDatabaseSystem().getDatabase();
-        }
-        if (DeliveryUtilities.class.equals(type)) {
-            return planSystem.getDeliveryUtilities();
-        }
-        if (PublicHtmlFiles.class.equals(type)) {
-            return planSystem.getDeliveryUtilities().getPublicHtmlFiles();
-        }
-        if (Exporter.class.equals(type)) {
-            return planSystem.getExportSystem().getExporter();
-        }
+        Supplier<?> supplier = parameterResolvers.get(type);
+        if (supplier != null) return supplier.get();
         throw new ParameterResolutionException("Unsupported parameter type " + type.getName());
     }
 }

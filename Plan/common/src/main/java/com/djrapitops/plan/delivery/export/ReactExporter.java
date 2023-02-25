@@ -110,8 +110,8 @@ public class ReactExporter extends FileExporter {
             } else if (path.endsWith(".js")) {
                 String withReplacedConstants = StringUtils.replaceEach(
                         resource.asString(),
-                        new String[]{"PLAN_BASE_ADDRESS", "PLAN_EXPORTED_VERSION", "n.p=\"/\""},
-                        new String[]{config.get(WebserverSettings.EXTERNAL_LINK), "true", "n.p=\"" + getBasePath() + "/\""}
+                        new String[]{"PLAN_BASE_ADDRESS", "PLAN_EXPORTED_VERSION", ".p=\"/\""},
+                        new String[]{config.get(WebserverSettings.EXTERNAL_LINK), "true", ".p=\"" + getBasePath() + "/\""}
                 );
                 export(to, withReplacedConstants);
             } else {

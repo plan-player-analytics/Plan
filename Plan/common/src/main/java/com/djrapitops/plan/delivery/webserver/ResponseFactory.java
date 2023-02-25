@@ -245,8 +245,8 @@ public class ResponseFactory {
                         return locale.replaceLanguageInJavascript(contents);
                     })
                     .chain(contents -> StringUtils.replace(contents,
-                            "n.p=\"/\"",
-                            "n.p=\"" + getBasePath() + "/\""))
+                            ".p=\"/\"",
+                            ".p=\"" + getBasePath() + "/\""))
                     .apply();
             ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.JS)

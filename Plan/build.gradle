@@ -16,7 +16,7 @@ plugins {
     id 'java-library'
     id "jacoco"
     id "checkstyle"
-    id "org.sonarqube" version "3.5.0.2730"
+    id "org.sonarqube" version "4.0.0.2929"
     id 'fabric-loom' version '0.12.+' apply false
 }
 
@@ -67,7 +67,7 @@ subprojects {
     }
 
     ext {
-        daggerVersion = "2.44.2"
+        daggerVersion = "2.45"
 
         palVersion = "5.1.0"
 
@@ -84,11 +84,11 @@ subprojects {
         commonsTextVersion = "1.10.0"
         commonsCompressVersion = "1.22"
         commonsCodecVersion = "1.15"
-        caffeineVersion = "3.1.2"
+        caffeineVersion = "3.1.4"
         jettyVersion = "11.0.13"
         caffeineVersion = "2.9.2"
         mysqlVersion = "8.0.32"
-        sqliteVersion = "3.40.1.0"
+        sqliteVersion = "3.41.0.0"
         adventureVersion = "4.12.0"
         hikariVersion = "5.0.1"
         slf4jVersion = "2.0.6"
@@ -96,7 +96,7 @@ subprojects {
         gsonVersion = "2.10.1"
         dependencyDownloadVersion = "1.3.0"
 
-        bstatsVersion = "3.0.0"
+        bstatsVersion = "3.0.1"
         placeholderapiVersion = "2.11.2"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
