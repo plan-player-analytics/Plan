@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.icon.Family;
@@ -127,6 +128,10 @@ public class ResponseFactory {
     }
 
     private Response forPage(@Untrusted Request request, Page page) {
+        return forPage(request, page, 200);
+    }
+
+    private Response forPage(@Untrusted Request request, Page page, int responseCode) {
         long modified = page.lastModified();
         Optional<Long> etag = Identifiers.getEtag(request);
 
@@ -135,6 +140,7 @@ public class ResponseFactory {
         }
 
         return Response.builder()
+                .setStatus(responseCode)
                 .setMimeType(MimeType.HTML)
                 .setContent(page.toHtml())
                 .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
@@ -185,7 +191,7 @@ public class ResponseFactory {
     }
 
     private Response getCachedOrNew(long modified, String fileName, Function<String, Response> newResponseFunction) {
-        WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
+        WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
         Optional<Long> lastModified = resource.getLastModified();
         if (lastModified.isPresent() && modified == lastModified.get()) {
             return browserCachedNotChangedResponse();
@@ -234,7 +240,7 @@ public class ResponseFactory {
 
     public Response javaScriptResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
+            WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
             String content = UnaryChain.of(resource.asString())
                     .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
@@ -284,7 +290,7 @@ public class ResponseFactory {
 
     public Response cssResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
+            WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
             String content = UnaryChain.of(resource.asString())
                     .chain(theme::replaceThemeColors)
                     .chain(contents -> StringUtils.replace(contents, "/static", getBasePath() + "/static"))
@@ -314,7 +320,7 @@ public class ResponseFactory {
 
     public Response imageResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
+            WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
             ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.IMAGE)
                     .setContent(resource)
@@ -350,7 +356,7 @@ public class ResponseFactory {
             type = MimeType.FONT_BYTESTREAM;
         }
         try {
-            WebResource resource = config.isTrue(PluginSettings.FRONTEND_BETA) ? getPublicOrJarResource(fileName) : getResource(fileName);
+            WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
             ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(type)
                     .setContent(resource);
@@ -514,8 +520,18 @@ public class ResponseFactory {
 
     public Response playerPageResponse(@Untrusted Request request, UUID playerUUID) {
         try {
-            return forPage(request, pageFactory.playerPage(playerUUID));
-        } catch (IllegalStateException e) {
+            Database db = dbSystem.getDatabase();
+            PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+            if (player.getValue(PlayerKeys.REGISTERED).isPresent()) {
+                return forPage(request, pageFactory.playerPage(player));
+            } else {
+                if (config.isTrue(PluginSettings.LEGACY_FRONTEND)) {
+                    return playerNotFound404();
+                } else {
+                    return forPage(request, pageFactory.reactPage(), 404);
+                }
+            }
+        } catch (IllegalStateException notFoundLegacy) {
             return playerNotFound404();
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate player page");

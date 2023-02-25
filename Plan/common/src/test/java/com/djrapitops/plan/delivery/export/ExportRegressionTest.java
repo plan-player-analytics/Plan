@@ -21,7 +21,6 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import extension.FullSystemExtension;
@@ -70,7 +69,6 @@ class ExportRegressionTest {
                 .waitingFor(new HttpWaitStrategy());
         webserver.start();
 
-        config.set(PluginSettings.FRONTEND_BETA, true);
         config.set(WebserverSettings.DISABLED, true);
         config.set(WebserverSettings.EXTERNAL_LINK, "http://" + webserver.getHost() + ":" + webserver.getMappedPort(8080));
         // Avoid accidentally DDoS:ing head image service during tests.

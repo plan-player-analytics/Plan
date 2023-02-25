@@ -87,7 +87,6 @@ class ReverseProxyRegressionTest {
         TestResources.copyResourceToFile(nginxConfig.toFile(), new FileInputStream(TestResources.getTestResourceFile("nginx-reverse-proxy.conf", ReverseProxyRegressionTest.class)));
         webserver.start();
 
-        config.set(PluginSettings.FRONTEND_BETA, true);
         config.set(PluginSettings.SERVER_NAME, "TestServer");
         config.set(WebserverSettings.PORT, PLAN_PORT);
         config.set(WebserverSettings.LOG_ACCESS_TO_CONSOLE, true);

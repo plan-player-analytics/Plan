@@ -172,6 +172,8 @@ public class ConfigUpdater {
                 new ConfigChange.MovedValue("Time.Delays.Ping_player_join_delay", "Time.Delays.Ping_player_join_delay.Time"),
                 new ConfigChange.MovedValue("Time.Delays.Wait_for_DB_Transactions_on_disable", "Time.Delays.Wait_for_DB_Transactions_on_disable.Time"),
                 new ConfigChange.MovedValue("Time.Thresholds.Activity_index.Playtime_threshold", "Time.Thresholds.Activity_index.Playtime_threshold.Time"),
+
+                new ConfigChange.Removed("Plugin.Frontend_BETA"),
         };
     }
 

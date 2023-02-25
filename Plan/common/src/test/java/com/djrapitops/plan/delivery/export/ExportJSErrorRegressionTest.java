@@ -98,6 +98,7 @@ class ExportJSErrorRegressionTest {
         config.set(ExportSettings.PLAYER_PAGES, true);
         config.set(ExportSettings.SERVER_PAGE, true);
         config.set(ExportSettings.PLAYERS_PAGE, true);
+        config.set(WebserverSettings.EXTERNAL_LINK, "http://" + nginx.getHost() + ":" + nginx.getMappedPort(80));
 
         config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
 
@@ -147,8 +148,7 @@ class ExportJSErrorRegressionTest {
     Collection<DynamicTest> exportedWebpageDoesNotHaveErrors(ChromeDriver driver) {
         String[] endpointsToTest = new String[]{
                 "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "/index.html",
-//                "/network/index.html",
-                "/server/index.html",
+                "/index.html",
                 "/players/index.html"
         };
 
@@ -161,6 +161,7 @@ class ExportJSErrorRegressionTest {
 
                     String address = nginx.getBaseUrl("http", 80).toURI().resolve(endpoint).toString();
                     driver.get(address);
+                    Thread.sleep(250);
 
                     List<LogEntry> logs = new ArrayList<>();
                     logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());

@@ -105,7 +105,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportHtml(Path toDirectory, Server server) throws IOException {
-        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isFalse(PluginSettings.LEGACY_FRONTEND)) return;
 
         ServerUUID serverUUID = server.getUuid();
         Path to = toDirectory
@@ -150,7 +150,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportReactRedirects(Path toDirectory, ServerUUID serverUUID) throws IOException {
-        if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isTrue(PluginSettings.LEGACY_FRONTEND)) return;
 
         exportReactRedirects(toDirectory, files, config, getRedirections(serverUUID));
     }
@@ -231,7 +231,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
-        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isFalse(PluginSettings.LEGACY_FRONTEND)) return;
 
         // Style
         exportResources(toDirectory,

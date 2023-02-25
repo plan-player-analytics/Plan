@@ -22,7 +22,6 @@ import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.LangCode;
@@ -84,7 +83,6 @@ class JSErrorRegressionTest {
         PlanConfig config = planSystem.getConfigSystem().getConfig();
         config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
         config.set(ProxySettings.IP, "localhost:" + TEST_PORT_NUMBER);
-        config.set(PluginSettings.FRONTEND_BETA, true);
 
         // Avoid accidentally DDoS:ing head image service during tests.
         config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");

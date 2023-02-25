@@ -93,7 +93,7 @@ public class PlayersPageExporter extends FileExporter {
     }
 
     private void exportHtml(Path toDirectory) throws IOException {
-        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isFalse(PluginSettings.LEGACY_FRONTEND)) return;
 
         Path to = toDirectory
                 .resolve("players")
@@ -116,7 +116,7 @@ public class PlayersPageExporter extends FileExporter {
     }
 
     private void exportReactRedirects(Path toDirectory) throws IOException {
-        if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isTrue(PluginSettings.LEGACY_FRONTEND)) return;
 
         String[] redirections = {"players"};
         exportReactRedirects(toDirectory, files, config, redirections);
@@ -149,7 +149,7 @@ public class PlayersPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(Path toDirectory) throws IOException {
-        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isFalse(PluginSettings.LEGACY_FRONTEND)) return;
 
         // Style
         exportResources(toDirectory,

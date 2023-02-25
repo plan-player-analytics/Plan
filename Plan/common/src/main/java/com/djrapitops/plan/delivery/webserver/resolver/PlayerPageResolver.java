@@ -95,7 +95,7 @@ public class PlayerPageResolver implements Resolver {
             return responseFactory.rawPlayerPageResponse(playerUUID);
         }
 
-        if (path.getPart(2).isPresent() && config.isFalse(PluginSettings.FRONTEND_BETA)) {
+        if (path.getPart(2).isPresent() && config.isTrue(PluginSettings.LEGACY_FRONTEND)) {
             // Redirect /player/{uuid/name}/ to /player/{uuid}
             return responseFactory.redirectResponse("../" + Html.encodeToURL(playerUUID.toString()));
         }

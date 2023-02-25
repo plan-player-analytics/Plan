@@ -21,6 +21,7 @@ Plugin:
   Configuration:
     Allow_proxy_to_manage_settings: true
   Frontend_BETA: false
+  Use_Legacy_Frontend: false
 # -----------------------------------------------------
 # Supported databases: SQLite, MySQL
 # -----------------------------------------------------

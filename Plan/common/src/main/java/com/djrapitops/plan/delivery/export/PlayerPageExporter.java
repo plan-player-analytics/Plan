@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.web.ResourceService;
@@ -31,6 +32,7 @@ import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -114,12 +116,14 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private void exportHtml(ExportPaths exportPaths, Path playerDirectory, UUID playerUUID) throws IOException {
-        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isFalse(PluginSettings.LEGACY_FRONTEND)) return;
 
         Path to = playerDirectory.resolve("index.html");
 
         try {
-            Page page = pageFactory.playerPage(playerUUID);
+            Database db = dbSystem.getDatabase();
+            PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+            Page page = pageFactory.playerPage(player);
             export(to, exportPaths.resolveExportPaths(page.toHtml()));
         } catch (IllegalStateException notFound) {
             throw new NotFoundException(notFound.getMessage());
@@ -127,7 +131,7 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private void exportReactRedirects(Path toDirectory, UUID playerUUID) throws IOException {
-        if (config.isFalse(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isTrue(PluginSettings.LEGACY_FRONTEND)) return;
 
         exportReactRedirects(toDirectory, files, config, getRedirections(playerUUID));
     }
@@ -160,7 +164,7 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private void exportRequiredResources(ExportPaths exportPaths, Path toDirectory) throws IOException {
-        if (config.isTrue(PluginSettings.FRONTEND_BETA)) return;
+        if (config.isFalse(PluginSettings.LEGACY_FRONTEND)) return;
 
         // Style
         exportResources(exportPaths, toDirectory,

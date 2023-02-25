@@ -42,7 +42,7 @@ public class ResourceSettings {
     }
 
     public boolean shouldBeCustomized(String plugin, @Untrusted String fileName) {
-        if (config.isTrue(CustomizedFileSettings.WEB_DEV_MODE) && config.isFalse(PluginSettings.FRONTEND_BETA)) {
+        if (config.isTrue(CustomizedFileSettings.WEB_DEV_MODE) && config.isTrue(PluginSettings.LEGACY_FRONTEND)) {
             return true;
         }
 

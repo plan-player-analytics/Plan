@@ -36,7 +36,6 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
@@ -100,7 +99,7 @@ public class PageFactory {
     }
 
     public Page playersPage() throws IOException {
-        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+        if (config.get().isFalse(PluginSettings.LEGACY_FRONTEND)) {
             return reactPage();
         }
 
@@ -138,7 +137,7 @@ public class PageFactory {
         Server server = dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID))
                 .orElseThrow(() -> new NotFoundException("Server not found in the database"));
 
-        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+        if (config.get().isFalse(PluginSettings.LEGACY_FRONTEND)) {
             return reactPage();
         }
 
@@ -157,11 +156,8 @@ public class PageFactory {
         );
     }
 
-    public Page playerPage(UUID playerUUID) throws IOException {
-        Database db = dbSystem.get().getDatabase();
-        PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
-
-        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+    public Page playerPage(PlayerContainer player) throws IOException {
+        if (config.get().isFalse(PluginSettings.LEGACY_FRONTEND)) {
             return reactPage();
         }
 
@@ -211,7 +207,7 @@ public class PageFactory {
     }
 
     public Page networkPage() throws IOException {
-        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+        if (config.get().isFalse(PluginSettings.LEGACY_FRONTEND)) {
             return reactPage();
         }
 
@@ -272,7 +268,7 @@ public class PageFactory {
     }
 
     public Page loginPage() throws IOException {
-        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+        if (config.get().isFalse(PluginSettings.LEGACY_FRONTEND)) {
             return reactPage();
         }
 
@@ -280,7 +276,7 @@ public class PageFactory {
     }
 
     public Page registerPage() throws IOException {
-        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+        if (config.get().isFalse(PluginSettings.LEGACY_FRONTEND)) {
             return reactPage();
         }
 
@@ -288,7 +284,7 @@ public class PageFactory {
     }
 
     public Page queryPage() throws IOException {
-        if (config.get().isTrue(PluginSettings.FRONTEND_BETA)) {
+        if (config.get().isFalse(PluginSettings.LEGACY_FRONTEND)) {
             return reactPage();
         }
         return new QueryPage(

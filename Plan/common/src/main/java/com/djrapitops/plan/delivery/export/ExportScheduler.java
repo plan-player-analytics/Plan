@@ -86,7 +86,7 @@ public class ExportScheduler extends PluginRunnable {
     }
 
     private void scheduleReactExport() {
-        if (config.isFalse(PluginSettings.FRONTEND_BETA) ||
+        if (config.isTrue(PluginSettings.LEGACY_FRONTEND) ||
                 config.isFalse(ExportSettings.SERVER_PAGE) &&
                         config.isFalse(ExportSettings.PLAYER_PAGES) &&
                         config.isFalse(ExportSettings.PLAYERS_PAGE)) {return;}
