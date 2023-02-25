@@ -1,12 +1,9 @@
 import React, {useCallback, useState} from 'react';
-import {Card, Dropdown} from "react-bootstrap-v5";
+import {Card, Dropdown} from "react-bootstrap";
 import ServersTable, {ServerSortOption} from "../../table/ServersTable";
 import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
-import DropdownMenu from "react-bootstrap-v5/lib/esm/DropdownMenu";
-import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
 import {CardLoader} from "../../navigation/Loader";
 
 const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
@@ -20,18 +17,18 @@ const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
 
     return (
         <Dropdown className="float-end" style={{position: "absolute", right: "0.5rem"}}>
-            <DropdownToggle variant=''>
+            <Dropdown.Toggle variant=''>
                 <Fa icon={getSortIcon()}/> {t(sortBy.label)}
-            </DropdownToggle>
+            </Dropdown.Toggle>
 
-            <DropdownMenu>
+            <Dropdown.Menu>
                 <h6 className="dropdown-header">{t('html.label.sortBy')}</h6>
                 {sortOptions.map((option, i) => (
-                    <DropdownItem key={i} onClick={() => setSortBy(option)}>
+                    <Dropdown.Item key={i} onClick={() => setSortBy(option)}>
                         {t(option.label)}
-                    </DropdownItem>
+                    </Dropdown.Item>
                 ))}
-            </DropdownMenu>
+            </Dropdown.Menu>
         </Dropdown>
     )
 }

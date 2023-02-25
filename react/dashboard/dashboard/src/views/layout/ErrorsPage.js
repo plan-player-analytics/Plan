@@ -8,7 +8,7 @@ import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchErrorLogs} from "../../service/metadataService";
 import ErrorPage from "./ErrorPage";
 import ErrorsAccordion from "../../components/accordion/ErrorsAccordion";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 
 const ErrorsPage = () => {
     const {data, loadingError} = useDataRequest(fetchErrorLogs, []);

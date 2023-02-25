@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import ExtensionCard, {ExtensionCardWrapper} from "../../components/extensions/ExtensionCard";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import Masonry from "masonry-layout";
 import {usePlayer} from "../layout/PlayerPage";

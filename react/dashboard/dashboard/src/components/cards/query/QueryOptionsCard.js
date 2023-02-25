@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchFilters, postQuery} from "../../../service/queryService";
@@ -61,8 +61,8 @@ const QueryOptionsCard = () => {
 
     // View state handling
     const [invalidFields, setInvalidFields] = useState([]);
-    const setAsInvalid = id => setInvalidFields([...invalidFields, id]);
-    const setAsValid = id => setInvalidFields(invalidFields.filter(invalid => id !== invalid));
+    const setAsInvalid = useCallback(id => setInvalidFields([...invalidFields, id]), [setInvalidFields, invalidFields]);
+    const setAsValid = useCallback(id => setInvalidFields(invalidFields.filter(invalid => id !== invalid)), [setInvalidFields, invalidFields]);
 
     const [extremes, setExtremes] = useState(undefined);
     /*eslint-disable react-hooks/exhaustive-deps */

@@ -9,7 +9,7 @@ const NetworkGeolocations = () => {
     const {data: pingData, loadingError: pingLoadingError} = useDataRequest(fetchNetworkPingTable, []);
 
     return (
-        <Geolocations className={"network_geolocations"}
+        <Geolocations className={"network-geolocations"}
                       geolocationData={data} geolocationError={loadingError}
                       pingData={pingData} pingError={pingLoadingError}
         />

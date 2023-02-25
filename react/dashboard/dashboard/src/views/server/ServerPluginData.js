@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import Masonry from "masonry-layout";
 import LoadIn from "../../components/animation/LoadIn";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import ExtensionCard, {ExtensionCardWrapper} from "../../components/extensions/ExtensionCard";
 import Loader from "../../components/navigation/Loader";
 import {useTranslation} from "react-i18next";

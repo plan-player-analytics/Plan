@@ -2,7 +2,7 @@ import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import ErrorView from "../ErrorView";
 import LoadIn from "../../components/animation/LoadIn";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col} from "react-bootstrap";
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
 import {fetchNetworkOverview} from "../../service/networkService";
@@ -11,6 +11,8 @@ import {CardLoader} from "../../components/navigation/Loader";
 import Datapoint from "../../components/Datapoint";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import NetworkOnlineActivityGraphsCard from "../../components/cards/server/graphs/NetworkOnlineActivityGraphsCard";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableCardBody from "../../components/layout/extension/ExtendableCardBody";
 
 
 const RecentPlayersCard = ({data}) => {
@@ -25,7 +27,7 @@ const RecentPlayersCard = ({data}) => {
                     {t('html.label.players')}
                 </h6>
             </Card.Header>
-            <Card.Body>
+            <ExtendableCardBody id={'card-body-network-overview-players'}>
                 <p>{t('html.label.last24hours')}</p>
                 <Datapoint icon={faUsers} color="light-blue"
                            name={t('html.label.uniquePlayers')} value={data.unique_players_1d}/>
@@ -41,7 +43,7 @@ const RecentPlayersCard = ({data}) => {
                            name={t('html.label.uniquePlayers')} value={data.unique_players_30d}/>
                 <Datapoint icon={faUsers} color="light-green"
                            name={t('html.label.newPlayers')} value={data.new_players_30d}/>
-            </Card.Body>
+            </ExtendableCardBody>
         </Card>
     )
 }
@@ -56,22 +58,22 @@ const NetworkOverview = () => {
     return (
         <LoadIn>
             <section className="network_overview">
-                <Row>
+                <ExtendableRow id={'row-network-overview-0'}>
                     <Col lg={9}>
                         <NetworkOnlineActivityGraphsCard/>
                     </Col>
                     <Col lg={3}>
                         <RecentPlayersCard data={data?.players}/>
                     </Col>
-                </Row>
-                <Row>
+                </ExtendableRow>
+                <ExtendableRow id={'row-network-overview-1'}>
                     <Col lg={4}>
                         <ServerAsNumbersCard data={data?.numbers}/>
                     </Col>
                     <Col lg={8}>
                         <ServerWeekComparisonCard data={data?.weeks}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

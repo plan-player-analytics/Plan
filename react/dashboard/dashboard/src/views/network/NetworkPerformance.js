@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import LoadIn from "../../components/animation/LoadIn";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col} from "react-bootstrap";
 import {useMetadata} from "../../hooks/metadataHook";
 import CardHeader from "../../components/cards/CardHeader";
 import {faServer} from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,7 @@ import PerformanceAsNumbersCard from "../../components/cards/server/tables/Perfo
 import {useNavigation} from "../../hooks/navigationHook";
 import {mapPerformanceDataToSeries} from "../../util/graphs";
 import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const NetworkPerformance = () => {
     const {t} = useTranslation();
@@ -87,13 +88,13 @@ const NetworkPerformance = () => {
     const isUpToDate = visualizedServers.every((s, i) => s === selectedOptions[i]);
     return (
         <LoadIn>
-            <section className={"network_performance"}>
-                <Row>
+            <section className={"network-performance"}>
+                <ExtendableRow id={'row-network-performance-0'}>
                     <Col>
                         <PerformanceGraphsCard data={performanceData}/>
                     </Col>
-                </Row>
-                <Row>
+                </ExtendableRow>
+                <ExtendableRow id={'row-network-performance-1'}>
                     <Col md={8}>
                         <PerformanceAsNumbersCard data={performanceData?.overview?.numbers}/>
                     </Col>
@@ -108,7 +109,7 @@ const NetworkPerformance = () => {
                             </button>
                         </Card>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

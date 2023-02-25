@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import Scrollable from "../../components/Scrollable";
@@ -10,6 +10,7 @@ import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
 import PlayerPingGraph from "../../components/graphs/PlayerPingGraph";
 import LoadIn from "../../components/animation/LoadIn";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const PingGraphCard = ({player}) => {
     const {t} = useTranslation();
@@ -70,20 +71,20 @@ const PlayerServers = () => {
     const {player} = usePlayer();
     return (
         <LoadIn>
-            <section className="player_sessions">
-                <Row>
+            <section className="player-servers">
+                <ExtendableRow id={'row-player-servers-0'}>
                     <Col lg={12}>
                         <PingGraphCard player={player}/>
                     </Col>
-                </Row>
-                <Row>
+                </ExtendableRow>
+                <ExtendableRow id={'row-player-servers-1'}>
                     <Col lg={8}>
                         <ServersCard player={player}/>
                     </Col>
                     <Col lg={4}>
                         <ServerPieCard player={player}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

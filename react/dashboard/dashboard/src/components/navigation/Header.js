@@ -2,11 +2,8 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {useAuth} from "../../hooks/authenticationHook";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBars, faClockRotateLeft, faCog, faDoorOpen, faPalette, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
-import DropdownMenu from "react-bootstrap-v5/lib/esm/DropdownMenu";
-import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
 import {useTheme} from "../../hooks/themeHook";
-import {Dropdown} from "react-bootstrap-v5";
-import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
+import {Dropdown} from "react-bootstrap";
 import {localeService} from "../../service/localeService";
 import {useTranslation} from "react-i18next";
 import {useNavigation} from "../../hooks/navigationHook";
@@ -71,23 +68,23 @@ const Header = ({page, tab, hideUpdater}) => {
             <div className="topbar-divider"/>
 
             <Dropdown className="nav-item">
-                <DropdownToggle variant=''>
+                <Dropdown.Toggle variant=''>
                     {authRequired && user ? <>
                         <span className="me-1 login-username">{user.username} </span>
                         <img alt="user img" className="rounded-circle" src={headImageUrl} style={{height: "2rem"}}/>
                     </> : <>
                         <Fa icon={faCog} className="me-2"/>
                     </>}
-                </DropdownToggle>
+                </Dropdown.Toggle>
 
-                <DropdownMenu>
-                    <DropdownItem onClick={toggleColorChooser}>
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={toggleColorChooser}>
                         <Fa icon={faPalette}/> {t('html.label.themeSelect')}
-                    </DropdownItem>
-                    {authRequired ? <DropdownItem href={baseAddress + "/auth/logout"}>
+                    </Dropdown.Item>
+                    {authRequired ? <Dropdown.Item href={baseAddress + "/auth/logout"}>
                         <Fa icon={faDoorOpen}/> {t('html.login.logout')}
-                    </DropdownItem> : ''}
-                </DropdownMenu>
+                    </Dropdown.Item> : ''}
+                </Dropdown.Menu>
             </Dropdown>
         </nav>
     )

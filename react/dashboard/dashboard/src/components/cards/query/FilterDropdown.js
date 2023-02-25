@@ -1,9 +1,6 @@
 import React from 'react';
-import DropdownToggle from "react-bootstrap-v5/lib/esm/DropdownToggle";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import DropdownMenu from "react-bootstrap-v5/lib/esm/DropdownMenu";
-import DropdownItem from "react-bootstrap-v5/lib/esm/DropdownItem";
-import {Dropdown} from "react-bootstrap-v5";
+import {Dropdown} from "react-bootstrap";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import Scrollable from "../../Scrollable";
@@ -47,20 +44,20 @@ const FilterDropdown = ({filterOptions, filters, setFilters}) => {
 
     return (
         <Dropdown>
-            <DropdownToggle variant=''>
+            <Dropdown.Toggle variant=''>
                 <Fa icon={faPlus}/> {t('html.query.filters.add')}
-            </DropdownToggle>
+            </Dropdown.Toggle>
 
-            <DropdownMenu popperConfig={{strategy: "absolute"}}>
+            <Dropdown.Menu popperConfig={{strategy: "absolute"}}>
                 <h6 className="dropdown-header">{t('html.query.filters.add')}</h6>
                 <Scrollable>
                     {filterOptions.map((option, i) => (
-                        <DropdownItem key={i} onClick={() => addFilter(option)}>
+                        <Dropdown.Item key={i} onClick={() => addFilter(option)}>
                             {getReadableFilterName(option)}
-                        </DropdownItem>
+                        </Dropdown.Item>
                     ))}
                 </Scrollable>
-            </DropdownMenu>
+            </Dropdown.Menu>
         </Dropdown>
     )
 };

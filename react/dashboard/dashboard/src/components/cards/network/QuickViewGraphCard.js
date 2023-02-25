@@ -1,6 +1,6 @@
 import React from 'react';
 import CardHeader from "../CardHeader";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
 import {faChartArea} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";

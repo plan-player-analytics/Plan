@@ -3,7 +3,7 @@ import {useTheme} from "../../hooks/themeHook";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCloudMoon, faPalette} from "@fortawesome/free-solid-svg-icons";
 import {colorEnumToBgClass} from "../../util/colors";
-import {Modal} from "react-bootstrap-v5";
+import {Modal} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 
 const ColorSelectorButton = ({color, setColor, disabled}) =>

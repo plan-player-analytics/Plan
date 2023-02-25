@@ -3,7 +3,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCrosshairs, faServer, faSignal, faSkull, faUser} from "@fortawesome/free-solid-svg-icons";
 import {faCalendarPlus, faClock, faMap} from "@fortawesome/free-regular-svg-icons";
 import Datapoint from "../Datapoint";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col, Row} from "react-bootstrap";
 import WorldPie from "../graphs/WorldPie";
 import KillsTable from "../table/KillsTable";
 import Accordion from "./Accordion";

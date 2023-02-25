@@ -3,9 +3,10 @@ import {useDataRequest} from "../../hooks/dataFetchHook";
 import {useParams} from "react-router-dom";
 import {fetchPlayers} from "../../service/serverService";
 import ErrorView from "../ErrorView";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col} from "react-bootstrap";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
 import LoadIn from "../../components/animation/LoadIn";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const ServerPlayers = () => {
     const {identifier} = useParams();
@@ -16,12 +17,12 @@ const ServerPlayers = () => {
 
     return (
         <LoadIn>
-            <section className="server_players">
-                <Row>
+            <section className="server-players">
+                <ExtendableRow id={'row-server-players-0'}>
                     <Col md={12}>
                         <PlayerListCard data={data}/>
                     </Col>
-                </Row>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

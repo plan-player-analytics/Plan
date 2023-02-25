@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ErrorView from "../ErrorView";
 import LoadIn from "../../components/animation/LoadIn";
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import ExtensionCard from "../../components/extensions/ExtensionCard";
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";

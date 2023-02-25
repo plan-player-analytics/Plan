@@ -4,7 +4,7 @@ import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchJoinAddressPie} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView";
 import {CardLoader} from "../../../navigation/Loader";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLocationArrow} from "@fortawesome/free-solid-svg-icons";
 import GroupVisualizer from "../../../graphs/GroupVisualizer";

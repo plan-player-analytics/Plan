@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {InputGroup} from "react-bootstrap-v5";
+import {InputGroup} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 

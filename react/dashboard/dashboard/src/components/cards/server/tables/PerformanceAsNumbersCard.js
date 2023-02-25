@@ -2,7 +2,7 @@ import React from 'react';
 import PerformanceAsNumbersTable from "../../../table/PerformanceAsNumbersTable";
 import CardHeader from "../../CardHeader";
 import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 
 const PerformanceAsNumbersCard = ({data}) => {
     return (

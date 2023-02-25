@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
 import logo from '../../Flaticon_circle.png'
-import {Alert, Card, Col, Row} from "react-bootstrap-v5";
+import {Alert, Card, Col, Row} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";

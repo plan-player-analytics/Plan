@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Col, Row} from "react-bootstrap-v5";
+import {Col} from "react-bootstrap";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServersOverview} from "../../service/networkService";
 import ErrorView from "../ErrorView";
 import ServersTableCard from "../../components/cards/network/ServersTableCard";
 import QuickViewGraphCard from "../../components/cards/network/QuickViewGraphCard";
 import QuickViewDataCard from "../../components/cards/network/QuickViewDataCard";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const NetworkServers = () => {
     const [selectedServer, setSelectedServer] = useState(0);
@@ -17,7 +18,7 @@ const NetworkServers = () => {
     }
 
     return (
-        <Row>
+        <ExtendableRow id={'row-network-servers-0'}>
             <Col md={6}>
                 <ServersTableCard loaded={Boolean(data)} servers={data?.servers || []}
                                   onSelect={(index) => setSelectedServer(index)}/>
@@ -26,7 +27,7 @@ const NetworkServers = () => {
                 {data?.servers.length && <QuickViewGraphCard server={data.servers[selectedServer]}/>}
                 {data?.servers.length && <QuickViewDataCard server={data.servers[selectedServer]}/>}
             </Col>
-        </Row>
+        </ExtendableRow>
     )
 };
 

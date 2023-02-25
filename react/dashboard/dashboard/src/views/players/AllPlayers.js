@@ -2,10 +2,11 @@ import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchPlayers} from "../../service/serverService";
 import ErrorView from "../ErrorView";
-import {Col, Row} from "react-bootstrap-v5";
+import {Col} from "react-bootstrap";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
 import LoadIn from "../../components/animation/LoadIn";
 import {CardLoader} from "../../components/navigation/Loader";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const AllPlayers = () => {
     const {data, loadingError} = useDataRequest(fetchPlayers, [null]);
@@ -14,11 +15,11 @@ const AllPlayers = () => {
 
     return (
         <LoadIn>
-            <Row>
+            <ExtendableRow id={'row-player-list-0'}>
                 <Col md={12}>
                     {data ? <PlayerListCard data={data}/> : <CardLoader/>}
                 </Col>
-            </Row>
+            </ExtendableRow>
         </LoadIn>
     )
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {createRoot} from "react-dom/client";
 import './index.css';
 import App from './App';
 
@@ -16,9 +16,12 @@ library.add(fab);
 library.add(fas);
 library.add(far);
 
-localeService.init().then(() => ReactDOM.render(
-    <React.StrictMode>
-        <App/>
-    </React.StrictMode>,
-    document.getElementById('root')
-));
+localeService.init().then(() => {
+    const container = document.getElementById('root');
+    const root = createRoot(container);
+    root.render(
+        <React.StrictMode>
+            <App/>
+        </React.StrictMode>
+    );
+});

@@ -1,5 +1,5 @@
 import React from "react";
-import {Card} from "react-bootstrap-v5";
+import {Card} from "react-bootstrap";
 
 export const CardLoader = () => {
     return (

@@ -1,4 +1,4 @@
-import {Card, Col, Row} from "react-bootstrap-v5";
+import {Card, Col, Row} from "react-bootstrap";
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBug} from "@fortawesome/free-solid-svg-icons";
