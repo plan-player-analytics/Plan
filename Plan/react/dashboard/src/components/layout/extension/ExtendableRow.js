@@ -5,13 +5,13 @@ import {usePageExtension} from "../../../hooks/pageExtensionHook";
 const ExtendableRow = ({id, className, children}) => {
     const [elementsBefore, setElementsBefore] = useState([]);
     const [elementsAfter, setElementsAfter] = useState([]);
-    const {onRender, onUnmount} = usePageExtension();
+    const {onRender, onUnmount, context} = usePageExtension();
 
     const render = useCallback(async () => {
         if (!onRender) return;
-        setElementsBefore(await onRender(id, 'beforeElement'));
-        setElementsAfter(await onRender(id, 'afterElement'));
-    }, [setElementsBefore, setElementsAfter, id, onRender])
+        setElementsBefore(await onRender(id, 'beforeElement', context));
+        setElementsAfter(await onRender(id, 'afterElement', context));
+    }, [setElementsBefore, setElementsAfter, id, onRender, context])
     useEffect(() => {
         render();
 
