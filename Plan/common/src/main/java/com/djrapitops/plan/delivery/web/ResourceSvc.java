@@ -133,7 +133,7 @@ public class ResourceSvc implements ResourceService {
             return "Error: Given resource did not support WebResource#asString method properly and returned 'null'";
         }
 
-        if (fileName.equals("index.html")) {
+        if ("index.html".equals(fileName)) {
             StringBuilder toHead = byPosition.get(Position.PRE_CONTENT);
             if (toHead != null) {
                 html = StringUtils.replaceOnce(html, "</head>", toHead.append("</head>").toString());
