@@ -50,9 +50,9 @@ const GroupVisualizer = ({groups, colors, name, horizontal}) => {
         top: "0.5rem"
     };
 
-    const changeViewToPie = useCallback(() => setVisualization(options.PIE), [setVisualization, options])
-    const changeViewToTable = useCallback(() => setVisualization(options.TABLE), [setVisualization, options])
-    const changeViewToBar = useCallback(() => setVisualization(horizontal ? options.BAR : options.COLUMN), [setVisualization, horizontal, options])
+    const changeViewToPie = useCallback(() => setVisualization(options.PIE), [setVisualization])
+    const changeViewToTable = useCallback(() => setVisualization(options.TABLE), [setVisualization])
+    const changeViewToBar = useCallback(() => setVisualization(horizontal ? options.BAR : options.COLUMN), [setVisualization, horizontal])
 
     const fallbackFunction = useCallback((error) => <ErrorViewText error={error}/>, []);
 
