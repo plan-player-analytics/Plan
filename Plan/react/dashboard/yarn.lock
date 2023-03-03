@@ -3943,10 +3943,10 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-datatables.net-bs5@>=1.12.1, datatables.net-bs5@^1.13.2:
-  version "1.13.2"
-  resolved "https://registry.yarnpkg.com/datatables.net-bs5/-/datatables.net-bs5-1.13.2.tgz#580bf08224c25cf7a86e94772757199babee7fe5"
-  integrity sha512-p1JOXFi+VD4wS0AxRmJPHBylJ8AC4xGJ3j0TZ+8hMspuZ+QvAhEqEPt8OEAGVzlN1ElfQimZjBeAoES/9nsuig==
+datatables.net-bs5@>=1.12.1, datatables.net-bs5@^1.13.3:
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/datatables.net-bs5/-/datatables.net-bs5-1.13.3.tgz#5b5a51fe48f26f5b8e37f28c8b2aee485291c3ac"
+  integrity sha512-yaZ89SjP1INIotvCVaBkgQ0VPvWTAfywG3dmBaVIosa4u0vUAqlx1+aYyL8WXgqmklSQda3nXdNwJu0OrPw84A==
   dependencies:
     datatables.net ">=1.12.1"
     jquery ">=1.7"
