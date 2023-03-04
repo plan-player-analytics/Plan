@@ -24,7 +24,7 @@ export const MetadataContextProvider = ({children}) => {
         } else if (error) {
             setMetadata({metadataError: error})
         }
-    }, [])
+    }, [authRequired, authLoaded, loggedIn]);
 
     const getPlayerHeadImageUrl = useCallback((name, uuid) => {
         if (!uuid && name === 'console') {

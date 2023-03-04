@@ -27,7 +27,6 @@ import javax.inject.Singleton;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * ResolverService Implementation.
@@ -59,12 +58,18 @@ public class ResolverSvc implements ResolverService {
     public void registerResolver(String pluginName, String start, Resolver resolver) {
         basicResolvers.add(new Container(pluginName, checking -> checking.startsWith(start), resolver, start));
         Collections.sort(basicResolvers);
+        if (config.isTrue(PluginSettings.DEV_MODE)) {
+            logger.info("Registered basic resolver '" + start + "' for plugin " + pluginName);
+        }
     }
 
     @Override
     public void registerResolverForMatches(String pluginName, Pattern pattern, Resolver resolver) {
         regexResolvers.add(new Container(pluginName, pattern.asPredicate(), resolver, pattern.pattern()));
         Collections.sort(regexResolvers);
+        if (config.isTrue(PluginSettings.DEV_MODE)) {
+            logger.info("Registered regex resolver '" + pattern.pattern() + "' for plugin " + pluginName);
+        }
     }
 
     @Override
@@ -80,18 +85,19 @@ public class ResolverSvc implements ResolverService {
 
     @Override
     public List<Resolver> getResolvers(@Untrusted String target) {
+        boolean devMode = config.isTrue(PluginSettings.DEV_MODE);
         List<Resolver> resolvers = new ArrayList<>();
         for (Container container : basicResolvers) {
-            if (container.matcher.test(target)) resolvers.add(container.resolver);
+            if (container.matcher.test(target)) {
+                if (devMode) logger.info("Match " + target + " - " + container.plugin + " '" + container.sortBy + "'");
+                resolvers.add(container.resolver);
+            }
         }
         for (Container container : regexResolvers) {
-            if (container.matcher.test(target)) resolvers.add(container.resolver);
-        }
-        if (config.isTrue(PluginSettings.DEV_MODE)) {
-            logger.info("Match Resolvers " + target + " - " + resolvers.stream()
-                    .map(Object::getClass)
-                    .map(Class::getSimpleName)
-                    .collect(Collectors.toList()));
+            if (container.matcher.test(target)) {
+                if (devMode) logger.info("Match " + target + " - " + container.plugin + " '" + container.sortBy + "'");
+                resolvers.add(container.resolver);
+            }
         }
         return resolvers;
     }

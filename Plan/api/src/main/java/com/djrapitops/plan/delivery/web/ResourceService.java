@@ -88,9 +88,9 @@ public interface ResourceService {
         }
         String actualScriptName = scriptName.endsWith(".js") ? scriptName : scriptName + ".js";
 
-        addScriptsToResource(pluginName, fileName, position, pluginName + "/" + actualScriptName);
-        ResolverService.getInstance().registerResolver(pluginName, pluginName + "/" + actualScriptName, (NoAuthResolver) request -> {
-            if (request.getPath().asString().equals(actualScriptName)) {
+        addScriptsToResource(pluginName, fileName, position, "/" + pluginName + "/" + actualScriptName);
+        ResolverService.getInstance().registerResolver(pluginName, "/" + pluginName + "/" + actualScriptName, (NoAuthResolver) request -> {
+            if (request.getPath().asString().endsWith(actualScriptName)) {
                 return Optional.of(Response.builder()
                         .setContent(javascriptAsString)
                         .setMimeType(MimeType.JS)
