@@ -20,6 +20,10 @@ import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.storage.file.PublicHtmlFiles;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,37 +36,51 @@ import javax.inject.Singleton;
 @Singleton
 public class WebServerSystem implements SubSystem {
 
+    private final PlanConfig config;
     private final Addresses addresses;
     private final ActiveCookieStore activeCookieStore;
+    private final PublicHtmlFiles publicHtmlFiles;
     private final WebServer webServer;
+    private final PluginLogger logger;
 
     @Inject
     public WebServerSystem(
+            PlanConfig config,
             Addresses addresses,
             ActiveCookieStore activeCookieStore,
-            WebServer webServer
-    ) {
+            PublicHtmlFiles publicHtmlFiles,
+            WebServer webServer,
+            PluginLogger logger) {
+        this.config = config;
         this.addresses = addresses;
         this.activeCookieStore = activeCookieStore;
+        this.publicHtmlFiles = publicHtmlFiles;
         this.webServer = webServer;
+        this.logger = logger;
     }
 
     @Override
     public void enable() {
         activeCookieStore.enable();
         webServer.enable();
-        if (!webServer.isAuthRequired()) {
-            ResourceService.getInstance().addStylesToResource("Plan", "error.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
-            ResourceService.getInstance().addStylesToResource("Plan", "server.html", ResourceService.Position.PRE_CONTENT, "../css/noauth.css");
-            ResourceService.getInstance().addStylesToResource("Plan", "player.html", ResourceService.Position.PRE_CONTENT, "../css/noauth.css");
-            ResourceService.getInstance().addStylesToResource("Plan", "players.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
-            ResourceService.getInstance().addStylesToResource("Plan", "network.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
-            ResourceService.getInstance().addStylesToResource("Plan", "query.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
-        }
-        if (webServer.isEnabled()) {
-            ResourceService.getInstance().addStylesToResource("Plan", "server.html", ResourceService.Position.PRE_CONTENT, "../css/querybutton.css");
-            ResourceService.getInstance().addStylesToResource("Plan", "players.html", ResourceService.Position.PRE_CONTENT, "./css/querybutton.css");
-            ResourceService.getInstance().addStylesToResource("Plan", "network.html", ResourceService.Position.PRE_CONTENT, "./css/querybutton.css");
+        if (config.isTrue(PluginSettings.LEGACY_FRONTEND)) {
+            if (!webServer.isAuthRequired()) {
+                ResourceService.getInstance().addStylesToResource("Plan", "error.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+                ResourceService.getInstance().addStylesToResource("Plan", "server.html", ResourceService.Position.PRE_CONTENT, "../css/noauth.css");
+                ResourceService.getInstance().addStylesToResource("Plan", "player.html", ResourceService.Position.PRE_CONTENT, "../css/noauth.css");
+                ResourceService.getInstance().addStylesToResource("Plan", "players.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+                ResourceService.getInstance().addStylesToResource("Plan", "network.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+                ResourceService.getInstance().addStylesToResource("Plan", "query.html", ResourceService.Position.PRE_CONTENT, "./css/noauth.css");
+            }
+            if (webServer.isEnabled()) {
+                ResourceService.getInstance().addStylesToResource("Plan", "server.html", ResourceService.Position.PRE_CONTENT, "../css/querybutton.css");
+                ResourceService.getInstance().addStylesToResource("Plan", "players.html", ResourceService.Position.PRE_CONTENT, "./css/querybutton.css");
+                ResourceService.getInstance().addStylesToResource("Plan", "network.html", ResourceService.Position.PRE_CONTENT, "./css/querybutton.css");
+            }
+        } else {
+            if (publicHtmlFiles.findPublicHtmlResource("index.html").isPresent()) {
+                logger.info("Found index.html in public_html, using a custom React bundle!");
+            }
         }
     }
 
