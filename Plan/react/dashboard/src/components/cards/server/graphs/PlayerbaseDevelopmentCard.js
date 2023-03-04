@@ -5,18 +5,27 @@ import {ErrorViewCard} from "../../../../views/ErrorView";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartLine} from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import React, {useCallback} from "react";
 import PlayerbaseGraph from "../../../graphs/PlayerbaseGraph";
 import {CardLoader} from "../../../navigation/Loader";
+import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
+import {useNavigation} from "../../../../hooks/navigationHook";
 
 export const PlayerbaseDevelopmentCardWithData = ({data, title}) => {
     const {t} = useTranslation();
+    const {setHelpModalTopic} = useNavigation();
+
+    const openHelp = useCallback(() => setHelpModalTopic('activity-index'), [setHelpModalTopic]);
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-black" style={{width: "100%"}}>
                     <Fa className="col-amber"
                         icon={faChartLine}/> {t(title ? title : 'html.label.playerbaseDevelopment')}
+                    <button className={"float-end"} onClick={openHelp}>
+                        <Fa className={"col-blue"}
+                            icon={faQuestionCircle}/>
+                    </button>
                 </h6>
             </Card.Header>
             <PlayerbaseGraph data={data}/>

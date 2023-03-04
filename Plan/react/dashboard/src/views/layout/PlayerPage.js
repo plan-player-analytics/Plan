@@ -11,6 +11,7 @@ import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import ErrorPage from "./ErrorPage";
 
+const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
 const PlayerPage = () => {
     const {t, i18n} = useTranslation();
@@ -59,6 +60,7 @@ const PlayerPage = () => {
                     </main>
                     <aside>
                         <ColorSelectorModal/>
+                        <React.Suspense fallback={""}><HelpModal/></React.Suspense>
                     </aside>
                 </div>
             </div>

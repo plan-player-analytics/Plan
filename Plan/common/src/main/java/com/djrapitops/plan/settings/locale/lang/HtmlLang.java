@@ -304,6 +304,19 @@ public enum HtmlLang implements Lang {
     QUERY_SERVERS_TWO("html.query.label.servers.two", "using data of 2 servers"),
     QUERY_SERVERS_MANY("html.query.label.servers.many", "using data of {number} servers"),
 
+    HELP_TEST_RESULT("html.label.help.testResult", "Test result"),
+    HELP_TEST_IT_OUT("html.label.help.testPrompt", "Test it out:"),
+    HELP_ACTIVITY_INDEX("html.label.help.activityIndexBasis", "Activity index is based on non-AFK playtime in the past 3 weeks (21 days). Each week is considered separately."),
+    HELP_ACTIVITY_INDEX_THRESHOLD("html.label.help.threshold", "Threshold"),
+    HELP_ACTIVITY_INDEX_WEEK("html.label.help.activityIndexWeek", "Week {}"),
+    HELP_ACTIVITY_INDEX_THRESHOLD_UNIT("html.label.help.thresholdUnit", "hours / week"),
+    HELP_ACTIVITY_INDEX_PLAYTIME_UNIT("html.label.help.playtimeUnit", "hours"),
+    HELP_ACTIVITY_INDEX_EXAMPLE_1("html.label.help.activityIndexExample1", "If someone plays as much as threshold every week, they are given activity index ~3."),
+    HELP_ACTIVITY_INDEX_EXAMPLE_2("html.label.help.activityIndexExample2", "Very active is ~2x the threshold (y ≥ 3.75)."),
+    HELP_ACTIVITY_INDEX_EXAMPLE_3("html.label.help.activityIndexExample3", "The index approaches 5 indefinitely."),
+    HELP_ACTIVITY_INDEX_VISUALIZATION("html.label.help.activityIndexVisual", "Here is a visualization of the curve where y = activity index, and x = playtime per week / threshold."),
+
+
     WARNING_NO_GAME_SERVERS("html.description.noGameServers", "Some data requires Plan to be installed on game servers."),
     WARNING_NO_GEOLOCATIONS("html.description.noGeolocations", "Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."),
     WARNING_NO_SPONGE_CHUNKS("html.description.noSpongeChunks", "Chunks unavailable on Sponge"),
