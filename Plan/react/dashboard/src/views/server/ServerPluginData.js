@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import Masonry from "masonry-layout";
 import LoadIn from "../../components/animation/LoadIn";
 import {Card, Col, Row} from "react-bootstrap";
@@ -11,7 +11,7 @@ import ErrorView from "../ErrorView";
 const ServerPluginData = () => {
     const {t} = useTranslation();
     const {extensionData, extensionDataLoadingError} = useServerExtensionContext();
-    const extensions = extensionData ? extensionData.extensions.filter(extension => !extension.wide) : [];
+    const extensions = useMemo(() => extensionData ? extensionData.extensions.filter(extension => !extension.wide) : [], [extensionData]);
 
     useEffect(() => {
         const masonryRow = document.getElementById('extension-masonry-row');
@@ -24,11 +24,11 @@ const ServerPluginData = () => {
         return () => {
             if (masonry.element) masonry.destroy();
         }
-    }, [])
+    }, [extensions]);
 
     if (extensionDataLoadingError) return <ErrorView error={extensionDataLoadingError}/>;
 
-    if (!extensions || !extensions.length) {
+    if (!extensions?.length) {
         return (
             <LoadIn>
                 <section className="server_plugin_data">
