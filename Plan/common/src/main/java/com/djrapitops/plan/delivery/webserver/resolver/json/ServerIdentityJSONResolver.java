@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.webserver.resolver.json;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
@@ -43,20 +43,13 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 @Singleton
-public class ServerIdentityJSONResolver implements Resolver {
+public class ServerIdentityJSONResolver implements NoAuthResolver {
 
     private final JSONFactory jsonFactory;
 
     @Inject
     public ServerIdentityJSONResolver(JSONFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
-    }
-
-    @Override
-    public boolean canAccess(Request request) {
-        return request.getUser()
-                .map(user -> user.hasPermission("page.server"))
-                .orElse(false);
     }
 
     @GET

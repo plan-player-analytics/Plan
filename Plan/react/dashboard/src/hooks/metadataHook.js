@@ -1,15 +1,19 @@
-import {createContext, useCallback, useContext, useEffect, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {fetchNetworkMetadata, fetchPlanMetadata} from "../service/metadataService";
 
 import terminal from '../Terminal-icon.png'
+import {useAuth} from "./authenticationHook";
 
 const MetadataContext = createContext({});
 
 export const MetadataContextProvider = ({children}) => {
     const [datastore] = useState({});
     const [metadata, setMetadata] = useState({});
+    const {authRequired, authLoaded, loggedIn} = useAuth();
 
     const updateMetadata = useCallback(async () => {
+        if (authRequired && (!authLoaded || !loggedIn)) return;
+
         const {data, error} = await fetchPlanMetadata();
         if (data) {
             setMetadata(data);
@@ -37,9 +41,12 @@ export const MetadataContextProvider = ({children}) => {
 
     useEffect(() => {
         updateMetadata();
-    }, [updateMetadata]);
+    }, [updateMetadata, authLoaded, loggedIn]);
 
-    const sharedState = {...metadata, getPlayerHeadImageUrl, datastore}
+    const sharedState = useMemo(() => {
+            return {...metadata, getPlayerHeadImageUrl, datastore}
+        },
+        [metadata, getPlayerHeadImageUrl, datastore]);
     return (<MetadataContext.Provider value={sharedState}>
             {children}
         </MetadataContext.Provider>

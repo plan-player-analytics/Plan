@@ -17,10 +17,9 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -42,7 +41,7 @@ import java.util.stream.Collectors;
  */
 @Singleton
 @Path("/v1/networkMetadata")
-public class NetworkMetadataJSONResolver implements Resolver {
+public class NetworkMetadataJSONResolver implements NoAuthResolver {
 
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
@@ -51,11 +50,6 @@ public class NetworkMetadataJSONResolver implements Resolver {
     public NetworkMetadataJSONResolver(ServerInfo serverInfo, DBSystem dbSystem) {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
-    }
-
-    @Override
-    public boolean canAccess(Request request) {
-        return request.getUser().orElse(new WebUser("")).hasPermission("page.network");
     }
 
     @GET

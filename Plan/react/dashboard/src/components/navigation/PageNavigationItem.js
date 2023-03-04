@@ -12,12 +12,13 @@ const PageNavigationItem = ({page}) => {
     const navigate = useNavigate();
     const location = useLocation();
     const {authRequired, loggedIn, user} = useAuth();
-    const {networkMetadata} = useMetadata();
+    const metadata = useMetadata();
     const [currentPage, setCurrentPage] = useState(undefined);
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        if (networkMetadata) {
+        const networkMetadata = metadata?.networkMetadata;
+        if (networkMetadata && networkMetadata.servers) {
             const hasProxy = networkMetadata.servers.filter(server => server.proxy).length
 
             let newItems = [
@@ -57,7 +58,7 @@ const PageNavigationItem = ({page}) => {
             setItems(newItems);
             setCurrentPage(newItems.find(item => location.pathname.startsWith(item.href))?.id);
         }
-    }, [t, networkMetadata, location, authRequired, loggedIn, user, page]);
+    }, [t, metadata, location, authRequired, loggedIn, user, page]);
 
     const onSelect = ({target}) => {
         const selected = target.value;
