@@ -306,6 +306,7 @@ public enum HtmlLang implements Lang {
 
     HELP_TEST_RESULT("html.label.help.testResult", "Test result"),
     HELP_TEST_IT_OUT("html.label.help.testPrompt", "Test it out:"),
+    HELP_RETENTION("html.label.help.retentionBasis", "New player retention is calculated based on session data. If a registered player has played within latter half of the timespan, they are considered retained."),
     HELP_ACTIVITY_INDEX("html.label.help.activityIndexBasis", "Activity index is based on non-AFK playtime in the past 3 weeks (21 days). Each week is considered separately."),
     HELP_ACTIVITY_INDEX_THRESHOLD("html.label.help.threshold", "Threshold"),
     HELP_ACTIVITY_INDEX_WEEK("html.label.help.activityIndexWeek", "Week {}"),

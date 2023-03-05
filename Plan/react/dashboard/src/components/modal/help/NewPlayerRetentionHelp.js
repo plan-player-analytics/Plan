@@ -41,10 +41,8 @@ const NewPlayerRetentionHelp = () => {
             },
             yAxis: {
                 type: 'datetime',
-                dateTimeLabelFormats: {
-                    // https://www.php.net/manual/en/function.strftime.php
-                    hour: '%H:00',
-                    day: '%H:00'
+                labels: {
+                    enabled: false
                 },
                 plotLines: [{
                     label: {text: t('html.label.registered')},
@@ -57,7 +55,7 @@ const NewPlayerRetentionHelp = () => {
                     value: session2Time,
                     width: 2
                 }],
-                title: {text: t('html.label.last24hours')}
+                title: {text: t('html.label.last7days')}
             },
             series: [{
                 name: t('html.query.filter.registeredBetween.text'),
@@ -86,8 +84,7 @@ const NewPlayerRetentionHelp = () => {
 
     return (
         <>
-            <p>New player retention is calculated based on session data. If a registered player has played within latter
-                half of the timespan, they are considered retained.</p>
+            <p>{t('html.label.help.retentionBasis')}</p>
             <Graph id={"new-player-retention-help"} options={graphOptions}/>
             <hr/>
             <p>{t('html.label.help.testPrompt')}</p>

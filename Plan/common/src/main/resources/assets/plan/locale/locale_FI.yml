@@ -339,6 +339,7 @@ html:
             activityIndexVisual: "Here is a visualization of the curve where y = activity index, and x = playtime per week / threshold."
             activityIndexWeek: "Week {}"
             playtimeUnit: "hours"
+            retentionBasis: "New player retention is calculated based on session data. If a registered player has played within latter half of the timespan, they are considered retained."
             testPrompt: "Test it out:"
             testResult: "Test result"
             threshold: "Threshold"
