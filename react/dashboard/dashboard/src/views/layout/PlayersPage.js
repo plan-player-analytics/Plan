@@ -10,6 +10,8 @@ import {useMetadata} from "../../hooks/metadataHook";
 import ErrorPage from "./ErrorPage";
 import {staticSite} from "../../service/backendConfiguration";
 
+const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
+
 const PlayersPage = () => {
     const {t, i18n} = useTranslation();
     const {isProxy, networkName, serverName} = useMetadata();
@@ -42,6 +44,7 @@ const PlayersPage = () => {
                     </main>
                     <aside>
                         <ColorSelectorModal/>
+                        <React.Suspense fallback={""}><HelpModal/></React.Suspense>
                     </aside>
                 </div>
             </div>

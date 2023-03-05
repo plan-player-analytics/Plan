@@ -10,11 +10,11 @@
 * const unmount = async () => {
 *   // Any code that needs to run when the element is removed from DOM
 * };
-* // 'server-overview-card' is the ID of the element
-* global.pageExtensionApi.registerElement('beforeElement', 'server-overview-card', render, unmount);
+* // 'card-body-server-as-numbers' is the ID of the element
+* global.pageExtensionApi.registerElement('beforeElement', 'card-body-server-as-numbers', render, unmount);
 *
 * // HtmlElement
-* global.pageExtensionApi.registerElement('afterElement', 'server-overview-card', () => {
+* global.pageExtensionApi.registerElement('afterElement', 'card-body-server-as-numbers', () => {
 *   const para = document.createElement("p");
 *   para.innerText = "Hello world";
 *   return para;

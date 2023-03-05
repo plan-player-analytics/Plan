@@ -25,10 +25,11 @@ const ServerAsNumbersCard = ({data}) => {
         <Card>
             <Card.Header>
                 <h6 className="col-black">
-                    <Fa icon={faBookOpen}/> {data.player_kills ? t('html.label.serverAsNumberse') : t('html.label.networkAsNumbers')}
+                    <Fa icon={faBookOpen}/> {data.player_kills !== undefined ? t('html.label.serverAsNumberse') : t('html.label.networkAsNumbers')}
                 </h6>
             </Card.Header>
-            <ExtendableCardBody id={data.player_kills ? 'card-body-server-as-numbers' : 'card-body-network-as-numbers'}>
+            <ExtendableCardBody
+                id={data.player_kills !== undefined ? 'card-body-server-as-numbers' : 'card-body-network-as-numbers'}>
                 <Datapoint name={t('html.label.currentUptime')}
                            color={'light-green'} icon={faPowerOff}
                            value={data.current_uptime}/>

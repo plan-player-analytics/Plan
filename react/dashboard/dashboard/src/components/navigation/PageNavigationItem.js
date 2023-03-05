@@ -12,12 +12,13 @@ const PageNavigationItem = ({page}) => {
     const navigate = useNavigate();
     const location = useLocation();
     const {authRequired, loggedIn, user} = useAuth();
-    const {networkMetadata} = useMetadata();
+    const metadata = useMetadata();
     const [currentPage, setCurrentPage] = useState(undefined);
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        if (networkMetadata) {
+        const networkMetadata = metadata?.networkMetadata;
+        if (networkMetadata && networkMetadata.servers) {
             const hasProxy = networkMetadata.servers.filter(server => server.proxy).length
 
             let newItems = [
@@ -57,11 +58,29 @@ const PageNavigationItem = ({page}) => {
             setItems(newItems);
             setCurrentPage(newItems.find(item => location.pathname.startsWith(item.href))?.id);
         }
-    }, [t, networkMetadata, location, authRequired, loggedIn, user, page]);
+    }, [t, metadata, location, authRequired, loggedIn, user, page]);
+
+    const getSharedPrefix = (one, two) => {
+        let i = 0;
+        while (one[i] && two[i] && one[i] === two[i]) {
+            i++;
+        }
+        return one.substring(0, i);
+    }
 
     const onSelect = ({target}) => {
         const selected = target.value;
-        navigate(items.find(item => item.id === selected).href);
+        const selectedItem = items.find(item => item.id === selected);
+        const selectedHref = selectedItem.href;
+        const currentHref = document.location.pathname + document.location.hash;
+
+        const sharedPrefix = getSharedPrefix(selectedHref, currentHref);
+        if (sharedPrefix === '/server/') {
+            // Moves to the same page of a different server, for example /server/{uuid}/performance
+            navigate(selectedHref + currentHref.substring(selectedHref.length));
+        } else {
+            navigate(selectedHref);
+        }
     }
 
     if (!items.length) {

@@ -1,15 +1,18 @@
 import {useTranslation} from "react-i18next";
 import {faUser, faUserCircle, faUserPlus, faUsers} from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import React, {useCallback} from "react";
 import {TableRow} from "./TableRow";
 import ComparisonTable from "./ComparisonTable";
 import SmallTrend from "../trend/SmallTrend";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCalendarCheck, faClock, faEye} from "@fortawesome/free-regular-svg-icons";
+import {faCalendarCheck, faClock, faEye, faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {CardLoader} from "../navigation/Loader";
+import {useNavigation} from "../../hooks/navigationHook";
 
 const OnlineActivityAsNumbersTable = ({data}) => {
     const {t} = useTranslation();
+    const {setHelpModalTopic} = useNavigation();
+    const openHelp = useCallback(() => setHelpModalTopic('new-player-retention'), [setHelpModalTopic]);
     if (!data) return <CardLoader/>;
 
     return (
@@ -44,7 +47,10 @@ const OnlineActivityAsNumbersTable = ({data}) => {
                           data.new_players_7d_avg,
                           data.new_players_24h_avg
                       ]}/>
-            <TableRow icon={faUserCircle} color="light-green" text={t('html.label.newPlayerRetention')}
+            <TableRow icon={faUserCircle} color="light-green" text={<>{t('html.label.newPlayerRetention')}  <span>
+                                <button onClick={openHelp}><Fa className={"col-black"}
+                                                               icon={faQuestionCircle}/>
+                                </button></span></>}
                       values={[
                           `(${data.new_players_retention_30d}/${data.new_players_30d}) ${data.new_players_retention_30d_perc}`,
                           `(${data.new_players_retention_7d}/${data.new_players_7d}) ${data.new_players_retention_7d_perc}`,

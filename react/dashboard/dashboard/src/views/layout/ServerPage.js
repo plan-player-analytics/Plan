@@ -30,6 +30,8 @@ import {ServerExtensionContextProvider, useServerExtensionContext} from "../../h
 import {iconTypeToFontAwesomeClass} from "../../util/icons";
 import {staticSite} from "../../service/backendConfiguration";
 
+const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
+
 const ServerSidebar = () => {
     const {t, i18n} = useTranslation();
     const {sidebarItems, setSidebarItems} = useNavigation();
@@ -159,6 +161,7 @@ const ServerPage = () => {
                         </main>
                         <aside>
                             <ColorSelectorModal/>
+                            <React.Suspense fallback={""}><HelpModal/></React.Suspense>
                         </aside>
                     </div>
                 </div>

@@ -22,9 +22,9 @@ const PlayerPluginData = () => {
         return () => {
             if (masonry.element) masonry.destroy();
         }
-    }, [])
+    }, [serverName])
 
-    if (!extensions) {
+    if (!extensions?.extensionData?.length) {
         return (
             <LoadIn>
                 <section className="player_plugin_data">

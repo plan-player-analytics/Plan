@@ -5,6 +5,7 @@ import {useTheme} from "./themeHook";
 import {useMetadata} from "./metadataHook";
 import {getColors, withReducedSaturation} from "../util/colors";
 import axios from "axios";
+import {useTranslation} from "react-i18next";
 
 const PageExtensionContext = createContext({});
 
@@ -17,6 +18,7 @@ export const PageExtensionContextProvider = ({children}) => {
         global.pageExtensionApi.onUnmount(className, position);
     }, []);
 
+    const {t} = useTranslation();
     const authContext = useAuth();
     const navigationContext = useNavigation();
     const themeContext = useTheme();
@@ -40,10 +42,11 @@ export const PageExtensionContextProvider = ({children}) => {
                 ...metadata
             },
             utilities: {
-                axios
+                axios,
+                i18nTranslate: t
             }
         };
-    }, [authContext, navigationContext, themeContext, metadata]);
+    }, [authContext, navigationContext, themeContext, metadata, t]);
 
     const sharedState = useMemo(() => {
         return {

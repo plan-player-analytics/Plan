@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import GroupTable from "../table/GroupTable";
 import GroupPie from "./GroupPie";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBarChart, faChartColumn, faPieChart, faTable} from "@fortawesome/free-solid-svg-icons";
 import {Col, Row} from "react-bootstrap";
 import GroupBarGraph from "./GroupBarGraph";
+import ErrorBoundary from "../ErrorBoundary";
+import {ErrorViewText} from "../../views/ErrorView";
 
 const options = {
     BAR: 'bar',
@@ -47,15 +49,23 @@ const GroupVisualizer = ({groups, colors, name, horizontal}) => {
         right: "0",
         top: "0.5rem"
     };
+
+    const changeViewToPie = useCallback(() => setVisualization(options.PIE), [setVisualization])
+    const changeViewToTable = useCallback(() => setVisualization(options.TABLE), [setVisualization])
+    const changeViewToBar = useCallback(() => setVisualization(horizontal ? options.BAR : options.COLUMN), [setVisualization, horizontal])
+
+    const fallbackFunction = useCallback((error) => <ErrorViewText error={error}/>, []);
+
     return <Row>
         <Col md={12} style={selectorFloatStyle}>
-            <VisualizerSelector icon={faPieChart} onClick={() => setVisualization(options.PIE)}/>
-            <VisualizerSelector icon={faTable} onClick={() => setVisualization(options.TABLE)}/>
-            <VisualizerSelector icon={horizontal ? faBarChart : faChartColumn}
-                                onClick={() => setVisualization(horizontal ? options.BAR : options.COLUMN)}/>
+            <VisualizerSelector icon={faPieChart} onClick={changeViewToPie}/>
+            <VisualizerSelector icon={faTable} onClick={changeViewToTable}/>
+            <VisualizerSelector icon={horizontal ? faBarChart : faChartColumn} onClick={changeViewToBar}/>
         </Col>
         <Col md={12}>
-            <Visualizer option={visualization} groups={groups} colors={colors} name={name}/>
+            <ErrorBoundary fallbackFunction={fallbackFunction}>
+                <Visualizer option={visualization} groups={groups} colors={colors} name={name}/>
+            </ErrorBoundary>
         </Col>
     </Row>
 };

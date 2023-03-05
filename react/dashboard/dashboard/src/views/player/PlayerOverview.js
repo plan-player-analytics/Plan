@@ -1,7 +1,13 @@
-import React from "react";
+import React, {useCallback} from "react";
 import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faAddressBook, faCalendar, faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
+import {
+    faAddressBook,
+    faCalendar,
+    faCalendarCheck,
+    faClock,
+    faQuestionCircle
+} from "@fortawesome/free-regular-svg-icons";
 import {
     faBookOpen,
     faBraille,
@@ -31,10 +37,13 @@ import {TableRow} from "../../components/table/TableRow";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableCardBody from "../../components/layout/extension/ExtendableCardBody";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useNavigation} from "../../hooks/navigationHook";
 
 const PlayerOverviewCard = ({player}) => {
     const {t} = useTranslation();
     const {getPlayerHeadImageUrl} = useMetadata();
+    const {setHelpModalTopic} = useNavigation();
+    const openHelp = useCallback(() => setHelpModalTopic('activity-index'), [setHelpModalTopic]);
     const headImageUrl = getPlayerHeadImageUrl(player.info.name, player.info.uuid)
 
     return (
@@ -107,9 +116,13 @@ const PlayerOverviewCard = ({player}) => {
                     <Col lg={6}>
                         <Datapoint
                             icon={faUser} color="amber"
-                            name={t('html.label.activityIndex')}
+                            name={<>{t('html.label.activityIndex')} <span>
+                                <button onClick={openHelp}><Fa className={"col-black"}
+                                                               icon={faQuestionCircle}/>
+                                </button></span></>}
                             value={player.info.activity_index} bold
                             valueLabel={player.info.activity_index_group}
+                            title={t('html.label.activityIndex')}
                         />
                         <Datapoint
                             icon={faServer} color="light-green"

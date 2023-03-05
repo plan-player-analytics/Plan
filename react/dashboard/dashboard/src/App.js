@@ -2,9 +2,10 @@ import './style/main.sass';
 import './style/sb-admin-2.css'
 import './style/style.css';
 import './style/mobile.css';
+import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
 import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
-import React from "react";
+import React, {useCallback} from "react";
 import {NightModeCss, ThemeContextProvider, ThemeCss} from "./hooks/themeHook";
 import axios from "axios";
 import ErrorView from "./views/ErrorView";
@@ -15,6 +16,7 @@ import {NavigationContextProvider} from "./hooks/navigationHook";
 import MainPageRedirect from "./components/navigation/MainPageRedirect";
 import {baseAddress, staticSite} from "./service/backendConfiguration";
 import {PageExtensionContextProvider} from "./hooks/pageExtensionHook";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -79,11 +81,16 @@ const ContextProviders = ({children}) => (
     </AuthenticationContextProvider>
 )
 
-const Lazy = ({children}) => (
-    <React.Suspense fallback={<></>}>
-        {children}
-    </React.Suspense>
-)
+const Lazy = ({children}) => {
+    const fallbackFunction = useCallback((error) => <ErrorView error={error}/>, []);
+    return (
+        <React.Suspense fallback={<></>}>
+            <ErrorBoundary fallbackFunction={fallbackFunction}>
+                {children}
+            </ErrorBoundary>
+        </React.Suspense>
+    );
+}
 
 const getBasename = () => {
     if (baseAddress) {

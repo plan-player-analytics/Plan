@@ -1,4 +1,4 @@
-import {createContext, useCallback, useContext, useState} from "react";
+import {createContext, useCallback, useContext, useMemo, useState} from "react";
 
 const NavigationContext = createContext({});
 
@@ -10,6 +10,7 @@ export const NavigationContextProvider = ({children}) => {
 
     const [items, setItems] = useState([]);
     const [sidebarExpanded, setSidebarExpanded] = useState(window.innerWidth > 1350);
+    const [helpModalTopic, setHelpModalTopic] = useState(undefined);
 
     const setSidebarItems = useCallback((items) => {
         const pathname = window.location.href;
@@ -49,11 +50,19 @@ export const NavigationContextProvider = ({children}) => {
         setSidebarExpanded(!sidebarExpanded);
     }, [setSidebarExpanded, sidebarExpanded])
 
-    const sharedState = {
+    const sharedState = useMemo(() => {
+        return {
+            currentTab, setCurrentTab,
+            lastUpdate, updateRequested, updating, requestUpdate, finishUpdate,
+            sidebarExpanded, setSidebarExpanded, toggleSidebar, sidebarItems: items, setSidebarItems,
+            helpModalTopic, setHelpModalTopic
+        }
+    }, [
         currentTab, setCurrentTab,
         lastUpdate, updateRequested, updating, requestUpdate, finishUpdate,
-        sidebarExpanded, setSidebarExpanded, toggleSidebar, sidebarItems: items, setSidebarItems
-    }
+        sidebarExpanded, setSidebarExpanded, toggleSidebar, items, setSidebarItems,
+        helpModalTopic, setHelpModalTopic
+    ]);
     return (<NavigationContext.Provider value={sharedState}>
             {children}
         </NavigationContext.Provider>
