@@ -5,6 +5,7 @@ import {useNavigation} from "../../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
 import ActivityIndexHelp from "./help/ActivityIndexHelp";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
+import NewPlayerRetentionHelp from "./help/NewPlayerRetentionHelp";
 
 const HelpModal = () => {
     const {t} = useTranslation();
@@ -15,6 +16,10 @@ const HelpModal = () => {
         "activity-index": {
             title: t('html.label.activityIndex'),
             body: <ActivityIndexHelp/>
+        },
+        "new-player-retention": {
+            title: t('html.label.newPlayerRetention'),
+            body: <NewPlayerRetentionHelp/>
         }
     }
 
