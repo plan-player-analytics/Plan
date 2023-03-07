@@ -166,7 +166,8 @@ public class NetworkPageExporter extends FileExporter {
                 "graph?type=uniqueAndNew",
                 "network/pingTable",
                 "sessions",
-                "extensionData?server=" + serverUUID
+                "extensionData?server=" + serverUUID,
+                "retention"
         );
     }
 

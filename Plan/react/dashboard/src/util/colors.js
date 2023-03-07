@@ -123,6 +123,67 @@ export const colorClassToBgClass = colorClass => {
     return "bg-" + colorClassToColorName(colorClass);
 }
 
+export const hsvToRgb = ([h, s, v]) => {
+    var r, g, b;
+
+    var i = Math.floor(h * 6);
+    var f = h * 6 - i;
+    var p = v * (1 - s);
+    var q = v * (1 - f * s);
+    var t = v * (1 - (1 - f) * s);
+
+    switch (i % 6) {
+        case 0:
+            r = v;
+            g = t;
+            b = p;
+            break;
+        case 1:
+            r = q;
+            g = v;
+            b = p;
+            break;
+        case 2:
+            r = p;
+            g = v;
+            b = t;
+            break;
+        case 3:
+            r = p;
+            g = q;
+            b = v;
+            break;
+        case 4:
+            r = t;
+            g = p;
+            b = v;
+            break;
+        case 5:
+            r = v;
+            g = p;
+            b = q;
+            break;
+    }
+
+    return [r * 255, g * 255, b * 255];
+}
+
+export const randomHSVColor = (i) => {
+    const goldenRatioConjugate = 0.618033988749895;
+    const hue = i * goldenRatioConjugate % 1;
+    const saturation = 0.7;
+    const value = 0.7 + (Math.random() / 10);
+    return [hue, saturation, value]
+}
+
+export const rgbToHexString = ([r, g, b]) => {
+    return '#' + rgbToHex(r) + rgbToHex(g) + rgbToHex(b);
+}
+
+const rgbToHex = (component) => {
+    return Math.floor(component).toString(16).padStart(2, '0');
+}
+
 // From https://stackoverflow.com/a/3732187
 export const withReducedSaturation = hex => {
     const saturationReduction = 0.70;

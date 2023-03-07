@@ -190,7 +190,8 @@ public class ServerPageExporter extends FileExporter {
                 "pingTable?server=" + serverUUID,
                 "sessions?server=" + serverUUID,
                 "extensionData?server=" + serverUUID,
-                "serverIdentity?server=" + serverUUID
+                "serverIdentity?server=" + serverUUID,
+                "retention?server=" + serverUUID
         );
     }
 

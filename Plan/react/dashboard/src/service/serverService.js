@@ -268,3 +268,23 @@ const fetchJoinAddressByDayNetwork = async (timestamp) => {
     if (staticSite) url = `/data/graph-joinAddressByDay.json`;
     return doGetRequest(url, timestamp);
 }
+
+export const fetchRetentionData = async (timestamp, identifier) => {
+    if (identifier) {
+        return await fetchServerRetentionData(timestamp, identifier);
+    } else {
+        return await fetchNetworkRetentionData(timestamp);
+    }
+}
+
+const fetchServerRetentionData = async (timestamp, identifier) => {
+    let url = `/v1/retention?server=${identifier}`;
+    if (staticSite) url = `/data/retention_${identifier}.json`;
+    return doGetRequest(url, timestamp);
+}
+
+const fetchNetworkRetentionData = async (timestamp) => {
+    let url = `/v1/retention`;
+    if (staticSite) url = `/data/retention.json`;
+    return doGetRequest(url, timestamp);
+}
