@@ -100,6 +100,7 @@ public class Contributors {
             new Contributor("stashenko", LANG),
             new Contributor("PikaMug", CODE),
             new Contributor("DubHacker", LANG),
+            new Contributor("TheLittle_Yang", LANG),
     };
 
     private Contributors() {
