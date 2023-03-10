@@ -122,7 +122,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                     for (let i = dataToMap[0].registerDate; i < time; i += increment) {
                         const retainedSince = dataToMap.filter(point => point.timeDifference > i - firstRegisterDate).length;
                         retainedBasedOnDate.push([i, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
-                        if (retainedSince === 0) break;
+                        if (retainedSince < 0.5) break;
                     }
                     seriesData = retainedBasedOnDate;
                     break;
@@ -131,7 +131,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                     for (let i = 0; i < time; i += increment) {
                         const retainedSince = dataToMap.filter(point => point.timeDifference > i).length;
                         retainedBasedOnTime.push([(i) / increment, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
-                        if (retainedSince === 0) break;
+                        if (retainedSince < 0.5) break;
                     }
                     seriesData = retainedBasedOnTime;
                     break;
@@ -140,7 +140,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                     for (let i = start; i < time; i += increment) {
                         const retainedSince = dataToMap.filter(point => point.playtime > i - start).length;
                         retainedBasedOnPlaytime.push([(i - start) / increment, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
-                        if (retainedSince === 0) break;
+                        if (retainedSince < 0.5) break;
                     }
                     seriesData = retainedBasedOnPlaytime;
                     break;
