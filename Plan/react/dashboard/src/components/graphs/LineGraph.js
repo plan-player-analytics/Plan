@@ -16,7 +16,8 @@ const LineGraph = ({
                        selectedRange,
                        extremes,
                        onSetExtremes,
-                       alreadyOffsetTimezone
+                       alreadyOffsetTimezone,
+                       options
                    }) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
@@ -28,7 +29,7 @@ const LineGraph = ({
         Accessibility(Highcharts);
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
-        setGraph(Highcharts.stockChart(id, {
+        setGraph(Highcharts.stockChart(id, options ? options : {
             rangeSelector: {
                 selected: selectedRange !== undefined ? selectedRange : 2,
                 buttons: linegraphButtons
@@ -58,7 +59,7 @@ const LineGraph = ({
             },
             series: series
         }));
-    }, [series, id, t,
+    }, [options, series, id, t,
         graphTheming, nightModeEnabled, alreadyOffsetTimezone, timeZoneOffsetMinutes,
         legendEnabled, yAxis,
         onSetExtremes, setGraph, selectedRange]);

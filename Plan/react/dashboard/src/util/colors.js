@@ -163,6 +163,8 @@ export const hsvToRgb = ([h, s, v]) => {
             g = p;
             b = q;
             break;
+        default:
+            break;
     }
 
     return [r * 255, g * 255, b * 255];

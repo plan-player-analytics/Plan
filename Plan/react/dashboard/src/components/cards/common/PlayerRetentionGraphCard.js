@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Card, Col, Row} from "react-bootstrap";
 import CardHeader from "../CardHeader";
 import {faUsersViewfinder} from "@fortawesome/free-solid-svg-icons";
@@ -15,69 +15,102 @@ import LineGraph from "../../graphs/LineGraph";
 import FunctionPlotGraph from "../../graphs/FunctionPlotGraph";
 import {useTheme} from "../../../hooks/themeHook";
 
+const dayMs = 24 * 3600000;
+const getWeek = (date) => {
+    const onejan = new Date(date.getFullYear(), 0, 1);
+    const today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const dayOfYear = ((today - onejan + 86400000) / 86400000);
+    return Math.ceil(dayOfYear / 7)
+};
+
 const PlayerRetentionGraphCard = ({identifier}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
 
-    const dayMs = 24 * 3600000;
-    const time = new Date().getTime();
+    const time = useMemo(() => new Date().getTime(), []);
 
     const {data, loadingError} = useDataRequest(fetchRetentionData, [identifier]);
 
     const [selectedWindow, setSelectedWindow] = useState('days');
-    const windowOptions = [
-        {name: 'hours', displayName: 'Hours', increment: 3600000},
-        {name: 'days', displayName: 'Days', increment: dayMs},
-        {name: 'weeks', displayName: 'Weeks', increment: 7 * dayMs},
-        {name: 'months', displayName: 'Month', increment: 30 * dayMs},
-    ];
+    const windowOptions = useMemo(() => [
+        {name: 'hours', displayName: t('html.label.time.hours'), increment: 3600000},
+        {name: 'days', displayName: t('html.label.time.days'), increment: dayMs},
+        {name: 'weeks', displayName: t('html.label.time.weeks'), increment: 7 * dayMs},
+        {name: 'months', displayName: t('html.label.time.months'), increment: 30 * dayMs},
+    ], [t]);
     const [selectedGroup, setSelectedGroup] = useState('registered-7d');
-    const groupOptions = [
-        {name: 'registered-7d', displayName: 'in the last 7 days', start: time - 7 * dayMs},
-        {name: 'registered-30d', displayName: 'in the last 30 days', start: time - 30 * dayMs},
-        {name: 'registered-3m', displayName: 'in the last 3 months', start: time - 3 * 30 * dayMs},
-        {name: 'registered-6m', displayName: 'in the last 6 months', start: time - 6 * 30 * dayMs},
-        {name: 'registered-1y', displayName: 'in the last 12 months', start: time - 365 * dayMs},
-        {name: 'registered-2y', displayName: 'in the last 24 months', start: time - 2 * 365 * dayMs},
-        {name: 'registered-ever', displayName: 'any time', start: 0},
-    ];
+    const groupOptions = useMemo(() => [
+        {name: 'registered-7d', displayName: t('html.label.retention.inLast7d'), start: time - 7 * dayMs},
+        {name: 'registered-30d', displayName: t('html.label.retention.inLast30d'), start: time - 30 * dayMs},
+        {name: 'registered-3m', displayName: t('html.label.retention.inLast90d'), start: time - 3 * 30 * dayMs},
+        {name: 'registered-6m', displayName: t('html.label.retention.inLast180d'), start: time - 6 * 30 * dayMs},
+        {name: 'registered-1y', displayName: t('html.label.retention.inLast365d'), start: time - 365 * dayMs},
+        {name: 'registered-2y', displayName: t('html.label.retention.inLast730d'), start: time - 2 * 365 * dayMs},
+        {name: 'registered-ever', displayName: t('html.label.retention.inAnytime'), start: 0},
+    ], [t, time]);
     const [selectedGroupBy, setSelectedGroupBy] = useState('none');
-    const groupByOptions = [
-        {name: 'none', displayName: 'No grouping'},
-        {name: 'days', displayName: 'Day'},
-        {name: 'weeks', displayName: 'Week'},
-        {name: 'months', displayName: 'Month'},
-        {name: 'years', displayName: 'Year'},
-    ];
+    const groupByOptions = useMemo(() => [
+        {name: 'none', displayName: t('html.label.retention.groupByNone')},
+        {name: 'days', displayName: t('html.label.time.day')},
+        {name: 'weeks', displayName: t('html.label.time.week')},
+        {name: 'months', displayName: t('html.label.time.month')},
+        {name: 'years', displayName: t('html.label.time.year')},
+    ], [t]);
     const [selectedYAxis, setSelectedYAxis] = useState('percentage');
-    const yAxisOptions = [
-        {name: 'percentage', displayName: 'Percentage'},
-        {name: 'count', displayName: 'Player Count'}
-    ];
+    const yAxisOptions = useMemo(() => [
+        {name: 'percentage', displayName: t('html.label.unit.percentage')},
+        {name: 'count', displayName: t('html.label.unit.playerCount')},
+    ], [t]);
     const [selectedAxis, setSelectedAxis] = useState('time');
-    const axisOptions = [
-        {name: 'date', displayName: 'Date'},
-        {name: 'time', displayName: 'Time since register date'},
-        {name: 'playtime', displayName: 'Playtime'}
-    ];
+    const axisOptions = useMemo(() => [
+        {name: 'date', displayName: t('html.label.time.date')},
+        {name: 'time', displayName: t('html.label.retention.timeSinceRegistered')},
+        {name: 'playtime', displayName: t('html.label.playtime')}
+    ], [t]);
 
     const [series, setSeries] = useState([]);
+    const [graphOptions, setGraphOptions] = useState({title: {text: ''},});
 
-    useEffect(() => {
-        if (!data) return;
-
-        Date.prototype.getWeek = function () {
-            const onejan = new Date(this.getFullYear(), 0, 1);
-            const today = new Date(this.getFullYear(), this.getMonth(), this.getDate());
-            const dayOfYear = ((today - onejan + 86400000) / 86400000);
-            return Math.ceil(dayOfYear / 7)
-        };
-
-        const start = groupOptions.find(option => option.name === selectedGroup).start;
+    const mapToData = useCallback(async (dataToMap, start) => {
+        const total = dataToMap.length;
+        let seriesData = [];
         const increment = windowOptions.find(option => option.name === selectedWindow).increment;
-        const filtered = data.player_retention.filter(point => point.registerDate > start)
-            .sort((a, b) => a.registerDate - b.registerDate);
+        const xAxis = axisOptions.find(option => option.name === selectedAxis).name;
+        switch (xAxis) {
+            case 'date':
+                const retainedBasedOnDate = [];
+                const firstRegisterDateStart = dataToMap[0].registerDate - dataToMap[0].registerDate % dayMs;
+                for (let date = firstRegisterDateStart; date < time; date += increment) {
+                    const retainedSince = dataToMap.filter(player => player.lastSeenDate >= date).length;
+                    retainedBasedOnDate.push([date, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
+                    if (retainedSince < 0.5) break;
+                }
+                seriesData = retainedBasedOnDate;
+                break;
+            case 'time':
+                const retainedBasedOnTime = [];
+                for (let i = 0; i < time; i += increment) {
+                    const retainedSince = dataToMap.filter(point => point.timeDifference > i).length;
+                    retainedBasedOnTime.push([(i) / increment, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
+                    if (retainedSince < 0.5) break;
+                }
+                seriesData = retainedBasedOnTime;
+                break;
+            case 'playtime':
+            default:
+                const retainedBasedOnPlaytime = [];
+                for (let i = start; i < time; i += increment) {
+                    const retainedSince = dataToMap.filter(point => point.playtime > i - start).length;
+                    retainedBasedOnPlaytime.push([(i - start) / increment, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
+                    if (retainedSince < 0.5) break;
+                }
+                seriesData = retainedBasedOnPlaytime;
+                break;
+        }
+        return seriesData;
+    }, [selectedWindow, windowOptions, selectedAxis, axisOptions, selectedYAxis, time])
 
+    const group = useCallback(async filtered => {
         const grouped = {};
         const groupBy = groupByOptions.find(option => option.name === selectedGroupBy).name;
         for (const point of filtered) {
@@ -90,7 +123,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                     grouped[day].push(point);
                     break;
                 case 'weeks':
-                    const week = date.getUTCFullYear() + '-week-' + date.getWeek();
+                    const week = date.getUTCFullYear() + '-week-' + getWeek(date);
                     if (!grouped[week]) grouped[week] = [];
                     grouped[week].push(point);
                     break;
@@ -110,46 +143,19 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                     break;
             }
         }
+        return grouped;
+    }, [groupByOptions, selectedGroupBy]);
 
-        const mapToData = (dataToMap) => {
-            const total = dataToMap.length;
-            let seriesData = [];
-            const xAxis = axisOptions.find(option => option.name === selectedAxis).name;
-            switch (xAxis) {
-                case 'date':
-                    const retainedBasedOnDate = [];
-                    const firstRegisterDate = dataToMap[0].registerDate - dataToMap[0].registerDate % dayMs;
-                    for (let i = dataToMap[0].registerDate; i < time; i += increment) {
-                        const retainedSince = dataToMap.filter(point => point.timeDifference > i - firstRegisterDate).length;
-                        retainedBasedOnDate.push([i, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
-                        if (retainedSince < 0.5) break;
-                    }
-                    seriesData = retainedBasedOnDate;
-                    break;
-                case 'time':
-                    const retainedBasedOnTime = [];
-                    for (let i = 0; i < time; i += increment) {
-                        const retainedSince = dataToMap.filter(point => point.timeDifference > i).length;
-                        retainedBasedOnTime.push([(i) / increment, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
-                        if (retainedSince < 0.5) break;
-                    }
-                    seriesData = retainedBasedOnTime;
-                    break;
-                case 'playtime':
-                    const retainedBasedOnPlaytime = [];
-                    for (let i = start; i < time; i += increment) {
-                        const retainedSince = dataToMap.filter(point => point.playtime > i - start).length;
-                        retainedBasedOnPlaytime.push([(i - start) / increment, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
-                        if (retainedSince < 0.5) break;
-                    }
-                    seriesData = retainedBasedOnPlaytime;
-                    break;
-            }
-            return seriesData;
-        }
+    const createSeries = useCallback(async (retentionData) => {
+
+        const start = groupOptions.find(option => option.name === selectedGroup).start;
+        const filtered = retentionData.filter(point => point.registerDate > start)
+            .sort((a, b) => a.registerDate - b.registerDate);
+
+        const grouped = await group(filtered);
 
         let i = 0;
-        const s = Object.entries(grouped).map(group => {
+        return Promise.all(Object.entries(grouped).map(async group => {
             const name = group[0];
             const groupData = group[1];
             const color = rgbToHexString(hsvToRgb(randomHSVColor(i)));
@@ -158,13 +164,71 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                 name: name,
                 type: 'spline',
                 tooltip: tooltip.twoDecimals,
-                data: mapToData(groupData),
+                data: await mapToData(groupData, start),
                 color: nightModeEnabled ? withReducedSaturation(color) : color
             };
-        });
-        console.log(s);
-        setSeries(s)
-    }, [data, selectedWindow, selectedGroup, selectedAxis, selectedGroupBy, selectedYAxis, setSeries])
+        }));
+    }, [nightModeEnabled, mapToData, groupOptions, selectedGroup, group]);
+
+    useEffect(() => {
+        if (!data) return;
+
+        createSeries(data.player_retention).then(setSeries);
+    }, [data, createSeries, setSeries]);
+
+    useEffect(() => {
+        const windowName = windowOptions.find(option => option.name === selectedWindow).displayName;
+        const unitLabel = selectedYAxis === 'percentage' ? 'Retained Players %' : t('html.label.players');
+        const axisName = axisOptions.find(option => option.name === selectedAxis).displayName;
+        setGraphOptions({
+            title: {text: ''},
+            rangeSelector: selectedAxis === 'date' ? {
+                selected: 2,
+                buttons: [{
+                    type: 'day',
+                    count: 7,
+                    text: '7d'
+                }, {
+                    type: 'month',
+                    count: 1,
+                    text: '30d'
+                }, {
+                    type: 'all',
+                    text: 'All'
+                }]
+            } : undefined,
+            chart: {
+                zooming: {
+                    type: 'xy'
+                }
+            },
+            plotOptions: {
+                areaspline: {
+                    fillOpacity: nightModeEnabled ? 0.2 : 0.4
+                }
+            },
+            legend: {
+                enabled: selectedGroupBy !== 'none',
+            },
+            xAxis: {
+                zoomEnabled: true,
+                title: {
+                    text: selectedAxis === 'date' ? t('html.label.time.date') : axisName + ' (' + windowName + ')'
+                }
+            },
+            yAxis: {
+                zoomEnabled: true,
+                title: {text: unitLabel},
+                max: selectedYAxis === 'percentage' ? 100 : undefined
+            },
+            tooltip: selectedAxis === 'date' ? {enabled: true} : {
+                enabled: true,
+                headerFormat: '{point.x} ' + windowName + '<br>',
+                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b>'
+            },
+            series: series
+        })
+    }, [t, nightModeEnabled, series, selectedGroupBy, axisOptions, selectedAxis, windowOptions, selectedWindow, selectedYAxis]);
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!data) return <CardLoader/>;
@@ -174,34 +238,32 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             <ExtendableCardBody id={'card-body-' + (identifier ? 'server-' : 'network-') + 'player-retention'}>
                 <Row>
                     <Col>
-                        <label>Time step</label>
+                        <label>{t('html.label.retention.timeStep')}</label>
                         <BasicDropdown selected={selectedWindow} options={windowOptions} onChange={setSelectedWindow}/>
                     </Col>
                     <Col>
-                        <label>Players who registered</label>
+                        <label>{t('html.label.retention.playersRegisteredInTime')}</label>
                         <BasicDropdown selected={selectedGroup} options={groupOptions} onChange={setSelectedGroup}/>
                     </Col>
                     <Col>
-                        <label>Group registered by</label>
+                        <label>{t('html.label.retention.groupByTime')}</label>
                         <BasicDropdown selected={selectedGroupBy} options={groupByOptions}
                                        onChange={setSelectedGroupBy}/>
                     </Col>
                     <Col>
-                        <label>X Axis</label>
+                        <label>{t('html.label.xAxis')}</label>
                         <BasicDropdown selected={selectedAxis} options={axisOptions} onChange={setSelectedAxis}/>
                     </Col>
                     <Col>
-                        <label>Y Axis</label>
+                        <label>{t('html.label.yAxis')}</label>
                         <BasicDropdown selected={selectedYAxis} options={yAxisOptions} onChange={setSelectedYAxis}/>
                     </Col>
                 </Row>
                 <hr/>
                 {selectedAxis !== 'date' &&
-                    <FunctionPlotGraph id={'retention-graph'} series={series} alreadyOffsetTimezone={true}
-                                       legendEnabled={true} tall/>}
+                    <FunctionPlotGraph id={'retention-graph'} options={graphOptions} tall/>}
                 {selectedAxis === 'date' &&
-                    <LineGraph id={'retention-graph'} series={series} alreadyOffsetTimezone={true} selectedRange={5}
-                               legendEnabled={true} tall/>}
+                    <LineGraph id={'retention-graph'} options={graphOptions} tall/>}
             </ExtendableCardBody>
         </Card>
     )
