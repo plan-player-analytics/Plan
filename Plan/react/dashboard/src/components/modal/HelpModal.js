@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import ActivityIndexHelp from "./help/ActivityIndexHelp";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import NewPlayerRetentionHelp from "./help/NewPlayerRetentionHelp";
+import PlayerRetentionGraphHelp from "./help/PlayerRetentionGraphHelp";
 
 const HelpModal = () => {
     const {t} = useTranslation();
@@ -20,6 +21,10 @@ const HelpModal = () => {
         "new-player-retention": {
             title: t('html.label.newPlayerRetention'),
             body: <NewPlayerRetentionHelp/>
+        },
+        "player-retention-graph": {
+            title: t('html.label.playerRetention'),
+            body: <PlayerRetentionGraphHelp/>
         }
     }
 

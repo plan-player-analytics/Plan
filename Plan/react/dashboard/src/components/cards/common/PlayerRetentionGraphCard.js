@@ -14,6 +14,9 @@ import {hsvToRgb, randomHSVColor, rgbToHexString, withReducedSaturation} from ".
 import LineGraph from "../../graphs/LineGraph";
 import FunctionPlotGraph from "../../graphs/FunctionPlotGraph";
 import {useTheme} from "../../../hooks/themeHook";
+import {useNavigation} from "../../../hooks/navigationHook";
+import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 
 const dayMs = 24 * 3600000;
 const getWeek = (date) => {
@@ -26,6 +29,8 @@ const getWeek = (date) => {
 const PlayerRetentionGraphCard = ({identifier}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
+    const {setHelpModalTopic} = useNavigation();
+    const openHelp = useCallback(() => setHelpModalTopic('player-retention-graph'), [setHelpModalTopic]);
 
     const time = useMemo(() => new Date().getTime(), []);
 
@@ -60,6 +65,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
     const yAxisOptions = useMemo(() => [
         {name: 'percentage', displayName: t('html.label.unit.percentage')},
         {name: 'count', displayName: t('html.label.unit.playerCount')},
+        {name: 'count-plus', displayName: t('html.label.unit.playerCount') + ' + ' + t('html.label.registered')}
     ], [t]);
     const [selectedAxis, setSelectedAxis] = useState('time');
     const axisOptions = useMemo(() => [
@@ -73,17 +79,20 @@ const PlayerRetentionGraphCard = ({identifier}) => {
 
     const mapToData = useCallback(async (dataToMap, start) => {
         const total = dataToMap.length;
-        let seriesData = [];
+        let seriesData;
         const increment = windowOptions.find(option => option.name === selectedWindow).increment;
         const xAxis = axisOptions.find(option => option.name === selectedAxis).name;
         switch (xAxis) {
             case 'date':
                 const retainedBasedOnDate = [];
                 const firstRegisterDateStart = dataToMap[0].registerDate - dataToMap[0].registerDate % dayMs;
+                let previousValue = -1;
                 for (let date = firstRegisterDateStart; date < time; date += increment) {
-                    const retainedSince = dataToMap.filter(player => player.lastSeenDate >= date).length;
+                    const filter = selectedYAxis === 'count-plus' ? player => player.registerDate <= date && player.lastSeenDate >= date : player => player.lastSeenDate >= date;
+                    const retainedSince = dataToMap.filter(filter).length;
                     retainedBasedOnDate.push([date, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
-                    if (retainedSince < 0.5) break;
+                    if (selectedYAxis === 'count-plus' && previousValue === retainedSince && retainedSince <= 0 || selectedYAxis !== 'count-plus' && retainedSince < 0.5) break;
+                    if (previousValue !== -1 || retainedSince > 0) previousValue = retainedSince;
                 }
                 seriesData = retainedBasedOnDate;
                 break;
@@ -234,7 +243,12 @@ const PlayerRetentionGraphCard = ({identifier}) => {
     if (!data) return <CardLoader/>;
     return (
         <Card>
-            <CardHeader icon={faUsersViewfinder} color={'light-blue'} label={t('html.label.playerRetention')}/>
+            <CardHeader icon={faUsersViewfinder} color={'light-blue'} label={t('html.label.playerRetention')}>
+                <button className={"float-end"} onClick={openHelp}>
+                    <Fa className={"col-blue"}
+                        icon={faQuestionCircle}/>
+                </button>
+            </CardHeader>
             <ExtendableCardBody id={'card-body-' + (identifier ? 'server-' : 'network-') + 'player-retention'}>
                 <Row>
                     <Col>
