@@ -279,7 +279,7 @@ export const fetchRetentionData = async (timestamp, identifier) => {
 
 const fetchServerRetentionData = async (timestamp, identifier) => {
     let url = `/v1/retention?server=${identifier}`;
-    if (staticSite) url = `/data/retention_${identifier}.json`;
+    if (staticSite) url = `/data/retention-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 
@@ -299,7 +299,7 @@ export const fetchPlayerJoinAddresses = async (timestamp, identifier) => {
 
 const fetchServerPlayerJoinAddresses = async (timestamp, identifier) => {
     let url = `/v1/joinAddresses?server=${identifier}`;
-    if (staticSite) url = `/data/joinAddresses_${identifier}.json`;
+    if (staticSite) url = `/data/joinAddresses-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 

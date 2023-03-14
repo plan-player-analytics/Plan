@@ -22,6 +22,7 @@ import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
+import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
@@ -85,7 +86,10 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
     default void latestJoinAddressIsUpdatedUponSecondSession() {
         joinAddressCanBeUnknown();
 
-        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        Long after = db().query(SessionQueries.lastSeen(playerUUID, serverUUID()));
+
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, after, playerUUID, player2UUID);
+
         String expectedAddress = TestConstants.GET_PLAYER_HOSTNAME.get();
         session.getExtraData().put(JoinAddress.class, new JoinAddress(expectedAddress));
         db().executeTransaction(new StoreSessionTransaction(session));
