@@ -10,7 +10,7 @@ export const BasicDropdown = ({selected, onChange, options}) => {
                 className="form-select form-select-sm"
                 defaultValue={selected}>
             {options.map((option, i) =>
-                <option key={i} value={option.name} disabled={option.disabled}>{option.displayName}</option>)}
+                <option key={option.name} value={option.name} disabled={option.disabled}>{option.displayName}</option>)}
         </select>
     )
 };
