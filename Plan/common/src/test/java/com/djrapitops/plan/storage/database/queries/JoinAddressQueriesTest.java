@@ -274,4 +274,22 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
         );
         assertEquals(expected, result);
     }
+
+    @Test
+    default void playerSpecificJoinAddressCanBeFetched() {
+        latestJoinAddressIsUpdatedUponSecondSession();
+
+        Map<UUID, String> expected = Map.of(playerUUID, TestConstants.GET_PLAYER_HOSTNAME.get());
+        Map<UUID, String> result = db().query(JoinAddressQueries.latestJoinAddressesOfPlayers());
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void playerSpecificJoinAddressCanBeFetchedForServer() {
+        joinAddressUpdateIsUniquePerServer();
+
+        Map<UUID, String> expected = Map.of(playerUUID, TestConstants.GET_PLAYER_HOSTNAME.get());
+        Map<UUID, String> result = db().query(JoinAddressQueries.latestJoinAddressesOfPlayers(TestConstants.SERVER_TWO_UUID));
+        assertEquals(expected, result);
+    }
 }
