@@ -88,7 +88,7 @@ const NetworkSidebar = () => {
             {name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"}
         ]
 
-        if (extensionData) {
+        if (extensionData?.extensions) {
             extensionData.extensions.filter(extension => extension.wide)
                 .map(extension => extension.extensionInformation)
                 .map(info => {
