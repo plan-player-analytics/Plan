@@ -42,6 +42,8 @@ public interface PlayerRetentionQueriesTest extends DatabaseTestPreparer {
 
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> registerTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, () -> registerTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
@@ -60,6 +62,8 @@ public interface PlayerRetentionQueriesTest extends DatabaseTestPreparer {
 
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> registerTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
         db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, () -> registerTime,
                 TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 

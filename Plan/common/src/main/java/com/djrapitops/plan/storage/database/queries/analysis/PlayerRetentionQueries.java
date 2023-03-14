@@ -41,7 +41,6 @@ public class PlayerRetentionQueries {
     }
 
     public static Query<List<RetentionData>> fetchRetentionData(ServerUUID serverUUID) {
-        // TODO fix
         String sql = SELECT +
                 UsersTable.USER_UUID + ',' +
                 "ui." + UserInfoTable.REGISTERED + ',' +
