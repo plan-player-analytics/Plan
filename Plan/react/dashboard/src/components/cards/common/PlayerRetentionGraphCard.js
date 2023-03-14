@@ -184,12 +184,12 @@ const PlayerRetentionGraphCard = ({identifier}) => {
 
         const grouped = await group(filtered, joinAddressData);
 
-        let i = 0;
+        let colorIndex = 1;
         return Promise.all(Object.entries(grouped).map(async group => {
             const name = group[0];
             const groupData = group[1];
-            const color = rgbToHexString(hsvToRgb(randomHSVColor(i)));
-            i++;
+            const color = rgbToHexString(hsvToRgb(randomHSVColor(colorIndex)));
+            colorIndex++;
             const mapped = await mapToData(groupData, start);
             if (mapped.filter(point => point[1] === 0).length === mapped.length) {
                 // Don't include all zeros series

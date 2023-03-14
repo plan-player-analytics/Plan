@@ -37,6 +37,7 @@ const ServerPerformance = React.lazy(() => import("./views/server/ServerPerforma
 const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginData"));
 const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
 const ServerJoinAddresses = React.lazy(() => import("./views/server/ServerJoinAddresses"));
+const ServerPlayerRetention = React.lazy(() => import("./views/server/ServerPlayerRetention"));
 
 const NetworkPage = React.lazy(() => import("./views/layout/NetworkPage"));
 const NetworkOverview = React.lazy(() => import("./views/network/NetworkOverview"));
@@ -146,7 +147,7 @@ function App() {
                                 <Route path="pvppve" element={<Lazy><ServerPvpPve/></Lazy>}/>
                                 <Route path="playerbase" element={<Lazy><PlayerbaseOverview/></Lazy>}/>
                                 <Route path="join-addresses" element={<Lazy><ServerJoinAddresses/></Lazy>}/>
-                                <Route path="retention" element={<></>}/>
+                                <Route path="retention" element={<Lazy><ServerPlayerRetention/></Lazy>}/>
                                 <Route path="players" element={<Lazy><ServerPlayers/></Lazy>}/>
                                 <Route path="geolocations" element={<Lazy><ServerGeolocations/></Lazy>}/>
                                 <Route path="performance" element={<Lazy><ServerPerformance/></Lazy>}/>

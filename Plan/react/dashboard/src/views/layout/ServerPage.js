@@ -13,7 +13,8 @@ import {
     faLocationArrow,
     faSearch,
     faUserGroup,
-    faUsers
+    faUsers,
+    faUsersViewfinder
 } from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
 import Sidebar from "../../components/navigation/Sidebar";
@@ -67,7 +68,7 @@ const ServerSidebar = () => {
                         href: "playerbase"
                     },
                     {name: 'html.label.joinAddresses', icon: faLocationArrow, href: "join-addresses"},
-                    // {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
+                    {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
                     {name: 'html.label.playerList', icon: faUserGroup, href: "players"},
                     {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
                 ]

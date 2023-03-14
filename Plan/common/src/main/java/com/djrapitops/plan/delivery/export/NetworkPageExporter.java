@@ -126,6 +126,7 @@ public class NetworkPageExporter extends FileExporter {
                 "network/sessions",
                 "network/playerbase",
                 "network/join-addresses",
+                "network/retention",
                 "network/players",
                 "network/geolocations",
                 "network/plugins-overview",

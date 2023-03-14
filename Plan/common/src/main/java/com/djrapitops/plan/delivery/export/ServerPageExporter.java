@@ -142,6 +142,7 @@ public class ServerPageExporter extends FileExporter {
                 server + serverUUID + "/pvppve",
                 server + serverUUID + "/playerbase",
                 server + serverUUID + "/join-addresses",
+                server + serverUUID + "/retention",
                 server + serverUUID + "/players",
                 server + serverUUID + "/geolocations",
                 server + serverUUID + "/performance",
