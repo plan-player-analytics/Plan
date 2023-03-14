@@ -191,7 +191,8 @@ public class ServerPageExporter extends FileExporter {
                 "sessions?server=" + serverUUID,
                 "extensionData?server=" + serverUUID,
                 "serverIdentity?server=" + serverUUID,
-                "retention?server=" + serverUUID
+                "retention?server=" + serverUUID,
+                "joinAddresses?server=" + serverUUID
         );
     }
 

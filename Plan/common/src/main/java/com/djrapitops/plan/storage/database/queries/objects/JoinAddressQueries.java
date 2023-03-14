@@ -26,6 +26,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.sql.PreparedStatement;
@@ -61,6 +62,10 @@ public class JoinAddressQueries {
         joinAddresses.put(set.getString(JoinAddressTable.JOIN_ADDRESS), set.getInt("total"));
     }
 
+    private static void extractJoinAddress(ResultSet set, Map<UUID, String> joinAddresses) throws SQLException {
+        joinAddresses.put(UUID.fromString(set.getString(UsersTable.USER_UUID)), set.getString(JoinAddressTable.JOIN_ADDRESS));
+    }
+
     public static Query<Map<String, Integer>> latestJoinAddresses(ServerUUID serverUUID) {
         String selectLatestSessionStarts = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_START + ") as max_start" +
                 FROM + SessionsTable.TABLE_NAME + " max_s" +
@@ -80,6 +85,45 @@ public class JoinAddressQueries {
                 ORDER_BY + JoinAddressTable.JOIN_ADDRESS + " ASC";
 
         return db -> db.queryMap(selectJoinAddressCounts, JoinAddressQueries::extractJoinAddressCounts, TreeMap::new, serverUUID);
+    }
+
+    public static Query<Map<UUID, String>> latestJoinAddressesOfPlayers() {
+        String selectLatestSessionStarts = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_START + ") as max_start" +
+                FROM + SessionsTable.TABLE_NAME + " max_s" +
+                GROUP_BY + SessionsTable.USER_ID;
+        String selectLatestJoinAddressIds = SELECT + SessionsTable.JOIN_ADDRESS_ID + ",s." + SessionsTable.USER_ID +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + "(" + selectLatestSessionStarts + ") q1 on q1." + SessionsTable.USER_ID + "=s." + SessionsTable.USER_ID +
+                AND + "q1.max_start=s." + SessionsTable.SESSION_START;
+
+        String selectJoinAddress = SELECT +
+                UsersTable.USER_UUID + ',' +
+                JoinAddressTable.JOIN_ADDRESS +
+                FROM + "(" + selectLatestJoinAddressIds + ") a" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=a." + SessionsTable.USER_ID +
+                INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on j." + JoinAddressTable.ID + "=a." + SessionsTable.JOIN_ADDRESS_ID;
+
+        return db -> db.queryMap(selectJoinAddress, JoinAddressQueries::extractJoinAddress, HashMap::new);
+    }
+
+    public static Query<Map<UUID, String>> latestJoinAddressesOfPlayers(ServerUUID serverUUID) {
+        String selectLatestSessionStarts = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_START + ") as max_start" +
+                FROM + SessionsTable.TABLE_NAME + " max_s" +
+                WHERE + "max_s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + SessionsTable.USER_ID;
+        String selectLatestJoinAddressIds = SELECT + SessionsTable.JOIN_ADDRESS_ID + ",s." + SessionsTable.USER_ID +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + "(" + selectLatestSessionStarts + ") q1 on q1." + SessionsTable.USER_ID + "=s." + SessionsTable.USER_ID +
+                AND + "q1.max_start=s." + SessionsTable.SESSION_START;
+
+        String selectJoinAddress = SELECT +
+                UsersTable.USER_UUID + ',' +
+                JoinAddressTable.JOIN_ADDRESS +
+                FROM + "(" + selectLatestJoinAddressIds + ") a" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=a." + SessionsTable.USER_ID +
+                INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on j." + JoinAddressTable.ID + "=a." + SessionsTable.JOIN_ADDRESS_ID;
+
+        return db -> db.queryMap(selectJoinAddress, JoinAddressQueries::extractJoinAddress, HashMap::new, serverUUID);
     }
 
     public static QueryStatement<List<String>> allJoinAddresses() {

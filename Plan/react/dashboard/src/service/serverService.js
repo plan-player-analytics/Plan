@@ -288,3 +288,23 @@ const fetchNetworkRetentionData = async (timestamp) => {
     if (staticSite) url = `/data/retention.json`;
     return doGetRequest(url, timestamp);
 }
+
+export const fetchPlayerJoinAddresses = async (timestamp, identifier) => {
+    if (identifier) {
+        return await fetchServerPlayerJoinAddresses(timestamp, identifier);
+    } else {
+        return await fetchNetworkPlayerJoinAddresses(timestamp);
+    }
+}
+
+const fetchServerPlayerJoinAddresses = async (timestamp, identifier) => {
+    let url = `/v1/joinAddresses?server=${identifier}`;
+    if (staticSite) url = `/data/joinAddresses_${identifier}.json`;
+    return doGetRequest(url, timestamp);
+}
+
+const fetchNetworkPlayerJoinAddresses = async (timestamp) => {
+    let url = `/v1/joinAddresses`;
+    if (staticSite) url = `/data/joinAddresses.json`;
+    return doGetRequest(url, timestamp);
+}

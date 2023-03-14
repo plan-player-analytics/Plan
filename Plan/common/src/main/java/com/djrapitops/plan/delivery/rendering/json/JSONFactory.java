@@ -135,6 +135,16 @@ public class JSONFactory {
         return db.query(PlayerRetentionQueries.fetchRetentionData());
     }
 
+    public Map<UUID, String> playerJoinAddresses(ServerUUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        return db.query(JoinAddressQueries.latestJoinAddressesOfPlayers(serverUUID));
+    }
+
+    public Map<UUID, String> playerJoinAddresses() {
+        Database db = dbSystem.getDatabase();
+        return db.query(JoinAddressQueries.latestJoinAddressesOfPlayers());
+    }
+
     public List<Map<String, Object>> serverSessionsAsJSONMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
 

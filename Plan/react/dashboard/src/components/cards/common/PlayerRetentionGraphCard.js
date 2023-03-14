@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import ExtendableCardBody from "../../layout/extension/ExtendableCardBody";
 import {BasicDropdown} from "../../input/BasicDropdown";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
-import {fetchRetentionData} from "../../../service/serverService";
+import {fetchPlayerJoinAddresses, fetchRetentionData} from "../../../service/serverService";
 import {ErrorViewCard} from "../../../views/ErrorView";
 import {CardLoader} from "../../navigation/Loader";
 import {tooltip} from "../../../util/graphs";
@@ -35,6 +35,10 @@ const PlayerRetentionGraphCard = ({identifier}) => {
     const time = useMemo(() => new Date().getTime(), []);
 
     const {data, loadingError} = useDataRequest(fetchRetentionData, [identifier]);
+    const {
+        data: joinAddressData,
+        loadingError: joinAddressLoadingError
+    } = useDataRequest(fetchPlayerJoinAddresses, [identifier]);
 
     const [selectedWindow, setSelectedWindow] = useState('days');
     const windowOptions = useMemo(() => [
@@ -60,18 +64,19 @@ const PlayerRetentionGraphCard = ({identifier}) => {
         {name: 'weeks', displayName: t('html.label.time.week')},
         {name: 'months', displayName: t('html.label.time.month')},
         {name: 'years', displayName: t('html.label.time.year')},
+        {name: 'joinAddress', displayName: t('html.label.joinAddress')},
     ], [t]);
     const [selectedYAxis, setSelectedYAxis] = useState('percentage');
     const yAxisOptions = useMemo(() => [
         {name: 'percentage', displayName: t('html.label.unit.percentage')},
         {name: 'count', displayName: t('html.label.unit.playerCount')},
-        {name: 'count-plus', displayName: t('html.label.unit.playerCount') + ' + ' + t('html.label.registered')}
     ], [t]);
     const [selectedAxis, setSelectedAxis] = useState('time');
     const axisOptions = useMemo(() => [
-        {name: 'date', displayName: t('html.label.time.date')},
         {name: 'time', displayName: t('html.label.retention.timeSinceRegistered')},
-        {name: 'playtime', displayName: t('html.label.playtime')}
+        {name: 'playtime', displayName: t('html.label.playtime')},
+        {name: 'date', displayName: t('html.label.time.date')},
+        {name: 'deltas', displayName: t('html.label.time.date') + ' > ' + t('html.label.registered')},
     ], [t]);
 
     const [series, setSeries] = useState([]);
@@ -83,16 +88,27 @@ const PlayerRetentionGraphCard = ({identifier}) => {
         const increment = windowOptions.find(option => option.name === selectedWindow).increment;
         const xAxis = axisOptions.find(option => option.name === selectedAxis).name;
         switch (xAxis) {
+            case 'deltas':
+                const retainedBasedOnDeltas = [];
+                const firstRegisterDeltasStart = dataToMap[0].registerDate - dataToMap[0].registerDate % dayMs;
+                let previousRetained = -1;
+                for (let date = firstRegisterDeltasStart; date < time; date += increment) {
+                    const filter = player => player.registerDate <= date && player.lastSeenDate >= date;
+                    const retainedSince = dataToMap.filter(filter).length;
+                    retainedBasedOnDeltas.push([date, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
+                    if (previousRetained === retainedSince && retainedSince <= 0.5) break;
+                    if (previousRetained !== -1 || retainedSince > 0) previousRetained = retainedSince;
+                }
+                seriesData = retainedBasedOnDeltas;
+                break;
             case 'date':
                 const retainedBasedOnDate = [];
                 const firstRegisterDateStart = dataToMap[0].registerDate - dataToMap[0].registerDate % dayMs;
-                let previousValue = -1;
                 for (let date = firstRegisterDateStart; date < time; date += increment) {
-                    const filter = selectedYAxis === 'count-plus' ? player => player.registerDate <= date && player.lastSeenDate >= date : player => player.lastSeenDate >= date;
+                    const filter = player => player.lastSeenDate >= date;
                     const retainedSince = dataToMap.filter(filter).length;
                     retainedBasedOnDate.push([date, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
-                    if (selectedYAxis === 'count-plus' && previousValue === retainedSince && retainedSince <= 0 || selectedYAxis !== 'count-plus' && retainedSince < 0.5) break;
-                    if (previousValue !== -1 || retainedSince > 0) previousValue = retainedSince;
+                    if (retainedSince < 0.5) break;
                 }
                 seriesData = retainedBasedOnDate;
                 break;
@@ -119,7 +135,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
         return seriesData;
     }, [selectedWindow, windowOptions, selectedAxis, axisOptions, selectedYAxis, time])
 
-    const group = useCallback(async filtered => {
+    const group = useCallback(async (filtered, joinAddressData) => {
         const grouped = {};
         const groupBy = groupByOptions.find(option => option.name === selectedGroupBy).name;
         for (const point of filtered) {
@@ -146,6 +162,11 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                     if (!grouped[year]) grouped[year] = [];
                     grouped[year].push(point);
                     break;
+                case 'joinAddress':
+                    const joinAddress = joinAddressData[point.playerUUID];
+                    if (!grouped[joinAddress]) grouped[joinAddress] = [];
+                    grouped[joinAddress].push(point);
+                    break;
                 case 'none':
                 default:
                     grouped['all'] = filtered;
@@ -155,13 +176,13 @@ const PlayerRetentionGraphCard = ({identifier}) => {
         return grouped;
     }, [groupByOptions, selectedGroupBy]);
 
-    const createSeries = useCallback(async (retentionData) => {
+    const createSeries = useCallback(async (retentionData, joinAddressData) => {
 
         const start = groupOptions.find(option => option.name === selectedGroup).start;
         const filtered = retentionData.filter(point => point.registerDate > start)
             .sort((a, b) => a.registerDate - b.registerDate);
 
-        const grouped = await group(filtered);
+        const grouped = await group(filtered, joinAddressData);
 
         let i = 0;
         return Promise.all(Object.entries(grouped).map(async group => {
@@ -169,21 +190,26 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             const groupData = group[1];
             const color = rgbToHexString(hsvToRgb(randomHSVColor(i)));
             i++;
-            return {
+            const mapped = await mapToData(groupData, start);
+            if (mapped.filter(point => point[1] === 0).length === mapped.length) {
+                // Don't include all zeros series
+                return [];
+            }
+            return [{
                 name: name,
                 type: 'spline',
                 tooltip: tooltip.twoDecimals,
-                data: await mapToData(groupData, start),
+                data: mapped,
                 color: nightModeEnabled ? withReducedSaturation(color) : color
-            };
+            }];
         }));
     }, [nightModeEnabled, mapToData, groupOptions, selectedGroup, group]);
 
     useEffect(() => {
-        if (!data) return;
+        if (!data || !joinAddressData) return;
 
-        createSeries(data.player_retention).then(setSeries);
-    }, [data, createSeries, setSeries]);
+        createSeries(data.player_retention, joinAddressData.join_address_by_player).then(series => setSeries(series.flat()));
+    }, [data, joinAddressData, createSeries, setSeries]);
 
     useEffect(() => {
         const windowName = windowOptions.find(option => option.name === selectedWindow).displayName;
@@ -222,7 +248,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             xAxis: {
                 zoomEnabled: true,
                 title: {
-                    text: selectedAxis === 'date' ? t('html.label.time.date') : axisName + ' (' + windowName + ')'
+                    text: selectedAxis === 'date' || selectedAxis === 'deltas' ? t('html.label.time.date') : axisName + ' (' + windowName + ')'
                 }
             },
             yAxis: {
@@ -230,8 +256,13 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                 title: {text: unitLabel},
                 max: selectedYAxis === 'percentage' ? 100 : undefined
             },
-            tooltip: selectedAxis === 'date' ? {enabled: true} : {
+            tooltip: selectedAxis === 'date' || selectedAxis === 'deltas' ? {
                 enabled: true,
+                valueDecimals: 2,
+                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b>'
+            } : {
+                enabled: true,
+                valueDecimals: 2,
                 headerFormat: '{point.x} ' + windowName + '<br>',
                 pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b>'
             },
@@ -240,7 +271,9 @@ const PlayerRetentionGraphCard = ({identifier}) => {
     }, [t, nightModeEnabled, series, selectedGroupBy, axisOptions, selectedAxis, windowOptions, selectedWindow, selectedYAxis]);
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
-    if (!data) return <CardLoader/>;
+    if (joinAddressLoadingError) return <ErrorViewCard error={joinAddressLoadingError}/>
+    if (!data || !joinAddressData) return <CardLoader/>;
+
     return (
         <Card>
             <CardHeader icon={faUsersViewfinder} color={'light-blue'} label={t('html.label.playerRetention')}>
@@ -274,9 +307,9 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                     </Col>
                 </Row>
                 <hr/>
-                {selectedAxis !== 'date' &&
+                {(selectedAxis !== 'date' && selectedAxis !== 'deltas') &&
                     <FunctionPlotGraph id={'retention-graph'} options={graphOptions} tall/>}
-                {selectedAxis === 'date' &&
+                {(selectedAxis === 'date' || selectedAxis === 'deltas') &&
                     <LineGraph id={'retention-graph'} options={graphOptions} tall/>}
             </ExtendableCardBody>
         </Card>

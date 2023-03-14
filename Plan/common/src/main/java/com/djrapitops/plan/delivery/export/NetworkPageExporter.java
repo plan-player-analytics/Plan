@@ -167,7 +167,8 @@ public class NetworkPageExporter extends FileExporter {
                 "network/pingTable",
                 "sessions",
                 "extensionData?server=" + serverUUID,
-                "retention"
+                "retention",
+                "joinAddresses"
         );
     }
 

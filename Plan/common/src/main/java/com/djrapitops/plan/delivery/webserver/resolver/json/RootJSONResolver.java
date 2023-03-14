@@ -66,7 +66,8 @@ public class RootJSONResolver {
             WhoAmIJSONResolver whoAmIJSONResolver,
             ServerIdentityJSONResolver serverIdentityJSONResolver,
             ExtensionJSONResolver extensionJSONResolver,
-            RetentionJSONResolver retentionJSONResolver
+            RetentionJSONResolver retentionJSONResolver,
+            PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver
     ) {
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
@@ -96,6 +97,7 @@ public class RootJSONResolver {
                 .add("whoami", whoAmIJSONResolver)
                 .add("extensionData", extensionJSONResolver)
                 .add("retention", retentionJSONResolver)
+                .add("joinAddresses", playerJoinAddressJSONResolver)
                 .build();
     }
 

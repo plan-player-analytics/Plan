@@ -33,6 +33,13 @@ const PlayerRetentionGraphHelp = () => {
                     2023-05-13: 2023-04 - 5%, 5% of players who registered in April 2023 were still playing on 13th of
                     May 2023
                 </li>
+                <li><b>{t('html.label.time.date') + ' > ' + t('html.label.registered')}</b> Shows the cumulative amount
+                    of players from the group
+                    at a given time. If more players registered than stopped playing, the line goes up, otherwise the
+                    line goes down.
+                    This graph usually creates an arch and peaks when the '{t('html.label.retention.groupByTime')}'
+                    window is passed (eg. 2023-01 peaks on 31st of January, 2023-02 on 28th of February etc).
+                </li>
             </ul>
             <p></p>
             <hr/>
@@ -42,11 +49,6 @@ const PlayerRetentionGraphHelp = () => {
                 <li><b>{t('html.label.unit.playerCount')}</b> Number of players in the group who had not stopped
                     playing. This can be used as context for the
                     percentage, since there may be more new players in different months.
-                </li>
-                <li><b>{t('html.label.unit.playerCount') + ' + ' + t('html.label.registered')}</b> Number of players in
-                    the group who had registered, and had not stopped playing. This can be used to
-                    see how many new players were gained each month (the peak). This option only works with 'Date' X
-                    axis
                 </li>
             </ul>
             <hr/>
