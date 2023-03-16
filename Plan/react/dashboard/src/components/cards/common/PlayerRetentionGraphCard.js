@@ -91,7 +91,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
         switch (xAxis) {
             case 'deltas':
                 const retainedBasedOnDeltas = [];
-                const firstRegisterDeltasStart = dataToMap[0].registerDate - dataToMap[0].registerDate % dayMs;
+                const firstRegisterDeltasStart = dataToMap[0].registerDate - dataToMap[0].registerDate % increment;
                 let previousRetained = -1;
                 for (let date = firstRegisterDeltasStart; date < time; date += increment) {
                     const filter = player => player.registerDate <= date && player.lastSeenDate >= date;
@@ -104,7 +104,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                 break;
             case 'date':
                 const retainedBasedOnDate = [];
-                const firstRegisterDateStart = dataToMap[0].registerDate - dataToMap[0].registerDate % dayMs;
+                const firstRegisterDateStart = dataToMap[0].registerDate - dataToMap[0].registerDate % increment;
                 for (let date = firstRegisterDateStart; date < time; date += increment) {
                     const filter = player => player.lastSeenDate >= date;
                     const retainedSince = dataToMap.filter(filter).length;
