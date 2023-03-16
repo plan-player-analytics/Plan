@@ -270,6 +270,10 @@ const PlayerRetentionGraphHelp = () => {
                             (anonymized)</label>
                         <img className={'w-100'} alt={'Graph'} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225088901-2e30caf6-f141-4998-91de-2034fda5b7e9.png'}/>
+                        <hr/>
+                        <label>Cumulative player gain can be checked with stacked player count as Y axis</label>
+                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                             src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225722723-cde69a1a-09fd-4e19-a8fe-993d60435652.png'}/>
                     </div>
                 }
             ]}/>
