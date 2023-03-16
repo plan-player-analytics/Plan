@@ -70,6 +70,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
     const yAxisOptions = useMemo(() => [
         {name: 'percentage', displayName: t('html.label.unit.percentage')},
         {name: 'count', displayName: t('html.label.unit.playerCount')},
+        {name: 'count-stacked', displayName: t('html.label.unit.playerCount') + ' (' + t('html.label.stacked') + ')'},
     ], [t]);
     const [selectedAxis, setSelectedAxis] = useState('time');
     const axisOptions = useMemo(() => [
@@ -197,13 +198,13 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             }
             return [{
                 name: name,
-                type: 'spline',
+                type: selectedYAxis === 'count-stacked' ? 'areaspline' : 'spline',
                 tooltip: tooltip.twoDecimals,
                 data: mapped,
                 color: nightModeEnabled ? withReducedSaturation(color) : color
             }];
         }));
-    }, [nightModeEnabled, mapToData, groupOptions, selectedGroup, group]);
+    }, [nightModeEnabled, mapToData, groupOptions, selectedGroup, selectedYAxis, group]);
 
     useEffect(() => {
         if (!data || !joinAddressData) return;
@@ -239,7 +240,8 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             },
             plotOptions: {
                 areaspline: {
-                    fillOpacity: nightModeEnabled ? 0.2 : 0.4
+                    fillOpacity: nightModeEnabled ? 0.2 : 0.4,
+                    stacking: 'normal'
                 }
             },
             legend: {
@@ -254,7 +256,8 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             yAxis: {
                 zoomEnabled: true,
                 title: {text: unitLabel},
-                max: selectedYAxis === 'percentage' ? 100 : undefined
+                max: selectedYAxis === 'percentage' ? 100 : undefined,
+                min: 0
             },
             tooltip: selectedAxis === 'date' || selectedAxis === 'deltas' ? {
                 enabled: true,
@@ -276,7 +279,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
 
     return (
         <Card>
-            <CardHeader icon={faUsersViewfinder} color={'light-blue'} label={t('html.label.playerRetention')}>
+            <CardHeader icon={faUsersViewfinder} color={'indigo'} label={t('html.label.playerRetention')}>
                 <button className={"float-end"} onClick={openHelp}>
                     <Fa className={"col-blue"}
                         icon={faQuestionCircle}/>
