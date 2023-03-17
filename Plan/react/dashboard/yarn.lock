@@ -3958,10 +3958,10 @@ datatables.net-bs5@>=1.12.1, datatables.net-bs5@^1.13.4:
     datatables.net ">=1.12.1"
     jquery ">=1.7"
 
-datatables.net-responsive-bs5@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/datatables.net-responsive-bs5/-/datatables.net-responsive-bs5-2.4.0.tgz#ab3a6fb147e5886ae043c9ecd54652f3a5d6d5c0"
-  integrity sha512-2kxigvftgVgdyH+BZ17jbR+BcWYZsacnlTt4PeOH/P98bMuqJKrziss7CLz/6qud/ehHdLEQTjMDoJddN9NfxA==
+datatables.net-responsive-bs5@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/datatables.net-responsive-bs5/-/datatables.net-responsive-bs5-2.4.1.tgz#8342ea3d97f49b2d4ce3af9742367d2feef31000"
+  integrity sha512-gtW0IjNMWCWQ+KHpIPcgXiQrq2Dhxz8yKql4sS2WfuYz+Z7645mk7xmqEhy4aqpWEGXdv4rcaZhr4tt49NLOpQ==
   dependencies:
     datatables.net-bs5 ">=1.12.1"
     datatables.net-responsive ">=2.3.0"
