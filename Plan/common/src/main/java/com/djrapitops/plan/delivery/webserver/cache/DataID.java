@@ -52,7 +52,10 @@ public enum DataID {
     EXTENSION_TABS,
     EXTENSION_JSON,
     LIST_SERVERS,
-    JOIN_ADDRESSES_BY_DAY;
+    JOIN_ADDRESSES_BY_DAY,
+    PLAYER_RETENTION,
+    PLAYER_JOIN_ADDRESSES,
+    ;
 
     public String of(ServerUUID serverUUID) {
         if (serverUUID == null) return name();

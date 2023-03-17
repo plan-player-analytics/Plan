@@ -93,7 +93,7 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        deleteDirectory(tempDir);
+        if (tempDir != null) deleteDirectory(tempDir);
     }
 
     private void deleteDirectory(Path directory) throws IOException {

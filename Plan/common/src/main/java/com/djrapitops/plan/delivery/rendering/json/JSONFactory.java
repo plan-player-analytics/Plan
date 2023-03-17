@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.RetentionData;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.domain.mutators.PlayerKillMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
@@ -43,6 +44,7 @@ import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
+import com.djrapitops.plan.storage.database.queries.analysis.PlayerRetentionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
@@ -126,6 +128,26 @@ public class JSONFactory {
                 formatters, locale,
                 true // players page
         ).toJSONMap();
+    }
+
+    public List<RetentionData> playerRetentionAsJSONMap(ServerUUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        return db.query(PlayerRetentionQueries.fetchRetentionData(serverUUID));
+    }
+
+    public List<RetentionData> networkPlayerRetentionAsJSONMap() {
+        Database db = dbSystem.getDatabase();
+        return db.query(PlayerRetentionQueries.fetchRetentionData());
+    }
+
+    public Map<UUID, String> playerJoinAddresses(ServerUUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        return db.query(JoinAddressQueries.latestJoinAddressesOfPlayers(serverUUID));
+    }
+
+    public Map<UUID, String> playerJoinAddresses() {
+        Database db = dbSystem.getDatabase();
+        return db.query(JoinAddressQueries.latestJoinAddressesOfPlayers());
     }
 
     public List<Map<String, Object>> serverSessionsAsJSONMap(ServerUUID serverUUID) {

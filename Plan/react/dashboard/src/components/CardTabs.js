@@ -17,9 +17,9 @@ const TabButton = ({name, href, icon, color, active}) => {
 const TabButtons = ({tabs, selectedTab}) => {
     return (
         <ul className="nav nav-tabs" role="tablist">
-            {tabs.map((tab, i) => (
+            {tabs.map(tab => (
                 <TabButton
-                    key={i}
+                    key={tab.href}
                     name={tab.name}
                     href={tab.href}
                     icon={tab.icon}
@@ -37,10 +37,10 @@ const CardTabs = ({tabs}) => {
     const [selectedTab, setSelectedTab] = useState(firstTab);
 
     useEffect(() => {
-        setSelectedTab(hash && tabs ? tabs.find(t => t.href === hash.substring(1)).href : firstTab)
+        setSelectedTab(hash && tabs ? tabs.find(t => t.href === hash.substring(1))?.href : firstTab)
     }, [hash, tabs, firstTab])
 
-    const tabContent = tabs.find(t => t.href === selectedTab).element;
+    const tabContent = tabs.find(t => t.href === selectedTab)?.element;
     return (
         <>
             <TabButtons tabs={tabs} selectedTab={selectedTab}/>

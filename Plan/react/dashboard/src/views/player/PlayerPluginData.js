@@ -10,7 +10,7 @@ const PlayerPluginData = () => {
     const {player} = usePlayer();
     const {serverName} = useParams();
 
-    const extensions = player.extensions.find(extension => extension.serverName === serverName)
+    const extensions = player.extensions ? player.extensions.find(extension => extension.serverName === serverName) : {};
 
     useEffect(() => {
         const masonryRow = document.getElementById('extension-masonry-row');
@@ -48,7 +48,7 @@ const PlayerPluginData = () => {
                 <Row id="extension-masonry-row"
                      data-masonry='{"percentPosition": true, "itemSelector": ".extension-wrapper"}'
                      style={{overflowY: 'hidden'}}>
-                    {extensions.extensionData.map((extension, i) =>
+                    {extensions?.extensionData?.map((extension, i) =>
                         <ExtensionCardWrapper key={'ext-' + i} extension={extension}>
                             <ExtensionCard extension={extension}/>
                         </ExtensionCardWrapper>

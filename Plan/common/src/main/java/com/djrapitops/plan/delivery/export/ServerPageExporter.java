@@ -142,6 +142,7 @@ public class ServerPageExporter extends FileExporter {
                 server + serverUUID + "/pvppve",
                 server + serverUUID + "/playerbase",
                 server + serverUUID + "/join-addresses",
+                server + serverUUID + "/retention",
                 server + serverUUID + "/players",
                 server + serverUUID + "/geolocations",
                 server + serverUUID + "/performance",
@@ -190,7 +191,9 @@ public class ServerPageExporter extends FileExporter {
                 "pingTable?server=" + serverUUID,
                 "sessions?server=" + serverUUID,
                 "extensionData?server=" + serverUUID,
-                "serverIdentity?server=" + serverUUID
+                "serverIdentity?server=" + serverUUID,
+                "retention?server=" + serverUUID,
+                "joinAddresses?server=" + serverUUID
         );
     }
 

@@ -14,11 +14,11 @@ const inverseIndex = y => {
     return -2 * y / (Math.PI * (y - 5));
 }
 
-const activityIndexPlot = () => {
+const activityIndexPlot = (maxValue) => {
     const data = []
     let x;
 
-    for (x = 0; x <= 3.5; x += 0.01) {
+    for (x = 0; x <= Math.max(3.5, maxValue); x += 0.01) {
         data.push([x, indexValue(x)]);
     }
     return data;
@@ -67,7 +67,8 @@ const ActivityIndexHelp = () => {
     const [result, setResult] = useState(0);
 
     const series = useMemo(() => {
-        const data = activityIndexPlot();
+        const inverse = inverseIndex(result);
+        const data = activityIndexPlot(inverse);
         return [{
             name: t('html.label.activityIndex') + ' y=5-5/(πx/2)+1',
             data: data,
@@ -77,7 +78,7 @@ const ActivityIndexHelp = () => {
         }, {
             name: t('html.label.help.testResult'),
             type: 'scatter',
-            data: [{x: inverseIndex(result), y: result, marker: {radius: 10}}],
+            data: [{x: inverse, y: result, marker: {radius: 10}}],
             pointPlacement: 0,
             width: 5,
             tooltip: tooltip.twoDecimals,

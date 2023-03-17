@@ -14,6 +14,7 @@ const FunctionPlotGraph = ({
                                yPlotBands,
                                xPlotLines,
                                xPlotBands,
+                               options
                            }) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
@@ -23,7 +24,7 @@ const FunctionPlotGraph = ({
         Accessibility(Highcharts);
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
-        Highcharts.chart(id, {
+        Highcharts.chart(id, options ? options : {
             yAxis: {
                 plotLines: yPlotLines,
                 plotBands: yPlotBands
@@ -44,7 +45,7 @@ const FunctionPlotGraph = ({
             },
             series: series
         });
-    }, [series, id, t, graphTheming, nightModeEnabled, legendEnabled,
+    }, [options, series, id, t, graphTheming, nightModeEnabled, legendEnabled,
         yPlotLines, yPlotBands, xPlotLines, xPlotBands]);
 
     const style = tall ? {height: "450px"} : undefined;
