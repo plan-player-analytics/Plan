@@ -112,14 +112,14 @@ const PlayerRetentionGraphHelp = () => {
                 {
                     name: t('html.label.help.usingTheGraph'), icon: faGears, color: 'indigo', href: 'data-explanation',
                     element: <div className={'mt-2'}>
-                        <p>{t('html.label.help.retentionOptions')}</p>
+                        <p>{t('html.label.help.retention.options')}</p>
                         <h4>{t('html.label.help.tips')}</h4>
                         <ul>
-                            <li>{t('html.label.help.retentionCompareMonths')
+                            <li>{t('html.label.help.retention.compareMonths')
                                 .replace('<0>', t('html.label.retention.groupByTime'))
                                 .replace('<1>', t('html.label.time.month'))}
                             </li>
-                            <li>{t('html.label.help.retentionCompareJoinAddress')}</li>
+                            <li>{t('html.label.help.retention.compareJoinAddress')}</li>
                             <li>{t('html.label.help.graph.zoom')}</li>
                             <li>{t('html.label.help.graph.labels')}</li>
                         </ul>
@@ -130,19 +130,19 @@ const PlayerRetentionGraphHelp = () => {
                             {'{\n    playerUUID,\n    registerDate,\n    lastSeenDate,\n    timeDifference = lastSeenDate - registerDate,\n    playtime\n    joinAddress\n}'}
                         </pre>
                         <ol>
-                            <li>{t('html.label.retention.calculationStep1')
+                            <li>{t('html.label.help.retention.calculationStep1')
                                 .replace('<>', t('html.label.retention.timeSinceRegistered'))}
                             </li>
-                            <li>{t('html.label.retention.calculationStep2')
+                            <li>{t('html.label.help.retention.calculationStep2')
                                 .replace('<0>', t('html.label.retention.groupByTime'))
                                 .replace('<1>', t('html.label.time.month'))}
                             </li>
-                            <li>{t('html.label.retention.calculationStep3')
+                            <li>{t('html.label.help.retention.calculationStep3')
                                 .replace('<0>', t('html.label.xAxis'))
                                 .replace('<1>', t('html.label.yAxis'))}
                             </li>
                             <li>{t('html.label.help.retention.calculationStep4')
-                                .replace('<>', t('html.label.retention.timeStep'))}
+                                .replace('<>', t('html.label.help.retention.timeStep'))}
                             </li>
                             <li>
                                 <p className={'m-0'}>{t('html.label.help.retention.calculationStep5')}

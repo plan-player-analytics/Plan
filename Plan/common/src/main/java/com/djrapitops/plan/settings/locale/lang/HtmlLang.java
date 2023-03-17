@@ -328,7 +328,7 @@ public enum HtmlLang implements Lang {
     RETENTION_CALCULATED("html.label.help.retention.howIsItCalculated", "How it is calculated"),
     RETENTION_CALCULATED_FROM("html.label.help.retention.howIsItCalculatedData", "The graph is generated from player data:"),
     RETENTION_CALCULATION_STEP1("html.label.help.retention.calculationStep1", "First the data is filtered using '<>' option. Any players with 'registerDate' outside the time range are ignored."),
-    RETENTION_CALCULATION_STEP2("html.label.help.retention.calculationStep2", "Then it is grouped into groups of players using '<0>' option, eg. With '<1>': \"All players who registered in January 2023, February 2023, etc\""),
+    RETENTION_CALCULATION_STEP2("html.label.help.retention.calculationStep2", "Then it is grouped into groups of players using '<0>' option, eg. With '<1>': All players who registered in January 2023, February 2023, etc"),
     RETENTION_CALCULATION_STEP3("html.label.help.retention.calculationStep3", "Then the '<0>' and '<1>' options select which visualization to render."),
     RETENTION_CALCULATION_STEP4("html.label.help.retention.calculationStep4", "'<>' controls how many points the graph has, eg. 'Days' has one point per day."),
     RETENTION_CALCULATION_STEP5("html.label.help.retention.calculationStep5", "On each calculated point all players are checked for the condition."),
