@@ -37,12 +37,14 @@ const ServerPerformance = React.lazy(() => import("./views/server/ServerPerforma
 const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginData"));
 const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
 const ServerJoinAddresses = React.lazy(() => import("./views/server/ServerJoinAddresses"));
+const ServerPlayerRetention = React.lazy(() => import("./views/server/ServerPlayerRetention"));
 
 const NetworkPage = React.lazy(() => import("./views/layout/NetworkPage"));
 const NetworkOverview = React.lazy(() => import("./views/network/NetworkOverview"));
 const NetworkServers = React.lazy(() => import("./views/network/NetworkServers"));
 const NetworkSessions = React.lazy(() => import("./views/network/NetworkSessions"));
 const NetworkJoinAddresses = React.lazy(() => import("./views/network/NetworkJoinAddresses"));
+const NetworkPlayerRetention = React.lazy(() => import("./views/network/NetworkPlayerRetention"));
 const NetworkGeolocations = React.lazy(() => import("./views/network/NetworkGeolocations"));
 const NetworkPlayerbaseOverview = React.lazy(() => import("./views/network/NetworkPlayerbaseOverview"));
 const NetworkPerformance = React.lazy(() => import("./views/network/NetworkPerformance"));
@@ -145,7 +147,7 @@ function App() {
                                 <Route path="pvppve" element={<Lazy><ServerPvpPve/></Lazy>}/>
                                 <Route path="playerbase" element={<Lazy><PlayerbaseOverview/></Lazy>}/>
                                 <Route path="join-addresses" element={<Lazy><ServerJoinAddresses/></Lazy>}/>
-                                <Route path="retention" element={<></>}/>
+                                <Route path="retention" element={<Lazy><ServerPlayerRetention/></Lazy>}/>
                                 <Route path="players" element={<Lazy><ServerPlayers/></Lazy>}/>
                                 <Route path="geolocations" element={<Lazy><ServerGeolocations/></Lazy>}/>
                                 <Route path="performance" element={<Lazy><ServerPerformance/></Lazy>}/>
@@ -165,6 +167,7 @@ function App() {
                                 {!staticSite &&
                                     <Route path="performance" element={<Lazy><NetworkPerformance/></Lazy>}/>}
                                 <Route path="playerbase" element={<Lazy><NetworkPlayerbaseOverview/></Lazy>}/>
+                                <Route path="retention" element={<Lazy><NetworkPlayerRetention/></Lazy>}/>
                                 <Route path="join-addresses" element={<Lazy><NetworkJoinAddresses/></Lazy>}/>
                                 <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
                                 <Route path="geolocations" element={<Lazy><NetworkGeolocations/></Lazy>}/>

@@ -37,6 +37,7 @@
     --color-night-text-dark-bg: #eee8d5;
 
     --color-theme: var(--color-plan);
+    --color-night: var(--color-night-dark-blue);
 }
 
 a {

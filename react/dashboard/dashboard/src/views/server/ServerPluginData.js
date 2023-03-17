@@ -11,7 +11,7 @@ import ErrorView from "../ErrorView";
 const ServerPluginData = () => {
     const {t} = useTranslation();
     const {extensionData, extensionDataLoadingError} = useServerExtensionContext();
-    const extensions = useMemo(() => extensionData ? extensionData.extensions.filter(extension => !extension.wide) : [], [extensionData]);
+    const extensions = useMemo(() => extensionData?.extensions ? extensionData.extensions.filter(extension => !extension.wide) : [], [extensionData]);
 
     useEffect(() => {
         const masonryRow = document.getElementById('extension-masonry-row');

@@ -11,7 +11,7 @@ const QuickViewGraphCard = ({server}) => {
         <Card>
             <CardHeader icon={faChartArea} color={'light-blue'}
                         label={server.name + ' ' + t('html.label.onlineActivity') + ' (' + t('html.label.thirtyDays') + ')'}/>
-            <PlayersOnlineGraph data={server.playersOnline}/>
+            <PlayersOnlineGraph data={{playersOnline: server.playersOnline, color: server.playersOnlineColor}}/>
         </Card>
     )
 };
