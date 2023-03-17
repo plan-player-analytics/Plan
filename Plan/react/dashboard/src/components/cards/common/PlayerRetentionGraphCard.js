@@ -214,7 +214,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
 
     useEffect(() => {
         const windowName = windowOptions.find(option => option.name === selectedWindow).displayName;
-        const unitLabel = selectedYAxis === 'percentage' ? 'Retained Players %' : t('html.label.players');
+        const unitLabel = selectedYAxis === 'percentage' ? t('html.label.retention.retainedPlayersPercentage') : t('html.label.players');
         const axisName = axisOptions.find(option => option.name === selectedAxis).displayName;
         setGraphOptions({
             title: {text: ''},

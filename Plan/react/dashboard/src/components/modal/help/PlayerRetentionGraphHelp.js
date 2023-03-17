@@ -52,7 +52,7 @@ const PlayerRetentionGraphHelp = () => {
         }]);
     }, [x, data, setSeries]);
     useEffect(() => {
-        const unitLabel = 'Retained Players %';
+        const unitLabel = t('html.label.retention.retainedPlayersPercentage');
         const windowName = t('html.label.time.hours');
         const axisName = axisOptions.find(option => option.name === selectedAxis).displayName;
         setGraphOptions({
@@ -110,67 +110,59 @@ const PlayerRetentionGraphHelp = () => {
         <>
             <CardTabs tabs={[
                 {
-                    name: "Using the graph", icon: faGears, color: 'indigo', href: 'data-explanation',
+                    name: t('html.label.help.usingTheGraph'), icon: faGears, color: 'indigo', href: 'data-explanation',
                     element: <div className={'mt-2'}>
-                        <p>Select the options to analyze different aspects of Player Retention.</p>
-                        <h4>Tips</h4>
+                        <p>{t('html.label.help.retentionOptions')}</p>
+                        <h4>{t('html.label.help.tips')}</h4>
                         <ul>
-                            <li>You can compare different months by changing the
-                                '{t('html.label.retention.groupByTime')}' option to '{t('html.label.time.month')}'.
+                            <li>{t('html.label.help.retentionCompareMonths')
+                                .replace('<0>', t('html.label.retention.groupByTime'))
+                                .replace('<1>', t('html.label.time.month'))}
                             </li>
-                            <li>Grouping by join address allows measuring advertising campaigns on different sites.</li>
-                            <li>You can Zoom in by click + dragging on the graph.</li>
-                            <li>You can hide/show a group by clicking on the label at the bottom.</li>
+                            <li>{t('html.label.help.retentionCompareJoinAddress')}</li>
+                            <li>{t('html.label.help.graph.zoom')}</li>
+                            <li>{t('html.label.help.graph.labels')}</li>
                         </ul>
                         <hr/>
-                        <h3>How it is calculated</h3>
-                        <p>The graph is generated from player data:</p>
+                        <h3>{t('html.label.help.retention.howIsItCalculated')}</h3>
+                        <p>{t('html.label.help.retention.howIsItCalculatedData')}</p>
                         <pre>
                             {'{\n    playerUUID,\n    registerDate,\n    lastSeenDate,\n    timeDifference = lastSeenDate - registerDate,\n    playtime\n    joinAddress\n}'}
                         </pre>
                         <ol>
-                            <li>First the data is filtered using '{t('html.label.retention.timeSinceRegistered')}'
-                                option. Any players with 'registerDate' outside the time range are ignored.
+                            <li>{t('html.label.retention.calculationStep1')
+                                .replace('<>', t('html.label.retention.timeSinceRegistered'))}
                             </li>
-                            <li>Then it is grouped into groups of players using '{t('html.label.retention.groupByTime')}'
-                                option, eg. With '{t('html.label.time.month')}': "All players who registered in January
-                                2023, February 2023, etc"
+                            <li>{t('html.label.retention.calculationStep2')
+                                .replace('<0>', t('html.label.retention.groupByTime'))
+                                .replace('<1>', t('html.label.time.month'))}
                             </li>
-                            <li>Then the '{t('html.label.xAxis')}' and '{t('html.label.yAxis')}' options select which
-                                visualization to render.
+                            <li>{t('html.label.retention.calculationStep3')
+                                .replace('<0>', t('html.label.xAxis'))
+                                .replace('<1>', t('html.label.yAxis'))}
                             </li>
-                            <li>'{t('html.label.retention.timeStep')}' controls how many points the graph has, eg.
-                                'Days' has one point per day.
+                            <li>{t('html.label.help.retention.calculationStep4')
+                                .replace('<>', t('html.label.retention.timeStep'))}
                             </li>
                             <li>
-                                <p className={'m-0'}>On each calculated point all players are checked for the condition.
-                                    Select X Axis below to see conditions.</p>
+                                <p className={'m-0'}>{t('html.label.help.retention.calculationStep5')}
+                                    {t('html.label.help.retention.calculationStep6')}</p>
                                 <label>{t('html.label.xAxis')}</label>
                                 <BasicDropdown selected={selectedAxis} options={axisOptions}
                                                onChange={setSelectedAxis}/>
                                 <div className={'mt-2'}>
-                                    <p>{selectedAxis === 'time' && <>
-                                        This visualization tells how long people keep coming back to play on the server
-                                        after they join the first time.
-                                        The visualization uses timeDifference. If x &lt; timeDifference, the player is
-                                        visible on the graph.
-                                    </>}
+                                    <p>
+                                        {selectedAxis === 'time' && <>
+                                            {t('html.label.help.retention.calculationStepTime')}
+                                        </>}
                                         {selectedAxis === 'playtime' && <>
-                                            This visualization tells how long the gameplay loop keeps players engaged on
-                                            your server. The visualization uses playtime. If x &lt; playtime, the player
-                                            is visible on the graph.
+                                            {t('html.label.help.retention.calculationStepPlaytime')}
                                         </>}
                                         {selectedAxis === 'date' && <>
-                                            This visualization shows the different groups of players that are still
-                                            playing on your server. The visualization uses lastSeen date. If
-                                            x &lt; lastSeenDate, the player is visible on the graph.
+                                            {t('html.label.help.retention.calculationStepDate')}
                                         </>}
                                         {selectedAxis === 'deltas' && <>
-                                            This visualization is most effective using Player Count as the Y Axis. The
-                                            visualization shows net gain of players (How many players joined minus
-                                            players who stopped playing). The visualization uses both registered and
-                                            lastSeen dates. If registerDate &lt; x &lt; lastSeenDate, the player is
-                                            visible on the graph.
+                                            {t('html.label.help.retention.calculationStepDeltas')}
                                         </>}</p>
                                     {selectedAxis !== 'date' && selectedAxis !== 'deltas' && <>
                                         <h4>{t('html.label.help.testPrompt')}</h4>
@@ -199,7 +191,7 @@ const PlayerRetentionGraphHelp = () => {
                                                 <th>{x <= 2 ? t('plugin.generic.yes') : t('plugin.generic.no')}</th>
                                             </tr>
                                             <tr style={x <= 1 ? {} : {backgroundColor: disabledColor}}>
-                                                <td>Tiger</td>
+                                                <td>Tigger</td>
                                                 <td>1h 59min 59s</td>
                                                 <th>{x <= 1 ? t('plugin.generic.yes') : t('plugin.generic.no')}</th>
                                             </tr>
@@ -234,45 +226,42 @@ const PlayerRetentionGraphHelp = () => {
 
                     </div>
                 }, {
-                    name: "Examples",
+                    name: t('html.label.help.examples'),
                     icon: faChartArea,
                     color: 'indigo',
                     href: 'interesting-combinations',
                     element: <div className={'mt-2'}>
                         <label>{t('html.label.retention.timeSinceRegistered')}</label>
-                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                        <img className={'w-100'} alt={t('html.label.help.graph.title')} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225086629-69e70c66-69d5-4a08-afbc-c63b218ec9bc.png'}/>
                         <hr/>
-                        <label>Playtime tells how long the gameplay loop keeps players engaged on your server.</label>
-                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                        <label>{t('html.label.help.retention.examples.playtime')}</label>
+                        <img className={'w-100'} alt={t('html.label.help.graph.title')} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225086773-ae5646e5-0d9e-4016-9f1d-c392d3d25c07.png'}/>
                         <hr/>
                         <label>{t('html.label.time.date')}</label>
-                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                        <img className={'w-100'} alt={t('html.label.help.graph.title')} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225086880-c6e88e9a-125d-4513-b86a-ca61b4d752b2.png'}/>
                         <hr/>
-                        <label>{t('html.label.time.date')} &gt; {t('html.label.registered')} shows net gain of
-                            players.</label>
-                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                        <label>{t('html.label.help.retention.examples.deltas')
+                            .replace('<>', t('html.label.time.date') + ' > ' + t('html.label.registered'))}</label>
+                        <img className={'w-100'} alt={t('html.label.help.graph.title')} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225087066-0cacc7e4-aacc-48ff-97d7-ba2cf6a368ff.png'}/>
                         <hr/>
-                        <label>A general pattern emerges when all players start leaving the server at the same
-                            time</label>
-                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                        <label>{t('html.label.help.retention.examples.pattern')}</label>
+                        <img className={'w-100'} alt={t('html.label.help.graph.title')} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225087273-04331324-6bc3-4efb-8864-166b5b3d4a89.png'}/>
                         <hr/>
-                        <label>Comparing player gain of different months. Plateaus suggest there were players Plan
-                            doesn't know about. In this example Plan was installed in January 2022.</label>
-                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                        <label>{t('html.label.help.retention.examples.plateau')}</label>
+                        <img className={'w-100'} alt={t('html.label.help.graph.title')} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225087828-8db2da1a-578d-43fc-abc5-2aa09e97935e.png'}/>
                         <hr/>
-                        <label>Comparing player gain of different ad campaigns using different Join Addresses
-                            (anonymized)</label>
-                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                        <label>{t('html.label.help.retention.examples.adCampaign')}</label>
+                        <img className={'w-100'} alt={t('html.label.help.graph.title')} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225088901-2e30caf6-f141-4998-91de-2034fda5b7e9.png'}/>
                         <hr/>
-                        <label>Cumulative player gain can be checked with stacked player count as Y axis</label>
-                        <img className={'w-100'} alt={'Graph'} loading={'lazy'}
+                        <label>{t('html.label.help.retention.examples.stack')}</label>
+                        <img className={'w-100'} alt={t('html.label.help.graph.title')} loading={'lazy'}
                              src={'https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/screenshot/225722723-cde69a1a-09fd-4e19-a8fe-993d60435652.png'}/>
                     </div>
                 }
