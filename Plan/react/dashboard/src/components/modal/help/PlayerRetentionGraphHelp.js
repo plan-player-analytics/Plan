@@ -142,7 +142,7 @@ const PlayerRetentionGraphHelp = () => {
                                 .replace('<1>', t('html.label.yAxis'))}
                             </li>
                             <li>{t('html.label.help.retention.calculationStep4')
-                                .replace('<>', t('html.label.help.retention.timeStep'))}
+                                .replace('<>', t('html.label.retention.timeStep'))}
                             </li>
                             <li>
                                 <p className={'m-0'}>{t('html.label.help.retention.calculationStep5')}
