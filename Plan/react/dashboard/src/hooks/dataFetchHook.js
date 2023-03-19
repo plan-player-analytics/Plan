@@ -59,7 +59,7 @@ export const useDataRequest = (fetchMethod, parameters) => {
         fetchMethod(updateRequested, ...parameters).then(({data: json, error}) => {
             handleResponse(json, error, false, 1000);
         });
-    }, [fetchMethod, ...parameters, updateRequested, refreshBarrierMs])
+    }, [fetchMethod, parameters.length, ...parameters, updateRequested, refreshBarrierMs])
     /* eslint-enable react-hooks/exhaustive-deps */
 
     return {data, loadingError};
