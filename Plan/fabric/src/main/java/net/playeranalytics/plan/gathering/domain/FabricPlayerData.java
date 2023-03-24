@@ -73,7 +73,7 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     private Optional<InetAddress> getIPFromSocketAddress() {
         try {
-            SocketAddress socketAddress = player.networkHandler.connection.getAddress();
+            SocketAddress socketAddress = player.networkHandler.getConnectionAddress();
             if (socketAddress instanceof InetSocketAddress inetSocketAddress) {
                 return Optional.of(inetSocketAddress.getAddress());
             } else if (socketAddress instanceof UnixDomainSocketAddress) {

@@ -4,6 +4,7 @@
   "package": "net.playeranalytics.plan.gathering.listeners.events.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ClientToServerHandshakePacketMixin",
     "KickCommandMixin",
     "PlayerManagerMixin",
     "ServerCommandSourceMixin",

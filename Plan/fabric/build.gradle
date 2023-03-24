@@ -8,9 +8,9 @@ dependencies {
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    minecraft "com.mojang:minecraft:1.19.3"
-    mappings "net.fabricmc:yarn:1.19.3+build.2:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.14.11"
+    minecraft "com.mojang:minecraft:1.19.4"
+    mappings "net.fabricmc:yarn:1.19.4+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.14.17"
     modImplementation('me.lucko:fabric-permissions-api:0.2-SNAPSHOT')
 
     // Fabric API
@@ -24,7 +24,7 @@ dependencies {
     ]
 
     apiModules.forEach {
-        modImplementation(fabricApi.module(it, "0.68.1+1.19.3"))
+        modImplementation(fabricApi.module(it, "0.76.0+1.19.4"))
     }
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
@@ -111,14 +111,10 @@ shadowJar {
     mergeServiceFiles()
 }
 
-prepareRemapJar {
-    dependsOn tasks.shadowJar
-}
-
 remapJar {
     dependsOn tasks.shadowJar
     mustRunAfter tasks.shadowJar
-    input = shadowJar.archiveFile.get()
+    inputFile = shadowJar.archiveFile.get()
     addNestedDependencies = true
 
     destinationDirectory.set(file("$rootDir/builds/"))
