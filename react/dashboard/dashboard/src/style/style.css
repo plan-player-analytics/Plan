@@ -1391,6 +1391,21 @@ body.sidebar-hidden .navbar-nav {
     }
 }
 
+@media (max-width: 400px) {
+    td, th {
+        font-size: 12px;
+        padding: 0.3rem !important;
+    }
+
+    .card-body p + p {
+        margin-top: 0.75rem;
+    }
+
+    p {
+        font-size: 12px;
+    }
+}
+
 .collapse-item.nav-button {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1429,4 +1444,8 @@ ul.filters {
 
 .contributor {
     width: 33%;
+}
+
+.extension-table-header {
+    cursor: pointer;
 }

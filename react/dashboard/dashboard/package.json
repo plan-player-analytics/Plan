@@ -24,7 +24,7 @@
     "datatables.net-bs5": "^1.13.4",
     "datatables.net-responsive-bs5": "^2.4.1",
     "highcharts": "^10.3.3",
-    "i18next": "^22.4.11",
+    "i18next": "^22.4.13",
     "i18next-chained-backend": "^4.2.0",
     "i18next-http-backend": "^2.2.0",
     "i18next-localstorage-backend": "^4.1.0",
@@ -37,7 +37,7 @@
     "react-mcjsonchat": "^1.0.0",
     "react-router-dom": "6",
     "react-scripts": "5.0.1",
-    "sass": "^1.59.3",
+    "sass": "^1.60.0",
     "source-map-explorer": "^2.5.2",
     "swagger-ui": "^4.18.1",
     "web-vitals": "^3.0.2"
