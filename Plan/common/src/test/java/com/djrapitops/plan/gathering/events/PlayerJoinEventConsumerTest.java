@@ -204,7 +204,7 @@ class PlayerJoinEventConsumerTest {
         underTest.onJoinGameServer(join);
         waitUntilDatabaseIsDone(database);
 
-        Set<UserInfo> expected = Set.of(new UserInfo(TestConstants.PLAYER_ONE_UUID, serverUUID, 1234L, false, "play.testjoinaddress.com", false));
+        Set<UserInfo> expected = Set.of(new UserInfo(TestConstants.PLAYER_ONE_UUID, serverUUID, 1234000L, false, "play.testjoinaddress.com", false));
         Set<UserInfo> result = database.query(UserInfoQueries.fetchUserInformationOfUser(TestConstants.PLAYER_ONE_UUID));
         assertEquals(expected, result);
     }
