@@ -1,3 +1,4 @@
+REL|5.5.2307|https://github.com/plan-player-analytics/Plan/releases/download/5.5.2307/Plan-5.5-build-2307.jar|https://github.com/plan-player-analytics/Plan/releases
 DEV|5.5.2290|https://github.com/plan-player-analytics/Plan/releases/download/5.5.2290/Plan-5.5-dev-build-2290.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.5.2290
 REL|5.5.2272|https://github.com/plan-player-analytics/Plan/releases/download/5.5.2272/Plan-5.5-build-2272.jar|https://github.com/plan-player-analytics/Plan/releases
 DEV|5.5.2254|https://github.com/plan-player-analytics/Plan/releases/download/5.5.2254/Plan-5.5-dev-build-2254.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.5.2254
