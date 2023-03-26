@@ -67,7 +67,12 @@ public class DeathEventListener implements FabricListener {
         }
 
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) ->
-                PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer)
+                {
+                if (!this.isEnabled) {
+                    return;
+                }
+                PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
+                }
         );
 
         PlanFabricEvents.ON_KILLED.register((victim, killer) -> {
