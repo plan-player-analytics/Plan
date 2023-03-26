@@ -97,7 +97,7 @@ subprojects {
         dependencyDownloadVersion = "1.3.0"
 
         bstatsVersion = "3.0.1"
-        placeholderapiVersion = "2.11.2"
+        placeholderapiVersion = "2.11.3"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
         junitVersion = "5.9.2"
