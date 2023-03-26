@@ -130,8 +130,17 @@ public class PlayerJoinEventConsumer {
                 .ifPresent(dbSystem.getDatabase()::executeTransaction);
     }
 
-    private CompletableFuture<?> storeGamePlayer(PlayerJoin join) {
+    private static long getRegisterDate(PlayerJoin join) {
         long registerDate = join.getPlayer().getRegisterDate().orElseGet(join::getTime);
+        // Correct incorrect register dates https://github.com/plan-player-analytics/Plan/issues/2934
+        if (registerDate < System.currentTimeMillis() / 1000) {
+            registerDate = registerDate * 1000;
+        }
+        return registerDate;
+    }
+
+    private CompletableFuture<?> storeGamePlayer(PlayerJoin join) {
+        long registerDate = getRegisterDate(join);
         String joinAddress = join.getPlayer().getJoinAddress().orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         Transaction transaction = new StoreServerPlayerTransaction(
                 join.getPlayerUUID(), registerDate, join.getPlayer().getName(), join.getServerUUID(), joinAddress

@@ -59,7 +59,11 @@ public class StoreServerPlayerTransaction extends PlayerRegisterTransaction {
 
         // Updates register date to smallest possible value.
         Optional<Long> foundRegisterDate = query(PlayerFetchQueries.fetchRegisterDate(playerUUID));
-        if (foundRegisterDate.isPresent() && foundRegisterDate.get() > registerDate) {
+        if (foundRegisterDate.isPresent() &&
+                (foundRegisterDate.get() > registerDate
+                        // Correct incorrect register dates https://github.com/plan-player-analytics/Plan/issues/2934
+                        || foundRegisterDate.get() < System.currentTimeMillis() / 1000)
+        ) {
             execute(DataStoreQueries.updateMainRegisterDate(playerUUID, registerDate));
         }
 
