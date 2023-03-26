@@ -36,8 +36,10 @@ import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class DeathEventListener implements FabricListener {
 
     private final Processing processing;
@@ -45,6 +47,7 @@ public class DeathEventListener implements FabricListener {
     private final ServerInfo serverInfo;
 
     private boolean isEnabled = false;
+    private boolean wasRegistered = false;
 
     @Inject
     public DeathEventListener(
@@ -59,9 +62,19 @@ public class DeathEventListener implements FabricListener {
 
     @Override
     public void register() {
+        if (this.wasRegistered) {
+            return;
+        }
+
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) ->
-                PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer)
+                {
+                if (!this.isEnabled) {
+                    return;
+                }
+                PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
+                }
         );
+
         PlanFabricEvents.ON_KILLED.register((victim, killer) -> {
             if (!this.isEnabled) {
                 return;
@@ -89,7 +102,9 @@ public class DeathEventListener implements FabricListener {
             }
 
         });
+
         this.enable();
+        this.wasRegistered = true;
     }
 
     private PlayerKill.Killer getKiller(ServerPlayerEntity killer) {

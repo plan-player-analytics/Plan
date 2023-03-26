@@ -40,10 +40,12 @@ import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.SocketAddress;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Singleton
 public class PlayerOnlineListener implements FabricListener {
 
     private final PlayerJoinEventConsumer joinEventConsumer;
@@ -58,6 +60,7 @@ public class PlayerOnlineListener implements FabricListener {
     private final AtomicReference<String> joinAddress = new AtomicReference<>();
 
     private boolean isEnabled = false;
+    private boolean wasRegistered = false;
 
     @Inject
     public PlayerOnlineListener(
@@ -79,6 +82,10 @@ public class PlayerOnlineListener implements FabricListener {
 
     @Override
     public void register() {
+        if (this.wasRegistered) {
+            return;
+        }
+
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             if (!this.isEnabled) {
                 return;
@@ -112,7 +119,9 @@ public class PlayerOnlineListener implements FabricListener {
             }
             onHandshake(packet);
         });
+
         this.enable();
+        this.wasRegistered = true;
     }
 
     private void onHandshake(HandshakeC2SPacket packet) {

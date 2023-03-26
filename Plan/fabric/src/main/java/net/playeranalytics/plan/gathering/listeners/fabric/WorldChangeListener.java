@@ -29,9 +29,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
 
+@Singleton
 public class WorldChangeListener implements FabricListener {
 
     private final WorldAliasSettings worldAliasSettings;
@@ -40,6 +42,7 @@ public class WorldChangeListener implements FabricListener {
     private final ErrorLogger errorLogger;
 
     private boolean isEnabled = false;
+    private boolean wasRegistered = false;
 
     @Inject
     public WorldChangeListener(
@@ -79,11 +82,19 @@ public class WorldChangeListener implements FabricListener {
 
     @Override
     public void register() {
-        this.enable();
-        if (!isEnabled) {
+        if (this.wasRegistered) {
             return;
         }
-        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> onWorldChange(player));
+
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> {
+            if (!this.isEnabled) {
+                return;
+            }
+            onWorldChange(player);
+        });
+
+        this.enable();
+        this.wasRegistered = true;
     }
 
     @Override
@@ -101,4 +112,3 @@ public class WorldChangeListener implements FabricListener {
         this.isEnabled = false;
     }
 }
-
