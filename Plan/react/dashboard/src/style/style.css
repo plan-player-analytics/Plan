@@ -1430,3 +1430,7 @@ ul.filters {
 .contributor {
     width: 33%;
 }
+
+.extension-table-header {
+    cursor: pointer;
+}
