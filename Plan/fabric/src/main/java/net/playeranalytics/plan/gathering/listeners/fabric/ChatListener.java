@@ -28,6 +28,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.UUID;
 
 /**
@@ -35,6 +36,7 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
+@Singleton
 public class ChatListener implements FabricListener {
 
     private final ServerInfo serverInfo;
@@ -43,6 +45,7 @@ public class ChatListener implements FabricListener {
     private final ErrorLogger errorLogger;
 
     private boolean isEnabled = false;
+    private boolean wasRegistered = false;
 
 
     @Inject
@@ -59,7 +62,6 @@ public class ChatListener implements FabricListener {
     }
 
     public void onChat(ServerPlayerEntity player) {
-
         try {
             actOnChatEvent(player);
         } catch (Exception e) {
@@ -80,6 +82,10 @@ public class ChatListener implements FabricListener {
 
     @Override
     public void register() {
+        if (this.wasRegistered) {
+            return;
+        }
+
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, params) -> {
             if (!isEnabled) {
                 return;
@@ -88,6 +94,7 @@ public class ChatListener implements FabricListener {
         });
 
         this.enable();
+        this.wasRegistered = true;
     }
 
     @Override
@@ -105,4 +112,3 @@ public class ChatListener implements FabricListener {
         this.isEnabled = false;
     }
 }
-

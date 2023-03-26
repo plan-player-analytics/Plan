@@ -30,6 +30,7 @@ import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,6 +39,7 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
+@Singleton
 public class GameModeChangeListener implements FabricListener {
 
     private final WorldAliasSettings worldAliasSettings;
@@ -46,6 +48,7 @@ public class GameModeChangeListener implements FabricListener {
     private final ErrorLogger errorLogger;
 
     private boolean isEnabled = false;
+    private boolean wasRegistered = false;
 
     @Inject
     public GameModeChangeListener(
@@ -83,11 +86,19 @@ public class GameModeChangeListener implements FabricListener {
 
     @Override
     public void register() {
-        if (!this.isEnabled) {
+        if (this.wasRegistered) {
             return;
         }
-        PlanFabricEvents.ON_GAMEMODE_CHANGE.register(this::onGameModeChange);
+
+        PlanFabricEvents.ON_GAMEMODE_CHANGE.register((player, newGameMode) -> {
+            if (!this.isEnabled) {
+                return;
+            }
+            this.onGameModeChange(player, newGameMode);
+        });
+
         this.enable();
+        this.wasRegistered = true;
     }
 
     @Override
