@@ -96,7 +96,7 @@ subprojects {
         gsonVersion = "2.10.1"
         dependencyDownloadVersion = "1.3.0"
 
-        bstatsVersion = "3.0.1"
+        bstatsVersion = "3.0.2"
         placeholderapiVersion = "2.11.3"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
