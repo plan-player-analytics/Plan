@@ -9,6 +9,8 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
 import ErrorPage from "./ErrorPage";
 import {QueryResultContextProvider} from "../../hooks/queryResultContext";
+import {useAuth} from "../../hooks/authenticationHook";
+import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 
 const QueryPage = () => {
     const {t, i18n} = useTranslation();
@@ -30,6 +32,8 @@ const QueryPage = () => {
         setCurrentTab('html.query.title.text');
     }, [t, i18n, setCurrentTab, setSidebarItems])
 
+    const {authRequired, loggedIn} = useAuth();
+    if (authRequired && !loggedIn) return <MainPageRedirect/>;
     if (error) return <ErrorPage error={error}/>;
 
     const displayedServerName = isProxy ? networkName : (serverName && serverName.startsWith('Server') ? "Plan" : serverName);

@@ -169,7 +169,20 @@ const LoginPage = () => {
         } else if (data && data.success) {
             await updateLoginDetails();
             if (redirectTo && !redirectTo.startsWith('http') && !redirectTo.startsWith('file') && !redirectTo.startsWith('javascript')) {
-                navigate(redirectTo.substring(redirectTo.indexOf('/')) + (window.location.hash ? window.location.hash : ''));
+                // Normalize the URL so that it can't redirect to different domain.
+                try {
+                    const redirectUrl = new URL(
+                        redirectTo.substring(redirectTo.indexOf('/')) + (window.location.hash ? window.location.hash : ''),
+                        window.location.protocol + '//' + window.location.host
+                    );
+                    navigate(
+                        redirectUrl.pathname + redirectUrl.search + redirectUrl.hash
+                    );
+                } catch (e) {
+                    console.warn(e);
+                    // Invalid redirect URL, something fishy might be going on, redirect to /
+                    navigate('/');
+                }
             } else {
                 navigate('/');
             }

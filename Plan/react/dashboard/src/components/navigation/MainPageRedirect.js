@@ -80,7 +80,13 @@ const MainPageRedirect = () => {
     };
 
     if (authRequired && !loggedIn) {
-        return (<Navigate to="/login" replace={true}/>)
+        if (!window.location.pathname.startsWith("/login")) {
+            return (<Navigate
+                to={"/login?from=" + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash)}
+                replace={true}/>)
+        } else {
+            return (<Navigate to="/login" replace={true}/>)
+        }
     } else if (authRequired && loggedIn) {
         return redirectBasedOnPermissions();
     } else {
