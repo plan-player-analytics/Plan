@@ -117,7 +117,7 @@ const NetworkSidebar = () => {
     )
 }
 
-const ServerPage = () => {
+const NetworkPage = () => {
     const {networkName, serverUUID} = useMetadata();
 
     const {currentTab} = useNavigation();
@@ -150,4 +150,4 @@ const ServerPage = () => {
     )
 }
 
-export default ServerPage;
+export default NetworkPage;

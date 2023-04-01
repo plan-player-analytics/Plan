@@ -27,7 +27,7 @@ import java.net.HttpURLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 interface HttpsServerTest {
 
@@ -78,21 +78,35 @@ interface HttpsServerTest {
     }
 
     default String login(String address) throws IOException, KeyManagementException, NoSuchAlgorithmException {
-        HttpURLConnection loginConnection = null;
+        HttpURLConnection connection = null;
         String cookie = "";
         try {
-            loginConnection = connector.getConnection("POST", address + "/auth/login");
-            loginConnection.setDoOutput(true);
-            loginConnection.getOutputStream().write("user=test&password=testPass".getBytes());
-            try (InputStream in = loginConnection.getInputStream()) {
+            connection = connector.getConnection("POST", address + "/auth/login");
+            connection.setDoOutput(true);
+            connection.getOutputStream().write("user=test&password=testPass".getBytes());
+            try (InputStream in = connection.getInputStream()) {
                 String responseBody = new String(IOUtils.toByteArray(in));
                 assertTrue(responseBody.contains("\"success\":true"), () -> "Not successful: " + responseBody);
-                cookie = loginConnection.getHeaderField("Set-Cookie").split(";")[0];
+                cookie = connection.getHeaderField("Set-Cookie").split(";")[0];
                 System.out.println("Got cookie: " + cookie);
             }
         } finally {
-            loginConnection.disconnect();
+            assertNotNull(connection);
+            connection.disconnect();
         }
         return cookie;
+    }
+
+    default void logout(String address, String cookie) throws IOException, KeyManagementException, NoSuchAlgorithmException {
+        HttpURLConnection connection = null;
+        try {
+            connection = connector.getConnection("POST", address + "/auth/logout");
+            connection.setRequestProperty("Cookie", cookie);
+            int responseCode = connection.getResponseCode();
+            assertEquals(302, responseCode, () -> "Logout not redirecting, got response code " + responseCode);
+        } finally {
+            assertNotNull(connection);
+            connection.disconnect();
+        }
     }
 }

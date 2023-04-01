@@ -10,6 +10,8 @@ import {useTranslation} from "react-i18next";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import ErrorPage from "./ErrorPage";
+import {useAuth} from "../../hooks/authenticationHook";
+import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
@@ -47,6 +49,8 @@ const PlayerPage = () => {
         finishUpdate(player.timestamp, player.timestamp_f);
     }, [player, t, i18n, finishUpdate, setSidebarItems])
 
+    const {authRequired, loggedIn} = useAuth();
+    if (authRequired && !loggedIn) return <MainPageRedirect/>;
     if (loadingError) return <ErrorPage error={loadingError}/>;
 
     return player ? (

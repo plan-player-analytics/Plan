@@ -72,6 +72,7 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
     private ChromeDriver getChromeWebDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--enable-javascript");
+        chromeOptions.addArguments("--ignore-certificate-errors");
         chromeOptions.addArguments("--remote-allow-origins=*");
         chromeOptions.setCapability(ChromeOptions.LOGGING_PREFS, getLoggingPreferences());
 
