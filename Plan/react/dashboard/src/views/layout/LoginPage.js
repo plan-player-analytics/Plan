@@ -175,9 +175,14 @@ const LoginPage = () => {
                         redirectTo.substring(redirectTo.indexOf('/')) + (window.location.hash ? window.location.hash : ''),
                         window.location.protocol + '//' + window.location.host
                     );
-                    navigate(
-                        redirectUrl.pathname + redirectUrl.search + redirectUrl.hash
-                    );
+                    if (redirectUrl.pathname.includes("//")) {
+                        // Invalid redirect URL, something fishy might be going on, redirect to /
+                        navigate('/');
+                    } else {
+                        navigate(
+                            redirectUrl.pathname + redirectUrl.search + redirectUrl.hash
+                        );
+                    }
                 } catch (e) {
                     console.warn(e);
                     // Invalid redirect URL, something fishy might be going on, redirect to /

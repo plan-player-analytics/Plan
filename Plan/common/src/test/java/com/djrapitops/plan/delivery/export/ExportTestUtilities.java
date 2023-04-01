@@ -78,9 +78,17 @@ public class ExportTestUtilities {
         assertTrue(loggedLines.isEmpty(), () -> "Browser console included " + loggedLines.size() + " logs: " + loggedLines);
     }
 
-    static Optional<WebElement> getElement(ChromeDriver driver) {
+    public static Optional<WebElement> getMainPageElement(ChromeDriver driver) {
         try {
             return Optional.of(driver.findElement(By.className("load-in")));
+        } catch (NoSuchElementException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<WebElement> getElementById(ChromeDriver driver, String id) {
+        try {
+            return Optional.of(driver.findElement(By.id(id)));
         } catch (NoSuchElementException e) {
             return Optional.empty();
         }
@@ -97,7 +105,7 @@ public class ExportTestUtilities {
 
         Awaitility.await()
                 .atMost(Duration.of(10, ChronoUnit.SECONDS))
-                .until(() -> getElement(driver).map(WebElement::isDisplayed).orElse(false));
+                .until(() -> getMainPageElement(driver).map(WebElement::isDisplayed).orElse(false));
 
         List<LogEntry> logs = new ArrayList<>();
         logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
