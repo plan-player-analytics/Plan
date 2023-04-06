@@ -5,7 +5,7 @@ command:
             description: "Název souboru zálohy (citlivé na velikost písmen)"
             name: "záloha"
         code:
-            description: "Kód použitý k dokončení registrace.."
+            description: "Kód použitý k dokončení registrace."
             name: "${code}"
         dbBackup:
             description: "Typ databáze k zálohování. Použita aktuální databáze, pokud není specifikováno."
@@ -54,7 +54,7 @@ command:
         manage:
             confirm: "> §cPřidejte '-a' argument k potvrzení provedení: ${0}"
             confirmOverwrite: "Data v ${0} budou přepsána!"
-            confirmPartialRemoval: "Join Address Data for Server ${0} in ${1} will be removed!"
+            confirmPartialRemoval: "Data IP adres připojení pro server ${0} na ${1} byla smazána!"
             confirmRemoval: "Data v ${0} budou smazána!"
             fail: "> §cNěco se pokazilo: ${0}"
             failFileNotFound: "> §cNenalezen soubor v ${0}"
@@ -265,7 +265,7 @@ html:
         authFailedTips: "- Ujistěte se, že jste zaregistrovaní s uživatelem s <b>/plan register</b><br>- Zkontrolujte zda je jméno a heslo správné<br>- Jméno a heslo jsou citlivá na velká/malá písmena<br><br>Pokud jste zapomněli heslo, zeptejte se člena týmu ke smazání vašeho starého uživatele či nové registraci."
         noServersOnline: "Žádné online servery k vykonání žádosti."
         playerNotSeen: "Hráč nebyl nenalezen."
-        serverNotExported: "Server neexistuje, je možné, že jeho data ještě nebyla exportována.."
+        serverNotExported: "Server neexistuje, je možné, že jeho data ještě nebyla exportována."
         serverNotSeen: "Server neexistuje"
     generic:
         none: "Žádný"
@@ -340,15 +340,15 @@ html:
             activityIndexWeek: "Týden {}"
             examples: "Příklady"
             graph:
-                labels: "Skupinu můžete skrýt/zobrazit kliknutím na štítek v dolní části.."
+                labels: "Skupinu můžete skrýt/zobrazit kliknutím na štítek v dolní části."
                 title: "Graf"
-                zoom: "Graf si můžete přiblížit kliknutím a táhnutím.."
+                zoom: "Graf si můžete přiblížit kliknutím a táhnutím."
             playtimeUnit: "hodiny"
             retention:
                 calculationStep1: "Nejprve se data filtrují pomocí možnosti '<>'. Hráči s 'registerDate' mimo časový rozsah jsou ignorováni."
                 calculationStep2: "Poté je rozdělíme do skupin hráčů pomocí možnosti '<0>', např. pomocí '<1>': Všichni hráči, kteří se zaregistrovali v lednu 2023, únoru 2023 atd."
-                calculationStep3: "Možnosti '<0>' a '<1>' pak vybírají, která vizualizace se má vykreslit.."
-                calculationStep4: "'<>' řídí, kolik bodů má graf, např. 'Days' má jeden bod za den.."
+                calculationStep3: "Možnosti '<0>' a '<1>' pak vybírají, která vizualizace se má vykreslit."
+                calculationStep4: "'<>' řídí, kolik bodů má graf, např. 'Days' má jeden bod za den."
                 calculationStep5: "V každém vypočteném bodě se u všech hráčů kontroluje, zda je splněna podmínka."
                 calculationStep6: "Pro zobrazení podmínek vyberte níže uvedenou osu X."
                 calculationStepDate: "Tato vizualizace zobrazuje různé skupiny hráčů, kteří stále hrají na vašem serveru. Vizualizace používá datum lastSeen. Pokud x < lastSeenDate, je hráč v grafu viditelný."
@@ -362,7 +362,7 @@ html:
                     deltas: "<> ukazuje čistý zisk hráčů."
                     pattern: "Když všichni hráči začnou opouštět server ve stejnou dobu, objeví se obecný vzorec."
                     plateau: "Srovnání zisku hráčů v různých měsících. Plochy naznačují, že existují hráči, o kterých Plan neví. V tomto příkladu byl Plan nainstalován v lednu 2022."
-                    playtime: "Doba hraní udává, jak dlouho jsou hráči na vašem serveru zapojeni do herní smyčky.."
+                    playtime: "Doba hraní udává, jak dlouho jsou hráči na vašem serveru zapojeni do herní smyčky."
                     stack: "Kumulativní zisk hráčů lze zkontrolovat pomocí počtu hráčů na hromádce jako osy Y."
                 howIsItCalculated: "Jak se vypočítává"
                 howIsItCalculatedData: "Graf je generován z údajů o hráči:"
@@ -692,9 +692,9 @@ plugin:
         processingComplete: "Zpracování dokončeno."
         savingSessions: "Ukládání nedokončené relace."
         savingSessionsTimeout: "Překročen časový limit, ukládánm nedokončené relace pro příští spojení."
-        waitingDb: "Čekání na dokončení dotazu, aby se zabránilo pádu JVM SQLite.."
+        waitingDb: "Čekání na dokončení dotazu, aby se zabránilo pádu JVM SQLite."
         waitingDbComplete: "Uzavřené připojení SQLite."
-        waitingTransactions: "Čekám na nedokončené transakce, aby nedošlo ke ztrátě dat.."
+        waitingTransactions: "Čekám na nedokončené transakce, aby nedošlo ke ztrátě dat."
         waitingTransactionsComplete: "Fronta Transakce uzavřena."
         webserver: "Webserver je již vypnutý."
     enable:
