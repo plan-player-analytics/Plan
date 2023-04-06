@@ -242,6 +242,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 new ComponentColumnToExtensionDataPatch(),
                 new BadJoinAddressDataCorrectionPatch(),
                 new AfterBadJoinAddressDataCorrectionPatch(),
+                new CorrectWrongCharacterEncodingPatch(logger, config),
         };
     }
 
