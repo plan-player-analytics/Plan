@@ -25,6 +25,7 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.utilities.dev.Benchmark;
 import com.djrapitops.plan.utilities.java.Lists;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -451,6 +452,12 @@ public class TPSQueries {
                 return set.next() ? (long) set.getDouble("average") : -1L;
             }
         };
+    }
+
+    public static Query<Optional<Long>> fetchLastStoredTpsDate(ServerUUID serverUUID) {
+        @Language("SQL")
+        String sql = "SELECT MAX(date) FROM plan_tps WHERE server_id=" + ServerTable.SELECT_SERVER_ID;
+        return db -> db.queryOptional(sql, resultSet -> resultSet.getLong(1), serverUUID);
     }
 
     public static Query<Map<Integer, List<TPS>>> fetchTPSDataOfServers(long after, long before, Collection<ServerUUID> serverUUIDs) {

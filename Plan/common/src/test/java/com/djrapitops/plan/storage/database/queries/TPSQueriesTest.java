@@ -26,7 +26,9 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.java.Lists;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import utilities.RandomData;
 
 import java.util.Comparator;
@@ -36,6 +38,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public interface TPSQueriesTest extends DatabaseTestPreparer {
 
@@ -71,6 +76,17 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         int expected = tpsData.get(tpsData.size() - 1).getPlayers();
         int actual = db().query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID())).map(DateObj::getValue).orElse(-1);
         assertEquals(expected, actual, () -> "Wrong return value. " + Lists.map(tpsData, TPS::getPlayers).toString());
+    }
+
+    @Test
+    default void sameServerIsDetected() {
+        TPS tps = RandomData.randomTPS().get(0);
+        PluginLogger logger = Mockito.mock(PluginLogger.class);
+        db().executeTransaction(new TPSStoreTransaction(logger, serverUUID(), tps));
+        db().executeTransaction(new TPSStoreTransaction(logger, serverUUID(), tps));
+        db().executeTransaction(new TPSStoreTransaction(logger, serverUUID(), tps));
+
+        verify(logger, times(1)).warn(anyString());
     }
 
     @Test

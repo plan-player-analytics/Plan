@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.gathering.listeners.Status;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
@@ -41,6 +42,7 @@ public class PluginStatusCommands {
     private final PlanPlugin plugin;
     private final PluginInformation pluginInformation;
     private final Locale locale;
+    private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final Status status;
     private final VersionChecker versionChecker;
@@ -51,6 +53,7 @@ public class PluginStatusCommands {
             PlanPlugin plugin,
             PluginInformation pluginInformation,
             Locale locale,
+            ServerInfo serverInfo,
             DBSystem dbSystem,
             Status status,
             VersionChecker versionChecker,
@@ -59,6 +62,7 @@ public class PluginStatusCommands {
         this.plugin = plugin;
         this.pluginInformation = pluginInformation;
         this.locale = locale;
+        this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.status = status;
         this.versionChecker = versionChecker;
@@ -113,6 +117,7 @@ public class PluginStatusCommands {
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
                 locale.getString(CommandLang.INFO_DATABASE, database.getType().getName() + " (" + database.getState().name() + ")"),
                 locale.getString(CommandLang.INFO_PROXY_CONNECTION, proxyAvailable),
+                locale.getString(CommandLang.INFO_SERVER_UUID, serverInfo.getServerUUID()),
                 "",
                 ">"
         };

@@ -81,7 +81,7 @@ public class CorrectWrongCharacterEncodingPatch extends Patch {
                 ")";
         @Language("MySQL")
         String sql = selectTablesWithWrongCharset + " UNION " + selectColumnsWithWrongCharset;
-        return db -> db.queryList(sql, resultSet -> resultSet.getString(0));
+        return db -> db.queryList(sql, resultSet -> resultSet.getString(1));
     }
 
     @Override

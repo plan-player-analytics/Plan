@@ -84,6 +84,7 @@ public class ProxyTPSCounter extends TPSCounter {
         long freeDiskSpace = systemUsage.getFreeDiskSpace();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
+                logger,
                 serverInfo.getServerUUID(),
                 TPSBuilder.get()
                         .date(timeLastMinute)
