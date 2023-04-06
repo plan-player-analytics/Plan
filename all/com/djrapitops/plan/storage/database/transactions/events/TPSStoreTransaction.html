@@ -104,6 +104,10 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.TPS)" class="member-name-link">TPSStoreTransaction</a><wbr>(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
  <a href="../../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&nbsp;tps)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.TPS)" class="member-name-link">TPSStoreTransaction</a><wbr>(net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
+ <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
+ <a href="../../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&nbsp;tps)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -112,7 +116,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
@@ -123,6 +127,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Implement this method for transaction execution.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setLastStorageCheck(long)" class="member-name-link">setLastStorageCheck</a><wbr>(long&nbsp;lastStorageCheck)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -144,6 +151,14 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="&lt;init&gt;(net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.TPS)">
+<h3>TPSStoreTransaction</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TPSStoreTransaction</span><wbr><span class="parameters">(net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
+ <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
+ <a href="../../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&nbsp;tps)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="&lt;init&gt;(com.djrapitops.plan.identification.ServerUUID,com.djrapitops.plan.gathering.domain.TPS)">
 <h3>TPSStoreTransaction</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TPSStoreTransaction</span><wbr><span class="parameters">(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
@@ -158,6 +173,12 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="setLastStorageCheck(long)">
+<h3>setLastStorageCheck</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLastStorageCheck</span><wbr><span class="parameters">(long&nbsp;lastStorageCheck)</span></div>
+</section>
+</li>
 <li>
 <section class="detail" id="performOperations()">
 <h3>performOperations</h3>
