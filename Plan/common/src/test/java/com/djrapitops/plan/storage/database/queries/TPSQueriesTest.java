@@ -80,6 +80,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void sameServerIsDetected() {
+        TPSStoreTransaction.setLastStorageCheck(0L);
         TPS tps = RandomData.randomTPS().get(0);
         PluginLogger logger = Mockito.mock(PluginLogger.class);
         db().executeTransaction(new TPSStoreTransaction(logger, serverUUID(), tps));
