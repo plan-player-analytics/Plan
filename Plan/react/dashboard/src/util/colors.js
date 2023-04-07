@@ -123,8 +123,30 @@ export const colorClassToBgClass = colorClass => {
     return "bg-" + colorClassToColorName(colorClass);
 }
 
+export const hsxStringToArray = (hsvString) => {
+    const color = hsvString.substring(4, hsvString.length - 1);
+    const split = color.split(',');
+    const h = Number(split[0]);
+    const s = Number(split[1].substring(0, split[1].length - 1));
+    const x = Number(split[2].substring(0, split[2].length - 1));
+    return [h, s, x];
+}
+
+export const hslToHsv = ([h, s, l]) => {
+    const hsv1 = s * (l < 50 ? l : 100 - l) / 100;
+    const hsvS = hsv1 === 0 ? 0 : 2 * hsv1 / (l + hsv1) * 100;
+    const hsvV = l + hsv1;
+    return [h, hsvS, hsvV];
+}
+
 export const hsvToRgb = ([h, s, v]) => {
     let r, g, b;
+
+    if (s > 1) {
+        h = h / 360;
+        s = s / 100;
+        v = v / 100;
+    }
 
     const i = Math.floor(h * 6);
     const f = h * 6 - i;
@@ -186,15 +208,15 @@ const rgbToHex = (component) => {
     return Math.floor(component).toString(16).padStart(2, '0');
 }
 
-// From https://stackoverflow.com/a/3732187
-export const withReducedSaturation = hex => {
-    const saturationReduction = 0.70;
-    // To RGB
-    let r = parseInt(hex.substr(1, 2), 16); // Grab the hex representation of red (chars 1-2) and convert to decimal (base 10).
-    let g = parseInt(hex.substr(3, 2), 16);
-    let b = parseInt(hex.substr(5, 2), 16);
+export const hexToRgb = (hexString) => {
+    const r = parseInt(hexString.substring(1, 3), 16);
+    const g = parseInt(hexString.substring(3, 5), 16);
+    const b = parseInt(hexString.substring(5, 7), 16);
+    return [r, g, b];
+}
 
-    // To HSL
+// https://css-tricks.com/converting-color-spaces-in-javascript/
+export const rgbToHsl = ([r, g, b]) => {
     r /= 255;
     g /= 255;
     b /= 255;
@@ -222,6 +244,15 @@ export const withReducedSaturation = hex => {
         }
         h /= 6;
     }
+    return [h, s, l];
+}
+
+// From https://stackoverflow.com/a/3732187
+export const withReducedSaturation = (hex, reduceSaturationPercentage) => {
+    const saturationReduction = reduceSaturationPercentage ? reduceSaturationPercentage : 0.70;
+
+    const rgb = hexToRgb(hex);
+    const [h, s, l] = rgbToHsl(rgb);
 
     // To css property
     return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';

@@ -76,17 +76,17 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
                       ]}/>
             <TableRow icon={faDragon} color="purple" text={t('html.label.averageEntities')}
                       values={[
-                          data.entities_30d,
-                          data.entities_7d,
-                          data.entities_24h
+                          <>{data.entities_30d} {noTPSOnProxies}</>,
+                          <>{data.entities_7d} {noTPSOnProxies}</>,
+                          <>{data.entities_24h} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faMap} color="blue-grey"
                       text={<>{t('html.label.averageChunks')}{' '}{data.chunks_30d === 'Unavailable' ?
                           <Fa icon={faEye} title={t('html.description.noSpongeChunks')}/> : ''}</>}
                       values={[
-                          data.chunks_30d,
-                          data.chunks_7d,
-                          data.chunks_24h
+                          <>{data.chunks_30d} {noTPSOnProxies}</>,
+                          <>{data.chunks_7d} {noTPSOnProxies}</>,
+                          <>{data.chunks_24h} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faHdd} color="green"
                       text={t('html.label.maxFreeDisk')}

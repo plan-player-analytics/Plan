@@ -7,9 +7,9 @@ import {useTranslation} from "react-i18next";
 
 const PerformanceAsNumbersCard = ({data, servers}) => {
     const {t} = useTranslation();
-    const noData24h = "Unavailable" === data?.cpu_24h;
-    const noData7d = "Unavailable" === data?.cpu_7d;
-    const noData30d = "Unavailable" === data?.cpu_30d;
+    const noData24h = data && "Unavailable" === data.cpu_24h;
+    const noData7d = data && "Unavailable" === data.cpu_7d;
+    const noData30d = data && "Unavailable" === data.cpu_30d;
 
     const noDataAlert = noData30d ? <p className={"alert alert-warning mb-0"}>{t('html.description.noData30d')}</p>
         : (noData7d ? <p className={"alert alert-warning mb-0"}>{t('html.description.noData7d')}</p>

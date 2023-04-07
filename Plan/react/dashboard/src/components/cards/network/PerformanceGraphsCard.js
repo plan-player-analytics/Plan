@@ -97,36 +97,53 @@ const PerformanceGraphsCard = ({data}) => {
 
         const spline = 'spline';
 
-        for (const server of serverData) {
+        const changeColor = (colorHex, index) => {
+            // TODO Convert color somehow using index
+            return colorHex;
+        }
+
+        serverData.forEach((server, i) => {
+            const playersOnlineColor = changeColor(data.colors.playersOnline, i);
+            const tpsColor = changeColor(data.colors.high, i);
+            const tpsZone = [...zones.tps]
+            tpsZone.forEach(zone => zone.color = changeColor(zone.color, i));
+            const cpuColor = changeColor(data.colors.cpu, i);
+            const ramColors = changeColor(data.colors.ram, i);
+            const entitiesColor = changeColor(data.colors.entities, i);
+            const chunksColor = changeColor(data.colors.chunks, i);
+            const diskColor = changeColor(data.colors.high, i);
+            const diskZones = [...zones.disk];
+            diskZones.forEach(zone => zone.color = changeColor(zone.color, i));
+
             series.players.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.playersOnline, color: data.colors.playersOnline, yAxis: 0
+                data: server.values.playersOnline, color: playersOnlineColor, yAxis: 0
             });
             series.tps.push({
                 name: server.serverName, type: spline, tooltip: tooltip.twoDecimals,
-                data: server.values.tps, color: data.colors.high, zones: zones.tps, yAxis: 0
+                data: server.values.tps, color: tpsColor, zones: tpsZone, yAxis: 0
             });
             series.cpu.push({
                 name: server.serverName, type: spline, tooltip: tooltip.twoDecimals,
-                data: server.values.cpu, color: data.colors.cpu, yAxis: 0
+                data: server.values.cpu, color: cpuColor, yAxis: 0
             });
             series.ram.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.ram, color: data.colors.ram, yAxis: 0
+                data: server.values.ram, color: ramColors, yAxis: 0
             });
             series.entities.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.entities, color: data.colors.entities, yAxis: 0
+                data: server.values.entities, color: entitiesColor, yAxis: 0
             });
             series.chunks.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.chunks, color: data.colors.chunks, yAxis: 0
+                data: server.values.chunks, color: chunksColor, yAxis: 0
             });
             series.disk.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.disk, color: data.colors.high, zones: zones.disk, yAxis: 0
+                data: server.values.disk, color: diskColor, zones: diskZones, yAxis: 0
             });
-        }
+        });
         setPerformanceSeries(series);
     }, [data, setPerformanceSeries])
 
