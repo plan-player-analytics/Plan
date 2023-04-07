@@ -28,6 +28,7 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
+import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -50,17 +51,19 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
     }
 
     private static Query<List<PluginBooleanOption>> pluginBooleanOptionsQuery() {
+        @Language("SQL")
         String selectOptions = SELECT + DISTINCT +
                 "server." + ServerTable.ID + " as server_id," +
                 "server." + ServerTable.NAME + " as server_name," +
+                "server." + ServerTable.PROXY + " as is_proxy," +
                 "plugin." + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
                 "provider." + ExtensionProviderTable.TEXT + " as provider_text" +
                 FROM + ServerTable.TABLE_NAME + " server" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " plugin on plugin." + ExtensionPluginTable.SERVER_UUID + "=server." + ServerTable.SERVER_UUID +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " provider on provider." + ExtensionProviderTable.PLUGIN_ID + "=plugin." + ExtensionPluginTable.ID +
-                INNER_JOIN + ExtensionPlayerValueTable.TABLE_NAME + " value on value." + ExtensionPlayerValueTable.PROVIDER_ID + "=provider." + ExtensionProviderTable.ID +
-                WHERE + "value." + ExtensionPlayerValueTable.BOOLEAN_VALUE + " IS NOT NULL" +
-                ORDER_BY + "server_name ASC, plugin_name ASC, provider_text ASC";
+                INNER_JOIN + ExtensionPlayerValueTable.TABLE_NAME + " v on v." + ExtensionPlayerValueTable.PROVIDER_ID + "=provider." + ExtensionProviderTable.ID +
+                WHERE + "v." + ExtensionPlayerValueTable.BOOLEAN_VALUE + " IS NOT NULL" +
+                ORDER_BY + "server_name, plugin_name, provider_text";
         return new QueryAllStatement<>(selectOptions) {
             @Override
             public List<PluginBooleanOption> processResults(ResultSet set) throws SQLException {
@@ -68,10 +71,11 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
                 while (set.next()) {
                     int serverId = set.getInt("server_id");
                     String serverName = set.getString("server_name");
+                    boolean proxy = set.getBoolean("is_proxy");
                     String pluginName = set.getString("plugin_name");
                     String providerText = set.getString("provider_text");
                     options.add(new PluginBooleanOption(
-                            Server.getIdentifiableName(serverName, serverId),
+                            Server.getIdentifiableName(serverName, serverId, proxy),
                             pluginName,
                             providerText
                     ));

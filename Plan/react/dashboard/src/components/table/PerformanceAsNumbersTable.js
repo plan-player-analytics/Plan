@@ -12,13 +12,19 @@ import {
 import React from "react";
 import {TableRow} from "./TableRow";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faEye} from "@fortawesome/free-regular-svg-icons";
+import {faEye, faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import AsNumbersTable from "./AsNumbersTable";
 import {ChartLoader} from "../navigation/Loader";
 
-const PerformanceAsNumbersTable = ({data}) => {
+const PerformanceAsNumbersTable = ({data, servers}) => {
     const {t} = useTranslation();
     if (!data) return <ChartLoader/>;
+
+    const isOnlyProxies = Boolean(servers.filter(server => !server.proxy).length);
+    const noTPSOnProxies = isOnlyProxies
+        ? ''
+        : <Fa icon={faQuestionCircle}
+              title={t('html.description.performanceNoGameServers')}/>;
 
     return (
         <AsNumbersTable
@@ -52,9 +58,9 @@ const PerformanceAsNumbersTable = ({data}) => {
                       ]}/>
             <TableRow icon={faTachometerAlt} color="orange" text={t('html.label.averageTps')}
                       values={[
-                          data.tps_30d,
-                          data.tps_7d,
-                          data.tps_24h
+                          <>{data.tps_30d} {noTPSOnProxies}</>,
+                          <>{data.tps_7d} {noTPSOnProxies}</>,
+                          <>{data.tps_24h} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faTachometerAlt} color="amber" text={t('html.label.averageCpuUsage')}
                       values={[

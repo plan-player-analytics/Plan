@@ -26,6 +26,7 @@ import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -82,7 +83,7 @@ public class VelocityServerInfo extends ServerInfo {
     }
 
     private void updateStorage() {
-        String address = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
+        String address = getAddress();
 
         server.setWebAddress(address);
 
@@ -104,9 +105,14 @@ public class VelocityServerInfo extends ServerInfo {
 
     private Server createServerObject() {
         ServerUUID serverUUID = generateNewUUID();
-        String accessAddress = addresses.getAccessAddress()
-                .orElse(addresses.isWebserverEnabled() ? addresses.getFallbackLocalhostAddress() : null);
+        String accessAddress = getAddress();
 
         return new Server(-1, serverUUID, "Velocity", accessAddress, true, currentVersion);
+    }
+
+    @Nullable
+    private String getAddress() {
+        return addresses.getAccessAddress()
+                .orElse(addresses.isWebserverEnabled() ? addresses.getFallbackLocalhostAddress() : null);
     }
 }

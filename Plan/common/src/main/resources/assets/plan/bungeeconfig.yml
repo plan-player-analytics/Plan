@@ -5,6 +5,7 @@
 # https://github.com/plan-player-analytics/Plan/wiki/Bukkit-Configuration
 # -----------------------------------------------------
 Server:
+  ServerName: Plan
   IP: 0.0.0.0
 Network:
   Name: Plan

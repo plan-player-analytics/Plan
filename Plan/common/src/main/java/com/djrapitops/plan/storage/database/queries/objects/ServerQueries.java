@@ -173,7 +173,7 @@ public class ServerQueries {
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> names = new ArrayList<>();
                 while (set.next()) {
-                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID)));
+                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID), false));
                 }
                 return names;
             }
@@ -182,7 +182,7 @@ public class ServerQueries {
 
     public static Query<Map<ServerUUID, String>> fetchServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                        ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                        ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME, ServerTable.PROXY)
                 .toString();
 
         return new QueryAllStatement<>(sql) {
@@ -191,7 +191,9 @@ public class ServerQueries {
                 Map<ServerUUID, String> names = new HashMap<>();
                 while (set.next()) {
                     ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
-                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID)));
+                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME),
+                            set.getInt(ServerTable.ID),
+                            set.getBoolean(ServerTable.PROXY)));
                 }
                 return names;
             }

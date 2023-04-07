@@ -62,12 +62,15 @@ public class Server implements Comparable<Server> {
         return name;
     }
 
-    public static String getIdentifiableName(String name, int id) {
-        return !"Plan".equalsIgnoreCase(name) ? name : "Server " + id;
+    public static String getIdentifiableName(String name, int id, boolean proxy) {
+        String identifiableName = !"Plan".equalsIgnoreCase(name) && !"Proxy".equalsIgnoreCase(name)
+                ? name
+                : "Server " + id;
+        return identifiableName + (proxy ? " (Proxy)" : "");
     }
 
     public String getIdentifiableName() {
-        return getIdentifiableName(name, id);
+        return getIdentifiableName(name, id, proxy);
     }
 
     public void setName(String name) {

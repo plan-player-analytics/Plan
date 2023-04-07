@@ -23,7 +23,7 @@ const NetworkPerformance = () => {
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [visualizedServers, setVisualizedServers] = useState([]);
 
-    const initializeServerOptions = () => {
+    useEffect(() => {
         if (networkMetadata) {
             const options = networkMetadata.servers;
             setServerOptions(options);
@@ -34,8 +34,7 @@ const NetworkPerformance = () => {
             setSelectedOptions([indexOfProxy]);
             setVisualizedServers([indexOfProxy]);
         }
-    };
-    useEffect(initializeServerOptions, [networkMetadata, setVisualizedServers]);
+    }, [networkMetadata, setVisualizedServers]);
 
     const applySelected = () => {
         setVisualizedServers(selectedOptions);
@@ -96,7 +95,8 @@ const NetworkPerformance = () => {
                 </ExtendableRow>
                 <ExtendableRow id={'row-network-performance-1'}>
                     <Col md={8}>
-                        <PerformanceAsNumbersCard data={performanceData?.overview?.numbers}/>
+                        <PerformanceAsNumbersCard data={performanceData?.overview?.numbers}
+                                                  servers={performanceData.servers || []}/>
                     </Col>
                     <Col md={4}>
                         <Card>
@@ -104,7 +104,8 @@ const NetworkPerformance = () => {
                             <MultiSelect options={serverOptions.map(server => server.serverName)}
                                          selectedIndexes={selectedOptions}
                                          setSelectedIndexes={setSelectedOptions}/>
-                            <button className={'btn bg-transparent'} onClick={applySelected} disabled={isUpToDate}>
+                            <button className={'btn ' + (isUpToDate ? 'bg-transparent' : 'bg-theme')}
+                                    onClick={applySelected} disabled={isUpToDate}>
                                 {t('html.label.apply')}
                             </button>
                         </Card>

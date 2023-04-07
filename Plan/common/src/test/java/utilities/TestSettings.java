@@ -71,7 +71,7 @@ public class TestSettings {
 
     public static Collection<Setting> getProxySettings() throws IllegalAccessException {
         List<Setting> settings = new ArrayList<>();
-        for (Class settingKeyClass : new Class[]{
+        for (Class<?> settingKeyClass : new Class[]{
                 DatabaseSettings.class,
                 DisplaySettings.class,
                 ExportSettings.class,
@@ -84,7 +84,6 @@ public class TestSettings {
             settings.addAll(FieldFetcher.getPublicStaticFields(settingKeyClass, Setting.class));
         }
         // Server settings contained in the key classes, remove
-        settings.remove(PluginSettings.SERVER_NAME);
         settings.remove(PluginSettings.PROXY_COPY_CONFIG);
         settings.remove(DatabaseSettings.TYPE);
         settings.remove(DisplaySettings.WORLD_ALIASES);
