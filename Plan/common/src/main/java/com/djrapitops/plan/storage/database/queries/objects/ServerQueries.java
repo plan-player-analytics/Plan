@@ -146,32 +146,20 @@ public class ServerQueries {
         };
     }
 
-    public static Query<Optional<Server>> fetchProxyServerInformation() {
+    public static Query<List<Server>> fetchProxyServers() {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?" +
-                AND + ServerTable.PROXY + "=?" +
-                LIMIT + '1';
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, true);
-                statement.setBoolean(2, true);
-            }
-
-            @Override
-            public Optional<Server> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(new Server(
-                            set.getInt(ServerTable.ID),
-                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
-                            set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY),
-                            set.getString(ServerTable.PLAN_VERSION)));
-                }
-                return Optional.empty();
-            }
-        };
+                AND + ServerTable.PROXY + "=?";
+        return db -> db.queryList(sql, set ->
+                new Server(
+                        set.getInt(ServerTable.ID),
+                        ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                        set.getString(ServerTable.NAME),
+                        set.getString(ServerTable.WEB_ADDRESS),
+                        set.getBoolean(ServerTable.PROXY),
+                        set.getString(ServerTable.PLAN_VERSION)
+                ), true, true
+        );
     }
 
     public static Query<List<String>> fetchGameServerNames() {

@@ -118,12 +118,32 @@ public class JSONFactory {
 
         Database database = dbSystem.getDatabase();
 
-        ServerUUID mainServerUUID = database.query(ServerQueries.fetchProxyServerInformation()).map(Server::getUuid).orElse(serverInfo.getServerUUID());
-        Map<UUID, ExtensionTabData> pluginData = database.query(new ExtensionServerTableDataQuery(mainServerUUID, xMostRecentPlayers));
+        List<ServerUUID> mainServerUUIDs = database.query(ServerQueries.fetchProxyServers())
+                .stream()
+                .map(Server::getUuid)
+                .collect(Collectors.toList());
+        if (mainServerUUIDs.isEmpty()) mainServerUUIDs.add(serverInfo.getServerUUID());
+
+        Map<UUID, ExtensionTabData> allPluginData = new HashMap<>();
+
+        for (ServerUUID serverUUID : mainServerUUIDs) {
+            Map<UUID, ExtensionTabData> pluginData = database.query(new ExtensionServerTableDataQuery(serverUUID, xMostRecentPlayers));
+            for (Map.Entry<UUID, ExtensionTabData> entry : pluginData.entrySet()) {
+                UUID playerUUID = entry.getKey();
+                ExtensionTabData dataFromServer = entry.getValue();
+                ExtensionTabData alreadyIncludedData = allPluginData.get(playerUUID);
+                if (alreadyIncludedData == null) {
+                    allPluginData.put(playerUUID, dataFromServer);
+                } else {
+                    alreadyIncludedData.combine(dataFromServer);
+                }
+            }
+        }
+
 
         return new PlayersTableJSONCreator(
                 database.query(new NetworkTablePlayersQuery(System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
-                pluginData,
+                allPluginData,
                 openPlayerLinksInNewTab,
                 formatters, locale,
                 true // players page

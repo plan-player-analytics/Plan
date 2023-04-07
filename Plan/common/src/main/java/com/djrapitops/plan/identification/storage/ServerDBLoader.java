@@ -45,8 +45,7 @@ public class ServerDBLoader implements ServerLoader {
     public Optional<Server> load(ServerUUID serverUUID) {
         try {
             if (serverUUID == null) {
-                // Assumes that we want the server that has single entry in the database, the proxy
-                return dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation());
+                throw new EnableException("Attempted to load a server with null UUID (Old behavior that is no longer supported)");
             }
 
             return dbSystem.getDatabase().query(
