@@ -119,6 +119,7 @@ public class LocaleSystem implements SubSystem {
 
         Optional<Locale> loaded;
         if (localeFile.exists()) {
+            writeNewDefaultLocale(localeFile);
             loaded = loadFromFile(localeFile);
         } else {
             loaded = loadSettingLocale();
