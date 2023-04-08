@@ -81,7 +81,8 @@ public class JettyInternalRequest implements InternalRequest {
         return new com.djrapitops.plan.delivery.web.resolver.request.Request(requestMethod, path, query, user, headers, requestBody);
     }
 
-    private Map<String, String> getRequestHeaders() {
+    @Override
+    public Map<String, String> getRequestHeaders() {
         return streamHeaderNames()
                 .collect(Collectors.toMap(Function.identity(), baseRequest::getHeader,
                         (one, two) -> one + ';' + two));

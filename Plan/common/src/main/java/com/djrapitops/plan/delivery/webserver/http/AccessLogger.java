@@ -54,6 +54,9 @@ public class AccessLogger {
                     getRequestURI(internalRequest, request) +
                     " (from " + internalRequest.getAccessAddress(webserverConfiguration) + ") - " +
                     code;
+            if (webserverConfiguration.isDevMode()) {
+                message += " Request Headers" + internalRequest.getRequestHeaders();
+            }
 
             int codeFamily = code - (code % 100); // 5XX, 4XX etc
             switch (codeFamily) {

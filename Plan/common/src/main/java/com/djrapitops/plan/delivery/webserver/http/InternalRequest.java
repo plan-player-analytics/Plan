@@ -26,6 +26,7 @@ import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfigurati
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -53,6 +54,8 @@ public interface InternalRequest {
     }
 
     Request toRequest();
+
+    Map<String, String> getRequestHeaders();
 
     List<Cookie> getCookies();
 
