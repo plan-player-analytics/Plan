@@ -58,7 +58,7 @@ const getContributionIcon = (type) => {
 
 const Contributor = ({contributor}) => {
     const icons = contributor.contributed.map(
-        (type, i) => <Fa key={i} icon={["fa", getContributionIcon(type)]}/>);
+        type => <Fa key={"" + type} icon={["fa", getContributionIcon(type)]}/>);
     return (
         <li className="contributor">{contributor.name} {icons} </li>
     )
@@ -78,7 +78,7 @@ const Contributions = () => {
         <p>In addition following <span className="col-theme">awesome people</span> have
             contributed:</p>
         <ul className="row contributors">
-            {contributors.map((contributor, i) => <Contributor key={i} contributor={contributor}/>)}
+            {contributors.map((contributor, i) => <Contributor key={contributor.name} contributor={contributor}/>)}
             <li>{t('html.modal.info.contributors.bugreporters')}</li>
         </ul>
         <small>

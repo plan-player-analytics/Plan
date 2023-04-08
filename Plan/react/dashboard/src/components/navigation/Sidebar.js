@@ -150,8 +150,8 @@ const SidebarCollapse = ({item, open, setOpen, collapseSidebar}) => {
                     <div className="bg-white py-2 collapse-inner rounded">
                         {item.contents
                             .filter(content => content !== undefined)
-                            .map((content, i) =>
-                                <Item key={i}
+                            .map(content =>
+                                <Item key={JSON.stringify(content)}
                                       inner
                                       active={false}
                                       item={content}

@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {useDataRequest} from "./dataFetchHook";
 import {fetchExtensionData} from "../service/serverService";
 
@@ -15,7 +15,9 @@ export const ServerExtensionContextProvider = ({identifier, children}) => {
         setExtensionDataLoadingError(loadingError);
     }, [data, loadingError, setExtensionData, setExtensionDataLoadingError])
 
-    const sharedState = {extensionData, extensionDataLoadingError}
+    const sharedState = useMemo(() => {
+        return {extensionData, extensionDataLoadingError};
+    }, [extensionData, extensionDataLoadingError]);
     return (<ServerExtensionContext.Provider value={sharedState}>
             {children}
         </ServerExtensionContext.Provider>

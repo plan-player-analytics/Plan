@@ -29,7 +29,7 @@ const FilterList = ({filters, setFilters, setAsInvalid, setAsValid}) => {
 
     return (
         <ul id={"filters"} className={"filters"}>
-            {filters.map((filter, i) => <li key={i} className={"filter"}>
+            {filters.map((filter, i) => <li key={JSON.stringify(filter)} className={"filter"}>
                 <Filter filter={filter} index={i}
                         setFilterOptions={newOptions => updateFilterOptions(i, newOptions)}
                         removeFilter={() => removeFilter(i)}

@@ -23,28 +23,36 @@ const PlayerbaseTrendsCard = ({data}) => {
                              headers={[t('html.label.thirtyDaysAgo'), t('html.label.now'), t('html.label.trend')]}>
                 <TableRow icon={faUsers} color="black" text={t('html.label.totalPlayers')}
                           values={[data.total_players_then, data.total_players_now,
-                              <BigTrend trend={data.total_players_trend}/>]}/>
+                              <BigTrend key={JSON.stringify(data.total_players_trend)}
+                                        trend={data.total_players_trend}/>]}/>
                 <TableRow icon={faUsers} color="lime" text={t('html.label.regularPlayers')}
                           values={[data.regular_players_then, data.regular_players_now,
-                              <BigTrend trend={data.regular_players_trend}/>]}/>
+                              <BigTrend key={JSON.stringify(data.regular_players_trend)}
+                                        trend={data.regular_players_trend}/>]}/>
                 <TableRow icon={faClock} color="green"
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                           values={[data.playtime_avg_then, data.playtime_avg_now,
-                              <BigTrend trend={data.playtime_avg_trend}/>]}/>
+                              <BigTrend key={JSON.stringify(data.total_players_trend)}
+                                        trend={data.playtime_avg_trend}/>]}/>
                 <TableRow icon={faClock} color="gray" text={t('html.label.afk') + ' ' + t('html.label.perPlayer')}
-                          values={[data.afk_then, data.afk_now, <BigTrend trend={data.afk_trend}/>]}/>
+                          values={[data.afk_then, data.afk_now,
+                              <BigTrend key={JSON.stringify(data.afk_trend)}
+                                        trend={data.afk_trend}/>]}/>
                 <TableRow icon={faClock} color="green"
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perRegularPlayer')}
                           values={[data.regular_playtime_avg_then, data.regular_playtime_avg_now,
-                              <BigTrend trend={data.regular_playtime_avg_trend}/>]}/>
+                              <BigTrend key={JSON.stringify(data.regular_playtime_avg_trend)}
+                                        trend={data.regular_playtime_avg_trend}/>]}/>
                 <TableRow icon={faClock} color="teal"
                           text={t('html.label.averageSessionLength') + ' ' + t('html.label.perRegularPlayer')}
                           values={[data.regular_session_avg_then, data.regular_session_avg_now,
-                              <BigTrend trend={data.regular_session_avg_trend}/>]}/>
+                              <BigTrend key={JSON.stringify(data.regular_session_avg_trend)}
+                                        trend={data.regular_session_avg_trend}/>]}/>
                 <TableRow icon={faClock} color="gray"
                           text={t('html.label.afk') + ' ' + t('html.label.perRegularPlayer')}
                           values={[data.regular_afk_avg_then, data.regular_afk_avg_now,
-                              <BigTrend trend={data.regular_afk_avg_trend}/>]}/>
+                              <BigTrend key={JSON.stringify(data.regular_afk_avg_trend)}
+                                        trend={data.regular_afk_avg_trend}/>]}/>
             </ComparisonTable>
         </Card>
     )

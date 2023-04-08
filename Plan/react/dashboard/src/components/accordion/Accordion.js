@@ -49,7 +49,6 @@ const Accordion = ({headers, slices, open, style}) => {
     }
 
     const width = headers.length;
-
     return (
         <table className={"table accordion-striped" + (nightModeEnabled ? " table-dark" : '')} id="tableAccordion"
                style={style}>

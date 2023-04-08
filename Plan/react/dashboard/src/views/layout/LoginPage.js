@@ -146,6 +146,32 @@ const LoginPage = () => {
         }
     }, [setRedirectTo, setSuccessMessage, t])
 
+    const redirectAfterLogin = () => {
+        if (redirectTo && !redirectTo.startsWith('http') && !redirectTo.startsWith('file') && !redirectTo.startsWith('javascript')) {
+            // Normalize the URL so that it can't redirect to different domain.
+            try {
+                const redirectUrl = new URL(
+                    redirectTo.substring(redirectTo.indexOf('/')) + (window.location.hash ? window.location.hash : ''),
+                    window.location.protocol + '//' + window.location.host
+                );
+                if (redirectUrl.pathname.includes("//")) {
+                    // Invalid redirect URL, something fishy might be going on, redirect to /
+                    navigate('/');
+                } else {
+                    navigate(
+                        redirectUrl.pathname + redirectUrl.search + redirectUrl.hash
+                    );
+                }
+            } catch (e) {
+                console.warn(e);
+                // Invalid redirect URL, something fishy might be going on, redirect to /
+                navigate('/');
+            }
+        } else {
+            navigate('/');
+        }
+    };
+
     const login = async (username, password) => {
         if (!username || username.length < 1) {
             return setFailMessage(t('html.register.error.noUsername'));
@@ -168,29 +194,7 @@ const LoginPage = () => {
             }
         } else if (data && data.success) {
             await updateLoginDetails();
-            if (redirectTo && !redirectTo.startsWith('http') && !redirectTo.startsWith('file') && !redirectTo.startsWith('javascript')) {
-                // Normalize the URL so that it can't redirect to different domain.
-                try {
-                    const redirectUrl = new URL(
-                        redirectTo.substring(redirectTo.indexOf('/')) + (window.location.hash ? window.location.hash : ''),
-                        window.location.protocol + '//' + window.location.host
-                    );
-                    if (redirectUrl.pathname.includes("//")) {
-                        // Invalid redirect URL, something fishy might be going on, redirect to /
-                        navigate('/');
-                    } else {
-                        navigate(
-                            redirectUrl.pathname + redirectUrl.search + redirectUrl.hash
-                        );
-                    }
-                } catch (e) {
-                    console.warn(e);
-                    // Invalid redirect URL, something fishy might be going on, redirect to /
-                    navigate('/');
-                }
-            } else {
-                navigate('/');
-            }
+            redirectAfterLogin();
         } else {
             setFailMessage(t('html.login.failed') + data ? data.error : t('generic.noData'));
         }

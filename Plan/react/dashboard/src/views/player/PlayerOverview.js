@@ -34,7 +34,7 @@ const ConnectionsCard = ({player}) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {player.connections.map((connection, i) => (<tr key={'connection-' + i}>
+                    {player.connections.map((connection, i) => (<tr key={JSON.stringify(connection)}>
                         <td>{connection.geolocation}</td>
                         <td>{connection.date}</td>
                     </tr>))}
