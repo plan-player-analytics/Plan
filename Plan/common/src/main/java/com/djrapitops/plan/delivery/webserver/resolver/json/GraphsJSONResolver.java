@@ -91,6 +91,7 @@ public class GraphsJSONResolver extends JSONResolver {
                             @ExampleObject(value = "performance", description = "Deprecated, use optimizedPerformance"),
                             @ExampleObject("optimizedPerformance"),
                             @ExampleObject("playersOnline"),
+                            @ExampleObject("playersOnlineProxies"),
                             @ExampleObject("uniqueAndNew"),
                             @ExampleObject("hourlyUniqueAndNew"),
                             @ExampleObject("serverCalendar"),
@@ -160,6 +161,8 @@ public class GraphsJSONResolver extends JSONResolver {
                 return DataID.GRAPH_OPTIMIZED_PERFORMANCE;
             case "playersOnline":
                 return DataID.GRAPH_ONLINE;
+            case "playersOnlineProxies":
+                return DataID.GRAPH_ONLINE_PROXIES;
             case "uniqueAndNew":
                 return DataID.GRAPH_UNIQUE_NEW;
             case "hourlyUniqueAndNew":
@@ -241,6 +244,8 @@ public class GraphsJSONResolver extends JSONResolver {
                 return graphJSON.playerHostnamePieJSONAsMap();
             case GRAPH_WORLD_MAP:
                 return graphJSON.geolocationGraphsJSONAsMap();
+            case GRAPH_ONLINE_PROXIES:
+                return graphJSON.proxyPlayersOnlineGraphs();
             case JOIN_ADDRESSES_BY_DAY:
                 try {
                     return graphJSON.joinAddressesByDay(

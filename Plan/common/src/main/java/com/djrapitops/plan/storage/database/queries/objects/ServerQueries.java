@@ -146,32 +146,29 @@ public class ServerQueries {
         };
     }
 
-    public static Query<Optional<Server>> fetchProxyServerInformation() {
+    public static Query<List<Server>> fetchProxyServers() {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?" +
-                AND + ServerTable.PROXY + "=?" +
-                LIMIT + '1';
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, true);
-                statement.setBoolean(2, true);
-            }
+                AND + ServerTable.PROXY + "=?";
+        return db -> db.queryList(sql, set ->
+                new Server(
+                        set.getInt(ServerTable.ID),
+                        ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                        set.getString(ServerTable.NAME),
+                        set.getString(ServerTable.WEB_ADDRESS),
+                        set.getBoolean(ServerTable.PROXY),
+                        set.getString(ServerTable.PLAN_VERSION)
+                ), true, true
+        );
+    }
 
-            @Override
-            public Optional<Server> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(new Server(
-                            set.getInt(ServerTable.ID),
-                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
-                            set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY),
-                            set.getString(ServerTable.PLAN_VERSION)));
-                }
-                return Optional.empty();
-            }
-        };
+    public static Query<List<ServerUUID>> fetchProxyServerUUIDs() {
+        String sql = SELECT + ServerTable.SERVER_UUID + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?" +
+                AND + ServerTable.PROXY + "=?";
+        return db -> db.queryList(sql, set -> ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                true, true
+        );
     }
 
     public static Query<List<String>> fetchGameServerNames() {
@@ -185,7 +182,7 @@ public class ServerQueries {
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> names = new ArrayList<>();
                 while (set.next()) {
-                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID)));
+                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID), false));
                 }
                 return names;
             }
@@ -194,7 +191,7 @@ public class ServerQueries {
 
     public static Query<Map<ServerUUID, String>> fetchServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                        ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                        ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME, ServerTable.PROXY)
                 .toString();
 
         return new QueryAllStatement<>(sql) {
@@ -203,7 +200,9 @@ public class ServerQueries {
                 Map<ServerUUID, String> names = new HashMap<>();
                 while (set.next()) {
                     ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
-                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID)));
+                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME),
+                            set.getInt(ServerTable.ID),
+                            set.getBoolean(ServerTable.PROXY)));
                 }
                 return names;
             }

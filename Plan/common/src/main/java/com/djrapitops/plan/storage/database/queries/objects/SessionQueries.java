@@ -186,7 +186,8 @@ public class SessionQueries {
             ServerName serverName = new ServerName(
                     Server.getIdentifiableName(
                             set.getString("server_name"),
-                            set.getInt("server_id")
+                            set.getInt("server_id"),
+                            false
                     ));
             extraData.put(ServerName.class, serverName);
 
@@ -777,7 +778,8 @@ public class SessionQueries {
                 while (set.next()) {
                     String name = Server.getIdentifiableName(
                             set.getString(ServerTable.NAME),
-                            set.getInt(ServerTable.ID)
+                            set.getInt(ServerTable.ID),
+                            false
                     );
                     playtimePerServer.put(name, set.getLong("playtime"));
                 }

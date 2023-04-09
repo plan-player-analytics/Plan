@@ -104,7 +104,7 @@ class ExportRegressionTest {
                     String address = "http://" + webserver.getHost() + ":" + webserver.getMappedPort(8080)
                             + (endpoint.startsWith("/") ? endpoint : '/' + endpoint);
                     List<LogEntry> logs = getLogsAfterRequestToAddress(driver, address);
-                    assertNoLogs(logs);
+                    assertNoLogs(logs, endpoint);
                 })
         ).collect(Collectors.toList());
     }

@@ -85,6 +85,7 @@ public class PluginGroupsFilter extends MultiOptionFilter {
                     "pl." + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
                     "s." + ServerTable.NAME + " as server_name," +
                     "s." + ServerTable.ID + " as server_id," +
+                    "s." + ServerTable.PROXY + " as is_proxy," +
                     "pl." + ExtensionPluginTable.SERVER_UUID + " as server_uuid," +
                     "pr." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                     "gr." + ExtensionGroupsTable.GROUP_NAME + " as group_name" +
@@ -106,7 +107,8 @@ public class PluginGroupsFilter extends MultiOptionFilter {
                 ProviderIdentifier identifier = new ProviderIdentifier(serverUUID, plugin, provider);
                 identifier.setServerName(Server.getIdentifiableName(
                         set.getString("server_name"),
-                        set.getInt("server_id")
+                        set.getInt("server_id"),
+                        set.getBoolean("is_proxy")
                 ));
 
                 String group = set.getString("group_name");

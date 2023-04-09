@@ -58,9 +58,10 @@ public class ExtensionDisableOnGameServerTask extends TaskSystem.Task {
 
     private void checkAndDisableProxyExtensions(String pluginName) {
         Database db = dbSystem.getDatabase();
-        db.query(ServerQueries.fetchProxyServerInformation())
+        db.query(ServerQueries.fetchProxyServers())
+                .stream()
                 .map(Server::getUuid)
-                .ifPresent(proxyUUID -> checkAndDisableProxyExtension(proxyUUID, pluginName));
+                .forEach(proxyUUID -> checkAndDisableProxyExtension(proxyUUID, pluginName));
     }
 
     private void checkAndDisableProxyExtension(ServerUUID proxyUUID, String pluginName) {

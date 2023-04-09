@@ -57,4 +57,9 @@ public class VelocitySensor implements ServerSensor<Object> {
     public List<String> getOnlinePlayerNames() {
         return getPlayers.get().stream().map(Player::getUsername).collect(Collectors.toList());
     }
+
+    @Override
+    public boolean usingRedisBungee() {
+        return VelocityRedisCheck.isClassAvailable();
+    }
 }

@@ -107,7 +107,7 @@ public class PluginStatusCommands {
         Database database = dbSystem.getDatabase();
 
         String updateAvailable = versionChecker.isNewVersionAvailable() ? yes : no;
-        String proxyAvailable = database.query(ServerQueries.fetchProxyServerInformation()).isPresent() ? yes : no;
+        String proxyAvailable = database.query(ServerQueries.fetchProxyServers()).isEmpty() ? no : yes;
 
 
         String[] messages = {

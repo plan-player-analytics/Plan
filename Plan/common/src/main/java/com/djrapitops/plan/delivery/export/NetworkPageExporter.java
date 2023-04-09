@@ -157,6 +157,7 @@ public class NetworkPageExporter extends FileExporter {
                 "network/sessionsOverview",
                 "network/playerbaseOverview",
                 "graph?type=playersOnline&server=" + serverUUID,
+                "graph?type=playersOnlineProxies",
                 "graph?type=uniqueAndNew",
                 "graph?type=hourlyUniqueAndNew",
                 "graph?type=serverPie",

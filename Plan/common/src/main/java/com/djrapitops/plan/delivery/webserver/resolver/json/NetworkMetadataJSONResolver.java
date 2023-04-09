@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -44,11 +45,13 @@ import java.util.stream.Collectors;
 public class NetworkMetadataJSONResolver implements NoAuthResolver {
 
     private final ServerInfo serverInfo;
+    private final ServerSensor<?> serverSensor;
     private final DBSystem dbSystem;
 
     @Inject
-    public NetworkMetadataJSONResolver(ServerInfo serverInfo, DBSystem dbSystem) {
+    public NetworkMetadataJSONResolver(ServerInfo serverInfo, ServerSensor<?> serverSensor, DBSystem dbSystem) {
         this.serverInfo = serverInfo;
+        this.serverSensor = serverSensor;
         this.dbSystem = dbSystem;
     }
 
@@ -70,6 +73,7 @@ public class NetworkMetadataJSONResolver implements NoAuthResolver {
                                 .sorted()
                                 .collect(Collectors.toList()))
                         .put("currentServer", ServerDto.fromServer(serverInfo.getServer()))
+                        .put("usingRedisBungee", serverSensor.usingRedisBungee())
                         .build())
                 .build();
     }

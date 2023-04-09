@@ -170,7 +170,7 @@ public class KillQueries {
                     new PlayerKill.Killer(killer, killerName),
                     new PlayerKill.Victim(victim, victimName, set.getLong("victim_" + UsersTable.REGISTERED)),
                     new ServerIdentifier(ServerUUID.fromString(set.getString(KillsTable.SERVER_UUID)),
-                            Server.getIdentifiableName(set.getString("server_name"), set.getInt("server_id"))
+                            Server.getIdentifiableName(set.getString("server_name"), set.getInt("server_id"), false)
                     ), weapon, date
             ));
         }

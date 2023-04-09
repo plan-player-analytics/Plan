@@ -26,6 +26,7 @@ import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -73,17 +74,16 @@ public class BungeeServerInfo extends ServerInfo {
     @Override
     public void loadServerInfo() {
         logger.info(locale.getString(PluginLang.LOADING_SERVER_INFO));
-        checkIfDefaultIP();
 
-        this.server = fromFile.load(null).orElseGet(() -> fromDatabase.load(null)
-                .orElseGet(this::registerServer));
+        this.server = fromFile.load(null)
+                .orElseGet(this::registerServer);
         this.server.setProxy(true); // Ensure isProxy if loaded from file
 
         processing.submitNonCritical(this::updateStorage);
     }
 
     private void updateStorage() {
-        String address = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
+        String address = getAddress();
 
         server.setWebAddress(address);
 
@@ -95,35 +95,26 @@ public class BungeeServerInfo extends ServerInfo {
     /**
      * @throws EnableException If IP setting is unset
      */
-    private void checkIfDefaultIP() {
-        String ip = serverProperties.getIp();
-        if ("0.0.0.0".equals(ip)) {
-            logger.error("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.");
-            logger.info("Player Analytics partially enabled (Use /planproxy reload to reload config)");
-            throw new EnableException("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.");
-        }
-    }
-
-    /**
-     * @throws EnableException If IP setting is unset
-     */
     private Server registerServer() {
         Server proxy = createServerObject();
 
         fromDatabase.save(proxy);
-        Server stored = fromDatabase.load(null)
-                .orElseThrow(() -> new EnableException("BungeeCord registration failed (DB)"));
+        Server stored = fromDatabase.load(proxy.getUuid())
+                .orElseThrow(() -> new EnableException("Server registration to database failed"));
 
         fromFile.save(stored);
         return stored;
     }
 
-    /**
-     * @throws EnableException If IP setting is unset
-     */
     private Server createServerObject() {
         ServerUUID serverUUID = generateNewUUID();
-        String accessAddress = addresses.getAccessAddress().orElseThrow(() -> new EnableException("Velocity can not have '0.0.0.0' or '' as an address. Set up 'Server.IP' setting."));
+        String accessAddress = getAddress();
         return new Server(-1, serverUUID, "BungeeCord", accessAddress, true, currentVersion);
+    }
+
+    @Nullable
+    private String getAddress() {
+        return addresses.getAccessAddress()
+                .orElse(addresses.isWebserverEnabled() ? addresses.getFallbackLocalhostAddress() : null);
     }
 }

@@ -176,7 +176,7 @@ public class JoinAddressQueries {
                     WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     AND + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
-                    GROUP_BY + "date,j." + JoinAddressTable.ID;
+                    GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS;
 
             return db.query(new QueryStatement<>(selectAddresses, 1000) {
                 @Override
@@ -219,7 +219,7 @@ public class JoinAddressQueries {
                     LEFT_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
                     WHERE + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
-                    GROUP_BY + "date,j." + JoinAddressTable.ID;
+                    GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS;
 
             return db.query(new QueryStatement<>(selectAddresses, 1000) {
                 @Override

@@ -105,7 +105,7 @@ public class LinkCommands {
                     .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier)));
         }
 
-        String address = getAddress(sender) + "/server/" + Html.encodeToURL(server.getName());
+        String address = getAddress(sender) + "/server/" + Html.encodeToURL(server.getUuid().toString());
         sender.buildMessage()
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_SERVER))
                 .apply(builder -> linkTo(builder, sender, address))
@@ -126,7 +126,7 @@ public class LinkCommands {
         String serversListed = dbSystem.getDatabase()
                 .query(ServerQueries.fetchPlanServerInformationCollection())
                 .stream().sorted()
-                .map(server -> m + server.getId().orElse(0) + "::" + t + server.getName() + "::" + s + server.getUuid() + "::" + s + server.getPlanVersion() + "\n")
+                .map(server -> m + server.getId().orElse(0) + "::" + t + server.getIdentifiableName() + "::" + s + server.getUuid() + "::" + s + server.getPlanVersion() + "\n")
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
         sender.buildMessage()
@@ -195,7 +195,7 @@ public class LinkCommands {
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_NETWORK))
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
-        if (dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation()).isEmpty()) {
+        if (dbSystem.getDatabase().query(ServerQueries.fetchProxyServers()).isEmpty()) {
             throw new IllegalArgumentException(locale.getString(CommandLang.NOTIFY_NO_NETWORK));
         }
     }

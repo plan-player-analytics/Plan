@@ -12,13 +12,19 @@ import {
 import React from "react";
 import {TableRow} from "./TableRow";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faEye} from "@fortawesome/free-regular-svg-icons";
+import {faEye, faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import AsNumbersTable from "./AsNumbersTable";
 import {ChartLoader} from "../navigation/Loader";
 
-const PerformanceAsNumbersTable = ({data}) => {
+const PerformanceAsNumbersTable = ({data, servers}) => {
     const {t} = useTranslation();
     if (!data) return <ChartLoader/>;
+
+    const dataIncludesGameServers = servers && Boolean(servers.filter(server => !server.proxy).length);
+    const noTPSOnProxies = !servers || dataIncludesGameServers
+        ? ''
+        : <Fa icon={faQuestionCircle}
+              title={t('html.description.performanceNoGameServers')}/>;
 
     return (
         <AsNumbersTable
@@ -52,9 +58,9 @@ const PerformanceAsNumbersTable = ({data}) => {
                       ]}/>
             <TableRow icon={faTachometerAlt} color="orange" text={t('html.label.averageTps')}
                       values={[
-                          data.tps_30d,
-                          data.tps_7d,
-                          data.tps_24h
+                          <>{data.tps_30d} {noTPSOnProxies}</>,
+                          <>{data.tps_7d} {noTPSOnProxies}</>,
+                          <>{data.tps_24h} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faTachometerAlt} color="amber" text={t('html.label.averageCpuUsage')}
                       values={[
@@ -70,17 +76,17 @@ const PerformanceAsNumbersTable = ({data}) => {
                       ]}/>
             <TableRow icon={faDragon} color="purple" text={t('html.label.averageEntities')}
                       values={[
-                          data.entities_30d,
-                          data.entities_7d,
-                          data.entities_24h
+                          <>{data.entities_30d} {noTPSOnProxies}</>,
+                          <>{data.entities_7d} {noTPSOnProxies}</>,
+                          <>{data.entities_24h} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faMap} color="blue-grey"
                       text={<>{t('html.label.averageChunks')}{' '}{data.chunks_30d === 'Unavailable' ?
                           <Fa icon={faEye} title={t('html.description.noSpongeChunks')}/> : ''}</>}
                       values={[
-                          data.chunks_30d,
-                          data.chunks_7d,
-                          data.chunks_24h
+                          <>{data.chunks_30d} {noTPSOnProxies}</>,
+                          <>{data.chunks_7d} {noTPSOnProxies}</>,
+                          <>{data.chunks_24h} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faHdd} color="green"
                       text={t('html.label.maxFreeDisk')}

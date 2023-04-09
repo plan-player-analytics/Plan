@@ -84,7 +84,7 @@ public class ServerFileLoader implements ServerLoader {
             ServerUUID serverUUID = ServerUUID.fromString(serverUUIDString);
             String name = config.getNode(PluginSettings.SERVER_NAME.getPath())
                     .map(ConfigNode::getString)
-                    .orElse("Proxy");
+                    .orElse("Plan");
             String address = serverInfoConfig.get().getString("Server.Web_address");
 
             return Optional.of(new Server(id, serverUUID, name, address, false, currentVersion));
