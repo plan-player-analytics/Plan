@@ -102,6 +102,12 @@ const PerformanceGraphsCard = ({data}) => {
             return colorHex;
         }
 
+        const minuteResolution = point => {
+            // Ensure that the points can be stacked by moving data to minute level
+            point[0] -= (point[0] % 60000);
+            return point;
+        }
+
         serverData.forEach((server, i) => {
             const playersOnlineColor = changeColor(data.colors.playersOnline, i);
             const tpsColor = changeColor(data.colors.high, i);
@@ -117,31 +123,31 @@ const PerformanceGraphsCard = ({data}) => {
 
             series.players.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.playersOnline, color: playersOnlineColor, yAxis: 0
+                data: server.values.playersOnline.map(minuteResolution), color: playersOnlineColor, yAxis: 0
             });
             series.tps.push({
                 name: server.serverName, type: spline, tooltip: tooltip.twoDecimals,
-                data: server.values.tps, color: tpsColor, zones: tpsZone, yAxis: 0
+                data: server.values.tps.map(minuteResolution), color: tpsColor, zones: tpsZone, yAxis: 0
             });
             series.cpu.push({
                 name: server.serverName, type: spline, tooltip: tooltip.twoDecimals,
-                data: server.values.cpu, color: cpuColor, yAxis: 0
+                data: server.values.cpu.map(minuteResolution), color: cpuColor, yAxis: 0
             });
             series.ram.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.ram, color: ramColors, yAxis: 0
+                data: server.values.ram.map(minuteResolution), color: ramColors, yAxis: 0
             });
             series.entities.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.entities, color: entitiesColor, yAxis: 0
+                data: server.values.entities.map(minuteResolution), color: entitiesColor, yAxis: 0
             });
             series.chunks.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.chunks, color: chunksColor, yAxis: 0
+                data: server.values.chunks.map(minuteResolution), color: chunksColor, yAxis: 0
             });
             series.disk.push({
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
-                data: server.values.disk, color: diskColor, zones: diskZones, yAxis: 0
+                data: server.values.disk.map(minuteResolution), color: diskColor, zones: diskZones, yAxis: 0
             });
         });
         setPerformanceSeries(series);

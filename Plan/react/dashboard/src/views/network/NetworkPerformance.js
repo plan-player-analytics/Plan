@@ -84,7 +84,8 @@ const NetworkPerformance = () => {
         loadPerformanceData();
     }, [loadPerformanceData, visualizedServers, updateRequested]);
 
-    const isUpToDate = visualizedServers.every((s, i) => s === selectedOptions[i]);
+    const isUpToDate = selectedOptions.length === visualizedServers.length && selectedOptions.every(
+        (s, i) => s === visualizedServers[i]);
     return (
         <LoadIn>
             <section className={"network-performance"}>
