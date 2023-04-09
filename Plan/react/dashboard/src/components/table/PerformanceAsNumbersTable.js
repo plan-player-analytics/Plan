@@ -20,8 +20,8 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
     const {t} = useTranslation();
     if (!data) return <ChartLoader/>;
 
-    const isOnlyProxies = Boolean(servers.filter(server => !server.proxy).length);
-    const noTPSOnProxies = isOnlyProxies
+    const dataIncludesGameServers = servers && Boolean(servers.filter(server => !server.proxy).length);
+    const noTPSOnProxies = !servers || dataIncludesGameServers
         ? ''
         : <Fa icon={faQuestionCircle}
               title={t('html.description.performanceNoGameServers')}/>;

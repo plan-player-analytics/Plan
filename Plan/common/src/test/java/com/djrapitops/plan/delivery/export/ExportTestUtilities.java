@@ -61,13 +61,13 @@ public class ExportTestUtilities {
         /* Static utility method class */
     }
 
-    public static void assertNoLogs(List<LogEntry> logs) {
+    public static void assertNoLogs(List<LogEntry> logs, String endpoint) {
         List<String> loggedLines = logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
                 .filter(log -> !StringUtils.containsAny(log,
                         "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net"
                 )).toList();
-        assertTrue(loggedLines.isEmpty(), () -> "Browser console included " + loggedLines.size() + " logs: " + loggedLines);
+        assertTrue(loggedLines.isEmpty(), () -> "Loading " + endpoint + ", Browser console included " + loggedLines.size() + " logs: " + loggedLines);
     }
 
     public static void assertNoLogsExceptFaviconError(List<LogEntry> logs) {

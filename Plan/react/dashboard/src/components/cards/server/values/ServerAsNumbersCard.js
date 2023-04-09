@@ -21,7 +21,7 @@ const ServerAsNumbersCard = ({data}) => {
     const {t} = useTranslation();
     const {networkMetadata} = useMetadata();
 
-    if (!data) return <CardLoader/>;
+    if (!data || !networkMetadata) return <CardLoader/>;
 
     const isGameServer = data.player_kills !== undefined;
     const showPeaks = isGameServer || networkMetadata.usingRedisBungee || networkMetadata.servers.filter(server => server.proxy).length === 1;
