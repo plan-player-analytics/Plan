@@ -13,7 +13,7 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes}) => {
                 onChange={handleChange}>
             {options.map((option, i) => {
                 return (
-                    <option key={i} value={selectedIndexes.includes(i)}
+                    <option key={JSON.stringify(option)} value={selectedIndexes.includes(i)}
                             selected={selectedIndexes.includes(i)}>{option}</option>
                 )
             })}

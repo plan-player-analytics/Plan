@@ -22,8 +22,8 @@ const LanguageSelector = () => {
                 className="form-select form-select-sm"
                 id="langSelector"
                 defaultValue={localeService.clientLocale}>
-            {languages.map((lang, i) =>
-                <option key={i} value={lang.name}>{lang.displayName}</option>)}
+            {languages.map(lang =>
+                <option key={lang.name} value={lang.name}>{lang.displayName}</option>)}
         </select>
     )
 }

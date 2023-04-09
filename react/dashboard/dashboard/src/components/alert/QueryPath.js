@@ -48,7 +48,8 @@ const QueryPath = () => {
 
     return (
         <aside id={"result-path"} className={"alert shadow " + (hasResults ? "alert-success" : "alert-warning")}>
-            {path.map((step, i) => <p key={i} style={{marginBottom: 0, marginLeft: i * 0.7 + "rem"}}>
+            {path.map((step, i) => <p key={step.kind + step.size}
+                                      style={{marginBottom: 0, marginLeft: i * 0.7 + "rem"}}>
                 <FontAwesomeIcon
                     icon={faFilter}/> '{getReadableFilterName(step.kind)}' matched {step.size} players
             </p>)}

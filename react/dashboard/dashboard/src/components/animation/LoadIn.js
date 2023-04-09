@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {Transition} from 'react-transition-group';
 
-const reduceAnimations = window.matchMedia(`(prefers-reduced-motion: reduce)`) === true;
 const defaultDuration = 250;
 
 const LoadIn = ({children, duration}) => {
     if (!duration) duration = defaultDuration;
+    const reduceAnimations = window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;
 
     const defaultStyle = reduceAnimations ? {
         transition: `opacity ${duration}ms ease-in-out`,

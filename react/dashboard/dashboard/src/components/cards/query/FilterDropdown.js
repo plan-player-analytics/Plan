@@ -51,8 +51,8 @@ const FilterDropdown = ({filterOptions, filters, setFilters}) => {
             <Dropdown.Menu popperConfig={{strategy: "absolute"}}>
                 <h6 className="dropdown-header">{t('html.query.filters.add')}</h6>
                 <Scrollable>
-                    {filterOptions.map((option, i) => (
-                        <Dropdown.Item key={i} onClick={() => addFilter(option)}>
+                    {filterOptions.map(option => (
+                        <Dropdown.Item key={option} onClick={() => addFilter(option)}>
                             {getReadableFilterName(option)}
                         </Dropdown.Item>
                     ))}

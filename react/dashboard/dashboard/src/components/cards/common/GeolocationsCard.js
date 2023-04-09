@@ -22,8 +22,8 @@ const ProjectionDropDown = ({projection, setProjection}) => {
 
             <Dropdown.Menu>
                 <h6 className="dropdown-header">{t('html.label.geoProjection.dropdown')}</h6>
-                {projectionOptions.map((option, i) => (
-                    <Dropdown.Item key={i} onClick={() => setProjection(option)}>
+                {projectionOptions.map(option => (
+                    <Dropdown.Item key={option} onClick={() => setProjection(option)}>
                         {t(option)}
                     </Dropdown.Item>
                 ))}

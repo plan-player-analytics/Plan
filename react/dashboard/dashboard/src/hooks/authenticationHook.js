@@ -1,4 +1,4 @@
-import {createContext, useCallback, useContext, useEffect, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {fetchWhoAmI} from "../service/authenticationService";
 
 const AuthenticationContext = createContext({});
@@ -35,7 +35,18 @@ export const AuthenticationContextProvider = ({children}) => {
         updateLoginDetails();
     }, [updateLoginDetails]);
 
-    const sharedState = {
+    const sharedState = useMemo(() => {
+        return {
+            authLoaded,
+            authRequired,
+            loggedIn,
+            user,
+            loginError,
+            hasPermission,
+            hasPermissionOtherThan,
+            updateLoginDetails
+        }
+    }, [
         authLoaded,
         authRequired,
         loggedIn,
@@ -44,7 +55,7 @@ export const AuthenticationContextProvider = ({children}) => {
         hasPermission,
         hasPermissionOtherThan,
         updateLoginDetails
-    }
+    ])
     return (<AuthenticationContext.Provider value={sharedState}>
             {children}
         </AuthenticationContext.Provider>

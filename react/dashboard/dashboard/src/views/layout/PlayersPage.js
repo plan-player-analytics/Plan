@@ -9,6 +9,8 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
 import ErrorPage from "./ErrorPage";
 import {staticSite} from "../../service/backendConfiguration";
+import {useAuth} from "../../hooks/authenticationHook";
+import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
@@ -30,6 +32,8 @@ const PlayersPage = () => {
         setCurrentTab('html.label.players')
     }, [t, i18n, setCurrentTab, setSidebarItems])
 
+    const {authRequired, loggedIn} = useAuth();
+    if (authRequired && !loggedIn) return <MainPageRedirect/>;
     if (error) return <ErrorPage error={error}/>;
 
     const displayedServerName = isProxy ? networkName : (serverName && serverName.startsWith('Server') ? "Plan" : serverName);

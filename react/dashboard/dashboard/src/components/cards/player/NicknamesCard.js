@@ -27,7 +27,7 @@ const NicknamesCard = ({player}) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {player.nicknames.map((nickname, i) => (<tr key={'nick-' + i}>
+                    {player.nicknames.map(nickname => (<tr key={JSON.stringify(nickname)}>
                         <td dangerouslySetInnerHTML={{__html: nickname.nickname}}/>
                         <td>{nickname.server}</td>
                         <td>{nickname.date}</td>

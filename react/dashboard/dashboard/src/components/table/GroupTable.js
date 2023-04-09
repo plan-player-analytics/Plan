@@ -30,7 +30,7 @@ const GroupTable = ({groups, colors}) => {
             <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
                 <tbody>
                 {groups.length ? groups.map((group, i) =>
-                        <GroupRow key={i}
+                        <GroupRow key={group.name}
                                   group={group}
                                   color={getColor(i)}/>) :
                     <tr>

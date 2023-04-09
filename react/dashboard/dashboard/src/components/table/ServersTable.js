@@ -1,7 +1,9 @@
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {
+    faBoxArchive,
     faCaretSquareRight,
+    faExclamationTriangle,
     faLineChart,
     faLink,
     faServer,
@@ -19,9 +21,22 @@ import {NavLink} from "react-router-dom";
 
 const ServerRow = ({server, onQuickView}) => {
     const {t} = useTranslation();
+
+    const timeUtc = Date.now();
+    const dayMs = 86400000
+
+    let noDataWarning = '';
+    if (!server.playersOnline.length) {
+        noDataWarning = <>&nbsp;<Fa icon={faBoxArchive} title={t('html.description.noData30d')}/></>
+    } else if (timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs) {
+        noDataWarning = <>&nbsp;<Fa icon={faExclamationTriangle}
+                                    className={timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs * 7 ? '' : "col-deep-orange"}
+                                    title={t('html.description.noData24h')}/></>
+    }
+
     return (
         <tr>
-            <td>{server.name}</td>
+            <td>{server.name}{noDataWarning}</td>
             <td className="p-1">
                 <NavLink to={"/server/" + encodeURIComponent(server.serverUUID)}
                          title={t('html.label.serverAnalysis') + ': ' + server.name}
@@ -136,8 +151,9 @@ const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {sortedServers.length ? sortedServers.map((server, i) => <ServerRow key={i} server={server}
-                                                                                    onQuickView={() => onSelect(servers.indexOf(server))}/>) :
+                {sortedServers.length ? sortedServers.map(server => <ServerRow key={server.serverUUID}
+                                                                               server={server}
+                                                                               onQuickView={() => onSelect(servers.indexOf(server))}/>) :
                     <tr>
                         <td>{t('html.generic.none')}</td>
                         <td>-</td>

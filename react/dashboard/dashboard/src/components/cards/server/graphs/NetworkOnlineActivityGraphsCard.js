@@ -10,15 +10,34 @@ import {ChartLoader} from "../../../navigation/Loader";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import {useMetadata} from "../../../../hooks/metadataHook";
+import StackedPlayersOnlineGraph from "../../../graphs/StackedPlayersOnlineGraph";
 
-const PlayersOnlineTab = () => {
-    const {serverUUID} = useMetadata();
+const SingleProxyPlayersOnlineGraph = ({serverUUID}) => {
     const {data, loadingError} = useDataRequest(fetchPlayersOnlineGraph, [serverUUID]);
+
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
+    if (!serverUUID || !data) return <ChartLoader/>;
+
+    return <PlayersOnlineGraph data={data}/>
+}
+
+const MultiProxyPlayersOnlineGraph = () => {
+    const {data, loadingError} = useDataRequest(fetchPlayersOnlineGraph, []);
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <PlayersOnlineGraph data={data}/>
+    return <StackedPlayersOnlineGraph data={data}/>
+}
+
+const PlayersOnlineTab = () => {
+    const {serverUUID, networkMetadata} = useMetadata();
+
+    if (networkMetadata.usingRedisBungee || networkMetadata.servers.filter(server => server.proxy).length === 1) {
+        return <SingleProxyPlayersOnlineGraph serverUUID={serverUUID}/>
+    } else {
+        return <MultiProxyPlayersOnlineGraph/>
+    }
 }
 
 const DayByDayTab = () => {
