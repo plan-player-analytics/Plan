@@ -32,7 +32,8 @@ import utilities.mocks.BungeeMockComponent;
 
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
@@ -74,7 +75,7 @@ class BungeeSystemTest {
     }
 
     @Test
-    void bungeeDoesNotEnableWithDefaultIP() {
+    void bungeeEnablesWithDefaultIP() {
         PlanSystem bungeeSystem = component.getPlanSystem();
         try {
             PlanConfig config = bungeeSystem.getConfigSystem().getConfig();
@@ -86,8 +87,8 @@ class BungeeSystemTest {
             db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
             dbSystem.setActiveDatabase(db);
 
-            EnableException thrown = assertThrows(EnableException.class, bungeeSystem::enable);
-            assertEquals("IP setting still 0.0.0.0 - Configure Alternative_IP/IP that connects to the Proxy server.", thrown.getMessage());
+            bungeeSystem.enable();
+            assertTrue(bungeeSystem.isEnabled());
         } finally {
             bungeeSystem.disable();
         }

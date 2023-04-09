@@ -91,7 +91,7 @@ public class GraphsJSONResolver extends JSONResolver {
                             @ExampleObject(value = "performance", description = "Deprecated, use optimizedPerformance"),
                             @ExampleObject("optimizedPerformance"),
                             @ExampleObject("playersOnline"),
-                            @ExampleObject("playersOnlineStacked"),
+                            @ExampleObject("playersOnlineProxies"),
                             @ExampleObject("uniqueAndNew"),
                             @ExampleObject("hourlyUniqueAndNew"),
                             @ExampleObject("serverCalendar"),
