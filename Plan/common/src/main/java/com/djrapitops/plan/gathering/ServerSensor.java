@@ -60,4 +60,8 @@ public interface ServerSensor<W> {
     default List<String> getOnlinePlayerNames() {
         return Collections.emptyList();
     }
+
+    default boolean usingRedisBungee() {
+        return false;
+    }
 }

@@ -58,4 +58,9 @@ public class BungeeSensor implements ServerSensor<Object> {
     public List<String> getOnlinePlayerNames() {
         return getPlayers.get().stream().map(ProxiedPlayer::getName).collect(Collectors.toList());
     }
+
+    @Override
+    public boolean usingRedisBungee() {
+        return RedisCheck.isClassAvailable();
+    }
 }

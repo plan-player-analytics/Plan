@@ -20,6 +20,9 @@ import com.djrapitops.plan.delivery.domain.DateMap;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.JoinAddressCount;
 import com.djrapitops.plan.delivery.domain.JoinAddressCounts;
+import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.graphs.GraphCollection;
+import com.djrapitops.plan.delivery.domain.datatransfer.graphs.ServerSpecificLineGraph;
 import com.djrapitops.plan.delivery.domain.mutators.MutatorFunctions;
 import com.djrapitops.plan.delivery.domain.mutators.PingMutator;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
@@ -59,10 +62,7 @@ import net.playeranalytics.plugin.scheduling.TimeAmount;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -494,5 +494,23 @@ public class GraphJSONCreator {
                 .put("colors", pieColors)
                 .put("join_addresses_by_date", joinAddressCounts)
                 .build();
+    }
+
+    public GraphCollection<ServerSpecificLineGraph> proxyPlayersOnlineGraphs() {
+        Database db = dbSystem.getDatabase();
+        long now = System.currentTimeMillis();
+        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
+
+        List<ServerSpecificLineGraph> proxyGraphs = new ArrayList<>();
+        for (Server proxy : db.query(ServerQueries.fetchProxyServers())) {
+            ServerUUID proxyUUID = proxy.getUuid();
+            List<Double[]> points = Lists.map(
+                    db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, proxyUUID)),
+                    point -> Point.fromDateObj(point).toArray()
+            );
+            proxyGraphs.add(new ServerSpecificLineGraph(points, ServerDto.fromServer(proxy)));
+        }
+
+        return new GraphCollection<>(proxyGraphs, theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
     }
 }

@@ -114,8 +114,8 @@ const fetchPlayersOnlineGraphServer = async (timestamp, identifier) => {
 }
 
 const fetchPlayersOnlineGraphNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=playersOnline`;
-    if (staticSite) url = `/data/graph-playersOnline.json`;
+    let url = `/v1/graph?type=playersOnlineProxies`;
+    if (staticSite) url = `/data/graph-playersOnlineProxies.json`;
     return doGetRequest(url, timestamp);
 }
 

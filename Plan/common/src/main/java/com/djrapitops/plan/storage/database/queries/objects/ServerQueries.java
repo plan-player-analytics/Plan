@@ -162,6 +162,15 @@ public class ServerQueries {
         );
     }
 
+    public static Query<List<ServerUUID>> fetchProxyServerUUIDs() {
+        String sql = SELECT + ServerTable.SERVER_UUID + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?" +
+                AND + ServerTable.PROXY + "=?";
+        return db -> db.queryList(sql, set -> ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                true, true
+        );
+    }
+
     public static Query<List<String>> fetchGameServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
                         ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME)
