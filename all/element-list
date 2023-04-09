@@ -18,6 +18,7 @@ com.djrapitops.plan.delivery.domain.auth
 com.djrapitops.plan.delivery.domain.container
 com.djrapitops.plan.delivery.domain.datatransfer
 com.djrapitops.plan.delivery.domain.datatransfer.extension
+com.djrapitops.plan.delivery.domain.datatransfer.graphs
 com.djrapitops.plan.delivery.domain.keys
 com.djrapitops.plan.delivery.domain.mutators
 com.djrapitops.plan.delivery.export
