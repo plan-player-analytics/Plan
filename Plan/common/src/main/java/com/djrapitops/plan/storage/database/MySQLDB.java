@@ -126,7 +126,7 @@ public class MySQLDB extends SQLDB {
 
             hikariConfig.setAutoCommit(false);
             setMaxConnections(hikariConfig);
-            hikariConfig.setMaxLifetime(TimeUnit.MINUTES.toMillis(25L));
+            hikariConfig.setMaxLifetime(config.get(DatabaseSettings.MAX_LIFETIME));
             hikariConfig.setLeakDetectionThreshold(TimeUnit.SECONDS.toMillis(29L));
 
             this.dataSource = new HikariDataSource(hikariConfig);
