@@ -1,4 +1,4 @@
-import {createContext, useContext, useMemo, useState} from "react";
+import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {createNightModeCss, getColors} from "../util/colors";
 import {getLightModeChartTheming, getNightModeChartTheming} from "../util/graphColors";
 import {useMetadata} from "./metadataHook";
@@ -16,7 +16,7 @@ const getDefaultTheme = (metadata) => {
         || defaultTheme === 'default'
         || defaultTheme === 'black'
         || defaultTheme === 'white'
-        || !themeColors.map(color => color.name).includes(defaultTheme)
+        || (defaultTheme !== 'night' && !themeColors.map(color => color.name).includes(defaultTheme));
 
     return invalidColor ? 'plan' : defaultTheme;
 }
@@ -38,8 +38,14 @@ export const ThemeContextProvider = ({children}) => {
     const metadata = useMetadata();
 
     const [colorChooserOpen, setColorChooserOpen] = useState(false);
-    const [selectedColor, setSelectedColor] = useState(getStoredTheme(getDefaultTheme(metadata)));
+    const [selectedColor, setSelectedColor] = useState(getStoredTheme('plan'));
     const [previousColor, setPreviousColor] = useState(undefined);
+
+    useEffect(() => {
+        if (!metadata) return;
+
+        setSelectedColor(getStoredTheme(getDefaultTheme(metadata)));
+    }, [metadata, setSelectedColor]);
 
     const sharedState = useMemo(() => {
         return {
@@ -86,7 +92,9 @@ export const useTheme = () => {
 
     const toggleNightMode = () => {
         if (isNightModeEnabled()) {
-            setTheme(previousColor ? previousColor : getDefaultTheme(metadata));
+            const defaultTheme = getDefaultTheme(metadata);
+            const lightTheme = defaultTheme === 'night' ? 'plan' : defaultTheme;
+            setTheme(previousColor ? previousColor : lightTheme);
         } else {
             setPreviousColor(selectedColor);
             setTheme('night');
