@@ -198,7 +198,7 @@ public class ExtensionRegister {
             createExtension.apply(factory).ifPresent(this::register);
         } catch (NotReadyException | UnsupportedOperationException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
-        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
+        } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }
@@ -213,7 +213,7 @@ public class ExtensionRegister {
             createExtension.apply(factory).forEach(this::register);
         } catch (NotReadyException | UnsupportedOperationException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
-        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
+        } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }

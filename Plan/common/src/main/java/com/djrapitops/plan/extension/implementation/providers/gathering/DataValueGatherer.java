@@ -157,7 +157,7 @@ public class DataValueGatherer {
         addValuesToBuilder2(dataBuilder, methods, parameters);
     }
 
-// TODO refactor to reduce cyclomatic complexity of the calling method
+    // TODO refactor to reduce cyclomatic complexity of the calling method
     private void addValuesToBuilder2(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             if (brokenMethods.contains(provider)) continue;
@@ -408,7 +408,10 @@ public class DataValueGatherer {
                         .ifPresent(data -> storeTable(parameters, conditions, data));
             } catch (DataExtensionMethodCallException methodError) {
                 logFailure(methodError);
-            } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
+            } catch (RejectedExecutionException ignore) {
+                // Processing or Database has shut down, which can be ignored
+            } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError | NoSuchFieldError |
+                     NoSuchMethodError unexpectedError) {
                 logFailure(unexpectedError);
             }
         }
@@ -584,7 +587,7 @@ public class DataValueGatherer {
 
     private void storePlayerComponent(Parameters parameters, Conditions conditions, ComponentDataValue data) {
         ProviderInformation information = data.getInformation();
-        String value = getComponentAsJson(getValue(conditions, data, information)) ;
+        String value = getComponentAsJson(getValue(conditions, data, information));
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
