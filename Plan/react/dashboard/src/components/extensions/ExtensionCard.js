@@ -4,6 +4,9 @@ import ExtensionIcon from "./ExtensionIcon";
 import Datapoint from "../Datapoint";
 import Masonry from 'masonry-layout'
 import ExtensionTable from "./ExtensionTable";
+import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import End from "../layout/End";
+import {MinecraftChat} from "react-mcjsonchat";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -43,12 +46,31 @@ const ExtensionTab = ({tab}) => {
 }
 
 const ExtensionValue = ({data}) => {
-    return (<Datapoint name={data.description.text}
-                       title={data.description.description}
-                       icon={[data.description.icon.familyClass, data.description.icon.iconName]}
-                       color={data.description.icon.colorClass}
-                       value={data.value}
-    />);
+    const color = data.description.icon.colorClass;
+    const colorClass = color && color.startsWith("col-") ? color : "col-" + color;
+    const icon = [data.description.icon.familyClass, data.description.icon.iconName];
+    const name = data.description.text;
+    const title = data.description.description;
+    if (data.type === 'HTML') {
+        return (
+            <p title={title}>
+                {icon && <Fa icon={icon} className={colorClass}/>} {name}
+                {<End><span dangerouslySetInnerHTML={data.value}></span></End>}
+            </p>
+        );
+    } else if (data.type === 'COMPONENT') {
+        return (<p title={title}>
+            {icon && <Fa icon={icon} className={colorClass}/>} {name}
+            {<End><MinecraftChat component={JSON.parse(data.value)}/></End>}
+        </p>)
+    } else {
+        return (<Datapoint name={name}
+                           title={title}
+                           icon={icon}
+                           color={color}
+                           value={data.value}
+        />);
+    }
 }
 
 const ExtensionValues = ({tab}) => {
