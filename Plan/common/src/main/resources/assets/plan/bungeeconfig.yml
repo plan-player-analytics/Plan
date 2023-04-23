@@ -20,7 +20,6 @@ Plugin:
     # Display update notification on the website
     Check_for_updates: true
     Notify_about_DEV_releases: false
-  Frontend_BETA: false
   Use_Legacy_Frontend: false
 # -----------------------------------------------------
 # Supported databases: MySQL
