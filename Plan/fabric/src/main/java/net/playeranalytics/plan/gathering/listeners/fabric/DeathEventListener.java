@@ -68,10 +68,10 @@ public class DeathEventListener implements FabricListener {
 
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) ->
                 {
-                if (!this.isEnabled) {
-                    return;
-                }
-                PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
+                    if (!this.isEnabled) {
+                        return;
+                    }
+                    PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
                 }
         );
 
@@ -97,7 +97,7 @@ public class DeathEventListener implements FabricListener {
                         ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayerEntity) victim), serverInfo.getServerIdentifier(), findWeapon(player), time)
                         : new MobKillProcessor(player.getUuid());
                 processing.submitCritical(processor);
-            } catch (Exception e) {
+            } catch (Exception | NoSuchMethodError e) {
                 errorLogger.error(e, ErrorContext.builder().related(getClass(), victim, killer).build());
             }
 
