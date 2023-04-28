@@ -8,9 +8,9 @@ dependencies {
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    minecraft "com.mojang:minecraft:1.19.4"
-    mappings "net.fabricmc:yarn:1.19.4+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.14.17"
+    minecraft "com.mojang:minecraft:23w17a"
+    mappings "net.fabricmc:yarn:23w17a+build.4:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.14.19"
     modImplementation('me.lucko:fabric-permissions-api:0.2-SNAPSHOT')
 
     // Fabric API
