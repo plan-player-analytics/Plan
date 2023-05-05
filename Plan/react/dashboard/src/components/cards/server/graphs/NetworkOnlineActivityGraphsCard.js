@@ -33,6 +33,8 @@ const MultiProxyPlayersOnlineGraph = () => {
 const PlayersOnlineTab = () => {
     const {serverUUID, networkMetadata} = useMetadata();
 
+    if (!networkMetadata) return <ChartLoader/>
+
     if (networkMetadata.usingRedisBungee || networkMetadata.servers.filter(server => server.proxy).length === 1) {
         return <SingleProxyPlayersOnlineGraph serverUUID={serverUUID}/>
     } else {
