@@ -445,7 +445,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver.auth">AllowedIpList</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/auth/package-summary.html">com.djrapitops.plan.delivery.webserver.auth</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig)" class="member-name-link">AllowedIpList(PlanConfig)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html" title="class in com.djrapitops.plan.delivery.webserver.auth">AllowedIpList</a></dt>
+<dt><a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.delivery.webserver.configuration.IpAllowListMatcher)" class="member-name-link">AllowedIpList(PlanConfig, IpAllowListMatcher)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html" title="class in com.djrapitops.plan.delivery.webserver.auth">AllowedIpList</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/filter/filters/AllPlayersFilter.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.queries.filter.filters">AllPlayersFilter</a> - Class in <a href="com/djrapitops/plan/storage/database/queries/filter/filters/package-summary.html">com.djrapitops.plan.storage.database.queries.filter.filters</a></dt>
 <dd>
@@ -6908,6 +6908,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/PlanSystem.html#getDeliveryUtilities()" class="member-name-link">getDeliveryUtilities()</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSystem.html" title="class in com.djrapitops.plan">PlanSystem</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html#getDependencyResource()" class="member-name-link">getDependencyResource()</a> - Method in class com.djrapitops.plan.delivery.webserver.configuration.<a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">IpAllowListMatcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/MySQLDB.html#getDependencyResource()" class="member-name-link">getDependencyResource()</a> - Method in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/MySQLDB.html" title="class in com.djrapitops.plan.storage.database">MySQLDB</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/SQLDB.html#getDependencyResource()" class="member-name-link">getDependencyResource()</a> - Method in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></dt>
@@ -10251,6 +10253,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.Builder.html#ipAddress(java.net.InetAddress)" class="member-name-link">ipAddress(InetAddress)</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.Builder.html" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver.configuration">IpAllowListMatcher</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/configuration/package-summary.html">com.djrapitops.plan.delivery.webserver.configuration</a></dt>
+<dd>
+<div class="block">Uses ipaddress library to support multiple formats of IP address ranges.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html#%3Cinit%3E(net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig)" class="member-name-link">IpAllowListMatcher(PluginLogger, PlanFiles, PlanConfig)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.configuration.<a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">IpAllowListMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IPLibraryAccessor.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver.configuration">IPLibraryAccessor</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/configuration/package-summary.html">com.djrapitops.plan.delivery.webserver.configuration</a></dt>
+<dd>
+<div class="block">Access the IP library through reflection to use the proper classloader.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IPLibraryAccessor.html#%3Cinit%3E(java.lang.ClassLoader)" class="member-name-link">IPLibraryAccessor(ClassLoader)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.configuration.<a href="com/djrapitops/plan/delivery/webserver/configuration/IPLibraryAccessor.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">IPLibraryAccessor</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.UserImportDataBuilder.html#ips(java.lang.String...)" class="member-name-link">ips(String...)</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.UserImportDataBuilder.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData.UserImportDataBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.UserImportDataBuilder.html#ips(java.util.Collection)" class="member-name-link">ips(Collection&lt;String&gt;)</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.UserImportDataBuilder.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData.UserImportDataBuilder</a></dt>
@@ -10268,6 +10282,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/gathering/afk/AFKTracker.html#isAfk(java.util.UUID)" class="member-name-link">isAfk(UUID)</a> - Method in class com.djrapitops.plan.gathering.afk.<a href="com/djrapitops/plan/gathering/afk/AFKTracker.html" title="class in com.djrapitops.plan.gathering.afk">AFKTracker</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html#isAllowed(java.lang.String)" class="member-name-link">isAllowed(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html" title="class in com.djrapitops.plan.delivery.webserver.auth">AllowedIpList</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html#isAllowed(java.lang.String)" class="member-name-link">isAllowed(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.configuration.<a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">IpAllowListMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IPLibraryAccessor.html#isAllowed(java.lang.String,java.util.List)" class="member-name-link">isAllowed(String, List&lt;String&gt;)</a> - Method in class com.djrapitops.plan.delivery.webserver.configuration.<a href="com/djrapitops/plan/delivery/webserver/configuration/IPLibraryAccessor.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">IPLibraryAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html#isApplied()" class="member-name-link">isApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/Patch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">Patch</a></dt>
 <dd>&nbsp;</dd>
@@ -10524,6 +10542,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/delivery/domain/datatransfer/extension/ExtensionTableDataDto.html#isWide()" class="member-name-link">isWide()</a> - Method in class com.djrapitops.plan.delivery.domain.datatransfer.extension.<a href="com/djrapitops/plan/delivery/domain/datatransfer/extension/ExtensionTableDataDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer.extension">ExtensionTableDataDto</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/results/ExtensionTableData.html#isWideTable()" class="member-name-link">isWideTable()</a> - Method in class com.djrapitops.plan.extension.implementation.results.<a href="com/djrapitops/plan/extension/implementation/results/ExtensionTableData.html" title="class in com.djrapitops.plan.extension.implementation.results">ExtensionTableData</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IPLibraryAccessor.html#isWithin(java.lang.Object,java.lang.Object,java.lang.Class)" class="member-name-link">isWithin(Object, Object, Class&lt;?&gt;)</a> - Method in class com.djrapitops.plan.delivery.webserver.configuration.<a href="com/djrapitops/plan/delivery/webserver/configuration/IPLibraryAccessor.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">IPLibraryAccessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/LangCode.html#IT" class="member-name-link">IT</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.<a href="com/djrapitops/plan/settings/locale/LangCode.html" title="enum class in com.djrapitops.plan.settings.locale">LangCode</a></dt>
 <dd>&nbsp;</dd>
@@ -11069,6 +11089,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/LegacyJettySSLContextLoader.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">LegacyJettySSLContextLoader(Locale, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/LegacyJettySSLContextLoader.html" title="class in com.djrapitops.plan.delivery.webserver.http">LegacyJettySSLContextLoader</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html#length()" class="member-name-link">length()</a> - Method in class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIPath</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/exceptions/LibraryLoadingException.html" class="type-name-link" title="class in com.djrapitops.plan.exceptions">LibraryLoadingException</a> - Exception in <a href="com/djrapitops/plan/exceptions/package-summary.html">com.djrapitops.plan.exceptions</a></dt>
+<dd>
+<div class="block">Exception that occurs when some downloaded library could not be properly used.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/exceptions/LibraryLoadingException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">LibraryLoadingException(String)</a> - Constructor for exception com.djrapitops.plan.exceptions.<a href="com/djrapitops/plan/exceptions/LibraryLoadingException.html" title="class in com.djrapitops.plan.exceptions">LibraryLoadingException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/html/icon/Color.html#LIGHT_BLUE" class="member-name-link">LIGHT_BLUE</a> - Enum constant in enum class com.djrapitops.plan.delivery.rendering.html.icon.<a href="com/djrapitops/plan/delivery/rendering/html/icon/Color.html" title="enum class in com.djrapitops.plan.delivery.rendering.html.icon">Color</a></dt>
 <dd>&nbsp;</dd>
@@ -13879,6 +13905,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/exceptions/PreparationException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">PreparationException(String)</a> - Constructor for exception com.djrapitops.plan.exceptions.<a href="com/djrapitops/plan/exceptions/PreparationException.html" title="class in com.djrapitops.plan.exceptions">PreparationException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/AssetVersions.html#prepare()" class="member-name-link">prepare()</a> - Method in class com.djrapitops.plan.delivery.web.<a href="com/djrapitops/plan/delivery/web/AssetVersions.html" title="class in com.djrapitops.plan.delivery.web">AssetVersions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html#prepare()" class="member-name-link">prepare()</a> - Method in class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/AllowedIpList.html" title="class in com.djrapitops.plan.delivery.webserver.auth">AllowedIpList</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html#prepare()" class="member-name-link">prepare()</a> - Method in class com.djrapitops.plan.delivery.webserver.configuration.<a href="com/djrapitops/plan/delivery/webserver/configuration/IpAllowListMatcher.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">IpAllowListMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/geolocation/GeoLite2Geolocator.html#prepare()" class="member-name-link">prepare()</a> - Method in class com.djrapitops.plan.gathering.geolocation.<a href="com/djrapitops/plan/gathering/geolocation/GeoLite2Geolocator.html" title="class in com.djrapitops.plan.gathering.geolocation">GeoLite2Geolocator</a></dt>
 <dd>&nbsp;</dd>
