@@ -18,8 +18,6 @@ package com.djrapitops.plan.delivery.webserver.configuration;
 
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.LibraryLoadingException;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import dev.vankka.dependencydownload.DependencyManager;
@@ -46,15 +44,15 @@ public class IpAllowListMatcher {
 
     private final PluginLogger logger;
     private final PlanFiles files;
-    private final PlanConfig config;
+    private final AddressAllowList addressAllowList;
     private final AtomicBoolean failedDownload = new AtomicBoolean(false);
     private ClassLoader libraryClassLoader;
 
     @Inject
-    public IpAllowListMatcher(PluginLogger logger, PlanFiles files, PlanConfig config) {
+    public IpAllowListMatcher(PluginLogger logger, PlanFiles files, AddressAllowList addressAllowList) {
         this.logger = logger;
         this.files = files;
-        this.config = config;
+        this.addressAllowList = addressAllowList;
     }
 
     public synchronized void prepare() {
@@ -95,7 +93,7 @@ public class IpAllowListMatcher {
         }
 
         try {
-            List<String> addresses = config.get(WebserverSettings.WHITELIST);
+            List<String> addresses = addressAllowList.getAllowedAddresses();
             IPLibraryAccessor libraryAccessor = new IPLibraryAccessor(libraryClassLoader);
             return libraryAccessor.isAllowed(accessAddress, addresses);
         } catch (LibraryLoadingException e) {
@@ -105,7 +103,7 @@ public class IpAllowListMatcher {
     }
 
     private boolean exactMatchAllowCheck(@Untrusted String accessAddress) {
-        List<String> allowed = config.get(WebserverSettings.WHITELIST);
+        List<String> allowed = addressAllowList.getAllowedAddresses();
         return allowed.isEmpty() || allowed.contains(accessAddress);
     }
 

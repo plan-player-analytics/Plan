@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.web.ResourceWriteTask;
 import com.djrapitops.plan.delivery.web.WebAssetVersionCheckTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
+import com.djrapitops.plan.delivery.webserver.configuration.AddressAllowList;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.timed.BungeePingCounter;
 import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
@@ -87,4 +88,8 @@ public interface BungeeTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindActiveCookieStoreExpiryTask(ActiveCookieExpiryCleanupTask activeCookieExpiryCleanupTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindAddressAllowListUpdateTask(AddressAllowList addressAllowList);
 }
