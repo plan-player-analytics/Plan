@@ -16,40 +16,39 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
+import com.djrapitops.plan.delivery.webserver.configuration.IpAllowListMatcher;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Singleton
 public class AllowedIpList {
 
     private final PlanConfig config;
-    private final AtomicReference<List<String>> allowList = new AtomicReference<>(null);
+    private final IpAllowListMatcher ipAllowListMatcher;
 
     @Inject
-    public AllowedIpList(PlanConfig config) {
+    public AllowedIpList(PlanConfig config, IpAllowListMatcher ipAllowListMatcher) {
         this.config = config;
-    }
-
-    private synchronized void prepare() {
-        if (allowList.get() == null) {
-            allowList.set(config.isTrue(WebserverSettings.IP_WHITELIST)
-                    ? config.get(WebserverSettings.WHITELIST)
-                    : Collections.emptyList());
-        }
+        this.ipAllowListMatcher = ipAllowListMatcher;
     }
 
     public boolean isAllowed(@Untrusted String accessAddress) {
-        prepare();
+        if (config.isFalse(WebserverSettings.IP_WHITELIST)) {
+            return true;
+        }
 
-        List<String> ips = allowList.get();
+        return ipAllowListMatcher.isAllowed(accessAddress);
+    }
 
-        return ips.isEmpty() || ips.contains(accessAddress);
+    public void prepare() {
+        if (config.isFalse(WebserverSettings.IP_WHITELIST)) {
+            return;
+        }
+
+        ipAllowListMatcher.prepare();
     }
 }

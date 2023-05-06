@@ -11,8 +11,9 @@ configurations {
     // Runtime downloading scopes
     mysqlDriver
     sqliteDriver
-    testImplementation.extendsFrom mysqlDriver, sqliteDriver
-    compileOnly.extendsFrom mysqlDriver, sqliteDriver
+    ipAddressMatcher
+    testImplementation.extendsFrom mysqlDriver, sqliteDriver, ipAddressMatcher
+    compileOnly.extendsFrom mysqlDriver, sqliteDriver, ipAddressMatcher
 
     swaggerJson // swagger.json configuration
 }
@@ -33,6 +34,14 @@ task generateResourceForSQLiteDriver(type: GenerateDependencyDownloadResourceTas
     includeShadowJarRelocations = false
 }
 
+task generateResourceForIpAddressMatcher(type: GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.ipAddressMatcher
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
+
 dependencies {
     implementation project(":api")
     shadow project(":extensions")
@@ -45,6 +54,7 @@ dependencies {
     }
     mysqlDriver "mysql:mysql-connector-java:$mysqlVersion"
     sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
+    ipAddressMatcher "com.github.seancfoley:ipaddress:$ipAddressMatcherVersion"
 
     shadow "org.apache.commons:commons-text:$commonsTextVersion"
     shadow "org.apache.commons:commons-compress:$commonsCompressVersion"
@@ -208,6 +218,7 @@ processResources {
     dependsOn determineAssetModifications
     dependsOn generateResourceForMySQLDriver
     dependsOn generateResourceForSQLiteDriver
+    dependsOn generateResourceForIpAddressMatcher
     dependsOn updateVersion
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from 'build/sources/resources'

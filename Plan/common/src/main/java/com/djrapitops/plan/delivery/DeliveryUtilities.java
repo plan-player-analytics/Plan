@@ -38,7 +38,8 @@ public class DeliveryUtilities {
             Lazy<Addresses> addresses,
             Lazy<Formatters> formatters,
             Lazy<Graphs> graphs,
-            Lazy<PublicHtmlFiles> publicHtmlFiles) {
+            Lazy<PublicHtmlFiles> publicHtmlFiles
+    ) {
         this.addresses = addresses;
         this.formatters = formatters;
         this.graphs = graphs;
@@ -60,4 +61,5 @@ public class DeliveryUtilities {
     public PublicHtmlFiles getPublicHtmlFiles() {
         return publicHtmlFiles.get();
     }
+
 }
