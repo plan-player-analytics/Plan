@@ -67,8 +67,8 @@ public abstract class SQLDB extends AbstractDatabase {
     private static boolean downloadDriver = true;
 
     private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
-            new StandardRepository("https://papermc.io/repo/repository/maven-public/"),
-            new StandardRepository("https://repo1.maven.org/maven2/")
+            new StandardRepository("https://papermc.io/repo/repository/maven-public"),
+            new StandardRepository("https://repo1.maven.org/maven2")
     );
 
     private final Supplier<ServerUUID> serverUUIDSupplier;
