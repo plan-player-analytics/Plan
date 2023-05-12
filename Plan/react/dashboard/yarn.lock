@@ -1196,12 +1196,12 @@
   dependencies:
     prop-types "^15.8.1"
 
-"@fullcalendar/bootstrap@^5.11.4":
-  version "5.11.4"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-5.11.4.tgz#8870915e5f4dd3fedd95c83bf14fd1a1f8d3d34f"
-  integrity sha512-IfBtsixKtDyludqxtiYtzlQ6Ozmaipovgl1Fz7EhjUDsm3wZ+So7YVu4yWSJL3DnFB40YjsyP8nqLTG+qPNIaA==
+"@fullcalendar/bootstrap@^5.11.5":
+  version "5.11.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-5.11.5.tgz#97de88d5b7821d575fd6259e826d8f8b9a3f3e9b"
+  integrity sha512-btsVVJuLQ9UNTj0SeHNHxwM3uzfHi6RsjtMQs13sXzp3tu2d6FTI849VJHs81GfTZp+fwK0RD2tZ/eswN58A5Q==
   dependencies:
-    "@fullcalendar/common" "~5.11.4"
+    "@fullcalendar/common" "~5.11.5"
     tslib "^2.1.0"
 
 "@fullcalendar/common@~5.11.4", "@fullcalendar/common@~5.11.5":
