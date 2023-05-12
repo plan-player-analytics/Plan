@@ -1204,19 +1204,19 @@
     "@fullcalendar/common" "~5.11.5"
     tslib "^2.1.0"
 
-"@fullcalendar/common@~5.11.4", "@fullcalendar/common@~5.11.5":
+"@fullcalendar/common@~5.11.5":
   version "5.11.5"
   resolved "https://registry.yarnpkg.com/@fullcalendar/common/-/common-5.11.5.tgz#1a30a852b33ab5c1b04f4ee558941bed3c72d07f"
   integrity sha512-3iAYiUbHXhjSVXnYWz27Od2cslztUPsOwiwKlfGvQxBixv2Kl6a8IPwaijKFYJHXdwYmfPoEgK7rvqAGVoIYwA==
   dependencies:
     tslib "^2.1.0"
 
-"@fullcalendar/daygrid@^5.11.4":
-  version "5.11.4"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-5.11.4.tgz#8a9f0863bb3fa8c0bc0118020cdb63fbe966aa94"
-  integrity sha512-M/pSrxgrtG5vDkOxqTgv6WrptrsXjp5QgQLyXantSy+9EuZOagPKJDh+HEU94DKUAc0mlXS6iDdf0WzjkTHe6A==
+"@fullcalendar/daygrid@^5.11.5":
+  version "5.11.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-5.11.5.tgz#2825ed691eadf72c6a2979bcde871de74681fc7a"
+  integrity sha512-hMpq0U3Nucys2jDD+crbkJCr+tVt3fDw04OE3fbpisuzqtrHxIzRmnUOdbWUjJQyToAAkt7UVUQ9E7hYdmvyGA==
   dependencies:
-    "@fullcalendar/common" "~5.11.4"
+    "@fullcalendar/common" "~5.11.5"
     tslib "^2.1.0"
 
 "@fullcalendar/react@^5.11.5":
