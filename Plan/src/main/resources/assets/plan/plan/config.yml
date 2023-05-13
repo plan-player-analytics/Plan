@@ -20,7 +20,6 @@ Plugin:
     Notify_about_DEV_releases: false
   Configuration:
     Allow_proxy_to_manage_settings: true
-  Frontend_BETA: false
   Use_Legacy_Frontend: false
 # -----------------------------------------------------
 # Supported databases: SQLite, MySQL
@@ -36,6 +35,9 @@ Database:
     # Launch options to append after mysql driver address
     Launch_options: "?rewriteBatchedStatements=true&useSSL=false&serverTimezone=UTC"
     Max_connections: 8
+    Max_Lifetime:
+      Time: 25
+      Unit: MINUTES
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
 # https://github.com/plan-player-analytics/Plan/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
@@ -73,6 +75,11 @@ Webserver:
       Remove_logs_after_days: 30
     IP_whitelist:
       Enabled: false
+      # Supported formats:
+      # IPv4 exact: "192.168.0.1", wildcard: "192.168.*.*", cidr: "192.168.0.0/16"
+      # IPv6 exact: "0:0:0:0:0:0:0:1", compressed: "1::1", cidr: "1234:db8:1234:1a:20::/64"
+      # More: https://seancfoley.github.io/IPAddress/ipaddress.html#supported-ip-address-parsing-formats
+      # Dynamic DNS hostname: "dns:intranet.example.com", updated once per minute
       Whitelist:
         - "192.168.0.0"
         - "0:0:0:0:0:0:0:1"
