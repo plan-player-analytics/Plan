@@ -42,7 +42,7 @@ dependencies {
     shadow 'net.playeranalytics:Extension-Sponge-Economy:8.0.0-R1.3'
     shadow 'net.playeranalytics:Extension-SuperbVote:0.5.4-R1.1'
     shadow 'net.playeranalytics:Extension-Tebex:R2.3'
-    shadow 'net.playeranalytics:Extension-Towny:0.96.7.4-R1.2'
+    shadow 'net.playeranalytics:Extension-Towny:0.99-R1.3'
     shadow 'net.playeranalytics:Extension-Vault:1.7-R1.3'
     shadow 'net.playeranalytics:Extension-ViaVersion:4.0.1-R1.3'
 }
