@@ -101,6 +101,7 @@ public class Contributors {
             new Contributor("PikaMug", CODE),
             new Contributor("DubHacker", LANG),
             new Contributor("TheLittle_Yang", LANG),
+            new Contributor("inductor", LANG),
     };
 
     private Contributors() {
