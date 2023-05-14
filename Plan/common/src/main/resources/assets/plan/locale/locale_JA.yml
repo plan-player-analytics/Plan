@@ -388,7 +388,7 @@ html:
         killed: "殺した人"
         last24hours: "24時間"
         last30days: "1ヶ月"
-        last7days: "一週間"
+        last7days: "1週間"
         lastConnected: "直近の接続"
         lastPeak: "直近のピークタイム"
         lastSeen: "直近のオンライン"
