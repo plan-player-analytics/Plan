@@ -90,6 +90,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("networkName", serverInfo.getServer().isProxy() ? config.get(ProxySettings.NETWORK_NAME) : null)
                         .put("mainCommand", mainCommand)
                         .put("refreshBarrierMs", config.get(WebserverSettings.REDUCED_REFRESH_BARRIER))
+                        .put("registrationDisabled", config.isTrue(WebserverSettings.DISABLED_REGISTRATION))
                         .build())
                 .build();
     }

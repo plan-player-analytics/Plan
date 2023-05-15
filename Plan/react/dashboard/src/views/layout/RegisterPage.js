@@ -11,6 +11,7 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useAuth} from "../../hooks/authenticationHook";
 import FinalizeRegistrationModal from "../../components/modal/FinalizeRegistrationModal";
 import {fetchRegisterCheck, postRegister} from "../../service/authenticationService";
+import {useMetadata} from "../../hooks/metadataHook";
 
 const Logo = () => {
     return (
@@ -43,6 +44,7 @@ const RegisterCard = ({children}) => {
 const RegisterForm = ({register}) => {
     const {t} = useTranslation();
 
+    const {registrationDisabled} = useMetadata();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -50,6 +52,12 @@ const RegisterForm = ({register}) => {
         event.preventDefault();
         register(username, password).then(() => setPassword(''));
     }, [username, password, setPassword, register]);
+
+    if (registrationDisabled) {
+        return (
+            <p>{t('html.register.disabled')}</p>
+        )
+    }
 
     return (
         <form className="user">

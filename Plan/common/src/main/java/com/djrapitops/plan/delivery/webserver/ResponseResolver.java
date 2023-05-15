@@ -26,6 +26,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
 import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
@@ -86,6 +87,7 @@ public class ResponseResolver {
     private final ResolverService resolverService;
     private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
+    private final WebserverConfiguration webserverConfiguration;
     private final PublicHtmlResolver publicHtmlResolver;
 
     @Inject
@@ -93,6 +95,7 @@ public class ResponseResolver {
             ResolverSvc resolverService,
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
+            WebserverConfiguration webserverConfiguration,
 
             QueryPageResolver queryPageResolver,
             PlayersPageResolver playersPageResolver,
@@ -118,6 +121,7 @@ public class ResponseResolver {
         this.resolverService = resolverService;
         this.responseFactory = responseFactory;
         this.webServer = webServer;
+        this.webserverConfiguration = webserverConfiguration;
         this.queryPageResolver = queryPageResolver;
         this.playersPageResolver = playersPageResolver;
         this.playerPageResolver = playerPageResolver;
@@ -150,12 +154,15 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
-
-        resolverService.registerResolver(plugin, "/login", loginPageResolver);
-        resolverService.registerResolver(plugin, "/register", registerPageResolver);
-        resolverService.registerResolver(plugin, "/auth/login", loginResolver);
-        resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
-        resolverService.registerResolver(plugin, "/auth/register", registerResolver);
+        if (webserverConfiguration.isAuthenticationEnabled()) {
+            resolverService.registerResolver(plugin, "/login", loginPageResolver);
+            resolverService.registerResolver(plugin, "/register", registerPageResolver);
+            resolverService.registerResolver(plugin, "/auth/login", loginResolver);
+            resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
+            if (webserverConfiguration.isRegistrationEnabled()) {
+                resolverService.registerResolver(plugin, "/auth/register", registerResolver);
+            }
+        }
 
         resolverService.registerResolver(plugin, "/errors", errorsPageResolver);
 

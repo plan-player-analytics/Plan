@@ -275,6 +275,7 @@ public enum HtmlLang implements Lang {
     LOGIN_FORGOT_PASSWORD_INSTRUCTIONS_4("html.login.forgotPassword4", "After using the command, "),
     LOGIN_FAILED("html.login.failed", "Login failed: "),
     REGISTER("html.register.register", "Register"),
+    REGISTER_DISABLED("html.register.disabled", "Registering new users has been disabled in the config."),
     REGISTER_CREATE_USER("html.register.createNewUser", "Create a new user"),
     REGISTER_USERNAME_TIP("html.register.usernameTip", "Username can be up to 50 characters."),
     REGISTER_PASSWORD_TIP("html.register.passwordTip", "Password should be more than 8 characters, but there are no limitations."),
