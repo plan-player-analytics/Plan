@@ -27,8 +27,10 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreWhitelistBounceTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
@@ -54,6 +56,7 @@ public class PlayerOnlineListener {
     private final PlayerJoinEventConsumer joinEventConsumer;
     private final PlayerLeaveEventConsumer leaveEventConsumer;
 
+    private final Game game;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final Status status;
@@ -63,13 +66,14 @@ public class PlayerOnlineListener {
     public PlayerOnlineListener(
             PlayerJoinEventConsumer joinEventConsumer,
             PlayerLeaveEventConsumer leaveEventConsumer,
-            ServerInfo serverInfo,
+            Game game, ServerInfo serverInfo,
             DBSystem dbSystem,
             Status status,
             ErrorLogger errorLogger
     ) {
         this.joinEventConsumer = joinEventConsumer;
         this.leaveEventConsumer = leaveEventConsumer;
+        this.game = game;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.status = status;
@@ -89,6 +93,18 @@ public class PlayerOnlineListener {
         GameProfile profile = event.profile();
         UUID playerUUID = profile.uniqueId();
         ServerUUID serverUUID = serverInfo.getServerUUID();
+        if (game.server().isWhitelistEnabled()) {
+            game.server().serviceProvider().whitelistService().isWhitelisted(profile)
+                    .thenAccept(whitelisted -> {
+                        if (!whitelisted) {
+                            dbSystem.getDatabase().executeTransaction(new StoreWhitelistBounceTransaction(
+                                    playerUUID,
+                                    event.profile().name().orElse(event.user().uniqueId().toString()),
+                                    serverUUID,
+                                    System.currentTimeMillis()));
+                        }
+                    });
+        }
         dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(profile)));
     }
 
