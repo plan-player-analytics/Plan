@@ -12,6 +12,7 @@ const PunchCard = ({series}) => {
         const punchCard = {
             name: t('html.label.relativeJoinActivity'),
             color: nightModeEnabled ? withReducedSaturation('#222') : '#222',
+            type: 'scatter',
             data: series
         };
         Accessibility(Highcharts);
