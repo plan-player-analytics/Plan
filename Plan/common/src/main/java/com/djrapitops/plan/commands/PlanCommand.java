@@ -20,6 +20,8 @@ import com.djrapitops.plan.commands.subcommands.*;
 import com.djrapitops.plan.commands.use.*;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
@@ -51,6 +53,7 @@ public class PlanCommand {
     private final DataUtilityCommands dataUtilityCommands;
 
     private final Locale locale;
+    private final PlanConfig config;
     private final ImportSystem importSystem;
     private final ErrorLogger errorLogger;
 
@@ -69,6 +72,7 @@ public class PlanCommand {
             PluginStatusCommands statusCommands,
             DatabaseCommands databaseCommands,
             DataUtilityCommands dataUtilityCommands,
+            PlanConfig config,
             ErrorLogger errorLogger
     ) {
         this.commandName = commandName;
@@ -82,6 +86,7 @@ public class PlanCommand {
         this.statusCommands = statusCommands;
         this.databaseCommands = databaseCommands;
         this.dataUtilityCommands = dataUtilityCommands;
+        this.config = config;
         this.errorLogger = errorLogger;
     }
 
@@ -220,6 +225,9 @@ public class PlanCommand {
     }
 
     private Subcommand registerCommand() {
+        if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION) || config.isTrue(WebserverSettings.DISABLED_REGISTRATION)) {
+            return null;
+        }
         return Subcommand.builder()
                 .aliases("register")
                 .requirePermission(Permissions.REGISTER_SELF)
@@ -244,6 +252,9 @@ public class PlanCommand {
     }
 
     private Subcommand logoutCommand() {
+        if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION)) {
+            return null;
+        }
         return Subcommand.builder()
                 .aliases("logout")
                 .requirePermission(Permissions.LOGOUT_OTHER)

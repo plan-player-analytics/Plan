@@ -32,7 +32,7 @@ public enum LangCode {
     FI("suomi", "AuroraLS3, KasperiP"),
     FR("français", "CyanTech, Aurelien & Nogapra"),
     IT("Italiano", "Malachiel & Mastory_Md5"),
-    JA("\u65E5\u672C\u8A9E", "yukieji"),
+    JA("\u65E5\u672C\u8A9E", "yukieji & inductor"),
     KO("\uD55C\uAD6D\uC5B4", "Guinness_Akihiko"),
     NL("Nederlands", "Sander0542"),
     RU("русский", "Saph1s, Perhun_Pak, BratishkaErik & stashenko"),

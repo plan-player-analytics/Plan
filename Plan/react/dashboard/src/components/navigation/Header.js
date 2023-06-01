@@ -36,7 +36,7 @@ const Header = ({page, tab, hideUpdater}) => {
     const {requestUpdate, lastUpdate, updating, toggleSidebar} = useNavigation();
 
     const {getPlayerHeadImageUrl} = useMetadata();
-    const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.linkedToUuid) : undefined
+    const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.playerUUID) : undefined
     // TODO Remove .replace('<', '') after locale replacement
     return (
         <nav className="nav-header nav mt-3 align-items-center justify-content-between container-fluid">
