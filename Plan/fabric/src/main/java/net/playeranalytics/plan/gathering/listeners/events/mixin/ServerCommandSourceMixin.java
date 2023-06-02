@@ -45,10 +45,11 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
     }
 
     @Shadow
+    public abstract void sendFeedback(Supplier<Text> supplier, boolean broadcastToOps);
+
+    @Shadow
     @Nullable
     public abstract Entity getEntity();
-
-    @Shadow public abstract void sendFeedback(Supplier<Text> supplier, boolean broadcastToOps);
 
     @Override
     public MessageBuilder buildMessage() {
