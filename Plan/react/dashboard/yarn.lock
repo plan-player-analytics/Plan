@@ -1227,10 +1227,10 @@
     "@fullcalendar/common" "~5.11.5"
     tslib "^2.1.0"
 
-"@highcharts/map-collection@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@highcharts/map-collection/-/map-collection-2.0.1.tgz#c5eac79b9711c75248d4219c53be9b6a07704c9d"
-  integrity sha512-eC5sEMC8LoCVMCz4BKuREcS3wVBBSFaRClJ7/vVZxd4nJe0VEykSFfQJwh8lpY4oJDy46iYrFzy3fwsTo9hmqg==
+"@highcharts/map-collection@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@highcharts/map-collection/-/map-collection-2.1.0.tgz#a3e40a4d73586028f22c758ebfed0161986320f3"
+  integrity sha512-oS7ELhgvltY7OVPG4EFHHcdLRSKu2Fwvg2B9eXRo/Get4rZPUoLwv5i+bUcPb5JYLxzhHVNniuw01yMJAnXJ8g==
 
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
