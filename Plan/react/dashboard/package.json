@@ -14,7 +14,7 @@
     "@fullcalendar/bootstrap": "^5.11.5",
     "@fullcalendar/daygrid": "^5.11.5",
     "@fullcalendar/react": "^5.11.5",
-    "@highcharts/map-collection": "^2.0.1",
+    "@highcharts/map-collection": "^2.1.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
