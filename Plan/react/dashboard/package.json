@@ -25,7 +25,7 @@
     "datatables.net-responsive-bs5": "^2.4.1",
     "highcharts": "^10.3.3",
     "i18next": "^22.5.1",
-    "i18next-chained-backend": "^4.2.0",
+    "i18next-chained-backend": "^4.3.0",
     "i18next-http-backend": "^2.2.1",
     "i18next-localstorage-backend": "^4.1.1",
     "masonry-layout": "^4.2.2",
