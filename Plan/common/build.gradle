@@ -47,7 +47,7 @@ dependencies {
     shadow project(":extensions")
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    compileOnly "net.kyori:adventure-api:4.13.1"
+    compileOnly "net.kyori:adventure-api:4.14.0"
     shadow("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
