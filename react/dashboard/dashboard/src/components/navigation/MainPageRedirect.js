@@ -75,7 +75,7 @@ const MainPageRedirect = () => {
         } else if (user.permissions.includes('page.player.other')) {
             return (<Navigate to={"/players"} replace={true}/>)
         } else if (user.permissions.includes('page.player.self')) {
-            return (<Navigate to={"/player/" + user.linkedToUuid} replace={true}/>)
+            return (<Navigate to={"/player/" + user.playerUUID} replace={true}/>)
         }
     };
 
