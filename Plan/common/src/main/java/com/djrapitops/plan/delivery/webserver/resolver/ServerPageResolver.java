@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -60,9 +61,9 @@ public class ServerPageResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         @Untrusted String firstPart = request.getPath().getPart(0).orElse("");
-        WebUser permissions = request.getUser().orElse(new WebUser(""));
-        boolean forServerPage = "server".equalsIgnoreCase(firstPart) && permissions.hasPermission("page.server");
-        boolean forNetworkPage = "network".equalsIgnoreCase(firstPart) && permissions.hasPermission("page.network");
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        boolean forServerPage = "server".equalsIgnoreCase(firstPart) && user.hasPermission(WebPermission.ACCESS_SERVER);
+        boolean forNetworkPage = "network".equalsIgnoreCase(firstPart) && user.hasPermission(WebPermission.ACCESS_NETWORK);
         return forServerPage || forNetworkPage;
     }
 

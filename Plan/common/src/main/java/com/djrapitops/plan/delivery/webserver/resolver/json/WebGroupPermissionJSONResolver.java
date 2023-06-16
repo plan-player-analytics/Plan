@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.auth.WebPermissionList;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
@@ -57,7 +58,7 @@ public class WebGroupPermissionJSONResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return true; // TODO
+        return request.getUser().map(user -> user.hasPermission(WebPermission.MANAGE_GROUPS)).orElse(false);
     }
 
     @GET

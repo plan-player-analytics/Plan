@@ -53,6 +53,7 @@ public class LegacyPermissionLevelGroupsPatch extends Patch {
                                 WebPermission.PAGE_PLAYER,
                                 WebPermission.ACCESS_PLAYER,
                                 WebPermission.ACCESS_SERVER,
+                                WebPermission.ACCESS_NETWORK
                         })
                         .map(WebPermission::getPermission)
                         .collect(Collectors.toList()))

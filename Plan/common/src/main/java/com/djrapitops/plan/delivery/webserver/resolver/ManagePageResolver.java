@@ -23,21 +23,14 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Optional;
 
-/**
- * Resolves /players URL.
- *
- * @author AuroraLS3
- */
-@Singleton
-public class PlayersPageResolver implements Resolver {
+public class ManagePageResolver implements Resolver {
 
     private final ResponseFactory responseFactory;
 
     @Inject
-    public PlayersPageResolver(
+    public ManagePageResolver(
             ResponseFactory responseFactory
     ) {
         this.responseFactory = responseFactory;
@@ -45,13 +38,11 @@ public class PlayersPageResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().map(user -> user.hasPermission(WebPermission.PAGE_PLAYERS)).orElse(false);
+        return request.getUser().map(user -> user.hasPermission(WebPermission.MANAGE_GROUPS) || user.hasPermission(WebPermission.MANAGE_USERS)).orElse(false);
     }
 
     @Override
     public Optional<Response> resolve(Request request) {
-        // Redirect /players/ to /players
-        if (request.getPath().getPart(1).isPresent()) return Optional.of(responseFactory.redirectResponse("/players"));
-        return Optional.of(responseFactory.playersPageResponse(request));
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

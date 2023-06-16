@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.auth.Group;
 import com.djrapitops.plan.delivery.domain.auth.GroupList;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -57,7 +58,7 @@ public class WebGroupJSONResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return true; // TODO
+        return request.getUser().map(user -> user.hasPermission(WebPermission.MANAGE_GROUPS)).orElse(false);
     }
 
     @GET

@@ -18,12 +18,14 @@ package com.djrapitops.plan.delivery.domain.auth;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.function.Supplier;
+
 /**
  * List of web permissions.
  *
  * @author AuroraLS3
  */
-public enum WebPermission {
+public enum WebPermission implements Supplier<String> {
     PAGE_NETWORK,
     PAGE_SERVER,
     PAGE_SERVER_OVERVIEW,
@@ -31,11 +33,17 @@ public enum WebPermission {
     PAGE_PLAYER,
     PAGE_PLAYERS,
     PAGE_QUERY,
+    PAGE_ERRORS,
+    PAGE_DOCS,
 
     ACCESS_PLAYER,
     ACCESS_PLAYER_SELF,
     // Restricting to specific servers: access.server.uuid
-    ACCESS_SERVER;
+    ACCESS_SERVER,
+    ACCESS_NETWORK,
+
+    MANAGE_GROUPS,
+    MANAGE_USERS;
 
     private final boolean deprecated;
 
@@ -53,5 +61,11 @@ public enum WebPermission {
 
     public boolean isDeprecated() {
         return deprecated;
+    }
+
+
+    @Override
+    public String get() {
+        return getPermission();
     }
 }

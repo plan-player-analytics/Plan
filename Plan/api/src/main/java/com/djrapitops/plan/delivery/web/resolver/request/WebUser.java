@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.web.resolver.request;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public final class WebUser {
 
@@ -57,7 +58,14 @@ public final class WebUser {
     }
 
     public boolean hasPermission(String permission) {
-        return permissions.contains(permission);
+        for (String grant : permissions) {
+            if (permission.contains(grant)) return true;
+        }
+        return false;
+    }
+
+    public boolean hasPermission(Supplier<String> permissionSupplier) {
+        return hasPermission(permissionSupplier.get());
     }
 
     public String getName() {

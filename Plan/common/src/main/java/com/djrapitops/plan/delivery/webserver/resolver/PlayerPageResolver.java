@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -63,7 +64,8 @@ public class PlayerPageResolver implements Resolver {
         URIPath path = request.getPath();
         WebUser user = request.getUser().orElse(new WebUser(""));
         boolean isOwnPage = isOwnPage(path, user);
-        return user.hasPermission("page.player.other") || user.hasPermission("page.player.self") && isOwnPage;
+        return user.hasPermission(WebPermission.ACCESS_PLAYER)
+                || (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF) && isOwnPage);
     }
 
     @NotNull

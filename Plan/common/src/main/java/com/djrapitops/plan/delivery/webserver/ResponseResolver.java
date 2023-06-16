@@ -82,6 +82,7 @@ public class ResponseResolver {
     private final ErrorsPageResolver errorsPageResolver;
     private final SwaggerJsonResolver swaggerJsonResolver;
     private final SwaggerPageResolver swaggerPageResolver;
+    private final ManagePageResolver managePageResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
@@ -116,7 +117,7 @@ public class ResponseResolver {
             SwaggerJsonResolver swaggerJsonResolver,
             SwaggerPageResolver swaggerPageResolver,
 
-            ErrorLogger errorLogger
+            ManagePageResolver managePageResolver, ErrorLogger errorLogger
     ) {
         this.resolverService = resolverService;
         this.responseFactory = responseFactory;
@@ -138,6 +139,7 @@ public class ResponseResolver {
         this.errorsPageResolver = errorsPageResolver;
         this.swaggerJsonResolver = swaggerJsonResolver;
         this.swaggerPageResolver = swaggerPageResolver;
+        this.managePageResolver = managePageResolver;
         this.errorLogger = errorLogger;
     }
 
@@ -162,6 +164,7 @@ public class ResponseResolver {
             if (webserverConfiguration.isRegistrationEnabled()) {
                 resolverService.registerResolver(plugin, "/auth/register", registerResolver);
             }
+            resolverService.registerResolver(plugin, "/manage", managePageResolver);
         }
 
         resolverService.registerResolver(plugin, "/errors", errorsPageResolver);
