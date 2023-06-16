@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.DateMap;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.delivery.domain.datatransfer.InputQueryDto;
 import com.djrapitops.plan.delivery.domain.datatransfer.ViewDto;
@@ -109,7 +110,7 @@ public class QueryJSONResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        return user.hasPermission("page.players");
+        return user.hasPermission(WebPermission.ACCESS_QUERY);
     }
 
     @GET

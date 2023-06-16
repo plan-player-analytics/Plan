@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONCreator;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -37,14 +38,16 @@ import java.util.function.Supplier;
 public class NetworkTabJSONResolver<T> extends JSONResolver {
 
     private final DataID dataID;
+    private final WebPermission permission;
     private final Supplier<T> jsonCreator;
     private final AsyncJSONResolverService asyncJSONResolverService;
 
     public NetworkTabJSONResolver(
-            DataID dataID, NetworkTabJSONCreator<T> jsonCreator,
+            DataID dataID, WebPermission permission, NetworkTabJSONCreator<T> jsonCreator,
             AsyncJSONResolverService asyncJSONResolverService
     ) {
         this.dataID = dataID;
+        this.permission = permission;
         this.jsonCreator = jsonCreator;
         this.asyncJSONResolverService = asyncJSONResolverService;
     }
@@ -54,7 +57,7 @@ public class NetworkTabJSONResolver<T> extends JSONResolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().orElse(new WebUser("")).hasPermission("page.network");
+        return request.getUser().orElse(new WebUser("")).hasPermission(permission);
     }
 
     @Override

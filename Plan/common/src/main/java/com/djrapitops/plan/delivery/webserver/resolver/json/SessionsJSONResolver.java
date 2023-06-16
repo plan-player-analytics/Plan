@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -72,7 +73,11 @@ public class SessionsJSONResolver extends JSONResolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        if (request.getQuery().get("server").isPresent()) {
+            return user.hasPermission(WebPermission.PAGE_SERVER_SESSIONS_LIST);
+        }
+        return user.hasPermission(WebPermission.PAGE_NETWORK_SESSIONS_LIST);
     }
 
     @GET

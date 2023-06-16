@@ -59,7 +59,7 @@ public final class WebUser {
 
     public boolean hasPermission(String permission) {
         for (String grant : permissions) {
-            if (permission.contains(grant)) return true;
+            if (permission.startsWith(grant)) return true;
         }
         return false;
     }

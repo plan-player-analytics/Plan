@@ -45,7 +45,7 @@ public class PlayersPageResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().map(user -> user.hasPermission(WebPermission.PAGE_PLAYERS)).orElse(false);
+        return request.getUser().map(user -> user.hasPermission(WebPermission.ACCESS_PLAYERS)).orElse(false);
     }
 
     @Override

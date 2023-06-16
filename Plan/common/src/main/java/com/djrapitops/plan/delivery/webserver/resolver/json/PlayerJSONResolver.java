@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.PlayerJSONCreator;
@@ -63,8 +64,8 @@ public class PlayerJSONResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        if (user.hasPermission("page.player.other")) return true;
-        if (user.hasPermission("page.player.self")) {
+        if (user.hasPermission(WebPermission.ACCESS_PLAYER)) return true;
+        if (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF)) {
             try {
                 UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
                 UUID playerUUID = identifiers.getPlayerUUID(request);

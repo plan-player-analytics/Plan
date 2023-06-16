@@ -38,7 +38,7 @@ public class QueryPageResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().map(user -> user.hasPermission(WebPermission.PAGE_QUERY)).orElse(false);
+        return request.getUser().map(user -> user.hasPermission(WebPermission.ACCESS_QUERY)).orElse(false);
     }
 
     @Override

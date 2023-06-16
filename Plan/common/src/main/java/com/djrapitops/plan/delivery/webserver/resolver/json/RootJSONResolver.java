@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.json.*;
 import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
@@ -81,13 +82,13 @@ public class RootJSONResolver {
                 .add("sessions", sessionsJSONResolver)
                 .add("kills", playerKillsJSONResolver)
                 .add("graph", graphsJSONResolver)
-                .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation))
-                .add("serverOverview", forJSON(DataID.SERVER_OVERVIEW, serverOverviewJSONCreator))
-                .add("onlineOverview", forJSON(DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONCreator))
-                .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONCreator))
-                .add("playerVersus", forJSON(DataID.PVP_PVE, pvPPvEJSONCreator))
-                .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONCreator))
-                .add("performanceOverview", forJSON(DataID.PERFORMANCE_OVERVIEW, performanceJSONCreator))
+                .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation, WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY))
+                .add("serverOverview", forJSON(DataID.SERVER_OVERVIEW, serverOverviewJSONCreator, WebPermission.PAGE_SERVER_OVERVIEW))
+                .add("onlineOverview", forJSON(DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONCreator, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY))
+                .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONCreator, WebPermission.PAGE_SERVER_SESSIONS_OVERVIEW))
+                .add("playerVersus", forJSON(DataID.PVP_PVE, pvPPvEJSONCreator, WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW))
+                .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONCreator, WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW))
+                .add("performanceOverview", forJSON(DataID.PERFORMANCE_OVERVIEW, performanceJSONCreator, WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW))
                 .add("player", playerJSONResolver)
                 .add("network", networkJSONResolver.getResolver())
                 .add("filters", filtersJSONResolver)
@@ -108,8 +109,8 @@ public class RootJSONResolver {
                 .build();
     }
 
-    private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator) {
-        return new ServerTabJSONResolver<>(dataID, identifiers, tabJSONCreator, asyncJSONResolverService);
+    private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator, WebPermission permission) {
+        return new ServerTabJSONResolver<>(dataID, permission, identifiers, tabJSONCreator, asyncJSONResolverService);
     }
 
     public CompositeResolver getResolver() {

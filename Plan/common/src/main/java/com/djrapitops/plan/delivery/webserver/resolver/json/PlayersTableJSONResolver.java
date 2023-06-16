@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -73,10 +74,10 @@ public class PlayersTableJSONResolver extends JSONResolver {
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
         if (request.getQuery().get("server").isPresent()) {
-            return user.hasPermission("page.server");
+            return user.hasPermission(WebPermission.PAGE_SERVER_PLAYERS);
         }
         // Assume players page
-        return user.hasPermission("page.players");
+        return user.hasPermission(WebPermission.ACCESS_PLAYERS);
     }
 
     @GET
