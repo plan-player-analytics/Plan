@@ -67,7 +67,11 @@ public class RootJSONResolver {
             ServerIdentityJSONResolver serverIdentityJSONResolver,
             ExtensionJSONResolver extensionJSONResolver,
             RetentionJSONResolver retentionJSONResolver,
-            PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver
+            PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver,
+
+            WebGroupJSONResolver webGroupJSONResolver,
+            WebGroupPermissionJSONResolver webGroupPermissionJSONResolver,
+            WebPermissionJSONResolver webPermissionJSONResolver
     ) {
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
@@ -98,6 +102,9 @@ public class RootJSONResolver {
                 .add("extensionData", extensionJSONResolver)
                 .add("retention", retentionJSONResolver)
                 .add("joinAddresses", playerJoinAddressJSONResolver)
+                .add("webGroups", webGroupJSONResolver)
+                .add("groupPermissions", webGroupPermissionJSONResolver)
+                .add("permissions", webPermissionJSONResolver)
                 .build();
     }
 

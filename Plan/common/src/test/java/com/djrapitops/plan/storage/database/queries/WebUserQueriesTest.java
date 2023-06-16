@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
@@ -34,6 +33,7 @@ import utilities.TestConstants;
 import utilities.TestPluginLogger;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -45,7 +45,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userIsRegistered() {
-        User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
+        User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), "admin", List.of("page", "access"));
         db().executeTransaction(new StoreWebUserTransaction(expected));
         forcePersistenceCheck();
 

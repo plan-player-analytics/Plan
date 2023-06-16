@@ -49,6 +49,9 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(SettingsTable.createTableSQL(dbType));
         execute(CookieTable.createTableSQL(dbType));
         execute(AccessLogTable.createTableSql(dbType));
+        execute(WebGroupTable.createTableSQL(dbType));
+        execute(WebPermissionTable.createTableSQL(dbType));
+        execute(WebGroupToPermissionTable.createTableSQL(dbType));
 
         // DataExtension tables
         execute(ExtensionIconTable.createTableSQL(dbType));

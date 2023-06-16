@@ -21,39 +21,31 @@ import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
 /**
- * Table information about 'plan_security'
+ * Represents the plan_web_permission table.
  *
  * @author AuroraLS3
- * @see com.djrapitops.plan.storage.database.transactions.patches.SecurityTableGroupPatch
  */
-public class SecurityTable {
+public class WebGroupToPermissionTable {
 
-    public static final String TABLE_NAME = "plan_security";
+    public static final String TABLE_NAME = "plan_web_group_to_permission";
 
     public static final String ID = "id";
-    public static final String USERNAME = "username";
-    public static final String LINKED_TO = "linked_to_uuid";
-    public static final String SALT_PASSWORD_HASH = "salted_pass_hash";
     public static final String GROUP_ID = "group_id";
+    public static final String PERMISSION_ID = "permission_id";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
-            USERNAME + ',' +
-            LINKED_TO + ',' +
-            SALT_PASSWORD_HASH + ',' +
-            GROUP_ID + ") VALUES (?,?,?," + WebGroupTable.SELECT_GROUP_ID + ")";
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + GROUP_ID + ',' + PERMISSION_ID + ") VALUES (?,?)";
 
-    private SecurityTable() {
+    private WebGroupToPermissionTable() {
         /* Static information class */
     }
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(USERNAME, Sql.varchar(100)).notNull().unique()
-                .column(LINKED_TO, Sql.varchar(36)).defaultValue("''")
-                .column(SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
                 .column(GROUP_ID, Sql.INT).notNull()
+                .column(PERMISSION_ID, Sql.INT).notNull()
                 .foreignKey(GROUP_ID, WebGroupTable.TABLE_NAME, WebGroupTable.ID)
+                .foreignKey(PERMISSION_ID, WebPermissionTable.TABLE_NAME, WebPermissionTable.ID)
                 .toString();
     }
 }

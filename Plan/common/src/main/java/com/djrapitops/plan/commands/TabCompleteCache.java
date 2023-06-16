@@ -17,7 +17,6 @@
 package com.djrapitops.plan.commands;
 
 import com.djrapitops.plan.SubSystem;
-import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -94,9 +93,7 @@ public class TabCompleteCache implements SubSystem {
     }
 
     private void refreshUserIdentifiers() {
-        dbSystem.getDatabase().query(WebUserQueries.fetchAllUsers()).stream()
-                .map(User::getUsername)
-                .forEach(userIdentifiers::add);
+        userIdentifiers.addAll(dbSystem.getDatabase().query(WebUserQueries.fetchAllUsernames()));
     }
 
     private void refreshBackupFileNames() {

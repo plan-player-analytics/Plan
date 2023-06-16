@@ -56,6 +56,9 @@ const QueryPage = React.lazy(() => import("./views/layout/QueryPage"));
 const NewQueryView = React.lazy(() => import("./views/query/NewQueryView"));
 const QueryResultView = React.lazy(() => import("./views/query/QueryResultView"));
 
+const ManagePage = React.lazy(() => import("./views/layout/ManagePage"));
+const GroupsView = React.lazy(() => import("./views/manage/GroupsView"));
+
 const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
 const RegisterPage = React.lazy(() => import("./views/layout/RegisterPage"));
 const ErrorPage = React.lazy(() => import("./views/layout/ErrorPage"));
@@ -67,6 +70,9 @@ const OverviewRedirect = () => {
 }
 const NewRedirect = () => {
     return (<Navigate to={"new"} replace={true}/>)
+}
+const GroupsRedirect = () => {
+    return (<Navigate to={"groups"} replace={true}/>)
 }
 
 const ContextProviders = ({children}) => (
@@ -179,6 +185,10 @@ function App() {
                                     icon: faMapSigns
                                 }}/>}/>
                             </Route>
+                            {!staticSite && <Route path="/manage" element={<Lazy><ManagePage/></Lazy>}>
+                                <Route path="" element={<GroupsRedirect/>}/>
+                                <Route path="groups" element={<Lazy><GroupsView/></Lazy>}/>
+                            </Route>}
                             {!staticSite && <Route path="/query" element={<Lazy><QueryPage/></Lazy>}>
                                 <Route path="" element={<NewRedirect/>}/>
                                 <Route path="new" element={<Lazy><NewQueryView/></Lazy>}/>

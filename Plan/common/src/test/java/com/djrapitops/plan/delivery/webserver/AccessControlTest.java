@@ -95,10 +95,10 @@ class AccessControlTest {
 
         system.enable();
 
-        User userLevel0 = new User("test0", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
-        User userLevel1 = new User("test1", "console", null, PassEncryptUtil.createHash("testPass"), 1, Collections.emptyList());
-        User userLevel2 = new User("test2", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), 2, Collections.emptyList());
-        User userLevel100 = new User("test100", "console", null, PassEncryptUtil.createHash("testPass"), 100, Collections.emptyList());
+        User userLevel0 = new User("test0", "console", null, PassEncryptUtil.createHash("testPass"), "legacy_level_0", Collections.emptyList());
+        User userLevel1 = new User("test1", "console", null, PassEncryptUtil.createHash("testPass"), "legacy_level_1", Collections.emptyList());
+        User userLevel2 = new User("test2", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), "legacy_level_2", Collections.emptyList());
+        User userLevel100 = new User("test100", "console", null, PassEncryptUtil.createHash("testPass"), "-", Collections.emptyList());
         system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel0));
         system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel1));
         system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel2));

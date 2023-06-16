@@ -127,7 +127,7 @@ public class LargeStoreQueries {
                         statement.setString(2, user.getLinkedToUUID().toString());
                     }
                     statement.setString(3, user.getPasswordHash());
-                    statement.setInt(4, user.getPermissionLevel());
+                    statement.setString(4, user.getPermissionGroup());
                     statement.addBatch();
                 }
             }

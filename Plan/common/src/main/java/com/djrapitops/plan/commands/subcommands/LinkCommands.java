@@ -217,7 +217,7 @@ public class LinkCommands {
             sender.send(t + locale.getString(CommandLang.HEADER_WEB_USERS, 0));
         } else {
             String usersListed = users.stream().sorted()
-                    .map(user -> m + user.getUsername() + "::" + t + user.getLinkedTo() + "::" + s + user.getPermissionLevel() + "\n")
+                    .map(user -> m + user.getUsername() + "::" + t + user.getLinkedTo() + "::" + s + user.getPermissionGroup() + "\n")
                     .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                     .toString();
             sender.buildMessage()
