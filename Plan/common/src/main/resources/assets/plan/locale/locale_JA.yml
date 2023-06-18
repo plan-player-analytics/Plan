@@ -750,7 +750,7 @@ plugin:
             certificateExpiresPassed: "Webserver: Certificate has expired, consider renewing the certificate."
             certificateExpiresSoon: "Webserver: Certificate expires in ${0}, consider renewing the certificate."
             certificateNoSuchAlias: "Webserver: Certificate with alias '${0}' was not found inside the keystore file '${1}'."
-            http: "Webサーバー: 証明書が存在ません -> HTTPサーバーを使用します"
+            http: "Webサーバー: 証明書が存在しません -> HTTPサーバーを使用します"
             ipWhitelist: "Webサーバー: IPのホワイトリストが有効になっています"
             ipWhitelistBlock: "Webサーバー: 「${0}」の「${1}」へのアクセスが拒否されました(ホワイトリストには未登録です)"
             noCertFile: "Webサーバー: 次のパスに保存された認証キーファイルが存在しません: ${0}"

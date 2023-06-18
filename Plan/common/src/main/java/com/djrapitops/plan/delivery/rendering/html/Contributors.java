@@ -102,6 +102,7 @@ public class Contributors {
             new Contributor("DubHacker", LANG),
             new Contributor("TheLittle_Yang", LANG),
             new Contributor("inductor", LANG),
+            new Contributor("lis2a", LANG)
     };
 
     private Contributors() {
