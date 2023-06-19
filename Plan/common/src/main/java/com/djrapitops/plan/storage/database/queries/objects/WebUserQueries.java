@@ -49,8 +49,8 @@ public class WebUserQueries {
                 "GROUP_CONCAT(" + WebPermissionTable.PERMISSION + ",',') as user_permissions" +
                 FROM + SecurityTable.TABLE_NAME + " s" +
                 INNER_JOIN + WebGroupTable.TABLE_NAME + " g on g." + WebGroupTable.ID + "=s." + SecurityTable.GROUP_ID +
-                LEFT_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp on gtp." + WebGroupToPermissionTable.GROUP_ID + "=s." + WebGroupTable.ID +
-                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p on gtp." + WebGroupToPermissionTable.PERMISSION_ID + "=s." + WebPermissionTable.ID +
+                LEFT_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp on gtp." + WebGroupToPermissionTable.GROUP_ID + "=s." + SecurityTable.GROUP_ID +
+                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p on gtp." + WebGroupToPermissionTable.PERMISSION_ID + "=p." + WebPermissionTable.ID +
                 LEFT_JOIN + UsersTable.TABLE_NAME + " on " + SecurityTable.LINKED_TO + "=" + UsersTable.USER_UUID +
                 WHERE + SecurityTable.USERNAME + "=?" +
                 GROUP_BY +
@@ -73,8 +73,8 @@ public class WebUserQueries {
                 "GROUP_CONCAT(" + WebPermissionTable.PERMISSION + ",',') as user_permissions" +
                 FROM + SecurityTable.TABLE_NAME + " s" +
                 INNER_JOIN + WebGroupTable.TABLE_NAME + " g on g." + WebGroupTable.ID + "=s." + SecurityTable.GROUP_ID +
-                LEFT_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp on gtp." + WebGroupToPermissionTable.GROUP_ID + "=s." + WebGroupTable.ID +
-                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p on gtp." + WebGroupToPermissionTable.PERMISSION_ID + "=s." + WebPermissionTable.ID +
+                LEFT_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp on gtp." + WebGroupToPermissionTable.GROUP_ID + "=s." + SecurityTable.GROUP_ID +
+                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p on gtp." + WebGroupToPermissionTable.PERMISSION_ID + "=p." + WebPermissionTable.ID +
                 LEFT_JOIN + UsersTable.TABLE_NAME + " on " + SecurityTable.LINKED_TO + "=" + UsersTable.USER_UUID +
                 WHERE + SecurityTable.LINKED_TO + "=?" +
                 GROUP_BY +
@@ -97,8 +97,8 @@ public class WebUserQueries {
                 "GROUP_CONCAT(" + WebPermissionTable.PERMISSION + ",',') as user_permissions" +
                 FROM + SecurityTable.TABLE_NAME + " s" +
                 INNER_JOIN + WebGroupTable.TABLE_NAME + " g on g." + WebGroupTable.ID + "=s." + SecurityTable.GROUP_ID +
-                LEFT_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp on gtp." + WebGroupToPermissionTable.GROUP_ID + "=s." + WebGroupTable.ID +
-                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p on gtp." + WebGroupToPermissionTable.PERMISSION_ID + "=s." + WebPermissionTable.ID +
+                LEFT_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp on gtp." + WebGroupToPermissionTable.GROUP_ID + "=s." + SecurityTable.GROUP_ID +
+                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p on gtp." + WebGroupToPermissionTable.PERMISSION_ID + "=p." + WebPermissionTable.ID +
                 LEFT_JOIN + UsersTable.TABLE_NAME + " on " + SecurityTable.LINKED_TO + "=" + UsersTable.USER_UUID +
                 GROUP_BY +
                 SecurityTable.USERNAME + ',' +
@@ -120,8 +120,8 @@ public class WebUserQueries {
                 FROM + CookieTable.TABLE_NAME + " c" +
                 INNER_JOIN + SecurityTable.TABLE_NAME + " s on c." + CookieTable.WEB_USERNAME + "=s." + SecurityTable.USERNAME +
                 INNER_JOIN + WebGroupTable.TABLE_NAME + " g on g." + WebGroupTable.ID + "=s." + SecurityTable.GROUP_ID +
-                LEFT_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp on gtp." + WebGroupToPermissionTable.GROUP_ID + "=s." + WebGroupTable.ID +
-                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p on gtp." + WebGroupToPermissionTable.PERMISSION_ID + "=s." + WebPermissionTable.ID +
+                LEFT_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp on gtp." + WebGroupToPermissionTable.GROUP_ID + "=s." + SecurityTable.GROUP_ID +
+                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p on gtp." + WebGroupToPermissionTable.PERMISSION_ID + "=p." + WebPermissionTable.ID +
                 LEFT_JOIN + UsersTable.TABLE_NAME + " on " + SecurityTable.LINKED_TO + "=" + UsersTable.USER_UUID +
                 WHERE + CookieTable.EXPIRES + ">?" +
                 GROUP_BY +

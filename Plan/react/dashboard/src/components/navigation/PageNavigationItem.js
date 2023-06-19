@@ -11,7 +11,7 @@ const PageNavigationItem = ({page}) => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
-    const {authRequired, loggedIn, user} = useAuth();
+    const {authRequired, loggedIn, user, hasPermission} = useAuth();
     const metadata = useMetadata();
     const [currentPage, setCurrentPage] = useState(undefined);
     const [items, setItems] = useState([]);
@@ -22,12 +22,18 @@ const PageNavigationItem = ({page}) => {
             const hasProxy = networkMetadata.servers.filter(server => server.proxy).length
 
             let newItems = [
-                {id: 'players', displayName: t('html.label.players'), href: "/players", permission: 'page.players'},
+                {id: 'players', displayName: t('html.label.players'), href: "/players", permission: 'access.players'},
+                {
+                    id: 'manage',
+                    displayName: t('html.label.manage'),
+                    href: "/manage",
+                    permission: ['manage.groups', 'manage.users']
+                },
                 {
                     id: 'query',
                     displayName: t('html.query.title.text').replace('<', ''),
                     href: "/query",
-                    permission: 'page.players'
+                    permission: 'access.query'
                 },
                 ...networkMetadata.servers
                     .filter(server => !server.proxy)
@@ -36,7 +42,7 @@ const PageNavigationItem = ({page}) => {
                             id: 'server-' + server.serverUUID,
                             displayName: t('html.label.server') + ', ' + server.serverName,
                             href: '/server/' + server.serverUUID,
-                            permission: 'page.server'
+                            permission: 'access.server.' + server.serverUUID
                         }
                     })
             ];
@@ -46,19 +52,19 @@ const PageNavigationItem = ({page}) => {
                     id: 'network',
                     displayName: t('html.label.network'),
                     href: "/network",
-                    permission: 'page.network'
+                    permission: 'access.network'
                 });
             }
             if (page) {
                 newItems.unshift({id: 'page', displayName: page, href: location.pathname, permission: undefined})
             }
             if (authRequired && loggedIn) {
-                newItems = newItems.filter(item => !item.permission || user.permissions.includes(item.permission))
+                newItems = newItems.filter(item => !item.permission || hasPermission(item.permission))
             }
             setItems(newItems);
             setCurrentPage(newItems.find(item => location.pathname.startsWith(item.href))?.id);
         }
-    }, [t, metadata, location, authRequired, loggedIn, user, page]);
+    }, [t, metadata, location, authRequired, loggedIn, user, hasPermission, page]);
 
     const getSharedPrefix = (one, two) => {
         let i = 0;

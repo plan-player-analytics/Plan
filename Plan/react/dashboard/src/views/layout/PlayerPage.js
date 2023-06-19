@@ -29,17 +29,23 @@ const PlayerPage = () => {
         if (!player) return;
 
         const items = [
-            {name: 'html.label.playerOverview', icon: faInfoCircle, href: "overview"},
-            {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions"},
-            {name: 'html.label.pvpPve', icon: faCampground, href: "pvppve"},
-            {name: 'html.label.servers', icon: faNetworkWired, href: "servers"}
+            {
+                name: 'html.label.playerOverview',
+                icon: faInfoCircle,
+                href: "overview",
+                permission: 'page.player.overview'
+            },
+            {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions", permission: 'page.player.sessions'},
+            {name: 'html.label.pvpPve', icon: faCampground, href: "pvppve", permission: 'page.player.versus'},
+            {name: 'html.label.servers', icon: faNetworkWired, href: "servers", permission: 'page.player.servers'}
         ]
 
         player.extensions.map(extension => {
             return {
                 name: `${t('html.label.plugins')} (${extension.serverName})`,
                 icon: faCubes,
-                href: `plugins/${encodeURIComponent(extension.serverName)}`
+                href: `plugins/${encodeURIComponent(extension.serverName)}`,
+                permission: 'page.player.plugins'
             }
         }).forEach(item => items.push(item));
 

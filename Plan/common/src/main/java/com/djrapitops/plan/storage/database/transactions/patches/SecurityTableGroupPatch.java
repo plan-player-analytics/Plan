@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.WebGroupTable;
 
@@ -58,7 +59,7 @@ public class SecurityTableGroupPatch extends Patch {
                     SecurityTable.USERNAME + ',' +
                     SecurityTable.LINKED_TO + ',' +
                     SecurityTable.SALT_PASSWORD_HASH + ',' +
-                    "(" + SELECT + WebGroupTable.ID + FROM + WebGroupTable.TABLE_NAME + WHERE + WebGroupTable.NAME + "=CONCAT('legacy_level_', permission_level))" +
+                    "(" + SELECT + WebGroupTable.ID + FROM + WebGroupTable.TABLE_NAME + WHERE + WebGroupTable.NAME + "=" + (dbType == DBType.SQLITE ? "'legacy_level_' || permission_level" : "CONCAT('legacy_level_', permission_level)") + ")" +
                     FROM + tempTableName
             );
 

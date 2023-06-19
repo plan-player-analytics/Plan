@@ -191,6 +191,7 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t, windowWidth, coll
 const Sidebar = ({page, items}) => {
     const {t} = useTranslation();
     const {currentTab, sidebarExpanded, setSidebarExpanded} = useNavigation();
+    const {authRequired, hasPermission, hasChildPermission} = useAuth();
 
     const [openCollapse, setOpenCollapse] = useState(undefined);
     const toggleCollapse = collapse => {
@@ -242,6 +243,10 @@ const Sidebar = ({page, items}) => {
         loadVersion();
     }, []);
 
+    const isVisible = (item) => {
+        return !authRequired || !item.permission || hasPermission(item.permission) || hasChildPermission(item.permission)
+    }
+
     return (
         <>
             {sidebarExpanded &&
@@ -249,7 +254,9 @@ const Sidebar = ({page, items}) => {
                     <Logo/>
                     <PageNavigationItem page={page}/>
                     <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>
-                    {items.length ? items.filter(item => item !== undefined).map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t, windowWidth, collapseConditionallyOnItemClick)) : ''}
+                    {items.length ? items.filter(item => item !== undefined)
+                        .filter(isVisible)
+                        .map((item, i) => renderItem(item, i, openCollapse, toggleCollapse, t, windowWidth, collapseConditionallyOnItemClick)) : ''}
                     <Divider/>
                     <FooterButtons
                         collapseSidebar={collapseConditionallyOnItemClick}

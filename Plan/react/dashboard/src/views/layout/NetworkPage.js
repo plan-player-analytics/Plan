@@ -39,7 +39,12 @@ const NetworkSidebar = () => {
     useEffect(() => {
         const servers = networkMetadata?.servers || [];
         const items = [
-            {name: 'html.label.networkOverview', icon: faInfoCircle, href: "overview"},
+            {
+                name: 'html.label.networkOverview',
+                icon: faInfoCircle,
+                href: "overview",
+                permission: 'page.network.overview'
+            },
             {},
             {name: 'html.label.information'},
             {
@@ -50,10 +55,17 @@ const NetworkSidebar = () => {
                         nameShort: 'html.label.overview',
                         name: 'html.label.servers',
                         icon: faNetworkWired,
-                        href: "serversOverview"
+                        href: "serversOverview",
+                        permission: 'page.network.server.list'
                     },
-                    {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions"},
-                    staticSite ? undefined : {name: 'html.label.performance', icon: faCogs, href: "performance"},
+                    {
+                        name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions",
+                        permission: 'page.network.sessions'
+                    },
+                    staticSite ? undefined : {
+                        name: 'html.label.performance', icon: faCogs, href: "performance",
+                        permission: 'page.network.performance'
+                    },
                     {},
                     ...servers
                         .filter(server => !server.proxy)
@@ -62,7 +74,8 @@ const NetworkSidebar = () => {
                                 name: server.serverName,
                                 icon: faServer,
                                 href: "/server/" + server.serverUUID,
-                                color: 'light-green'
+                                color: 'light-green',
+                                permission: 'access.server.' + server.serverUUID
                             }
                         })
                 ]
@@ -75,17 +88,43 @@ const NetworkSidebar = () => {
                         nameShort: 'html.label.overview',
                         name: 'html.label.playerbaseOverview',
                         icon: faChartLine,
-                        href: "playerbase"
+                        href: "playerbase",
+                        permission: 'page.network.playerbase'
                     },
-                    {name: 'html.label.joinAddresses', icon: faLocationArrow, href: "join-addresses"},
-                    {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
-                    {name: 'html.label.playerList', icon: faUserGroup, href: "players"},
-                    {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
+                    {
+                        name: 'html.label.joinAddresses',
+                        icon: faLocationArrow,
+                        href: "join-addresses",
+                        permission: 'page.network.join.addresses'
+                    },
+                    {
+                        name: 'html.label.playerRetention',
+                        icon: faUsersViewfinder,
+                        href: "retention",
+                        permission: 'page.network.retention'
+                    },
+                    {
+                        name: 'html.label.playerList',
+                        icon: faUserGroup,
+                        href: "players",
+                        permission: 'page.network.players'
+                    },
+                    {
+                        name: 'html.label.geolocations',
+                        icon: faGlobe,
+                        href: "geolocations",
+                        permission: 'page.network.geolocations'
+                    },
                 ]
             },
             {},
-            {name: 'html.label.plugins'},
-            {name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"}
+            {name: 'html.label.plugins', permission: 'page.network.plugins'},
+            {
+                name: 'html.label.pluginsOverview',
+                icon: faCubes,
+                href: "plugins-overview",
+                permission: 'page.network.plugins'
+            }
         ]
 
         if (extensionData?.extensions) {
@@ -95,7 +134,8 @@ const NetworkSidebar = () => {
                     return {
                         name: info.pluginName,
                         icon: [iconTypeToFontAwesomeClass(info.icon.family), info.icon.iconName],
-                        href: `plugins/${encodeURIComponent(info.pluginName)}`
+                        href: `plugins/${encodeURIComponent(info.pluginName)}`,
+                        permission: 'page.network.plugins'
                     }
                 }).forEach(item => items.push(item))
         }
@@ -103,8 +143,8 @@ const NetworkSidebar = () => {
         if (!staticSite) {
             items.push(
                 {},
-                {name: 'html.label.links'},
-                {name: 'html.label.query', icon: faSearch, href: "/query"}
+                {name: 'html.label.links', permission: 'access.query'},
+                {name: 'html.label.query', icon: faSearch, href: "/query", permission: 'access.query'}
             );
         }
 
