@@ -115,6 +115,8 @@ public class PlanCommand {
                 .subcommand(unregisterCommand())
                 .subcommand(logoutCommand())
                 .subcommand(webUsersCommand())
+                .subcommand(groups())
+                .subcommand(setGroup())
 
                 .subcommand(acceptCommand())
                 .subcommand(cancelCommand())
@@ -512,6 +514,29 @@ public class PlanCommand {
                 .inDepthDescription(locale.getString(DeepHelpLang.JSON))
                 .onCommand(linkCommands::onJson)
                 .onTabComplete(this::playerNames)
+                .build();
+    }
+
+    private Subcommand setGroup() {
+        return Subcommand.builder()
+                .aliases("setgroup")
+                .requirePermission(Permissions.SET_GROUP)
+                .requiredArgument(locale.getString(HelpLang.ARG_USERNAME), locale.getString(HelpLang.DESC_ARG_USERNAME))
+                .requiredArgument(locale.getString(HelpLang.ARG_GROUP), locale.getString(HelpLang.DESC_ARG_GROUP))
+                .description(locale.getString(HelpLang.SET_GROUP))
+                .inDepthDescription(locale.getString(DeepHelpLang.SET_GROUP))
+                .onCommand(registrationCommands::onChangePermissionGroup)
+//                .onTabComplete(this::playerNames) // TODO
+                .build();
+    }
+
+    private Subcommand groups() {
+        return Subcommand.builder()
+                .aliases("groups")
+                .requirePermission(Permissions.SET_GROUP)
+                .description(locale.getString(HelpLang.GROUPS))
+                .inDepthDescription(locale.getString(DeepHelpLang.GROUPS))
+                .onCommand(registrationCommands::onListWebGroups)
                 .build();
     }
 }

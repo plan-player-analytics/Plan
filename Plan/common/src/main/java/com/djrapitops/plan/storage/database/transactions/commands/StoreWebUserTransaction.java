@@ -18,12 +18,15 @@ package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.WebGroupTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
 /**
  * Transaction to save a new Plan {@link User} to the database.
@@ -40,18 +43,29 @@ public class StoreWebUserTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        execute(new ExecStatement(SecurityTable.INSERT_STATEMENT) {
+        String sql = "UPDATE " + SecurityTable.TABLE_NAME + " SET " + SecurityTable.GROUP_ID + "=" + WebGroupTable.SELECT_GROUP_ID +
+                WHERE + SecurityTable.USERNAME + "=?";
+        boolean updated = execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, user.getUsername());
-                if (user.getLinkedToUUID() == null) {
-                    statement.setNull(2, Types.VARCHAR);
-                } else {
-                    statement.setString(2, user.getLinkedToUUID().toString());
-                }
-                statement.setString(3, user.getPasswordHash());
-                statement.setString(4, user.getPermissionGroup());
+                statement.setString(1, user.getPermissionGroup());
+                statement.setString(2, user.getUsername());
             }
         });
+        if (!updated) {
+            execute(new ExecStatement(SecurityTable.INSERT_STATEMENT) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, user.getUsername());
+                    if (user.getLinkedToUUID() == null) {
+                        statement.setNull(2, Types.VARCHAR);
+                    } else {
+                        statement.setString(2, user.getLinkedToUUID().toString());
+                    }
+                    statement.setString(3, user.getPasswordHash());
+                    statement.setString(4, user.getPermissionGroup());
+                }
+            });
+        }
     }
 }

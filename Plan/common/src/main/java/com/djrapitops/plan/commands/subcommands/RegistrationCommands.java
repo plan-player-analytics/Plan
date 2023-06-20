@@ -205,4 +205,32 @@ public class RegistrationCommands {
             ActiveCookieStore.removeUserCookie(loggingOut);
         }
     }
+
+    public void onChangePermissionGroup(CMDSender sender, @Untrusted Arguments arguments) {
+        String username = arguments.get(0)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, locale.getString(HelpLang.ARG_USERNAME))));
+        String group = arguments.get(1)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, locale.getString(HelpLang.ARG_GROUP))));
+
+        Database database = dbSystem.getDatabase();
+        User user = database.query(WebUserQueries.fetchUser(username))
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(FailReason.USER_DOES_NOT_EXIST)));
+
+        Optional<Integer> groupId = database.query(WebUserQueries.fetchGroupId(group));
+        if (groupId.isEmpty()) {
+            throw new IllegalArgumentException(locale.getString(FailReason.GROUP_DOES_NOT_EXIST));
+        }
+
+        user.setPermissionGroup(group);
+
+        database.executeTransaction(new StoreWebUserTransaction(user))
+                .thenRun(() -> sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS)));
+    }
+
+    public void onListWebGroups(CMDSender sender, @Untrusted Arguments arguments) {
+        Database database = dbSystem.getDatabase();
+        List<String> groupNames = database.query(WebUserQueries.fetchGroupNames());
+
+        sender.send(String.join(", ", groupNames));
+    }
 }
