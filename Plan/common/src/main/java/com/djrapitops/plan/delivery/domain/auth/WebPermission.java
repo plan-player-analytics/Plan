@@ -26,6 +26,7 @@ import java.util.function.Supplier;
  * @author AuroraLS3
  */
 public enum WebPermission implements Supplier<String> {
+    PAGE,
     PAGE_NETWORK,
     PAGE_NETWORK_OVERVIEW,
     PAGE_NETWORK_OVERVIEW_GRAPHS,
@@ -93,6 +94,7 @@ public enum WebPermission implements Supplier<String> {
     PAGE_PLAYER_SERVERS,
     PAGE_PLAYER_PLUGINS,
 
+    ACCESS,
     ACCESS_PLAYER,
     ACCESS_PLAYER_SELF,
     // Restricting to specific servers: access.server.uuid
