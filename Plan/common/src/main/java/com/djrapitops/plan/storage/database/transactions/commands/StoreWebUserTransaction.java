@@ -43,7 +43,7 @@ public class StoreWebUserTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        String sql = "UPDATE " + SecurityTable.TABLE_NAME + " SET " + SecurityTable.GROUP_ID + "=" + WebGroupTable.SELECT_GROUP_ID +
+        String sql = "UPDATE " + SecurityTable.TABLE_NAME + " SET " + SecurityTable.GROUP_ID + "=(" + WebGroupTable.SELECT_GROUP_ID + ')' +
                 WHERE + SecurityTable.USERNAME + "=?";
         boolean updated = execute(new ExecStatement(sql) {
             @Override

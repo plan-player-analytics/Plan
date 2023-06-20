@@ -1,8 +1,12 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {fetchAvailablePermissions, fetchGroupPermissions} from "../../service/manageService";
 
 const GroupEditContext = createContext({});
 
 const createPermissionTree = (permissions) => {
+    if (!permissions.length) {
+        return {children: []};
+    }
     permissions.sort();
 
     const idTree = [];
@@ -18,18 +22,24 @@ const createPermissionTree = (permissions) => {
         const parentIndex = permission.parentIndex;
         if (parentIndex !== -1) idTree[parentIndex].children.push(permission);
     }
-    return idTree[0];
+    const rootNodes = idTree.filter(node => node.parentIndex === -1);
+    return {children: rootNodes};
 }
 
 export const GroupEditContextProvider = ({groupName, children}) => {
-    const [allPermissions] = useState([
-        'page',
-        'page.server',
-        'page.server.overview',
-        'page.server.onlineOverview'
-    ]);
+    const [allPermissions, setAllPermissions] = useState([]);
+    useEffect(() => {
+        fetchAvailablePermissions().then(response => {
+            setAllPermissions(response?.data?.permissions);
+        });
+    }, []);
 
-    const [permissions, setPermissions] = useState(['page.server.overview']);
+    const [permissions, setPermissions] = useState([]);
+    useEffect(() => {
+        fetchGroupPermissions(groupName).then(response => {
+            setPermissions(response?.data?.permissions);
+        });
+    }, [groupName]);
 
     const isChecked = useCallback((permission) => {
         return permissions.includes(permission);
@@ -44,7 +54,6 @@ export const GroupEditContextProvider = ({groupName, children}) => {
         const checkedChildren = childPermissions.filter(p => isChecked(p));
         const indeterminate = childPermissions.length !== checkedChildren.length && checkedChildren.length !== 0;
         const indeterminateChildren = childPermissions.filter(p => !isChecked(p) && isIndeterminate(p));
-        console.log(permission, childPermissions, checkedChildren, indeterminate, indeterminateChildren)
         return indeterminate || indeterminateChildren.length;
     }, [permissions, allPermissions, isChecked]);
 

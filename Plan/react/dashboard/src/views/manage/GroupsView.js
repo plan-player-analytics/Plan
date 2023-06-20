@@ -13,32 +13,36 @@ import {CardLoader} from "../../components/navigation/Loader";
 
 const GroupsHeader = ({groupName}) => {
     return (
-        <>
+        <tr>
             <td><FontAwesomeIcon icon={faUserGroup}/> {groupName}</td>
-        </>
+        </tr>
     )
 }
 
 const PermissionDropdown = ({permission, checked, indeterminate, togglePermission, children, childNodes, root}) => {
     if (childNodes.length) {
-        return (
-            <details open style={root ? {} : {marginLeft: "1.1rem"}}>
-                <summary>
-                    <input className={"form-check-input"} type={"checkbox"} value={indeterminate ? "" : checked}
-                           checked={checked}
-                        // ref={input => {
-                        //     if (input) input.indeterminate = indeterminate
-                        // }}
-                           onChange={() => togglePermission(permission)}
-                    /> {permission}
-                </summary>
+        if (permission === undefined) {
+            return <>{children}</>;
+        } else {
+            return (
+                <details open style={root ? {marginLeft: "0.5rem"} : {marginLeft: "2.1rem"}}>
+                    <summary>
+                        <input className={"form-check-input"} type={"checkbox"} value={indeterminate ? "" : checked}
+                               checked={checked}
+                            // ref={input => {
+                            //     if (input) input.indeterminate = indeterminate
+                            // }}
+                               onChange={() => togglePermission(permission)}
+                        /> {permission}
+                    </summary>
 
-                {children}
-            </details>
-        )
+                    {children}
+                </details>
+            )
+        }
     } else {
         return (
-            <li style={root ? {} : {marginLeft: "2rem"}}>
+            <li style={root ? {marginLeft: "1.4rem"} : {marginLeft: "3rem"}}>
                 <input className={"form-check-input"} type={"checkbox"} value={indeterminate ? "" : checked}
                        checked={checked}
                     // ref={input => {
@@ -95,16 +99,16 @@ const GroupsBody = () => {
     );
 }
 
-const GroupsCard = ({groupName}) => {
+const GroupsCard = ({groups}) => {
     const headers = [];
-    const slices = [
-        {
-            body: <GroupEditContextProvider groupName={groupName}><GroupsBody/></GroupEditContextProvider>,
-            header: <GroupsHeader groupName={groupName}/>,
+    const slices = groups.map(group => {
+        return {
+            body: <GroupEditContextProvider groupName={group.name}><GroupsBody/></GroupEditContextProvider>,
+            header: <GroupsHeader groupName={group.name}/>,
             color: 'light-green',
             outline: false
         }
-    ]
+    })
     return (
         <Card>
             <CardHeader icon={faUsersGear} color="theme" label={"Manage Group Permissions"}>
@@ -132,7 +136,7 @@ const GroupsView = () => {
         <LoadIn>
             <Row>
                 <Col md={12}>
-                    {data.groups.map(group => <GroupsCard key={group.name} groupName={group.name}/>)}
+                    <GroupsCard groups={data.groups}/>
                 </Col>
             </Row>
         </LoadIn>
