@@ -59,7 +59,9 @@ public final class WebUser {
 
     public boolean hasPermission(String permission) {
         for (String grant : permissions) {
-            if (permission.startsWith(grant)) return true;
+            String substitute = permission.replace(grant, "");
+            // Last character is . so it is a sub-permission of the parent, eg. page.player, page.player.thing -> .thing
+            if (substitute.isEmpty() || substitute.startsWith(".")) return true;
         }
         return false;
     }

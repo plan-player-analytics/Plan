@@ -9,9 +9,16 @@ const createPermissionTree = (permissions) => {
     }
     permissions.sort();
 
+    const isParent = (permission, parentCandidate) => {
+        if (parentCandidate === permission) return false;
+        const substitute = permission.replace(parentCandidate, '')[0];
+        // Last character is . so it is a sub-permission of the parent, eg. page.player, page.player.thing -> .thing
+        return substitute.length && substitute[0] === '.';
+    }
+
     const idTree = [];
     for (const permission of permissions) {
-        const parentCandidates = permissions.filter(p => p !== permission && permission.includes(p));
+        const parentCandidates = permissions.filter(parentCandidate => isParent(permission, parentCandidate));
         parentCandidates.sort();
         parentCandidates.reverse();
         const parent = parentCandidates.length ? parentCandidates[0] : null;
