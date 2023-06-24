@@ -17,6 +17,8 @@
 package net.playeranalytics.plan.gathering.domain;
 
 import com.djrapitops.plan.gathering.domain.PlatformPlayerData;
+import io.netty.channel.local.LocalAddress;
+import io.netty.channel.unix.DomainSocketAddress;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -76,9 +78,11 @@ public class FabricPlayerData implements PlatformPlayerData {
             SocketAddress socketAddress = player.networkHandler.getConnectionAddress();
             if (socketAddress instanceof InetSocketAddress inetSocketAddress) {
                 return Optional.of(inetSocketAddress.getAddress());
-            } else if (socketAddress instanceof UnixDomainSocketAddress) {
+            } else if (socketAddress instanceof UnixDomainSocketAddress || socketAddress instanceof LocalAddress) {
                 // These connections come from the same physical machine
                 return Optional.of(InetAddress.getLocalHost());
+            } else if (socketAddress instanceof DomainSocketAddress domainSocketAddress) {
+                return Optional.of(InetAddress.getByName(domainSocketAddress.path()));
             }
         } catch (NoSuchMethodError | UnknownHostException e) {
             // Ignored
