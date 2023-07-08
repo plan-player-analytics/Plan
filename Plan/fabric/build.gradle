@@ -30,6 +30,11 @@ dependencies {
     testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
+loom {
+    // Defining separate refmap file prevents conflicts with plugin mixins
+    mixin.defaultRefmapName.set("plan-fabric-refmap.json")
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.release.set(17)
 }
