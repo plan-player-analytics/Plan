@@ -111,30 +111,33 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../afk/AFKTracker.html" title="class in com.djrapitops.plan.gathering.afk">AFKTracker</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAfkTracker()" class="member-name-link">getAfkTracker</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLeave(org.spongepowered.api.event.network.ServerSideConnectionEvent.Disconnect)" class="member-name-link">onLeave</a><wbr>(org.spongepowered.api.event.network.ServerSideConnectionEvent.Disconnect&nbsp;event)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onLeave(org.spongepowered.api.event.network.ServerSideConnectionEvent.Disconnect)" class="member-name-link">onLeave</a><wbr>(org.spongepowered.api.event.network.ServerSideConnectionEvent.Disconnect&nbsp;event)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onMove(org.spongepowered.api.event.entity.MoveEntityEvent,org.spongepowered.api.entity.living.player.server.ServerPlayer)" class="member-name-link">onMove</a><wbr>(org.spongepowered.api.event.entity.MoveEntityEvent&nbsp;event,
+ org.spongepowered.api.entity.living.player.server.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onMove(org.spongepowered.api.event.entity.MoveEntityEvent,org.spongepowered.api.entity.living.player.server.ServerPlayer)" class="member-name-link">onMove</a><wbr>(org.spongepowered.api.event.entity.MoveEntityEvent&nbsp;event,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerChat(org.spongepowered.api.event.message.PlayerChatEvent,org.spongepowered.api.entity.living.player.server.ServerPlayer)" class="member-name-link">onPlayerChat</a><wbr>(org.spongepowered.api.event.message.PlayerChatEvent&nbsp;event,
  org.spongepowered.api.entity.living.player.server.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerChat(org.spongepowered.api.event.message.PlayerChatEvent,org.spongepowered.api.entity.living.player.server.ServerPlayer)" class="member-name-link">onPlayerChat</a><wbr>(org.spongepowered.api.event.message.PlayerChatEvent&nbsp;event,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerCommand(org.spongepowered.api.event.command.ExecuteCommandEvent,org.spongepowered.api.entity.living.player.server.ServerPlayer)" class="member-name-link">onPlayerCommand</a><wbr>(org.spongepowered.api.event.command.ExecuteCommandEvent&nbsp;event,
  org.spongepowered.api.entity.living.player.server.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerCommand(org.spongepowered.api.event.command.ExecuteCommandEvent,org.spongepowered.api.entity.living.player.server.ServerPlayer)" class="member-name-link">onPlayerCommand</a><wbr>(org.spongepowered.api.event.command.ExecuteCommandEvent&nbsp;event,
- org.spongepowered.api.entity.living.player.server.ServerPlayer&nbsp;player)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onSettingsChange(org.spongepowered.api.event.entity.living.player.PlayerChangeClientSettingsEvent)" class="member-name-link">onSettingsChange</a><wbr>(org.spongepowered.api.event.entity.living.player.PlayerChangeClientSettingsEvent&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onSettingsChange(org.spongepowered.api.event.entity.living.player.PlayerChangeClientSettingsEvent)" class="member-name-link">onSettingsChange</a><wbr>(org.spongepowered.api.event.entity.living.player.PlayerChangeClientSettingsEvent&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -168,6 +171,12 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getAfkTracker()">
+<h3>getAfkTracker</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../afk/AFKTracker.html" title="class in com.djrapitops.plan.gathering.afk">AFKTracker</a></span>&nbsp;<span class="element-name">getAfkTracker</span>()</div>
+</section>
+</li>
 <li>
 <section class="detail" id="onMove(org.spongepowered.api.event.entity.MoveEntityEvent,org.spongepowered.api.entity.living.player.server.ServerPlayer)">
 <h3>onMove</h3>
