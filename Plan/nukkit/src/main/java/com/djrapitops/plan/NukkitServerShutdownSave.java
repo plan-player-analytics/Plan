@@ -17,6 +17,8 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.gathering.ServerShutdownSave;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
+import com.djrapitops.plan.gathering.listeners.nukkit.NukkitAFKListener;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -24,6 +26,7 @@ import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 /**
  * ServerShutdownSave implementation for Nukkit based servers.
@@ -46,5 +49,10 @@ public class NukkitServerShutdownSave extends ServerShutdownSave {
     @Override
     protected boolean checkServerShuttingDownStatus() {
         return false; // No check implementation for Nukkit yet, JVM shutdown save used instead.
+    }
+
+    @Override
+    public Optional<AFKTracker> getAfkTracker() {
+        return Optional.ofNullable(NukkitAFKListener.getAfkTracker());
     }
 }

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.exceptions.database.DBInitException;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
@@ -62,6 +63,8 @@ public abstract class ServerShutdownSave {
     }
 
     protected abstract boolean checkServerShuttingDownStatus();
+
+    public abstract Optional<AFKTracker> getAfkTracker();
 
     public void serverIsKnownToBeShuttingDown() {
         shuttingDown = true;
@@ -115,7 +118,10 @@ public abstract class ServerShutdownSave {
     }
 
     Collection<FinishedSession> finishSessions(Collection<ActiveSession> activeSessions, long now) {
-        return activeSessions.stream().map(session -> session.toFinishedSession(now)).collect(Collectors.toList());
+        return activeSessions.stream().map(session -> {
+            getAfkTracker().ifPresent(afkTracker -> afkTracker.performedAction(session.getPlayerUUID(), now));
+            return session.toFinishedSession(now);
+        }).collect(Collectors.toList());
     }
 
     private Future<?> saveSessions(Collection<FinishedSession> finishedSessions, Database database) {

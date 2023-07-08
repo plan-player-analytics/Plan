@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
@@ -85,6 +86,11 @@ class ShutdownSaveTest {
             @Override
             protected boolean checkServerShuttingDownStatus() {
                 return shutdownStatus;
+            }
+
+            @Override
+            public Optional<AFKTracker> getAfkTracker() {
+                return Optional.empty();
             }
         };
 
