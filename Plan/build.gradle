@@ -88,6 +88,7 @@ subprojects {
         jettyVersion = "11.0.15"
         caffeineVersion = "2.9.2"
         mysqlVersion = "8.0.33"
+        mariadbVersion = "3.1.4"
         sqliteVersion = "3.41.2.1"
         adventureVersion = "4.14.0"
         hikariVersion = "5.0.1"
@@ -134,8 +135,9 @@ subprojects {
         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testImplementation "org.xerial:sqlite-jdbc:$sqliteVersion"    // SQLite
-        testImplementation "mysql:mysql-connector-java:$mysqlVersion" // MySQL
+        testImplementation "org.xerial:sqlite-jdbc:$sqliteVersion" // SQLite
+        testImplementation "com.mysql:mysql-connector-j:$mysqlVersion" // MySQL
+        testImplementation "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion" // MariaDB
     }
 
     configurations {
