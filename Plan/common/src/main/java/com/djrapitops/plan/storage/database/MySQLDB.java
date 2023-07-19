@@ -24,6 +24,8 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
+import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -159,6 +161,23 @@ public class MySQLDB extends SQLDB {
         } finally {
             unloadMySQLDriver();
         }
+
+        if (useMariaDbDriver) {
+            checkMariaDBVersionIncompatibility();
+        }
+    }
+
+    private void checkMariaDBVersionIncompatibility() {
+        executeTransaction(new OperationCriticalTransaction() {
+            @Override
+            protected void performOperations() {
+                query(MySQLSchemaQueries.getVersion())
+                        .filter("11.0.2-MariaDB"::equals)
+                        .ifPresent(badVersion -> {
+                            throw new DBInitException("MariaDB version " + badVersion + " inserts incorrect data due to a bug in query execution order so it is not supported. Upgrade MariaDB to 11.1.1 or newer, or downgrade to MariaDB 10.");
+                        });
+            }
+        });
     }
 
     private void setMaxConnections(HikariConfig hikariConfig) {
