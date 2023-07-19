@@ -83,7 +83,7 @@ public class MySQLDB extends SQLDB {
             String driverFile = useMariaDbDriver ? "dependencies/mariadbDriver.txt" : "dependencies/mysqlDriver.txt";
             return files.getResourceFromJar(driverFile).asLines();
         } catch (IOException e) {
-            throw new DBInitException("Failed to get MySQL dependency information", e);
+            throw new DBInitException("Failed to get " + (useMariaDbDriver ? "MariaDB" : "MySQL") + " dependency information", e);
         }
     }
 
@@ -93,7 +93,7 @@ public class MySQLDB extends SQLDB {
     @Override
     public void setupDataSource() {
         if (driverClassLoader == null) {
-            logger.info("Downloading MySQL Driver, this may take a while...");
+            logger.info("Downloading " + (useMariaDbDriver ? "MariaDB" : "MySQL") + " Driver, this may take a while...");
             downloadDriver();
         }
 
