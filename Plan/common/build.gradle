@@ -10,16 +10,25 @@ plugins {
 configurations {
     // Runtime downloading scopes
     mysqlDriver
+    mariadbDriver
     sqliteDriver
     ipAddressMatcher
-    testImplementation.extendsFrom mysqlDriver, sqliteDriver, ipAddressMatcher
-    compileOnly.extendsFrom mysqlDriver, sqliteDriver, ipAddressMatcher
+    testImplementation.extendsFrom mysqlDriver, mariadbDriver, sqliteDriver, ipAddressMatcher
+    compileOnly.extendsFrom mysqlDriver, mariadbDriver, sqliteDriver, ipAddressMatcher
 
     swaggerJson // swagger.json configuration
 }
 
 task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {
     var conf = configurations.mysqlDriver
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
+
+task generateResourceForMariaDBDriver(type: GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.mariadbDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
     // Not necessary to include in the resource
@@ -52,7 +61,8 @@ dependencies {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
-    mysqlDriver "mysql:mysql-connector-java:$mysqlVersion"
+    mysqlDriver "com.mysql:mysql-connector-j:$mysqlVersion"
+    mariadbDriver "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion"
     sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
     ipAddressMatcher "com.github.seancfoley:ipaddress:$ipAddressMatcherVersion"
 
