@@ -52,7 +52,7 @@ const FilterDropdown = ({filterOptions, filters, setFilters}) => {
                 <h6 className="dropdown-header">{t('html.query.filters.add')}</h6>
                 <Scrollable>
                     {filterOptions.map(option => (
-                        <Dropdown.Item key={option} onClick={() => addFilter(option)}>
+                        <Dropdown.Item key={JSON.stringify(option)} onClick={() => addFilter(option)}>
                             {getReadableFilterName(option)}
                         </Dropdown.Item>
                     ))}
