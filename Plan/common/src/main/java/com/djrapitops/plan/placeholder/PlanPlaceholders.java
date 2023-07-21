@@ -18,10 +18,13 @@ package com.djrapitops.plan.placeholder;
 
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -109,6 +112,18 @@ public final class PlanPlaceholders {
      * otherwise {@code null}
      */
     public String onPlaceholderRequest(UUID uuid, @Untrusted String placeholder, @Untrusted List<String> parameters) {
+        try {
+            return tryReplacePlaceholder(uuid, placeholder, parameters);
+        } catch (DBOpException e) {
+            if (dbSystem.getDatabase().getState() == Database.State.CLOSED) {
+                return "Plan Bug #3020, please report";
+            }
+            throw e;
+        }
+    }
+
+    @Nullable
+    private String tryReplacePlaceholder(UUID uuid, String placeholder, List<String> parameters) {
         for (Entry<String, Function<String, Serializable>> entry : rawHandlers.entrySet()) {
             if (placeholder.startsWith(entry.getKey())) {
                 return Objects.toString(entry.getValue().apply(placeholder));

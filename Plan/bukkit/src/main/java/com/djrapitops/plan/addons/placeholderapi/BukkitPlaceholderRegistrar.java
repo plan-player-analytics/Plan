@@ -22,6 +22,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class BukkitPlaceholderRegistrar {
@@ -50,7 +51,17 @@ public class BukkitPlaceholderRegistrar {
 
     public void unregister() {
         if (placeholderExtension != null) {
-            placeholderExtension.unregister();
+            boolean success = false;
+            while (!success) {
+                success = placeholderExtension.unregister();
+                if (!success) {
+                    try {
+                        Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+                    } catch (InterruptedException interrupted) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
         }
     }
 }
