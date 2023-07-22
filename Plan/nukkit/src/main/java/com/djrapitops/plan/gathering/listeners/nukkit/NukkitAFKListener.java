@@ -65,6 +65,10 @@ public class NukkitAFKListener implements Listener {
         }
     }
 
+    public static AFKTracker getAfkTracker() {
+        return afkTracker;
+    }
+
     private void event(PlayerEvent event) {
         try {
             Player player = event.getPlayer();

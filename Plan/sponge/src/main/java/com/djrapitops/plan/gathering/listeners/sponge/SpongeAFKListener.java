@@ -67,6 +67,10 @@ public class SpongeAFKListener {
         }
     }
 
+    public static AFKTracker getAfkTracker() {
+        return afkTracker;
+    }
+
     private void event(Event event, ServerPlayer player) {
         try {
             performedAction(player);

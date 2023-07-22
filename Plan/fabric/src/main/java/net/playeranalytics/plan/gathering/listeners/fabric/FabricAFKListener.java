@@ -58,6 +58,10 @@ public class FabricAFKListener implements FabricListener {
         }
     }
 
+    public static AFKTracker getAfkTracker() {
+        return afkTracker;
+    }
+
     private void event(ServerPlayerEntity player) {
         try {
             UUID uuid = player.getUuid();

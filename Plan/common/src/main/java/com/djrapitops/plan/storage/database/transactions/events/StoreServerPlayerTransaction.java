@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.events;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
@@ -79,6 +80,6 @@ public class StoreServerPlayerTransaction extends PlayerRegisterTransaction {
         }
 
         // Truncates the address to fit database.
-        return StringUtils.truncate(joinAddress, 255);
+        return StringUtils.truncate(joinAddress, JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
     }
 }
