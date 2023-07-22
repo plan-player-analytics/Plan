@@ -10,6 +10,7 @@ import {GroupEditContextProvider, useGroupEditContext} from "../../hooks/context
 import {fetchGroups} from "../../service/manageService";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {CardLoader} from "../../components/navigation/Loader";
+import {useTranslation} from "react-i18next";
 
 const GroupsHeader = ({groupName}) => {
     return (
@@ -20,6 +21,11 @@ const GroupsHeader = ({groupName}) => {
 }
 
 const PermissionDropdown = ({permission, checked, indeterminate, togglePermission, children, childNodes, root}) => {
+    const {t} = useTranslation();
+
+    const translationKey = "html.manage.permission.description." + permission?.replace('.', "_");
+    const translated = t(translationKey);
+
     if (childNodes.length) {
         if (permission === undefined) {
             return <>{children}</>;
@@ -33,7 +39,7 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
                                    if (input) input.indeterminate = indeterminate
                                }}
                                onChange={() => togglePermission(permission)}
-                        /> {permission}
+                        /> {permission} {permission && translated !== translationKey && <span>{translated}</span>}
                         <hr style={{margin: 0}}/>
                     </summary>
 
@@ -110,6 +116,8 @@ const GroupsCard = ({groups}) => {
             outline: false
         }
     })
+
+    // TODO prevent saving changes if no group has the manage.groups permission!
     return (
         <Card>
             <CardHeader icon={faUsersGear} color="theme" label={"Manage Group Permissions"}>
