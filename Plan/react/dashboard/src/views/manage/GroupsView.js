@@ -29,11 +29,12 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
                     <summary>
                         <input className={"form-check-input"} type={"checkbox"} value={indeterminate ? "" : checked}
                                checked={checked}
-                            // ref={input => {
-                            //     if (input) input.indeterminate = indeterminate
-                            // }}
+                               ref={input => {
+                                   if (input) input.indeterminate = indeterminate
+                               }}
                                onChange={() => togglePermission(permission)}
                         /> {permission}
+                        <hr style={{margin: 0}}/>
                     </summary>
 
                     {children}

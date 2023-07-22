@@ -76,22 +76,31 @@ export const GroupEditContextProvider = ({groupName, children}) => {
         return isNodeChecked(node);
     }, [permissionTree, isNodeChecked, dfs]);
 
-    const isIndeterminate = useCallback((permission) => {
+    const isNodeIndeterminate = useCallback((node) => {
         // Indeterminate if:
-        // Some child nodes have different value (XOR)
-        // Child is indeterminate
+        // permission node itself is not toggled,
+        // but some of its children are toggled or indeterminate.
+        if (!node || node.toggled) return false;
 
-        const childPermissions = allPermissions.filter(p => p.includes(permission) && p !== permission);
-        const checkedChildren = childPermissions.filter(p => isChecked(p));
-        const indeterminate = childPermissions.length !== checkedChildren.length && checkedChildren.length !== 0;
-        const indeterminateChildren = childPermissions.filter(p => !isChecked(p) && isIndeterminate(p));
-        return indeterminate || indeterminateChildren.length;
-    }, [permissions, allPermissions, isChecked]);
+        const childNodes = node.children;
+        const toggledChildNodes = node.children.filter(child => child.toggled);
+        const indeterminate = toggledChildNodes.length !== 0;
+        if (indeterminate) return true;
+
+        for (const child of childNodes) {
+            if (isNodeIndeterminate(child)) {
+                return true;
+            }
+        }
+        return false;
+    }, [])
+    const isIndeterminate = useCallback((permission) => {
+        const node = dfs(permissionTree, permission);
+        return isNodeIndeterminate(node);
+    }, [permissionTree, dfs, isNodeIndeterminate]);
 
     const removePermissions = (toRemoveArray) => {
         const result = permissions.filter(p => !toRemoveArray.includes(p));
-        console.log("Remove permissions", toRemoveArray);
-        console.log("Result", result);
         setPermissions(result);
     }
 
