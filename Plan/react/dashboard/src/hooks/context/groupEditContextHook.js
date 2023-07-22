@@ -3,11 +3,11 @@ import {fetchAvailablePermissions, fetchGroupPermissions} from "../../service/ma
 
 const GroupEditContext = createContext({});
 
-const createPermissionTree = (permissions) => {
-    if (!permissions.length) {
+const createPermissionTree = (allPermissions, toggledPermissions) => {
+    if (!allPermissions.length) {
         return {children: []};
     }
-    permissions.sort();
+    allPermissions.sort();
 
     const isParent = (permission, parentCandidate) => {
         if (parentCandidate === permission) return false;
@@ -17,13 +17,13 @@ const createPermissionTree = (permissions) => {
     }
 
     const idTree = [];
-    for (const permission of permissions) {
-        const parentCandidates = permissions.filter(parentCandidate => isParent(permission, parentCandidate));
+    for (const permission of allPermissions) {
+        const parentCandidates = allPermissions.filter(parentCandidate => isParent(permission, parentCandidate));
         parentCandidates.sort();
         parentCandidates.reverse();
         const parent = parentCandidates.length ? parentCandidates[0] : null;
-        const parentIndex = permissions.indexOf(parent);
-        idTree.push({permission, parentIndex, children: []});
+        const parentIndex = allPermissions.indexOf(parent);
+        idTree.push({permission, parentIndex, children: [], toggled: toggledPermissions.includes(permission)});
     }
     for (const permission of idTree) {
         const parentIndex = permission.parentIndex;
@@ -53,13 +53,28 @@ export const GroupEditContextProvider = ({groupName, children}) => {
 
     const [permissionTree, setPermissionTree] = useState({children: []});
     useEffect(() => {
-        setPermissionTree(createPermissionTree(allPermissions))
+        setPermissionTree(createPermissionTree(allPermissions, permissions))
+    }, [allPermissions, permissions]);
+
+    const dfs = useCallback((root, permission) => {
+        if (root.permission === permission) return root;
+
+        for (const child of root.children) {
+            const found = dfs(child, permission);
+            if (found) return found;
+        }
+        return null;
     }, [allPermissions]);
 
+    const isNodeChecked = useCallback((node) => {
+        if (!node) return false;
+        const parentNode = node?.parent;
+        return node?.toggled ? node : isNodeChecked(parentNode)
+    }, [])
     const isChecked = useCallback((permission) => {
-        const parent = dfs(permissionTree, permission)?.parent;
-        return parent && isChecked(parent.permission) || permissions.includes(permission);
-    }, [permissions]);
+        const node = dfs(permissionTree, permission);
+        return isNodeChecked(node);
+    }, [permissionTree, isNodeChecked, dfs]);
 
     const isIndeterminate = useCallback((permission) => {
         // Indeterminate if:
@@ -73,47 +88,72 @@ export const GroupEditContextProvider = ({groupName, children}) => {
         return indeterminate || indeterminateChildren.length;
     }, [permissions, allPermissions, isChecked]);
 
-    const dfs = useCallback((root, permission) => {
-        if (root.permission === permission) return root;
-
-        for (const child of root.children) {
-            const found = dfs(child, permission);
-            if (found) return found;
-        }
-        return null;
-    }, [allPermissions]);
-
     const removePermissions = (toRemoveArray) => {
-        const filter = permissions.filter(p => !toRemoveArray.includes(p));
-        console.log("Remove permissions", toRemoveArray, "Result", filter)
-        setPermissions(filter);
+        const result = permissions.filter(p => !toRemoveArray.includes(p));
+        console.log("Remove permissions", toRemoveArray);
+        console.log("Result", result);
+        setPermissions(result);
     }
 
-    const addPermissions = (toAddArray) => {
-        console.log("Add permissions", toAddArray)
-        setPermissions([...permissions, ...toAddArray]);
+    const modifyPermissions = useCallback((toAddArray, toRemoveArray) => {
+        const result = [...permissions, ...toAddArray].filter(p => !toRemoveArray.includes(p));
+        setPermissions(result);
+    }, [setPermissions, permissions]);
+
+    const getAllChildren = (root) => {
+        let children = [...root.children];
+        root.children.forEach(child => children.push(...getAllChildren(child)))
+        return children;
     }
 
     const togglePermission = useCallback((permission) => {
-        const included = permissions.includes(permission);
         const node = dfs(permissionTree, permission);
-        const parent = node.parent;
-        // TODO This needs to check up the whole tree until it finds the checked parent and add every necessary permission
-        const parentIncluded = parent && permissions.includes(parent.permission);
-        console.log("Toggle", permission, included, node, parentIncluded, parent);
 
-        if (included) {
+        const checked = node.toggled;
+        if (checked) {
             removePermissions([permission]);
-        } else if (parentIncluded) {
-            removePermissions([parent.permission, ...node.children.map(c => c.permission)]);
-            addPermissions(parent.children.map(c => c.permission).filter(p => p !== permission));
         } else {
-            removePermissions(node.children.map(c => c.permission));
-            addPermissions([permission]);
-        }
-    }, [permissions, setPermissions, isIndeterminate]);
+            // Lookup parent that is checked
+            const checkedNode = isNodeChecked(node);
+            if (checkedNode) {
+                // We need to find the nodes that are currently checked by the parent node
+                // This way only the node that was clicked gets unchecked
+                const nodesToAdd = [];
+                const queue = [node.parent];
+                let foundAll = false;
+                while (!foundAll) {
+                    const next = queue.pop();
+                    if (!next) continue;
+                    const otherChildren = next.children.filter(child => child.permission !== permission);
+                    nodesToAdd.push(...otherChildren);
+                    if (next.permission === checkedNode.permission) foundAll = true;
 
-    console.log(permissions);
+                    if (!foundAll) queue.push(next.parent);
+                }
+
+                // Then we need to remove the nodes that are no longer all checked
+                // This way all the parents of the node that was clicked are unchecked
+                const nodesToRemove = [];
+                let next = node;
+                while (next.parent != null) {
+                    nodesToRemove.push(next.parent);
+                    next = next.parent;
+                }
+
+                modifyPermissions(
+                    nodesToAdd.map(child => child.permission),
+                    nodesToRemove.map(child => child.permission)
+                );
+            } else {
+                // Is not checked, add the permission and remove all child permission from list (they are checked)
+                modifyPermissions(
+                    [permission],
+                    getAllChildren(node).map(child => child.permission)
+                );
+            }
+        }
+    }, [permissionTree, setPermissionTree]);
+
     const sharedState = useMemo(() => {
         return {
             permissionTree,
