@@ -112,14 +112,6 @@ public class Contributors {
         // Static method class
     }
 
-    public static String generateContributorHtml() {
-        int estimatedLength = CONTRIBUTOR_ARRAY.length * 40 + 50;
-        StringBuilder html = new StringBuilder(estimatedLength);
-        Arrays.stream(CONTRIBUTOR_ARRAY).sorted()
-                .forEach(contributor -> contributor.appendHtml(html));
-        return html.toString();
-    }
-
     public static List<Contributor> getContributors() {
         return Arrays.stream(CONTRIBUTOR_ARRAY).sorted().collect(Collectors.toList());
     }
@@ -146,15 +138,6 @@ public class Contributors {
         Contributor(String name, For... contributed) {
             this.name = name;
             this.contributed = contributed;
-        }
-
-        public void appendHtml(StringBuilder html) {
-            html.append("<li class=\"col-4\">")
-                    .append(name);
-            for (For contribution : contributed) {
-                html.append(contribution.toHtml());
-            }
-            html.append("</li>");
         }
 
         @Override
