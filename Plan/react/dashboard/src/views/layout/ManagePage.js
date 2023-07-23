@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {useMetadata} from "../../hooks/metadataHook";
 import {useNavigation} from "../../hooks/navigationHook";
 import {staticSite} from "../../service/backendConfiguration";
-import {faSearch, faUser, faUserGroup, faUsersGear} from "@fortawesome/free-solid-svg-icons";
+import {faSearch, faUsersGear} from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import ErrorPage from "./ErrorPage";
@@ -25,8 +25,8 @@ const ManagePage = () => {
         const items = staticSite ? [] : [
             {name: 'html.label.manage'},
             {name: 'html.label.groupPermissions', icon: faUsersGear, href: "groups"},
-            {name: 'html.label.groupUsers', icon: faUserGroup, href: "groupUsers"},
-            {name: 'html.label.users', icon: faUser, href: "users"},
+            // {name: 'html.label.groupUsers', icon: faUserGroup, href: "groupUsers"},
+            // {name: 'html.label.users', icon: faUser, href: "users"},
             {name: 'html.label.links'},
             {name: 'html.label.query', icon: faSearch, href: "/query"},
         ]

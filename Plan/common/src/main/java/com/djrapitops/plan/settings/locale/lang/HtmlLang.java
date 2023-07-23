@@ -36,6 +36,10 @@ public enum HtmlLang implements Lang {
     SIDE_LINKS("html.label.links", "LINKS"),
     SIDE_PERFORMANCE("html.label.performance", "Performance"),
     SIDE_PLUGINS_OVERVIEW("html.label.pluginsOverview", "Plugins Overview"),
+    SIDE_MANAGE("html.label.manage", "Manage"),
+    SIDE_MANAGE_GROUPS("html.label.groupPermissions", "Manage Groups"),
+    SIDE_MANAGE_GROUP_USERS("html.label.groupUsers", "Manage Group Users"),
+    SIDE_MANAGE_USER_GROUPS("html.label.users", "Manage Users"),
     QUERY_MAKE("html.label.query", "Make a query"),
     UNIT_NO_DATA("generic.noData", "No Data"), // Generic
     GRAPH_NO_DATA("html.label.noDataToDisplay", "No Data to Display"),

@@ -16,6 +16,8 @@ import {
 } from "../../hooks/context/configurationStorageContextHook";
 import SideNavTabs from "../../components/layout/SideNavTabs";
 import Select from "../../components/input/Select";
+import Scrollable from "../../components/Scrollable";
+import OpaqueText from "../../components/layout/OpaqueText";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -28,7 +30,7 @@ const GroupsHeader = ({groupName, icon}) => {
 const PermissionDropdown = ({permission, checked, indeterminate, togglePermission, children, childNodes, root}) => {
     const {t} = useTranslation();
 
-    const translationKey = "html.manage.permission.description." + permission?.replace('.', "_");
+    const translationKey = "html.manage.permission.description." + permission?.split('.').join("_");
     const translated = t(translationKey);
 
     if (childNodes.length) {
@@ -44,7 +46,8 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
                                    if (input) input.indeterminate = indeterminate
                                }}
                                onChange={() => togglePermission(permission)}
-                        /> {permission} {permission && translated !== translationKey && <span>{translated}</span>}
+                        /> {permission} {permission && translated !== translationKey &&
+                        <OpaqueText inline>&middot; {translated}</OpaqueText>}
                         <hr style={{margin: 0}}/>
                     </summary>
 
@@ -55,13 +58,11 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
     } else {
         return (
             <li style={root ? {marginLeft: "1.4rem"} : {marginLeft: "3rem"}}>
-                <input className={"form-check-input"} type={"checkbox"} value={indeterminate ? "" : checked}
+                <input className={"form-check-input"} type={"checkbox"} value={checked}
                        checked={checked}
-                    // ref={input => {
-                    //     if (input) input.indeterminate = indeterminate
-                    // }}
                        onChange={() => togglePermission(permission)}
-                /> {permission}
+                /> {permission} {permission && translated !== translationKey &&
+                <OpaqueText inline>&middot; {translated}</OpaqueText>}
             </li>
         )
     }
@@ -107,11 +108,13 @@ const GroupsBody = ({groups}) => {
                     <UnsavedChangesText visible={changed}/>
                     <DeleteGroupButton groupName={groupName} groups={groups}/>
                 </div>
-                <PermissionTree nodes={[permissionTree]}
-                                childNodes={permissionTree.children}
-                                togglePermission={togglePermission}
-                                isChecked={isChecked}
-                                isIndeterminate={isIndeterminate}/>
+                <Scrollable>
+                    <PermissionTree nodes={[permissionTree]}
+                                    childNodes={permissionTree.children}
+                                    togglePermission={togglePermission}
+                                    isChecked={isChecked}
+                                    isIndeterminate={isIndeterminate}/>
+                </Scrollable>
             </Col>
         </Row>
     );
@@ -178,13 +181,15 @@ const DeleteGroupButton = ({groupName, groups}) => {
 }
 
 const DiscardButton = () => {
-    const {requestDiscard} = useConfigurationStorageContext();
+    const {dirty, requestDiscard} = useConfigurationStorageContext();
 
     return (
-        <button className={"float-end btn"} style={{margin: "-0.5rem", marginRight: "0.5rem"}}
-                onClick={requestDiscard}>
-            <Fa icon={faTrash}/> Discard Changes
-        </button>
+        <>
+            {dirty && <button className={"float-end btn"} style={{margin: "-0.5rem", marginRight: "0.5rem"}}
+                              onClick={requestDiscard}>
+                <Fa icon={faTrash}/> Discard Changes
+            </button>}
+        </>
     )
 }
 
@@ -227,7 +232,7 @@ const AddGroupBody = ({groups}) => {
                         Group name can be 100 characters maximum.
                     </div>}
                 </InputGroup>
-                <button className={"btn bg-plan mt-2"} disabled={invalid || value.length === 0}
+                <button className={"btn bg-plan mt-2"} disabled={invalid || !value || value.length === 0}
                         onClick={() => {
                         }}>
                     <Fa icon={faFloppyDisk}/> Add group
@@ -264,7 +269,7 @@ const GroupsCard = ({groups}) => {
                     <DiscardButton/>
                 </CardHeader>
                 <Card.Body>
-                    <SideNavTabs slices={slices}></SideNavTabs>
+                    <SideNavTabs slices={slices} open></SideNavTabs>
                 </Card.Body>
             </Card>
         </ConfigurationStorageContextProvider>

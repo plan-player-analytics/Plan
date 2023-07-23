@@ -1449,3 +1449,11 @@ ul.filters {
 .extension-table-header {
     cursor: pointer;
 }
+
+.opaque-text {
+    opacity: 0.4;
+}
+
+.opaque-text:hover {
+    opacity: 1;
+}
