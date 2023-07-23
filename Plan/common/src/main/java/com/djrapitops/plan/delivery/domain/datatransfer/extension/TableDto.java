@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
-import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
+import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,9 +43,46 @@ public class TableDto {
                 .map(IconDto::new)
                 .collect(Collectors.toList());
 
-        rows = HtmlTable.mapToRows(table.getRows(), table.getTableColumnFormats()).stream()
+        rows = mapToRows(table.getRows(), table.getTableColumnFormats()).stream()
                 .map(row -> constructRow(columns, row))
                 .collect(Collectors.toList());
+    }
+
+    public static List<TableCellDto[]> mapToRows(List<Object[]> rows, TableColumnFormat[] tableColumnFormats) {
+        return rows.stream()
+                .map(row -> {
+                    List<TableCellDto> mapped = new ArrayList<>(row.length);
+                    for (int i = 0; i < row.length; i++) {
+                        Object value = row[i];
+                        if (value == null) {
+                            mapped.add(null);
+                        } else {
+                            TableColumnFormat format = tableColumnFormats[i];
+                            mapped.add(new TableCellDto(applyFormat(format, value), value));
+                        }
+                    }
+                    return mapped.toArray(new TableCellDto[0]);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public static String applyFormat(TableColumnFormat format, Object value) {
+        try {
+            switch (format) {
+                case TIME_MILLISECONDS:
+                    return Formatters.getInstance().timeAmount().apply(Long.parseLong(value.toString()));
+                case DATE_YEAR:
+                    return Formatters.getInstance().yearLong().apply(Long.parseLong(value.toString()));
+                case DATE_SECOND:
+                    return Formatters.getInstance().secondLong().apply(Long.parseLong(value.toString()));
+                case PLAYER_NAME:
+                    return Html.LINK.create("../player/" + Html.encodeToURL(Html.swapColorCodesToSpan(value.toString())));
+                default:
+                    return Html.swapColorCodesToSpan(value.toString());
+            }
+        } catch (Exception e) {
+            return Objects.toString(value);
+        }
     }
 
     private List<TableCellDto> constructRow(List<String> columns, TableCellDto[] row) {

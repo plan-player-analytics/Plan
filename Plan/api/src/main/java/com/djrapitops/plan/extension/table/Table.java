@@ -21,10 +21,7 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Object for giving Plan table data.
@@ -98,6 +95,26 @@ public final class Table {
 
     public TableColumnFormat[] getTableColumnFormats() {
         return tableColumnFormats;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Table table = (Table) o;
+        return Arrays.equals(getColumns(), table.getColumns())
+                && Arrays.equals(getIcons(), table.getIcons())
+                && Arrays.equals(getTableColumnFormats(), table.getTableColumnFormats())
+                && Objects.equals(getRows(), table.getRows());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getRows());
+        result = 31 * result + Arrays.hashCode(getColumns());
+        result = 31 * result + Arrays.hashCode(getIcons());
+        result = 31 * result + Arrays.hashCode(getTableColumnFormats());
+        return result;
     }
 
     /**

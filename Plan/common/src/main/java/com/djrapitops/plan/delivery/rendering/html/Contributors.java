@@ -117,18 +117,7 @@ public class Contributors {
     }
 
     enum For {
-        CODE("fa-code"),
-        LANG("fa-language");
-
-        private final String icon;
-
-        For(String icon) {
-            this.icon = icon;
-        }
-
-        String toHtml() {
-            return " <i class=\"fa fa-fw " + icon + "\"></i>";
-        }
+        CODE, LANG
     }
 
     private static class Contributor implements Comparable<Contributor> {
