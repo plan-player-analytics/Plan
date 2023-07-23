@@ -178,7 +178,6 @@ export const GroupEditContextProvider = ({groupName, children}) => {
 
     const saveChanges = useCallback(async () => {
         if (saveRequested > lastSave && changed) {
-            console.log("Save", groupName);
             // await saveGroupPermissions(groupName, permissions);
             setLastSave(Date.now());
             setChanged(false);

@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +33,7 @@ public class WebGroupDefaultGroupsPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return query(WebUserQueries.fetchGroupId("player")).isPresent();
+        return query(WebUserQueries.fetchGroupId("no_access")).isPresent();
     }
 
     @Override
@@ -75,5 +76,6 @@ public class WebGroupDefaultGroupsPatch extends Patch {
                         .map(WebPermission::getPermission)
                         .collect(Collectors.toList()))
         );
+        executeOther(new StoreWebGroupTransaction("no_access", Collections.emptyList()));
     }
 }

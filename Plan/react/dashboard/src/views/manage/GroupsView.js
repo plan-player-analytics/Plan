@@ -1,13 +1,12 @@
 import ErrorView from "../ErrorView";
 import LoadIn from "../../components/animation/LoadIn";
 import {Card, Col, InputGroup, Row} from "react-bootstrap";
-import React, {useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import CardHeader from "../../components/cards/CardHeader";
 import {faFloppyDisk, faPlus, faRotateLeft, faTrash, faUserGroup, faUsersGear} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon as Fa, FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {GroupEditContextProvider, useGroupEditContext} from "../../hooks/context/groupEditContextHook";
 import {fetchGroups} from "../../service/manageService";
-import {useDataRequest} from "../../hooks/dataFetchHook";
 import {CardLoader} from "../../components/navigation/Loader";
 import {useTranslation} from "react-i18next";
 import {
@@ -90,7 +89,7 @@ const PermissionTree = ({nodes, isIndeterminate, isChecked, togglePermission}) =
     )
 }
 
-const GroupsBody = ({groups}) => {
+const GroupsBody = ({groups, reloadGroupNames}) => {
     const {
         changed,
         groupName,
@@ -106,7 +105,7 @@ const GroupsBody = ({groups}) => {
                 <div>
                     <h3 style={{display: "inline-block"}}>Permissions of {groupName}</h3>
                     <UnsavedChangesText visible={changed}/>
-                    <DeleteGroupButton groupName={groupName} groups={groups}/>
+                    <DeleteGroupButton groupName={groupName} groups={groups} reloadGroupNames={reloadGroupNames}/>
                 </div>
                 <Scrollable>
                     <PermissionTree nodes={[permissionTree]}
@@ -132,7 +131,7 @@ const SaveButton = () => {
     )
 }
 
-const DeleteGroupButton = ({groupName, groups}) => {
+const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
     const [clicked, setClicked] = useState(false);
     const [moveToGroup, setMoveToGroup] = useState(0);
 
@@ -155,7 +154,8 @@ const DeleteGroupButton = ({groupName, groups}) => {
 
                     <button className={"btn bg-red mt-2"}
                             onClick={() => {
-                                setClicked(true)
+                                // TODO call delete group
+                                reloadGroupNames();
                             }}>
                         <Fa icon={faTrash}/> Confirm & delete {groupName}
                     </button>
@@ -205,7 +205,7 @@ const UnsavedChangesText = ({visible}) => {
     }
 }
 
-const AddGroupBody = ({groups}) => {
+const AddGroupBody = ({groups, reloadGroupNames}) => {
     const [invalid, setInvalid] = useState(false);
     const [value, setValue] = useState(undefined);
 
@@ -234,6 +234,8 @@ const AddGroupBody = ({groups}) => {
                 </InputGroup>
                 <button className={"btn bg-plan mt-2"} disabled={invalid || !value || value.length === 0}
                         onClick={() => {
+                            // TODO Add a new group
+                            reloadGroupNames();
                         }}>
                     <Fa icon={faFloppyDisk}/> Add group
                 </button>
@@ -242,11 +244,11 @@ const AddGroupBody = ({groups}) => {
     )
 }
 
-const GroupsCard = ({groups}) => {
+const GroupsCard = ({groups, reloadGroupNames}) => {
     const slices = groups.map(group => {
         return {
             body: <GroupEditContextProvider groupName={group.name}><GroupsBody
-                groups={groups}/></GroupEditContextProvider>,
+                groups={groups} reloadGroupNames={reloadGroupNames}/></GroupEditContextProvider>,
             header: <GroupsHeader groupName={group.name}/>,
             color: 'light-green',
             outline: false
@@ -254,41 +256,56 @@ const GroupsCard = ({groups}) => {
     })
 
     slices.push({
-        body: <AddGroupBody groups={groups}/>,
+        body: <AddGroupBody groups={groups} reloadGroupNames={reloadGroupNames}/>,
         header: <GroupsHeader groupName={"Add group"} icon={faPlus}/>,
         color: 'light-green',
         outline: false
     })
 
     return (
-        <ConfigurationStorageContextProvider>
-            <Card>
-                <CardHeader icon={faUsersGear} color="theme" label={"Manage Group Permissions"}>
-                    <UnsavedChangesText/>
-                    <SaveButton/>
-                    <DiscardButton/>
-                </CardHeader>
-                <Card.Body>
-                    <SideNavTabs slices={slices} open></SideNavTabs>
-                </Card.Body>
-            </Card>
-        </ConfigurationStorageContextProvider>
+        <Card>
+            <CardHeader icon={faUsersGear} color="theme" label={"Manage Group Permissions"}>
+                <UnsavedChangesText/>
+                <SaveButton/>
+                <DiscardButton/>
+            </CardHeader>
+            <Card.Body>
+                <SideNavTabs slices={slices} open></SideNavTabs>
+            </Card.Body>
+        </Card>
     )
 }
 
 const GroupsView = () => {
-    const {data, loadingError} = useDataRequest(fetchGroups, [null]);
+    const [updateRequested, setUpdateRequested] = useState(Date.now());
+    const [data, setData] = useState(undefined);
+    const [loadingError, setLoadingError] = useState(undefined);
+    const loadGroupNames = useCallback(() => {
+        fetchGroups().then(({data, loadingError}) => {
+            setData(data);
+            setLoadingError(loadingError);
+        })
+    }, [setData, setLoadingError]);
+    useEffect(() => {
+        loadGroupNames();
+    }, [updateRequested, loadGroupNames]);
 
-    if (loadingError) return <ErrorView error={loadingError}/>
-    if (!data) return <CardLoader/>
+    const reloadGroupNames = useCallback(() => {
+        setTimeout(() => setUpdateRequested(Date.now()), 1000);
+    }, [setUpdateRequested])
+
+    if (loadingError) return <ErrorView error={loadingError}/>;
+    if (!data) return <CardLoader/>;
 
     return (
         <LoadIn>
-            <Row>
-                <Col md={12}>
-                    <GroupsCard groups={data.groups}/>
-                </Col>
-            </Row>
+            <ConfigurationStorageContextProvider>
+                <Row>
+                    <Col md={12}>
+                        <GroupsCard groups={data.groups} reloadGroupNames={reloadGroupNames}/>
+                    </Col>
+                </Row>
+            </ConfigurationStorageContextProvider>
         </LoadIn>
     )
 };
