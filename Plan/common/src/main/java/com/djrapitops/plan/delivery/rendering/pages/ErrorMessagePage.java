@@ -17,7 +17,6 @@
 package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
-import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.utilities.java.UnaryChain;
@@ -63,10 +62,7 @@ public class ErrorMessagePage implements Page {
         placeholders.put("title", icon.toHtml() + " " + errorTitle);
         placeholders.put("titleText", errorTitle);
         placeholders.put("paragraph", errorMsg);
-        placeholders.put("versionButton", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
         placeholders.put("version", versionChecker.getCurrentVersion());
-        placeholders.put("updateModal", versionChecker.getUpdateModal());
-        placeholders.put("contributors", Contributors.generateContributorHtml());
         return UnaryChain.of(template)
                 .chain(theme::replaceThemeColors)
                 .chain(placeholders::apply)
