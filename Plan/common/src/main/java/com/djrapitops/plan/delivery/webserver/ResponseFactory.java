@@ -232,12 +232,6 @@ public class ResponseFactory {
             String content = UnaryChain.of(resource.asString())
                     .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
-                    .chain(contents -> {
-                        if (fileName.contains(STATIC_BUNDLE_FOLDER) || fileName.startsWith("vendor/") || fileName.startsWith("/vendor/")) {
-                            return contents;
-                        }
-                        return locale.replaceLanguageInJavascript(contents);
-                    })
                     .chain(contents -> StringUtils.replace(contents,
                             ".p=\"/\"",
                             ".p=\"" + getBasePath() + "/\""))
