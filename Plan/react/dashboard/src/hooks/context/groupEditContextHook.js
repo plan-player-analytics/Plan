@@ -1,5 +1,6 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {fetchAvailablePermissions, fetchGroupPermissions} from "../../service/manageService";
+import {useConfigurationStorageContext} from "./configurationStorageContextHook";
 
 const GroupEditContext = createContext({});
 
@@ -37,6 +38,11 @@ const createPermissionTree = (allPermissions, toggledPermissions) => {
 }
 
 export const GroupEditContextProvider = ({groupName, children}) => {
+    const [changed, setChanged] = useState(false);
+    const {markDirty, saveRequested, discardRequested} = useConfigurationStorageContext();
+    const [lastSave, setLastSave] = useState(Date.now());
+    const [lastDiscard, setLastDiscard] = useState(Date.now());
+
     const [allPermissions, setAllPermissions] = useState([]);
     useEffect(() => {
         fetchAvailablePermissions().then(response => {
@@ -45,11 +51,16 @@ export const GroupEditContextProvider = ({groupName, children}) => {
     }, []);
 
     const [permissions, setPermissions] = useState([]);
-    useEffect(() => {
-        fetchGroupPermissions(groupName).then(response => {
+    const loadPermissions = useCallback(() => {
+        return fetchGroupPermissions(groupName).then(response => {
             setPermissions(response?.data?.permissions);
+            setLastDiscard(Date.now());
+            setChanged(false);
         });
-    }, [groupName]);
+    }, [groupName, setChanged, setPermissions, setLastDiscard]);
+    useEffect(() => {
+        loadPermissions()
+    }, [loadPermissions]);
 
     const [permissionTree, setPermissionTree] = useState({children: []});
     useEffect(() => {
@@ -64,7 +75,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
             if (found) return found;
         }
         return null;
-    }, [allPermissions]);
+    }, []);
 
     const isNodeChecked = useCallback((node) => {
         if (!node) return false;
@@ -99,23 +110,25 @@ export const GroupEditContextProvider = ({groupName, children}) => {
         return isNodeIndeterminate(node);
     }, [permissionTree, dfs, isNodeIndeterminate]);
 
-    const removePermissions = (toRemoveArray) => {
+    const removePermissions = useCallback((toRemoveArray) => {
         const result = permissions.filter(p => !toRemoveArray.includes(p));
         setPermissions(result);
-    }
+    }, [setPermissions, permissions]);
 
     const modifyPermissions = useCallback((toAddArray, toRemoveArray) => {
         const result = [...permissions, ...toAddArray].filter(p => !toRemoveArray.includes(p));
         setPermissions(result);
     }, [setPermissions, permissions]);
 
-    const getAllChildren = (root) => {
+    const getAllChildren = useCallback((root) => {
         let children = [...root.children];
         root.children.forEach(child => children.push(...getAllChildren(child)))
         return children;
-    }
+    }, [])
 
     const togglePermission = useCallback((permission) => {
+        markDirty(true);
+        setChanged(true);
         const node = dfs(permissionTree, permission);
 
         const checked = node.toggled;
@@ -161,10 +174,30 @@ export const GroupEditContextProvider = ({groupName, children}) => {
                 );
             }
         }
-    }, [permissionTree, setPermissionTree]);
+    }, [markDirty, setChanged, permissionTree, dfs, getAllChildren, isNodeChecked, modifyPermissions, removePermissions]);
+
+    const saveChanges = useCallback(async () => {
+        if (saveRequested > lastSave && changed) {
+            console.log("Save", groupName);
+            // await saveGroupPermissions(groupName, permissions);
+            setLastSave(Date.now());
+            setChanged(false);
+        }
+    }, [lastSave, changed, setChanged, saveRequested, setLastSave, groupName]);
+
+    useEffect(() => {
+        saveChanges();
+    }, [saveChanges]);
+
+    useEffect(() => {
+        if (discardRequested > lastDiscard) {
+            loadPermissions();
+        }
+    }, [lastDiscard, discardRequested, loadPermissions])
 
     const sharedState = useMemo(() => {
         return {
+            changed,
             permissionTree,
             permissions,
             isChecked,
@@ -173,6 +206,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
             groupName
         }
     }, [
+        changed,
         permissionTree,
         permissions,
         isChecked,

@@ -151,7 +151,7 @@ public class WebUserQueries {
     }
 
     public static Query<List<String>> fetchGroupNames() {
-        String sql = SELECT + WebGroupTable.NAME + FROM + WebGroupTable.TABLE_NAME;
+        String sql = SELECT + WebGroupTable.NAME + FROM + WebGroupTable.TABLE_NAME + ORDER_BY + WebGroupTable.NAME;
         return db -> db.queryList(sql, row -> row.getString(WebGroupTable.NAME));
     }
 

@@ -1,4 +1,4 @@
-import {doGetRequest} from "./backendConfiguration";
+import {doGetRequest, doSomePostRequest, standard200option} from "./backendConfiguration";
 
 export const fetchGroups = async () => {
     let url = `/v1/webGroups`;
@@ -13,4 +13,9 @@ export const fetchGroupPermissions = async (groupName) => {
 export const fetchAvailablePermissions = async () => {
     let url = `/v1/permissions`;
     return doGetRequest(url, new Date().getTime());
+}
+
+export const saveGroupPermissions = async (groupName, permissions) => {
+    let url = `/v1/saveGroupPermissions?group=${groupName}`;
+    return doSomePostRequest(url, [standard200option], JSON.stringify(permissions))
 }
