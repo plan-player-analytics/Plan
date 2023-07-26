@@ -1,4 +1,4 @@
-import {doGetRequest, doSomePostRequest, standard200option} from "./backendConfiguration";
+import {doGetRequest, doSomeDeleteRequest, doSomePostRequest, standard200option} from "./backendConfiguration";
 
 export const fetchGroups = async () => {
     let url = `/v1/webGroups`;
@@ -17,5 +17,15 @@ export const fetchAvailablePermissions = async () => {
 
 export const saveGroupPermissions = async (groupName, permissions) => {
     let url = `/v1/saveGroupPermissions?group=${groupName}`;
-    return doSomePostRequest(url, [standard200option], JSON.stringify(permissions))
+    return doSomePostRequest(url, [standard200option], JSON.stringify(permissions));
+}
+
+export const addGroup = async (groupName) => {
+    let url = `/v1/saveGroupPermissions?group=${groupName}`;
+    return doSomePostRequest(url, [standard200option], JSON.stringify([]));
+}
+
+export const deleteGroup = async (groupName) => {
+    let url = `/v1/deleteGroup?group=${groupName}`;
+    return doSomeDeleteRequest(url, [standard200option]);
 }

@@ -72,7 +72,9 @@ public class RootJSONResolver {
 
             WebGroupJSONResolver webGroupJSONResolver,
             WebGroupPermissionJSONResolver webGroupPermissionJSONResolver,
-            WebPermissionJSONResolver webPermissionJSONResolver
+            WebPermissionJSONResolver webPermissionJSONResolver,
+            WebGroupSaveJSONResolver webGroupSaveJSONResolver,
+            WebGroupDeleteJSONResolver webGroupDeleteJSONResolver
     ) {
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
@@ -106,6 +108,8 @@ public class RootJSONResolver {
                 .add("webGroups", webGroupJSONResolver)
                 .add("groupPermissions", webGroupPermissionJSONResolver)
                 .add("permissions", webPermissionJSONResolver)
+                .add("saveGroupPermissions", webGroupSaveJSONResolver)
+                .add("deleteGroup", webGroupDeleteJSONResolver)
                 .build();
     }
 

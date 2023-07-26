@@ -6,7 +6,7 @@ import CardHeader from "../../components/cards/CardHeader";
 import {faFloppyDisk, faPlus, faRotateLeft, faTrash, faUserGroup, faUsersGear} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon as Fa, FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {GroupEditContextProvider, useGroupEditContext} from "../../hooks/context/groupEditContextHook";
-import {fetchGroups} from "../../service/manageService";
+import {addGroup, deleteGroup, fetchGroups} from "../../service/manageService";
 import {CardLoader} from "../../components/navigation/Loader";
 import {useTranslation} from "react-i18next";
 import {
@@ -154,8 +154,12 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
 
                     <button className={"btn bg-red mt-2"}
                             onClick={() => {
-                                // TODO call delete group
-                                reloadGroupNames();
+                                deleteGroup(groupName).then(() => {
+                                    reloadGroupNames();
+                                    // TODO add feedback
+                                }).catch(e => {
+                                    // TODO add feedback
+                                })
                             }}>
                         <Fa icon={faTrash}/> Confirm & delete {groupName}
                     </button>
@@ -234,8 +238,12 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
                 </InputGroup>
                 <button className={"btn bg-plan mt-2"} disabled={invalid || !value || value.length === 0}
                         onClick={() => {
-                            // TODO Add a new group
-                            reloadGroupNames();
+                            addGroup(value).then(() => {
+                                reloadGroupNames();
+                                // TODO add Feedback
+                            }).catch(e => {
+                                // TODO add Feedback
+                            })
                         }}>
                     <Fa icon={faFloppyDisk}/> Add group
                 </button>
