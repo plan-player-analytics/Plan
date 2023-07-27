@@ -40,7 +40,7 @@ public class LegacyPermissionLevelGroupsPatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         return !hasColumn(SecurityTable.TABLE_NAME, "permission_level")
-                && query(WebUserQueries.fetchGroupId("legacy_level_100")).isPresent();
+                || query(WebUserQueries.fetchGroupId("legacy_level_100")).isPresent();
     }
 
     @Override
