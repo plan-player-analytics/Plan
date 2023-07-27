@@ -26,7 +26,6 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -39,6 +38,7 @@ import jakarta.ws.rs.Path;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,10 +79,10 @@ public class WebGroupSaveJSONResolver implements Resolver {
             throw new BadRequestException("Endpoint needs to be sent a POST request.");
         }
 
-        String groupName = request.getHeader("group")
+        String groupName = request.getQuery().get("group")
                 .orElseThrow(() -> new BadRequestException("'group' parameter not given."));
         String requestBody = new String(request.getRequestBody(), StandardCharsets.UTF_8);
-        List<String> permissions = new Gson().fromJson(requestBody, new TypeToken<>() {});
+        List<String> permissions = Arrays.asList(new Gson().fromJson(requestBody, String[].class));
         return Optional.of(getResponse(groupName, permissions));
     }
 

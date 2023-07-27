@@ -20,9 +20,7 @@ import OpaqueText from "../../components/layout/OpaqueText";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
-        <tr>
-            <td><FontAwesomeIcon icon={icon || faUserGroup}/> {groupName}</td>
-        </tr>
+        <span className={"float-start"}><FontAwesomeIcon icon={icon || faUserGroup}/> {groupName}</span>
     )
 }
 
@@ -154,8 +152,9 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
 
                     <button className={"btn bg-red mt-2"}
                             onClick={() => {
-                                deleteGroup(groupName).then(() => {
+                                deleteGroup(groupName, groupOptions[moveToGroup]).then(() => {
                                     reloadGroupNames();
+                                    setClicked(false);
                                     // TODO add feedback
                                 }).catch(e => {
                                     // TODO add feedback
@@ -289,10 +288,10 @@ const GroupsView = () => {
     const [data, setData] = useState(undefined);
     const [loadingError, setLoadingError] = useState(undefined);
     const loadGroupNames = useCallback(() => {
-        fetchGroups().then(({data, loadingError}) => {
+        fetchGroups().then(({data, error}) => {
             setData(data);
-            setLoadingError(loadingError);
-        })
+            setLoadingError(error);
+        });
     }, [setData, setLoadingError]);
     useEffect(() => {
         loadGroupNames();

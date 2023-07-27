@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {fetchAvailablePermissions, fetchGroupPermissions} from "../../service/manageService";
+import {fetchAvailablePermissions, fetchGroupPermissions, saveGroupPermissions} from "../../service/manageService";
 import {useConfigurationStorageContext} from "./configurationStorageContextHook";
 
 const GroupEditContext = createContext({});
@@ -183,7 +183,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
             setChanged(false);
             // TODO add feedback
         }
-    }, [lastSave, changed, setChanged, saveRequested, setLastSave, groupName]);
+    }, [lastSave, changed, setChanged, saveRequested, setLastSave, permissions, groupName]);
 
     useEffect(() => {
         saveChanges();

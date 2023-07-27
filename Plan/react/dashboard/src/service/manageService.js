@@ -25,7 +25,7 @@ export const addGroup = async (groupName) => {
     return doSomePostRequest(url, [standard200option], JSON.stringify([]));
 }
 
-export const deleteGroup = async (groupName) => {
-    let url = `/v1/deleteGroup?group=${groupName}`;
+export const deleteGroup = async (groupName, moveTo) => {
+    let url = `/v1/deleteGroup?group=${groupName}&moveTo=${moveTo}`;
     return doSomeDeleteRequest(url, [standard200option]);
 }

@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.transactions;
 
+import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.WebGroupTable;
 import com.djrapitops.plan.storage.database.sql.tables.WebGroupToPermissionTable;
 import org.intellij.lang.annotations.Language;
@@ -34,14 +36,19 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 public class DeleteWebGroupTransaction extends Transaction {
 
     private final String name;
+    private final String moveTo;
 
-    public DeleteWebGroupTransaction(String name) {
+    public DeleteWebGroupTransaction(String name, String moveTo) {
         this.name = name;
+        this.moveTo = moveTo;
     }
 
     @Override
     protected void performOperations() {
         String selectIdSql = WebGroupTable.SELECT_GROUP_ID;
+
+        Integer moveToId = query(db -> db.queryOptional(selectIdSql, row -> row.getInt(WebGroupTable.ID), moveTo))
+                .orElseThrow(() -> new DBOpException("Group not found for given name"));
 
         query(db -> db.queryOptional(selectIdSql, row -> row.getInt(WebGroupTable.ID), name))
                 .ifPresent(groupId -> {
@@ -51,6 +58,17 @@ public class DeleteWebGroupTransaction extends Transaction {
                                 @Override
                                 public void prepare(PreparedStatement statement) throws SQLException {
                                     statement.setInt(1, groupId);
+                                }
+                            });
+
+                            @Language("SQL")
+                            String moveUsersSql = "UPDATE " + SecurityTable.TABLE_NAME + " SET " + SecurityTable.GROUP_ID + "=?" +
+                                    WHERE + SecurityTable.GROUP_ID + "=?";
+                            execute(new ExecStatement(moveUsersSql) {
+                                @Override
+                                public void prepare(PreparedStatement statement) throws SQLException {
+                                    statement.setInt(1, groupId);
+                                    statement.setInt(2, moveToId);
                                 }
                             });
 

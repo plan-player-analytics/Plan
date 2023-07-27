@@ -74,14 +74,16 @@ public class WebGroupDeleteJSONResolver implements Resolver {
         if (!request.getMethod().equals("DELETE")) {
             throw new BadRequestException("Endpoint needs to be sent a DELETE request.");
         }
-        String groupName = request.getHeader("group")
+        String groupName = request.getQuery().get("group")
                 .orElseThrow(() -> new BadRequestException("'group' parameter not given."));
+        String moveTo = request.getQuery().get("moveTo")
+                .orElseThrow(() -> new BadRequestException("'moveTo' parameter not given."));
 
-        return Optional.of(getResponse(groupName));
+        return Optional.of(getResponse(groupName, moveTo));
     }
 
-    private Response getResponse(String groupName) {
-        dbSystem.getDatabase().executeTransaction(new DeleteWebGroupTransaction(groupName));
+    private Response getResponse(String groupName, String moveTo) {
+        dbSystem.getDatabase().executeTransaction(new DeleteWebGroupTransaction(groupName, moveTo));
 
         return Response.builder()
                 .setStatus(200)
