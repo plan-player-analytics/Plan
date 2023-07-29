@@ -32,6 +32,7 @@ const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
     )
 }
 
+/*eslint no-template-curly-in-string: "off"*/
 const NewestVersionModal = ({open, toggle, versionInfo}) => {
     const {t} = useTranslation();
     return (

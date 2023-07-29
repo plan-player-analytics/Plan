@@ -144,7 +144,7 @@ public class WebUserQueries {
         String permissionGroup = set.getString(WebGroupTable.NAME);
         String userPermissions = set.getString("user_permissions");
         List<String> permissions = userPermissions != null ? Arrays.asList(userPermissions.split(",")) : List.of();
-        return new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionGroup, permissions);
+        return new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionGroup, new HashSet<>(permissions));
     }
 
     public static Query<Map<String, Long>> getCookieExpiryTimes() {

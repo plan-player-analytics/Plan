@@ -205,7 +205,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
                 });
             }
         }
-    }, [lastSave, changed, setChanged, saveRequested, setLastSave, permissions, groupName]);
+    }, [lastSave, changed, setChanged, saveRequested, setLastSave, permissions, groupName, addAlert, t]);
 
     useEffect(() => {
         saveChanges();

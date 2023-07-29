@@ -33,9 +33,9 @@ import utilities.TestConstants;
 import utilities.TestPluginLogger;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +45,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userIsRegistered() {
-        User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), "admin", List.of("page", "access"));
+        User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), "admin", Set.of("page", "access", "manage.groups", "manage.users"));
         db().executeTransaction(new StoreWebUserTransaction(expected));
         forcePersistenceCheck();
 
