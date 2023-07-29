@@ -3,11 +3,20 @@ import LoadIn from "../../components/animation/LoadIn";
 import {Card, Col, InputGroup, Row} from "react-bootstrap";
 import React, {useCallback, useEffect, useState} from "react";
 import CardHeader from "../../components/cards/CardHeader";
-import {faFloppyDisk, faPlus, faRotateLeft, faTrash, faUserGroup, faUsersGear} from "@fortawesome/free-solid-svg-icons";
+import {
+    faCheck,
+    faExclamationTriangle,
+    faFloppyDisk,
+    faPlus,
+    faRotateLeft,
+    faTrash,
+    faUserGroup,
+    faUsersGear
+} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon as Fa, FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {GroupEditContextProvider, useGroupEditContext} from "../../hooks/context/groupEditContextHook";
 import {addGroup, deleteGroup, fetchGroups} from "../../service/manageService";
-import {CardLoader} from "../../components/navigation/Loader";
+import {CardLoader, ChartLoader} from "../../components/navigation/Loader";
 import {useTranslation} from "react-i18next";
 import {
     ConfigurationStorageContextProvider,
@@ -17,6 +26,7 @@ import SideNavTabs from "../../components/layout/SideNavTabs";
 import Select from "../../components/input/Select";
 import Scrollable from "../../components/Scrollable";
 import OpaqueText from "../../components/layout/OpaqueText";
+import {useAlertPopupContext} from "../../hooks/context/alertPopupContext";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -71,7 +81,7 @@ const PermissionTree = ({nodes, isIndeterminate, isChecked, togglePermission}) =
     }
     return (
         <>
-            {nodes.map(node => <>
+            {nodes.map(node => <section key={node.permission + "-1234"}>
                 <PermissionDropdown permission={node.permission} root={node.parentIndex === -1}
                                     indeterminate={isIndeterminate(node.permission)}
                                     checked={isChecked(node.permission)}
@@ -82,7 +92,7 @@ const PermissionTree = ({nodes, isIndeterminate, isChecked, togglePermission}) =
                                     isChecked={isChecked}
                                     isIndeterminate={isIndeterminate}/>
                 </PermissionDropdown>
-            </>)}
+            </section>)}
         </>
     )
 }
@@ -106,11 +116,12 @@ const GroupsBody = ({groups, reloadGroupNames}) => {
                     <DeleteGroupButton groupName={groupName} groups={groups} reloadGroupNames={reloadGroupNames}/>
                 </div>
                 <Scrollable>
-                    <PermissionTree nodes={[permissionTree]}
-                                    childNodes={permissionTree.children}
-                                    togglePermission={togglePermission}
-                                    isChecked={isChecked}
-                                    isIndeterminate={isIndeterminate}/>
+                    {permissionTree?.children?.length && <PermissionTree nodes={[permissionTree]}
+                                                                         childNodes={permissionTree.children}
+                                                                         togglePermission={togglePermission}
+                                                                         isChecked={isChecked}
+                                                                         isIndeterminate={isIndeterminate}/>}
+                    {!permissionTree?.children?.length && <ChartLoader/>}
                 </Scrollable>
             </Col>
         </Row>
@@ -132,6 +143,7 @@ const SaveButton = () => {
 const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
     const [clicked, setClicked] = useState(false);
     const [moveToGroup, setMoveToGroup] = useState(0);
+    const {addAlert} = useAlertPopupContext();
 
     if (clicked) {
         const groupOptions = groups.filter(g => g.name !== groupName).map(g => g.name);
@@ -152,12 +164,23 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
 
                     <button className={"btn bg-red mt-2"}
                             onClick={() => {
-                                deleteGroup(groupName, groupOptions[moveToGroup]).then(() => {
-                                    reloadGroupNames();
-                                    setClicked(false);
-                                    // TODO add feedback
-                                }).catch(e => {
-                                    // TODO add feedback
+                                deleteGroup(groupName, groupOptions[moveToGroup]).then(({error}) => {
+                                    if (error) {
+                                        addAlert({
+                                            timeout: 15000,
+                                            color: "danger",
+                                            content: <><Fa
+                                                icon={faExclamationTriangle}/>{" Failed to delete group: " + error}</>
+                                        });
+                                    } else {
+                                        reloadGroupNames();
+                                        setClicked(false);
+                                        addAlert({
+                                            timeout: 7500,
+                                            color: "success",
+                                            content: <><Fa icon={faCheck}/>{" Deleted group '" + groupName}'</>
+                                        });
+                                    }
                                 })
                             }}>
                         <Fa icon={faTrash}/> Confirm & delete {groupName}
@@ -211,6 +234,7 @@ const UnsavedChangesText = ({visible}) => {
 const AddGroupBody = ({groups, reloadGroupNames}) => {
     const [invalid, setInvalid] = useState(false);
     const [value, setValue] = useState(undefined);
+    const {addAlert} = useAlertPopupContext();
 
     const onChange = (event) => {
         const newValue = event.target.value;
@@ -237,11 +261,22 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
                 </InputGroup>
                 <button className={"btn bg-plan mt-2"} disabled={invalid || !value || value.length === 0}
                         onClick={() => {
-                            addGroup(value).then(() => {
-                                reloadGroupNames();
-                                // TODO add Feedback
-                            }).catch(e => {
-                                // TODO add Feedback
+                            addGroup(value).then(({error}) => {
+                                if (error) {
+                                    addAlert({
+                                        timeout: 15000,
+                                        color: "danger",
+                                        content: <><Fa
+                                            icon={faExclamationTriangle}/>{" Failed to add group: " + error}</>
+                                    });
+                                } else {
+                                    addAlert({
+                                        timeout: 7500,
+                                        color: "success",
+                                        content: <><Fa icon={faCheck}/>{" Added group '" + value}'</>
+                                    });
+                                    reloadGroupNames();
+                                }
                             })
                         }}>
                     <Fa icon={faFloppyDisk}/> Add group

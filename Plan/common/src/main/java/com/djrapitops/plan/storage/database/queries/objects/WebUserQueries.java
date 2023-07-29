@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -185,5 +186,15 @@ public class WebUserQueries {
 
     public static Query<List<String>> fetchAllUsernames() {
         return db -> db.queryList(SELECT + SecurityTable.USERNAME + FROM + SecurityTable.TABLE_NAME, row -> row.getString(SecurityTable.USERNAME));
+    }
+
+    public static Query<List<String>> fetchGroupNamesWithPermission(String permission) {
+        @Language("SQL")
+        String sql = SELECT + WebGroupTable.NAME +
+                FROM + WebGroupTable.TABLE_NAME + " g" +
+                INNER_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gp ON gp." + WebGroupToPermissionTable.GROUP_ID + "=g." + WebGroupTable.ID +
+                INNER_JOIN + WebPermissionTable.TABLE_NAME + " p ON gp." + WebGroupToPermissionTable.PERMISSION_ID + "=p." + WebPermissionTable.ID +
+                WHERE + WebPermissionTable.PERMISSION + "=?";
+        return db -> db.queryList(sql, row -> row.getString(WebGroupTable.NAME), permission);
     }
 }

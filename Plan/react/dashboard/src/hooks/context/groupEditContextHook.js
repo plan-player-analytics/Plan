@@ -1,6 +1,9 @@
-import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {fetchAvailablePermissions, fetchGroupPermissions, saveGroupPermissions} from "../../service/manageService";
 import {useConfigurationStorageContext} from "./configurationStorageContextHook";
+import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {faCheck, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
+import {useAlertPopupContext} from "./alertPopupContext";
 
 const GroupEditContext = createContext({});
 
@@ -42,6 +45,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
     const {markDirty, saveRequested, discardRequested} = useConfigurationStorageContext();
     const [lastSave, setLastSave] = useState(Date.now());
     const [lastDiscard, setLastDiscard] = useState(Date.now());
+    const {addAlert} = useAlertPopupContext();
 
     const [allPermissions, setAllPermissions] = useState([]);
     useEffect(() => {
@@ -178,10 +182,22 @@ export const GroupEditContextProvider = ({groupName, children}) => {
 
     const saveChanges = useCallback(async () => {
         if (saveRequested > lastSave && changed) {
-            await saveGroupPermissions(groupName, permissions);
-            setLastSave(Date.now());
-            setChanged(false);
-            // TODO add feedback
+            const {error} = await saveGroupPermissions(groupName, permissions);
+            if (error) {
+                addAlert({
+                    timeout: 15000,
+                    color: "danger",
+                    content: <><Fa icon={faExclamationTriangle}/>{" Failed to save changes: " + error}</>
+                });
+            } else {
+                setLastSave(Date.now());
+                setChanged(false);
+                addAlert({
+                    timeout: 5000,
+                    color: "success",
+                    content: <><Fa icon={faCheck}/>{" Changes saved successfully!"}</>
+                });
+            }
         }
     }, [lastSave, changed, setChanged, saveRequested, setLastSave, permissions, groupName]);
 

@@ -1457,3 +1457,12 @@ ul.filters {
 .opaque-text:hover {
     opacity: 1;
 }
+
+@keyframes alert-timer {
+    from {
+        width: 100%
+    }
+    to {
+        width: 0
+    }
+}

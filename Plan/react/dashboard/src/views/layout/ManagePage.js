@@ -11,6 +11,7 @@ import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import {Outlet} from "react-router-dom";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
+import AlertPopupArea from "../../components/alert/AlertPopupArea";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
@@ -45,6 +46,7 @@ const ManagePage = () => {
         <>
             <Sidebar items={sidebarItems}/>
             <div className="d-flex flex-column" id="content-wrapper">
+                <AlertPopupArea/>
                 <Header page={displayedServerName} tab={currentTab} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
