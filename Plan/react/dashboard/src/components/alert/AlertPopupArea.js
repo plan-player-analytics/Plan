@@ -9,7 +9,8 @@ const Alert = ({alert}) => {
             <button className={"alert shadow alert-" + alert.color} onClick={() => dismissAlert(alert)}>
                 {alert.content}
                 <span aria-hidden="true" style={{marginLeft: "0.5rem"}}>&times;</span>
-                <div className={"alert-timer"} style={{animationDuration: alert.timeout + "ms"}}/>
+                <div className={"alert-timer"}
+                     style={{animationDuration: (alert.timeout - (Date.now() - alert.time)) + "ms"}}/>
             </button>
         </LoadIn>
     )

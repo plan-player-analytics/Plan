@@ -187,7 +187,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
                 addAlert({
                     timeout: 15000,
                     color: "danger",
-                    content: <><Fa icon={faExclamationTriangle}/>{" Failed to save changes: " + error}</>
+                    content: <><Fa icon={faExclamationTriangle}/>{" Failed to save changes: " + error?.message}</>
                 });
             } else {
                 setLastSave(Date.now());

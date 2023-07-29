@@ -6,7 +6,7 @@ export const AlertPopupContextProvider = ({children}) => {
     const [alerts, setAlerts] = useState([]);
 
     const dismissAlert = useCallback(alert => {
-        setAlerts(alerts.filter(a => a.time !== alert.time));
+        setAlerts(alerts.filter(a => a.time - alert.time < 1));
     }, [alerts, setAlerts]);
 
     const addAlert = useCallback(alert => {

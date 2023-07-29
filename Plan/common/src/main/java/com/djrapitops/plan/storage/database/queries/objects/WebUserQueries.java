@@ -142,7 +142,8 @@ public class WebUserQueries {
         UUID linkedToUUID = linkedTo != null ? UUID.fromString(set.getString(SecurityTable.LINKED_TO)) : null;
         String passwordHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
         String permissionGroup = set.getString(WebGroupTable.NAME);
-        List<String> permissions = Arrays.asList(set.getString("user_permissions").split(","));
+        String userPermissions = set.getString("user_permissions");
+        List<String> permissions = userPermissions != null ? Arrays.asList(userPermissions.split(",")) : List.of();
         return new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionGroup, permissions);
     }
 

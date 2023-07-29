@@ -170,7 +170,7 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
                                             timeout: 15000,
                                             color: "danger",
                                             content: <><Fa
-                                                icon={faExclamationTriangle}/>{" Failed to delete group: " + error}</>
+                                                icon={faExclamationTriangle}/>{" Failed to delete group: " + error?.message}</>
                                         });
                                     } else {
                                         reloadGroupNames();
@@ -267,7 +267,7 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
                                         timeout: 15000,
                                         color: "danger",
                                         content: <><Fa
-                                            icon={faExclamationTriangle}/>{" Failed to add group: " + error}</>
+                                            icon={faExclamationTriangle}/>{" Failed to add group: " + error?.message}</>
                                     });
                                 } else {
                                     addAlert({

@@ -67,8 +67,8 @@ public class DeleteWebGroupTransaction extends Transaction {
                             execute(new ExecStatement(moveUsersSql) {
                                 @Override
                                 public void prepare(PreparedStatement statement) throws SQLException {
-                                    statement.setInt(1, groupId);
-                                    statement.setInt(2, moveToId);
+                                    statement.setInt(1, moveToId);
+                                    statement.setInt(2, groupId);
                                 }
                             });
 
