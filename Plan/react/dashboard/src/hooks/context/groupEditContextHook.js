@@ -4,6 +4,7 @@ import {useConfigurationStorageContext} from "./configurationStorageContextHook"
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 import {useAlertPopupContext} from "./alertPopupContext";
+import {Trans, useTranslation} from "react-i18next";
 
 const GroupEditContext = createContext({});
 
@@ -41,6 +42,7 @@ const createPermissionTree = (allPermissions, toggledPermissions) => {
 }
 
 export const GroupEditContextProvider = ({groupName, children}) => {
+    const {t} = useTranslation();
     const [changed, setChanged] = useState(false);
     const {markDirty, saveRequested, discardRequested} = useConfigurationStorageContext();
     const [lastSave, setLastSave] = useState(Date.now());
@@ -187,7 +189,11 @@ export const GroupEditContextProvider = ({groupName, children}) => {
                 addAlert({
                     timeout: 15000,
                     color: "danger",
-                    content: <><Fa icon={faExclamationTriangle}/>{" Failed to save changes: " + error?.message}</>
+                    content: <>
+                        <Fa icon={faExclamationTriangle}/>
+                        {" "}
+                        <Trans i18nKey={"html.label.managePage.alert.saveFail"} values={{error: error?.message}}/>
+                    </>
                 });
             } else {
                 setLastSave(Date.now());
@@ -195,7 +201,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
                 addAlert({
                     timeout: 5000,
                     color: "success",
-                    content: <><Fa icon={faCheck}/>{" Changes saved successfully!"}</>
+                    content: <><Fa icon={faCheck}/>{" "}{t('html.label.managePage.alert.saveSuccess')}</>
                 });
             }
         }

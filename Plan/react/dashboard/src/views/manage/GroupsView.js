@@ -17,7 +17,7 @@ import {FontAwesomeIcon as Fa, FontAwesomeIcon} from "@fortawesome/react-fontawe
 import {GroupEditContextProvider, useGroupEditContext} from "../../hooks/context/groupEditContextHook";
 import {addGroup, deleteGroup, fetchGroups} from "../../service/manageService";
 import {CardLoader, ChartLoader} from "../../components/navigation/Loader";
-import {useTranslation} from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 import {
     ConfigurationStorageContextProvider,
     useConfigurationStorageContext
@@ -111,7 +111,9 @@ const GroupsBody = ({groups, reloadGroupNames}) => {
         <Row>
             <Col>
                 <div>
-                    <h3 style={{display: "inline-block"}}>Permissions of {groupName}</h3>
+                    <h3 style={{display: "inline-block"}}>
+                        <Trans i18nKey="html.label.managePage.groupPermissions" values={{groupName}}/>
+                    </h3>
                     <UnsavedChangesText visible={changed}/>
                     <DeleteGroupButton groupName={groupName} groups={groups} reloadGroupNames={reloadGroupNames}/>
                 </div>
@@ -129,13 +131,14 @@ const GroupsBody = ({groups, reloadGroupNames}) => {
 }
 
 const SaveButton = () => {
+    const {t} = useTranslation();
     const {dirty, requestSave} = useConfigurationStorageContext();
 
     return (
         <button className={"float-end btn bg-theme"} style={{margin: "-0.5rem"}}
                 disabled={!dirty}
                 onClick={requestSave}>
-            <Fa icon={faFloppyDisk}/> Save
+            <Fa icon={faFloppyDisk}/> {t('html.label.managePage.changes.save')}
         </button>
     )
 }
@@ -144,23 +147,27 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
     const [clicked, setClicked] = useState(false);
     const [moveToGroup, setMoveToGroup] = useState(0);
     const {addAlert} = useAlertPopupContext();
+    const {t} = useTranslation();
 
     if (clicked) {
         const groupOptions = groups.filter(g => g.name !== groupName).map(g => g.name);
         return (
             <Card>
-                <CardHeader icon={faTrash} label={`Delete ${groupName}`}/>
+                <CardHeader icon={faTrash} label={<Trans i18nKey={"html.label.managePage.deleteGroup.header"}
+                                                         values={{groupName}}/>}/>
                 <Card.Body>
                     <InputGroup>
                         <div className={"input-group-text"}>
-                            Move remaining users to group
+                            {t('html.label.managePage.deleteGroup.moveToSelect')}
                         </div>
                         <Select options={groupOptions}
                                 selectedIndex={moveToGroup} setSelectedIndex={setMoveToGroup}/>
                     </InputGroup>
 
-                    <p className={"mt-3"}>This will move all users of '{groupName}' to group
-                        '{groupOptions[moveToGroup]}'. There is no undo!</p>
+                    <p className={"mt-3"}>
+                        <Trans i18nKey="html.label.managePage.deleteGroup.confirmDescription"
+                               values={{groupName, moveTo: groupOptions[moveToGroup]}}/>
+                    </p>
 
                     <button className={"btn bg-red mt-2"}
                             onClick={() => {
@@ -169,8 +176,12 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
                                         addAlert({
                                             timeout: 15000,
                                             color: "danger",
-                                            content: <><Fa
-                                                icon={faExclamationTriangle}/>{" Failed to delete group: " + error?.message}</>
+                                            content: <>
+                                                <Fa icon={faExclamationTriangle}/>
+                                                {" "}
+                                                <Trans i18nKey={"html.label.managePage.alert.groupDeleteFail"}
+                                                       values={{error: error?.message}}/>
+                                            </>
                                         });
                                     } else {
                                         reloadGroupNames();
@@ -178,18 +189,24 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
                                         addAlert({
                                             timeout: 7500,
                                             color: "success",
-                                            content: <><Fa icon={faCheck}/>{" Deleted group '" + groupName}'</>
+                                            content: <>
+                                                <Fa icon={faCheck}/>
+                                                {" "}
+                                                <Trans i18nKey={"html.label.managePage.alert.groupDeleteSuccess"}
+                                                       values={{groupName}}/>
+                                            </>
                                         });
                                     }
                                 })
                             }}>
-                        <Fa icon={faTrash}/> Confirm & delete {groupName}
+                        <Fa icon={faTrash}/> <Trans i18nKey="html.label.managePage.deleteGroup.confirm"
+                                                    values={{groupName}}/>
                     </button>
                     <button className={"btn bg-grey-outline mt-2"} style={{marginLeft: "0.5rem"}}
                             onClick={() => {
                                 setClicked(false)
                             }}>
-                        <Fa icon={faRotateLeft}/> Cancel
+                        <Fa icon={faRotateLeft}/> {t("command.confirmation.deny")}
                     </button>
                 </Card.Body>
             </Card>
@@ -201,30 +218,37 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
                 onClick={() => {
                     setClicked(true)
                 }}>
-            <Fa icon={faTrash}/> Delete {groupName}
+            <Fa icon={faTrash}/> <Trans i18nKey={"html.label.managePage.deleteGroup.header"} values={{groupName}}/>
         </button>
     )
 }
 
 const DiscardButton = () => {
+    const {t} = useTranslation();
     const {dirty, requestDiscard} = useConfigurationStorageContext();
 
     return (
         <>
             {dirty && <button className={"float-end btn"} style={{margin: "-0.5rem", marginRight: "0.5rem"}}
                               onClick={requestDiscard}>
-                <Fa icon={faTrash}/> Discard Changes
+                <Fa icon={faTrash}/> {t('html.label.managePage.changes.discard')}
             </button>}
         </>
     )
 }
 
 const UnsavedChangesText = ({visible}) => {
+    const {t} = useTranslation();
     const {dirty} = useConfigurationStorageContext();
     const show = visible !== undefined ? visible : dirty;
     if (show) {
         return (
-            <p style={{display: "inline-block", marginLeft: "1rem", marginBottom: 0, opacity: 0.6}}>Unsaved changes</p>
+            <p style={{
+                display: "inline-block",
+                marginLeft: "1rem",
+                marginBottom: 0,
+                opacity: 0.6
+            }}>{t('html.label.managePage.changes.unsaved')}</p>
         )
     } else {
         return <></>
@@ -232,6 +256,7 @@ const UnsavedChangesText = ({visible}) => {
 }
 
 const AddGroupBody = ({groups, reloadGroupNames}) => {
+    const {t} = useTranslation();
     const [invalid, setInvalid] = useState(false);
     const [value, setValue] = useState(undefined);
     const {addAlert} = useAlertPopupContext();
@@ -244,19 +269,19 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
 
     return (
         <Card>
-            <CardHeader icon={faPlus} label={"Add group"}/>
+            <CardHeader icon={faPlus} label={t('html.label.managePage.addGroup.header')}/>
             <Card.Body>
                 <InputGroup>
                     <div className={"input-group-text"}>
                         <FontAwesomeIcon icon={faUserGroup}/>
                     </div>
                     <input type="text" className={"form-control" + (invalid ? " is-invalid" : '')}
-                           placeholder={"Name of the group"}
+                           placeholder={t('html.label.managePage.addGroup.name')}
                            value={value}
                            onChange={onChange}
                     />
                     {invalid && <div className="invalid-feedback">
-                        Group name can be 100 characters maximum.
+                        {t('html.label.managePage.addGroup.invalidName')}
                     </div>}
                 </InputGroup>
                 <button className={"btn bg-plan mt-2"} disabled={invalid || !value || value.length === 0}
@@ -266,20 +291,29 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
                                     addAlert({
                                         timeout: 15000,
                                         color: "danger",
-                                        content: <><Fa
-                                            icon={faExclamationTriangle}/>{" Failed to add group: " + error?.message}</>
+                                        content: <>
+                                            <Fa icon={faExclamationTriangle}/>
+                                            {" "}
+                                            <Trans i18nKey={"html.label.managePage.alert.groupAddFail"}
+                                                   values={{error: error?.message}}/>
+                                        </>
                                     });
                                 } else {
                                     addAlert({
                                         timeout: 7500,
                                         color: "success",
-                                        content: <><Fa icon={faCheck}/>{" Added group '" + value}'</>
+                                        content: <>
+                                            <Fa icon={faCheck}/>
+                                            {" "}
+                                            <Trans i18nKey={"html.label.managePage.alert.groupAddSuccess"}
+                                                   values={{groupName: value}}/>
+                                        </>
                                     });
                                     reloadGroupNames();
                                 }
                             })
                         }}>
-                    <Fa icon={faFloppyDisk}/> Add group
+                    <Fa icon={faFloppyDisk}/> {t('html.label.managePage.addGroup.header')}
                 </button>
             </Card.Body>
         </Card>
@@ -287,10 +321,13 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
 }
 
 const GroupsCard = ({groups, reloadGroupNames}) => {
+    const {t} = useTranslation();
+
     const slices = groups.map(group => {
         return {
-            body: <GroupEditContextProvider groupName={group.name}><GroupsBody
-                groups={groups} reloadGroupNames={reloadGroupNames}/></GroupEditContextProvider>,
+            body: <GroupEditContextProvider groupName={group.name}>
+                <GroupsBody groups={groups} reloadGroupNames={reloadGroupNames}/>
+            </GroupEditContextProvider>,
             header: <GroupsHeader groupName={group.name}/>,
             color: 'light-green',
             outline: false
@@ -299,14 +336,14 @@ const GroupsCard = ({groups, reloadGroupNames}) => {
 
     slices.push({
         body: <AddGroupBody groups={groups} reloadGroupNames={reloadGroupNames}/>,
-        header: <GroupsHeader groupName={"Add group"} icon={faPlus}/>,
+        header: <GroupsHeader groupName={t('html.label.managePage.addGroup.header')} icon={faPlus}/>,
         color: 'light-green',
         outline: false
     })
 
     return (
         <Card>
-            <CardHeader icon={faUsersGear} color="theme" label={"Manage Group Permissions"}>
+            <CardHeader icon={faUsersGear} color="theme" label={t('html.label.managePage.groupHeader')}>
                 <UnsavedChangesText/>
                 <SaveButton/>
                 <DiscardButton/>

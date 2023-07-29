@@ -9,7 +9,7 @@ const CardHeader = ({icon, color, label, children}) => {
     return (
         <Card.Header>
             <h6 className="col-black" style={{width: "100%"}}>
-                <Fa icon={icon} className={"col-" + color}/> {t(label)}
+                <Fa icon={icon} className={"col-" + color}/> {label instanceof String ? t(label) : label}
                 {children}
             </h6>
         </Card.Header>

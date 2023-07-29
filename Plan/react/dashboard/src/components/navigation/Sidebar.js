@@ -117,7 +117,7 @@ const FooterButtons = ({collapseSidebar, toggleInfoModal, toggleVersionModal, ve
                 </button>
                 {authRequired ?
                     <a className="btn bg-transparent-light" href={baseAddress + "/auth/logout"} id="logout-button">
-                        <Fa icon={faDoorOpen}/> Logout
+                        <Fa icon={faDoorOpen}/> {t('html.login.logout')}
                     </a> : ''}
             </div>
             <div className="ms-md-3 text-center text-md-start">
