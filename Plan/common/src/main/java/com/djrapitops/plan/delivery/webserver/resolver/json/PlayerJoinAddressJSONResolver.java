@@ -70,9 +70,9 @@ public class PlayerJoinAddressJSONResolver extends JSONResolver {
     public boolean canAccess(@Untrusted Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
         if (request.getQuery().get("server").isPresent()) {
-            return user.hasPermission(WebPermission.PAGE_SERVER_JOIN_ADDRESSES);
+            return user.hasPermission(WebPermission.PAGE_SERVER_RETENTION);
         }
-        return user.hasPermission(WebPermission.PAGE_NETWORK_JOIN_ADDRESSES);
+        return user.hasPermission(WebPermission.PAGE_NETWORK_RETENTION);
     }
 
     @GET

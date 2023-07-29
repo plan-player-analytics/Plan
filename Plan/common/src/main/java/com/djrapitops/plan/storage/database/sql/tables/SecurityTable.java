@@ -40,7 +40,7 @@ public class SecurityTable {
             USERNAME + ',' +
             LINKED_TO + ',' +
             SALT_PASSWORD_HASH + ',' +
-            GROUP_ID + ") VALUES (?,?,?," + WebGroupTable.SELECT_GROUP_ID + ")";
+            GROUP_ID + ") VALUES (?,?,?,(" + WebGroupTable.SELECT_GROUP_ID + "))";
 
     private SecurityTable() {
         /* Static information class */

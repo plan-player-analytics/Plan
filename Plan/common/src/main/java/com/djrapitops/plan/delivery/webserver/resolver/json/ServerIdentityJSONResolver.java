@@ -16,14 +16,16 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,13 +45,19 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 @Singleton
-public class ServerIdentityJSONResolver implements NoAuthResolver {
+public class ServerIdentityJSONResolver implements Resolver {
 
     private final JSONFactory jsonFactory;
 
     @Inject
     public ServerIdentityJSONResolver(JSONFactory jsonFactory) {
         this.jsonFactory = jsonFactory;
+    }
+
+    @Override
+    public boolean canAccess(Request request) {
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        return user.hasPermission(WebPermission.ACCESS_SERVER);
     }
 
     @GET
