@@ -103,6 +103,7 @@ public class Contributors {
             new Contributor("TheLittle_Yang", LANG),
             new Contributor("inductor", LANG),
             new Contributor("ringoXD", LANG),
+            new Contributor("yu_solt", LANG),
             new Contributor("lis2a", LANG)
     };
 
