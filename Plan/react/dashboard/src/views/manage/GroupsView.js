@@ -27,6 +27,7 @@ import Select from "../../components/input/Select";
 import Scrollable from "../../components/Scrollable";
 import OpaqueText from "../../components/layout/OpaqueText";
 import {useAlertPopupContext} from "../../hooks/context/alertPopupContext";
+import {DropdownStatusContextProvider, useDropdownStatusContext} from "../../hooks/context/dropdownStatusContextHook";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -36,6 +37,7 @@ const GroupsHeader = ({groupName, icon}) => {
 
 const PermissionDropdown = ({permission, checked, indeterminate, togglePermission, children, childNodes, root}) => {
     const {t} = useTranslation();
+    const {toggle, toggled} = useDropdownStatusContext();
 
     const translationKey = "html.manage.permission.description." + permission?.split('.').join("_");
     const translated = t(translationKey);
@@ -45,8 +47,12 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
             return <>{children}</>;
         } else {
             return (
-                <details open style={root ? {marginLeft: "0.5rem"} : {marginLeft: "2.1rem"}}>
-                    <summary>
+                <details open={!toggled.includes(permission)}
+                         style={root ? {marginLeft: "0.5rem"} : {marginLeft: "2.1rem"}}>
+                    <summary onClick={event => {
+                        event.preventDefault();
+                        toggle(permission);
+                    }}>
                         <input className={"form-check-input"} type={"checkbox"} value={indeterminate ? "" : checked}
                                checked={checked}
                                ref={input => {
@@ -379,11 +385,13 @@ const GroupsView = () => {
     return (
         <LoadIn>
             <ConfigurationStorageContextProvider>
-                <Row>
-                    <Col md={12}>
-                        <GroupsCard groups={data.groups} reloadGroupNames={reloadGroupNames}/>
-                    </Col>
-                </Row>
+                <DropdownStatusContextProvider>
+                    <Row>
+                        <Col md={12}>
+                            <GroupsCard groups={data.groups} reloadGroupNames={reloadGroupNames}/>
+                        </Col>
+                    </Row>
+                </DropdownStatusContextProvider>
             </ConfigurationStorageContextProvider>
         </LoadIn>
     )
