@@ -9,30 +9,34 @@ import ErrorView from "../ErrorView";
 import OnlineActivityInsightsCard from "../../components/cards/server/insights/OnlineActivityInsightsCard";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const OnlineActivity = () => {
+    const {hasPermission, hasChildPermission} = useAuth();
     const {identifier} = useParams();
 
-    const {data, loadingError} = useDataRequest(fetchOnlineActivityOverview, [identifier])
+    const seeOverview = hasPermission('page.server.online.activity.overview');
+    const seeGraphs = hasChildPermission('page.server.online.activity.graphs');
+    const {data, loadingError} = useDataRequest(fetchOnlineActivityOverview, [identifier], seeOverview)
 
     if (loadingError) return <ErrorView error={loadingError}/>
 
     return (
         <LoadIn>
             <section className="server-online-activity-overview">
-                <ExtendableRow id={'row-server-online-activity-overview-0'}>
+                {seeGraphs && <ExtendableRow id={'row-server-online-activity-overview-0'}>
                     <Col lg={12}>
                         <OnlineActivityGraphsCard/>
                     </Col>
-                </ExtendableRow>
-                <ExtendableRow id={'row-server-online-activity-overview-1'}>
+                </ExtendableRow>}
+                {seeOverview && <ExtendableRow id={'row-server-online-activity-overview-1'}>
                     <Col lg={8}>
                         <OnlineActivityAsNumbersCard data={data?.numbers}/>
                     </Col>
                     <Col lg={4}>
                         <OnlineActivityInsightsCard data={data?.insights}/>
                     </Col>
-                </ExtendableRow>
+                </ExtendableRow>}
             </section>
         </LoadIn>
     )

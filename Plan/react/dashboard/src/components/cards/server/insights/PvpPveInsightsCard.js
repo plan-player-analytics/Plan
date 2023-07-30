@@ -11,7 +11,7 @@ const PvpPveInsightsCard = ({data}) => {
     if (!data) return <CardLoader/>;
 
     return (
-        <InsightsFor30DaysCard>
+        <InsightsFor30DaysCard id={"pvp-pve-insights"}>
             <Datapoint name={t('html.label.deadliestWeapon')} icon={faKhanda} color="amber"
                        value={data.weapon_1st}/>
             <Datapoint name={t('html.label.secondDeadliestWeapon')} icon={faKhanda} color="gray"

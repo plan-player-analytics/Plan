@@ -6,19 +6,25 @@ import SessionInsightsCard from "../../components/cards/server/insights/SessionI
 import LoadIn from "../../components/animation/LoadIn";
 import {useParams} from "react-router-dom";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const ServerSessions = () => {
+    const {hasPermission} = useAuth();
     const {identifier} = useParams();
+
+    const seeSessionList = hasPermission('page.server.sessions.list');
+    const seeSessionInsights = hasPermission('page.server.sessions.overview');
+    const seeWorldPie = hasPermission('page.server.sessions.world.pie');
     return (
         <LoadIn>
             <section className="server-sessions">
                 <ExtendableRow id={'row-server-sessions-0'}>
-                    <Col lg={8}>
+                    {seeSessionList && <Col lg={8}>
                         <ServerRecentSessionsCard identifier={identifier}/>
-                    </Col>
+                    </Col>}
                     <Col lg={4}>
-                        <ServerWorldPieCard/>
-                        <SessionInsightsCard identifier={identifier}/>
+                        {seeWorldPie && <ServerWorldPieCard/>}
+                        {seeSessionInsights && <SessionInsightsCard identifier={identifier}/>}
                     </Col>
                 </ExtendableRow>
             </section>

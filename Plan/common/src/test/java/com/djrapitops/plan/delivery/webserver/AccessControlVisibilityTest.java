@@ -53,6 +53,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -104,7 +105,12 @@ class AccessControlVisibilityTest {
         return user;
     }
 
-    void login(WebDriver driver, User user) {
+    void login(ChromeDriver driver, User user) throws Exception {
+//        String cookie = AccessControlTest.login("https://localhost:" + TEST_PORT_NUMBER, user.getUsername());
+//        driver.manage().addCookie(new Cookie("auth", cookie.split("=")[1]));
+        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
+        SeleniumExtension.waitForElementToBeVisible(By.id("inputUser"), driver);
+
         driver.findElement(By.id("inputUser")).sendKeys(user.getUsername());
         driver.findElement(By.id("inputPassword")).sendKeys(PASSWORD);
         driver.findElement(By.id("login-button")).click();
@@ -116,10 +122,7 @@ class AccessControlVisibilityTest {
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/manage";
         driver.get(address);
-        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
-        Thread.sleep(250); // Wait for React render
         login(driver, user);
-        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
         Thread.sleep(250); // Wait for React render
         assertTrue(driver.findElement(By.id("slice_h_0")).isDisplayed(), "Could not see groups");
     }
@@ -127,10 +130,22 @@ class AccessControlVisibilityTest {
     static Stream<Arguments> serverPageElementVisibleCases() {
         return Stream.of(
                 Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, "players-online-graph", "overview"),
-                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW, "players-online-graph", "overview"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW, "last-7-days", "overview"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW, "server-as-numbers", "overview"),
-                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW, "week-comparison", "overview")
+                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW, "week-comparison", "overview"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS, "online-activity-graphs", "online-activity"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY, "day-by-day-nav", "online-activity"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR, "hour-by-hour-nav", "online-activity"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR, "server-calendar-nav", "online-activity"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD, "punchcard-nav", "online-activity"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, "online-activity-numbers", "online-activity"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, "online-activity-insights", "online-activity"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_OVERVIEW, "session-insights", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE, "world-pie", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_LIST, "session-list", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW, "pvp-pve-as-numbers", "pvppve"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW, "pvp-pve-insights", "pvppve"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST, "pvp-kills-table", "pvppve")
         );
     }
 
@@ -141,11 +156,9 @@ class AccessControlVisibilityTest {
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/server/" + serverUUID + "/" + section;
         driver.get(address);
-        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
-        Thread.sleep(250); // Wait for React render
         login(driver, user);
-        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
-        Thread.sleep(250); // Wait for React render
-        assertTrue(driver.findElement(By.id(element)).isDisplayed(), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
+
+        SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
+        assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
     }
 }

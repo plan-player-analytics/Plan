@@ -19,10 +19,7 @@ package extension;
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.extension.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogType;
@@ -54,6 +51,14 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         Awaitility.await()
                 .atMost(5, TimeUnit.SECONDS)
                 .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
+    }
+
+    public static void waitForElementToBeVisible(By by, ChromeDriver driver) {
+        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
+        Awaitility.await()
+                .atMost(3, TimeUnit.SECONDS)
+                .ignoreException(NoSuchElementException.class)
+                .until(() -> driver.findElement(by).isDisplayed());
     }
 
     @Override

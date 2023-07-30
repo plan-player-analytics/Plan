@@ -48,7 +48,7 @@ const DayByDayTab = () => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <TimeByTimeGraph data={data}/>
+    return <TimeByTimeGraph id={"day-by-day-graph"} data={data}/>
 }
 
 const HourByHourTab = () => {
@@ -57,7 +57,7 @@ const HourByHourTab = () => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <TimeByTimeGraph data={data}/>
+    return <TimeByTimeGraph id={"hour-by-hour-graph"} data={data}/>
 }
 
 const NetworkOnlineActivityGraphsCard = () => {

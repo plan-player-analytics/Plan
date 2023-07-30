@@ -11,7 +11,7 @@ const OnlineActivityAsNumbersCard = ({data}) => {
     if (!data) return <CardLoader/>;
 
     return (
-        <Card>
+        <Card id={'online-activity-numbers'}>
             <Card.Header>
                 <h6 className="col-black">
                     <Fa icon={faBookOpen} className="col-light-blue"/> {t('html.label.onlineActivityAsNumbers')}

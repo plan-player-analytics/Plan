@@ -32,7 +32,7 @@ export const AuthenticationContextProvider = ({children}) => {
             }
             return false;
         }
-        return !authRequired || (loggedIn && user && user.permissions.filter(perm => permission.includes(perm)).length);
+        return !authRequired || (loggedIn && user && Boolean(user.permissions.filter(perm => permission.includes(perm)).length));
     }, [authRequired, loggedIn, user]);
 
     const hasChildPermission = useCallback(permission => {
@@ -44,7 +44,7 @@ export const AuthenticationContextProvider = ({children}) => {
             }
             return false;
         }
-        return !authRequired || (loggedIn && user && Boolean(user.permissions.filter(perm => perm.includes(permission)).length));
+        return !authRequired || (loggedIn && user && Boolean(user.permissions.filter(perm => perm.includes(permission) || permission.includes(perm)).length));
     }, [authRequired, loggedIn, user]);
 
     const hasPermissionOtherThan = useCallback(permission => {

@@ -202,7 +202,7 @@ class AccessControlTest {
         }
     }
 
-    static String login(String address, String username) throws IOException, KeyManagementException, NoSuchAlgorithmException {
+    public static String login(String address, String username) throws IOException, KeyManagementException, NoSuchAlgorithmException {
         HttpURLConnection loginConnection = null;
         String cookie;
         try {
