@@ -46,23 +46,23 @@ sponge {
         // version is a *required* property (empty string works fine)
         dependency("griefprevention") {
             optional(true)
-            version("")
+            version("*")
         }
         dependency("luckperms") {
             optional(true)
-            version("")
+            version("*")
         }
         dependency("nucleus") {
             optional(true)
-            version("")
+            version("*")
         }
         dependency("redprotect") {
             optional(true)
-            version("")
+            version("*")
         }
         dependency("nuvotifier") {
             optional(true)
-            version("")
+            version("*")
         }
     }
 }
