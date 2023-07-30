@@ -156,7 +156,7 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
-        if (webserverConfiguration.isAuthenticationEnabled()) {
+        if (webServer.get().isAuthRequired()) {
             resolverService.registerResolver(plugin, "/login", loginPageResolver);
             resolverService.registerResolver(plugin, "/register", registerPageResolver);
             resolverService.registerResolver(plugin, "/auth/login", loginResolver);

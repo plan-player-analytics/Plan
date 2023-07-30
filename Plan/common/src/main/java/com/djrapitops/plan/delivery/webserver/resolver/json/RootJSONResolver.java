@@ -21,7 +21,9 @@ import com.djrapitops.plan.delivery.rendering.json.*;
 import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.identification.Identifiers;
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,13 +38,22 @@ public class RootJSONResolver {
 
     private final Identifiers identifiers;
     private final AsyncJSONResolverService asyncJSONResolverService;
-    private final CompositeResolver resolver;
+    private final Lazy<WebServer> webServer;
+    private final WebGroupJSONResolver webGroupJSONResolver;
+    private final WebGroupPermissionJSONResolver webGroupPermissionJSONResolver;
+    private final WebPermissionJSONResolver webPermissionJSONResolver;
+    private final WebGroupSaveJSONResolver webGroupSaveJSONResolver;
+    private final WebGroupDeleteJSONResolver webGroupDeleteJSONResolver;
+
+    private final CompositeResolver.Builder readOnlyResourcesBuilder;
+    private CompositeResolver resolver;
 
     @Inject
     public RootJSONResolver(
             Identifiers identifiers,
             AsyncJSONResolverService asyncJSONResolverService,
             JSONFactory jsonFactory,
+            Lazy<WebServer> webServer,
 
             GraphsJSONResolver graphsJSONResolver,
             SessionsJSONResolver sessionsJSONResolver,
@@ -79,7 +90,7 @@ public class RootJSONResolver {
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
 
-        resolver = CompositeResolver.builder()
+        readOnlyResourcesBuilder = CompositeResolver.builder()
                 .add("players", playersTableJSONResolver)
                 .add("sessions", sessionsJSONResolver)
                 .add("kills", playerKillsJSONResolver)
@@ -104,13 +115,15 @@ public class RootJSONResolver {
                 .add("whoami", whoAmIJSONResolver)
                 .add("extensionData", extensionJSONResolver)
                 .add("retention", retentionJSONResolver)
-                .add("joinAddresses", playerJoinAddressJSONResolver)
-                .add("webGroups", webGroupJSONResolver)
-                .add("groupPermissions", webGroupPermissionJSONResolver)
-                .add("permissions", webPermissionJSONResolver)
-                .add("saveGroupPermissions", webGroupSaveJSONResolver)
-                .add("deleteGroup", webGroupDeleteJSONResolver)
-                .build();
+                .add("joinAddresses", playerJoinAddressJSONResolver);
+
+        this.webServer = webServer;
+        // These endpoints require authentication to be enabled.
+        this.webGroupJSONResolver = webGroupJSONResolver;
+        this.webGroupPermissionJSONResolver = webGroupPermissionJSONResolver;
+        this.webPermissionJSONResolver = webPermissionJSONResolver;
+        this.webGroupSaveJSONResolver = webGroupSaveJSONResolver;
+        this.webGroupDeleteJSONResolver = webGroupDeleteJSONResolver;
     }
 
     private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator, WebPermission permission) {
@@ -118,6 +131,20 @@ public class RootJSONResolver {
     }
 
     public CompositeResolver getResolver() {
+        if (resolver == null) {
+            if (webServer.get().isAuthRequired()) {
+                resolver = readOnlyResourcesBuilder
+                        .add("webGroups", webGroupJSONResolver)
+                        .add("groupPermissions", webGroupPermissionJSONResolver)
+                        .add("permissions", webPermissionJSONResolver)
+                        .add("saveGroupPermissions", webGroupSaveJSONResolver)
+                        .add("deleteGroup", webGroupDeleteJSONResolver)
+                        .build();
+            } else {
+                resolver = readOnlyResourcesBuilder.build();
+            }
+        }
+
         return resolver;
     }
 }
