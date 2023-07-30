@@ -65,7 +65,7 @@ public class PlayerPageResolver implements Resolver {
         WebUser user = request.getUser().orElse(new WebUser(""));
         boolean isOwnPage = isOwnPage(path, user);
         return user.hasPermission(WebPermission.ACCESS_PLAYER)
-                || (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF) && isOwnPage);
+                || user.hasPermission(WebPermission.ACCESS_PLAYER_SELF) && isOwnPage;
     }
 
     @NotNull
