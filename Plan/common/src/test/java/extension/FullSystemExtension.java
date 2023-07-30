@@ -56,7 +56,6 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
 
     public FullSystemExtension() {
         this.parameterResolvers = Maps.builder(Class.class, Supplier.class)
-                .put(Path.class, () -> tempDir)
                 .put(PlanSystem.class, () -> planSystem)
                 .put(PlanFiles.class, () -> planSystem.getPlanFiles())
                 .put(PlanConfig.class, () -> planSystem.getConfigSystem().getConfig())

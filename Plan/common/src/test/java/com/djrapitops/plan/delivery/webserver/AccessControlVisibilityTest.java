@@ -35,6 +35,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -65,7 +66,7 @@ class AccessControlVisibilityTest {
     private static final String PASSWORD = "testPass";
 
     @BeforeAll
-    static void setUp(PlanSystem system, Path tempDir, PlanConfig config) throws Exception {
+    static void setUp(PlanSystem system, @TempDir Path tempDir, PlanConfig config) throws Exception {
         File certFile = tempDir.resolve("TestCert.p12").toFile();
         File testCert = TestResources.getTestResourceFile("TestCert.p12", ConfigUpdater.class);
         Files.copy(testCert.toPath(), certFile.toPath(), StandardCopyOption.REPLACE_EXISTING);

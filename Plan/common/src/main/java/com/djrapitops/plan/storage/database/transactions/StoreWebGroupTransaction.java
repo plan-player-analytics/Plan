@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.sql.tables.WebGroupToPermissionTable
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +37,9 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 public class StoreWebGroupTransaction extends Transaction {
 
     private final String name;
-    private final List<String> permissions;
+    private final Collection<String> permissions;
 
-    public StoreWebGroupTransaction(String name, List<String> permissions) {
+    public StoreWebGroupTransaction(String name, Collection<String> permissions) {
         this.name = name;
         this.permissions = permissions;
     }

@@ -81,6 +81,10 @@ public class User implements Comparable<User> {
         this.permissionGroup = permissionGroup;
     }
 
+    public Collection<String> getPermissions() {
+        return permissions;
+    }
+
     @Override
     public String toString() {
         return "User{" +

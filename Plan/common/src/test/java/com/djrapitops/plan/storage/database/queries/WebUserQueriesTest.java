@@ -23,6 +23,7 @@ import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
@@ -32,10 +33,7 @@ import org.mockito.Mockito;
 import utilities.TestConstants;
 import utilities.TestPluginLogger;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,7 +43,9 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void userIsRegistered() {
-        User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), "admin", Set.of("page", "access", "manage.groups", "manage.users"));
+        executeTransactions(new StoreWebGroupTransaction("admin", List.of("page", "access", "manage.groups", "manage.users")));
+        User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), "admin",
+                new HashSet<>(Arrays.asList("page", "access", "manage.groups", "manage.users")));
         db().executeTransaction(new StoreWebUserTransaction(expected));
         forcePersistenceCheck();
 

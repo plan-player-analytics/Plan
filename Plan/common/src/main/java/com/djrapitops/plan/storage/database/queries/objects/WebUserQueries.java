@@ -26,6 +26,7 @@ import org.intellij.lang.annotations.Language;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -117,6 +118,7 @@ public class WebUserQueries {
                 SecurityTable.LINKED_TO + ',' +
                 SecurityTable.SALT_PASSWORD_HASH + ',' +
                 WebGroupTable.NAME + ',' +
+                CookieTable.COOKIE + ',' +
                 "GROUP_CONCAT(" + WebPermissionTable.PERMISSION + ",',') as user_permissions" +
                 FROM + CookieTable.TABLE_NAME + " c" +
                 INNER_JOIN + SecurityTable.TABLE_NAME + " s on c." + CookieTable.WEB_USERNAME + "=s." + SecurityTable.USERNAME +
@@ -130,7 +132,8 @@ public class WebUserQueries {
                 UsersTable.USER_NAME + ',' +
                 SecurityTable.LINKED_TO + ',' +
                 SecurityTable.SALT_PASSWORD_HASH + ',' +
-                WebGroupTable.NAME;
+                WebGroupTable.NAME + ',' +
+                CookieTable.COOKIE;
 
         return db -> db.queryMap(sql, (set, byCookie) -> byCookie.put(set.getString(CookieTable.COOKIE), extractUser(set)),
                 System.currentTimeMillis());
@@ -143,7 +146,9 @@ public class WebUserQueries {
         String passwordHash = set.getString(SecurityTable.SALT_PASSWORD_HASH);
         String permissionGroup = set.getString(WebGroupTable.NAME);
         String userPermissions = set.getString("user_permissions");
-        List<String> permissions = userPermissions != null ? Arrays.asList(userPermissions.split(",")) : List.of();
+        List<String> permissions = userPermissions != null ? Arrays.stream(userPermissions.split(","))
+                .filter(permission -> !permission.isEmpty())
+                .collect(Collectors.toList()) : List.of();
         return new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionGroup, new HashSet<>(permissions));
     }
 
@@ -175,7 +180,7 @@ public class WebUserQueries {
         return db -> db.queryOptional(WebGroupTable.SELECT_GROUP_ID, row -> row.getInt(WebGroupTable.ID), name);
     }
 
-    public static Query<List<Integer>> fetchPermissionIds(@Untrusted List<String> permissions) {
+    public static Query<List<Integer>> fetchPermissionIds(@Untrusted Collection<String> permissions) {
         String sql = SELECT + WebPermissionTable.ID +
                 FROM + WebPermissionTable.TABLE_NAME +
                 WHERE + WebPermissionTable.PERMISSION + " IN (" + Sql.nParameters(permissions.size()) + ")";

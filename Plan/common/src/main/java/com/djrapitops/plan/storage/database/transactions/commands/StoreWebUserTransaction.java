@@ -17,14 +17,17 @@
 package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.WebGroupTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Optional;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 
@@ -43,6 +46,11 @@ public class StoreWebUserTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
+        Optional<Integer> groupId = query(WebUserQueries.fetchGroupId(user.getPermissionGroup()));
+        if (groupId.isEmpty()) {
+            executeOther(new StoreWebGroupTransaction(user.getPermissionGroup(), user.getPermissions()));
+        }
+
         String sql = "UPDATE " + SecurityTable.TABLE_NAME + " SET " + SecurityTable.GROUP_ID + "=(" + WebGroupTable.SELECT_GROUP_ID + ')' +
                 WHERE + SecurityTable.USERNAME + "=?";
         boolean updated = execute(new ExecStatement(sql) {

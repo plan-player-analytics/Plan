@@ -21,6 +21,7 @@ import com.djrapitops.plan.storage.database.sql.tables.WebPermissionTable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,9 +33,9 @@ import java.util.Set;
  */
 public class StoreMissingWebPermissionsTransaction extends Transaction {
 
-    private final List<String> permissions;
+    private final Collection<String> permissions;
 
-    public StoreMissingWebPermissionsTransaction(List<String> permissions) {
+    public StoreMissingWebPermissionsTransaction(Collection<String> permissions) {
         this.permissions = permissions;
     }
 
