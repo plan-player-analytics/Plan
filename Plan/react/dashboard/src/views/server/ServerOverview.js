@@ -14,6 +14,7 @@ import ServerWeekComparisonCard from "../../components/cards/server/tables/Serve
 import LoadIn from "../../components/animation/LoadIn";
 import {CardLoader} from "../../components/navigation/Loader";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
@@ -21,7 +22,7 @@ const Last7DaysCard = ({data}) => {
     if (!data) return <CardLoader/>;
 
     return (
-        <Card>
+        <Card id={"last-7-days"}>
             <Card.Header>
                 <h6 className="col-black">
                     {t('html.label.last7days')}
@@ -57,11 +58,15 @@ const Last7DaysCard = ({data}) => {
 }
 
 const ServerOverview = () => {
+    const {hasPermission} = useAuth();
     const {identifier} = useParams();
 
+    const seeOverview = hasPermission('page.server.overview');
+    const seeOnlineGraph = hasPermission('page.server.overview.players.online.graph')
     const {data, loadingError} = useDataRequest(
         fetchServerOverview,
-        [identifier])
+        [identifier],
+        seeOverview)
 
     if (loadingError) {
         return <ErrorView error={loadingError}/>
@@ -71,21 +76,21 @@ const ServerOverview = () => {
         <LoadIn>
             <section className="server-overview">
                 <ExtendableRow id={'row-server-overview-0'}>
-                    <Col lg={9}>
+                    {seeOnlineGraph && <Col lg={9}>
                         <OnlineActivityCard/>
-                    </Col>
-                    <Col lg={3}>
+                    </Col>}
+                    {seeOverview && <Col lg={3}>
                         <Last7DaysCard data={data?.last_7_days}/>
-                    </Col>
+                    </Col>}
                 </ExtendableRow>
-                <ExtendableRow id={'row-server-overview-1'}>
+                {seeOverview && <ExtendableRow id={'row-server-overview-1'}>
                     <Col lg={4}>
                         <ServerAsNumbersCard data={data?.numbers}/>
                     </Col>
                     <Col lg={8}>
                         <ServerWeekComparisonCard data={data?.weeks}/>
                     </Col>
-                </ExtendableRow>
+                </ExtendableRow>}
             </section>
         </LoadIn>
     )

@@ -245,7 +245,7 @@ class AccessControlTest {
                 new StoreWebGroupTransaction(groupName, List.of(permission.getPermission()))
         ).get();
 
-        User user = new User(RandomData.randomString(95), "console", null, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
+        User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
         db.executeTransaction(new StoreWebUserTransaction(user)).get();
 
         return user;

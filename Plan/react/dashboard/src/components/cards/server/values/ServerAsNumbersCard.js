@@ -26,7 +26,7 @@ const ServerAsNumbersCard = ({data}) => {
     const isGameServer = data.player_kills !== undefined;
     const showPeaks = isGameServer || networkMetadata.usingRedisBungee || networkMetadata.servers.filter(server => server.proxy).length === 1;
     return (
-        <Card>
+        <Card id={isGameServer ? "server-as-numbers" : "network-as-numbers"}>
             <Card.Header>
                 <h6 className="col-black">
                     <Fa icon={faBookOpen}/> {isGameServer ? t('html.label.serverAsNumberse') : t('html.label.networkAsNumbers')}

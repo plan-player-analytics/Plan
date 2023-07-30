@@ -44,7 +44,7 @@ export const AuthenticationContextProvider = ({children}) => {
             }
             return false;
         }
-        return !authRequired || (loggedIn && user && user.permissions.filter(perm => perm.includes(permission)).length);
+        return !authRequired || (loggedIn && user && Boolean(user.permissions.filter(perm => perm.includes(permission)).length));
     }, [authRequired, loggedIn, user]);
 
     const hasPermissionOtherThan = useCallback(permission => {

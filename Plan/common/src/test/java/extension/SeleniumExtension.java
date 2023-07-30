@@ -27,10 +27,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.CIProperties;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -46,6 +48,12 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         WebElement body = driver.findElement(By.tagName("body"));
         body.sendKeys(Keys.CONTROL + "t");
         driver.switchTo().window(new ArrayList<>(driver.getWindowHandles()).get(0));
+    }
+
+    public static void waitForPageLoadForSeconds(int i, ChromeDriver driver) {
+        Awaitility.await()
+                .atMost(5, TimeUnit.SECONDS)
+                .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
     }
 
     @Override
