@@ -10,24 +10,28 @@ import PlayerbaseTrendsCard from "../../components/cards/server/tables/Playerbas
 import PlayerbaseInsightsCard from "../../components/cards/server/insights/PlayerbaseInsightsCard";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const PlayerbaseOverview = () => {
+    const {hasPermission} = useAuth();
     const {identifier} = useParams();
 
-    const {data, loadingError} = useDataRequest(fetchPlayerbaseOverview, [identifier]);
+    const seeOverview = hasPermission('page.server.playerbase.overview');
+    const seeGraphs = hasPermission('page.server.playerbase.graphs');
+    const {data, loadingError} = useDataRequest(fetchPlayerbaseOverview, [identifier], seeOverview);
 
     return (
         <LoadIn>
             <section className="server-playerbase">
-                <ExtendableRow id={'row-server-playerbase-0'}>
+                {seeGraphs && <ExtendableRow id={'row-server-playerbase-0'}>
                     <Col lg={8}>
                         <PlayerbaseDevelopmentCard identifier={identifier}/>
                     </Col>
                     <Col lg={4}>
                         <CurrentPlayerbaseCard identifier={identifier}/>
                     </Col>
-                </ExtendableRow>
-                <ExtendableRow id={'row-server-playerbase-1'}>
+                </ExtendableRow>}
+                {seeOverview && <ExtendableRow id={'row-server-playerbase-1'}>
                     {loadingError && <ErrorViewCard error={loadingError}/>}
                     {!loadingError && <>
                         <Col lg={8}>
@@ -37,7 +41,7 @@ const PlayerbaseOverview = () => {
                             <PlayerbaseInsightsCard data={data?.insights}/>
                         </Col>
                     </>}
-                </ExtendableRow>
+                </ExtendableRow>}
             </section>
         </LoadIn>
     )
