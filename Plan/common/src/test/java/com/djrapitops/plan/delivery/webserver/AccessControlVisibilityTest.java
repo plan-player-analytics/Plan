@@ -106,28 +106,6 @@ class AccessControlVisibilityTest {
         return user;
     }
 
-    void login(ChromeDriver driver, User user) throws Exception {
-//        String cookie = AccessControlTest.login("https://localhost:" + TEST_PORT_NUMBER, user.getUsername());
-//        driver.manage().addCookie(new Cookie("auth", cookie.split("=")[1]));
-        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
-        SeleniumExtension.waitForElementToBeVisible(By.id("inputUser"), driver);
-
-        driver.findElement(By.id("inputUser")).sendKeys(user.getUsername());
-        driver.findElement(By.id("inputPassword")).sendKeys(PASSWORD);
-        driver.findElement(By.id("login-button")).click();
-    }
-
-    @Test
-    void adminHasAccessToManagePage(Database database, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.MANAGE_GROUPS);
-
-        String address = "https://localhost:" + TEST_PORT_NUMBER + "/manage";
-        driver.get(address);
-        login(driver, user);
-        Thread.sleep(250); // Wait for React render
-        assertTrue(driver.findElement(By.id("slice_h_0")).isDisplayed(), "Could not see groups");
-    }
-
     static Stream<Arguments> serverPageElementVisibleCases() {
         return Stream.of(
                 Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, "players-online-graph", "overview"),
@@ -150,8 +128,40 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, "playerbase-trends", "playerbase"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, "playerbase-insights", "playerbase"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS, "playerbase-graph", "playerbase"),
-                Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS, "playerbase-current", "playerbase")
+                Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS, "playerbase-current", "playerbase"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME, "join-address-graph", "join-addresses"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE, "join-address-groups", "join-addresses"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_RETENTION, "retention-graph", "retention"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERS, "players-table", "players"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP, "geolocations", "geolocations"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY, "ping-per-country", "geolocations"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, "performance-graphs", "performance"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, "performance-as-numbers", "performance"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, "performance-insights", "performance"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PLUGINS, "server-plugin-data", "plugins-overview")
         );
+    }
+
+    @Test
+    void adminHasAccessToManagePage(Database database, ChromeDriver driver) throws Exception {
+        User user = registerUser(database, WebPermission.MANAGE_GROUPS);
+
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/manage";
+        driver.get(address);
+        login(driver, user);
+        Thread.sleep(250); // Wait for React render
+        assertTrue(driver.findElement(By.id("slice_h_0")).isDisplayed(), "Could not see groups");
+    }
+
+    void login(ChromeDriver driver, User user) {
+//        String cookie = AccessControlTest.login("https://localhost:" + TEST_PORT_NUMBER, user.getUsername());
+//        driver.manage().addCookie(new Cookie("auth", cookie.split("=")[1]));
+        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
+        SeleniumExtension.waitForElementToBeVisible(By.id("inputUser"), driver);
+
+        driver.findElement(By.id("inputUser")).sendKeys(user.getUsername());
+        driver.findElement(By.id("inputPassword")).sendKeys(PASSWORD);
+        driver.findElement(By.id("login-button")).click();
     }
 
     @ParameterizedTest(name = "Access to server page with visibility {0} can see element #{1} in section /server/uuid/{2}")

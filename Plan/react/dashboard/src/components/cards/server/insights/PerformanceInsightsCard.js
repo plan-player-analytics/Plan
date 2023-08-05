@@ -10,7 +10,7 @@ const PerformanceInsightsCard = ({data}) => {
     if (!data) return <CardLoader/>;
 
     return (
-        <InsightsFor30DaysCard>
+        <InsightsFor30DaysCard id={"performance-insights"}>
             <p>{t('html.label.duringLowTps')}</p>
             <Datapoint name={t('html.label.average') + ' ' + t('html.label.players')} icon={faUsers} color="red"
                        value={data.low_tps_players} bold/>

@@ -4,17 +4,21 @@ import {Col} from "react-bootstrap";
 import LoadIn from "../../components/animation/LoadIn";
 import PlayerRetentionGraphCard from "../../components/cards/common/PlayerRetentionGraphCard";
 import {useParams} from "react-router-dom";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const ServerPlayerRetention = () => {
+    const {hasPermission} = useAuth();
     const {identifier} = useParams();
+
+    const seeRetention = hasPermission('page.server.retention');
     return (
         <LoadIn>
             <section className="server-retention">
-                <ExtendableRow id={'row-server-retention-0'}>
+                {seeRetention && <ExtendableRow id={'row-server-retention-0'}>
                     <Col lg={12}>
                         <PlayerRetentionGraphCard identifier={identifier}/>
                     </Col>
-                </ExtendableRow>
+                </ExtendableRow>}
             </section>
         </LoadIn>
     )

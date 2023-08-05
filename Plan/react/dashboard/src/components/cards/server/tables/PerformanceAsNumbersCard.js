@@ -17,8 +17,8 @@ const PerformanceAsNumbersCard = ({data, servers}) => {
                 : ''));
 
     return (
-        <Card>
-            <CardHeader icon={faBookOpen} color="blue-grey" label={'html.label.performanceAsNumbers'}/>
+        <Card id={"performance-as-numbers"}>
+            <CardHeader icon={faBookOpen} color="blue-grey" label={"html.label.performanceAsNumbers"}/>
             {noDataAlert}
             <PerformanceAsNumbersTable data={data} servers={servers}/>
         </Card>

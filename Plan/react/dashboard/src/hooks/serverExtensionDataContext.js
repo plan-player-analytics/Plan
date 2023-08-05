@@ -1,14 +1,17 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {useDataRequest} from "./dataFetchHook";
 import {fetchExtensionData} from "../service/serverService";
+import {useAuth} from "./authenticationHook";
 
 const ServerExtensionContext = createContext({});
 
 export const ServerExtensionContextProvider = ({identifier, children}) => {
+    const {hasPermission} = useAuth();
     const [extensionData, setExtensionData] = useState(undefined);
     const [extensionDataLoadingError, setExtensionDataLoadingError] = useState(undefined);
 
-    const {data, loadingError} = useDataRequest(fetchExtensionData, [identifier]);
+    const seePlugins = hasPermission('page.server.plugins');
+    const {data, loadingError} = useDataRequest(fetchExtensionData, [identifier], seePlugins);
 
     useEffect(() => {
         setExtensionData(data);
