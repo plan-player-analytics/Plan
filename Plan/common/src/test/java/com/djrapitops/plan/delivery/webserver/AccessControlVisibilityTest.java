@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
@@ -30,16 +31,14 @@ import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTr
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import extension.FullSystemExtension;
 import extension.SeleniumExtension;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import utilities.RandomData;
@@ -54,8 +53,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author AuroraLS3
@@ -78,6 +76,8 @@ class AccessControlVisibilityTest {
         config.set(WebserverSettings.CERTIFICATE_KEYPASS, "test");
         config.set(WebserverSettings.CERTIFICATE_STOREPASS, "test");
         config.set(WebserverSettings.CERTIFICATE_ALIAS, "test");
+        config.set(DataGatheringSettings.ACCEPT_GEOLITE2_EULA, true);
+        config.set(DataGatheringSettings.GEOLOCATIONS, true);
         system.enable();
     }
 
@@ -164,6 +164,7 @@ class AccessControlVisibilityTest {
         driver.findElement(By.id("login-button")).click();
     }
 
+    @DisplayName("Server element is visible with permission")
     @ParameterizedTest(name = "Access to server page with visibility {0} can see element #{1} in section /server/uuid/{2}")
     @MethodSource("serverPageElementVisibleCases")
     void serverPageElementVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
@@ -175,5 +176,19 @@ class AccessControlVisibilityTest {
 
         SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
+    }
+
+    @DisplayName("Server element is not visible without permission")
+    @ParameterizedTest(name = "Access to server page with no visibility can't see element #{1} in section /server/uuid/{2}")
+    @MethodSource("serverPageElementVisibleCases")
+    void serverPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
+        User user = registerUser(database, WebPermission.ACCESS_SERVER);
+
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/server/" + serverUUID + "/" + section;
+        driver.get(address);
+        login(driver, user);
+
+        Thread.sleep(1000);
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(By.id(element)), () -> "Saw element #" + element + " at " + address + " without permission to");
     }
 }
