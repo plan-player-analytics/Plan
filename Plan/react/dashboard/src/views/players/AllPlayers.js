@@ -7,19 +7,22 @@ import PlayerListCard from "../../components/cards/common/PlayerListCard";
 import LoadIn from "../../components/animation/LoadIn";
 import {CardLoader} from "../../components/navigation/Loader";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const AllPlayers = () => {
-    const {data, loadingError} = useDataRequest(fetchPlayers, [null]);
+    const {hasPermission} = useAuth();
+    const seePlayers = hasPermission('page.network.players') || hasPermission('access.players')
+    const {data, loadingError} = useDataRequest(fetchPlayers, [null], seePlayers);
 
     if (loadingError) return <ErrorView error={loadingError}/>
 
     return (
         <LoadIn>
-            <ExtendableRow id={'row-player-list-0'}>
+            {seePlayers && <ExtendableRow id={'row-player-list-0'}>
                 <Col md={12}>
                     {data ? <PlayerListCard data={data}/> : <CardLoader/>}
                 </Col>
-            </ExtendableRow>
+            </ExtendableRow>}
         </LoadIn>
     )
 };

@@ -13,6 +13,7 @@ import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import NetworkOnlineActivityGraphsCard from "../../components/cards/server/graphs/NetworkOnlineActivityGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import ExtendableCardBody from "../../components/layout/extension/ExtendableCardBody";
+import {useAuth} from "../../hooks/authenticationHook";
 
 
 const RecentPlayersCard = ({data}) => {
@@ -21,7 +22,7 @@ const RecentPlayersCard = ({data}) => {
     if (!data) return <CardLoader/>;
 
     return (
-        <Card>
+        <Card id={"recent-players"}>
             <Card.Header>
                 <h6 className="col-black">
                     {t('html.label.players')}
@@ -49,7 +50,10 @@ const RecentPlayersCard = ({data}) => {
 }
 
 const NetworkOverview = () => {
-    const {data, loadingError} = useDataRequest(fetchNetworkOverview, [])
+    const {hasPermission, hasChildPermission} = useAuth();
+    const seeOverview = hasPermission('page.network.overview');
+    const seeGraphs = hasChildPermission('page.network.overview.graphs');
+    const {data, loadingError} = useDataRequest(fetchNetworkOverview, [], seeOverview)
 
     if (loadingError) {
         return <ErrorView error={loadingError}/>
@@ -59,21 +63,21 @@ const NetworkOverview = () => {
         <LoadIn>
             <section className="network_overview">
                 <ExtendableRow id={'row-network-overview-0'}>
-                    <Col lg={9}>
+                    {seeGraphs && <Col lg={seeOverview ? 9 : 12}>
                         <NetworkOnlineActivityGraphsCard/>
-                    </Col>
-                    <Col lg={3}>
+                    </Col>}
+                    {seeOverview && <Col lg={3}>
                         <RecentPlayersCard data={data?.players}/>
-                    </Col>
+                    </Col>}
                 </ExtendableRow>
-                <ExtendableRow id={'row-network-overview-1'}>
+                {seeOverview && <ExtendableRow id={'row-network-overview-1'}>
                     <Col lg={4}>
                         <ServerAsNumbersCard data={data?.numbers}/>
                     </Col>
                     <Col lg={8}>
                         <ServerWeekComparisonCard data={data?.weeks}/>
                     </Col>
-                </ExtendableRow>
+                </ExtendableRow>}
             </section>
         </LoadIn>
     )

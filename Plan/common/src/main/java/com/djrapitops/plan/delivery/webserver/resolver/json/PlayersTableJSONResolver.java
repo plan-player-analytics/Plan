@@ -77,7 +77,8 @@ public class PlayersTableJSONResolver extends JSONResolver {
             return user.hasPermission(WebPermission.PAGE_SERVER_PLAYERS);
         }
         // Assume players page
-        return user.hasPermission(WebPermission.ACCESS_PLAYERS);
+        return user.hasPermission(WebPermission.ACCESS_PLAYERS)
+                || user.hasPermission(WebPermission.ACCESS_NETWORK) && user.hasPermission(WebPermission.PAGE_NETWORK_PLAYERS);
     }
 
     @GET

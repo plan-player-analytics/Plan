@@ -5,12 +5,12 @@ import {useAuth} from "./authenticationHook";
 
 const ServerExtensionContext = createContext({});
 
-export const ServerExtensionContextProvider = ({identifier, children}) => {
+export const ServerExtensionContextProvider = ({identifier, proxy, children}) => {
     const {hasPermission} = useAuth();
     const [extensionData, setExtensionData] = useState(undefined);
     const [extensionDataLoadingError, setExtensionDataLoadingError] = useState(undefined);
 
-    const seePlugins = hasPermission('page.server.plugins');
+    const seePlugins = hasPermission(proxy ? 'page.network.plugins' : 'page.server.plugins');
     const {data, loadingError} = useDataRequest(fetchExtensionData, [identifier], seePlugins);
 
     useEffect(() => {
@@ -19,8 +19,8 @@ export const ServerExtensionContextProvider = ({identifier, children}) => {
     }, [data, loadingError, setExtensionData, setExtensionDataLoadingError])
 
     const sharedState = useMemo(() => {
-        return {extensionData, extensionDataLoadingError};
-    }, [extensionData, extensionDataLoadingError]);
+        return {extensionData, extensionDataLoadingError, proxy};
+    }, [extensionData, extensionDataLoadingError, proxy]);
     return (<ServerExtensionContext.Provider value={sharedState}>
             {children}
         </ServerExtensionContext.Provider>

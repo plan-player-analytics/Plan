@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
@@ -26,6 +27,7 @@ import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
@@ -145,6 +147,33 @@ class AccessControlVisibilityTest {
         );
     }
 
+    static Stream<Arguments> networkPageElementVisibleCases() {
+        return Stream.of(
+                Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE, "online-activity-nav", "overview"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY, "day-by-day-nav", "overview"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR, "hour-by-hour-nav", "overview"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW, "recent-players", "overview"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW, "network-as-numbers", "overview"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW, "week-comparison", "overview"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_SERVER_LIST, "row-network-servers-0", "serversOverview"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_OVERVIEW, "session-insights", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE, "server-pie", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_LIST, "session-list", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW, "playerbase-trends", "playerbase"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW, "playerbase-insights", "playerbase"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS, "playerbase-graph", "playerbase"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS, "playerbase-current", "playerbase"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME, "join-address-graph", "join-addresses"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE, "join-address-groups", "join-addresses"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_RETENTION, "retention-graph", "retention"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERS, "players-table", "players"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, "geolocations", "geolocations"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY, "ping-per-country", "geolocations"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PERFORMANCE, "row-network-performance-0", "performance"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PLUGINS, "server-plugin-data", "plugins-overview")
+        );
+    }
+
     static Stream<Arguments> playerPageVisibleCases() {
         return Stream.of(
                 Arguments.arguments(WebPermission.PAGE_PLAYER_OVERVIEW, "player-overview", "overview"),
@@ -197,12 +226,48 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Server element is not visible without permission")
-    @ParameterizedTest(name = "Access to server page with no visibility can't see element #{1} in section /server/uuid/{2}")
+    @ParameterizedTest(name = "Access to server page with no visibility can't see element #{1} in section /server/uuid/{2} (Needs {0})")
     @MethodSource("serverPageElementVisibleCases")
     void serverPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_SERVER);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/server/" + serverUUID + "/" + section;
+        driver.get(address);
+        login(driver, user);
+
+        Thread.sleep(250);
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(By.id(element)), () -> "Saw element #" + element + " at " + address + " without permission to");
+    }
+
+    private void registerProxy(Database database) throws ExecutionException, InterruptedException {
+        database.executeTransaction(new StoreServerInformationTransaction(
+                new Server(TestConstants.SERVER_TWO_UUID, "Proxy", "https://localhost", TestConstants.VERSION)
+        )).get();
+    }
+
+    @DisplayName("Network element is visible with permission")
+    @ParameterizedTest(name = "Access to network page with visibility {0} can see element #{1} in section /network/{2}")
+    @MethodSource("networkPageElementVisibleCases")
+    void networkPageElementVisible(WebPermission permission, String element, String section, Database database, ChromeDriver driver) throws Exception {
+        User user = registerUser(database, WebPermission.ACCESS_NETWORK, permission);
+        registerProxy(database);
+
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/network/" + section;
+        driver.get(address);
+        login(driver, user);
+
+        SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
+        assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
+    }
+
+    @DisplayName("Network element is not visible without permission")
+    @ParameterizedTest(name = "Access to network page with no visibility can't see element #{1} in section /network/{2} (Needs {0})")
+    @MethodSource("networkPageElementVisibleCases")
+    void networkPageElementNotVisible(WebPermission permission, String element, String section, Database database, ChromeDriver driver) throws Exception {
+        User user = registerUser(database, WebPermission.ACCESS_NETWORK);
+        registerProxy(database);
+
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/network/" + section;
         driver.get(address);
         login(driver, user);
 
@@ -226,7 +291,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Player element is not visible without permission")
-    @ParameterizedTest(name = "Access to player page with no visibility can't see element #{1} in section /player/uuid/{2}")
+    @ParameterizedTest(name = "Access to player page with no visibility can't see element #{1} in section /player/uuid/{2} (Needs {0})")
     @MethodSource("playerPageVisibleCases")
     void playerPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_PLAYER);

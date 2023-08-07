@@ -169,7 +169,7 @@ const NetworkPage = () => {
 
     return (
         <>
-            <ServerExtensionContextProvider identifier={serverUUID}>
+            <ServerExtensionContextProvider identifier={serverUUID} proxy={true}>
                 <NetworkSidebar/>
                 <div className="d-flex flex-column" id="content-wrapper">
                     <Header page={networkName} tab={currentTab}/>

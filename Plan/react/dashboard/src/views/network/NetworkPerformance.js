@@ -13,8 +13,10 @@ import {useNavigation} from "../../hooks/navigationHook";
 import {mapPerformanceDataToSeries} from "../../util/graphs";
 import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const NetworkPerformance = () => {
+    const {hasPermission} = useAuth();
     const {t} = useTranslation();
     const {networkMetadata} = useMetadata();
     const {updateRequested} = useNavigation();
@@ -88,7 +90,7 @@ const NetworkPerformance = () => {
         (s, i) => s === visualizedServers[i]);
     return (
         <LoadIn>
-            <section className={"network-performance"}>
+            {hasPermission('page.network.performance') && <section className={"network-performance"}>
                 <ExtendableRow id={'row-network-performance-0'}>
                     <Col>
                         <PerformanceGraphsCard data={performanceData}/>
@@ -112,7 +114,7 @@ const NetworkPerformance = () => {
                         </Card>
                     </Col>
                 </ExtendableRow>
-            </section>
+            </section>}
         </LoadIn>
     )
 };

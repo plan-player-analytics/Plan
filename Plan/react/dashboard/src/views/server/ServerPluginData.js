@@ -12,9 +12,9 @@ import {useAuth} from "../../hooks/authenticationHook";
 const ServerPluginData = () => {
     const {hasPermission} = useAuth();
     const {t} = useTranslation();
-    const {extensionData, extensionDataLoadingError} = useServerExtensionContext();
+    const {extensionData, extensionDataLoadingError, proxy} = useServerExtensionContext();
     const extensions = useMemo(() => extensionData?.extensions ? extensionData.extensions.filter(extension => !extension.wide) : [], [extensionData]);
-    const seePlugins = hasPermission('page.server.plugins');
+    const seePlugins = hasPermission(proxy ? 'page.network.plugins' : 'page.server.plugins');
 
     useEffect(() => {
         const masonryRow = document.getElementById('extension-masonry-row');
