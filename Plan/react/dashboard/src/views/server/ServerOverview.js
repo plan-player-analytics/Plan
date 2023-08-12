@@ -61,7 +61,7 @@ const ServerOverview = () => {
     const {hasPermission} = useAuth();
     const {identifier} = useParams();
 
-    const seeOverview = hasPermission('page.server.overview');
+    const seeOverview = hasPermission('page.server.overview.numbers');
     const seeOnlineGraph = hasPermission('page.server.overview.players.online.graph')
     const {data, loadingError} = useDataRequest(
         fetchServerOverview,

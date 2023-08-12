@@ -28,6 +28,8 @@ import Scrollable from "../../components/Scrollable";
 import OpaqueText from "../../components/layout/OpaqueText";
 import {useAlertPopupContext} from "../../hooks/context/alertPopupContext";
 import {DropdownStatusContextProvider, useDropdownStatusContext} from "../../hooks/context/dropdownStatusContextHook";
+import {useNavigation} from "../../hooks/navigationHook";
+import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -328,6 +330,8 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
 
 const GroupsCard = ({groups, reloadGroupNames}) => {
     const {t} = useTranslation();
+    const {setHelpModalTopic} = useNavigation();
+    const openHelp = useCallback(() => setHelpModalTopic('group-permissions'), [setHelpModalTopic]);
 
     const slices = groups.map(group => {
         return {
@@ -350,6 +354,10 @@ const GroupsCard = ({groups, reloadGroupNames}) => {
     return (
         <Card>
             <CardHeader icon={faUsersGear} color="theme" label={t('html.label.managePage.groupHeader')}>
+                <button className={"btn bg-transparent col-blue"} style={{margin: "-0.5rem"}}
+                        onClick={openHelp}>
+                    <Fa icon={faQuestionCircle}/>
+                </button>
                 <UnsavedChangesText/>
                 <SaveButton/>
                 <DiscardButton/>

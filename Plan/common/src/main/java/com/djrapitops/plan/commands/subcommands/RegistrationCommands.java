@@ -20,6 +20,7 @@ import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
@@ -124,7 +125,8 @@ public class RegistrationCommands {
                 }
             }
         } else if (arguments.contains("superuser")) {
-            return Optional.of("admin");
+            return dbSystem.getDatabase().query(WebUserQueries.fetchGroupNamesWithPermission(WebPermission.MANAGE_GROUPS.getPermission()))
+                    .stream().findFirst();
         }
         return Optional.empty();
     }

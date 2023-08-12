@@ -30,6 +30,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE("Controls what is visible on pages"),
     PAGE_NETWORK("See all of network page"),
     PAGE_NETWORK_OVERVIEW("See Network Overview -tab"),
+    PAGE_NETWORK_OVERVIEW_NUMBERS("See Network Overview numbers"),
     PAGE_NETWORK_OVERVIEW_GRAPHS("See Network Overview graphs"),
     PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE("See Players Online graph"),
     PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY("See Day by Day graph"),
@@ -57,6 +58,7 @@ public enum WebPermission implements Supplier<String>, Lang {
 
     PAGE_SERVER("See all of server page"),
     PAGE_SERVER_OVERVIEW("See Server Overview -tab"),
+    PAGE_SERVER_OVERVIEW_NUMBERS("See Server Overview numbers"),
     PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH("See Players Online graph"),
     PAGE_SERVER_ONLINE_ACTIVITY("See Online Activity -tab"),
     PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW("See Online Activity numbers"),

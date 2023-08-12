@@ -51,7 +51,7 @@ const RecentPlayersCard = ({data}) => {
 
 const NetworkOverview = () => {
     const {hasPermission, hasChildPermission} = useAuth();
-    const seeOverview = hasPermission('page.network.overview');
+    const seeOverview = hasPermission('page.network.overview.numbers');
     const seeGraphs = hasChildPermission('page.network.overview.graphs');
     const {data, loadingError} = useDataRequest(fetchNetworkOverview, [], seeOverview)
 

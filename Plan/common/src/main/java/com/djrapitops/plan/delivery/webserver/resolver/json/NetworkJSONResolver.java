@@ -50,7 +50,7 @@ public class NetworkJSONResolver {
     ) {
         this.asyncJSONResolverService = asyncJSONResolverService;
         resolver = CompositeResolver.builder()
-                .add("overview", forJSON(DataID.SERVER_OVERVIEW, networkOverviewJSONCreator, WebPermission.PAGE_NETWORK_OVERVIEW))
+                .add("overview", forJSON(DataID.SERVER_OVERVIEW, networkOverviewJSONCreator, WebPermission.PAGE_NETWORK_OVERVIEW_NUMBERS))
                 .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, networkPlayerBaseOverviewJSONCreator, WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW))
                 .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, networkSessionsOverviewJSONCreator, WebPermission.PAGE_NETWORK_SESSIONS_OVERVIEW))
                 .add("servers", forJSON(DataID.SERVERS, jsonFactory::serversAsJSONMaps, WebPermission.PAGE_NETWORK_SERVER_LIST))

@@ -16,7 +16,7 @@ const SwaggerView = () => {
                 url: baseAddress + "/docs/swagger.json"
             });
         }
-    }, []);
+    }, [seeDocs]);
 
     return (
         <>
